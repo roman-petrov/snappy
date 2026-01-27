@@ -1,0 +1,33 @@
+{
+  "version": "0.2",
+  "language": "en,ru",
+  "words": [
+    "gramio",
+    "gigachat",
+    "yookassa",
+    "dotenv",
+    "eslint",
+    "cspell",
+    "jscpd",
+    "markdownlint",
+    "snappy",
+    "Telegram",
+    "деловой",
+    "дружеский",
+    "юмористический",
+    "продающий",
+    "нейтральный",
+    "эмодзи",
+    "мейкеров",
+    "БОТ",
+    "ТОКЕН",
+    "API"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    "bun.lockb",
+    "package-lock.json",
+    "yarn.lock"
+  ]
+}

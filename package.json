@@ -1,0 +1,40 @@
+{
+  "name": "snappy-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for content improvement powered by GigaChat AI",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "build": "tsc",
+    "lint:eslint": "eslint .",
+    "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
+    "lint:jscpd": "jscpd src",
+    "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
+    "ci": "bun run lint:eslint && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "content",
+    "ai",
+    "gigachat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "gramio": "^0.0.45",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "cspell": "^8.3.2",
+    "eslint": "^8.56.0",
+    "jscpd": "^4.0.5",
+    "markdownlint-cli": "^0.39.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
