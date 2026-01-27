@@ -7,11 +7,12 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc",
+    "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint .",
     "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
     "lint:jscpd": "jscpd src",
     "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
-    "ci": "bun run lint:eslint && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
+    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
   },
   "keywords": [
     "telegram",

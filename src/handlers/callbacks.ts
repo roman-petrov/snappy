@@ -31,7 +31,7 @@ export const registerCallbackHandlers = (bot: Bot) => {
     if (selectedLanguage) {
       setUserLanguage(userId, selectedLanguage);
       await context.answerCallbackQuery();
-      await context.editMessageText(t(selectedLanguage, 'commands.language.changed'));
+      await context.send(t(selectedLanguage, 'commands.language.changed'));
       return;
     }
 

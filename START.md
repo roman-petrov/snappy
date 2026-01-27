@@ -158,6 +158,7 @@ bun run ci
 ```
 
 Эта команда последовательно запустит:
+- TypeScript Compiler (проверка типов)
 - ESLint (проверка TypeScript кода)
 - CSpell (проверка орфографии)
 - JSCPD (поиск дублирования кода)
@@ -166,6 +167,7 @@ bun run ci
 Индивидуальные команды для запуска линтеров:
 
 ```bash
+bun run lint:tsc         # Только TypeScript Compiler
 bun run lint:eslint      # Только ESLint
 bun run lint:cspell      # Только CSpell
 bun run lint:jscpd       # Только JSCPD
