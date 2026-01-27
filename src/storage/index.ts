@@ -23,14 +23,14 @@ export const setUserLanguage = (userId: number, language: Locale): void => {
     requestCount: 0,
     lastReset: Date.now(),
   };
-  
+
   session.language = language;
   sessions.set(userId, session);
 };
 
 export const canMakeRequest = (userId: number): boolean => {
   const session = sessions.get(userId);
-  
+
   if (!session) {
     // Первый запрос - создаем сессию
     sessions.set(userId, {
@@ -40,19 +40,19 @@ export const canMakeRequest = (userId: number): boolean => {
     });
     return true;
   }
-  
+
   // Проверяем, нужно ли сбросить счетчик (прошло 24 часа)
   if (Date.now() - session.lastReset > RESET_INTERVAL) {
     session.requestCount = 0;
     session.lastReset = Date.now();
   }
-  
+
   return session.requestCount < FREE_REQUESTS_LIMIT;
 };
 
 export const incrementRequestCount = (userId: number): void => {
   const session = sessions.get(userId);
-  
+
   if (!session) {
     sessions.set(userId, {
       language: (process.env.DEFAULT_LANGUAGE as Locale) || 'ru',
@@ -61,22 +61,22 @@ export const incrementRequestCount = (userId: number): void => {
     });
     return;
   }
-  
+
   session.requestCount++;
 };
 
 export const getRemainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
-  
+
   if (!session) {
     return FREE_REQUESTS_LIMIT;
   }
-  
+
   // Проверяем, нужно ли сбросить счетчик
   if (Date.now() - session.lastReset > RESET_INTERVAL) {
     return FREE_REQUESTS_LIMIT;
   }
-  
+
   return Math.max(0, FREE_REQUESTS_LIMIT - session.requestCount);
 };
 
@@ -84,14 +84,14 @@ export const getRemainingRequests = (userId: number): number => {
 export const cleanupOldSessions = (): void => {
   const now = Date.now();
   const sessionsToDelete: number[] = [];
-  
+
   for (const [userId, session] of sessions.entries()) {
     // Удаляем сессии старше 7 дней
     if (now - session.lastReset > 7 * 24 * 60 * 60 * 1000) {
       sessionsToDelete.push(userId);
     }
   }
-  
+
   for (const userId of sessionsToDelete) {
     sessions.delete(userId);
   }

@@ -21,9 +21,7 @@ export const registerCommands = (bot: Bot) => {
 
     const locale = getUserLanguage(userId);
 
-    await context.send(
-      `${t(locale, 'commands.help.title')}\n\n${t(locale, 'commands.help.text')}`
-    );
+    await context.send(`${t(locale, 'commands.help.title')}\n\n${t(locale, 'commands.help.text')}`);
   });
 
   bot.command('balance', async (context) => {
@@ -38,7 +36,7 @@ export const registerCommands = (bot: Bot) => {
       t(locale, 'commands.balance.free', {
         count: remaining,
         status: premiumStatus,
-      })
+      }),
     );
   });
 
@@ -64,7 +62,7 @@ export const registerCommands = (bot: Bot) => {
       `${t(locale, 'commands.premium.title')}\n\n${t(locale, 'commands.premium.description', { price })}`,
       {
         reply_markup: createPremiumKeyboard(locale),
-      }
+      },
     );
   });
 };

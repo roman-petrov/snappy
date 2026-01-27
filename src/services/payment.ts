@@ -32,7 +32,7 @@ interface YooKassaPaymentResponse {
 const createPayment = async (
   userId: number,
   amount: number,
-  description: string
+  description: string,
 ): Promise<string> => {
   const shopId = process.env.YOOKASSA_SHOP_ID;
   const secretKey = process.env.YOOKASSA_SECRET_KEY;
@@ -42,7 +42,7 @@ const createPayment = async (
   }
 
   const idempotenceKey = `${userId}-${Date.now()}`;
-  
+
   const requestBody: YooKassaPaymentRequest = {
     amount: {
       value: amount.toFixed(2),
@@ -64,7 +64,7 @@ const createPayment = async (
   const response = await fetch('https://api.yookassa.ru/v3/payments', {
     method: 'POST',
     headers: {
-      'Authorization': `Basic ${credentials}`,
+      Authorization: `Basic ${credentials}`,
       'Content-Type': 'application/json',
       'Idempotence-Key': idempotenceKey,
     },
@@ -77,8 +77,8 @@ const createPayment = async (
     throw new Error('Failed to create payment');
   }
 
-  const data = await response.json() as YooKassaPaymentResponse;
-  
+  const data = (await response.json()) as YooKassaPaymentResponse;
+
   return data.confirmation.confirmation_url;
 };
 
@@ -103,7 +103,7 @@ export const verifyPayment = async (paymentId: string): Promise<boolean> => {
   const response = await fetch(`https://api.yookassa.ru/v3/payments/${paymentId}`, {
     method: 'GET',
     headers: {
-      'Authorization': `Basic ${credentials}`,
+      Authorization: `Basic ${credentials}`,
       'Content-Type': 'application/json',
     },
   });
@@ -112,7 +112,7 @@ export const verifyPayment = async (paymentId: string): Promise<boolean> => {
     return false;
   }
 
-  const data = await response.json() as YooKassaPaymentResponse;
-  
+  const data = (await response.json()) as YooKassaPaymentResponse;
+
   return data.status === 'succeeded' && data.paid;
 };

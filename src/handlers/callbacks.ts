@@ -6,10 +6,7 @@ import {
   canMakeRequest,
   incrementRequestCount,
 } from '../storage/index';
-import {
-  parseFeatureCallback,
-  parseLanguageCallback,
-} from '../keyboards/index';
+import { parseFeatureCallback, parseLanguageCallback } from '../keyboards/index';
 import { getUserText, clearUserText } from './messages';
 import { gigaChatService } from '../services/gigachat';
 import { createPremiumPayment } from '../services/payment';

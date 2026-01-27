@@ -7,12 +7,15 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc",
+    "format": "prettier --write \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint .",
+    "lint:prettier": "prettier --check \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
     "lint:jscpd": "jscpd src",
     "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
-    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
+    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:prettier && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
   },
   "keywords": [
     "telegram",
@@ -24,7 +27,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "gramio": "^0.0.45",
+    "gramio": "^0.4.11",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
@@ -33,8 +36,10 @@
     "@typescript-eslint/parser": "^7.0.0",
     "cspell": "^8.3.2",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "jscpd": "^4.0.5",
     "markdownlint-cli": "^0.39.0",
+    "prettier": "^3.2.4",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }

@@ -62,8 +62,8 @@ class GigaChatService {
     const response = await fetch('https://ngw.devices.sberbank.ru:9443/api/v2/oauth', {
       method: 'POST',
       headers: {
-        'Authorization': this.getAuthHeader(),
-        'RqUID': crypto.randomUUID(),
+        Authorization: this.getAuthHeader(),
+        RqUID: crypto.randomUUID(),
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: `scope=${this.scope}`,
@@ -73,7 +73,7 @@ class GigaChatService {
       throw new Error(`Failed to get access token: ${response.statusText}`);
     }
 
-    const data = await response.json() as GigaChatTokenResponse;
+    const data = (await response.json()) as GigaChatTokenResponse;
     this.accessToken = data.access_token;
     this.tokenExpiresAt = data.expires_at;
 
@@ -103,7 +103,7 @@ class GigaChatService {
     const response = await fetch('https://gigachat.devices.sberbank.ru/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),
@@ -113,8 +113,8 @@ class GigaChatService {
       throw new Error(`GigaChat API error: ${response.statusText}`);
     }
 
-    const data = await response.json() as GigaChatCompletionResponse;
-    
+    const data = (await response.json()) as GigaChatCompletionResponse;
+
     if (!data.choices || data.choices.length === 0) {
       throw new Error('No response from GigaChat');
     }

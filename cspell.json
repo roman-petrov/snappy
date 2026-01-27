@@ -23,11 +23,5 @@
     "ТОКЕН",
     "API"
   ],
-  "ignorePaths": [
-    "node_modules",
-    "dist",
-    "bun.lockb",
-    "package-lock.json",
-    "yarn.lock"
-  ]
+  "ignorePaths": ["node_modules", "dist", "bun.lockb", "package-lock.json", "yarn.lock"]
 }

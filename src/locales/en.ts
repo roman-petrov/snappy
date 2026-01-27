@@ -1,7 +1,8 @@
 export const en = {
   commands: {
     start: {
-      welcome: '👋 Hello! I\'m Snappy — a bot for content improvement.\n\n✨ Send me text, and I\'ll help make it better!',
+      welcome:
+        "👋 Hello! I'm Snappy — a bot for content improvement.\n\n✨ Send me text, and I'll help make it better!",
       help: '📝 How to use:\n1. Send me text\n2. Choose the function you need\n3. Get improved result\n\n💎 Free requests available: {count}',
     },
     help: {
@@ -19,7 +20,8 @@ export const en = {
     },
     premium: {
       title: '💎 Premium subscription',
-      description: '🚀 Get unlimited requests!\n\n💰 Price: {price} RUB/month\n\n✨ Features:\n• Unlimited requests\n• Priority processing\n• All features available',
+      description:
+        '🚀 Get unlimited requests!\n\n💰 Price: {price} RUB/month\n\n✨ Features:\n• Unlimited requests\n• Priority processing\n• All features available',
       button: '💳 Pay {price} RUB',
       success: '✅ Payment successful! Premium activated.',
       error: '❌ Payment error. Please try again later.',
@@ -31,13 +33,13 @@ export const en = {
     result: '✅ Done!\n\n{text}',
     error: '❌ An error occurred. Please try again.',
     limit: '⚠️ Free requests limit reached.\n\n💎 Buy premium for unlimited usage: /premium',
-    
+
     style_business: '📊 Business style',
     style_friendly: '😊 Friendly style',
     style_humorous: '😄 Humorous style',
     style_selling: '💰 Selling style',
     style_neutral: '📝 Neutral style',
-    
+
     fix_errors: '✅ Fix errors',
     add_emoji: '😊 Add emoji',
     shorten: '📉 Shorten text',

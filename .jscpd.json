@@ -1,11 +1,7 @@
 {
   "threshold": 0,
   "reporters": ["console"],
-  "ignore": [
-    "node_modules",
-    "dist",
-    "**/*.json"
-  ],
+  "ignore": ["node_modules", "dist", "**/*.json"],
   "absolute": true,
   "gitignore": true,
   "format": ["typescript"],

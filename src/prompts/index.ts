@@ -1,4 +1,4 @@
-export type FeatureType = 
+export type FeatureType =
   | 'style_business'
   | 'style_friendly'
   | 'style_humorous'

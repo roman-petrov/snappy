@@ -3,7 +3,7 @@ export default {
   language: 'en',
   enableFiletypes: ['typescript', 'javascript', 'markdown', 'json'],
   ignoreRegExpList: [
-    '[а-яА-ЯёЁ]+',  // Игнорируем кириллицу
+    '[а-яА-ЯёЁ]+', // Игнорируем кириллицу
   ],
   words: [
     'gramio',
@@ -49,11 +49,5 @@ export default {
     'PERS',
     'newbot',
   ],
-  ignorePaths: [
-    'node_modules',
-    'dist',
-    'bun.lockb',
-    'package-lock.json',
-    'yarn.lock',
-  ],
+  ignorePaths: ['node_modules', 'dist', 'bun.lockb', 'package-lock.json', 'yarn.lock'],
 };

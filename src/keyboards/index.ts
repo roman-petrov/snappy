@@ -22,22 +22,19 @@ export const createFeaturesKeyboard = (locale: Locale) => {
 };
 
 export const createLanguageKeyboard = () => {
-  return new InlineKeyboard()
-    .text('🇷🇺 Русский', 'lang:ru')
-    .text('🇬🇧 English', 'lang:en');
+  return new InlineKeyboard().text('🇷🇺 Русский', 'lang:ru').text('🇬🇧 English', 'lang:en');
 };
 
 export const createPremiumKeyboard = (locale: Locale) => {
   const price = process.env.PREMIUM_PRICE || '299';
-  return new InlineKeyboard()
-    .text(t(locale, 'commands.premium.button', { price }), 'premium:buy');
+  return new InlineKeyboard().text(t(locale, 'commands.premium.button', { price }), 'premium:buy');
 };
 
 export const parseFeatureCallback = (data: string): FeatureType | null => {
   if (!data.startsWith('feature:')) {
     return null;
   }
-  
+
   return data.replace('feature:', '') as FeatureType;
 };
 
@@ -45,7 +42,7 @@ export const parseLanguageCallback = (data: string): Locale | null => {
   if (!data.startsWith('lang:')) {
     return null;
   }
-  
+
   const lang = data.replace('lang:', '');
-  return (lang === 'ru' || lang === 'en') ? lang : null;
+  return lang === 'ru' || lang === 'en' ? lang : null;
 };

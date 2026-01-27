@@ -1,5 +1,6 @@
 import tsParser from '@typescript-eslint/parser';
 import tsPlugin from '@typescript-eslint/eslint-plugin';
+import prettierConfig from 'eslint-config-prettier';
 
 export default [
   {
@@ -20,6 +21,7 @@ export default [
       '@typescript-eslint': tsPlugin,
     },
     rules: {
+      ...prettierConfig.rules,
       'prefer-arrow-callback': 'error',
       'func-style': ['error', 'expression'],
       '@typescript-eslint/no-explicit-any': 'warn',
