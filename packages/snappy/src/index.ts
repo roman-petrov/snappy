@@ -10,8 +10,6 @@ import { registerCallbackHandlers } from './handlers/callbacks';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 process.env.NODE_EXTRA_CA_CERTS = resolve(__dirname, '../../..', 'certs');
-console.log(process.env.NODE_EXTRA_CA_CERTS);
-console.log("DIR: " + resolve(__dirname, '../../..', 'certs'));
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 
