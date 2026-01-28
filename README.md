@@ -34,22 +34,23 @@
 ```text
 snappy/
 ├── packages/
-│   └── snappy/            # Telegram-бот для улучшения контента
+│   └── snappy/               # Telegram-бот для улучшения контента
 │       ├── src/
-│       │   ├── handlers/  # Обработчики команд и сообщений
-│       │   ├── keyboards/ # Inline-клавиатуры
-│       │   ├── locales/   # Мультиязычность (ru, en)
-│       │   ├── prompts/   # Системные промпты для GigaChat
-│       │   ├── services/  # Сервисы (GigaChat, платежи)
-│       │   ├── storage/   # In-memory хранилище сессий
-│       │   └── index.ts   # Точка входа
-│       ├── .env.example   # Пример конфигурации
+│       │   ├── handlers/     # Обработчики команд и сообщений
+│       │   ├── keyboards/    # Inline-клавиатуры
+│       │   ├── locales/      # Мультиязычность (ru, en)
+│       │   ├── prompts/      # Системные промпты для GigaChat
+│       │   ├── services/     # Сервисы (GigaChat, платежи)
+│       │   ├── storage/      # In-memory хранилище сессий
+│       │   └── index.ts      # Точка входа
+│       ├── .env.example      # Пример конфигурации (production)
+│       ├── .env.dev.example  # Пример конфигурации (development)
 │       └── package.json
-├── tsconfig.json          # Единый TypeScript конфиг для всех пакетов
-├── eslint.config.js       # Единый ESLint конфиг
-├── .prettierrc.js         # Единый Prettier конфиг
-├── START.md               # Детальная инструкция по запуску
-└── package.json           # Корневой package.json с workspaces
+├── tsconfig.json             # Единый TypeScript конфиг для всех пакетов
+├── eslint.config.js          # Единый ESLint конфиг
+├── .prettierrc.js            # Единый Prettier конфиг
+├── START.md                  # Детальная инструкция по запуску
+└── package.json              # Корневой package.json с workspaces
 ```
 
 ## Пакеты
@@ -58,21 +59,45 @@ snappy/
 
 Telegram-бот для улучшения контента, созданный специально для контент-мейкеров и владельцев Telegram-каналов.
 
+## Окружения
+
+Проект поддерживает разделение на окружения:
+
+- **Development** (`.env.dev`) - для локальной разработки с тестовым ботом
+- **Production** (`.env`) - для продакшн бота с реальными пользователями
+
+**Важно:** Создайте отдельного бота через [@BotFather](https://t.me/botfather) для разработки! Это стандартная практика, которая позволяет:
+- Тестировать изменения без влияния на пользователей
+- Использовать hot-reload для мгновенной проверки изменений
+- Избежать конфликтов при одновременном запуске нескольких инстансов
+
 ## Быстрый старт
 
 Смотрите [START.md](./START.md) для детальных инструкций по запуску.
 
-### Краткая версия
+### Режим разработки
 
 ```bash
 # 1. Установите зависимости
 bun install
 
-# 2. Создайте .env файл и заполните переменные
+# 2. Создайте тестового бота через @BotFather в Telegram
+
+# 3. Создайте .env.dev файл и заполните переменные
+cp packages/snappy/.env.dev.example packages/snappy/.env.dev
+
+# 4. Запустите бота в режиме разработки
+bun run dev
+```
+
+### Production
+
+```bash
+# 1. Создайте .env файл с продакшн конфигурацией
 cp packages/snappy/.env.example packages/snappy/.env
 
-# 3. Запустите бота
-bun run dev
+# 2. Запустите бота
+bun run start
 ```
 
 ## Команды
