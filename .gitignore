@@ -1,7 +1,8 @@
 node_modules/
-dist/
 .env
 .env.local
+packages/*/.env
+packages/*/.env.local
 .DS_Store
 *.log
 .vscode/

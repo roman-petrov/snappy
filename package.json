@@ -1,23 +1,27 @@
 {
-  "name": "snappy-bot",
+  "name": "snappy-monorepo",
   "version": "1.0.0",
-  "description": "Telegram bot for content improvement powered by GigaChat AI",
+  "description": "Monorepo for Snappy Telegram bot and related packages",
+  "private": true,
   "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts",
-    "build": "tsc",
-    "format": "prettier --write \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "dev": "bun run --filter snappy dev",
+    "start": "bun run --filter snappy start",
+    "format": "prettier --write \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "format:check": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:tsc": "tsc --noEmit",
     "lint:eslint": "eslint .",
-    "lint:prettier": "prettier --check \"src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "lint:prettier": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
-    "lint:jscpd": "jscpd src",
+    "lint:jscpd": "jscpd packages/*/src",
     "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
     "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:prettier && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
   },
   "keywords": [
+    "monorepo",
     "telegram",
     "bot",
     "content",
@@ -26,10 +30,6 @@
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "gramio": "^0.4.11",
-    "dotenv": "^16.4.5"
-  },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",

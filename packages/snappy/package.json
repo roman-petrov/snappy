@@ -1,0 +1,24 @@
+{
+  "name": "snappy",
+  "version": "1.0.0",
+  "description": "Telegram bot for content improvement powered by GigaChat AI",
+  "type": "module",
+  "main": "./src/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "content",
+    "ai",
+    "gigachat"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "gramio": "^0.4.11",
+    "dotenv": "^16.4.5"
+  }
+}
