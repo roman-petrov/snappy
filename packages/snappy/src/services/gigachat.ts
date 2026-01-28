@@ -15,8 +15,8 @@ interface GigaChatMessage {
 interface GigaChatCompletionRequest {
   model: string;
   messages: GigaChatMessage[];
-  temperature?: number;
-  max_tokens?: number;
+  stream: boolean;
+  repetition_penalty: number;
 }
 
 interface GigaChatCompletionResponse {
@@ -38,40 +38,29 @@ interface GigaChatCompletionResponse {
 }
 
 class GigaChatService {
-  private clientId: string;
-  private clientSecret: string;
-  private scope: string;
   private accessToken: string | null = null;
   private tokenExpiresAt: number = 0;
-
-  constructor() {
-    this.clientId = config.GIGACHAT_CLIENT_ID;
-    this.clientSecret = config.GIGACHAT_CLIENT_SECRET;
-    this.scope = config.GIGACHAT_SCOPE;
-  }
-
-  private getAuthHeader = (): string => {
-    const credentials = `${this.clientId}:${this.clientSecret}`;
-    return `Basic ${btoa(credentials)}`;
-  };
 
   private getAccessToken = async (): Promise<string> => {
     if (this.accessToken && Date.now() < this.tokenExpiresAt) {
       return this.accessToken;
     }
 
+    const authKey = config.GIGACHAT_AUTH_KEY.trim().replace(/\s+/g, '');
     const response = await fetch('https://ngw.devices.sberbank.ru:9443/api/v2/oauth', {
       method: 'POST',
       headers: {
-        Authorization: this.getAuthHeader(),
-        RqUID: crypto.randomUUID(),
+        Accept: 'application/json',
+        Authorization: `Basic ${authKey}`,
         'Content-Type': 'application/x-www-form-urlencoded',
+        RqUID: crypto.randomUUID(),
       },
-      body: `scope=${this.scope}`,
+      body: `scope=${encodeURIComponent(config.GIGACHAT_SCOPE)}`,
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to get access token: ${response.statusText}`);
+      const errBody = await response.text();
+      throw new Error(`Failed to get access token: ${response.status} ${response.statusText}${errBody ? ` — ${errBody}` : ''}`);
     }
 
     const data = (await response.json()) as GigaChatTokenResponse;
@@ -88,22 +77,17 @@ class GigaChatService {
     const requestBody: GigaChatCompletionRequest = {
       model: 'GigaChat',
       messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: text,
-        },
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: text },
       ],
-      temperature: 0.7,
-      max_tokens: 2000,
+      stream: false,
+      repetition_penalty: 1,
     };
 
     const response = await fetch('https://gigachat.devices.sberbank.ru/api/v1/chat/completions', {
       method: 'POST',
       headers: {
+        Accept: 'application/json',
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
@@ -111,7 +95,8 @@ class GigaChatService {
     });
 
     if (!response.ok) {
-      throw new Error(`GigaChat API error: ${response.statusText}`);
+      const errBody = await response.text();
+      throw new Error(`GigaChat API error: ${response.status} ${response.statusText}${errBody ? ` — ${errBody}` : ''}`);
     }
 
     const data = (await response.json()) as GigaChatCompletionResponse;

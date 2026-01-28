@@ -8,8 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "bun run --filter snappy dev",
-    "start": "bun run --filter snappy start",
+    "dev": "bun run --filter snappy --elide-lines=0 dev",
+    "start": "bun run --filter snappy --elide-lines=0 start",
     "format": "prettier --write \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "format:check": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:tsc": "tsc --noEmit",
