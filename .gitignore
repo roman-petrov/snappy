@@ -1,12 +1,2 @@
 node_modules/
-.env
-.env.local
-.env.dev
-packages/*/.env
-packages/*/.env.local
-packages/*/.env.dev
-.DS_Store
-*.log
-.vscode/
-.idea/
 bun.lockb

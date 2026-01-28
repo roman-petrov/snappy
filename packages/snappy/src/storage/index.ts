@@ -1,4 +1,5 @@
 import type { Locale } from '../locales/index';
+import { config } from '../config';
 
 interface UserSession {
   language: Locale;
@@ -9,12 +10,11 @@ interface UserSession {
 // Простое in-memory хранилище для текущих сессий
 const sessions = new Map<number, UserSession>();
 
-const FREE_REQUESTS_LIMIT = parseInt(process.env.FREE_REQUESTS_LIMIT || '10', 10);
 const RESET_INTERVAL = 24 * 60 * 60 * 1000; // 24 часа
 
 export const getUserLanguage = (userId: number): Locale => {
   const session = sessions.get(userId);
-  return session?.language || (process.env.DEFAULT_LANGUAGE as Locale) || 'ru';
+  return session?.language ?? config.DEFAULT_LANGUAGE;
 };
 
 export const setUserLanguage = (userId: number, language: Locale): void => {
@@ -34,7 +34,7 @@ export const canMakeRequest = (userId: number): boolean => {
   if (!session) {
     // Первый запрос - создаем сессию
     sessions.set(userId, {
-      language: (process.env.DEFAULT_LANGUAGE as Locale) || 'ru',
+      language: config.DEFAULT_LANGUAGE,
       requestCount: 0,
       lastReset: Date.now(),
     });
@@ -47,7 +47,7 @@ export const canMakeRequest = (userId: number): boolean => {
     session.lastReset = Date.now();
   }
 
-  return session.requestCount < FREE_REQUESTS_LIMIT;
+  return session.requestCount < config.FREE_REQUESTS_LIMIT;
 };
 
 export const incrementRequestCount = (userId: number): void => {
@@ -55,7 +55,7 @@ export const incrementRequestCount = (userId: number): void => {
 
   if (!session) {
     sessions.set(userId, {
-      language: (process.env.DEFAULT_LANGUAGE as Locale) || 'ru',
+      language: config.DEFAULT_LANGUAGE,
       requestCount: 1,
       lastReset: Date.now(),
     });
@@ -69,15 +69,15 @@ export const getRemainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
 
   if (!session) {
-    return FREE_REQUESTS_LIMIT;
+    return config.FREE_REQUESTS_LIMIT;
   }
 
   // Проверяем, нужно ли сбросить счетчик
   if (Date.now() - session.lastReset > RESET_INTERVAL) {
-    return FREE_REQUESTS_LIMIT;
+    return config.FREE_REQUESTS_LIMIT;
   }
 
-  return Math.max(0, FREE_REQUESTS_LIMIT - session.requestCount);
+  return Math.max(0, config.FREE_REQUESTS_LIMIT - session.requestCount);
 };
 
 // Очистка старых сессий (запускается периодически)

@@ -15,12 +15,13 @@
 bun install
 
 # Создайте конфиг для разработки
-cd packages/snappy
-cp .env.dev.example .env.dev
+mkdir -p ~/.snappy
+cp packages/snappy/config.json.example ~/.snappy/config.json
 
-# Отредактируйте .env.dev:
+# Отредактируйте ~/.snappy/config.json:
 # - Вставьте токен dev-бота в BOT_TOKEN
 # - Добавьте GIGACHAT_CLIENT_ID и GIGACHAT_CLIENT_SECRET
+# - Заполните остальные параметры при необходимости
 ```
 
 ### 3. Запустите бота
@@ -41,10 +42,11 @@ bun run dev
 
 ### 2. Настройте продакшн
 ```bash
-cd packages/snappy
-cp .env.example .env
+# Убедитесь, что конфигурация настроена
+# Конфигурация загружается из ~/.snappy/config.json
+# (используется тот же файл, что и для разработки)
 
-# Отредактируйте .env с токеном продакшн-бота
+# Отредактируйте ~/.snappy/config.json с токеном продакшн-бота
 ```
 
 ### 3. Запустите

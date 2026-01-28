@@ -1,5 +1,6 @@
 import type { FeatureType } from '../prompts/index';
 import { getSystemPrompt } from '../prompts/index';
+import { config } from '../config';
 
 interface GigaChatTokenResponse {
   access_token: string;
@@ -44,9 +45,9 @@ class GigaChatService {
   private tokenExpiresAt: number = 0;
 
   constructor() {
-    this.clientId = process.env.GIGACHAT_CLIENT_ID || '';
-    this.clientSecret = process.env.GIGACHAT_CLIENT_SECRET || '';
-    this.scope = process.env.GIGACHAT_SCOPE || 'GIGACHAT_API_PERS';
+    this.clientId = config.GIGACHAT_CLIENT_ID;
+    this.clientSecret = config.GIGACHAT_CLIENT_SECRET;
+    this.scope = config.GIGACHAT_SCOPE;
   }
 
   private getAuthHeader = (): string => {

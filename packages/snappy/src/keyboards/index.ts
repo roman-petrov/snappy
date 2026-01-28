@@ -2,6 +2,7 @@ import { InlineKeyboard } from 'gramio';
 import type { Locale } from '../locales/index';
 import { t } from '../locales/index';
 import type { FeatureType } from '../prompts/index';
+import { config } from '../config';
 
 export const createFeaturesKeyboard = (locale: Locale) => {
   return new InlineKeyboard()
@@ -26,8 +27,10 @@ export const createLanguageKeyboard = () => {
 };
 
 export const createPremiumKeyboard = (locale: Locale) => {
-  const price = process.env.PREMIUM_PRICE || '299';
-  return new InlineKeyboard().text(t(locale, 'commands.premium.button', { price }), 'premium:buy');
+  return new InlineKeyboard().text(
+    t(locale, 'commands.premium.button', { price: config.PREMIUM_PRICE }),
+    'premium:buy',
+  );
 };
 
 export const parseFeatureCallback = (data: string): FeatureType | null => {

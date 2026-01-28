@@ -2,6 +2,7 @@ import type { Bot } from 'gramio';
 import { t } from '../locales/index';
 import { getUserLanguage, getRemainingRequests } from '../storage/index';
 import { createLanguageKeyboard, createPremiumKeyboard } from '../keyboards/index';
+import { config } from '../config';
 
 export const registerCommands = (bot: Bot) => {
   bot.command('start', async (context) => {
@@ -56,10 +57,9 @@ export const registerCommands = (bot: Bot) => {
     if (!userId) return;
 
     const locale = getUserLanguage(userId);
-    const price = process.env.PREMIUM_PRICE || '299';
 
     await context.send(
-      `${t(locale, 'commands.premium.title')}\n\n${t(locale, 'commands.premium.description', { price })}`,
+      `${t(locale, 'commands.premium.title')}\n\n${t(locale, 'commands.premium.description', { price: config.PREMIUM_PRICE })}`,
       {
         reply_markup: createPremiumKeyboard(locale),
       },

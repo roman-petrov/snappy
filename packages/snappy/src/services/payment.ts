@@ -1,3 +1,5 @@
+import { config } from '../config';
+
 interface YooKassaPaymentRequest {
   amount: {
     value: string;
@@ -34,8 +36,8 @@ const createPayment = async (
   amount: number,
   description: string,
 ): Promise<string> => {
-  const shopId = process.env.YOOKASSA_SHOP_ID;
-  const secretKey = process.env.YOOKASSA_SECRET_KEY;
+  const shopId = config.YOOKASSA_SHOP_ID;
+  const secretKey = config.YOOKASSA_SECRET_KEY;
 
   if (!shopId || !secretKey) {
     throw new Error('YooKassa credentials not configured');
@@ -83,16 +85,15 @@ const createPayment = async (
 };
 
 export const createPremiumPayment = async (userId: number): Promise<string> => {
-  const price = parseInt(process.env.PREMIUM_PRICE || '299', 10);
-  return createPayment(userId, price, 'Snappy Bot - Premium подписка (30 дней)');
+  return createPayment(userId, config.PREMIUM_PRICE, 'Snappy Bot - Premium подписка (30 дней)');
 };
 
 // Примечание: для проверки статуса платежа используется webhook от YooKassa
 // В stateless архитектуре мы не храним информацию о платежах
 // Webhook должен быть настроен в личном кабинете YooKassa
 export const verifyPayment = async (paymentId: string): Promise<boolean> => {
-  const shopId = process.env.YOOKASSA_SHOP_ID;
-  const secretKey = process.env.YOOKASSA_SECRET_KEY;
+  const shopId = config.YOOKASSA_SHOP_ID;
+  const secretKey = config.YOOKASSA_SECRET_KEY;
 
   if (!shopId || !secretKey) {
     return false;

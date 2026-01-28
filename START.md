@@ -93,66 +93,47 @@ bun install
 
 **Примечание:** Для тестирования можно не настраивать YooKassa - функция покупки премиума просто не будет работать.
 
-### 6. Конфигурация переменных окружения
+### 6. Конфигурация
 
-Проект поддерживает два окружения:
+Проект использует единый файл конфигурации `~/.snappy/config.json` (где `~` - домашняя директория пользователя) как для разработки, так и для production.
 
-#### Для разработки (`.env.dev`):
-
-```bash
-cd packages/snappy
-cp .env.dev.example .env.dev
-```
-
-Откройте файл `.env.dev` и заполните токен **dev-бота**:
-
-```env
-# Telegram Bot Token для разработки
-BOT_TOKEN=токен_dev_бота_от_botfather
-
-# GigaChat API Configuration
-GIGACHAT_CLIENT_ID=ваш_client_id
-GIGACHAT_CLIENT_SECRET=ваш_client_secret
-GIGACHAT_SCOPE=GIGACHAT_API_PERS
-
-# Остальные параметры...
-```
-
-#### Для production (`.env`):
+#### Создание файла конфигурации:
 
 ```bash
-cd packages/snappy
-cp .env.example .env
+# Создайте директорию для конфигурации (если её нет)
+mkdir -p ~/.snappy
+
+# Скопируйте пример конфигурации
+cp packages/snappy/config.json.example ~/.snappy/config.json
 ```
 
-Откройте файл `.env` и заполните токен **продакшн-бота**:
+Откройте файл `~/.snappy/config.json` и заполните все необходимые параметры:
 
-```env
-# Telegram Bot Token (обязательно)
-BOT_TOKEN=ваш_токен_от_botfather
-
-# GigaChat API Configuration (обязательно)
-GIGACHAT_CLIENT_ID=ваш_client_id
-GIGACHAT_CLIENT_SECRET=ваш_client_secret
-GIGACHAT_SCOPE=GIGACHAT_API_PERS
-
-# Payment Configuration - YooKassa (опционально)
-YOOKASSA_SHOP_ID=ваш_shop_id
-YOOKASSA_SECRET_KEY=ваш_secret_key
-
-# Bot Configuration
-DEFAULT_LANGUAGE=ru
-FREE_REQUESTS_LIMIT=10
-PREMIUM_PRICE=299
+```json
+{
+  "BOT_TOKEN": "ваш_токен_от_botfather",
+  "GIGACHAT_CLIENT_ID": "ваш_client_id",
+  "GIGACHAT_CLIENT_SECRET": "ваш_client_secret",
+  "GIGACHAT_SCOPE": "GIGACHAT_API_PERS",
+  "YOOKASSA_SHOP_ID": "ваш_shop_id",
+  "YOOKASSA_SECRET_KEY": "ваш_secret_key",
+  "DEFAULT_LANGUAGE": "ru",
+  "FREE_REQUESTS_LIMIT": 10,
+  "PREMIUM_PRICE": 299
+}
 ```
 
 **Важно:**
 
-- `BOT_TOKEN` - обязательный параметр
+- `BOT_TOKEN` - обязательный параметр (токен Telegram бота)
 - `GIGACHAT_CLIENT_ID` и `GIGACHAT_CLIENT_SECRET` - обязательные параметры
-- Параметры YooKassa можно оставить пустыми для тестирования
-- `FREE_REQUESTS_LIMIT` - количество бесплатных запросов на пользователя в день (по умолчанию 10)
-- `PREMIUM_PRICE` - цена премиум подписки в рублях (по умолчанию 299)
+- Параметры YooKassa (`YOOKASSA_SHOP_ID`, `YOOKASSA_SECRET_KEY`) можно не указывать для тестирования
+- `GIGACHAT_SCOPE` - область доступа GigaChat (по умолчанию: `GIGACHAT_API_PERS`)
+- `DEFAULT_LANGUAGE` - язык по умолчанию (`ru` или `en`, по умолчанию: `ru`)
+- `FREE_REQUESTS_LIMIT` - количество бесплатных запросов на пользователя в день (по умолчанию: `10`)
+- `PREMIUM_PRICE` - цена премиум подписки в рублях (по умолчанию: `299`)
+
+**Примечание:** Для разработки рекомендуется создать отдельного тестового бота через @BotFather и указать его токен в `BOT_TOKEN`. При переходе на production просто замените токен в том же файле конфигурации.
 
 ## Запуск бота
 
@@ -166,7 +147,7 @@ bun run dev
 ```
 
 Эта команда:
-- Использует `.env.dev` с токеном dev-бота
+- Загружает конфигурацию из `~/.snappy/config.json`
 - Запускает `tsx watch` для автоматической перезагрузки при изменениях
 - Любые изменения в коде сразу применяются
 
@@ -182,7 +163,7 @@ bun run start
 ```
 
 Эта команда:
-- Использует `.env` с токеном продакшн-бота
+- Загружает конфигурацию из `~/.snappy/config.json`
 - Запускает `tsx` для выполнения TypeScript напрямую
 - Не перезагружается при изменениях
 
@@ -310,9 +291,9 @@ sudo systemctl status snappy-bot
 
 ### Бот не запускается
 
-1. Проверьте, что все переменные в `.env` заполнены корректно
+1. Проверьте, что файл `~/.snappy/config.json` существует и все параметры заполнены корректно
 2. Убедитесь, что токен бота действителен
-3. Проверьте логи на наличие ошибок
+3. Проверьте логи на наличие ошибок (бот выведет понятное сообщение об ошибке, если файл конфигурации не найден или содержит ошибки)
 
 ### Ошибки GigaChat API
 
@@ -351,7 +332,7 @@ bun --version
 
 ### Ограничения бесплатной версии
 
-- 10 запросов в день на пользователя (настраивается в `.env`)
+- 10 запросов в день на пользователя (настраивается в `~/.snappy/config.json` через параметр `FREE_REQUESTS_LIMIT`)
 - Счетчик сбрасывается каждые 24 часа
 - При перезапуске бота счетчики обнуляются
 

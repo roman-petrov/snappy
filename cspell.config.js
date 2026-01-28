@@ -9,7 +9,7 @@ export default {
     'gramio',
     'gigachat',
     'yookassa',
-    'dotenv',
+    'zod',
     'eslint',
     'cspell',
     'jscpd',

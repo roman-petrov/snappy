@@ -1,16 +1,11 @@
-import 'dotenv/config';
 import { Bot } from 'gramio';
+import { config } from './config';
 import { registerCommands } from './handlers/commands';
 import { registerMessageHandlers } from './handlers/messages';
 import { registerCallbackHandlers } from './handlers/callbacks';
 
 const main = async () => {
-  const token = process.env.BOT_TOKEN;
-
-  if (!token) {
-    console.error('❌ BOT_TOKEN is not set in environment variables');
-    process.exit(1);
-  }
+  const token = config.BOT_TOKEN;
 
   console.log('🚀 Starting Snappy Bot...');
 
