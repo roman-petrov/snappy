@@ -65,7 +65,6 @@
           "fontWeight": "bold"
         }
       ],
-      "filterLanguageRegex": "json",
       "regexFlags": "g"
     }
   },
