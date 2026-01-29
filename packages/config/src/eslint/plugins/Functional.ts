@@ -1,10 +1,12 @@
 import pluginFunctional from "eslint-plugin-functional";
+import { defineConfig } from "eslint/config";
 
 /**
  * TODO(code-quality):
  * Need to revisit this configuration if https://github.com/microsoft/TypeScript/issues/42357 is shipped in TypeScript
  */
-export default [
+export default defineConfig([
+  // @ts-expect-error - pluginFunctional.configs.all is not assignable to type 'InfiniteArray<ConfigWithExtends>'.
   pluginFunctional.configs.all,
   {
     rules: {
@@ -19,4 +21,4 @@ export default [
     },
   },
   { files: [`packages/*/src/main.ts`], rules: { "functional/no-expression-statements": `off` } },
-];
+]);
