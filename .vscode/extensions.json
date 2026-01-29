@@ -1,17 +1,21 @@
 {
   "recommendations": [
+    // IDE
+    "vscode-icons-team.vscode-icons",
     "aaron-bond.better-comments",
     "shardulm94.trailing-spaces",
     "usernamehw.errorlens",
-    "yzhang.markdown-all-in-one",
-    "shd101wyy.markdown-preview-enhanced",
     "kisstkondoros.vscode-codemetrics",
     "Orta.vscode-jest",
     "yoavbls.pretty-ts-errors",
     "fabiospampinato.vscode-highlight",
+    // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "DavidAnson.vscode-markdownlint",
-    "streetsidesoftware.code-spell-checker"
+    "streetsidesoftware.code-spell-checker",
+    // Misc
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced"
   ]
 }
