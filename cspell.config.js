@@ -14,7 +14,7 @@ export default {
   dictionaryDefinitions: [{ name: `customWords`, path: `./.words.txt` }],
   enabledFileTypes: { "*": true },
   enableGlobDot: true,
-  ignorePaths: [".vscode/**"],
+  ignorePaths: [`.vscode/**`],
   import: `@cspell/dict-ru_ru/cspell-ext.json`,
   language: `en_US`,
   useGitignore: true,

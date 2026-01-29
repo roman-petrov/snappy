@@ -8,13 +8,13 @@ import { registerCallbackHandlers } from "./handlers/callbacks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-process.env["NODE_EXTRA_CA_CERTS"] = resolve(__dirname, "../../..", "certs");
-process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = "0";
+process.env[`NODE_EXTRA_CA_CERTS`] = resolve(__dirname, `../../..`, `certs`);
+process.env[`NODE_TLS_REJECT_UNAUTHORIZED`] = `0`;
 
 const main = async () => {
   const token = config.BOT_TOKEN;
 
-  console.log("🚀 Starting Snappy Bot...");
+  console.log(`🚀 Starting Snappy Bot...`);
 
   const bot = new Bot(token);
 
@@ -26,10 +26,10 @@ const main = async () => {
   // Запускаем бота
   await bot.start();
 
-  console.log("✅ Snappy Bot is running!");
+  console.log(`✅ Snappy Bot is running!`);
 };
 
 main().catch(error => {
-  console.error("❌ Failed to start bot:", error);
+  console.error(`❌ Failed to start bot:`, error);
   process.exit(1);
 });

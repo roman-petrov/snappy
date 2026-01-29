@@ -9,11 +9,11 @@ interface UserSession {
 
 // Простое in-memory хранилище для текущих сессий
 const sessions = new Map<number, UserSession>();
-
 const RESET_INTERVAL = 24 * 60 * 60 * 1000; // 24 часа
 
 export const getUserLanguage = (userId: number): Locale => {
   const session = sessions.get(userId);
+
   return session?.language ?? config.DEFAULT_LANGUAGE;
 };
 
@@ -30,6 +30,7 @@ export const canMakeRequest = (userId: number): boolean => {
   if (!session) {
     // Первый запрос - создаем сессию
     sessions.set(userId, { language: config.DEFAULT_LANGUAGE, requestCount: 0, lastReset: Date.now() });
+
     return true;
   }
 
@@ -47,6 +48,7 @@ export const incrementRequestCount = (userId: number): void => {
 
   if (!session) {
     sessions.set(userId, { language: config.DEFAULT_LANGUAGE, requestCount: 1, lastReset: Date.now() });
+
     return;
   }
 

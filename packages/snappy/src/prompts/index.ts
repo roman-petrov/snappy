@@ -1,14 +1,14 @@
 export type FeatureType =
-  | "style_business"
-  | "style_friendly"
-  | "style_humorous"
-  | "style_selling"
-  | "style_neutral"
-  | "fix_errors"
-  | "add_emoji"
-  | "shorten"
-  | "expand"
-  | "improve_readability";
+  | `style_business`
+  | `style_friendly`
+  | `style_humorous`
+  | `style_selling`
+  | `style_neutral`
+  | `fix_errors`
+  | `add_emoji`
+  | `shorten`
+  | `expand`
+  | `improve_readability`;
 
 export const systemPrompts: Record<FeatureType, string> = {
   style_business: `Ты профессиональный редактор текстов. Твоя задача - переписать текст в деловом стиле.

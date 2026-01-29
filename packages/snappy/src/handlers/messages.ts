@@ -7,14 +7,14 @@ import { createFeaturesKeyboard } from "../keyboards/index";
 const userTexts = new Map<number, string>();
 
 export const registerMessageHandlers = (bot: Bot) => {
-  bot.on("message", async context => {
+  bot.on(`message`, async context => {
     const userId = context.from?.id;
     const text = context.text;
 
     if (!userId || !text) return;
 
     // Игнорируем команды
-    if (text.startsWith("/")) return;
+    if (text.startsWith(`/`)) return;
 
     const locale = getUserLanguage(userId);
 
@@ -22,7 +22,7 @@ export const registerMessageHandlers = (bot: Bot) => {
     userTexts.set(userId, text);
 
     // Показываем клавиатуру с функциями
-    await context.send(t(locale, "features.choose"), { reply_markup: createFeaturesKeyboard(locale) });
+    await context.send(t(locale, `features.choose`), { reply_markup: createFeaturesKeyboard(locale) });
   });
 };
 
@@ -36,8 +36,8 @@ export const clearUserText = (userId: number): void => {
 
 // Очистка старых текстов (запускается периодически)
 const cleanupOldTexts = () => {
-  // В простой реализации очищаем все тексты старше 1 часа
-  // Для этого нужно хранить timestamp, но в MVP можем просто периодически очищать всё
+  /* В простой реализации очищаем все тексты старше 1 часа
+     Для этого нужно хранить timestamp, но в MVP можем просто периодически очищать всё */
   if (userTexts.size > 1000) {
     userTexts.clear();
   }
