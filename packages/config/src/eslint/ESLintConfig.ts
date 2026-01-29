@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
@@ -11,8 +10,7 @@ export const ESLintConfig = defineConfig([
   {
     languageOptions: {
       globals: { ...globals.browser, ...globals.es2025, ...globals.node },
-      parser: tsParser,
-      parserOptions: { ecmaVersion: 2022, project: `./tsconfig.json`, sourceType: `module` },
+      parserOptions: { projectService: true },
     },
     rules: prettierConfig.rules,
   },
