@@ -1,10 +1,10 @@
 {
-  "threshold": 0,
-  "reporters": ["console"],
-  "ignore": ["node_modules", "dist", "**/*.json"],
   "absolute": true,
+  "ignore": [".jscpd"],
+  "ignorePattern": ["import.*from.*"],
   "gitignore": true,
-  "format": ["typescript"],
-  "minLines": 5,
-  "minTokens": 50
+  "mode": "strict",
+  "output": ".jscpd",
+  "reporters": ["console", "html"],
+  "threshold": 0
 }

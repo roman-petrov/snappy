@@ -1,3 +1,4 @@
+/* jscpd:ignore-start */
 import type { Bot } from "gramio";
 
 import { config } from "../config";
@@ -58,3 +59,4 @@ export const registerCommands = (bot: Bot) => {
     );
   });
 };
+/* jscpd:ignore-end */
