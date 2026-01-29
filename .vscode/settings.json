@@ -1,0 +1,84 @@
+{
+  // Cursor
+  "cursor.composer.usageSummaryDisplay": "always",
+  "cursor.general.disableHttp2": true,
+
+  // Workbench
+  "workbench.colorTheme": "Default Dark Modern",
+  "workbench.sideBar.location": "right",
+  "workbench.activityBar.orientation": "vertical",
+
+  // Explorer
+  "explorer.excludeGitIgnore": true,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "*.ts": "${capture}.*",
+    "*.tsx": "${capture}.*"
+  },
+
+  // Editor
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always",
+    "source.organizeImports": "never"
+  },
+  "editor.fontFamily": "Google Sans Code, Cascadia Code",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.linkedEditing": true,
+  "editor.rulers": [120],
+
+  // Better Comments
+  "better-comments.multilineComments": true,
+
+  // CSpell
+  "cSpell.diagnosticLevel": "Warning",
+
+  // Error Lens
+  "errorLens.gutterIconsEnabled": true,
+  "errorLens.gutterIconSet": "circle",
+  "errorLens.gutterIconSize": "150%",
+  "errorLens.messageEnabled": false,
+  "errorLens.statusBarIconsEnabled": true,
+
+  // ESLint
+  "eslint.rules.customizations": [
+    {
+      "rule": "*",
+      "severity": "warn"
+    }
+  ],
+
+  // Files
+  "files.exclude": {
+    "**/node_modules": true,
+    ".git": true,
+    "bun.lockb": true
+  },
+
+  // Highlight
+  "highlight.regexes": {
+    "(\\{([a-z])+([A-Z][a-z]*)*\\})": {
+      "decorations": [
+        {
+          "color": "orange",
+          "fontWeight": "bold"
+        }
+      ],
+      "filterLanguageRegex": "json",
+      "regexFlags": "g"
+    }
+  },
+
+  // Jest
+  "jest.jestCommandLine": "yarn node --experimental-vm-modules node_modules/jest/bin/jest.js",
+  "jest.runMode": "on-demand",
+
+  // Markdown
+  "markdown.validate.enabled": true,
+
+  // TypeScript
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
+}

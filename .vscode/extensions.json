@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "shardulm94.trailing-spaces",
+    "usernamehw.errorlens",
+    "yzhang.markdown-all-in-one",
+    "shd101wyy.markdown-preview-enhanced",
+    "kisstkondoros.vscode-codemetrics",
+    "Orta.vscode-jest",
+    "yoavbls.pretty-ts-errors",
+    "fabiospampinato.vscode-highlight",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "DavidAnson.vscode-markdownlint",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
