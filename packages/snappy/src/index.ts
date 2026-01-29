@@ -9,8 +9,8 @@ import { registerCallbackHandlers } from './handlers/callbacks';
 // Настройка сертификатов Минцифры
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-process.env.NODE_EXTRA_CA_CERTS = resolve(__dirname, '../../..', 'certs');
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+process.env["NODE_EXTRA_CA_CERTS"] = resolve(__dirname, '../../..', 'certs');
+process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = '0'
 
 
 const main = async () => {
