@@ -6,7 +6,6 @@ import { registerCommands } from "./handlers/commands";
 import { registerMessageHandlers } from "./handlers/messages";
 import { registerCallbackHandlers } from "./handlers/callbacks";
 
-// Настройка сертификатов Минцифры
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 process.env["NODE_EXTRA_CA_CERTS"] = resolve(__dirname, "../../..", "certs");

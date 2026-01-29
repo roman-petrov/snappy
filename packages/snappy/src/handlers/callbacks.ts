@@ -27,7 +27,6 @@ export const registerCallbackHandlers = (bot: Bot) => {
       return;
     }
 
-    // Обработка покупки премиума
     if (data === "premium:buy") {
       try {
         const paymentUrl = await createPremiumPayment(userId);
