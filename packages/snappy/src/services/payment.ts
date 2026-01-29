@@ -1,16 +1,16 @@
 import { config } from "../config";
 
 interface YooKassaPaymentRequest {
-  amount: { currency: string; value: string; };
+  amount: { currency: string; value: string };
   capture: boolean;
-  confirmation: { return_url?: string; type: string; };
+  confirmation: { return_url?: string; type: string };
   description: string;
   metadata?: Record<string, string>;
 }
 
 interface YooKassaPaymentResponse {
-  amount: { currency: string; value: string; };
-  confirmation: { confirmation_url: string; type: string; };
+  amount: { currency: string; value: string };
+  confirmation: { confirmation_url: string; type: string };
   created_at: string;
   description: string;
   id: string;

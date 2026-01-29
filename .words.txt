@@ -2,3 +2,4 @@ gigachat
 yookassa
 giga
 gramio
+cascadia

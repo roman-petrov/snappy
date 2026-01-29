@@ -7,15 +7,15 @@
     "packages/*"
   ],
   "scripts": {
-    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:prettier && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown",
+    "ci": "bun lint:tsc && bun lint:eslint && bun lint:prettier && bun lint:cspell && bun lint:jscpd && bun lint:markdown",
     "dev": "bun run --filter @snappy/snappy --elide-lines=0 dev",
-    "format": "prettier --write \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
-    "format:check": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
-    "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
+    "fix:eslint": "eslint --fix .",
+    "fix:prettier": "prettier --write .",
+    "lint:cspell": "cspell .",
     "lint:eslint": "eslint .",
-    "lint:jscpd": "jscpd packages/*/src",
-    "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
-    "lint:prettier": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "lint:jscpd": "jscpd .",
+    "lint:markdown": "markdownlint .",
+    "lint:prettier": "prettier --check .",
     "lint:tsc": "tsc --noEmit",
     "start": "bun run --filter @snappy/snappy --elide-lines=0 start"
   },
