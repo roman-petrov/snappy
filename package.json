@@ -1,36 +1,26 @@
 {
   "name": "snappy-monorepo",
-  "version": "1.0.0",
-  "description": "Monorepo for Snappy Telegram bot and related packages",
-  "private": true,
+  "version": "0.0.0",
   "type": "module",
+  "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
+    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:prettier && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown",
     "dev": "bun run --filter snappy --elide-lines=0 dev",
-    "start": "bun run --filter snappy --elide-lines=0 start",
     "format": "prettier --write \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "format:check": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
-    "lint:tsc": "tsc --noEmit",
-    "lint:eslint": "eslint .",
-    "lint:prettier": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
     "lint:cspell": "cspell \"**/*.{ts,md,json,js}\" --no-progress --config cspell.config.js",
+    "lint:eslint": "eslint .",
     "lint:jscpd": "jscpd packages/*/src",
     "lint:markdown": "markdownlint \"**/*.md\" --ignore node_modules",
-    "ci": "bun run lint:tsc && bun run lint:eslint && bun run lint:prettier && bun run lint:cspell && bun run lint:jscpd && bun run lint:markdown"
+    "lint:prettier": "prettier --check \"packages/**/src/**/*.{ts,js,json,md}\" \"*.{md,json,js}\"",
+    "lint:tsc": "tsc --noEmit",
+    "start": "bun run --filter snappy --elide-lines=0 start"
   },
-  "keywords": [
-    "monorepo",
-    "telegram",
-    "bot",
-    "content",
-    "ai",
-    "gigachat"
-  ],
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
+    "@cspell/dict-ru_ru": "^2.3.2",
     "@types/node": "^25.1.0",
     "@typescript-eslint/eslint-plugin": "^8.54.0",
     "@typescript-eslint/parser": "^8.54.0",
@@ -40,8 +30,8 @@
     "jscpd": "^4.0.5",
     "markdownlint-cli": "^0.47.0",
     "prettier": "^3.2.4",
+    "prettier-plugin-pkg": "^0.21.2",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.3",
-    "@cspell/dict-ru_ru": "^2.3.2"
+    "typescript": "^5.3.3"
   }
 }

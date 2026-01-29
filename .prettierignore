@@ -1,8 +1,2 @@
-node_modules
-dist
+**/node_modules
 bun.lockb
-package-lock.json
-yarn.lock
-.env
-.env.local
-*.log
