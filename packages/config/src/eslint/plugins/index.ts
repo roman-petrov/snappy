@@ -3,9 +3,13 @@ import pluginCore from "./Core";
 import pluginFunctional from "./Functional";
 import pluginImport from "./Import";
 import pluginPerfectionist from "./Perfectionist";
+import pluginPromise from "./Promise";
+import pluginRegExp from "./RegExp";
+import pluginSonarJs from "./SonarJs";
 import pluginStylistic from "./Stylistic";
 import pluginTypeScriptESLint from "./TypeScriptESLint";
 import pluginUnicorn from "./Unicorn";
+import pluginUnusedImports from "./UnusedImports";
 
 export default [
   ...pluginStylistic,
@@ -16,4 +20,8 @@ export default [
   ...pluginFunctional,
   ...pluginCheckFile,
   ...pluginImport,
+  ...pluginUnusedImports,
+  ...pluginPromise,
+  ...pluginRegExp,
+  ...pluginSonarJs,
 ];
