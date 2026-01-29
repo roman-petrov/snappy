@@ -1,3 +1,4 @@
+import pluginCheckFile from "./CheckFile";
 import pluginCore from "./Core";
 import pluginFunctional from "./Functional";
 import pluginPerfectionist from "./Perfectionist";
@@ -12,4 +13,5 @@ export default [
   ...pluginCore,
   ...pluginUnicorn,
   ...pluginFunctional,
+  ...pluginCheckFile,
 ];
