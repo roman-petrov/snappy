@@ -1,22 +1,3 @@
-export default {
-  dictionaries: [
-    `companies`,
-    `misc`,
-    `softwareTerms`,
-    `npm`,
-    `node`,
-    `typescript`,
-    `html`,
-    `css`,
-    `customWords`,
-    `ru-ru`,
-  ],
-  dictionaryDefinitions: [{ name: `customWords`, path: `./.words.txt` }],
-  enabledFileTypes: { "*": true },
-  enableGlobDot: true,
-  ignorePaths: [`.git`, `.vscode/**`],
-  import: `@cspell/dict-ru_ru/cspell-ext.json`,
-  language: `en_US`,
-  useGitignore: true,
-  version: `0.2`,
-};
+import { CSpellConfig } from "@snappy/config/js";
+
+export default CSpellConfig;
