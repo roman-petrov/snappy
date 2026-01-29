@@ -19,15 +19,15 @@
     "lint:tsc": "tsc --noEmit",
     "start": "bun run --filter @snappy/snappy --elide-lines=0 start"
   },
+  "dependencies": {
+    "@snappy/config": "workspace:*"
+  },
   "devDependencies": {
-    "@cspell/dict-ru_ru": "^2.3.2",
-    "@snappy/config": "workspace:*",
     "@types/node": "^25.1.0",
     "cspell": "^9.6.2",
     "jscpd": "^4.0.5",
     "markdownlint-cli": "^0.47.0",
     "prettier": "^3.2.4",
-    "prettier-plugin-pkg": "^0.21.2",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }

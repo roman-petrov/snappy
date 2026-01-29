@@ -1,6 +1,7 @@
 import pluginCheckFile from "./CheckFile";
 import pluginCore from "./Core";
 import pluginFunctional from "./Functional";
+import pluginImport from "./Import";
 import pluginPerfectionist from "./Perfectionist";
 import pluginStylistic from "./Stylistic";
 import pluginTypeScriptESLint from "./TypeScriptESLint";
@@ -14,4 +15,5 @@ export default [
   ...pluginUnicorn,
   ...pluginFunctional,
   ...pluginCheckFile,
+  ...pluginImport,
 ];
