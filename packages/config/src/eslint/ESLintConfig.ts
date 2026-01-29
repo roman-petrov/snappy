@@ -1,10 +1,12 @@
 import pluginTypeScriptESLint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
+import { globalIgnores } from "eslint/config";
 
 import plugins from "./plugins";
 
 export const ESLintConfig = [
+  globalIgnores([`.jscpd`]),
   {
     files: [`**/*.ts`],
     languageOptions: {
