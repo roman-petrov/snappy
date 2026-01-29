@@ -1,3 +1,1 @@
-import { CSpellConfig } from "@snappy/config/js";
-
-export default CSpellConfig;
+export { CSpellConfig as default } from "@snappy/config/js";

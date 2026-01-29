@@ -1,3 +1,1 @@
-import { PrettierConfig } from "@snappy/config/js";
-
-export default PrettierConfig;
+export { PrettierConfig as default } from "@snappy/config/js";

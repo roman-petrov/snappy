@@ -7,7 +7,7 @@ import { type FeatureType, getSystemPrompt } from "../prompts";
 const httpsAgent = new Agent({ rejectUnauthorized: false });
 
 const client = new gigaChatClient({
-  credentials: config.GIGACHAT_AUTH_KEY.trim().replace(/\s+/gu, ``),
+  credentials: config.GIGACHAT_AUTH_KEY,
   httpsAgent,
   model: `GigaChat`,
   scope: config.GIGACHAT_SCOPE,

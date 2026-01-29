@@ -28,26 +28,38 @@ export const createLanguageKeyboard = () =>
 export const createPremiumKeyboard = (locale: Locale) =>
   new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: config.PREMIUM_PRICE }), `premium:buy`);
 
-export const parseFeatureCallback = (data: string): FeatureType | null => {
+export const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(`feature:`)) {
-    return null;
+    return undefined;
   }
 
   const feature = data.replace(`feature:`, ``);
 
-  if (feature === `addEmoji` || feature === `expand` || feature === `fixErrors` || feature === `improveReadability` || feature === `shorten` || feature === `styleBusiness` || feature === `styleFriendly` || feature === `styleHumorous` || feature === `styleNeutral` || feature === `styleSelling`) {
+  if (
+    feature === `addEmoji` ||
+    feature === `expand` ||
+    feature === `fixErrors` ||
+    feature === `improveReadability` ||
+    feature === `shorten` ||
+    feature === `styleBusiness` ||
+    feature === `styleFriendly` ||
+    feature === `styleHumorous` ||
+    feature === `styleNeutral` ||
+    feature === `styleSelling`
+  ) {
     return feature;
   }
 
-  return null;
+  return undefined;
 };
 
-export const parseLanguageCallback = (data: string): Locale | null => {
+export const parseLanguageCallback = (data: string) => {
   if (!data.startsWith(`lang:`)) {
-    return null;
+    return undefined;
   }
 
   const lang = data.replace(`lang:`, ``);
 
-  return lang === `ru` || lang === `en` ? lang : null;
+  return lang === `ru` || lang === `en` ? lang : undefined;
 };
+

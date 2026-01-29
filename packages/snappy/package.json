@@ -2,14 +2,16 @@
   "name": "@snappy/snappy",
   "version": "0.0.0",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./src/main.ts",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts"
+    "dev": "tsx watch src/main.ts",
+    "start": "tsx src/main.ts"
   },
   "dependencies": {
+    "eslint-plugin-unicorn": "^62.0.0",
     "gigachat": "^0.0.18",
     "gramio": "^0.4.11",
     "zod": "^3.24.0"
   }
 }
+
