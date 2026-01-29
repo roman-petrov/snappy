@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/filename-case */
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";

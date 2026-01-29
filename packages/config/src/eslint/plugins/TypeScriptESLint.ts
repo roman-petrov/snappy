@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/filename-case */
 import { defineConfig } from "eslint/config";
 import pluginTypescriptESLint from "typescript-eslint";
 
