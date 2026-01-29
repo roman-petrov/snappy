@@ -1,23 +1,19 @@
 import type { Locale } from "../locales";
 
-import { config } from "../config";
+import { Config } from "../Config";
+import { Time } from "../core/Time";
 
 type UserSession = { language: Locale; lastReset: number; requestCount: number };
 
 // Простое in-memory хранилище для текущих сессий
 const sessions = new Map<number, UserSession>();
-const secondsPerMinute = 60;
-const minutesPerHour = 60;
-const millisecondsPerSecond = 1000;
-const hourInMs = secondsPerMinute * minutesPerHour * millisecondsPerSecond;
-const dayInMs = 24 * hourInMs;
-const resetInterval = dayInMs;
+const resetInterval = Time.dayInMs;
 
 export const getUserLanguage = (userId: number): Locale => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    return config.DEFAULT_LANGUAGE;
+    return Config.DEFAULT_LANGUAGE;
   }
 
   return session.language;
@@ -35,7 +31,7 @@ export const canMakeRequest = (userId: number): boolean => {
 
   if (session === undefined) {
     // Первый запрос - создаем сессию
-    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 0 });
+    sessions.set(userId, { language: Config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 0 });
 
     return true;
   }
@@ -46,14 +42,14 @@ export const canMakeRequest = (userId: number): boolean => {
     session.lastReset = Date.now();
   }
 
-  return session.requestCount < config.FREE_REQUESTS_LIMIT;
+  return session.requestCount < Config.FREE_REQUESTS_LIMIT;
 };
 
 export const incrementRequestCount = (userId: number): void => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 1 });
+    sessions.set(userId, { language: Config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 1 });
 
     return;
   }
@@ -65,20 +61,20 @@ export const getRemainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    return config.FREE_REQUESTS_LIMIT;
+    return Config.FREE_REQUESTS_LIMIT;
   }
 
   // Проверяем, нужно ли сбросить счетчик
   if (Date.now() - session.lastReset > resetInterval) {
-    return config.FREE_REQUESTS_LIMIT;
+    return Config.FREE_REQUESTS_LIMIT;
   }
 
-  return Math.max(0, config.FREE_REQUESTS_LIMIT - session.requestCount);
+  return Math.max(0, Config.FREE_REQUESTS_LIMIT - session.requestCount);
 };
 
 // Очистка старых сессий (запускается периодически)
 const daysToKeepSession = 7;
-const sessionRetentionMs = daysToKeepSession * dayInMs;
+const sessionRetentionMs = daysToKeepSession * Time.dayInMs;
 
 export const cleanupOldSessions = (): void => {
   const now = Date.now();
@@ -97,4 +93,4 @@ export const cleanupOldSessions = (): void => {
 };
 
 // Запускаем очистку каждый час
-setInterval(cleanupOldSessions, hourInMs);
+setInterval(cleanupOldSessions, Time.hourInMs);

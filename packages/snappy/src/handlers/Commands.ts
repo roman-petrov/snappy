@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import type { Bot } from "gramio";
 
-import { config } from "../config";
+import { Config } from "../Config";
 import { createLanguageKeyboard, createPremiumKeyboard } from "../keyboards";
 import { t } from "../locales";
 import { getRemainingRequests, getUserLanguage } from "../storage";
@@ -45,7 +45,7 @@ export const registerCommands = (bot: Bot) => {
     const locale = getUserLanguage(userId);
 
     await context.send(
-      `${t(locale, `commands.premium.title`)}\n\n${t(locale, `commands.premium.description`, { price: config.PREMIUM_PRICE })}`,
+      `${t(locale, `commands.premium.title`)}\n\n${t(locale, `commands.premium.description`, { price: Config.PREMIUM_PRICE })}`,
       { reply_markup: createPremiumKeyboard(locale) },
     );
   });

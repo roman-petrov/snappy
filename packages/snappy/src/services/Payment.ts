@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { config } from "../config";
+import { Config } from "../Config";
 
 type YooKassaPaymentRequest = {
   amount: { currency: string; value: string };
@@ -13,8 +13,8 @@ type YooKassaPaymentRequest = {
 };
 
 const createPayment = async (userId: number, amount: number, description: string): Promise<string> => {
-  const shopId = config.YOOKASSA_SHOP_ID;
-  const secretKey = config.YOOKASSA_SECRET_KEY;
+  const shopId = Config.YOOKASSA_SHOP_ID;
+  const secretKey = Config.YOOKASSA_SECRET_KEY;
 
   if (shopId === undefined || shopId === `` || secretKey === undefined || secretKey === ``) {
     throw new Error(`YooKassa credentials not configured`);
@@ -70,7 +70,7 @@ const createPayment = async (userId: number, amount: number, description: string
 };
 
 export const createPremiumPayment = async (userId: number): Promise<string> => {
-  const result = await createPayment(userId, config.PREMIUM_PRICE, `Snappy Bot - Premium подписка (30 дней)`);
+  const result = await createPayment(userId, Config.PREMIUM_PRICE, `Snappy Bot - Premium подписка (30 дней)`);
 
   return result;
 };
@@ -79,8 +79,8 @@ export const createPremiumPayment = async (userId: number): Promise<string> => {
    В stateless архитектуре мы не храним информацию о платежах
    Webhook должен быть настроен в личном кабинете YooKassa */
 export const verifyPayment = async (paymentId: string): Promise<boolean> => {
-  const shopId = config.YOOKASSA_SHOP_ID;
-  const secretKey = config.YOOKASSA_SECRET_KEY;
+  const shopId = Config.YOOKASSA_SHOP_ID;
+  const secretKey = Config.YOOKASSA_SECRET_KEY;
 
   if (shopId === undefined || shopId === `` || secretKey === undefined || secretKey === ``) {
     return false;

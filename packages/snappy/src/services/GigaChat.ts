@@ -1,16 +1,16 @@
 import gigaChatClient from "gigachat";
 import { Agent } from "node:https";
 
-import { config } from "../config";
+import { Config } from "../Config";
 import { type FeatureType, getSystemPrompt } from "../prompts";
 
 const httpsAgent = new Agent({ rejectUnauthorized: false });
 
 const client = new gigaChatClient({
-  credentials: config.GIGACHAT_AUTH_KEY,
+  credentials: Config.GIGACHAT_AUTH_KEY,
   httpsAgent,
   model: `GigaChat`,
-  scope: config.GIGACHAT_SCOPE,
+  scope: Config.GIGACHAT_SCOPE,
   timeout: 600,
 });
 

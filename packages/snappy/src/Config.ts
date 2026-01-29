@@ -34,4 +34,4 @@ const loadConfig = (): Config => {
   return result.data;
 };
 
-export const config = loadConfig();
+export const Config = loadConfig();

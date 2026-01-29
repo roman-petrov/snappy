@@ -17,6 +17,7 @@ export default defineConfig([
       "new-cap": `off`,
       "no-magic-numbers": `off`,
       "no-plus-plus": `off`,
+      "no-redeclare": `off`,
       "no-ternary": `off`,
       "no-undefined": `off`,
       "no-void": [`error`, { allowAsStatement: true }],

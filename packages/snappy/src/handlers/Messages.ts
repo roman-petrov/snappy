@@ -1,6 +1,8 @@
+/* jscpd:ignore-start */
 /* eslint-disable camelcase */
 import type { Bot } from "gramio";
 
+import { Time } from "../core/Time";
 import { createFeaturesKeyboard } from "../keyboards";
 import { t } from "../locales";
 import { getUserLanguage } from "../storage";
@@ -40,10 +42,6 @@ export const clearUserText = (userId: number): void => {
 
 // Очистка старых текстов (запускается периодически)
 const maxTextCount = 1000;
-const secondsPerMinute = 60;
-const minutesPerHour = 60;
-const millisecondsPerSecond = 1000;
-const hourInMs = secondsPerMinute * minutesPerHour * millisecondsPerSecond;
 
 const cleanupOldTexts = (): void => {
   /* В простой реализации очищаем все тексты старше 1 часа
@@ -54,4 +52,4 @@ const cleanupOldTexts = (): void => {
 };
 
 // Каждый час
-setInterval(cleanupOldTexts, hourInMs);
+setInterval(cleanupOldTexts, Time.hourInMs);

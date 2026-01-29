@@ -5,7 +5,7 @@ import { parseFeatureCallback, parseLanguageCallback } from "../keyboards";
 import { t } from "../locales";
 import { createPremiumPayment, gigaChatService } from "../services";
 import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage";
-import { clearUserText, getUserText } from "./messages";
+import { clearUserText, getUserText } from "./Messages";
 
 export const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {
