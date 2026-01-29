@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Bot } from "gramio";
 
 import { config } from "./config";

@@ -2,7 +2,7 @@ import type { Locale } from "../locales/index";
 
 import { config } from "../config";
 
-interface UserSession {
+type UserSession = {
   language: Locale;
   lastReset: number;
   requestCount: number;

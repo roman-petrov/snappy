@@ -9,7 +9,7 @@ import { getRemainingRequests, getUserLanguage } from "../storage/index";
 export const registerCommands = (bot: Bot) => {
   bot.command(`start`, async context => {
     const userId = context.from?.id;
-    if (!userId) return;
+    if (!userId) {return;}
 
     const locale = getUserLanguage(userId);
     const remaining = getRemainingRequests(userId);
@@ -20,7 +20,7 @@ export const registerCommands = (bot: Bot) => {
 
   bot.command(`help`, async context => {
     const userId = context.from?.id;
-    if (!userId) return;
+    if (!userId) {return;}
 
     const locale = getUserLanguage(userId);
 
@@ -29,7 +29,7 @@ export const registerCommands = (bot: Bot) => {
 
   bot.command(`balance`, async context => {
     const userId = context.from?.id;
-    if (!userId) return;
+    if (!userId) {return;}
 
     const locale = getUserLanguage(userId);
     const remaining = getRemainingRequests(userId);
@@ -40,7 +40,7 @@ export const registerCommands = (bot: Bot) => {
 
   bot.command(`language`, async context => {
     const userId = context.from?.id;
-    if (!userId) return;
+    if (!userId) {return;}
 
     const locale = getUserLanguage(userId);
 
@@ -49,7 +49,7 @@ export const registerCommands = (bot: Bot) => {
 
   bot.command(`premium`, async context => {
     const userId = context.from?.id;
-    if (!userId) return;
+    if (!userId) {return;}
 
     const locale = getUserLanguage(userId);
 

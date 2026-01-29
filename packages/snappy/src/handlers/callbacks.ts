@@ -10,7 +10,7 @@ import { clearUserText, getUserText } from "./messages";
 export const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from?.id;
-    const data = context.data;
+    const {data} = context;
 
     if (!userId || !data) {
       await context.answerCallbackQuery();

@@ -132,6 +132,4 @@ export const systemPrompts: Record<FeatureType, string> = {
 Верни ТОЛЬКО переработанный текст без комментариев и пояснений.`,
 };
 
-export const getSystemPrompt = (feature: FeatureType): string => {
-  return systemPrompts[feature];
-};
+export const getSystemPrompt = (feature: FeatureType): string => systemPrompts[feature];

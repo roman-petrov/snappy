@@ -10,12 +10,12 @@ const userTexts = new Map<number, string>();
 export const registerMessageHandlers = (bot: Bot) => {
   bot.on(`message`, async context => {
     const userId = context.from?.id;
-    const text = context.text;
+    const {text} = context;
 
-    if (!userId || !text) return;
+    if (!userId || !text) {return;}
 
     // Игнорируем команды
-    if (text.startsWith(`/`)) return;
+    if (text.startsWith(`/`)) {return;}
 
     const locale = getUserLanguage(userId);
 
@@ -27,9 +27,7 @@ export const registerMessageHandlers = (bot: Bot) => {
   });
 };
 
-export const getUserText = (userId: number): string | undefined => {
-  return userTexts.get(userId);
-};
+export const getUserText = (userId: number): string | undefined => userTexts.get(userId);
 
 export const clearUserText = (userId: number): void => {
   userTexts.delete(userId);

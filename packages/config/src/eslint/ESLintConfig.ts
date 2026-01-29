@@ -1,29 +1,20 @@
-import pluginTypeScriptESLint from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
 import { globalIgnores } from "eslint/config";
+import { defineConfig } from "eslint/config";
+import globals from "globals";
 
 import plugins from "./plugins";
 
-export const ESLintConfig = [
+export const ESLintConfig = defineConfig([
   globalIgnores([`.jscpd`]),
   {
-    files: [`**/*.ts`],
     languageOptions: {
-      globals: { console: `readonly`, process: `readonly` },
+      globals: { ...globals.browser, ...globals.es2025, ...globals.node },
       parser: tsParser,
       parserOptions: { ecmaVersion: 2022, project: `./tsconfig.json`, sourceType: `module` },
     },
-    plugins: { "@typescript-eslint": pluginTypeScriptESLint },
-    rules: {
-      ...prettierConfig.rules,
-      "@typescript-eslint/explicit-function-return-type": `off`,
-      "@typescript-eslint/no-explicit-any": `warn`,
-      "@typescript-eslint/no-unused-vars": [`error`, { argsIgnorePattern: `^_` }],
-      "func-style": [`error`, `expression`],
-      "no-console": `off`,
-      "prefer-arrow-callback": `error`,
-    },
+    rules: prettierConfig.rules,
   },
   ...plugins,
-];
+]);

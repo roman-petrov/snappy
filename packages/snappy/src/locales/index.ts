@@ -7,9 +7,7 @@ export type Messages = typeof ru;
 
 export const locales: Record<Locale, Messages> = { en, ru };
 
-export const getLocale = (locale: Locale): Messages => {
-  return locales[locale] || locales.ru;
-};
+export const getLocale = (locale: Locale): Messages => locales[locale] || locales.ru;
 
 export const t = (locale: Locale, key: string, params?: Record<string, number | string>): string => {
   const messages = getLocale(locale);

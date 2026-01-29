@@ -1,15 +1,16 @@
 /* jscpd:ignore-start */
+/* eslint-disable no-console */
 import { config } from "../config";
 
-interface YooKassaPaymentRequest {
+type YooKassaPaymentRequest = {
   amount: { currency: string; value: string };
   capture: boolean;
   confirmation: { return_url?: string; type: string };
   description: string;
   metadata?: Record<string, string>;
-}
+};
 
-interface YooKassaPaymentResponse {
+type YooKassaPaymentResponse = {
   amount: { currency: string; value: string };
   confirmation: { confirmation_url: string; type: string };
   created_at: string;
@@ -18,7 +19,7 @@ interface YooKassaPaymentResponse {
   metadata?: Record<string, string>;
   paid: boolean;
   status: string;
-}
+};
 
 const createPayment = async (userId: number, amount: number, description: string): Promise<string> => {
   const shopId = config.YOOKASSA_SHOP_ID;
@@ -61,9 +62,8 @@ const createPayment = async (userId: number, amount: number, description: string
   return data.confirmation.confirmation_url;
 };
 
-export const createPremiumPayment = async (userId: number): Promise<string> => {
-  return createPayment(userId, config.PREMIUM_PRICE, `Snappy Bot - Premium подписка (30 дней)`);
-};
+export const createPremiumPayment = async (userId: number): Promise<string> =>
+  createPayment(userId, config.PREMIUM_PRICE, `Snappy Bot - Premium подписка (30 дней)`);
 
 /* Примечание: для проверки статуса платежа используется webhook от YooKassa
    В stateless архитектуре мы не храним информацию о платежах

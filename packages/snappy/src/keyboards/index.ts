@@ -1,13 +1,12 @@
 import { InlineKeyboard } from "gramio";
 
-import type { Locale } from "../locales/index";
-import type { FeatureType } from "../prompts/index";
+import type { FeatureType } from "../prompts";
 
 import { config } from "../config";
-import { t } from "../locales/index";
+import { type Locale, t } from "../locales";
 
-export const createFeaturesKeyboard = (locale: Locale) => {
-  return new InlineKeyboard()
+export const createFeaturesKeyboard = (locale: Locale) =>
+  new InlineKeyboard()
     .text(t(locale, `features.style_business`), `feature:style_business`)
     .text(t(locale, `features.style_friendly`), `feature:style_friendly`)
     .row()
@@ -22,18 +21,12 @@ export const createFeaturesKeyboard = (locale: Locale) => {
     .row()
     .text(t(locale, `features.expand`), `feature:expand`)
     .text(t(locale, `features.improve_readability`), `feature:improve_readability`);
-};
 
-export const createLanguageKeyboard = () => {
-  return new InlineKeyboard().text(`🇷🇺 Русский`, `lang:ru`).text(`🇬🇧 English`, `lang:en`);
-};
+export const createLanguageKeyboard = () =>
+  new InlineKeyboard().text(`🇷🇺 Русский`, `lang:ru`).text(`🇬🇧 English`, `lang:en`);
 
-export const createPremiumKeyboard = (locale: Locale) => {
-  return new InlineKeyboard().text(
-    t(locale, `commands.premium.button`, { price: config.PREMIUM_PRICE }),
-    `premium:buy`,
-  );
-};
+export const createPremiumKeyboard = (locale: Locale) =>
+  new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: config.PREMIUM_PRICE }), `premium:buy`);
 
 export const parseFeatureCallback = (data: string): FeatureType | null => {
   if (!data.startsWith(`feature:`)) {
