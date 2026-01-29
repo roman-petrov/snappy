@@ -3,8 +3,7 @@ import type { Bot } from "gramio";
 
 import { parseFeatureCallback, parseLanguageCallback } from "../keyboards";
 import { t } from "../locales";
-import { gigaChatService } from "../services/gigachat";
-import { createPremiumPayment } from "../services/payment";
+import { createPremiumPayment, gigaChatService } from "../services";
 import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage";
 import { clearUserText, getUserText } from "./messages";
 
