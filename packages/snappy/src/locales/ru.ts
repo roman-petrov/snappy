@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/filename-case */
 export const ru = {
   buttons: { back: `◀️ Назад`, cancel: `❌ Отменить`, english: `🇬🇧 English`, russian: `🇷🇺 Русский` },
   commands: {
