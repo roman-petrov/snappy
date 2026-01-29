@@ -1,18 +1,18 @@
 // cspell:words pers
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { homedir } from "node:os";
+import { join } from "node:path";
 import { z } from "zod";
 
 const ConfigSchema = z.object({
   BOT_TOKEN: z.string().min(1, `BOT_TOKEN is required`),
-  GIGACHAT_AUTH_KEY: z.string().min(1, `GIGACHAT_AUTH_KEY is required`),
-  GIGACHAT_SCOPE: z.string().default(`GIGACHAT_API_PERS`),
-  YOOKASSA_SHOP_ID: z.string().optional(),
-  YOOKASSA_SECRET_KEY: z.string().optional(),
   DEFAULT_LANGUAGE: z.enum([`ru`, `en`]).default(`ru`),
   FREE_REQUESTS_LIMIT: z.coerce.number().int().positive().default(10),
+  GIGACHAT_AUTH_KEY: z.string().min(1, `GIGACHAT_AUTH_KEY is required`),
+  GIGACHAT_SCOPE: z.string().default(`GIGACHAT_API_PERS`),
   PREMIUM_PRICE: z.coerce.number().int().positive().default(299),
+  YOOKASSA_SECRET_KEY: z.string().optional(),
+  YOOKASSA_SHOP_ID: z.string().optional(),
 });
 
 export type Config = z.infer<typeof ConfigSchema>;

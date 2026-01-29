@@ -1,17 +1,19 @@
 import GigaChat from "gigachat";
 import { Agent } from "node:https";
+
 import type { FeatureType } from "../prompts/index";
-import { getSystemPrompt } from "../prompts/index";
+
 import { config } from "../config";
+import { getSystemPrompt } from "../prompts/index";
 
 const httpsAgent = new Agent({ rejectUnauthorized: false });
 
 const client = new GigaChat({
   credentials: config.GIGACHAT_AUTH_KEY.trim().replace(/\s+/g, ``),
-  scope: config.GIGACHAT_SCOPE,
-  model: `GigaChat`,
-  timeout: 600,
   httpsAgent,
+  model: `GigaChat`,
+  scope: config.GIGACHAT_SCOPE,
+  timeout: 600,
 });
 
 export const gigaChatService = {
@@ -20,8 +22,8 @@ export const gigaChatService = {
 
     const resp = await client.chat({
       messages: [
-        { role: `system`, content: systemPrompt },
-        { role: `user`, content: text },
+        { content: systemPrompt, role: `system` },
+        { content: text, role: `user` },
       ],
       repetition_penalty: 1,
     });

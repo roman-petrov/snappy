@@ -1,8 +1,10 @@
 import { InlineKeyboard } from "gramio";
+
 import type { Locale } from "../locales/index";
-import { t } from "../locales/index";
 import type { FeatureType } from "../prompts/index";
+
 import { config } from "../config";
+import { t } from "../locales/index";
 
 export const createFeaturesKeyboard = (locale: Locale) => {
   return new InlineKeyboard()

@@ -1,10 +1,11 @@
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
 import { Bot } from "gramio";
+import { dirname, resolve } from "path";
+import { fileURLToPath } from "url";
+
 import { config } from "./config";
+import { registerCallbackHandlers } from "./handlers/callbacks";
 import { registerCommands } from "./handlers/commands";
 import { registerMessageHandlers } from "./handlers/messages";
-import { registerCallbackHandlers } from "./handlers/callbacks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

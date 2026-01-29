@@ -1,10 +1,11 @@
 import type { Bot } from "gramio";
-import { t } from "../locales/index";
-import { getUserLanguage, setUserLanguage, canMakeRequest, incrementRequestCount } from "../storage/index";
+
 import { parseFeatureCallback, parseLanguageCallback } from "../keyboards/index";
-import { getUserText, clearUserText } from "./messages";
+import { t } from "../locales/index";
 import { gigaChatService } from "../services/gigachat";
 import { createPremiumPayment } from "../services/payment";
+import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage/index";
+import { clearUserText, getUserText } from "./messages";
 
 export const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {

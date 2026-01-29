@@ -1,8 +1,9 @@
 import type { Bot } from "gramio";
-import { t } from "../locales/index";
-import { getUserLanguage, getRemainingRequests } from "../storage/index";
-import { createLanguageKeyboard, createPremiumKeyboard } from "../keyboards/index";
+
 import { config } from "../config";
+import { createLanguageKeyboard, createPremiumKeyboard } from "../keyboards/index";
+import { t } from "../locales/index";
+import { getRemainingRequests, getUserLanguage } from "../storage/index";
 
 export const registerCommands = (bot: Bot) => {
   bot.command(`start`, async context => {

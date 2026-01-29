@@ -1,7 +1,8 @@
 import type { Bot } from "gramio";
+
+import { createFeaturesKeyboard } from "../keyboards/index";
 import { t } from "../locales/index";
 import { getUserLanguage } from "../storage/index";
-import { createFeaturesKeyboard } from "../keyboards/index";
 
 // Временное хранилище текстов пользователей (in-memory)
 const userTexts = new Map<number, string>();

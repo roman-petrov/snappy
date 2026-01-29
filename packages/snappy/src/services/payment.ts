@@ -1,22 +1,22 @@
 import { config } from "../config";
 
 interface YooKassaPaymentRequest {
-  amount: { value: string; currency: string };
-  confirmation: { type: string; return_url?: string };
+  amount: { currency: string; value: string; };
   capture: boolean;
+  confirmation: { return_url?: string; type: string; };
   description: string;
   metadata?: Record<string, string>;
 }
 
 interface YooKassaPaymentResponse {
-  id: string;
-  status: string;
-  paid: boolean;
-  amount: { value: string; currency: string };
-  confirmation: { type: string; confirmation_url: string };
+  amount: { currency: string; value: string; };
+  confirmation: { confirmation_url: string; type: string; };
   created_at: string;
   description: string;
+  id: string;
   metadata?: Record<string, string>;
+  paid: boolean;
+  status: string;
 }
 
 const createPayment = async (userId: number, amount: number, description: string): Promise<string> => {
@@ -30,9 +30,9 @@ const createPayment = async (userId: number, amount: number, description: string
   const idempotenceKey = `${userId}-${Date.now()}`;
 
   const requestBody: YooKassaPaymentRequest = {
-    amount: { value: amount.toFixed(2), currency: `RUB` },
-    confirmation: { type: `redirect`, return_url: `https://t.me/your_bot_username` },
+    amount: { currency: `RUB`, value: amount.toFixed(2) },
     capture: true,
+    confirmation: { return_url: `https://t.me/your_bot_username`, type: `redirect` },
     description,
     metadata: { user_id: userId.toString() },
   };
@@ -40,13 +40,13 @@ const createPayment = async (userId: number, amount: number, description: string
   const credentials = btoa(`${shopId}:${secretKey}`);
 
   const response = await fetch(`https://api.yookassa.ru/v3/payments`, {
-    method: `POST`,
+    body: JSON.stringify(requestBody),
     headers: {
       "Authorization": `Basic ${credentials}`,
       "Content-Type": `application/json`,
       "Idempotence-Key": idempotenceKey,
     },
-    body: JSON.stringify(requestBody),
+    method: `POST`,
   });
 
   if (!response.ok) {
@@ -78,8 +78,8 @@ export const verifyPayment = async (paymentId: string): Promise<boolean> => {
   const credentials = btoa(`${shopId}:${secretKey}`);
 
   const response = await fetch(`https://api.yookassa.ru/v3/payments/${paymentId}`, {
-    method: `GET`,
     headers: { "Authorization": `Basic ${credentials}`, "Content-Type": `application/json` },
+    method: `GET`,
   });
 
   if (!response.ok) {

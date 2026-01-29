@@ -1,17 +1,17 @@
-import { ru } from "./ru";
 import { en } from "./en";
+import { ru } from "./ru";
 
-export type Locale = `ru` | `en`;
+export type Locale = `en` | `ru`;
 
 export type Messages = typeof ru;
 
-export const locales: Record<Locale, Messages> = { ru, en };
+export const locales: Record<Locale, Messages> = { en, ru };
 
 export const getLocale = (locale: Locale): Messages => {
   return locales[locale] || locales.ru;
 };
 
-export const t = (locale: Locale, key: string, params?: Record<string, string | number>): string => {
+export const t = (locale: Locale, key: string, params?: Record<string, number | string>): string => {
   const messages = getLocale(locale);
   const keys = key.split(`.`);
   let value: unknown = messages;

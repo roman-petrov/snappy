@@ -1,10 +1,11 @@
 import type { Locale } from "../locales/index";
+
 import { config } from "../config";
 
 interface UserSession {
   language: Locale;
-  requestCount: number;
   lastReset: number;
+  requestCount: number;
 }
 
 // Простое in-memory хранилище для текущих сессий
@@ -18,7 +19,7 @@ export const getUserLanguage = (userId: number): Locale => {
 };
 
 export const setUserLanguage = (userId: number, language: Locale): void => {
-  const session = sessions.get(userId) || { language, requestCount: 0, lastReset: Date.now() };
+  const session = sessions.get(userId) || { language, lastReset: Date.now(), requestCount: 0 };
 
   session.language = language;
   sessions.set(userId, session);
@@ -29,7 +30,7 @@ export const canMakeRequest = (userId: number): boolean => {
 
   if (!session) {
     // Первый запрос - создаем сессию
-    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, requestCount: 0, lastReset: Date.now() });
+    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 0 });
 
     return true;
   }
@@ -47,7 +48,7 @@ export const incrementRequestCount = (userId: number): void => {
   const session = sessions.get(userId);
 
   if (!session) {
-    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, requestCount: 1, lastReset: Date.now() });
+    sessions.set(userId, { language: config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 1 });
 
     return;
   }
