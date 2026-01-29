@@ -10,26 +10,49 @@ export const locales: Record<Locale, Messages> = { en, ru };
 
 export const getLocale = (locale: Locale): Messages => locales[locale];
 
+const notFound = Symbol(`notFound`);
+
+const resolveByPath = (current: unknown, keys: string[]): unknown => {
+  if (keys.length === 0) {
+    return current;
+  }
+
+  const [first, ...rest] = keys;
+
+  if (first === undefined || typeof current !== `object` || current === null || !(first in current)) {
+    return notFound;
+  }
+
+  return resolveByPath((current as Record<string, unknown>)[first], rest);
+};
+
+const interpolate = (template: string, entries: [string, number | string][]): string => {
+  if (entries.length === 0) {
+    return template;
+  }
+
+  const [first, ...rest] = entries;
+
+  if (first === undefined) {
+    return template;
+  }
+
+  const [parameterKey, parameterValue] = first;
+  const next = template.replace(`{${parameterKey}}`, String(parameterValue));
+
+  return interpolate(next, rest);
+};
+
 export const t = (locale: Locale, key: string, parameters?: Record<string, number | string>): string => {
   const messages = getLocale(locale);
   const keys = key.split(`.`);
-  let value: unknown = messages;
-  for (const keyPart of keys) {
-    if (typeof value === `object` && value !== null && keyPart in value) {
-      const record = value as Record<string, unknown>;
-      value = record[keyPart];
-    } else {
-      return key;
-    }
+  const value = resolveByPath(messages as unknown, keys);
+
+  if (value === notFound) {
+    return key;
   }
 
-  let result = String(value);
+  const template = String(value);
 
-  if (parameters !== undefined) {
-    for (const [parameterKey, parameterValue] of Object.entries(parameters)) {
-      result = result.replace(`{${parameterKey}}`, String(parameterValue));
-    }
-  }
-
-  return result;
+  return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
 };
