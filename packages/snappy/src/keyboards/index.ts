@@ -1,7 +1,5 @@
 import { InlineKeyboard } from "gramio";
 
-import type { FeatureType } from "../prompts";
-
 import { config } from "../config";
 import { type Locale, t } from "../locales";
 
