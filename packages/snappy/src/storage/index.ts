@@ -98,4 +98,3 @@ export const cleanupOldSessions = (): void => {
 
 // Запускаем очистку каждый час
 setInterval(cleanupOldSessions, hourInMs);
-

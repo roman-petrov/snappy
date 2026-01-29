@@ -60,4 +60,3 @@ export const parseLanguageCallback = (data: string) => {
 
   return lang === `ru` || lang === `en` ? lang : undefined;
 };
-

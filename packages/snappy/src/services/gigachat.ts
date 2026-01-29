@@ -39,4 +39,3 @@ export const gigaChatService = {
     return content.trim();
   },
 };
-

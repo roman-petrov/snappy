@@ -1,16 +1,4 @@
-export type FeatureType =
-  | `addEmoji`
-  | `expand`
-  | `fixErrors`
-  | `improveReadability`
-  | `shorten`
-  | `styleBusiness`
-  | `styleFriendly`
-  | `styleHumorous`
-  | `styleNeutral`
-  | `styleSelling`;
-
-export const systemPrompts: Record<FeatureType, string> = {
+export const systemPrompts = {
   addEmoji: `Ты креативный редактор социальных медиа. Твоя задача - добавить эмодзи в текст.
 
 Требования:
@@ -130,6 +118,8 @@ export const systemPrompts: Record<FeatureType, string> = {
 - Текст должен мотивировать к действию
 
 Верни ТОЛЬКО переработанный текст без комментариев и пояснений.`,
-};
+} as const satisfies Record<string, string>;
+
+export type FeatureType = keyof typeof systemPrompts;
 
 export const getSystemPrompt = (feature: FeatureType): string => systemPrompts[feature];
