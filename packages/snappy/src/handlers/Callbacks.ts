@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
 
 import { parseFeatureCallback, parseLanguageCallback } from "../keyboards";

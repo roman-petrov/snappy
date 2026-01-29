@@ -1,3 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-loop-statements */
 import type { Locale } from "../locales";
 
 import { Config } from "../Config";

@@ -1,5 +1,6 @@
 /* jscpd:ignore-start */
 /* eslint-disable camelcase */
+/* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
 import { Config } from "../Config";

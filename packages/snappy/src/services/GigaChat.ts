@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-promise-reject */
 import gigaChatClient from "gigachat";
 import { Agent } from "node:https";
 

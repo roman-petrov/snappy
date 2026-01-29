@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-expression-statements */
 import { register } from "tsx/esm/api";
 
 const unregister = register();

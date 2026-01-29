@@ -2,6 +2,8 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable functional/no-promise-reject */
+/* eslint-disable functional/no-expression-statements */
 import { Config } from "../Config";
 
 type YooKassaPaymentRequest = {
