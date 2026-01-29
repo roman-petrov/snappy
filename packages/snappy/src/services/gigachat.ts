@@ -1,17 +1,15 @@
-import GigaChat from 'gigachat';
-import { Agent } from 'node:https';
-import type { FeatureType } from '../prompts/index';
-import { getSystemPrompt } from '../prompts/index';
-import { config } from '../config';
+import GigaChat from "gigachat";
+import { Agent } from "node:https";
+import type { FeatureType } from "../prompts/index";
+import { getSystemPrompt } from "../prompts/index";
+import { config } from "../config";
 
-const httpsAgent = new Agent({
-  rejectUnauthorized: false,
-});
+const httpsAgent = new Agent({ rejectUnauthorized: false });
 
 const client = new GigaChat({
-  credentials: config.GIGACHAT_AUTH_KEY.trim().replace(/\s+/g, ''),
+  credentials: config.GIGACHAT_AUTH_KEY.trim().replace(/\s+/g, ""),
   scope: config.GIGACHAT_SCOPE,
-  model: 'GigaChat',
+  model: "GigaChat",
   timeout: 600,
   httpsAgent,
 });
@@ -21,15 +19,15 @@ export const gigaChatService = {
     const systemPrompt = getSystemPrompt(feature);
     const resp = await client.chat({
       messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: text },
+        { role: "system", content: systemPrompt },
+        { role: "user", content: text },
       ],
       repetition_penalty: 1,
     });
 
     const content = resp.choices[0]?.message?.content;
-    if (content == null || content === '') {
-      throw new Error('No response from GigaChat');
+    if (content == null || content === "") {
+      throw new Error("No response from GigaChat");
     }
     return content.trim();
   },

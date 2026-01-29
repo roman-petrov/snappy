@@ -1,18 +1,13 @@
-import type { Bot } from 'gramio';
-import { t } from '../locales/index';
-import {
-  getUserLanguage,
-  setUserLanguage,
-  canMakeRequest,
-  incrementRequestCount,
-} from '../storage/index';
-import { parseFeatureCallback, parseLanguageCallback } from '../keyboards/index';
-import { getUserText, clearUserText } from './messages';
-import { gigaChatService } from '../services/gigachat';
-import { createPremiumPayment } from '../services/payment';
+import type { Bot } from "gramio";
+import { t } from "../locales/index";
+import { getUserLanguage, setUserLanguage, canMakeRequest, incrementRequestCount } from "../storage/index";
+import { parseFeatureCallback, parseLanguageCallback } from "../keyboards/index";
+import { getUserText, clearUserText } from "./messages";
+import { gigaChatService } from "../services/gigachat";
+import { createPremiumPayment } from "../services/payment";
 
 export const registerCallbackHandlers = (bot: Bot) => {
-  bot.on('callback_query', async (context) => {
+  bot.on("callback_query", async context => {
     const userId = context.from?.id;
     const data = context.data;
 
@@ -28,20 +23,20 @@ export const registerCallbackHandlers = (bot: Bot) => {
     if (selectedLanguage) {
       setUserLanguage(userId, selectedLanguage);
       await context.answerCallbackQuery();
-      await context.send(t(selectedLanguage, 'commands.language.changed'));
+      await context.send(t(selectedLanguage, "commands.language.changed"));
       return;
     }
 
     // Обработка покупки премиума
-    if (data === 'premium:buy') {
+    if (data === "premium:buy") {
       try {
         const paymentUrl = await createPremiumPayment(userId);
         await context.answerCallbackQuery();
         await context.send(`💳 ${paymentUrl}`);
       } catch (error) {
-        console.error('Payment error:', error);
+        console.error("Payment error:", error);
         await context.answerCallbackQuery();
-        await context.send(t(locale, 'commands.premium.error'));
+        await context.send(t(locale, "commands.premium.error"));
       }
       return;
     }
@@ -53,19 +48,19 @@ export const registerCallbackHandlers = (bot: Bot) => {
 
       // Проверяем лимит запросов
       if (!canMakeRequest(userId)) {
-        await context.send(t(locale, 'features.limit'));
+        await context.send(t(locale, "features.limit"));
         return;
       }
 
       // Получаем сохраненный текст пользователя
       const userText = getUserText(userId);
       if (!userText) {
-        await context.send(t(locale, 'features.error'));
+        await context.send(t(locale, "features.error"));
         return;
       }
 
       // Показываем статус обработки
-      await context.send(t(locale, 'features.processing'));
+      await context.send(t(locale, "features.processing"));
 
       try {
         // Обрабатываем текст через GigaChat
@@ -75,13 +70,13 @@ export const registerCallbackHandlers = (bot: Bot) => {
         incrementRequestCount(userId);
 
         // Отправляем результат
-        await context.send(t(locale, 'features.result', { text: processedText }));
+        await context.send(t(locale, "features.result", { text: processedText }));
 
         // Очищаем сохраненный текст
         clearUserText(userId);
       } catch (error) {
-        console.error('GigaChat processing error:', error);
-        await context.send(t(locale, 'features.error'));
+        console.error("GigaChat processing error:", error);
+        await context.send(t(locale, "features.error"));
       }
 
       return;

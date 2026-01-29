@@ -3,6 +3,7 @@
 ## Для разработки
 
 ### 1. Создайте dev-бота
+
 ```
 1. Откройте @BotFather в Telegram
 2. /newbot → имя: "Snappy Dev" → username: "snappy_dev_bot"
@@ -10,6 +11,7 @@
 ```
 
 ### 2. Настройте проект
+
 ```bash
 # Установите зависимости
 bun install
@@ -25,6 +27,7 @@ cp packages/snappy/config.json.example ~/.snappy/config.json
 ```
 
 ### 3. Запустите бота
+
 ```bash
 # Из корня проекта
 bun run dev
@@ -35,12 +38,14 @@ bun run dev
 ## Для production
 
 ### 1. Создайте prod-бота
+
 ```
 1. @BotFather → /newbot → имя: "Snappy" → username: "snappy_bot"
 2. Скопируйте токен
 ```
 
 ### 2. Настройте продакшн
+
 ```bash
 # Убедитесь, что конфигурация настроена
 # Конфигурация загружается из ~/.snappy/config.json
@@ -50,6 +55,7 @@ bun run dev
 ```
 
 ### 3. Запустите
+
 ```bash
 # Из корня проекта
 bun run start

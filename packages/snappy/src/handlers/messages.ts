@@ -1,20 +1,20 @@
-import type { Bot } from 'gramio';
-import { t } from '../locales/index';
-import { getUserLanguage } from '../storage/index';
-import { createFeaturesKeyboard } from '../keyboards/index';
+import type { Bot } from "gramio";
+import { t } from "../locales/index";
+import { getUserLanguage } from "../storage/index";
+import { createFeaturesKeyboard } from "../keyboards/index";
 
 // Временное хранилище текстов пользователей (in-memory)
 const userTexts = new Map<number, string>();
 
 export const registerMessageHandlers = (bot: Bot) => {
-  bot.on('message', async (context) => {
+  bot.on("message", async context => {
     const userId = context.from?.id;
     const text = context.text;
 
     if (!userId || !text) return;
 
     // Игнорируем команды
-    if (text.startsWith('/')) return;
+    if (text.startsWith("/")) return;
 
     const locale = getUserLanguage(userId);
 
@@ -22,9 +22,7 @@ export const registerMessageHandlers = (bot: Bot) => {
     userTexts.set(userId, text);
 
     // Показываем клавиатуру с функциями
-    await context.send(t(locale, 'features.choose'), {
-      reply_markup: createFeaturesKeyboard(locale),
-    });
+    await context.send(t(locale, "features.choose"), { reply_markup: createFeaturesKeyboard(locale) });
   });
 };
 
