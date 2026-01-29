@@ -18,7 +18,7 @@ export type Config = z.infer<typeof ConfigSchema>;
 
 const configPath = join(homedir(), "snappy", "config.json");
 
-function loadConfig(): Config {
+const loadConfig = (): Config => {
   let raw: string;
   try {
     raw = readFileSync(configPath, "utf-8");
@@ -45,6 +45,6 @@ function loadConfig(): Config {
   }
 
   return result.data;
-}
+};
 
 export const config = loadConfig();
