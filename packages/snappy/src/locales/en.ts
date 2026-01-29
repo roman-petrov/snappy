@@ -36,7 +36,6 @@ export const en = {
     processing: `⏳ Processing your text...`,
     result: `✅ Done!\n\n{text}`,
     shorten: `📉 Shorten text`,
-
     styleBusiness: `📊 Business style`,
     styleFriendly: `😊 Friendly style`,
     styleHumorous: `😄 Humorous style`,
