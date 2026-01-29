@@ -24,7 +24,7 @@ const main = async () => {
   console.log(`✅ Snappy Bot is running!`);
 };
 
-main().catch(error => {
+main().catch((error: unknown) => {
   console.error(`❌ Failed to start bot:`, error);
   process.exit(1);
 });

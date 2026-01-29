@@ -1,21 +1,26 @@
+/* eslint-disable camelcase */
 import type { Bot } from "gramio";
 
-import { createFeaturesKeyboard } from "../keyboards/index";
-import { t } from "../locales/index";
-import { getUserLanguage } from "../storage/index";
+import { createFeaturesKeyboard } from "../keyboards";
+import { t } from "../locales";
+import { getUserLanguage } from "../storage";
 
 // Временное хранилище текстов пользователей (in-memory)
 const userTexts = new Map<number, string>();
 
 export const registerMessageHandlers = (bot: Bot) => {
   bot.on(`message`, async context => {
-    const userId = context.from?.id;
-    const {text} = context;
+    const userId = context.from.id;
+    const { text } = context;
 
-    if (!userId || !text) {return;}
+    if (text === undefined || text === ``) {
+      return;
+    }
 
     // Игнорируем команды
-    if (text.startsWith(`/`)) {return;}
+    if (text.startsWith(`/`)) {
+      return;
+    }
 
     const locale = getUserLanguage(userId);
 
@@ -34,12 +39,19 @@ export const clearUserText = (userId: number): void => {
 };
 
 // Очистка старых текстов (запускается периодически)
-const cleanupOldTexts = () => {
+const maxTextCount = 1000;
+const secondsPerMinute = 60;
+const minutesPerHour = 60;
+const millisecondsPerSecond = 1000;
+const hourInMs = secondsPerMinute * minutesPerHour * millisecondsPerSecond;
+
+const cleanupOldTexts = (): void => {
   /* В простой реализации очищаем все тексты старше 1 часа
      Для этого нужно хранить timestamp, но в MVP можем просто периодически очищать всё */
-  if (userTexts.size > 1000) {
+  if (userTexts.size > maxTextCount) {
     userTexts.clear();
   }
 };
 
-setInterval(cleanupOldTexts, 60 * 60 * 1000); // Каждый час
+// Каждый час
+setInterval(cleanupOldTexts, hourInMs);

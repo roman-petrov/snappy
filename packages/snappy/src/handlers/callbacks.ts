@@ -1,24 +1,26 @@
+/* eslint-disable no-console */
 import type { Bot } from "gramio";
 
-import { parseFeatureCallback, parseLanguageCallback } from "../keyboards/index";
-import { t } from "../locales/index";
+import { parseFeatureCallback, parseLanguageCallback } from "../keyboards";
+import { t } from "../locales";
 import { gigaChatService } from "../services/gigachat";
 import { createPremiumPayment } from "../services/payment";
-import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage/index";
+import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage";
 import { clearUserText, getUserText } from "./messages";
 
 export const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {
-    const userId = context.from?.id;
-    const {data} = context;
+    const userId = context.from.id;
+    const { data } = context;
 
-    if (!userId || !data) {
+    if (!data) {
       await context.answerCallbackQuery();
 
       return;
     }
 
-    const locale = getUserLanguage(userId); // Обработка выбора языка
+    // Обработка выбора языка
+    const locale = getUserLanguage(userId);
     const selectedLanguage = parseLanguageCallback(data);
     if (selectedLanguage) {
       setUserLanguage(userId, selectedLanguage);
@@ -56,7 +58,7 @@ export const registerCallbackHandlers = (bot: Bot) => {
 
       // Получаем сохраненный текст пользователя
       const userText = getUserText(userId);
-      if (!userText) {
+      if (userText === undefined || userText === ``) {
         await context.send(t(locale, `features.error`));
 
         return;

@@ -7,20 +7,20 @@ import { type Locale, t } from "../locales";
 
 export const createFeaturesKeyboard = (locale: Locale) =>
   new InlineKeyboard()
-    .text(t(locale, `features.style_business`), `feature:style_business`)
-    .text(t(locale, `features.style_friendly`), `feature:style_friendly`)
+    .text(t(locale, `features.styleBusiness`), `feature:styleBusiness`)
+    .text(t(locale, `features.styleFriendly`), `feature:styleFriendly`)
     .row()
-    .text(t(locale, `features.style_humorous`), `feature:style_humorous`)
-    .text(t(locale, `features.style_selling`), `feature:style_selling`)
+    .text(t(locale, `features.styleHumorous`), `feature:styleHumorous`)
+    .text(t(locale, `features.styleSelling`), `feature:styleSelling`)
     .row()
-    .text(t(locale, `features.style_neutral`), `feature:style_neutral`)
-    .text(t(locale, `features.fix_errors`), `feature:fix_errors`)
+    .text(t(locale, `features.styleNeutral`), `feature:styleNeutral`)
+    .text(t(locale, `features.fixErrors`), `feature:fixErrors`)
     .row()
-    .text(t(locale, `features.add_emoji`), `feature:add_emoji`)
+    .text(t(locale, `features.addEmoji`), `feature:addEmoji`)
     .text(t(locale, `features.shorten`), `feature:shorten`)
     .row()
     .text(t(locale, `features.expand`), `feature:expand`)
-    .text(t(locale, `features.improve_readability`), `feature:improve_readability`);
+    .text(t(locale, `features.improveReadability`), `feature:improveReadability`);
 
 export const createLanguageKeyboard = () =>
   new InlineKeyboard().text(`🇷🇺 Русский`, `lang:ru`).text(`🇬🇧 English`, `lang:en`);
@@ -33,7 +33,13 @@ export const parseFeatureCallback = (data: string): FeatureType | null => {
     return null;
   }
 
-  return data.replace(`feature:`, ``) as FeatureType;
+  const feature = data.replace(`feature:`, ``);
+
+  if (feature === `addEmoji` || feature === `expand` || feature === `fixErrors` || feature === `improveReadability` || feature === `shorten` || feature === `styleBusiness` || feature === `styleFriendly` || feature === `styleHumorous` || feature === `styleNeutral` || feature === `styleSelling`) {
+    return feature;
+  }
+
+  return null;
 };
 
 export const parseLanguageCallback = (data: string): Locale | null => {

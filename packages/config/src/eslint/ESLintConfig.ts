@@ -1,7 +1,6 @@
 import tsParser from "@typescript-eslint/parser";
 import prettierConfig from "eslint-config-prettier";
-import { globalIgnores } from "eslint/config";
-import { defineConfig } from "eslint/config";
+import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 
 import plugins from "./plugins";

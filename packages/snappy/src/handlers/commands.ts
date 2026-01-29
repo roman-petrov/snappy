@@ -1,16 +1,15 @@
 /* jscpd:ignore-start */
+/* eslint-disable camelcase */
 import type { Bot } from "gramio";
 
 import { config } from "../config";
-import { createLanguageKeyboard, createPremiumKeyboard } from "../keyboards/index";
-import { t } from "../locales/index";
-import { getRemainingRequests, getUserLanguage } from "../storage/index";
+import { createLanguageKeyboard, createPremiumKeyboard } from "../keyboards";
+import { t } from "../locales";
+import { getRemainingRequests, getUserLanguage } from "../storage";
 
 export const registerCommands = (bot: Bot) => {
   bot.command(`start`, async context => {
-    const userId = context.from?.id;
-    if (!userId) {return;}
-
+    const userId = context.from.id;
     const locale = getUserLanguage(userId);
     const remaining = getRemainingRequests(userId);
 
@@ -19,18 +18,14 @@ export const registerCommands = (bot: Bot) => {
   });
 
   bot.command(`help`, async context => {
-    const userId = context.from?.id;
-    if (!userId) {return;}
-
+    const userId = context.from.id;
     const locale = getUserLanguage(userId);
 
     await context.send(`${t(locale, `commands.help.title`)}\n\n${t(locale, `commands.help.text`)}`);
   });
 
   bot.command(`balance`, async context => {
-    const userId = context.from?.id;
-    if (!userId) {return;}
-
+    const userId = context.from.id;
     const locale = getUserLanguage(userId);
     const remaining = getRemainingRequests(userId);
     const premiumStatus = t(locale, `commands.balance.inactive`);
@@ -39,18 +34,14 @@ export const registerCommands = (bot: Bot) => {
   });
 
   bot.command(`language`, async context => {
-    const userId = context.from?.id;
-    if (!userId) {return;}
-
+    const userId = context.from.id;
     const locale = getUserLanguage(userId);
 
     await context.send(t(locale, `commands.language.select`), { reply_markup: createLanguageKeyboard() });
   });
 
   bot.command(`premium`, async context => {
-    const userId = context.from?.id;
-    if (!userId) {return;}
-
+    const userId = context.from.id;
     const locale = getUserLanguage(userId);
 
     await context.send(
