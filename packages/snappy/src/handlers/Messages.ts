@@ -25,7 +25,7 @@ export const registerMessageHandlers = (bot: Bot) => {
       return;
     }
 
-    const locale = getUserLanguage(userId);
+    const locale = getUserLanguage(context.from?.languageCode);
 
     // Сохраняем текст пользователя
     userTexts.set(userId, text);

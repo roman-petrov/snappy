@@ -3,30 +3,20 @@
 /* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
 
-import { parseFeatureCallback, parseLanguageCallback } from "../keyboards";
+import { parseFeatureCallback } from "../keyboards";
 import { t } from "../locales";
 import { createPremiumPayment, gigaChatService } from "../services";
-import { canMakeRequest, getUserLanguage, incrementRequestCount, setUserLanguage } from "../storage";
+import { canMakeRequest, getUserLanguage, incrementRequestCount } from "../storage";
 import { clearUserText, getUserText } from "./Messages";
 
 export const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
+    const locale = getUserLanguage(context.from.languageCode);
     const { data } = context;
 
     if (!data) {
       await context.answerCallbackQuery();
-
-      return;
-    }
-
-    // Обработка выбора языка
-    const locale = getUserLanguage(userId);
-    const selectedLanguage = parseLanguageCallback(data);
-    if (selectedLanguage) {
-      setUserLanguage(userId, selectedLanguage);
-      await context.answerCallbackQuery();
-      await context.send(t(selectedLanguage, `commands.language.changed`));
 
       return;
     }

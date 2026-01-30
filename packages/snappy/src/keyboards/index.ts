@@ -20,9 +20,6 @@ export const createFeaturesKeyboard = (locale: Locale) =>
     .text(t(locale, `features.expand`), `feature:expand`)
     .text(t(locale, `features.improveReadability`), `feature:improveReadability`);
 
-export const createLanguageKeyboard = () =>
-  new InlineKeyboard().text(`🇷🇺 Русский`, `lang:ru`).text(`🇬🇧 English`, `lang:en`);
-
 export const createPremiumKeyboard = (locale: Locale) =>
   new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: Config.PREMIUM_PRICE }), `premium:buy`);
 
@@ -51,12 +48,3 @@ export const parseFeatureCallback = (data: string) => {
   return undefined;
 };
 
-export const parseLanguageCallback = (data: string) => {
-  if (!data.startsWith(`lang:`)) {
-    return undefined;
-  }
-
-  const lang = data.replace(`lang:`, ``);
-
-  return lang === `ru` || lang === `en` ? lang : undefined;
-};

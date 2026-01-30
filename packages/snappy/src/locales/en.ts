@@ -10,7 +10,7 @@ export const en = {
     },
     help: {
       menu: `Show help`,
-      text: `/start - Start working\n/help - Show help\n/balance - Check balance\n/premium - Buy premium\n/language - Change language`,
+      text: `/start - Start working\n/help - Show help\n/balance - Check balance\n/premium - Buy premium`,
       title: `📚 Commands help`,
     },
     language: {

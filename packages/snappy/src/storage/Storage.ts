@@ -6,27 +6,36 @@ import type { Locale } from "../locales";
 import { Config } from "../Config";
 import { Time } from "../core/Time";
 
-type UserSession = { language: Locale; lastReset: number; requestCount: number };
+type UserSession = { lastReset: number; requestCount: number };
 
 // Простое in-memory хранилище для текущих сессий
 const sessions = new Map<number, UserSession>();
 const resetInterval = Time.dayInMs;
 
-export const getUserLanguage = (userId: number): Locale => {
-  const session = sessions.get(userId);
-
-  if (session === undefined) {
-    return Config.DEFAULT_LANGUAGE;
+/**
+ * Определяет язык на основе language_code из Telegram
+ * Если язык русский - возвращает 'ru', если английский - 'en', иначе - 'en'
+ * Если language_code не определен - возвращает 'en'
+ */
+export const getUserLanguage = (languageCode?: string): Locale => {
+  if (languageCode === undefined) {
+    return `en`;
   }
 
-  return session.language;
-};
+  const code = languageCode.toLowerCase();
 
-export const setUserLanguage = (userId: number, language: Locale): void => {
-  const session = sessions.get(userId) ?? { language, lastReset: Date.now(), requestCount: 0 };
+  // Проверяем русский язык (ru, ru-RU и т.д.)
+  if (code.startsWith(`ru`)) {
+    return `ru`;
+  }
 
-  session.language = language;
-  sessions.set(userId, session);
+  // Проверяем английский язык (en, en-US и т.д.)
+  if (code.startsWith(`en`)) {
+    return `en`;
+  }
+
+  // Для всех остальных языков используем английский
+  return `en`;
 };
 
 export const canMakeRequest = (userId: number): boolean => {
@@ -34,7 +43,7 @@ export const canMakeRequest = (userId: number): boolean => {
 
   if (session === undefined) {
     // Первый запрос - создаем сессию
-    sessions.set(userId, { language: Config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 0 });
+    sessions.set(userId, { lastReset: Date.now(), requestCount: 0 });
 
     return true;
   }
@@ -52,7 +61,7 @@ export const incrementRequestCount = (userId: number): void => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    sessions.set(userId, { language: Config.DEFAULT_LANGUAGE, lastReset: Date.now(), requestCount: 1 });
+    sessions.set(userId, { lastReset: Date.now(), requestCount: 1 });
 
     return;
   }
