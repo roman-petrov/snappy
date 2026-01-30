@@ -47,4 +47,3 @@ export const parseFeatureCallback = (data: string) => {
 
   return undefined;
 };
-
