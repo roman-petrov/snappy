@@ -11,6 +11,11 @@ const bot = new Bot(Config.BOT_TOKEN);
 registerCommands(bot);
 registerMessageHandlers(bot);
 registerCallbackHandlers(bot);
+bot.onStart(async () => {
+  await bot.api.setChatMenuButton({
+    menu_button: { type: `commands` },
+  });
+});
 
 await bot.start();
 
