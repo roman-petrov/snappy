@@ -18,13 +18,13 @@ export const registerCommands = (bot: Bot) => {
   });
 
   bot.command(`help`, async context => {
-    const locale = getUserLanguage(context.from?.languageCode);
+    const locale = getUserLanguage(context.from.languageCode);
 
     await context.send(`${t(locale, `commands.help.title`)}\n\n${t(locale, `commands.help.text`)}`);
   });
 
   bot.command(`balance`, async context => {
-    const locale = getUserLanguage(context.from?.languageCode);
+    const locale = getUserLanguage(context.from.languageCode);
     const userId = context.from.id;
     const remaining = getRemainingRequests(userId);
     const premiumStatus = t(locale, `commands.balance.inactive`);
@@ -33,7 +33,7 @@ export const registerCommands = (bot: Bot) => {
   });
 
   bot.command(`premium`, async context => {
-    const locale = getUserLanguage(context.from?.languageCode);
+    const locale = getUserLanguage(context.from.languageCode);
 
     await context.send(
       `${t(locale, `commands.premium.title`)}\n\n${t(locale, `commands.premium.description`, { price: Config.PREMIUM_PRICE })}`,
