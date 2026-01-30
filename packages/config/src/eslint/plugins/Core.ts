@@ -6,6 +6,7 @@ export default defineConfig([
   {
     rules: {
       "arrow-parens": [`error`, `as-needed`],
+      "camelcase": `off`,
       "capitalized-comments": [`error`, `always`, { ignorePattern: `jscpd|cspell` }],
       "complexity": `off`,
       "curly": [`error`, `all`],
