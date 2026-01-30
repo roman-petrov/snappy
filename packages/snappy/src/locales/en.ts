@@ -3,9 +3,9 @@ export const en = {
   buttons: { back: `◀️ Back`, cancel: `❌ Cancel`, english: `🇬🇧 English`, russian: `🇷🇺 Русский` },
   commands: {
     balance: {
-      menu: `Check balance`,
       free: `📊 Your balance:\n\n🆓 Free requests: {count}\n💎 Premium: {status}`,
       inactive: `Inactive`,
+      menu: `Check balance`,
       premium: `Active`,
     },
     help: {
@@ -19,10 +19,10 @@ export const en = {
       select: `🌐 Выберите язык / Select language:`,
     },
     premium: {
-      menu: `Buy premium`,
       button: `💳 Pay {price} RUB`,
       description: `🚀 Get unlimited requests!\n\n💰 Price: {price} RUB/month\n\n✨ Features:\n• Unlimited requests\n• Priority processing\n• All features available`,
       error: `❌ Payment error. Please try again later.`,
+      menu: `Buy premium`,
       success: `✅ Payment successful! Premium activated.`,
       title: `💎 Premium subscription`,
     },
