@@ -10,6 +10,7 @@ export default defineConfig([
       "capitalized-comments": [`error`, `always`, { ignorePattern: `jscpd|cspell` }],
       "complexity": `off`,
       "curly": [`error`, `all`],
+      "dot-notation": `off`,
       "id-length": [`error`, { exceptions: [`_`, `$`, `a`, `b`, `c`, `x`, `y`, `z`, `r`, `h`, `s`, `v`, `t`] }],
       "max-lines": `off`,
       "max-lines-per-function": `off`,

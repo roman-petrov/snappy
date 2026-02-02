@@ -40,8 +40,18 @@ jobs:
           SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
           REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
           USE_PM2: ${{ secrets.USE_PM2 || 'true' }}
+          SNAPPY_CONFIG_JSON: ${{ secrets.SNAPPY_CONFIG }}
         run: |
           echo "🚀 Starting deployment..."
+
+          # Кодирование конфигурации в base64, если она предоставлена
+          if [ -n "${SNAPPY_CONFIG_JSON}" ]; then
+            echo "🔐 Encoding SNAPPY_CONFIG to base64..."
+            SNAPPY_CONFIG_B64=$(echo -n "${SNAPPY_CONFIG_JSON}" | base64 -w 0)
+          else
+            echo "⚠️  Warning: SNAPPY_CONFIG secret is not set. Make sure config.json exists on the server."
+            SNAPPY_CONFIG_B64=""
+          fi
 
           # Создание директории на сервере, если её нет
           echo "📁 Ensuring remote directory exists..."
@@ -73,19 +83,36 @@ jobs:
           # Перезапуск приложения
           if [ "${USE_PM2}" = "true" ]; then
             echo "🔄 Restarting with PM2..."
-            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
-              "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
-               pm2 delete snappy-bot 2>/dev/null || true && \
-               pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun && \
-               pm2 save"
+            if [ -n "${SNAPPY_CONFIG_B64}" ]; then
+              ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+                "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
+                 pm2 delete snappy-bot 2>/dev/null || true && \
+                 SNAPPY_CONFIG=\"${SNAPPY_CONFIG_B64}\" pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun --update-env && \
+                 pm2 save"
+            else
+              ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+                "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
+                 pm2 delete snappy-bot 2>/dev/null || true && \
+                 pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun && \
+                 pm2 save"
+            fi
             
             echo "📊 PM2 Status:"
             ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
               "pm2 status snappy-bot"
           else
             echo "🔄 Restarting with systemd..."
-            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
-              "sudo systemctl restart snappy-bot"
+            if [ -n "${SNAPPY_CONFIG_B64}" ]; then
+              ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+                "sudo mkdir -p /etc/systemd/system/snappy-bot.service.d && \
+                 echo '[Service]' | sudo tee /etc/systemd/system/snappy-bot.service.d/env.conf && \
+                 echo 'Environment=\"SNAPPY_CONFIG=${SNAPPY_CONFIG_B64}\"' | sudo tee -a /etc/systemd/system/snappy-bot.service.d/env.conf && \
+                 sudo systemctl daemon-reload && \
+                 sudo systemctl restart snappy-bot"
+            else
+              ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+                "sudo systemctl restart snappy-bot"
+            fi
             
             echo "📊 Service Status:"
             ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
