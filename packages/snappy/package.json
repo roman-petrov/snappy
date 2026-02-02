@@ -4,7 +4,7 @@
   "type": "module",
   "main": "./src/main.ts",
   "scripts": {
-    "dev": "tsx watch src/main.ts",
+    "dev": "bun --watch src/main.ts",
     "start": "bun src/main.ts"
   },
   "dependencies": {
