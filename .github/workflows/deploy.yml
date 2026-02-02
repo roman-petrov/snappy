@@ -87,13 +87,15 @@ jobs:
               ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
                 "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
                  pm2 delete snappy-bot 2>/dev/null || true && \
-                 SNAPPY_CONFIG=\"${SNAPPY_CONFIG_B64}\" pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun --update-env && \
+                 cd packages/snappy && \
+                 SNAPPY_CONFIG=\"${SNAPPY_CONFIG_B64}\" pm2 start \"\$HOME/.bun/bin/bun\" --name snappy-bot --update-env -- run start && \
                  pm2 save"
             else
               ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
                 "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
                  pm2 delete snappy-bot 2>/dev/null || true && \
-                 pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun && \
+                 cd packages/snappy && \
+                 pm2 start \"\$HOME/.bun/bin/bun\" --name snappy-bot -- run start && \
                  pm2 save"
             fi
             
@@ -120,3 +122,4 @@ jobs:
           fi
 
           echo "✅ Deployment completed successfully!"
+

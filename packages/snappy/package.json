@@ -5,7 +5,7 @@
   "main": "./src/main.ts",
   "scripts": {
     "dev": "tsx watch src/main.ts",
-    "start": "tsx src/main.ts"
+    "start": "bun src/main.ts"
   },
   "dependencies": {
     "gigachat": "^0.0.18",
