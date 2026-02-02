@@ -1,0 +1,99 @@
+name: Setup Server
+
+on:
+  workflow_dispatch: # Только ручной запуск через GitHub UI
+
+jobs:
+  setup:
+    name: Setup Server Dependencies
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Install dependencies on server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+        run: |
+          echo "🚀 Starting server setup..."
+
+          ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} << 'ENDSSH'
+            set -e
+            
+            echo "📦 Updating system packages..."
+            sudo apt-get update -qq
+            
+            # Установка curl и других утилит, если их нет
+            echo "🔧 Installing required utilities..."
+            sudo apt-get install -y -qq curl unzip
+            
+            # Установка Node.js (LTS версия через NodeSource)
+            if ! command -v node &> /dev/null; then
+              echo "📥 Installing Node.js..."
+              curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+              sudo apt-get install -y -qq nodejs
+              echo "✅ Node.js installed: $(node --version)"
+            else
+              echo "✅ Node.js already installed: $(node --version)"
+            fi
+            
+            # Установка Bun
+            if ! command -v bun &> /dev/null; then
+              echo "📥 Installing Bun..."
+              curl -fsSL https://bun.sh/install | bash
+              
+              # Добавление Bun в PATH для текущей сессии
+              export BUN_INSTALL="$HOME/.bun"
+              export PATH="$BUN_INSTALL/bin:$PATH"
+              
+              # Добавление Bun в PATH постоянно
+              if ! grep -q 'BUN_INSTALL' ~/.bashrc; then
+                echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.bashrc
+                echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.bashrc
+              fi
+              
+              # Для zsh, если используется
+              if [ -f ~/.zshrc ] && ! grep -q 'BUN_INSTALL' ~/.zshrc; then
+                echo 'export BUN_INSTALL="$HOME/.bun"' >> ~/.zshrc
+                echo 'export PATH="$BUN_INSTALL/bin:$PATH"' >> ~/.zshrc
+              fi
+              
+              echo "✅ Bun installed: $($HOME/.bun/bin/bun --version)"
+            else
+              echo "✅ Bun already installed: $(bun --version)"
+            fi
+            
+            # Установка PM2 глобально
+            if ! command -v pm2 &> /dev/null; then
+              echo "📥 Installing PM2..."
+              sudo npm install -g pm2
+              
+              # Настройка PM2 для автозапуска при старте системы
+              sudo pm2 startup systemd -u ${USER} --hp ${HOME} || true
+              
+              echo "✅ PM2 installed: $(pm2 --version)"
+            else
+              echo "✅ PM2 already installed: $(pm2 --version)"
+            fi
+            
+            echo ""
+            echo "🎉 Server setup completed successfully!"
+            echo ""
+            echo "📊 Installed versions:"
+            echo "  - Node.js: $(node --version)"
+            echo "  - npm: $(npm --version)"
+            echo "  - Bun: $($HOME/.bun/bin/bun --version 2>/dev/null || bun --version)"
+            echo "  - PM2: $(pm2 --version)"
+          ENDSSH
+
+          echo "✅ Setup completed!"

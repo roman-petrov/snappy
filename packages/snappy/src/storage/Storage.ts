@@ -3,7 +3,7 @@
 /* eslint-disable functional/no-loop-statements */
 import type { Locale } from "../locales";
 
-import { Config } from "../Config";
+import { AppConfiguration } from "../AppConfiguration";
 import { Time } from "../core/Time";
 
 type UserSession = { lastReset: number; requestCount: number };
@@ -54,7 +54,7 @@ export const canMakeRequest = (userId: number): boolean => {
     session.lastReset = Date.now();
   }
 
-  return session.requestCount < Config.FREE_REQUESTS_LIMIT;
+  return session.requestCount < AppConfiguration.freeRequestLimit;
 };
 
 export const incrementRequestCount = (userId: number): void => {
@@ -73,15 +73,15 @@ export const getRemainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    return Config.FREE_REQUESTS_LIMIT;
+    return AppConfiguration.freeRequestLimit;
   }
 
   // Проверяем, нужно ли сбросить счетчик
   if (Date.now() - session.lastReset > resetInterval) {
-    return Config.FREE_REQUESTS_LIMIT;
+    return AppConfiguration.freeRequestLimit;
   }
 
-  return Math.max(0, Config.FREE_REQUESTS_LIMIT - session.requestCount);
+  return Math.max(0, AppConfiguration.freeRequestLimit - session.requestCount);
 };
 
 // Очистка старых сессий (запускается периодически)

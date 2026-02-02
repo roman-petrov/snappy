@@ -1,6 +1,6 @@
 import { InlineKeyboard } from "gramio";
 
-import { Config } from "../Config";
+import { AppConfiguration } from "../AppConfiguration";
 import { type Locale, t } from "../locales";
 
 export const createFeaturesKeyboard = (locale: Locale) =>
@@ -21,7 +21,7 @@ export const createFeaturesKeyboard = (locale: Locale) =>
     .text(t(locale, `features.improveReadability`), `feature:improveReadability`);
 
 export const createPremiumKeyboard = (locale: Locale) =>
-  new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: Config.PREMIUM_PRICE }), `premium:buy`);
+  new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: AppConfiguration.premiumPrice }), `premium:buy`);
 
 export const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(`feature:`)) {

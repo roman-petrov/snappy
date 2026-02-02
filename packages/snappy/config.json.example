@@ -4,8 +4,5 @@
   "GIGACHAT_AUTH_KEY": "your_gigachat_authorization_key",
   "GIGACHAT_SCOPE": "GIGACHAT_API_PERS",
   "YOOKASSA_SHOP_ID": "your_shop_id",
-  "YOOKASSA_SECRET_KEY": "your_secret_key",
-  "DEFAULT_LANGUAGE": "ru",
-  "FREE_REQUESTS_LIMIT": 10,
-  "PREMIUM_PRICE": 299
+  "YOOKASSA_SECRET_KEY": "your_secret_key"
 }

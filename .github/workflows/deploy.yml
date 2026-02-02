@@ -1,0 +1,95 @@
+name: Deploy to Server
+
+on:
+  workflow_dispatch: # Только ручной запуск через GitHub UI
+
+jobs:
+  deploy:
+    name: Deploy Snappy Bot
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      #      - name: Run CI checks
+      #        run: bun run ci
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          ssh-keyscan -p ${{ secrets.SSH_PORT || 22 }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || 22 }}
+          REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+          USE_PM2: ${{ secrets.USE_PM2 || 'true' }}
+        run: |
+          echo "🚀 Starting deployment..."
+
+          # Создание директории на сервере, если её нет
+          echo "📁 Ensuring remote directory exists..."
+          ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+            "mkdir -p ${REMOTE_PATH}"
+
+          # Синхронизация файлов
+          echo "📦 Syncing files..."
+          rsync -avz --delete \
+            -e "ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no" \
+            --exclude='node_modules' \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.jscpd' \
+            --exclude='bun.lockb' \
+            --exclude='*.log' \
+            --exclude='.vscode' \
+            --exclude='deploy.config.json' \
+            --exclude='.env' \
+            --exclude='*.bat' \
+            --exclude='.DS_Store' \
+            ./ ${SSH_USER}@${SSH_HOST}:${REMOTE_PATH}/
+
+          # Установка зависимостей на сервере
+          echo "📥 Installing dependencies..."
+          ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+            "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && bun install --production"
+
+          # Перезапуск приложения
+          if [ "${USE_PM2}" = "true" ]; then
+            echo "🔄 Restarting with PM2..."
+            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+              "cd ${REMOTE_PATH} && export PATH=\"\$HOME/.bun/bin:\$PATH\" && \
+               pm2 delete snappy-bot 2>/dev/null || true && \
+               pm2 start packages/snappy/src/main.ts --name snappy-bot --interpreter \$HOME/.bun/bin/bun && \
+               pm2 save"
+            
+            echo "📊 PM2 Status:"
+            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+              "pm2 status snappy-bot"
+          else
+            echo "🔄 Restarting with systemd..."
+            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+              "sudo systemctl restart snappy-bot"
+            
+            echo "📊 Service Status:"
+            ssh -p ${SSH_PORT} -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} \
+              "sudo systemctl status snappy-bot --no-pager -l"
+          fi
+
+          echo "✅ Deployment completed successfully!"

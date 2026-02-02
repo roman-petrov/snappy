@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-expression-statements */
+import { AppConfiguration } from "../AppConfiguration";
 import { Config } from "../Config";
 
 type YooKassaPaymentRequest = {
@@ -71,7 +72,7 @@ const createPayment = async (userId: number, amount: number, description: string
 };
 
 export const createPremiumPayment = async (userId: number): Promise<string> => {
-  const result = await createPayment(userId, Config.PREMIUM_PRICE, `Snappy Bot - Premium подписка (30 дней)`);
+  const result = await createPayment(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
   return result;
 };
