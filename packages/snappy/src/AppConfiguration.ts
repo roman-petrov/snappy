@@ -1,3 +1,4 @@
+// cspell:words pers
 export const AppConfiguration = {
   freeRequestLimit: 10,
   gigaChatScope: `GIGACHAT_API_PERS`,
