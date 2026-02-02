@@ -7,7 +7,6 @@ import { z } from "zod";
 const configSchema = z.object({
   BOT_TOKEN: z.string().min(1, `BOT_TOKEN is required`),
   GIGACHAT_AUTH_KEY: z.string().min(1, `GIGACHAT_AUTH_KEY is required`),
-  GIGACHAT_SCOPE: z.string().default(`GIGACHAT_API_PERS`),
   YOOKASSA_SECRET_KEY: z.string().optional(),
   YOOKASSA_SHOP_ID: z.string().optional(),
 });

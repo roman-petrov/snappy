@@ -2,6 +2,7 @@
 import gigaChatClient from "gigachat";
 import { Agent } from "node:https";
 
+import { AppConfiguration } from "../AppConfiguration";
 import { Config } from "../Config";
 import { type FeatureType, getSystemPrompt } from "../prompts";
 
@@ -11,7 +12,7 @@ const client = new gigaChatClient({
   credentials: Config.GIGACHAT_AUTH_KEY,
   httpsAgent,
   model: `GigaChat`,
-  scope: Config.GIGACHAT_SCOPE,
+  scope: AppConfiguration.gigaChatScope,
   timeout: 600,
 });
 
