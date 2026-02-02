@@ -62,4 +62,5 @@ export default defineConfig([
     },
   },
   { files: [`**/*.js`], rules: pluginTypescriptESLint.configs.disableTypeChecked.rules },
+  { files: [`**/*.test.ts`], rules: { "@typescript-eslint/no-magic-numbers": `off` } },
 ]);

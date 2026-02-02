@@ -21,4 +21,16 @@ export default defineConfig([
     },
   },
   { files: [`packages/*/src/main.ts`], rules: { "functional/no-expression-statements": `off` } },
+  {
+    files: [`**/*.test.ts`],
+    rules: {
+      "functional/immutable-data": `off`,
+      "functional/no-expression-statements": `off`,
+      "functional/no-let": `off`,
+      "functional/no-loop-statements": `off`,
+      "functional/no-promise-reject": `off`,
+      "functional/no-try-statements": `off`,
+      "no-await-in-loop": `off`,
+    },
+  },
 ]);
