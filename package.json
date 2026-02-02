@@ -17,12 +17,14 @@
     "lint:markdown": "markdownlint .",
     "lint:prettier": "prettier --check .",
     "lint:tsc": "tsc --noEmit",
-    "start": "bun run --filter @snappy/snappy --elide-lines=0 start"
+    "start": "bun run --filter @snappy/snappy --elide-lines=0 start",
+    "test": "bun test"
   },
   "dependencies": {
     "@snappy/config": "workspace:*"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.8",
     "@types/node": "^25.1.0",
     "cspell": "^9.6.2",
     "jscpd": "^4.0.5",
