@@ -63,4 +63,3 @@ const loadConfig = (): Config => {
 };
 
 export const Config = loadConfig();
-

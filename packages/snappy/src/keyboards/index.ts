@@ -21,7 +21,10 @@ export const createFeaturesKeyboard = (locale: Locale) =>
     .text(t(locale, `features.improveReadability`), `feature:improveReadability`);
 
 export const createPremiumKeyboard = (locale: Locale) =>
-  new InlineKeyboard().text(t(locale, `commands.premium.button`, { price: AppConfiguration.premiumPrice }), `premium:buy`);
+  new InlineKeyboard().text(
+    t(locale, `commands.premium.button`, { price: AppConfiguration.premiumPrice }),
+    `premium:buy`,
+  );
 
 export const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(`feature:`)) {
