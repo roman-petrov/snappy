@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "ci": "bun test && bun lint:tsc && bun lint:eslint && bun lint:prettier && bun lint:cspell && bun lint:jscpd && bun lint:markdown",
-    "dev": "bun run --filter @snappy/snappy --elide-lines=0 dev",
+    "dev": "bun --watch packages/snappy-bot/src/main.ts",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier --write .",
     "lint:cspell": "cspell .",
@@ -17,7 +17,7 @@
     "lint:markdown": "markdownlint .",
     "lint:prettier": "prettier --check .",
     "lint:tsc": "tsc --noEmit",
-    "start": "bun run --filter @snappy/snappy --elide-lines=0 start"
+    "start": "bun packages/snappy-bot/src/main.ts"
   },
   "dependencies": {
     "@snappy/config": "workspace:*"

@@ -3,9 +3,11 @@
 /* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
 
+import { Snappy } from "@snappy/snappy";
+
 import { Keyboards } from "../keyboards";
 import { t } from "../locales";
-import { gigaChatService, Payment } from "../services";
+import { Payment } from "../services";
 import { Storage } from "../storage";
 import { Messages } from "./Messages";
 
@@ -55,7 +57,7 @@ const registerCallbackHandlers = (bot: Bot) => {
       await context.send(t(localeKey, `features.processing`));
 
       try {
-        const processedText = await gigaChatService.processText(text, feature);
+        const processedText = await Snappy.processText(text, feature);
 
         Storage.incrementRequestCount(userId);
 

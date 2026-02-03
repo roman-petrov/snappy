@@ -48,6 +48,13 @@
       "version": "0.0.0",
       "dependencies": {
         "gigachat": "^0.0.18",
+      },
+    },
+    "packages/snappy-bot": {
+      "name": "@snappy/snappy-bot",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/snappy": "workspace:*",
         "gramio": "^0.4.11",
         "zod": "^3.24.0",
       },
@@ -331,6 +338,8 @@
     "@snappy/config": ["@snappy/config@workspace:packages/config"],
 
     "@snappy/snappy": ["@snappy/snappy@workspace:packages/snappy"],
+
+    "@snappy/snappy-bot": ["@snappy/snappy-bot@workspace:packages/snappy-bot"],
 
     "@stylistic/eslint-plugin": ["@stylistic/eslint-plugin@5.7.1", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.9.1", "@typescript-eslint/types": "^8.53.1", "eslint-visitor-keys": "^4.2.1", "espree": "^10.4.0", "estraverse": "^5.3.0", "picomatch": "^4.0.3" }, "peerDependencies": { "eslint": ">=9.0.0" } }, "sha512-zjTUwIsEfT+k9BmXwq1QEFYsb4afBlsI1AXFyWQBgggMzwBFOuu92pGrE5OFx90IOjNl+lUbQoTG7f8S0PkOdg=="],
 

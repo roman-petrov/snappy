@@ -48,3 +48,4 @@ const cleanupOldTexts = (): void => {
 setInterval(cleanupOldTexts, Time.hourInMs);
 
 export const Messages = { clearUserText, registerMessageHandlers, userText };
+/* jscpd:ignore-end */

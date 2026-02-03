@@ -2,14 +2,8 @@
   "name": "@snappy/snappy",
   "version": "0.0.0",
   "type": "module",
-  "main": "./src/main.ts",
-  "scripts": {
-    "dev": "bun --watch src/main.ts",
-    "start": "bun src/main.ts"
-  },
+  "main": "./src/index.ts",
   "dependencies": {
-    "gigachat": "^0.0.18",
-    "gramio": "^0.4.11",
-    "zod": "^3.24.0"
+    "gigachat": "^0.0.18"
   }
 }

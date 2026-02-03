@@ -1,13 +1,20 @@
 /* eslint-disable no-console */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable functional/no-loop-statements */
+import { Snappy } from "@snappy/snappy";
 import { Bot } from "gramio";
+import { Agent } from "node:https";
 
+import { AppConfiguration } from "./AppConfiguration";
 import { Config } from "./Config";
 import { Callbacks, Commands, Messages } from "./handlers";
 import { Locales, t } from "./locales";
 
 console.log(`🚀 Starting Snappy Bot...`);
+
+const httpsAgent = new Agent({ rejectUnauthorized: false });
+
+Snappy.init({ credentials: Config.GIGACHAT_AUTH_KEY, httpsAgent, scope: AppConfiguration.gigaChatScope });
 
 const bot = new Bot(Config.BOT_TOKEN);
 const commandKeys = [`start`, `help`, `balance`, `premium`] as const;

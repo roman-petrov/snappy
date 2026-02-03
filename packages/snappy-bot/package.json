@@ -1,0 +1,11 @@
+{
+  "name": "@snappy/snappy-bot",
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/main.ts",
+  "dependencies": {
+    "@snappy/snappy": "workspace:*",
+    "gramio": "^0.4.11",
+    "zod": "^3.24.0"
+  }
+}
