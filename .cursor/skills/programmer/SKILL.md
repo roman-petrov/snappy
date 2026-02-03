@@ -24,9 +24,12 @@ description:
 
 ## 🧭 Philosophy
 
-- **Occam's razor** — don't write code "for the future"; only what's needed now.
+- **🔥 Occam's razor** — don't write unnecessary code; remove everything you can do without. Write **maximally concise**
+  code. Don't write code "for the future"; only what's needed now.
 - **Simplicity** — keep code simple and compact.
 - **No OOP** — don't use classes or object-oriented style.
+- **📐 Use principles** **DRY** (Don't Repeat Yourself), **KISS** (Keep It Simple, Stupid), **YAGNI** (You Aren't Gonna
+  Need It).
 
 ---
 
