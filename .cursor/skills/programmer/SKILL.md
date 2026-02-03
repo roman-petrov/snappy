@@ -92,6 +92,19 @@ does.
 **Example:** prefer `Rect.area(width, height)` over `Rect.calculateArea(width, height)` or
 `Rect.getArea(width, height)`.
 
+### Don't duplicate context in names
+
+The **parent scope** (function, method, class, module, block) already carries context. Identifiers declared **inside**
+that scope — variables, nested functions, methods, parameters, locals — should **not repeat** words or concepts that are
+already implied by the parent's name or surrounding context. Shorter, context-free names in the child scope are
+preferred; the reader infers the rest from the parent.
+
+**Example:** inside a function `sendMessage`, name a variable `text` or `body`, not `messageText` or `messageBody`.
+Inside a function `parseUserInput`, a helper might be `validate` or `normalize`, not `validateUserInput`.
+
+Applies to any language and any construct: variables, functions, methods, parameters, constants, types — wherever a
+parent scope already establishes context, avoid echoing that context in child identifiers.
+
 ---
 
 ## ✅ Quick Checklist
@@ -105,4 +118,5 @@ does.
 - [ ] Unused code removed (variables, parameters, imports, etc.)
 - [ ] One-off variables/functions inlined where used only once
 - [ ] Simple names; no auxiliary words in functions (get, make, create, calculate); no utils/helper/manager etc.
+- [ ] No redundant context in names: child identifiers don't repeat words already implied by the parent scope
 - [ ] Comments only for non-obvious things, in English
