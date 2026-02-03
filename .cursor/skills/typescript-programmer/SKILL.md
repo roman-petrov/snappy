@@ -71,7 +71,8 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 ### Module of pure functions
 
 Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
-same file.
+same file. **Never export individual functions** — only the single namespace constant (e.g.
+`export const Math = { add, remove }`, not `export function add` / `export const remove`).
 
 ### Module with side effects
 
@@ -104,4 +105,5 @@ export const Timer = (delay: number) => {
 - [ ] Types omitted where inferred
 - [ ] Arrow functions everywhere
 - [ ] No `let` at module level (except in factory closure)
-- [ ] Pure module → `export const X = { fn1, fn2 }`; with side effects → `export const X = (deps) => ({ ... })`
+- [ ] Pure module → `export const X = { fn1, fn2 }` (no individual `export function`/`export const fn`); with side
+      effects → `export const X = (deps) => ({ ... })`
