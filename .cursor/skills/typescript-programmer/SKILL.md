@@ -3,9 +3,9 @@ name: typescript-programmer
 description: TypeScript coding style — functional, minimal, no OOP. Use when writing or reviewing TypeScript: general principles (DRY, type inference, naming, undefined, ===, braces), pure functions, type (not interface), arrow functions, module export conventions.
 ---
 
-# TypeScript Programmer
+# 📘 TypeScript Programmer
 
-## Philosophy
+## 🧭 Philosophy
 
 - **Occam's razor** — don't write code "for the future"; only what's needed now.
 - **Simplicity** — keep code simple and compact.
@@ -13,7 +13,7 @@ description: TypeScript coding style — functional, minimal, no OOP. Use when w
 
 ---
 
-## General Programming Principles
+## 📐 General Programming Principles
 
 ### Don't duplicate code
 
@@ -22,8 +22,7 @@ description: TypeScript coding style — functional, minimal, no OOP. Use when w
 
 ### Infer types from values
 
-Prefer **inferring types from values** so data and types stay in sync. Annotate explicitly only when inference is
-impossible or hurts readability.
+Prefer **inferring types from values** so data and types stay in sync. Annotate explicitly only when inference is impossible or hurts readability.
 
 | Situation                     | How to infer                                               |
 | ----------------------------- | ---------------------------------------------------------- |
@@ -42,9 +41,9 @@ const CONFIG = { timeout: 5000, retries: 3 } as const;
 type ConfigKey = keyof typeof CONFIG;
 ```
 
-### File naming
+### 📁 File naming
 
-**PascalCase** для `.ts`; исключения: `main.ts`, `index.ts`.
+Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 ### undefined instead of null
 
@@ -61,7 +60,7 @@ type ConfigKey = keyof typeof CONFIG;
 
 ---
 
-## Code Style
+## ✍️ Code Style
 
 ### Functional style
 
@@ -81,7 +80,7 @@ type ConfigKey = keyof typeof CONFIG;
 
 ---
 
-## Module Export Rules
+## 📦 Module Export Rules
 
 ### No variables in module scope
 
@@ -89,13 +88,11 @@ type ConfigKey = keyof typeof CONFIG;
 
 ### Module of pure functions
 
-Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
-same file.
+Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the same file.
 
 ### Module with side effects
 
-Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
-Inside — `let` in the closure, reset via `undefined`, checks via `===` and braces in `if`.
+Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`. Inside — `let` in the closure, reset via `undefined`, checks via `===` and braces in `if`.
 
 ```ts
 export const Timer = (delay: number) => {
@@ -112,16 +109,16 @@ export const Timer = (delay: number) => {
 
 ---
 
-## Quick Checklist
+## ✅ Quick Checklist
 
 **Principles**
 
 - [ ] No code duplication
 - [ ] Types inferred from values where possible
-- [ ] Files in PascalCase (except main.ts, index.ts)
-- [ ] Use undefined, not null
-- [ ] Comparisons only === / !==
-- [ ] All if statements have curly braces
+- [ ] Files in PascalCase (except `main.ts`, `index.ts`)
+- [ ] Use `undefined`, not `null`
+- [ ] Comparisons only `===` / `!==`
+- [ ] All `if` statements have curly braces
 
 **Style**
 
