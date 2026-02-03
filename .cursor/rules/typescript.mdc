@@ -1,14 +1,15 @@
 ---
-name: typescript-programmer
 description:
-  Applies TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions,
-  module export conventions). Builds on programmer skill. Use when writing or reviewing TypeScript code.
+  TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions, module
+  export conventions). Builds on programming rule. Use when writing or reviewing TypeScript code.
+globs: "**/*.ts"
+alwaysApply: false
 ---
 
-# 📘 TypeScript Programmer
+# 📘 TypeScript
 
-Follow the **programmer** skill for general principles (DRY, pure functions, no OOP, comments, simple names, etc.). This
-skill adds TypeScript-specific rules only.
+Follow the **programming** rule for general principles (DRY, pure functions, no OOP, comments, simple names, etc.). This
+rule adds TypeScript-specific rules only.
 
 ---
 
