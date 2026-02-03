@@ -65,6 +65,17 @@ Watch for unused code: unused variables, function parameters, imports, and the l
 If a variable or function is used only once and not reused elsewhere — **always** remove it and inline its usage to
 shorten and simplify the code.
 
+### 📝 Simple names
+
+Use the **simplest possible names** (Occam's razor). In **function names** avoid auxiliary words such as **get**,
+**create**, **make**, **calculate**, **compute**: in a functional style we already know that functions return values, so
+these words add noise. In names of variables, functions, or units avoid **utils**, **utilities**, **util**, **factory**,
+**helper**, **wrapper**, **manager** and the like — they introduce unnecessary abstractions and obscure what the code
+does.
+
+**Example:** prefer `Rect.area(width, height)` over `Rect.calculateArea(width, height)` or
+`Rect.getArea(width, height)`.
+
 ---
 
 ## ✅ Quick Checklist
@@ -76,4 +87,5 @@ shorten and simplify the code.
 - [ ] Immutable data; no mutation where possible
 - [ ] Unused code removed (variables, parameters, imports, etc.)
 - [ ] One-off variables/functions inlined where used only once
+- [ ] Simple names; no auxiliary words in functions (get, make, create, calculate); no utils/helper/manager etc.
 - [ ] Comments only for non-obvious things, in English
