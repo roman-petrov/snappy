@@ -44,8 +44,7 @@ type ConfigKey = keyof typeof CONFIG;
 
 ### File naming
 
-- TypeScript files — **PascalCase**, except: `main.ts`, `index.ts`.
-- Examples: `UserService.ts`, `ApiClient.ts`, `FormatDate.ts`, `main.ts`, `index.ts`.
+**PascalCase** для `.ts`; исключения: `main.ts`, `index.ts`.
 
 ### undefined instead of null
 
