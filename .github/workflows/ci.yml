@@ -12,7 +12,7 @@ jobs:
       matrix:
         task:
           - name: 🧪 Run Tests
-            command: bun test
+            command: bun do test
           - name: 📘 TypeScript Check
             command: bun do lint:tsc
           - name: 📐 ESLint Check

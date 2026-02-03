@@ -54,6 +54,7 @@
   ],
 
   // Files
+  "files.eol": "\n",
   "files.exclude": {
     "**/node_modules": true,
     ".git": true,
