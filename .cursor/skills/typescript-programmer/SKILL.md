@@ -1,6 +1,9 @@
 ---
 name: typescript-programmer
-description: TypeScript coding style — functional, minimal, no OOP. Use when writing or reviewing TypeScript: general principles (DRY, type inference, naming, undefined, ===, braces), pure functions, type (not interface), arrow functions, module export conventions.
+description:
+  TypeScript coding style — functional, minimal, no OOP. Use when writing or reviewing TypeScript - general principles
+  (DRY, type inference, naming, undefined, ===, braces), pure functions, type (not interface), arrow functions, module
+  export conventions.
 ---
 
 # 📘 TypeScript Programmer
@@ -22,7 +25,8 @@ description: TypeScript coding style — functional, minimal, no OOP. Use when w
 
 ### Infer types from values
 
-Prefer **inferring types from values** so data and types stay in sync. Annotate explicitly only when inference is impossible or hurts readability.
+Prefer **inferring types from values** so data and types stay in sync. Annotate explicitly only when inference is
+impossible or hurts readability.
 
 | Situation                     | How to infer                                               |
 | ----------------------------- | ---------------------------------------------------------- |
@@ -88,11 +92,13 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 ### Module of pure functions
 
-Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the same file.
+Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
+same file.
 
 ### Module with side effects
 
-Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`. Inside — `let` in the closure, reset via `undefined`, checks via `===` and braces in `if`.
+Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
+Inside — `let` in the closure, reset via `undefined`, checks via `===` and braces in `if`.
 
 ```ts
 export const Timer = (delay: number) => {
