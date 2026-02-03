@@ -2,7 +2,7 @@
   "mcpServers": {
     "do": {
       "command": "bun",
-      "args": ["packages/do/src/main.server.ts"]
+      "args": ["do-mcp"]
     }
   }
 }

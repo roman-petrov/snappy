@@ -3,11 +3,10 @@
   "version": "0.0.0",
   "type": "module",
   "bin": {
-    "do": "./src/main.cli.ts"
+    "do": "./src/main.cli.ts",
+    "do-mcp": "./src/main.server.ts"
   },
-  "main": "./src/main.server.ts",
   "exports": {
-    ".": "./src/main.server.ts",
     "./config": "./src/config/index.ts",
     "./config/js": "./src/config/index.esm.js"
   },
