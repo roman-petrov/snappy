@@ -5,28 +5,28 @@ import { type Locale, t } from "../locales";
 import { type FeatureType, systemPrompts } from "../prompts";
 
 const featurePrefix = `feature:`;
-const createFeatureCallback = (feature: FeatureType) => `${featurePrefix}${feature}`;
+const featureCallbackData = (feature: FeatureType) => `${featurePrefix}${feature}`;
 
-export const createFeaturesKeyboard = (locale: Locale) =>
+export const featuresKeyboard = (localeKey: Locale) =>
   new InlineKeyboard()
-    .text(t(locale, `features.styleBusiness`), createFeatureCallback(`styleBusiness`))
-    .text(t(locale, `features.styleFriendly`), createFeatureCallback(`styleFriendly`))
+    .text(t(localeKey, `features.styleBusiness`), featureCallbackData(`styleBusiness`))
+    .text(t(localeKey, `features.styleFriendly`), featureCallbackData(`styleFriendly`))
     .row()
-    .text(t(locale, `features.styleHumorous`), createFeatureCallback(`styleHumorous`))
-    .text(t(locale, `features.styleSelling`), createFeatureCallback(`styleSelling`))
+    .text(t(localeKey, `features.styleHumorous`), featureCallbackData(`styleHumorous`))
+    .text(t(localeKey, `features.styleSelling`), featureCallbackData(`styleSelling`))
     .row()
-    .text(t(locale, `features.styleNeutral`), createFeatureCallback(`styleNeutral`))
-    .text(t(locale, `features.fixErrors`), createFeatureCallback(`fixErrors`))
+    .text(t(localeKey, `features.styleNeutral`), featureCallbackData(`styleNeutral`))
+    .text(t(localeKey, `features.fixErrors`), featureCallbackData(`fixErrors`))
     .row()
-    .text(t(locale, `features.addEmoji`), createFeatureCallback(`addEmoji`))
-    .text(t(locale, `features.shorten`), createFeatureCallback(`shorten`))
+    .text(t(localeKey, `features.addEmoji`), featureCallbackData(`addEmoji`))
+    .text(t(localeKey, `features.shorten`), featureCallbackData(`shorten`))
     .row()
-    .text(t(locale, `features.expand`), createFeatureCallback(`expand`))
-    .text(t(locale, `features.improveReadability`), createFeatureCallback(`improveReadability`));
+    .text(t(localeKey, `features.expand`), featureCallbackData(`expand`))
+    .text(t(localeKey, `features.improveReadability`), featureCallbackData(`improveReadability`));
 
-export const createPremiumKeyboard = (locale: Locale) =>
+export const premiumKeyboard = (localeKey: Locale) =>
   new InlineKeyboard().text(
-    t(locale, `commands.premium.button`, { price: AppConfiguration.premiumPrice }),
+    t(localeKey, `commands.premium.button`, { price: AppConfiguration.premiumPrice }),
     `premium:buy`,
   );
 
@@ -41,4 +41,4 @@ export const parseFeatureCallback = (data: string): FeatureType | undefined => {
   return isFeature(key) ? key : undefined;
 };
 
-export const Keyboards = { createFeaturesKeyboard, createPremiumKeyboard, parseFeatureCallback };
+export const Keyboards = { featuresKeyboard, parseFeatureCallback, premiumKeyboard };

@@ -3,41 +3,41 @@
 import type { Bot } from "gramio";
 
 import { AppConfiguration } from "../AppConfiguration";
-import { createPremiumKeyboard } from "../keyboards";
+import { premiumKeyboard } from "../keyboards";
 import { t } from "../locales";
-import { getRemainingRequests, getUserLanguage } from "../storage";
+import { remainingRequests, userLanguage } from "../storage";
 
 export const registerCommands = (bot: Bot) => {
   bot.command(`start`, async context => {
-    const locale = getUserLanguage(context.from.languageCode);
+    const localeKey = userLanguage(context.from.languageCode);
     const userId = context.from.id;
-    const remaining = getRemainingRequests(userId);
+    const remaining = remainingRequests(userId);
 
-    await context.send(t(locale, `commands.start.welcome`));
-    await context.send(t(locale, `commands.start.help`, { count: remaining }));
+    await context.send(t(localeKey, `commands.start.welcome`));
+    await context.send(t(localeKey, `commands.start.help`, { count: remaining }));
   });
 
   bot.command(`help`, async context => {
-    const locale = getUserLanguage(context.from.languageCode);
+    const localeKey = userLanguage(context.from.languageCode);
 
-    await context.send(`${t(locale, `commands.help.title`)}\n\n${t(locale, `commands.help.text`)}`);
+    await context.send(`${t(localeKey, `commands.help.title`)}\n\n${t(localeKey, `commands.help.text`)}`);
   });
 
   bot.command(`balance`, async context => {
-    const locale = getUserLanguage(context.from.languageCode);
+    const localeKey = userLanguage(context.from.languageCode);
     const userId = context.from.id;
-    const remaining = getRemainingRequests(userId);
-    const premiumStatus = t(locale, `commands.balance.inactive`);
+    const remaining = remainingRequests(userId);
+    const premiumStatus = t(localeKey, `commands.balance.inactive`);
 
-    await context.send(t(locale, `commands.balance.free`, { count: remaining, status: premiumStatus }));
+    await context.send(t(localeKey, `commands.balance.free`, { count: remaining, status: premiumStatus }));
   });
 
   bot.command(`premium`, async context => {
-    const locale = getUserLanguage(context.from.languageCode);
+    const localeKey = userLanguage(context.from.languageCode);
 
     await context.send(
-      `${t(locale, `commands.premium.title`)}\n\n${t(locale, `commands.premium.description`, { price: AppConfiguration.premiumPrice })}`,
-      { reply_markup: createPremiumKeyboard(locale) },
+      `${t(localeKey, `commands.premium.title`)}\n\n${t(localeKey, `commands.premium.description`, { price: AppConfiguration.premiumPrice })}`,
+      { reply_markup: premiumKeyboard(localeKey) },
     );
   });
 };

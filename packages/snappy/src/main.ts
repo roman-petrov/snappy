@@ -5,7 +5,7 @@ import { Bot } from "gramio";
 
 import { Config } from "./Config";
 import { registerCallbackHandlers, registerCommands, registerMessageHandlers } from "./handlers";
-import { type Locale, t } from "./locales";
+import { localeKeys, t } from "./locales";
 
 console.log(`🚀 Starting Snappy Bot...`);
 
@@ -15,8 +15,7 @@ const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 const setLocalizedCommands = async (): Promise<void> => {
   await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
 
-  const locales: Locale[] = [`en`, `ru`];
-  for (const locale of locales) {
+  for (const locale of localeKeys) {
     await bot.api.setMyCommands({
       commands: commandKeys.map(name => ({ command: name, description: t(locale, `commands.${name}.menu`) })),
       language_code: locale,

@@ -11,7 +11,7 @@ type UserSession = { lastReset: number; requestCount: number };
 const sessions = new Map<number, UserSession>();
 const resetInterval = Time.dayInMs;
 
-export const getUserLanguage = (languageCode?: string): Locale => {
+export const userLanguage = (languageCode?: string): Locale => {
   if (languageCode === undefined) {
     return `en`;
   }
@@ -58,7 +58,7 @@ export const incrementRequestCount = (userId: number): void => {
   session.requestCount += 1;
 };
 
-export const getRemainingRequests = (userId: number): number => {
+export const remainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
@@ -92,10 +92,4 @@ export const cleanupOldSessions = (): void => {
 
 setInterval(cleanupOldSessions, Time.hourInMs);
 
-export const Storage = {
-  canMakeRequest,
-  cleanupOldSessions,
-  getRemainingRequests,
-  getUserLanguage,
-  incrementRequestCount,
-};
+export const Storage = { canMakeRequest, cleanupOldSessions, incrementRequestCount, remainingRequests, userLanguage };

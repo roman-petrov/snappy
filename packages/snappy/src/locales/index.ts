@@ -2,13 +2,15 @@
 import { en } from "./en";
 import { ru } from "./ru";
 
-export type Locale = `en` | `ru`;
-
 export type Messages = typeof ru;
+
+export const localeKeys = [`en`, `ru`] as const;
+
+export type Locale = (typeof localeKeys)[number];
 
 export const locales: Record<Locale, Messages> = { en, ru };
 
-export const getLocale = (locale: Locale): Messages => locales[locale];
+export const locale = (localeKey: Locale): Messages => locales[localeKey];
 
 const notFound = Symbol(`notFound`);
 
@@ -43,8 +45,8 @@ const interpolate = (template: string, entries: [string, number | string][]): st
   return interpolate(next, rest);
 };
 
-export const t = (locale: Locale, key: string, parameters?: Record<string, number | string>): string => {
-  const messages = getLocale(locale);
+export const t = (localeKey: Locale, key: string, parameters?: Record<string, number | string>): string => {
+  const messages = locale(localeKey);
   const keys = key.split(`.`);
   const value = resolveByPath(messages as unknown, keys);
 
@@ -57,4 +59,4 @@ export const t = (locale: Locale, key: string, parameters?: Record<string, numbe
   return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
 };
 
-export const Locales = { getLocale, locales, t };
+export const Locales = { locale, localeKeys, locales, t };

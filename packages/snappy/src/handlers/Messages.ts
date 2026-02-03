@@ -4,9 +4,9 @@
 import type { Bot } from "gramio";
 
 import { Time } from "../core/Time";
-import { createFeaturesKeyboard } from "../keyboards";
+import { featuresKeyboard } from "../keyboards";
 import { t } from "../locales";
-import { getUserLanguage } from "../storage";
+import { userLanguage } from "../storage";
 
 const userTexts = new Map<number, string>();
 
@@ -23,16 +23,15 @@ export const registerMessageHandlers = (bot: Bot) => {
       return;
     }
 
-    const locale = getUserLanguage(context.from.languageCode);
+    const localeKey = userLanguage(context.from.languageCode);
 
     userTexts.set(userId, text);
 
-    // Показываем клавиатуру с функциями
-    await context.send(t(locale, `features.choose`), { reply_markup: createFeaturesKeyboard(locale) });
+    await context.send(t(localeKey, `features.choose`), { reply_markup: featuresKeyboard(localeKey) });
   });
 };
 
-export const getUserText = (userId: number): string | undefined => userTexts.get(userId);
+export const userText = (userId: number): string | undefined => userTexts.get(userId);
 
 export const clearUserText = (userId: number): void => {
   userTexts.delete(userId);
@@ -48,4 +47,4 @@ const cleanupOldTexts = (): void => {
 
 setInterval(cleanupOldTexts, Time.hourInMs);
 
-export const Messages = { clearUserText, getUserText, registerMessageHandlers };
+export const Messages = { clearUserText, registerMessageHandlers, userText };
