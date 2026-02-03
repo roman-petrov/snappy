@@ -38,5 +38,23 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Diagnostics
+        run: |
+          echo "=== Bun version ==="
+          bun --version
+          echo "=== Root dir ==="
+          ls -la
+          echo "=== node_modules (root) ==="
+          ls -la node_modules 2>/dev/null || echo "node_modules missing"
+          echo "=== node_modules/.bin ==="
+          ls -la node_modules/.bin 2>/dev/null || echo "node_modules/.bin missing"
+          echo "=== @snappy/do in node_modules ==="
+          ls -la node_modules/@snappy 2>/dev/null || echo "@snappy missing"
+          ls -la node_modules/@snappy/do 2>/dev/null || echo "@snappy/do missing"
+          echo "=== which do ==="
+          which do 2>/dev/null || true
+          echo "=== bun do --help (exit code ignored) ==="
+          bun do --help 2>&1 || true
+
       - name: Run ${{ matrix.task.name }}
         run: ${{ matrix.task.command }}
