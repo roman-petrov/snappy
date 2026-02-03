@@ -31,7 +31,12 @@ const server = new McpServer(
 
 server.registerTool(
   `workflow_run`,
-  { description: workflowRunDescription, inputSchema },
+  {
+    description: workflowRunDescription,
+    /* Zod 4 ZodObject not assignable to SDK AnySchema (zod/v4/core) after zod update */
+    // @ts-expect-error TS2322
+    inputSchema,
+  },
   async ({ package: packageArg, script }: WorkflowRunInput) => {
     const resolved = Workflow.resolve(root, script, packageArg);
     if (!resolved.ok) {
