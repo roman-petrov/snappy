@@ -1,6 +1,8 @@
 export type Command = { command: string; description: string; name: string };
 
 export const COMMANDS: readonly Command[] = [
+  { command: ``, description: `Run packages/<package>/src/main.ts via bun (no watch).`, name: `run` },
+  { command: ``, description: `Run packages/<package>/src/main.ts via bun with --watch.`, name: `dev` },
   {
     command: `bun test && bunx tsc --noEmit && bunx eslint . && bunx prettier --check . && bunx cspell . && bunx jscpd . && bunx markdownlint .`,
     description: `Full CI pipeline: run tests and all linters (tsc, eslint, prettier, cspell, jscpd, markdown).`,
