@@ -41,4 +41,6 @@ export const registerCommands = (bot: Bot) => {
     );
   });
 };
+
+export const Commands = { registerCommands };
 /* jscpd:ignore-end */

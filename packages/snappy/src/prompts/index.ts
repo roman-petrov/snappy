@@ -123,3 +123,5 @@ export const systemPrompts = {
 export type FeatureType = keyof typeof systemPrompts;
 
 export const getSystemPrompt = (feature: FeatureType): string => systemPrompts[feature];
+
+export const Prompts = { getSystemPrompt, systemPrompts };

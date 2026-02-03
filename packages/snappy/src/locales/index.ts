@@ -56,3 +56,5 @@ export const t = (locale: Locale, key: string, parameters?: Record<string, numbe
 
   return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
 };
+
+export const Locales = { getLocale, locales, t };

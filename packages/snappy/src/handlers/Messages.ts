@@ -8,7 +8,6 @@ import { createFeaturesKeyboard } from "../keyboards";
 import { t } from "../locales";
 import { getUserLanguage } from "../storage";
 
-// Временное хранилище текстов пользователей (in-memory)
 const userTexts = new Map<number, string>();
 
 export const registerMessageHandlers = (bot: Bot) => {
@@ -20,14 +19,12 @@ export const registerMessageHandlers = (bot: Bot) => {
       return;
     }
 
-    // Игнорируем команды
     if (text.startsWith(`/`)) {
       return;
     }
 
     const locale = getUserLanguage(context.from.languageCode);
 
-    // Сохраняем текст пользователя
     userTexts.set(userId, text);
 
     // Показываем клавиатуру с функциями
@@ -41,16 +38,14 @@ export const clearUserText = (userId: number): void => {
   userTexts.delete(userId);
 };
 
-// Очистка старых текстов (запускается периодически)
 const maxTextCount = 1000;
 
 const cleanupOldTexts = (): void => {
-  /* В простой реализации очищаем все тексты старше 1 часа
-     Для этого нужно хранить timestamp, но в MVP можем просто периодически очищать всё */
   if (userTexts.size > maxTextCount) {
     userTexts.clear();
   }
 };
 
-// Каждый час
 setInterval(cleanupOldTexts, Time.hourInMs);
+
+export const Messages = { clearUserText, getUserText, registerMessageHandlers };

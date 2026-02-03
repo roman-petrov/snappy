@@ -32,7 +32,6 @@ const createPayment = async (userId: number, amount: number, description: string
     metadata: { userId: userId.toString() },
   };
 
-  // Преобразуем camelCase в snake_case для API YooKassa
   const apiRequestBody = {
     amount: requestBody.amount,
     capture: requestBody.capture,
@@ -72,14 +71,11 @@ const createPayment = async (userId: number, amount: number, description: string
 };
 
 export const createPremiumPayment = async (userId: number): Promise<string> => {
-  const result = await createPayment(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
+  const url = await createPayment(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
-  return result;
+  return url;
 };
 
-/* Примечание: для проверки статуса платежа используется webhook от YooKassa
-   В stateless архитектуре мы не храним информацию о платежах
-   Webhook должен быть настроен в личном кабинете YooKassa */
 export const verifyPayment = async (paymentId: string): Promise<boolean> => {
   const shopId = Config.YOOKASSA_SHOP_ID;
   const secretKey = Config.YOOKASSA_SECRET_KEY;
@@ -107,4 +103,6 @@ export const verifyPayment = async (paymentId: string): Promise<boolean> => {
 
   return apiResponse.status === `succeeded` && apiResponse.paid;
 };
+
+export const Payment = { createPremiumPayment, verifyPayment };
 /* jscpd:ignore-end */

@@ -23,12 +23,10 @@ const loadConfig = (): Config => {
   let raw: string;
   let configSource: string;
 
-  // Пытаемся загрузить из файла
   if (existsSync(configPath)) {
     raw = readFileSync(configPath, `utf-8`);
     configSource = configPath;
   } else {
-    // Если файл не найден, пытаемся загрузить из переменной окружения
     const envConfig = process.env[`SNAPPY_CONFIG`];
     if (envConfig === undefined) {
       throw new Error(`Config file not found at ${configPath} and SNAPPY_CONFIG environment variable is not set`);

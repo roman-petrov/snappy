@@ -35,19 +35,16 @@ export const registerCallbackHandlers = (bot: Bot) => {
       return;
     }
 
-    // Обработка выбора функции улучшения
     const feature = parseFeatureCallback(data);
-    if (feature) {
+    if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      // Проверяем лимит запросов
       if (!canMakeRequest(userId)) {
         await context.send(t(locale, `features.limit`));
 
         return;
       }
 
-      // Получаем сохраненный текст пользователя
       const userText = getUserText(userId);
       if (userText === undefined || userText === ``) {
         await context.send(t(locale, `features.error`));
@@ -55,20 +52,15 @@ export const registerCallbackHandlers = (bot: Bot) => {
         return;
       }
 
-      // Показываем статус обработки
       await context.send(t(locale, `features.processing`));
 
       try {
-        // Обрабатываем текст через GigaChat
         const processedText = await gigaChatService.processText(userText, feature);
 
-        // Увеличиваем счетчик запросов
         incrementRequestCount(userId);
 
-        // Отправляем результат
         await context.send(t(locale, `features.result`, { text: processedText }));
 
-        // Очищаем сохраненный текст
         clearUserText(userId);
       } catch (error) {
         console.error(`GigaChat processing error:`, error);
@@ -81,3 +73,5 @@ export const registerCallbackHandlers = (bot: Bot) => {
     await context.answerCallbackQuery();
   });
 };
+
+export const Callbacks = { registerCallbackHandlers };
