@@ -5,15 +5,24 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 
-import { Commands } from "./Commands.js";
-import { Instructions } from "./Instructions.js";
-import { Run } from "./Run.js";
-import { Scripts } from "./Scripts.js";
+import { Commands } from "./Commands";
+import { Instructions } from "./Instructions";
+import { Run } from "./Run";
+import { Scripts } from "./Scripts";
+import { Workflow } from "./Workflow";
 
-const workflowRunDescription = `Run a project workflow command (ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal.`;
+const workflowRunDescription = `Run a project workflow command (run, dev, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal. For run/dev pass package (see enum).`;
 const root = Scripts.rootDir();
 const names = Commands.commands().map(c => c.name);
 const scriptEnum = z.enum(names as [string, ...string[]]);
+const appPackages = Workflow.applicationPackages(root);
+
+const packageSchema =
+  appPackages.length > 0 ? z.enum(appPackages as [string, ...string[]]).optional() : z.string().optional();
+
+const inputSchema = z.object({ package: packageSchema, script: scriptEnum });
+
+type WorkflowRunInput = z.infer<typeof inputSchema>;
 
 const server = new McpServer(
   { name: `do`, version: `0.0.0` },
@@ -22,14 +31,21 @@ const server = new McpServer(
 
 server.registerTool(
   `workflow_run`,
-  { description: workflowRunDescription, inputSchema: z.object({ script: scriptEnum }) },
-  async ({ script }) => {
-    const cmd = Commands.commandByName(script);
-    if (cmd === undefined) {
-      return { content: [{ text: `Unknown command: ${script}`, type: `text` as const }] };
+  { description: workflowRunDescription, inputSchema },
+  async ({ package: packageArg, script }: WorkflowRunInput) => {
+    const resolved = Workflow.resolve(root, script, packageArg);
+    if (!resolved.ok) {
+      return { content: [{ text: resolved.error, type: `text` as const }] };
     }
-    const result = await Run.run(root, cmd.command, { stdio: `pipe` });
-    const text = Run.formatResult(script, result);
+    const devTimeoutMs = 600_000;
+    const isDev = script === `dev`;
+
+    const result = await Run.run(root, resolved.command, {
+      stdio: isDev ? `inherit` : `pipe`,
+      timeoutMs: isDev ? devTimeoutMs : undefined,
+    });
+
+    const text = isDev ? `Dev server exited with code ${result.exitCode}.` : Run.formatResult(script, result);
 
     return { content: [{ text, type: `text` as const }] };
   },

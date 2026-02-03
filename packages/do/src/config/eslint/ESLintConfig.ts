@@ -3,7 +3,7 @@ import prettierConfig from "eslint-config-prettier";
 import { defineConfig, globalIgnores } from "eslint/config";
 import globals from "globals";
 
-import plugins from "./plugins/index.js";
+import plugins from "./plugins/index";
 
 export const ESLintConfig = defineConfig([
   globalIgnores([`.jscpd`]),
