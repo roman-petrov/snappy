@@ -3,8 +3,12 @@
   "cursor.composer.usageSummaryDisplay": "always",
   "cursor.general.disableHttp2": true,
 
+  // Window
+  "window.zoomLevel": 1,
+
   // Workbench
   "workbench.colorTheme": "Default Dark Modern",
+  "workbench.iconTheme": "vscode-icons",
   "workbench.sideBar.location": "right",
   "workbench.activityBar.orientation": "vertical",
 
