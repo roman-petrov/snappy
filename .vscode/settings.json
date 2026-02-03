@@ -73,10 +73,6 @@
     }
   },
 
-  // Jest
-  "jest.jestCommandLine": "yarn node --experimental-vm-modules node_modules/jest/bin/jest.js",
-  "jest.runMode": "on-demand",
-
   // Markdown
   "markdown.validate.enabled": true,
 
