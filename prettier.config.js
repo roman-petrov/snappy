@@ -1,1 +1,1 @@
-export { PrettierConfig as default } from "@snappy/config/js";
+export { PrettierConfig as default } from "@snappy/do/config/js";

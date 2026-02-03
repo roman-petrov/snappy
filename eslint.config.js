@@ -1,1 +1,1 @@
-export { ESLintConfig as default } from "@snappy/config/js";
+export { ESLintConfig as default } from "@snappy/do/config/js";
