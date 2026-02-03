@@ -40,6 +40,12 @@ description:
 - Extract repeated logic into functions or shared constants.
 - **Single source of truth** — derive from data instead of manually duplicating types and values.
 
+### ♻️ Reuse existing functions
+
+Prefer **existing project functions** over writing new ones. Prefer project utilities over built-in or standard-library
+equivalents when they are a valid alternative. Before adding a function that might be reusable, **check** that the
+project does not already have the same or similar one.
+
 ### Single source of truth (data)
 
 When working with data, keep **one canonical place** for each fact or value. All other uses should **derive** from that
@@ -91,6 +97,7 @@ does.
 ## ✅ Quick Checklist
 
 - [ ] No code duplication; single source of truth (one canonical place for data, derive the rest)
+- [ ] Existing project functions reused; no duplicate helpers before checking the project
 - [ ] No extra "future-proof" code; code is simple and short
 - [ ] No classes or OOP
 - [ ] Pure functions extracted and under tests
