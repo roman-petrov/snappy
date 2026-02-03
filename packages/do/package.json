@@ -1,0 +1,20 @@
+{
+  "name": "@snappy/do",
+  "version": "0.0.0",
+  "type": "module",
+  "bin": {
+    "do": "./src/main.cli.ts"
+  },
+  "main": "./src/main.server.ts",
+  "scripts": {
+    "start": "bun run src/main.server.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "cspell": "^9.6.2",
+    "jscpd": "^4.0.5",
+    "markdownlint-cli": "^0.47.0",
+    "prettier": "^3.2.4",
+    "zod": "^3.24.0"
+  }
+}
