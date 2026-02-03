@@ -11,7 +11,7 @@ import { Run } from "./Run";
 import { Scripts } from "./Scripts";
 import { Workflow } from "./Workflow";
 
-const workflowRunDescription = `Run a project workflow command (run, dev, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal. For run/dev pass package (see enum).`;
+const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal. For run/dev pass package (see enum).`;
 const root = Scripts.rootDir();
 const names = Commands.commands().map(c => c.name);
 const scriptEnum = z.enum(names as [string, ...string[]]);
