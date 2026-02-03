@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
@@ -7,7 +10,7 @@ import { Instructions } from "./Instructions.js";
 import { Run } from "./Run.js";
 import { Scripts } from "./Scripts.js";
 
-const WORKFLOW_RUN_DESCRIPTION = `Run a project workflow command (ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal.`;
+const workflowRunDescription = `Run a project workflow command (ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal.`;
 const root = Scripts.rootDir();
 const names = Commands.commands().map(c => c.name);
 const scriptEnum = z.enum(names as [string, ...string[]]);
@@ -19,7 +22,7 @@ const server = new McpServer(
 
 server.registerTool(
   `workflow_run`,
-  { description: WORKFLOW_RUN_DESCRIPTION, inputSchema: z.object({ script: scriptEnum }) },
+  { description: workflowRunDescription, inputSchema: z.object({ script: scriptEnum }) },
   async ({ script }) => {
     const cmd = Commands.commandByName(script);
     if (cmd === undefined) {

@@ -5,4 +5,4 @@ gramio
 cascadia
 sonarjs
 bunx
-
+modelcontextprotocol
