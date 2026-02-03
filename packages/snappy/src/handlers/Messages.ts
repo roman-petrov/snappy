@@ -4,13 +4,13 @@
 import type { Bot } from "gramio";
 
 import { Time } from "../core/Time";
-import { featuresKeyboard } from "../keyboards";
+import { Keyboards } from "../keyboards";
 import { t } from "../locales";
-import { userLanguage } from "../storage";
+import { Storage } from "../storage";
 
 const userTexts = new Map<number, string>();
 
-export const registerMessageHandlers = (bot: Bot) => {
+const registerMessageHandlers = (bot: Bot) => {
   bot.on(`message`, async context => {
     const userId = context.from.id;
     const { text } = context;
@@ -23,17 +23,17 @@ export const registerMessageHandlers = (bot: Bot) => {
       return;
     }
 
-    const localeKey = userLanguage(context.from.languageCode);
+    const localeKey = Storage.userLanguage(context.from.languageCode);
 
     userTexts.set(userId, text);
 
-    await context.send(t(localeKey, `features.choose`), { reply_markup: featuresKeyboard(localeKey) });
+    await context.send(t(localeKey, `features.choose`), { reply_markup: Keyboards.featuresKeyboard(localeKey) });
   });
 };
 
-export const userText = (userId: number) => userTexts.get(userId);
+const userText = (userId: number) => userTexts.get(userId);
 
-export const clearUserText = (userId: number) => {
+const clearUserText = (userId: number) => {
   userTexts.delete(userId);
 };
 

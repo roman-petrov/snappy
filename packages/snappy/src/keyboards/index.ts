@@ -2,12 +2,12 @@ import { InlineKeyboard } from "gramio";
 
 import { AppConfiguration } from "../AppConfiguration";
 import { type Locale, t } from "../locales";
-import { type FeatureType, systemPrompts } from "../prompts";
+import { type FeatureType, Prompts } from "../prompts";
 
 const featurePrefix = `feature:`;
 const featureCallbackData = (feature: FeatureType) => `${featurePrefix}${feature}`;
 
-export const featuresKeyboard = (localeKey: Locale) =>
+const featuresKeyboard = (localeKey: Locale) =>
   new InlineKeyboard()
     .text(t(localeKey, `features.styleBusiness`), featureCallbackData(`styleBusiness`))
     .text(t(localeKey, `features.styleFriendly`), featureCallbackData(`styleFriendly`))
@@ -24,19 +24,19 @@ export const featuresKeyboard = (localeKey: Locale) =>
     .text(t(localeKey, `features.expand`), featureCallbackData(`expand`))
     .text(t(localeKey, `features.improveReadability`), featureCallbackData(`improveReadability`));
 
-export const premiumKeyboard = (localeKey: Locale) =>
+const premiumKeyboard = (localeKey: Locale) =>
   new InlineKeyboard().text(
     t(localeKey, `commands.premium.button`, { price: AppConfiguration.premiumPrice }),
     `premium:buy`,
   );
 
-export const parseFeatureCallback = (data: string) => {
+const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(featurePrefix)) {
     return undefined;
   }
 
   const key = data.slice(featurePrefix.length);
-  const isFeature = (keyString: string): keyString is FeatureType => keyString in systemPrompts;
+  const isFeature = (keyString: string): keyString is FeatureType => keyString in Prompts.systemPrompts;
 
   return isFeature(key) ? key : undefined;
 };

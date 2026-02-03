@@ -4,14 +4,12 @@ import { ru } from "./ru";
 
 export type Messages = typeof ru;
 
-export const localeKeys = [`en`, `ru`] as const;
+const localeKeys = [`en`, `ru`] as const;
 
 export type Locale = (typeof localeKeys)[number];
 
-export const locales: Record<Locale, Messages> = { en, ru };
-
-export const locale = (localeKey: Locale) => locales[localeKey];
-
+const locales: Record<Locale, Messages> = { en, ru };
+const locale = (localeKey: Locale) => locales[localeKey];
 const notFound = Symbol(`notFound`);
 
 const resolveByPath = (current: unknown, keys: string[]) => {

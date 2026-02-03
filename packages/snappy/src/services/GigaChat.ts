@@ -4,7 +4,7 @@ import { Agent } from "node:https";
 
 import { AppConfiguration } from "../AppConfiguration";
 import { Config } from "../Config";
-import { type FeatureType, systemPrompt } from "../prompts";
+import { type FeatureType, Prompts } from "../prompts";
 
 const httpsAgent = new Agent({ rejectUnauthorized: false });
 
@@ -18,7 +18,7 @@ const client = new gigaChatClient({
 
 export const gigaChatService = {
   processText: async (text: string, feature: FeatureType) => {
-    const prompt = systemPrompt(feature);
+    const prompt = Prompts.systemPrompt(feature);
 
     const resp = await client.chat({
       messages: [

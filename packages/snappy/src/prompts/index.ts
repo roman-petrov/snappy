@@ -1,4 +1,4 @@
-export const systemPrompts = {
+const systemPrompts = {
   addEmoji: `Ты креативный редактор социальных медиа. Твоя задача - добавить эмодзи в текст.
 
 Требования:
@@ -122,6 +122,6 @@ export const systemPrompts = {
 
 export type FeatureType = keyof typeof systemPrompts;
 
-export const systemPrompt = (feature: FeatureType) => systemPrompts[feature];
+const systemPrompt = (feature: FeatureType) => systemPrompts[feature];
 
 export const Prompts = { systemPrompt, systemPrompts };

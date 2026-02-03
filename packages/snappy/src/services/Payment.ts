@@ -71,10 +71,10 @@ const paymentUrl = async (userId: number, amount: number, description: string) =
 };
 
 /* eslint-disable-next-line require-await -- promise-function-async requires async; no await needed when returning promise. */
-export const premiumPaymentUrl = async (userId: number) =>
+const premiumPaymentUrl = async (userId: number) =>
   paymentUrl(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
-export const verifyPayment = async (paymentId: string) => {
+const verifyPayment = async (paymentId: string) => {
   const shopId = Config.YOOKASSA_SHOP_ID;
   const secretKey = Config.YOOKASSA_SECRET_KEY;
 

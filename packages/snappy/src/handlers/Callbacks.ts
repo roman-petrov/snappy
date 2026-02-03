@@ -3,16 +3,16 @@
 /* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
 
-import { parseFeatureCallback } from "../keyboards";
+import { Keyboards } from "../keyboards";
 import { t } from "../locales";
-import { gigaChatService, premiumPaymentUrl } from "../services";
-import { canMakeRequest, incrementRequestCount, userLanguage } from "../storage";
-import { clearUserText, userText } from "./Messages";
+import { gigaChatService, Payment } from "../services";
+import { Storage } from "../storage";
+import { Messages } from "./Messages";
 
-export const registerCallbackHandlers = (bot: Bot) => {
+const registerCallbackHandlers = (bot: Bot) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
-    const localeKey = userLanguage(context.from.languageCode);
+    const localeKey = Storage.userLanguage(context.from.languageCode);
     const { data } = context;
 
     if (!data) {
@@ -23,7 +23,7 @@ export const registerCallbackHandlers = (bot: Bot) => {
 
     if (data === `premium:buy`) {
       try {
-        const paymentUrl = await premiumPaymentUrl(userId);
+        const paymentUrl = await Payment.premiumPaymentUrl(userId);
         await context.answerCallbackQuery();
         await context.send(`💳 ${paymentUrl}`);
       } catch (error) {
@@ -35,17 +35,17 @@ export const registerCallbackHandlers = (bot: Bot) => {
       return;
     }
 
-    const feature = parseFeatureCallback(data);
+    const feature = Keyboards.parseFeatureCallback(data);
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if (!canMakeRequest(userId)) {
+      if (!Storage.canMakeRequest(userId)) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
       }
 
-      const text = userText(userId);
+      const text = Messages.userText(userId);
       if (text === undefined || text === ``) {
         await context.send(t(localeKey, `features.error`));
 
@@ -57,11 +57,11 @@ export const registerCallbackHandlers = (bot: Bot) => {
       try {
         const processedText = await gigaChatService.processText(text, feature);
 
-        incrementRequestCount(userId);
+        Storage.incrementRequestCount(userId);
 
         await context.send(t(localeKey, `features.result`, { text: processedText }));
 
-        clearUserText(userId);
+        Messages.clearUserText(userId);
       } catch (error) {
         console.error(`GigaChat processing error:`, error);
         await context.send(t(localeKey, `features.error`));

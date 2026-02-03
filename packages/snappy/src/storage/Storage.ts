@@ -11,7 +11,7 @@ type UserSession = { lastReset: number; requestCount: number };
 const sessions = new Map<number, UserSession>();
 const resetInterval = Time.dayInMs;
 
-export const userLanguage = (languageCode?: string): Locale => {
+const userLanguage = (languageCode?: string): Locale => {
   if (languageCode === undefined) {
     return `en`;
   }
@@ -29,7 +29,7 @@ export const userLanguage = (languageCode?: string): Locale => {
   return `en`;
 };
 
-export const canMakeRequest = (userId: number): boolean => {
+const canMakeRequest = (userId: number): boolean => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
@@ -46,7 +46,7 @@ export const canMakeRequest = (userId: number): boolean => {
   return session.requestCount < AppConfiguration.freeRequestLimit;
 };
 
-export const incrementRequestCount = (userId: number): void => {
+const incrementRequestCount = (userId: number): void => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
@@ -58,7 +58,7 @@ export const incrementRequestCount = (userId: number): void => {
   session.requestCount += 1;
 };
 
-export const remainingRequests = (userId: number): number => {
+const remainingRequests = (userId: number): number => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
@@ -75,7 +75,7 @@ export const remainingRequests = (userId: number): number => {
 const daysToKeepSession = 7;
 const sessionRetentionMs = daysToKeepSession * Time.dayInMs;
 
-export const cleanupOldSessions = (): void => {
+const cleanupOldSessions = (): void => {
   const now = Date.now();
   const sessionsToDelete: number[] = [];
 

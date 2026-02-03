@@ -72,7 +72,8 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
 same file. **Never export individual functions** — only the single namespace constant (e.g.
-`export const Math = { add, remove }`, not `export function add` / `export const remove`).
+`export const Math = { add, remove }`, not `export function add` / `export const remove`). **Exception:** very general,
+frequently used helpers (e.g. localization `t`) may be exported and used without the module prefix.
 
 ### Module with side effects
 
