@@ -12,7 +12,7 @@ console.log(`🚀 Starting Snappy Bot...`);
 const bot = new Bot(Config.BOT_TOKEN);
 const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
-const setLocalizedCommands = async (): Promise<void> => {
+const setLocalizedCommands = async () => {
   await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
 
   for (const locale of localeKeys) {

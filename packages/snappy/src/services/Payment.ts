@@ -14,7 +14,7 @@ type YooKassaPaymentRequest = {
   metadata?: Record<string, string>;
 };
 
-const paymentUrl = async (userId: number, amount: number, description: string): Promise<string> => {
+const paymentUrl = async (userId: number, amount: number, description: string) => {
   const shopId = Config.YOOKASSA_SHOP_ID;
   const secretKey = Config.YOOKASSA_SECRET_KEY;
 
@@ -71,10 +71,10 @@ const paymentUrl = async (userId: number, amount: number, description: string): 
 };
 
 /* eslint-disable-next-line require-await -- promise-function-async requires async; no await needed when returning promise. */
-export const premiumPaymentUrl = async (userId: number): Promise<string> =>
+export const premiumPaymentUrl = async (userId: number) =>
   paymentUrl(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
-export const verifyPayment = async (paymentId: string): Promise<boolean> => {
+export const verifyPayment = async (paymentId: string) => {
   const shopId = Config.YOOKASSA_SHOP_ID;
   const secretKey = Config.YOOKASSA_SECRET_KEY;
 

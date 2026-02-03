@@ -30,7 +30,7 @@ export const premiumKeyboard = (localeKey: Locale) =>
     `premium:buy`,
   );
 
-export const parseFeatureCallback = (data: string): FeatureType | undefined => {
+export const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(featurePrefix)) {
     return undefined;
   }

@@ -31,9 +31,9 @@ export const registerMessageHandlers = (bot: Bot) => {
   });
 };
 
-export const userText = (userId: number): string | undefined => userTexts.get(userId);
+export const userText = (userId: number) => userTexts.get(userId);
 
-export const clearUserText = (userId: number): void => {
+export const clearUserText = (userId: number) => {
   userTexts.delete(userId);
 };
 

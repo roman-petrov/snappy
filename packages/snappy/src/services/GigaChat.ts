@@ -17,7 +17,7 @@ const client = new gigaChatClient({
 });
 
 export const gigaChatService = {
-  processText: async (text: string, feature: FeatureType): Promise<string> => {
+  processText: async (text: string, feature: FeatureType) => {
     const prompt = systemPrompt(feature);
 
     const resp = await client.chat({

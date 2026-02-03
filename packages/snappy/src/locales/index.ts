@@ -10,11 +10,11 @@ export type Locale = (typeof localeKeys)[number];
 
 export const locales: Record<Locale, Messages> = { en, ru };
 
-export const locale = (localeKey: Locale): Messages => locales[localeKey];
+export const locale = (localeKey: Locale) => locales[localeKey];
 
 const notFound = Symbol(`notFound`);
 
-const resolveByPath = (current: unknown, keys: string[]): unknown => {
+const resolveByPath = (current: unknown, keys: string[]) => {
   if (keys.length === 0) {
     return current;
   }
@@ -28,7 +28,7 @@ const resolveByPath = (current: unknown, keys: string[]): unknown => {
   return resolveByPath((current as Record<string, unknown>)[first], rest);
 };
 
-const interpolate = (template: string, entries: [string, number | string][]): string => {
+const interpolate = (template: string, entries: [string, number | string][]) => {
   if (entries.length === 0) {
     return template;
   }
@@ -39,13 +39,13 @@ const interpolate = (template: string, entries: [string, number | string][]): st
     return template;
   }
 
-  const [parameterKey, parameterValue] = first;
-  const next = template.replace(`{${parameterKey}}`, String(parameterValue));
+  const [key, value] = first;
+  const next = template.replace(`{${key}}`, String(value));
 
   return interpolate(next, rest);
 };
 
-export const t = (localeKey: Locale, key: string, parameters?: Record<string, number | string>): string => {
+export const t = (localeKey: Locale, key: string, parameters?: Record<string, number | string>) => {
   const messages = locale(localeKey);
   const keys = key.split(`.`);
   const value = resolveByPath(messages as unknown, keys);
