@@ -1,0 +1,23 @@
+---
+description: ESLint exceptions (disable comments). Use when adding or reviewing ESLint overrides in code.
+globs: "**/*.{js,ts,mjs,cjs}"
+alwaysApply: false
+---
+
+# 📘 ESLint
+
+## Exceptions at the top of the file
+
+When you need to disable ESLint rules for a file, **always place exceptions at the beginning of the file**:
+
+- Put each rule on its own line: **one `/* eslint-disable rule-name */` per line**. Do not list multiple rules in one
+  comment.
+- Do not add descriptions to disable comments (no `-- reason` or inline explanation).
+- Do not scatter disables throughout the code; do not use `eslint-disable-next-line` for whole blocks — move the rule to
+  the top of the file.
+
+**Example (at the top of the file, before imports):**
+
+```ts
+/* eslint-disable no-console */
+```
