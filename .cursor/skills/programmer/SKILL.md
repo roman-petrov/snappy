@@ -37,6 +37,13 @@ description:
 - Extract repeated logic into functions or shared constants.
 - **Single source of truth** — derive from data instead of manually duplicating types and values.
 
+### Single source of truth (data)
+
+When working with data, keep **one canonical place** for each fact or value. All other uses should **derive** from that
+source instead of storing copies. Avoid duplicating the same data in multiple variables, configs, or structures — if
+something changes, you should only update it in one place. Prefer computing derived values (e.g. lists, summaries,
+flags) from the source data rather than maintaining them in parallel.
+
 ### Functional style
 
 - The main unit is the **function**.
@@ -80,7 +87,7 @@ does.
 
 ## ✅ Quick Checklist
 
-- [ ] No code duplication; single source of truth
+- [ ] No code duplication; single source of truth (one canonical place for data, derive the rest)
 - [ ] No extra "future-proof" code; code is simple and short
 - [ ] No classes or OOP
 - [ ] Pure functions extracted and under tests
