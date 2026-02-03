@@ -56,6 +56,15 @@ description:
 Boolean parameters and properties should always be **optional** and should have default value of **`false`**: when we
 pass `true` we intend to activate something that is disabled by default.
 
+### 🧹 Remove unused code
+
+Watch for unused code: unused variables, function parameters, imports, and the like. **Always** remove unused code.
+
+### 🔄 Inline one-off code
+
+If a variable or function is used only once and not reused elsewhere — **always** remove it and inline its usage to
+shorten and simplify the code.
+
 ---
 
 ## ✅ Quick Checklist
@@ -65,4 +74,6 @@ pass `true` we intend to activate something that is disabled by default.
 - [ ] No classes or OOP
 - [ ] Pure functions extracted and under tests
 - [ ] Immutable data; no mutation where possible
+- [ ] Unused code removed (variables, parameters, imports, etc.)
+- [ ] One-off variables/functions inlined where used only once
 - [ ] Comments only for non-obvious things, in English
