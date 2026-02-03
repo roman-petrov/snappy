@@ -11,20 +11,20 @@ jobs:
       fail-fast: false
       matrix:
         task:
-          - name: Run Tests
+          - name: 🧪 Run Tests
             command: bun test
-          - name: TypeScript Check
-            command: bun lint:tsc
-          - name: ESLint Check
-            command: bun lint:eslint
-          - name: Prettier Check
-            command: bun lint:prettier
-          - name: CSpell Check
-            command: bun lint:cspell
-          - name: JSCPD Check
-            command: bun lint:jscpd
-          - name: Markdown Lint Check
-            command: bun lint:markdown
+          - name: 📘 TypeScript Check
+            command: bun do lint:tsc
+          - name: 📐 ESLint Check
+            command: bun do lint:eslint
+          - name: 💅 Prettier Check
+            command: bun do lint:prettier
+          - name: 📝 CSpell Check
+            command: bun do lint:cspell
+          - name: 🔍 JSCPD Check
+            command: bun do lint:jscpd
+          - name: 📄 Markdown Lint Check
+            command: bun do lint:markdown
 
     steps:
       - name: Checkout code
