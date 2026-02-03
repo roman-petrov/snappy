@@ -1,8 +1,8 @@
 ---
 name: markdown-writer
 description:
-  Write and edit Markdown in English with emphasis formatting (bold, italic) and emoji in headers for readability. Use
-  when creating or editing .md files, documentation, README, notes, or when the user asks for markdown content.
+  Writes and edits Markdown in English with emphasis (bold, italic), code spans, and emoji in headers for readability.
+  Use when creating or editing .md files, documentation, README, notes, or when the user asks for markdown content.
 ---
 
 # 📝 Markdown Writer

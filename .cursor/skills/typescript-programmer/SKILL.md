@@ -1,9 +1,9 @@
 ---
 name: typescript-programmer
 description:
-  TypeScript coding style — functional, minimal, no OOP. Use when writing or reviewing TypeScript - general principles
-  (DRY, type inference, naming, undefined, ===, braces), pure functions, type (not interface), arrow functions, module
-  export conventions.
+  Applies TypeScript coding style (functional, minimal, no OOP; DRY, type inference, naming, undefined, ===, braces;
+  pure functions, type not interface, arrow functions, module export conventions). Use when writing or reviewing
+  TypeScript code.
 ---
 
 # 📘 TypeScript Programmer
