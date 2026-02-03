@@ -1,27 +1,18 @@
 ---
 name: typescript-programmer
 description:
-  Applies TypeScript coding style (functional, minimal, no OOP; DRY, type inference, naming, undefined, ===, braces;
-  pure functions, type not interface, arrow functions, module export conventions). Use when writing or reviewing
-  TypeScript code.
+  Applies TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions,
+  module export conventions). Builds on programmer skill. Use when writing or reviewing TypeScript code.
 ---
 
 # 📘 TypeScript Programmer
 
-## 🧭 Philosophy
-
-- **Occam's razor** — don't write code "for the future"; only what's needed now.
-- **Simplicity** — keep code simple and compact.
-- **No OOP** — don't use classes or object-oriented style.
+Follow the **programmer** skill for general principles (DRY, pure functions, no OOP, comments, simple names, etc.). This
+skill adds TypeScript-specific rules only.
 
 ---
 
-## 📐 General Programming Principles
-
-### Don't duplicate code
-
-- Extract repeated logic into functions or shared constants.
-- **Single source of truth** for types and values: derive types from data instead of manually duplicating enums.
+## 📐 TypeScript-Specific Rules
 
 ### Infer types from values
 
@@ -34,8 +25,6 @@ impossible or hurts readability.
 | Constant object (keys/values) | `keyof typeof OBJ`, `(typeof OBJ)[key]`                    |
 | Function return type          | `ReturnType<typeof fn>`                                    |
 | Function parameters           | `Parameters<typeof fn>`                                    |
-
-One example for array and object:
 
 ```ts
 const STATUSES = ["pending", "done", "failed"] as const;
@@ -62,25 +51,14 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 - In **`if`** (and in `else`, `else if`) always use **curly braces**, even for a single statement.
 
----
-
-## ✍️ Code Style
-
-### Functional style
-
-- The main unit is the **function**.
-- Prefer **pure functions**: extract to separate files and cover with tests.
-- Use **arrow functions** everywhere, not regular `function`.
-
 ### Types
 
 - Use only **`type`**, not `interface`.
 - **Don't specify types** where the compiler infers them.
 
-### Comments
+### Arrow functions
 
-- Don't comment the obvious; only **non-obvious** points.
-- Comment language — **English**.
+- Use **arrow functions** everywhere, not regular `function`.
 
 ---
 
@@ -115,29 +93,15 @@ export const Timer = (delay: number) => {
 
 ---
 
-## ✅ Quick Checklist
+## ✅ Checklist
 
-**Principles**
-
-- [ ] No code duplication
 - [ ] Types inferred from values where possible
 - [ ] Files in PascalCase (except `main.ts`, `index.ts`)
 - [ ] Use `undefined`, not `null`
 - [ ] Comparisons only `===` / `!==`
 - [ ] All `if` statements have curly braces
-
-**Style**
-
-- [ ] No extra "future-proof" code; code is simple and short
-- [ ] No classes or OOP
-- [ ] Arrow functions everywhere
 - [ ] Only `type`, no `interface`
 - [ ] Types omitted where inferred
-- [ ] Comments only for non-obvious things, in English
-- [ ] Pure functions extracted and under tests
-
-**Modules**
-
+- [ ] Arrow functions everywhere
 - [ ] No `let` at module level (except in factory closure)
-- [ ] Pure module → `export const X = { fn1, fn2 }`
-- [ ] Module with side effects → `export const X = (deps) => ({ ... })`
+- [ ] Pure module → `export const X = { fn1, fn2 }`; with side effects → `export const X = (deps) => ({ ... })`
