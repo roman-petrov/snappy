@@ -41,6 +41,7 @@ jobs:
           SSH_OPTS="-p 22 -o StrictHostKeyChecking=no"
           TARGET="${SSH_USER}@${SSH_HOST}"
           SNAPPY_CONFIG_B64=$(echo -n "${SNAPPY_CONFIG}" | base64 -w 0)
+          SNAPPY_VERSION="${GITHUB_SHA}"
 
           ssh ${SSH_OPTS} "${TARGET}" "mkdir -p ${REMOTE_PATH}"
 
@@ -48,4 +49,4 @@ jobs:
             --exclude='node_modules' --exclude='.git' --exclude='.github' \
             ./ "${TARGET}:${REMOTE_PATH}/"
 
-          ssh ${SSH_OPTS} "${TARGET}" "bash -s" -- "${REMOTE_PATH}" "${SNAPPY_CONFIG_B64}" < .github/scripts/deploy.sh
+          ssh ${SSH_OPTS} "${TARGET}" "bash -s" -- "${REMOTE_PATH}" "${SNAPPY_CONFIG_B64}" "${SNAPPY_VERSION}" < .github/scripts/deploy.sh

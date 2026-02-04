@@ -12,6 +12,7 @@ export const en = {
       menu: `Show help`,
       text: `/start - Start working\n/help - Show help\n/balance - Check balance\n/premium - Buy premium`,
       title: `📚 Commands help`,
+      versionLabel: `Version`,
     },
     language: {
       changed: `✅ Language changed to English`,

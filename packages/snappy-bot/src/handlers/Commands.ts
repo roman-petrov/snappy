@@ -19,8 +19,15 @@ const registerCommands = (bot: Bot) => {
 
   bot.command(`help`, async context => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
+    const body = `${t(localeKey, `commands.help.title`)}\n\n${t(localeKey, `commands.help.text`)}`;
+    const version = process.env[`SNAPPY_VERSION`];
 
-    await context.send(`${t(localeKey, `commands.help.title`)}\n\n${t(localeKey, `commands.help.text`)}`);
+    const message =
+      version === undefined
+        ? body
+        : `${body}\n\n<tg-spoiler>${t(localeKey, `commands.help.versionLabel`)}: <b>${version}</b></tg-spoiler>`;
+
+    await context.send(message, version === undefined ? undefined : { parse_mode: `HTML` });
   });
 
   bot.command(`balance`, async context => {
