@@ -1,28 +1,28 @@
 # cspell:words webfactory
-name: Setup Server
+name: 🖥️ Setup server
 
 on:
   workflow_dispatch:
 
 jobs:
   setup:
-    name: Setup Server Dependencies
+    name: ⚙️ Setup server dependencies
     runs-on: ubuntu-latest
     environment: production
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH
+      - name: 🔑 Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Add server to known hosts
+      - name: 📋 Add server to known hosts
         run: ssh-keyscan -p 22 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Install dependencies on server
+      - name: 📦 Install dependencies on server
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}

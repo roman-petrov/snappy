@@ -1,4 +1,4 @@
-name: CI
+name: ✅ CI
 
 on:
   workflow_dispatch: # Только ручной запуск через GitHub UI
@@ -27,16 +27,16 @@ jobs:
             arg: lint:markdown
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Bun
+      - name: 🐰 Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
-      - name: Install dependencies
+      - name: 📦 Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Run ${{ matrix.task.name }}
+      - name: ▶️ Run ${{ matrix.task.name }}
         run: bun run packages/do/src/main.cli.ts ${{ matrix.task.arg }}
