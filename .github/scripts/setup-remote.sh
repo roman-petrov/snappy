@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# cspell:word setcap
 set -e
 
 [ -d "$HOME/.bun/bin" ] && export PATH="$HOME/.bun/bin:$PATH"
