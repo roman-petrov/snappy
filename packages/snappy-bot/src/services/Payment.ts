@@ -70,7 +70,6 @@ const paymentUrl = async (userId: number, amount: number, description: string) =
   return apiResponse.confirmation.confirmationUrl;
 };
 
-/* eslint-disable-next-line require-await -- promise-function-async requires async; no await needed when returning promise. */
 const premiumPaymentUrl = async (userId: number) =>
   paymentUrl(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
