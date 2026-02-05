@@ -8,19 +8,15 @@ import { z } from "zod";
 import { Commands } from "./Commands";
 import { Instructions } from "./Instructions";
 import { Run } from "./Run";
+import { RunAll } from "./RunAll";
 import { Scripts } from "./Scripts";
 import { Workflow } from "./Workflow";
 
-const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal. For run/dev pass package (see enum).`;
+const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run bun run or npm run in the terminal.`;
 const root = Scripts.rootDir();
 const names = Commands.commands().map(c => c.name);
 const scriptEnum = z.enum(names as [string, ...string[]]);
-const appPackages = Workflow.applicationPackages(root);
-
-const packageSchema =
-  appPackages.length > 0 ? z.enum(appPackages as [string, ...string[]]).optional() : z.string().optional();
-
-const inputSchema = z.object({ package: packageSchema, script: scriptEnum });
+const inputSchema = z.object({ script: scriptEnum });
 
 type WorkflowRunInput = z.infer<typeof inputSchema>;
 
@@ -37,10 +33,20 @@ server.registerTool(
     // @ts-expect-error TS2322
     inputSchema,
   },
-  async ({ package: packageArg, script }: WorkflowRunInput) => {
-    const resolved = Workflow.resolve(root, script, packageArg);
+  async ({ script }: WorkflowRunInput) => {
+    const resolved = Workflow.resolve(root, script);
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
+    }
+    if (resolved.command === `__dev_all__`) {
+      const exitCode = await RunAll.runDev(root);
+
+      return { content: [{ text: `Dev exited with code ${exitCode}.`, type: `text` as const }] };
+    }
+    if (resolved.command === `__run_all__`) {
+      const exitCode = await RunAll.runProd(root);
+
+      return { content: [{ text: `Run exited with code ${exitCode}.`, type: `text` as const }] };
     }
     const devTimeoutMs = 600_000;
     const isDev = script === `dev`;

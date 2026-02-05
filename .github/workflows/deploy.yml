@@ -3,6 +3,12 @@ name: 🚀 Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag (commit SHA) from Releases. Empty = build and deploy from current commit."
+        required: false
+        type: string
+        default: ""
 
 jobs:
   deploy:
@@ -11,8 +17,19 @@ jobs:
     environment: production
 
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - name: 🏗️ Build and publish to Release
+        if: inputs.version == ''
+        id: build
+        uses: ./.github/actions/build-and-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 📥 Download release artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ inputs.version || steps.build.outputs.version }}"
+          gh release download "$VERSION" --repo ${{ github.repository }} --pattern '*.zip' -O dist.zip
 
       - name: 🔑 Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -27,4 +44,8 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SNAPPY_CONFIG: ${{ secrets.SNAPPY_CONFIG }}
-        run: bash .github/scripts/deploy.sh
+          SNAPPY_VERSION: ${{ inputs.version || steps.build.outputs.version }}
+          DIST_ZIP: dist.zip
+        run: |
+          export SNAPPY_VERSION="${{ inputs.version || steps.build.outputs.version }}"
+          bash .github/scripts/deploy.sh
