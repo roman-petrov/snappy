@@ -61,6 +61,17 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 - Use **arrow functions** everywhere, not regular `function`.
 
+### Destructure parameters
+
+When possible, **destructure function parameters** instead of accessing properties via the parameter name. Prefer
+`({ a, b }: Props)` over `(props: Props)` with `props.a`, `props.b` in the body.
+
+```ts
+type Options = { a: string; b: number };
+
+const fn = ({ a, b }: Options) => a + b;
+```
+
 ---
 
 ## 📦 Module Export Rules
@@ -127,6 +138,7 @@ export type Timer = ReturnType<typeof Timer>;
 - [ ] Only `type`, no `interface`
 - [ ] Types omitted where inferred
 - [ ] Arrow functions everywhere
+- [ ] Parameters destructured when possible (e.g. `({ a, b }: T)` not `(opts: T)` with `opts.a`)
 - [ ] No `let` at module level (except in factory closure)
 - [ ] Pure module → `export const X = { fn1, fn2 }` (no individual `export function`/`export const fn`); with side
       effects → `export const X = (deps) => ({ ... })`

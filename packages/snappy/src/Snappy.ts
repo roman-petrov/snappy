@@ -8,9 +8,9 @@ import { type FeatureType, Prompts } from "./prompts";
 
 export type SnappyOptions = { gigaChatAuthKey: string };
 
-export const Snappy = (options: SnappyOptions) => {
+export const Snappy = ({ gigaChatAuthKey }: SnappyOptions) => {
   const client = new GigaChat({
-    credentials: options.gigaChatAuthKey,
+    credentials: gigaChatAuthKey,
     httpsAgent: new Agent({ rejectUnauthorized: false }),
     model: `GigaChat`,
     scope: `GIGACHAT_API_PERS`,
