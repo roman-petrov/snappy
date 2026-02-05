@@ -4,27 +4,28 @@
    --------------------------------------------------------------------------- */
 
 :root {
-  /* Palette */
+  /* Palette — яркая индиго/фиолет с акцентами */
   --color-accent: #6366f1;
   --color-accent-deep: #4f46e5;
-  --color-accent-hot: #8b5cf6;
+  --color-accent-hot: #a855f7;
+  --color-accent-cyan: #06b6d4;
   --color-accent-soft: #eef2ff;
   --color-accent-soft-2: #e8e5ff;
   --color-accent-soft-3: #ede9fe;
-  --color-accent-soft-4: #fafaff;
+  --color-accent-soft-4: #faf5ff;
   --rgb-accent: 99 102 241;
 
-  --color-text: #1a1a1f;
-  --color-text-heading: #0f172a;
-  --color-text-body: #334155;
-  --color-text-muted: #5b5f6b;
+  --color-text: #0f0f14;
+  --color-text-heading: #0c0c12;
+  --color-text-body: #2d2d3a;
+  --color-text-muted: #5c5c6e;
 
-  --color-bg: #f8f7ff;
-  --color-bg-mid: #f0eeff;
-  --color-bg-end: #fafafa;
+  --color-bg: #f5f3ff;
+  --color-bg-mid: #ede9fe;
+  --color-bg-end: #faf5ff;
   --color-bg-card: #fff;
-  --color-border: #e2e0f5;
-  --color-border-accent: rgb(var(--rgb-accent) / 0.25);
+  --color-border: #e0dcf5;
+  --color-border-accent: rgb(var(--rgb-accent) / 0.35);
 
   /* Spacing scale */
   --space-1: 0.25rem;
@@ -64,15 +65,15 @@
   /* Radii and shadows */
   --radius-sm: 10px;
   --radius: 14px;
-  --shadow: 0 2px 8px rgb(var(--rgb-accent) / 0.08);
-  --shadow-card: 0 4px 20px rgb(var(--rgb-accent) / 0.12);
-  --shadow-btn: 0 4px 14px rgb(var(--rgb-accent) / 0.4);
-  --shadow-btn-hover: 0 8px 24px rgb(var(--rgb-accent) / 0.45);
-  --shadow-nav: 0 1px 0 rgb(var(--rgb-accent) / 0.06);
-  --shadow-glow: radial-gradient(ellipse at center, rgb(var(--rgb-accent) / 0.35) 0%, transparent 70%);
+  --shadow: 0 2px 12px rgb(var(--rgb-accent) / 0.1);
+  --shadow-card: 0 8px 32px rgb(var(--rgb-accent) / 0.15);
+  --shadow-btn: 0 4px 16px rgb(var(--rgb-accent) / 0.45);
+  --shadow-btn-hover: 0 10px 28px rgb(var(--rgb-accent) / 0.5);
+  --shadow-nav: 0 1px 0 rgb(var(--rgb-accent) / 0.08);
+  --shadow-glow: radial-gradient(ellipse at center, rgb(var(--rgb-accent) / 0.4) 0%, transparent 65%);
 
   /* Gradients (from palette) */
-  --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hot) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hot) 60%, #c026d3 100%);
   --gradient-bg: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
   --gradient-card: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-accent-soft-4) 100%);
   --gradient-example: linear-gradient(135deg, var(--color-accent-soft) 0%, var(--color-accent-soft-2) 100%);
@@ -83,7 +84,7 @@
     var(--color-accent-soft-3) 100%
   );
   --gradient-footer: linear-gradient(180deg, var(--color-bg-card) 0%, var(--color-bg) 100%);
-  --gradient-heading: linear-gradient(135deg, #0f172a 0%, #334155 50%, #1e293b 100%);
+  --gradient-heading: linear-gradient(135deg, #0c0c12 0%, #2d2d3a 50%, #1e1e2e 100%);
 
   /* Layout and motion */
   --content-width: 1100px;
@@ -116,6 +117,60 @@ html {
   box-sizing: border-box;
 }
 
+/* Фоновая анимация (только CSS): движущийся градиент + «облака» */
+@keyframes bg-shift {
+  0%,
+  100% {
+    background-position: 0% 50%, 100% 50%, 50% 0%;
+  }
+  33% {
+    background-position: 100% 50%, 0% 50%, 80% 100%;
+  }
+  66% {
+    background-position: 50% 100%, 100% 0%, 20% 50%;
+  }
+}
+
+@keyframes blob-1 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.4;
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.05);
+    opacity: 0.5;
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.95);
+    opacity: 0.35;
+  }
+}
+
+@keyframes blob-2 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(-40px, -20px) scale(1.1);
+    opacity: 0.45;
+  }
+}
+
+@keyframes blob-3 {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.25;
+  }
+  50% {
+    transform: translate(25px, 30px) scale(1.08);
+    opacity: 0.4;
+  }
+}
+
 body {
   margin: 0;
   font-family: var(--font-sans);
@@ -124,6 +179,80 @@ body {
   color: var(--color-text);
   background: var(--gradient-bg);
   background-attachment: fixed;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
+  background-attachment: fixed;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse 120% 80% at 20% 20%, rgb(99 102 241 / 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 80% 80%, rgb(168 85 247 / 0.18) 0%, transparent 50%),
+    radial-gradient(ellipse 80% 60% at 50% 100%, rgb(6 182 212 / 0.12) 0%, transparent 45%);
+  background-size: 200% 200%, 200% 200%, 200% 200%;
+  background-position: 0% 50%, 100% 50%, 50% 0%;
+  animation: bg-shift 18s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.bg-blobs {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  will-change: transform;
+}
+
+.bg-blob-1 {
+  width: min(80vw, 520px);
+  height: min(80vw, 520px);
+  left: -10%;
+  top: 10%;
+  background: rgb(99 102 241 / 0.35);
+  animation: blob-1 22s ease-in-out infinite;
+}
+
+.bg-blob-2 {
+  width: min(70vw, 420px);
+  height: min(70vw, 420px);
+  right: -5%;
+  top: 40%;
+  background: rgb(168 85 247 / 0.3);
+  animation: blob-2 26s ease-in-out infinite;
+}
+
+.bg-blob-3 {
+  width: min(60vw, 380px);
+  height: min(60vw, 380px);
+  left: 30%;
+  bottom: -5%;
+  background: rgb(6 182 212 / 0.25);
+  animation: blob-3 20s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::after,
+  .bg-blob {
+    animation: none;
+  }
 }
 
 a {
@@ -236,11 +365,11 @@ nav a:hover {
 .hero::before {
   content: "";
   position: absolute;
-  inset-block-start: 0;
+  inset-block-start: -20%;
   inset-inline: 50% auto;
   transform: translateX(-50%);
-  width: min(90%, 480px);
-  height: 280px;
+  width: min(100%, 560px);
+  height: 320px;
   background: var(--shadow-glow);
   pointer-events: none;
 }
@@ -575,8 +704,8 @@ nav a:hover {
   background: var(--gradient-cta);
   border-radius: var(--radius);
   margin-block-start: var(--space-8);
-  border: 1px solid rgb(var(--rgb-accent) / 0.2);
-  box-shadow: var(--shadow-card);
+  border: 1px solid rgb(var(--rgb-accent) / 0.25);
+  box-shadow: var(--shadow-card), 0 0 0 1px rgb(255 255 255 / 0.5) inset;
 }
 
 .cta-block h2 {
