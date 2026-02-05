@@ -203,6 +203,73 @@ nav a:hover {
   line-height: 1.55;
 }
 
+.example-block {
+  margin-bottom: 2.5rem;
+}
+
+.example-block:last-child {
+  margin-bottom: 0;
+}
+
+.example-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.example-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .example-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.example-box {
+  border-radius: var(--radius-sm);
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+}
+
+.example-was {
+  background: var(--bg);
+}
+
+.example-stalo {
+  background: var(--accent-soft);
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.example-title {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.example-stalo .example-title {
+  color: var(--accent);
+}
+
+.example-box p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.example-was p {
+  color: var(--text-muted);
+}
+
 .styles-list {
   list-style: none;
   padding: 0;
