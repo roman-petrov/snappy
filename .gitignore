@@ -1,3 +1,4 @@
 .jscpd
 **/node_modules
 bun.lockb
+dist

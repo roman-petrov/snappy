@@ -3,16 +3,31 @@ name: 🚀 Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag (commit SHA) from Releases. Empty = build and deploy from current commit."
+        required: false
+        type: string
+        default: ""
 
 jobs:
   deploy:
     name: 🚀 Deploy to production
     runs-on: ubuntu-latest
     environment: production
+    permissions:
+      contents: write
 
     steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
+      - name: 🏗️ Build and publish to Release
+        if: inputs.version == ''
+        id: build
+        uses: ./.github/actions/build-and-release
+
+      - name: 📥 Download release artifact
+        run: |
+          VERSION="${{ inputs.version || steps.build.outputs.version }}"
+          gh release download "$VERSION" --repo ${{ github.repository }} --pattern '*.zip' -O dist.zip
 
       - name: 🔑 Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -27,4 +42,6 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SNAPPY_CONFIG: ${{ secrets.SNAPPY_CONFIG }}
+          SNAPPY_VERSION: ${{ inputs.version || steps.build.outputs.version }}
+          DIST_ZIP: dist.zip
         run: bash .github/scripts/deploy.sh

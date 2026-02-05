@@ -40,6 +40,8 @@ export default defineConfig([
             ext: true,
             Fn: true,
             fn: true,
+            prod: true,
+            Prod: true,
             Prop: true,
             prop: true,
             Props: true,

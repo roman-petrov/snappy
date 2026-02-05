@@ -6,7 +6,7 @@ import globals from "globals";
 import plugins from "./plugins/index";
 
 export const ESLintConfig = defineConfig([
-  globalIgnores([`.jscpd`, `**/*.html`]),
+  globalIgnores([`.jscpd`, `dist`, `**/*.html`]),
   {
     languageOptions: {
       globals: { ...globals.browser, ...globals.es2025, ...globals.node },

@@ -1,8 +1,9 @@
 export type Command = { command: string; description: string; name: string };
 
-export const COMMANDS: readonly Command[] = [
-  { command: ``, description: `Run packages/<package>/src/main.ts via bun (no watch).`, name: `run` },
-  { command: ``, description: `Run packages/<package>/src/main.ts via bun with --watch.`, name: `dev` },
+const commands = [
+  { command: `run`, description: `Build and run all apps (node dist/bot + dist/site/server).`, name: `run` },
+  { command: `dev`, description: `Run all apps in watch (bot + site dev server).`, name: `dev` },
+  { command: `build`, description: `Build bot + site into dist/ (bun build, no sourcemap).`, name: `build` },
   { command: `bun test`, description: `Run tests via bun test.`, name: `test` },
   {
     command: `bun test && bunx tsc --noEmit && bunx eslint . && bunx prettier --check . && bunx cspell . && bunx jscpd . && bunx markdownlint .`,
@@ -19,7 +20,6 @@ export const COMMANDS: readonly Command[] = [
   { command: `bunx prettier --write .`, description: `Prettier: format and write files.`, name: `fix:prettier` },
 ] as const;
 
-const commands = (): readonly Command[] => COMMANDS;
-const commandByName = (name: string): Command | undefined => COMMANDS.find(c => c.name === name);
+const commandByName = (name: string) => commands.find(c => c.name === name);
 
 export const Commands = { commandByName, commands };
