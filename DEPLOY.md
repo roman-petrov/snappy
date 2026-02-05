@@ -1,6 +1,8 @@
 # Deploy Snappy Bot
 
-Deployment is done via GitHub Actions: one manual workflow run syncs the repo to the VPS with rsync and runs the deploy script on the server. The script installs Node.js, Bun, and PM2 if missing, then installs dependencies and restarts the bot under PM2.
+Deployment is done via GitHub Actions: one manual workflow run syncs the repo to the VPS with rsync and runs the deploy
+script on the server. The script installs Node.js, Bun, and PM2 if missing, then installs dependencies and restarts the
+bot under PM2.
 
 ## Prerequisites
 
@@ -29,14 +31,15 @@ Deployment is done via GitHub Actions: one manual workflow run syncs the repo to
 
 2. In the `production` environment, add **Environment secrets**:
 
-| Secret            | Description              | Example                                    |
-| ----------------- | ------------------------ | ------------------------------------------ |
-| `SSH_HOST`        | Server hostname or IP    | `192.168.1.100` or `bot.example.com`       |
-| `SSH_USER`        | SSH username             | `deploy` or `ubuntu`                        |
-| `SSH_PRIVATE_KEY` | Private SSH key content  | Full key with BEGIN/END                    |
-| `SNAPPY_CONFIG`   | Bot config JSON          | Raw JSON (e.g. contents of config.json)    |
+| Secret            | Description             | Example                                 |
+| ----------------- | ----------------------- | --------------------------------------- |
+| `SSH_HOST`        | Server hostname or IP   | `192.168.1.100` or `bot.example.com`    |
+| `SSH_USER`        | SSH username            | `deploy` or `ubuntu`                    |
+| `SSH_PRIVATE_KEY` | Private SSH key content | Full key with BEGIN/END                 |
+| `SNAPPY_CONFIG`   | Bot config JSON         | Raw JSON (e.g. contents of config.json) |
 
-Fixed values (not secrets): SSH port `22`, deploy path on server `/home/deploy/snappy`. The deploy script uses PM2 to run the bot.
+Fixed values (not secrets): SSH port `22`, deploy path on server `/home/deploy/snappy`. The deploy script uses PM2 to
+run the bot.
 
 > Secrets in the `production` environment can be protected (e.g. require approval before deploy).
 
@@ -46,7 +49,8 @@ Fixed values (not secrets): SSH port `22`, deploy path on server `/home/deploy/s
 2. Select the **Deploy** workflow.
 3. Click **Run workflow**, choose the branch (usually `main`), then **Run workflow**.
 
-Deploy is manual only. On the first run, the script installs Node.js, Bun, and PM2 on the server if they are missing; no separate server setup is required.
+Deploy is manual only. On the first run, the script installs Node.js, Bun, and PM2 on the server if they are missing; no
+separate server setup is required.
 
 ## Monitoring and logs
 
@@ -58,7 +62,8 @@ pm2 status
 
 ## Rollback
 
-Code is deployed via rsync (no git on the server). To roll back: re-run the **Deploy** workflow from a previous commit in GitHub, or restore the app directory from backup and on the server run:
+Code is deployed via rsync (no git on the server). To roll back: re-run the **Deploy** workflow from a previous commit
+in GitHub, or restore the app directory from backup and on the server run:
 
 ```bash
 cd /home/deploy/snappy

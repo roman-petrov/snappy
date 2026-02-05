@@ -11,7 +11,6 @@ import { Locales, t } from "./locales";
 console.log(`🚀 Starting Snappy Bot...`);
 
 const snappy = Snappy({ gigaChatAuthKey: Config.GIGACHAT_AUTH_KEY });
-
 const bot = new Bot(Config.BOT_TOKEN);
 const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
