@@ -10,28 +10,27 @@ const distBotPath = (root: string) => join(root, `dist`, `bot`, `app.js`);
 const distSiteServerPath = (root: string) => join(root, `dist`, `site`, `server.js`);
 const spawnOptions = { stderr: `inherit` as const, stdin: `ignore` as const, stdout: `inherit` as const };
 
-const runDev = async (root: string) => {
-  const botProc = Bun.spawn([`bun`, `--watch`, `run`, botMainPath(root)], { cwd: root, ...spawnOptions });
-  const siteProc = Bun.spawn([`bun`, `run`, `--cwd`, siteDir(root), `dev`], { cwd: root, ...spawnOptions });
-  const first = await Promise.race([botProc.exited, siteProc.exited]);
-  botProc.kill();
-  siteProc.kill();
+const spawnTwo = async (root: string, botCmd: string[], siteCmd: string[]) => {
+  const a = Bun.spawn(botCmd, { cwd: root, ...spawnOptions });
+  const b = Bun.spawn(siteCmd, { cwd: root, ...spawnOptions });
+  const exit = await Promise.race([a.exited, b.exited]);
 
-  return first;
+  a.kill();
+  b.kill();
+
+  return exit;
 };
+
+const runDev = async (root: string) =>
+  spawnTwo(root, [`bun`, `--watch`, `run`, botMainPath(root)], [`bun`, `run`, `--cwd`, siteDir(root), `dev`]);
 
 const runProd = async (root: string) => {
   const buildExit = await Build.build(root);
   if (buildExit !== 0) {
     return buildExit;
   }
-  const botProc = Bun.spawn([`node`, distBotPath(root)], { cwd: root, ...spawnOptions });
-  const siteProc = Bun.spawn([`node`, distSiteServerPath(root)], { cwd: root, ...spawnOptions });
-  const first = await Promise.race([botProc.exited, siteProc.exited]);
-  botProc.kill();
-  siteProc.kill();
 
-  return first;
+  return spawnTwo(root, [`node`, distBotPath(root)], [`node`, distSiteServerPath(root)]);
 };
 
 export const RunAll = { runDev, runProd };

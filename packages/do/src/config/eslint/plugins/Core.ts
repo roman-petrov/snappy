@@ -25,6 +25,7 @@ export default defineConfig([
       "no-void": [`error`, { allowAsStatement: true }],
       "no-warning-comments": `off`,
       "one-var": [`error`, `never`],
+      "require-await": `off`,
       "sort-imports": `off`,
       "sort-keys": `off`,
       "spaced-comment": `off`,
