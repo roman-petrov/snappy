@@ -14,14 +14,6 @@ jobs:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: 🐰 Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: 📦 Install dependencies
-        run: bun install --frozen-lockfile
-
       - name: 🔑 Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
@@ -35,18 +27,4 @@ jobs:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           SNAPPY_CONFIG: ${{ secrets.SNAPPY_CONFIG }}
-        run: |
-          set -e
-          REMOTE_PATH=/home/deploy/snappy
-          SSH_OPTS="-p 22 -o StrictHostKeyChecking=no"
-          TARGET="${SSH_USER}@${SSH_HOST}"
-          SNAPPY_CONFIG_B64=$(echo -n "${SNAPPY_CONFIG}" | base64 -w 0)
-          SNAPPY_VERSION="${GITHUB_SHA}"
-
-          ssh ${SSH_OPTS} "${TARGET}" "mkdir -p ${REMOTE_PATH}"
-
-          rsync -avz --delete -e "ssh ${SSH_OPTS}" \
-            --exclude='node_modules' --exclude='.git' --exclude='.github' \
-            ./ "${TARGET}:${REMOTE_PATH}/"
-
-          ssh ${SSH_OPTS} "${TARGET}" "bash -s" -- "${REMOTE_PATH}" "${SNAPPY_CONFIG_B64}" "${SNAPPY_VERSION}" < .github/scripts/deploy.sh
+        run: bash .github/scripts/deploy.sh

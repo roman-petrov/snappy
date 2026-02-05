@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 set -e
 
-REMOTE_PATH="$1"
-SNAPPY_CONFIG_B64="$2"
-SNAPPY_VERSION="$3"
+REMOTE_PATH=/home/deploy/snappy
+SSH_OPTS="-p 22 -o StrictHostKeyChecking=no"
+TARGET="${SSH_USER}@${SSH_HOST}"
+SNAPPY_CONFIG_B64=$(echo -n "${SNAPPY_CONFIG}" | base64 -w 0)
+SNAPPY_VERSION="${GITHUB_SHA}"
 
-export PATH="$HOME/.bun/bin:$PATH"
-cd "${REMOTE_PATH}"
+echo "⚙️ Setting up server..."
+ssh ${SSH_OPTS} "${TARGET}" "bash -s" < .github/scripts/setup-remote.sh
 
-echo "📦 Installing dependencies..."
-bun install --production
+echo "📤 Syncing files..."
+ssh ${SSH_OPTS} "${TARGET}" "mkdir -p ${REMOTE_PATH}"
+rsync -avz --delete -e "ssh ${SSH_OPTS}" \
+  --exclude='node_modules' --exclude='.git' --exclude='.github' \
+  ./ "${TARGET}:${REMOTE_PATH}/"
 
-echo "🔄 Restarting PM2..."
-pm2 delete snappy-bot 2>/dev/null || true
-cd packages/snappy-bot
-SNAPPY_CONFIG="${SNAPPY_CONFIG_B64}" SNAPPY_VERSION="${SNAPPY_VERSION}" pm2 start bun --name snappy-bot --update-env -- run start
-pm2 save
-
-echo "📊 PM2 status:"
-pm2 status snappy-bot
-echo "✅ Deploy completed."
+echo "🚀 Running deploy on server..."
+ssh ${SSH_OPTS} "${TARGET}" "bash -s" -- "${REMOTE_PATH}" "${SNAPPY_CONFIG_B64}" "${SNAPPY_VERSION}" < .github/scripts/deploy-remote.sh
