@@ -5,7 +5,11 @@
   "private": true,
   "scripts": {
     "dev": "live-server . --port=4321",
-    "preview": "live-server . --port=4321 --no-browser"
+    "preview": "live-server . --port=4321 --no-browser",
+    "start": "serve . -l 80"
+  },
+  "dependencies": {
+    "serve": "^14.2.4"
   },
   "devDependencies": {
     "live-server": "^1.2.2"

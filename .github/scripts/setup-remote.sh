@@ -14,6 +14,12 @@ else
   echo "✅ Node.js already installed: $(node --version)"
 fi
 
+NODE_BIN=$(command -v node)
+if [ -n "${NODE_BIN}" ]; then
+  echo "🔓 Allowing Node to bind to port 80..."
+  sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "${NODE_BIN}")" 2>/dev/null || true
+fi
+
 if ! command -v bun &>/dev/null; then
   echo "📦 Installing Bun..."
   curl -fsSL https://bun.sh/install | bash
