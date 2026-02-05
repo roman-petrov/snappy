@@ -2,8 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
-
-import { Snappy } from "@snappy/snappy";
+import type { Snappy } from "@snappy/snappy";
 
 import { Keyboards } from "../keyboards";
 import { t } from "../locales";
@@ -11,7 +10,7 @@ import { Payment } from "../services";
 import { Storage } from "../storage";
 import { Messages } from "./Messages";
 
-const registerCallbackHandlers = (bot: Bot) => {
+const registerCallbackHandlers = (bot: Bot, snappy: Snappy) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
     const localeKey = Storage.userLanguage(context.from.languageCode);
@@ -57,7 +56,7 @@ const registerCallbackHandlers = (bot: Bot) => {
       await context.send(t(localeKey, `features.processing`));
 
       try {
-        const processedText = await Snappy.processText(text, feature);
+        const processedText = await snappy.processText(text, feature);
 
         Storage.incrementRequestCount(userId);
 

@@ -71,27 +71,48 @@ Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
 
 ### Module of pure functions
 
-Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
-same file. **Never export individual functions** — only the single namespace constant (e.g.
-`export const Math = { add, remove }`, not `export function add` / `export const remove`). **Exception:** very general,
-frequently used helpers (e.g. localization `t`) may be exported and used without the module prefix.
+- Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
+  same file.
+- **Never export individual functions** — only the single namespace constant (e.g. `export const Math = { add, remove }`,
+  not `export function add` / `export const remove`).
+- **Exception:** very general, frequently used helpers (e.g. localization `t`) may be exported and used without the
+  module prefix.
 
-### Module with side effects
+```ts
+const add = (a: number, b: number) => a + b;
+const subtract = (a: number, b: number) => a - b;
+const multiply = (a: number, b: number) => a * b;
+const divide = (a: number, b: number) => a / b;
 
-Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
-Inside — `let` in the closure, reset via `undefined`, checks via `===` and braces in `if`.
+export const Math = { add, subtract, multiply, divide };
+```
+
+### Module with side effects (factory)
+
+- Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
+- **Declare each function as a local `const` first**, then return the object. Don't inline arrow functions in the return
+  literal — extract them above the `return`.
+- Export the API type: `export type <ModuleName> = ReturnType<typeof <ModuleName>>`.
 
 ```ts
 export const Timer = (delay: number) => {
   let id: ReturnType<typeof setInterval> | undefined = undefined;
+
+  const start = () => {
+    id = setInterval(() => {}, delay);
+  };
+
   const stop = () => {
     if (id !== undefined) {
       clearInterval(id);
       id = undefined;
     }
   };
+
   return { start, stop };
 };
+
+export type Timer = ReturnType<typeof Timer>;
 ```
 
 ---
@@ -109,3 +130,5 @@ export const Timer = (delay: number) => {
 - [ ] No `let` at module level (except in factory closure)
 - [ ] Pure module → `export const X = { fn1, fn2 }` (no individual `export function`/`export const fn`); with side
       effects → `export const X = (deps) => ({ ... })`
+- [ ] Factory: functions declared as local `const` before `return`, not inlined in the return object
+- [ ] Factory: API type exported as `export type X = ReturnType<typeof X>`
