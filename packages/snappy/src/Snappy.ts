@@ -20,7 +20,7 @@ export const Snappy = ({ gigaChatAuthKey }: SnappyOptions) => {
   const processText = async (text: string, feature: FeatureType) => {
     const prompt = Prompts.systemPrompt(feature);
 
-    const resp = await client.chat({
+    const { choices } = await client.chat({
       messages: [
         { content: prompt, role: `system` },
         { content: text, role: `user` },
@@ -28,7 +28,7 @@ export const Snappy = ({ gigaChatAuthKey }: SnappyOptions) => {
       repetitionPenalty: 1,
     });
 
-    const [firstChoice] = resp.choices;
+    const [firstChoice] = choices;
     if (firstChoice === undefined) {
       throw new Error(`No response from GigaChat`);
     }

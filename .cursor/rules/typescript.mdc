@@ -72,6 +72,15 @@ type Options = { a: string; b: number };
 const fn = ({ a, b }: Options) => a + b;
 ```
 
+### Destructure assignments
+
+When assigning from an object, **destructure needed properties** instead of assigning the whole object and then
+accessing properties. Prefer `const { a, b } = obj` over `const x = obj` with `x.a`, `x.b`.
+
+```ts
+const { a, b } = obj;
+```
+
 ---
 
 ## 🔀 Control flow & expressions
@@ -158,6 +167,7 @@ export type Timer = ReturnType<typeof Timer>;
 
 - [ ] Arrow functions everywhere
 - [ ] Parameters destructured when possible (`({ a, b }: T)` not `(opts: T)` with `opts.a`)
+- [ ] Assignments destructured when possible (`const { a } = obj` not `const x = obj` with `x.a`)
 
 ### Control flow & expressions
 
