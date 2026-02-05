@@ -1,0 +1,47 @@
+name: Build and publish to Release
+description: Checkout, install, build, zip, create GitHub Release. Outputs version (commit SHA).
+
+inputs:
+  token:
+    description: GITHUB_TOKEN for creating release
+    required: true
+
+outputs:
+  version:
+    description: Release tag (release-<sha>), used to download the artifact
+    value: ${{ steps.release.outputs.version }}
+
+runs:
+  using: composite
+  steps:
+    - name: 📥 Checkout
+      uses: actions/checkout@v4
+
+    - name: 🐰 Setup Bun
+      uses: oven-sh/setup-bun@v2
+      with:
+        bun-version: latest
+
+    - name: 🏗️ Install and build
+      shell: bash
+      run: |
+        bun install --frozen-lockfile
+        bun run packages/do/src/main.cli.ts build
+
+    - name: 📦 Zip artifact
+      shell: bash
+      run: zip -r dist.zip dist
+
+    - name: 📤 Create Release and upload artifact
+      id: release
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        RELEASE_TAG: release-${{ github.sha }}
+      run: |
+        gh release delete "$RELEASE_TAG" --yes 2>/dev/null || true
+        gh release create "$RELEASE_TAG" dist.zip \
+          --repo ${{ github.repository }} \
+          --title "$RELEASE_TAG" \
+          --notes "Build from commit ${{ github.sha }}"
+        echo "version=$RELEASE_TAG" >> $GITHUB_OUTPUT

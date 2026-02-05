@@ -1,0 +1,20 @@
+name: 🏗️ Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 🏗️ Build and publish to Releases
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Build and publish
+        uses: ./.github/actions/build-and-release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
