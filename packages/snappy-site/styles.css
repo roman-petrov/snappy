@@ -102,6 +102,8 @@ html {
 
 #features,
 #examples,
+#who,
+#faq,
 #start {
   scroll-margin-top: 3.5rem;
 }
@@ -349,6 +351,10 @@ nav a:hover {
   gap: var(--space-6);
 }
 
+#who .features-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
@@ -489,6 +495,45 @@ nav a:hover {
 }
 
 /* ---------------------------------------------------------------------------
+   FAQ
+   --------------------------------------------------------------------------- */
+
+.faq-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--space-4);
+}
+
+.faq-item {
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  transition: border-color var(--ease), box-shadow var(--ease);
+}
+
+.faq-item:hover {
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow);
+}
+
+.faq-item dt {
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  margin: 0 0 var(--space-2);
+}
+
+.faq-item dd {
+  margin: 0;
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+/* ---------------------------------------------------------------------------
    Steps
    --------------------------------------------------------------------------- */
 
@@ -585,6 +630,10 @@ nav a:hover {
 
 @media (max-width: 640px) {
   .example-row {
+    grid-template-columns: 1fr;
+  }
+
+  #who .features-grid {
     grid-template-columns: 1fr;
   }
 
