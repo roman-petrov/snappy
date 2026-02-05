@@ -39,4 +39,5 @@ runs:
           --repo ${{ github.repository }} \
           --title "$RELEASE_TAG" \
           --notes "Build from commit ${{ github.sha }}"
+        rm -f dist.zip
         echo "version=$RELEASE_TAG" >> $GITHUB_OUTPUT
