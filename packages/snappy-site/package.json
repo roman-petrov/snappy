@@ -1,0 +1,13 @@
+{
+  "name": "@snappy/snappy-site",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "live-server . --port=4321",
+    "preview": "live-server . --port=4321 --no-browser"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
