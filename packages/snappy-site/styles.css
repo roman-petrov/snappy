@@ -75,7 +75,12 @@
   --gradient-bg: linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-mid) 50%, var(--color-bg-end) 100%);
   --gradient-card: linear-gradient(135deg, var(--color-bg-card) 0%, var(--color-accent-soft-4) 100%);
   --gradient-example: linear-gradient(135deg, var(--color-accent-soft) 0%, var(--color-accent-soft-2) 100%);
-  --gradient-cta: linear-gradient(135deg, var(--color-accent-soft) 0%, var(--color-accent-soft-2) 50%, var(--color-accent-soft-3) 100%);
+  --gradient-cta: linear-gradient(
+    135deg,
+    var(--color-accent-soft) 0%,
+    var(--color-accent-soft-2) 50%,
+    var(--color-accent-soft-3) 100%
+  );
   --gradient-footer: linear-gradient(180deg, var(--color-bg-card) 0%, var(--color-bg) 100%);
   --gradient-heading: linear-gradient(135deg, #0f172a 0%, #334155 50%, #1e293b 100%);
 
@@ -473,7 +478,9 @@ nav a:hover {
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
   border-inline-start: 3px solid var(--color-accent);
-  transition: background var(--ease), border-color var(--ease);
+  transition:
+    background var(--ease),
+    border-color var(--ease);
 }
 
 .styles-list li:hover {
