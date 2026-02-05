@@ -13,7 +13,15 @@ rule adds TypeScript-specific rules only.
 
 ---
 
-## 📐 TypeScript-Specific Rules
+## 📁 Project & files
+
+### File naming
+
+Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
+
+---
+
+## 📐 Types
 
 ### Infer types from values
 
@@ -28,34 +36,26 @@ impossible or hurts readability.
 | Function parameters           | `Parameters<typeof fn>`                                    |
 
 ```ts
-const STATUSES = ["pending", "done", "failed"] as const;
-type Status = (typeof STATUSES)[number];
+const statuses = ["pending", "done", "failed"] as const;
+type Status = (typeof statuses)[number];
 
-const CONFIG = { timeout: 5000, retries: 3 } as const;
-type ConfigKey = keyof typeof CONFIG;
+const config = { timeout: 5000, retries: 3 } as const;
+type ConfigKey = keyof typeof config;
 ```
 
-### 📁 File naming
+### Type declarations
 
-Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
+- Use only **`type`**, not `interface`.
+- **Don't specify types** where the compiler infers them.
 
 ### undefined instead of null
 
 - Don't use `null`; use **`undefined`** for "absent" values.
 - Replace `T | null` with `T | undefined` (or optional field without explicit type).
 
-### Strict comparison
+---
 
-- Always use **`===`** and **`!==`**, not `==` / `!=`.
-
-### Braces in conditionals
-
-- In **`if`** (and in `else`, `else if`) always use **curly braces**, even for a single statement.
-
-### Types
-
-- Use only **`type`**, not `interface`.
-- **Don't specify types** where the compiler infers them.
+## ⚡ Functions
 
 ### Arrow functions
 
@@ -74,18 +74,30 @@ const fn = ({ a, b }: Options) => a + b;
 
 ---
 
-## 📦 Module Export Rules
+## 🔀 Control flow & expressions
 
-### No variables in module scope
+### Strict comparison
+
+- Always use **`===`** and **`!==`**, not `==` / `!=`.
+
+### Braces in conditionals
+
+- In **`if`** (and in `else`, `else if`) always use **curly braces**, even for a single statement.
+
+---
+
+## 📦 Modules
+
+### Module scope
 
 - Don't use **`let`** at module level (only `const` or functions).
 
-### Module of pure functions
+### Pure module (object of functions)
 
 - Export as an **object of functions**: `export const <ModuleName> = { fn1, fn2, ... }`. Functions are declared in the
   same file.
-- **Never export individual functions** — only the single namespace constant (e.g. `export const Math = { add, remove }`,
-  not `export function add` / `export const remove`).
+- **Never export individual functions** — only the single namespace constant (e.g.
+  `export const Math = { add, remove }`, not `export function add` / `export const remove`).
 - **Exception:** very general, frequently used helpers (e.g. localization `t`) may be exported and used without the
   module prefix.
 
@@ -98,9 +110,10 @@ const divide = (a: number, b: number) => a / b;
 export const Math = { add, subtract, multiply, divide };
 ```
 
-### Module with side effects (factory)
+### Factory module (closure with side effects)
 
-- Export as a **closure (factory)** that returns an API: `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
+- Export as a **closure (factory)** that returns an API:
+  `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
 - **Declare each function as a local `const` first**, then return the object. Don't inline arrow functions in the return
   literal — extract them above the `return`.
 - Export the API type: `export type <ModuleName> = ReturnType<typeof <ModuleName>>`.
@@ -130,17 +143,30 @@ export type Timer = ReturnType<typeof Timer>;
 
 ## ✅ Checklist
 
-- [ ] Types inferred from values where possible
+### Project & files
+
 - [ ] Files in PascalCase (except `main.ts`, `index.ts`)
-- [ ] Use `undefined`, not `null`
-- [ ] Comparisons only `===` / `!==`
-- [ ] All `if` statements have curly braces
+
+### Types
+
+- [ ] Types inferred from values where possible
 - [ ] Only `type`, no `interface`
 - [ ] Types omitted where inferred
+- [ ] Use `undefined`, not `null`
+
+### Functions
+
 - [ ] Arrow functions everywhere
-- [ ] Parameters destructured when possible (e.g. `({ a, b }: T)` not `(opts: T)` with `opts.a`)
+- [ ] Parameters destructured when possible (`({ a, b }: T)` not `(opts: T)` with `opts.a`)
+
+### Control flow & expressions
+
+- [ ] Comparisons only `===` / `!==`
+- [ ] All `if` statements have curly braces
+
+### Modules
+
 - [ ] No `let` at module level (except in factory closure)
-- [ ] Pure module → `export const X = { fn1, fn2 }` (no individual `export function`/`export const fn`); with side
-      effects → `export const X = (deps) => ({ ... })`
-- [ ] Factory: functions declared as local `const` before `return`, not inlined in the return object
+- [ ] Pure module: `export const X = { fn1, fn2 }` (no individual exports)
+- [ ] Factory: functions declared as local `const` before `return`, not inlined
 - [ ] Factory: API type exported as `export type X = ReturnType<typeof X>`
