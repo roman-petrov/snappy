@@ -19,6 +19,9 @@ jobs:
       contents: write
 
     steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
       - name: 🏗️ Build and publish to Release
         if: inputs.version == ''
         id: build
