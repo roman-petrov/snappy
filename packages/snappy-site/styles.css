@@ -286,6 +286,16 @@ nav a:hover {
   font-size: var(--text-md);
 }
 
+.icon-telegram {
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline-end: var(--space-2);
+}
+
+.icon-telegram svg {
+  display: block;
+}
+
 /* ---------------------------------------------------------------------------
    Sections
    --------------------------------------------------------------------------- */
