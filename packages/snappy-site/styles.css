@@ -91,6 +91,16 @@
    Base
    --------------------------------------------------------------------------- */
 
+html {
+  scroll-behavior: smooth;
+}
+
+#features,
+#examples,
+#start {
+  scroll-margin-top: 3.5rem;
+}
+
 * {
   box-sizing: border-box;
 }
