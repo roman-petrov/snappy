@@ -3,7 +3,7 @@
 /* eslint-disable functional/immutable-data */
 import type { Bot } from "gramio";
 
-import { Time } from "../core/Time";
+import { Time } from "@snappy/core";
 import { Keyboards } from "../keyboards";
 import { t } from "../locales";
 import { Storage } from "../storage";

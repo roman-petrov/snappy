@@ -4,7 +4,7 @@
 import type { Locale } from "../locales";
 
 import { AppConfiguration } from "../AppConfiguration";
-import { Time } from "../core/Time";
+import { Time } from "@snappy/core";
 
 type UserSession = { lastReset: number; requestCount: number };
 
