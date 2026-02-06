@@ -48,5 +48,7 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SNAPPY_CONFIG: ${{ secrets.SNAPPY_CONFIG }}
           SNAPPY_VERSION: ${{ inputs.version || steps.build.outputs.version }}
+          SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
+          SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
           DIST_ZIP: dist.zip
         run: bash .github/scripts/deploy.sh
