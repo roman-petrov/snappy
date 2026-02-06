@@ -14,11 +14,20 @@ type YooKassaPaymentRequest = {
   metadata?: Record<string, string>;
 };
 
-const paymentUrl = async (userId: number, amount: number, description: string) => {
+const yooKassaAuth = (): string | undefined => {
   const shopId = Config.YOOKASSA_SHOP_ID;
   const secretKey = Config.YOOKASSA_SECRET_KEY;
 
   if (shopId === undefined || shopId === `` || secretKey === undefined || secretKey === ``) {
+    return undefined;
+  }
+
+  return `Basic ${btoa(`${shopId}:${secretKey}`)}`;
+};
+
+const paymentUrl = async (userId: number, amount: number, description: string) => {
+  const auth = yooKassaAuth();
+  if (auth === undefined) {
     throw new Error(`YooKassa credentials not configured`);
   }
 
@@ -40,15 +49,9 @@ const paymentUrl = async (userId: number, amount: number, description: string) =
     metadata: requestBody.metadata,
   };
 
-  const credentials = btoa(`${shopId}:${secretKey}`);
-
   const response = await fetch(`https://api.yookassa.ru/v3/payments`, {
     body: JSON.stringify(apiRequestBody),
-    headers: {
-      "Authorization": `Basic ${credentials}`,
-      "Content-Type": `application/json`,
-      "Idempotence-Key": idempotenceKey,
-    },
+    headers: { "Authorization": auth, "Content-Type": `application/json`, "Idempotence-Key": idempotenceKey },
     method: `POST`,
   });
 
@@ -74,17 +77,13 @@ const premiumPaymentUrl = async (userId: number) =>
   paymentUrl(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
 const verifyPayment = async (paymentId: string) => {
-  const shopId = Config.YOOKASSA_SHOP_ID;
-  const secretKey = Config.YOOKASSA_SECRET_KEY;
-
-  if (shopId === undefined || shopId === `` || secretKey === undefined || secretKey === ``) {
+  const auth = yooKassaAuth();
+  if (auth === undefined) {
     return false;
   }
 
-  const credentials = btoa(`${shopId}:${secretKey}`);
-
   const response = await fetch(`https://api.yookassa.ru/v3/payments/${paymentId}`, {
-    headers: { "Authorization": `Basic ${credentials}`, "Content-Type": `application/json` },
+    headers: { "Authorization": auth, "Content-Type": `application/json` },
     method: `GET`,
   });
 

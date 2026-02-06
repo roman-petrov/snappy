@@ -10,7 +10,7 @@ import { Storage } from "../storage";
 
 const userTexts = new Map<number, string>();
 
-const registerMessageHandlers = (bot: Bot) => {
+const registerHandlers = (bot: Bot) => {
   bot.on(`message`, async context => {
     const userId = context.from.id;
     const { text } = context;
@@ -47,5 +47,5 @@ const cleanupOldTexts = (): void => {
 
 setInterval(cleanupOldTexts, Time.hourInMs);
 
-export const Messages = { clearUserText, registerMessageHandlers, userText };
+export const Messages = { clearUserText, registerHandlers, userText };
 /* jscpd:ignore-end */

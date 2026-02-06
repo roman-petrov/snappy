@@ -10,7 +10,7 @@ import { Payment } from "../services";
 import { Storage } from "../storage";
 import { Messages } from "./Messages";
 
-const registerCallbackHandlers = (bot: Bot, snappy: Snappy) => {
+const registerHandlers = (bot: Bot, snappy: Snappy) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
     const localeKey = Storage.userLanguage(context.from.languageCode);
@@ -75,4 +75,4 @@ const registerCallbackHandlers = (bot: Bot, snappy: Snappy) => {
   });
 };
 
-export const Callbacks = { registerCallbackHandlers };
+export const Callbacks = { registerHandlers };

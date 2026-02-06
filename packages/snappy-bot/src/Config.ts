@@ -19,7 +19,7 @@ export type Config = z.infer<typeof configSchema>;
 
 const configPath = join(homedir(), `snappy`, `config.json`);
 
-const loadConfig = () => {
+export const Config = (() => {
   let raw: string;
   let configSource: string;
 
@@ -58,6 +58,4 @@ const loadConfig = () => {
   }
 
   return result.data;
-};
-
-export const Config = loadConfig();
+})();

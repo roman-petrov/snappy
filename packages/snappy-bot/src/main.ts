@@ -29,9 +29,9 @@ const setLocalizedCommands = async () => {
   });
 };
 
-Commands.registerCommands(bot);
-Messages.registerMessageHandlers(bot);
-Callbacks.registerCallbackHandlers(bot, snappy);
+Commands.register(bot);
+Messages.registerHandlers(bot);
+Callbacks.registerHandlers(bot, snappy);
 bot.onStart(setLocalizedCommands);
 
 await bot.start();

@@ -7,7 +7,7 @@ import { Keyboards } from "../keyboards";
 import { t } from "../locales";
 import { Storage } from "../storage";
 
-const registerCommands = (bot: Bot) => {
+const register = (bot: Bot) => {
   bot.command(`start`, async context => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
     const userId = context.from.id;
@@ -49,5 +49,5 @@ const registerCommands = (bot: Bot) => {
   });
 };
 
-export const Commands = { registerCommands };
+export const Commands = { register };
 /* jscpd:ignore-end */
