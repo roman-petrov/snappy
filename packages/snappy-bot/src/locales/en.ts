@@ -14,11 +14,6 @@ export const en = {
       title: `📚 Commands help`,
       versionLabel: `Version`,
     },
-    language: {
-      changed: `✅ Language changed to English`,
-      menu: `Change language`,
-      select: `🌐 Выберите язык / Select language:`,
-    },
     premium: {
       button: `💳 Pay {price} RUB`,
       description: `🚀 Get unlimited requests!\n\n💰 Price: {price} RUB/month\n\n✨ Features:\n• Unlimited requests\n• Priority processing\n• All features available`,
