@@ -1,10 +1,11 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-loop-statements */
+import { Time } from "@snappy/core";
+
 import type { Locale } from "../locales";
 
 import { AppConfiguration } from "../AppConfiguration";
-import { Time } from "@snappy/core";
 
 type UserSession = { lastReset: number; requestCount: number };
 
@@ -92,4 +93,4 @@ const cleanupOldSessions = (): void => {
 
 setInterval(cleanupOldSessions, Time.hourInMs);
 
-export const Storage = { canMakeRequest, cleanupOldSessions, incrementRequestCount, remainingRequests, userLanguage };
+export const Storage = { canMakeRequest, incrementRequestCount, remainingRequests, userLanguage };

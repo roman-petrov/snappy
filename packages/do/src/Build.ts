@@ -1,5 +1,6 @@
-/* eslint-disable no-undef */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-loop-statements */
+/* eslint-disable no-undef */
 import fs from "node:fs";
 import { extname, join } from "node:path";
 
@@ -12,7 +13,6 @@ const ensureDir = (dir: string): void => {
   }
 };
 
-/* eslint-disable functional/no-loop-statements -- copy files, no pure alternative */
 const copySiteStatic = (root: string): void => {
   const siteDir = join(root, `packages`, `snappy-site`);
   const outDir = join(root, distDir, `site`);

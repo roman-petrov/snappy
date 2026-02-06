@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-promise-reject */
+/* eslint-disable @typescript-eslint/naming-convention */
 // cspell:words PERS
-// eslint-disable-next-line @typescript-eslint/naming-convention -- GigaChat is the product/brand name
 import GigaChat from "gigachat";
 import { Agent } from "node:https";
 
