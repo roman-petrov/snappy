@@ -3,6 +3,7 @@
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable preserve-caught-error */
+import { _ } from "@snappy/core";
 import { existsSync, readFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
@@ -33,7 +34,7 @@ export const Config = (() => {
     }
 
     try {
-      raw = Buffer.from(envConfig, `base64`).toString(`utf-8`);
+      raw = _.base64decode(envConfig);
       configSource = `SNAPPY_CONFIG environment variable`;
     } catch (error) {
       throw new Error(

@@ -9,6 +9,7 @@
     "start": "bun run src/main.ts"
   },
   "dependencies": {
+    "@snappy/core": "workspace:*",
     "serve-static": "^2.0.7"
   },
   "devDependencies": {

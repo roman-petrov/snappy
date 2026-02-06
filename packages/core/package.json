@@ -1,10 +1,10 @@
 {
-  "name": "@snappy/snappy",
+  "name": "@snappy/core",
   "version": "0.0.0",
   "type": "module",
   "private": true,
   "main": "./src/index.ts",
-  "dependencies": {
-    "gigachat": "^0.0.18"
+  "exports": {
+    ".": "./src/index.ts"
   }
 }
