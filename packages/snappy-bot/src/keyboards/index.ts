@@ -1,7 +1,6 @@
 import { type FeatureType, Prompts } from "@snappy/snappy";
 import { InlineKeyboard } from "gramio";
 
-import { AppConfiguration } from "../AppConfiguration";
 import { type Locale, t } from "../locales";
 
 const featurePrefix = `feature:`;
@@ -24,11 +23,8 @@ const featuresKeyboard = (localeKey: Locale) =>
     .text(t(localeKey, `features.expand`), featureCallbackData(`expand`))
     .text(t(localeKey, `features.improveReadability`), featureCallbackData(`improveReadability`));
 
-const premiumKeyboard = (localeKey: Locale) =>
-  new InlineKeyboard().text(
-    t(localeKey, `commands.premium.button`, { price: AppConfiguration.premiumPrice }),
-    `premium:buy`,
-  );
+const premiumKeyboard = (localeKey: Locale, premiumPrice: number) =>
+  new InlineKeyboard().text(t(localeKey, `commands.premium.button`, { price: premiumPrice }), `premium:buy`);
 
 const parseFeatureCallback = (data: string) => {
   if (!data.startsWith(featurePrefix)) {

@@ -37,6 +37,7 @@
     "globals": "^17.2.0",
     "jscpd": "^4.0.5",
     "markdownlint-cli": "^0.47.0",
+    "open": "^11.0.0",
     "prettier": "^3.2.4",
     "prettier-plugin-pkg": "^0.21.2",
     "tsx": "^4.21.0",

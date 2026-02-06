@@ -3,8 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-expression-statements */
-import { AppConfiguration } from "../AppConfiguration";
-import { Config } from "../Config";
+import type { SnappyBotConfig } from "../SnappyBot";
 
 type YooKassaPaymentRequest = {
   amount: { currency: string; value: string };
@@ -14,9 +13,9 @@ type YooKassaPaymentRequest = {
   metadata?: Record<string, string>;
 };
 
-const yooKassaAuth = (): string | undefined => {
-  const shopId = Config.YOOKASSA_SHOP_ID;
-  const secretKey = Config.YOOKASSA_SECRET_KEY;
+const yooKassaAuth = (config: SnappyBotConfig): string | undefined => {
+  const shopId = config.yooKassaShopId;
+  const secretKey = config.yooKassaSecretKey;
 
   if (shopId === undefined || shopId === `` || secretKey === undefined || secretKey === ``) {
     return undefined;
@@ -25,8 +24,8 @@ const yooKassaAuth = (): string | undefined => {
   return `Basic ${btoa(`${shopId}:${secretKey}`)}`;
 };
 
-const paymentUrl = async (userId: number, amount: number, description: string) => {
-  const auth = yooKassaAuth();
+const paymentUrl = async (userId: number, amount: number, description: string, config: SnappyBotConfig) => {
+  const auth = yooKassaAuth(config);
   if (auth === undefined) {
     throw new Error(`YooKassa credentials not configured`);
   }
@@ -73,11 +72,11 @@ const paymentUrl = async (userId: number, amount: number, description: string) =
   return apiResponse.confirmation.confirmationUrl;
 };
 
-const premiumPaymentUrl = async (userId: number) =>
-  paymentUrl(userId, AppConfiguration.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
+const premiumPaymentUrl = async (userId: number, config: SnappyBotConfig) =>
+  paymentUrl(userId, config.premiumPrice, `Snappy Bot - Premium подписка (30 дней)`, config);
 
-const verifyPayment = async (paymentId: string) => {
-  const auth = yooKassaAuth();
+const verifyPayment = async (paymentId: string, config: SnappyBotConfig) => {
+  const auth = yooKassaAuth(config);
   if (auth === undefined) {
     return false;
   }

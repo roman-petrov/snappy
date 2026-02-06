@@ -2,16 +2,17 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
-import { AppConfiguration } from "../AppConfiguration";
+import type { SnappyBotConfig } from "../SnappyBot";
+
 import { Keyboards } from "../keyboards";
 import { t } from "../locales";
 import { Storage } from "../storage";
 
-const register = (bot: Bot) => {
+const register = (bot: Bot, config: SnappyBotConfig) => {
   bot.command(`start`, async context => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
     const userId = context.from.id;
-    const remaining = Storage.remainingRequests(userId);
+    const remaining = Storage.remainingRequests(userId, config);
 
     await context.send(t(localeKey, `commands.start.welcome`));
     await context.send(t(localeKey, `commands.start.help`, { count: remaining }));
@@ -20,7 +21,7 @@ const register = (bot: Bot) => {
   bot.command(`help`, async context => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
     const body = `${t(localeKey, `commands.help.title`)}\n\n${t(localeKey, `commands.help.text`)}`;
-    const version = process.env[`SNAPPY_VERSION`];
+    const version = config.snappyVersion;
 
     const message =
       version === undefined
@@ -33,7 +34,7 @@ const register = (bot: Bot) => {
   bot.command(`balance`, async context => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
     const userId = context.from.id;
-    const remaining = Storage.remainingRequests(userId);
+    const remaining = Storage.remainingRequests(userId, config);
     const premiumStatus = t(localeKey, `commands.balance.inactive`);
 
     await context.send(t(localeKey, `commands.balance.free`, { count: remaining, status: premiumStatus }));
@@ -43,8 +44,8 @@ const register = (bot: Bot) => {
     const localeKey = Storage.userLanguage(context.from.languageCode);
 
     await context.send(
-      `${t(localeKey, `commands.premium.title`)}\n\n${t(localeKey, `commands.premium.description`, { price: AppConfiguration.premiumPrice })}`,
-      { reply_markup: Keyboards.premiumKeyboard(localeKey) },
+      `${t(localeKey, `commands.premium.title`)}\n\n${t(localeKey, `commands.premium.description`, { price: config.premiumPrice })}`,
+      { reply_markup: Keyboards.premiumKeyboard(localeKey, config.premiumPrice) },
     );
   });
 };

@@ -40,7 +40,8 @@ bot under PM2.
 | `SSL_CERT_PEM`    | (optional) TLS cert     | PEM content for site HTTPS              |
 | `SSL_KEY_PEM`     | (optional) TLS key      | PEM content for site HTTPS              |
 
-If both `SSL_CERT_PEM` and `SSL_KEY_PEM` are set, the site runs on port 443 (HTTPS). Otherwise it runs on port 80 (HTTP).
+If both `SSL_CERT_PEM` and `SSL_KEY_PEM` are set, the site runs on port 443 (HTTPS). Otherwise it runs on port 80
+(HTTP).
 
 Fixed values (not secrets): SSH port `22`, deploy path on server `/home/deploy/snappy`. The deploy script uses PM2 to
 run the bot.

@@ -15,7 +15,7 @@ const ensureDir = (dir: string): void => {
 
 const copySiteStatic = (root: string): void => {
   const siteDir = join(root, `packages`, `snappy-site`);
-  const outDir = join(root, distDir, `site`);
+  const outDir = join(root, distDir, `www`);
   ensureDir(outDir);
   const entries = fs.readdirSync(siteDir, { withFileTypes: true });
   const files = entries.filter(entry => entry.isFile() && siteStaticExtensions.has(extname(entry.name)));
@@ -40,22 +40,15 @@ const runBunBuild = async (cwd: string, entry: string, outfile: string) => {
 const build = async (root: string) => {
   const dist = join(root, distDir);
   fs.rmSync(dist, { force: true, recursive: true });
-  ensureDir(join(root, distDir, `bot`));
-
-  const botEntry = join(root, `packages`, `snappy-bot`, `src`, `main.ts`);
-  const botOut = join(root, distDir, `bot`, `app.js`);
-  const botResult = await runBunBuild(root, botEntry, botOut);
-  if (botResult !== 0) {
-    return botResult;
-  }
+  ensureDir(dist);
 
   copySiteStatic(root);
 
-  const siteEntry = join(root, `packages`, `snappy-site`, `src`, `main.ts`);
-  const siteOut = join(root, distDir, `site`, `server.js`);
-  const siteResult = await runBunBuild(root, siteEntry, siteOut);
-  if (siteResult !== 0) {
-    return siteResult;
+  const serverEntry = join(root, `packages`, `server-prod`, `src`, `main.ts`);
+  const serverOut = join(root, distDir, `server.js`);
+  const serverResult = await runBunBuild(root, serverEntry, serverOut);
+  if (serverResult !== 0) {
+    return serverResult;
   }
 
   return 0;

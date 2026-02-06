@@ -1,9 +1,9 @@
 export type Command = { command: string; description: string; name: string };
 
 const commands = [
-  { command: `run`, description: `Build and run all apps (node dist/bot + dist/site/server).`, name: `run` },
-  { command: `dev`, description: `Run all apps in watch (bot + site dev server).`, name: `dev` },
-  { command: `build`, description: `Build bot + site into dist/ (bun build, no sourcemap).`, name: `build` },
+  { command: `run`, description: `Build and run server (server-prod → node dist/server.js).`, name: `run` },
+  { command: `dev`, description: `Run server in watch (server-dev).`, name: `dev` },
+  { command: `build`, description: `Build server into dist/server.js, static into dist/www.`, name: `build` },
   { command: `bun test`, description: `Run tests via bun test.`, name: `test` },
   {
     command: `bun test && bunx tsc --noEmit && bunx eslint . && bunx prettier --check . && bunx cspell . && bunx jscpd . && bunx markdownlint .`,

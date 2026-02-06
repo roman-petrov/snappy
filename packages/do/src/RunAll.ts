@@ -1,28 +1,25 @@
-/* eslint-disable no-undef */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable no-undef */
 import { join } from "node:path";
+import open from "open";
 
 import { Build } from "./Build";
 
-const botMainPath = (root: string) => join(root, `packages`, `snappy-bot`, `src`, `main.ts`);
-const siteDir = (root: string) => join(root, `packages`, `snappy-site`);
-const distBotPath = (root: string) => join(root, `dist`, `bot`, `app.js`);
-const distSiteServerPath = (root: string) => join(root, `dist`, `site`, `server.js`);
+const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `src`, `main.ts`);
+const distServerPath = (root: string) => join(root, `dist`, `server.js`);
 const spawnOptions = { stderr: `inherit` as const, stdin: `ignore` as const, stdout: `inherit` as const };
 
-const spawnTwo = async (root: string, botCmd: string[], siteCmd: string[]) => {
-  const a = Bun.spawn(botCmd, { cwd: root, ...spawnOptions });
-  const b = Bun.spawn(siteCmd, { cwd: root, ...spawnOptions });
-  const exit = await Promise.race([a.exited, b.exited]);
+const runDev = async (root: string) => {
+  const proc = Bun.spawn([`bun`, `--watch`, `run`, serverMainPath(root)], {
+    cwd: root,
+    env: { ...process.env, NODE_ENV: `development` },
+    ...spawnOptions,
+  });
 
-  a.kill();
-  b.kill();
+  await open(`http://localhost`);
 
-  return exit;
+  return proc.exited;
 };
-
-const runDev = async (root: string) =>
-  spawnTwo(root, [`bun`, `--watch`, `run`, botMainPath(root)], [`bun`, `run`, `--cwd`, siteDir(root), `dev`]);
 
 const runProd = async (root: string) => {
   const buildExit = await Build.build(root);
@@ -30,7 +27,9 @@ const runProd = async (root: string) => {
     return buildExit;
   }
 
-  return spawnTwo(root, [`node`, distBotPath(root)], [`node`, distSiteServerPath(root)]);
+  const proc = Bun.spawn([`node`, distServerPath(root)], { cwd: root, ...spawnOptions });
+
+  return proc.exited;
 };
 
 export const RunAll = { runDev, runProd };

@@ -13,8 +13,7 @@ unzip -o -q snappy.zip
 rm -f snappy.zip
 
 echo "🔄 Restarting PM2..."
-pm2 delete snappy-bot 2>/dev/null || true
-pm2 delete snappy-site 2>/dev/null || true
+pm2 delete snappy 2>/dev/null || true
 
 export SNAPPY_CONFIG="${SNAPPY_CONFIG_B64}"
 export SNAPPY_VERSION="${SNAPPY_VERSION}"
@@ -22,8 +21,7 @@ export SSL_CERT_PEM="${SSL_CERT_B64}"
 export SSL_KEY_PEM="${SSL_KEY_B64}"
 
 cd "${REMOTE_PATH}"
-pm2 start dist/bot/app.js --name snappy-bot --update-env
-pm2 start dist/site/server.js --name snappy-site --update-env
+pm2 start dist/server.js --name snappy --update-env
 
 pm2 save
 

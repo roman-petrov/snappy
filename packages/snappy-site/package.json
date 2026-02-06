@@ -2,18 +2,5 @@
   "name": "@snappy/snappy-site",
   "version": "0.0.0",
   "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "live-server . --port=4321",
-    "preview": "live-server . --port=4321 --no-browser",
-    "start": "bun run src/main.ts"
-  },
-  "dependencies": {
-    "@snappy/core": "workspace:*",
-    "serve-static": "^2.0.7"
-  },
-  "devDependencies": {
-    "@types/serve-static": "^2.2.0",
-    "live-server": "^1.2.2"
-  }
+  "private": true
 }

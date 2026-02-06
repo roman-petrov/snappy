@@ -4,13 +4,15 @@
 import type { Snappy } from "@snappy/snappy";
 import type { Bot } from "gramio";
 
+import type { SnappyBotConfig } from "../SnappyBot";
+
 import { Keyboards } from "../keyboards";
 import { t } from "../locales";
 import { Payment } from "../services";
 import { Storage } from "../storage";
 import { Messages } from "./Messages";
 
-const registerHandlers = (bot: Bot, snappy: Snappy) => {
+const registerHandlers = (bot: Bot, snappy: Snappy, config: SnappyBotConfig) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
     const localeKey = Storage.userLanguage(context.from.languageCode);
@@ -24,7 +26,7 @@ const registerHandlers = (bot: Bot, snappy: Snappy) => {
 
     if (data === `premium:buy`) {
       try {
-        const paymentUrl = await Payment.premiumPaymentUrl(userId);
+        const paymentUrl = await Payment.premiumPaymentUrl(userId, config);
         await context.answerCallbackQuery();
         await context.send(`💳 ${paymentUrl}`);
       } catch (error) {
@@ -40,7 +42,7 @@ const registerHandlers = (bot: Bot, snappy: Snappy) => {
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if (!Storage.canMakeRequest(userId)) {
+      if (!Storage.canMakeRequest(userId, config)) {
         await context.send(t(localeKey, `features.limit`));
 
         return;

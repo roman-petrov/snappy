@@ -1,12 +1,11 @@
 {
-  "name": "@snappy/snappy-bot",
+  "name": "@snappy/server-prod",
   "version": "0.0.0",
   "type": "module",
   "private": true,
-  "main": "./src/index.ts",
+  "main": "./src/main.ts",
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "@snappy/snappy": "workspace:*",
-    "gramio": "^0.4.11"
+    "@snappy/server": "workspace:*"
   }
 }
