@@ -22,7 +22,7 @@ type WorkflowRunInput = z.infer<typeof inputSchema>;
 
 const server = new McpServer(
   { name: `do`, version: `0.0.0` },
-  { capabilities: { resources: {}, tools: {} }, instructions: Instructions.instructions() },
+  { capabilities: { resources: {}, tools: {} }, instructions: Instructions.instructions },
 );
 
 server.registerTool(
@@ -47,7 +47,7 @@ server.registerResource(
   `instructions`,
   instructionsUri,
   { description: `Start here: how to use the do server and when to use workflow_run instead of the terminal.` },
-  () => ({ contents: [{ text: Instructions.instructions(), uri: instructionsUri }] }),
+  () => ({ contents: [{ text: Instructions.instructions, uri: instructionsUri }] }),
 );
 
 const transport = new StdioServerTransport();
