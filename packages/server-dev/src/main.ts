@@ -11,5 +11,6 @@ if (!existsSync(configPath)) {
 }
 const configRaw = readFileSync(configPath, `utf-8`);
 const root = join(import.meta.dirname, `..`, `..`, `snappy-site`);
+const server = Server(configRaw, { middleware: LiveReload, root });
 
-Server.start(configRaw, { middleware: LiveReload, root });
+server.start();

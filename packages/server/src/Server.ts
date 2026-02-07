@@ -7,13 +7,23 @@ import { HttpServer, type HttpServerOptions } from "./HttpServer";
 
 export type ServerOptions = HttpServerOptions & { snappyVersion?: string };
 
-const start = (configJson: string, options: ServerOptions) => {
-  process.stdout.write(`🚀 Starting server…\n`);
+export const Server = (configJson: string, options: ServerOptions) => {
   const config = { ...Config(configJson), ...options };
   const bot = SnappyBot({ ...config, ...AppConfiguration });
   const httpServer = HttpServer(config);
-  void bot.start();
-  httpServer.start();
+
+  const start = () => {
+    process.stdout.write(`🚀 Starting server…\n`);
+    void bot.start();
+    httpServer.start();
+  };
+
+  const stop = () => {
+    process.stdout.write(`🚀 Stopping server…\n`);
+    void bot.stop();
+  };
+
+  return { start, stop };
 };
 
-export const Server = { start };
+export type Server = ReturnType<typeof Server>;
