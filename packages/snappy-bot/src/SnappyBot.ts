@@ -17,10 +17,14 @@ export type SnappyBotConfig = {
   yooKassaShopId?: string;
 };
 
-const start = async (config: SnappyBotConfig) => {
+export const SnappyBot = (config: SnappyBotConfig) => {
+  const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
+  const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
+  const bot = new Bot(config.botToken);
+  const storage = Storage();
   const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
-  const setLocalizedCommands = async (bot: Bot) => {
+  const setLocalizedCommands = async () => {
     await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
 
     for (const locale of Locale.localeKeys) {
@@ -35,11 +39,6 @@ const start = async (config: SnappyBotConfig) => {
     });
   };
 
-  const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
-  const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
-  const bot = new Bot(config.botToken);
-  const storage = Storage();
-
   Commands.register(bot, config.freeRequestLimit, config.premiumPrice, config.snappyVersion, storage);
   Messages.register(bot, storage);
   Callbacks.register(bot, snappy, {
@@ -48,10 +47,19 @@ const start = async (config: SnappyBotConfig) => {
     storage,
     yooKassa,
   });
-  bot.onStart(async () => setLocalizedCommands(bot));
+  bot.onStart(setLocalizedCommands);
 
-  await bot.start();
-  process.stdout.write(`🤖 Bot started\n`);
+  const start = async () => {
+    await bot.start();
+    process.stdout.write(`🤖 Bot started\n`);
+  };
+
+  const stop = async () => {
+    await bot.stop();
+    process.stdout.write(`🤖 Bot stopped\n`);
+  };
+
+  return { start, stop };
 };
 
-export const SnappyBot = { start };
+export type SnappyBot = ReturnType<typeof SnappyBot>;
