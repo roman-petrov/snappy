@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-/* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
+/* eslint-disable functional/no-expression-statements */
 import { Snappy } from "@snappy/snappy";
 import { YooKassa } from "@snappy/yoo-kassa";
 import { Bot } from "gramio";
@@ -17,24 +17,24 @@ export type SnappyBotConfig = {
   yooKassaShopId?: string;
 };
 
-const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
+const start = async (config: SnappyBotConfig) => {
+  const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
-const setLocalizedCommands = async (bot: Bot) => {
-  await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
+  const setLocalizedCommands = async (bot: Bot) => {
+    await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
 
-  for (const locale of Locale.localeKeys) {
+    for (const locale of Locale.localeKeys) {
+      await bot.api.setMyCommands({
+        commands: commandKeys.map(name => ({ command: name, description: t(locale, `commands.${name}.menu`) })),
+        language_code: locale,
+      });
+    }
+
     await bot.api.setMyCommands({
-      commands: commandKeys.map(name => ({ command: name, description: t(locale, `commands.${name}.menu`) })),
-      language_code: locale,
+      commands: commandKeys.map(name => ({ command: name, description: t(`en`, `commands.${name}.menu`) })),
     });
-  }
+  };
 
-  await bot.api.setMyCommands({
-    commands: commandKeys.map(name => ({ command: name, description: t(`en`, `commands.${name}.menu`) })),
-  });
-};
-
-const start = async (config: SnappyBotConfig): Promise<void> => {
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
   const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
   const bot = new Bot(config.botToken);

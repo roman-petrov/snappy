@@ -1,15 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { en } from "./locales/en";
-import { ru } from "./locales/ru";
+import localeData from "./locales";
 
-export type Messages = typeof ru;
+export type Locale = keyof typeof localeData;
 
-const localeKeys = [`en`, `ru`] as const;
-
-export type Locale = (typeof localeKeys)[number];
-
-const locales: Record<Locale, Messages> = { en, ru };
-const locale = (localeKey: Locale) => locales[localeKey];
+const localeKeys = Object.keys(localeData) as Locale[];
+const locale = (localeKey: Locale) => localeData[localeKey];
 const notFound = Symbol(`notFound`);
 
 const resolveByPath = (current: unknown, keys: string[]) => {
@@ -60,7 +55,7 @@ export const t = (localeKey: Locale, key: string, parameters?: Record<string, nu
 const userLanguage = (languageCode?: string) => {
   const code = languageCode?.toLowerCase();
 
-  return code === undefined ? `en` : code.startsWith(`ru`) ? `ru` : `en`;
+  return code === undefined ? `en` : (localeKeys.find(loc => code.startsWith(loc)) ?? `en`);
 };
 
-export const Locale = { locale, localeKeys, locales, t, userLanguage };
+export const Locale = { locale, localeKeys, locales: localeData, t, userLanguage };

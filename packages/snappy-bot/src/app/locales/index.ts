@@ -1,3 +1,6 @@
-export { en } from "./en";
+import { en } from "./en";
+import { ru } from "./ru";
 
-export { ru } from "./ru";
+const localeData = { en, ru } as const;
+
+export default localeData;
