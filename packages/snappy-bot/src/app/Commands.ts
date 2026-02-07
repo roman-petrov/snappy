@@ -2,7 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
-import type { SnappyBotConfig } from "./SnappyBot";
+import type { SnappyBotConfig } from "../SnappyBot";
 
 import { Keyboards } from "./Keyboards";
 import { t } from "./locales";

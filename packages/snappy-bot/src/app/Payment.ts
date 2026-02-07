@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-expression-statements */
-import type { SnappyBotConfig } from "./SnappyBot";
+import type { SnappyBotConfig } from "../SnappyBot";
 
 type YooKassaPaymentRequest = {
   amount: { currency: string; value: string };

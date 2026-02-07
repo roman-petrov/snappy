@@ -4,10 +4,7 @@
 import { Snappy } from "@snappy/snappy";
 import { Bot } from "gramio";
 
-import { Callbacks } from "./Callbacks";
-import { Commands } from "./Commands";
-import { Locales, t } from "./locales";
-import { Messages } from "./Messages";
+import { Callbacks, Commands, Locales, Messages, t } from "./app";
 
 export type SnappyBotConfig = {
   botToken: string;

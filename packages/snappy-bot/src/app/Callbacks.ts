@@ -4,7 +4,7 @@
 import type { Snappy } from "@snappy/snappy";
 import type { Bot } from "gramio";
 
-import type { SnappyBotConfig } from "./SnappyBot";
+import type { SnappyBotConfig } from "../SnappyBot";
 
 import { Keyboards } from "./Keyboards";
 import { t } from "./locales";
