@@ -11,8 +11,9 @@ const start = (configJson: string, options: ServerOptions) => {
   process.stdout.write(`🚀 Starting server…\n`);
   const config = { ...Config(configJson), ...options };
   const bot = SnappyBot({ ...config, ...AppConfiguration });
+  const httpServer = HttpServer(config);
   void bot.start();
-  HttpServer(config).start();
+  httpServer.start();
 };
 
 export const Server = { start };
