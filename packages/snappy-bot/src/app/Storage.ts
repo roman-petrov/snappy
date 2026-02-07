@@ -3,7 +3,6 @@
 /* eslint-disable functional/no-loop-statements */
 import { Time } from "@snappy/core";
 
-import type { SnappyBotConfig } from "../SnappyBot";
 import type { Locale } from "./locales";
 
 type UserSession = { lastReset: number; requestCount: number };
@@ -29,7 +28,7 @@ const userLanguage = (languageCode?: string): Locale => {
   return `en`;
 };
 
-const canMakeRequest = (userId: number, config: SnappyBotConfig): boolean => {
+const canMakeRequest = (userId: number, freeRequestLimit: number): boolean => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
@@ -43,7 +42,7 @@ const canMakeRequest = (userId: number, config: SnappyBotConfig): boolean => {
     session.lastReset = Date.now();
   }
 
-  return session.requestCount < config.freeRequestLimit;
+  return session.requestCount < freeRequestLimit;
 };
 
 const incrementRequestCount = (userId: number): void => {
@@ -58,18 +57,18 @@ const incrementRequestCount = (userId: number): void => {
   session.requestCount += 1;
 };
 
-const remainingRequests = (userId: number, config: SnappyBotConfig): number => {
+const remainingRequests = (userId: number, freeRequestLimit: number): number => {
   const session = sessions.get(userId);
 
   if (session === undefined) {
-    return config.freeRequestLimit;
+    return freeRequestLimit;
   }
 
   if (Date.now() - session.lastReset > resetInterval) {
-    return config.freeRequestLimit;
+    return freeRequestLimit;
   }
 
-  return Math.max(0, config.freeRequestLimit - session.requestCount);
+  return Math.max(0, freeRequestLimit - session.requestCount);
 };
 
 const daysToKeepSession = 7;

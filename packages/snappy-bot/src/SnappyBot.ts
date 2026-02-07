@@ -38,9 +38,13 @@ const start = async (config: SnappyBotConfig): Promise<void> => {
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
   const bot = new Bot(config.botToken);
 
-  Commands.register(bot, config);
+  Commands.register(bot, config.freeRequestLimit, config.premiumPrice, config.snappyVersion);
   Messages.registerHandlers(bot);
-  Callbacks.registerHandlers(bot, snappy, config);
+  Callbacks.registerHandlers(bot, snappy, {
+    freeRequestLimit: config.freeRequestLimit,
+    premiumPrice: config.premiumPrice,
+    yooKassa: { secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId },
+  });
   bot.onStart(async () => setLocalizedCommands(bot));
 
   await bot.start();

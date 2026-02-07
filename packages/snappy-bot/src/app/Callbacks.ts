@@ -4,15 +4,15 @@
 import type { Snappy } from "@snappy/snappy";
 import type { Bot } from "gramio";
 
-import type { SnappyBotConfig } from "../SnappyBot";
-
 import { Keyboards } from "./Keyboards";
 import { t } from "./locales";
 import { Messages } from "./Messages";
-import { Payment } from "./Payment";
+import { Payment, type YooKassaCredentials } from "./Payment";
 import { Storage } from "./Storage";
 
-const registerHandlers = (bot: Bot, snappy: Snappy, config: SnappyBotConfig) => {
+export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; yooKassa: YooKassaCredentials };
+
+const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
     const localeKey = Storage.userLanguage(context.from.languageCode);
@@ -26,7 +26,7 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: SnappyBotConfig) => 
 
     if (data === `premium:buy`) {
       try {
-        const paymentUrl = await Payment.premiumPaymentUrl(userId, config);
+        const paymentUrl = await Payment.premiumPaymentUrl(userId, config.premiumPrice, config.yooKassa);
         await context.answerCallbackQuery();
         await context.send(`💳 ${paymentUrl}`);
       } catch (error) {
@@ -42,7 +42,7 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: SnappyBotConfig) => 
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if (!Storage.canMakeRequest(userId, config)) {
+      if (!Storage.canMakeRequest(userId, config.freeRequestLimit)) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
