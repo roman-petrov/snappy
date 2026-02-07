@@ -76,6 +76,30 @@ pass `true` we intend to activate something that is disabled by default.
 
 Watch for unused code: unused variables, function parameters, imports, and the like. **Always** remove unused code.
 
+### Minimal parameters
+
+A function must accept **only** the parameters it actually uses. This applies especially to object parameters: avoid
+passing a "fat" object when the function needs only a subset of its fields.
+
+- Uses **1 field** from an object of 5 → pass that single value as a scalar parameter.
+- Uses **2+ fields** from a larger object → define a small input type with just those fields.
+
+**Example:**
+
+```text
+// Bad: function receives full User, uses only name
+formatGreeting(user) → "Hello, {user.name}"
+
+// Good: pass only what is used
+formatGreeting(name) → "Hello, {name}"
+
+// Bad: function receives full Order, uses only id and total
+printReceipt(order) → uses order.id, order.total
+
+// Good: minimal input type
+printReceipt({id, total}) → only these two fields
+```
+
 ### 🔄 Inline one-off code
 
 If a variable or function is used only once and not reused elsewhere — **always** remove it and inline its usage to
@@ -116,6 +140,7 @@ parent scope already establishes context, avoid echoing that context in child id
 - [ ] Pure functions extracted and under tests
 - [ ] Immutable data; no mutation where possible
 - [ ] Unused code removed (variables, parameters, imports, etc.)
+- [ ] Functions accept only parameters they use (no fat objects for single/scalar values)
 - [ ] One-off variables/functions inlined where used only once
 - [ ] Simple names; no auxiliary words in functions (get, make, create, calculate); no utils/helper/manager etc.
 - [ ] No redundant context in names: child identifiers don't repeat words already implied by the parent scope
