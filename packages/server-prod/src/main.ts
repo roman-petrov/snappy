@@ -13,5 +13,5 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const snappyVersion = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-
-Server.start(configJson, { root, snappyVersion, sslCertPem, sslKeyPem });
+const server = Server(configJson, { root, snappyVersion, sslCertPem, sslKeyPem });
+server.start();
