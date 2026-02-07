@@ -4,13 +4,13 @@
 import type { Snappy } from "@snappy/snappy";
 import type { Bot } from "gramio";
 
-import type { SnappyBotConfig } from "../SnappyBot";
+import type { SnappyBotConfig } from "./SnappyBot";
 
-import { Keyboards } from "../Keyboards";
-import { t } from "../locales";
-import { Payment } from "../services";
-import { Storage } from "../storage";
+import { Keyboards } from "./Keyboards";
+import { t } from "./locales";
 import { Messages } from "./Messages";
+import { Payment } from "./Payment";
+import { Storage } from "./Storage";
 
 const registerHandlers = (bot: Bot, snappy: Snappy, config: SnappyBotConfig) => {
   bot.on(`callback_query`, async context => {

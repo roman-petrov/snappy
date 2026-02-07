@@ -5,9 +5,9 @@ import type { Bot } from "gramio";
 
 import { Time } from "@snappy/core";
 
-import { Keyboards } from "../Keyboards";
-import { t } from "../locales";
-import { Storage } from "../storage";
+import { Keyboards } from "./Keyboards";
+import { t } from "./locales";
+import { Storage } from "./Storage";
 
 const userTexts = new Map<number, string>();
 

@@ -2,11 +2,11 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
-import type { SnappyBotConfig } from "../SnappyBot";
+import type { SnappyBotConfig } from "./SnappyBot";
 
-import { Keyboards } from "../Keyboards";
-import { t } from "../locales";
-import { Storage } from "../storage";
+import { Keyboards } from "./Keyboards";
+import { t } from "./locales";
+import { Storage } from "./Storage";
 
 const register = (bot: Bot, config: SnappyBotConfig) => {
   bot.command(`start`, async context => {

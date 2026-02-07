@@ -3,8 +3,8 @@
 /* eslint-disable functional/no-loop-statements */
 import { Time } from "@snappy/core";
 
-import type { Locale } from "../locales";
-import type { SnappyBotConfig } from "../SnappyBot";
+import type { Locale } from "./locales";
+import type { SnappyBotConfig } from "./SnappyBot";
 
 type UserSession = { lastReset: number; requestCount: number };
 
