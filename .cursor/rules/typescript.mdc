@@ -93,6 +93,22 @@ const { a, b } = obj;
 
 - In **`if`** (and in `else`, `else if`) always use **curly braces**, even for a single statement.
 
+### Ternary over multiple return branches
+
+Prefer a **single return with ternary** over several `if` branches that each return a value.
+
+```ts
+// Bad: multiple if-return branches
+const label = (status: Status) => {
+  if (status === "pending") return "Waiting";
+  if (status === "done") return "Complete";
+  return "Unknown";
+};
+
+// Good: one ternary expression
+const label = (status: Status) => (status === "pending" ? "Waiting" : status === "done" ? "Complete" : "Unknown");
+```
+
 ---
 
 ## 📦 Modules
@@ -173,6 +189,7 @@ export type Timer = ReturnType<typeof Timer>;
 
 - [ ] Comparisons only `===` / `!==`
 - [ ] All `if` statements have curly braces
+- [ ] Ternary over multiple if-return branches when returning values
 
 ### Modules
 
