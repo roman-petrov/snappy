@@ -1,7 +1,7 @@
 # 🔍 Audit: Rules Compliance
 
-**Goal:** thorough audit of code compliance with project rules. **Result:** detailed report in chat. **Do not modify the
-codebase.**
+**Goal:** thorough audit of code compliance with project rules. **Result:** markdown table with numbered violations;
+user can request fixes by number (e.g. "fix #2, #5"). **Do not modify the codebase.**
 
 ---
 
@@ -42,30 +42,29 @@ Check **sequentially**: first all items of rule A, then all items of rule B, etc
 ### 4️⃣ Build the report
 
 - Do **not** save the report to a file — output it in the chat.
-- Format: file → list of violations with exact location and description.
+- Format: markdown table(s) with **global numbering** of violations (1, 2, 3… across the entire report).
+- User can request fixes by number: "fix #2, #5".
 
 ---
 
-## 📄 Report format (example)
+## 📄 Report format (mandatory)
 
-```text
+1. **Summary table** at the top — all violations with global #, file, rule, item, location, violation.
+2. **Per-file sections** (optional, for detail) — same data, same global numbers.
+3. **Footer** — total count.
+
+```markdown
 # Audit Report
 
-## file1.ts
-
-| # | Rule       | Item                    | Location   | Violation                                  |
-|---|------------|-------------------------|------------|--------------------------------------------|
-| 1 | programming| Minimal parameters      | fn foo     | Receives full User, uses only name         |
-| 2 | typescript | Destructure parameters  | bar()      | Uses opts.x instead of ({ x }: Opts)       |
-
-## file2.ts
-
-| # | Rule       | Item                    | Location   | Violation                                  |
-|---|------------|-------------------------|------------|--------------------------------------------|
-| 1 | typescript | Ternary over multiple   | label()    | Multiple if-return instead of ternary      |
+| #   | File     | Rule        | Item                   | Location | Violation                             |
+| --- | -------- | ----------- | ---------------------- | -------- | ------------------------------------- |
+| 1   | file1.ts | programming | Minimal parameters     | fn foo   | Receives full User, uses only name    |
+| 2   | file1.ts | typescript  | Destructure parameters | bar()    | Uses opts.x instead of ({ x }: Opts)  |
+| 3   | file2.ts | typescript  | Ternary over multiple  | label()  | Multiple if-return instead of ternary |
 
 ---
-Total: 2 files, 3 violations
+
+**Total:** 3 violations in 2 files. To fix: "fix #1, #2" or "fix #3".
 ```
 
 ---
@@ -76,6 +75,7 @@ Total: 2 files, 3 violations
 - Use search (grep, codebase search) when it helps find violations.
 - Interpret findings against the full rule text, not keywords alone.
 - Record every violation: file, rule, item, location, description.
+- Number violations globally (1, 2, 3…) so the user can request fixes: "fix #2, #5".
 
 ---
 
@@ -84,5 +84,6 @@ Total: 2 files, 3 violations
 - [ ] Rules loaded
 - [ ] Scope and file list determined
 - [ ] For each file, all applicable rules checked item by item
-- [ ] Report built and output in chat
+- [ ] Report built: markdown table, global violation numbers (#1, #2…)
+- [ ] Report output in chat
 - [ ] Code **not** modified
