@@ -7,6 +7,7 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "@snappy/snappy": "workspace:*",
+    "@snappy/yoo-kassa": "workspace:*",
     "gramio": "^0.4.11"
   }
 }

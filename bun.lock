@@ -102,6 +102,10 @@
       "name": "@snappy/snappy-site",
       "version": "0.0.0",
     },
+    "packages/yoo-kassa": {
+      "name": "@snappy/yoo-kassa",
+      "version": "0.0.0",
+    },
   },
   "packages": {
     "@babel/helper-string-parser": ["@babel/helper-string-parser@7.27.1", "", {}, "sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA=="],
@@ -399,6 +403,8 @@
     "@snappy/snappy-bot": ["@snappy/snappy-bot@workspace:packages/snappy-bot"],
 
     "@snappy/snappy-site": ["@snappy/snappy-site@workspace:packages/snappy-site"],
+
+    "@snappy/yoo-kassa": ["@snappy/yoo-kassa@workspace:packages/yoo-kassa"],
 
     "@stylistic/eslint-plugin": ["@stylistic/eslint-plugin@5.7.1", "", { "dependencies": { "@eslint-community/eslint-utils": "^4.9.1", "@typescript-eslint/types": "^8.53.1", "eslint-visitor-keys": "^4.2.1", "espree": "^10.4.0", "estraverse": "^5.3.0", "picomatch": "^4.0.3" }, "peerDependencies": { "eslint": ">=9.0.0" } }, "sha512-zjTUwIsEfT+k9BmXwq1QEFYsb4afBlsI1AXFyWQBgggMzwBFOuu92pGrE5OFx90IOjNl+lUbQoTG7f8S0PkOdg=="],
 

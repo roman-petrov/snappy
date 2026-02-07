@@ -2,6 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 import { Snappy } from "@snappy/snappy";
+import { YooKassa } from "@snappy/yoo-kassa";
 import { Bot } from "gramio";
 
 import { Callbacks, Commands, Locales, Messages, t } from "./app";
@@ -36,6 +37,7 @@ const setLocalizedCommands = async (bot: Bot) => {
 
 const start = async (config: SnappyBotConfig): Promise<void> => {
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
+  const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
   const bot = new Bot(config.botToken);
 
   Commands.register(bot, config.freeRequestLimit, config.premiumPrice, config.snappyVersion);
@@ -43,7 +45,7 @@ const start = async (config: SnappyBotConfig): Promise<void> => {
   Callbacks.registerHandlers(bot, snappy, {
     freeRequestLimit: config.freeRequestLimit,
     premiumPrice: config.premiumPrice,
-    yooKassa: { secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId },
+    yooKassa,
   });
   bot.onStart(async () => setLocalizedCommands(bot));
 

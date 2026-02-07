@@ -2,15 +2,15 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { Snappy } from "@snappy/snappy";
+import type { YooKassa } from "@snappy/yoo-kassa";
 import type { Bot } from "gramio";
 
 import { Keyboards } from "./Keyboards";
 import { t } from "./locales";
 import { Messages } from "./Messages";
-import { Payment, type YooKassaCredentials } from "./Payment";
 import { Storage } from "./Storage";
 
-export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; yooKassa: YooKassaCredentials };
+export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; yooKassa: YooKassa };
 
 const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
@@ -26,7 +26,11 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => 
 
     if (data === `premium:buy`) {
       try {
-        const paymentUrl = await Payment.premiumPaymentUrl(userId, config.premiumPrice, config.yooKassa);
+        const paymentUrl = await config.yooKassa.paymentUrl(
+          userId,
+          config.premiumPrice,
+          `Snappy Bot - Premium подписка (30 дней)`,
+        );
         await context.answerCallbackQuery();
         await context.send(`💳 ${paymentUrl}`);
       } catch (error) {
