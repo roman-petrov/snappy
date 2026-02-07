@@ -57,4 +57,10 @@ export const t = (localeKey: Locale, key: string, parameters?: Record<string, nu
   return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
 };
 
-export const Locales = { locale, localeKeys, locales, t };
+const userLanguage = (languageCode?: string) => {
+  const code = languageCode?.toLowerCase();
+
+  return code === undefined ? `en` : code.startsWith(`ru`) ? `ru` : `en`;
+};
+
+export const Locales = { locale, localeKeys, locales, t, userLanguage };

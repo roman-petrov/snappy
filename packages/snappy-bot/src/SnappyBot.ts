@@ -5,13 +5,12 @@ import { Snappy } from "@snappy/snappy";
 import { YooKassa } from "@snappy/yoo-kassa";
 import { Bot } from "gramio";
 
-import { Callbacks, Commands, Locales, Messages, t } from "./app";
+import { Callbacks, Commands, Locales, Messages, Storage, t } from "./app";
 
 export type SnappyBotConfig = {
   botToken: string;
   freeRequestLimit: number;
   gigaChatAuthKey: string;
-  liveReload?: boolean;
   premiumPrice: number;
   snappyVersion?: string;
   yooKassaSecretKey?: string;
@@ -39,12 +38,14 @@ const start = async (config: SnappyBotConfig): Promise<void> => {
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
   const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
   const bot = new Bot(config.botToken);
+  const storage = Storage();
 
-  Commands.register(bot, config.freeRequestLimit, config.premiumPrice, config.snappyVersion);
-  Messages.registerHandlers(bot);
-  Callbacks.registerHandlers(bot, snappy, {
+  Commands.register(bot, config.freeRequestLimit, config.premiumPrice, config.snappyVersion, storage);
+  Messages.register(bot, storage);
+  Callbacks.register(bot, snappy, {
     freeRequestLimit: config.freeRequestLimit,
     premiumPrice: config.premiumPrice,
+    storage,
     yooKassa,
   });
   bot.onStart(async () => setLocalizedCommands(bot));

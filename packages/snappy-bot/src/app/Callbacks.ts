@@ -5,17 +5,17 @@ import type { Snappy } from "@snappy/snappy";
 import type { YooKassa } from "@snappy/yoo-kassa";
 import type { Bot } from "gramio";
 
+import type { Storage } from "./Storage";
+
 import { Keyboards } from "./Keyboards";
-import { t } from "./locales";
-import { Messages } from "./Messages";
-import { Storage } from "./Storage";
+import { Locales, t } from "./locales";
 
-export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; yooKassa: YooKassa };
+export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; storage: Storage; yooKassa: YooKassa };
 
-const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
+const register = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
-    const localeKey = Storage.userLanguage(context.from.languageCode);
+    const localeKey = Locales.userLanguage(context.from.languageCode);
     const { data } = context;
 
     if (!data) {
@@ -46,13 +46,13 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => 
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if (!Storage.canMakeRequest(userId, config.freeRequestLimit)) {
+      if (!config.storage.canMakeRequest(userId, config.freeRequestLimit)) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
       }
 
-      const text = Messages.userText(userId);
+      const text = config.storage.userText(userId);
       if (text === undefined || text === ``) {
         await context.send(t(localeKey, `features.error`));
 
@@ -64,11 +64,11 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => 
       try {
         const processedText = await snappy.processText(text, feature);
 
-        Storage.incrementRequestCount(userId);
+        config.storage.incrementRequestCount(userId);
 
         await context.send(t(localeKey, `features.result`, { text: processedText }));
 
-        Messages.clearUserText(userId);
+        config.storage.clearUserText(userId);
       } catch (error) {
         console.error(`GigaChat processing error:`, error);
         await context.send(t(localeKey, `features.error`));
@@ -81,4 +81,4 @@ const registerHandlers = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => 
   });
 };
 
-export const Callbacks = { registerHandlers };
+export const Callbacks = { register };

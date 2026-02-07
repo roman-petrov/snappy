@@ -1,17 +1,12 @@
-/* jscpd:ignore-start */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/immutable-data */
 import type { Bot } from "gramio";
 
-import { Time } from "@snappy/core";
+import type { Storage } from "./Storage";
 
 import { Keyboards } from "./Keyboards";
-import { t } from "./locales";
-import { Storage } from "./Storage";
+import { Locales, t } from "./locales";
 
-const userTexts = new Map<number, string>();
-
-const registerHandlers = (bot: Bot) => {
+const register = (bot: Bot, storage: Storage) => {
   bot.on(`message`, async context => {
     const userId = context.from.id;
     const { text } = context;
@@ -24,29 +19,12 @@ const registerHandlers = (bot: Bot) => {
       return;
     }
 
-    const localeKey = Storage.userLanguage(context.from.languageCode);
+    const localeKey = Locales.userLanguage(context.from.languageCode);
 
-    userTexts.set(userId, text);
+    storage.setUserText(userId, text);
 
     await context.send(t(localeKey, `features.choose`), { reply_markup: Keyboards.featuresKeyboard(localeKey) });
   });
 };
 
-const userText = (userId: number) => userTexts.get(userId);
-
-const clearUserText = (userId: number) => {
-  userTexts.delete(userId);
-};
-
-const maxTextCount = 1000;
-
-const cleanupOldTexts = (): void => {
-  if (userTexts.size > maxTextCount) {
-    userTexts.clear();
-  }
-};
-
-setInterval(cleanupOldTexts, Time.hourInMs);
-
-export const Messages = { clearUserText, registerHandlers, userText };
-/* jscpd:ignore-end */
+export const Messages = { register };
