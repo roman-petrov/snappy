@@ -8,14 +8,14 @@ import type { Bot } from "gramio";
 import type { Storage } from "./Storage";
 
 import { Keyboards } from "./Keyboards";
-import { Locales, t } from "./locales";
+import { Locale, t } from "./Locale";
 
 export type CallbacksConfig = { freeRequestLimit: number; premiumPrice: number; storage: Storage; yooKassa: YooKassa };
 
 const register = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const userId = context.from.id;
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
     const { data } = context;
 
     if (!data) {

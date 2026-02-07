@@ -1,7 +1,7 @@
 import { type FeatureType, Prompts } from "@snappy/snappy";
 import { InlineKeyboard } from "gramio";
 
-import { type Locale, t } from "./locales";
+import { type Locale, t } from "./Locale";
 
 const featurePrefix = `feature:`;
 const featureCallbackData = (feature: FeatureType) => `${featurePrefix}${feature}`;

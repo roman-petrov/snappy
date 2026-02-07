@@ -5,7 +5,7 @@ import type { Bot } from "gramio";
 import type { Storage } from "./Storage";
 
 import { Keyboards } from "./Keyboards";
-import { Locales, t } from "./locales";
+import { Locale, t } from "./Locale";
 
 const register = (
   bot: Bot,
@@ -15,7 +15,7 @@ const register = (
   storage: Storage,
 ) => {
   bot.command(`start`, async context => {
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
     const userId = context.from.id;
     const remaining = storage.remainingRequests(userId, freeRequestLimit);
 
@@ -24,7 +24,7 @@ const register = (
   });
 
   bot.command(`help`, async context => {
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
     const body = `${t(localeKey, `commands.help.title`)}\n\n${t(localeKey, `commands.help.text`)}`;
 
     const message =
@@ -36,7 +36,7 @@ const register = (
   });
 
   bot.command(`balance`, async context => {
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
     const userId = context.from.id;
     const remaining = storage.remainingRequests(userId, freeRequestLimit);
     const premiumStatus = t(localeKey, `commands.balance.inactive`);
@@ -45,7 +45,7 @@ const register = (
   });
 
   bot.command(`premium`, async context => {
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
 
     await context.send(
       `${t(localeKey, `commands.premium.title`)}\n\n${t(localeKey, `commands.premium.description`, { price: premiumPrice })}`,

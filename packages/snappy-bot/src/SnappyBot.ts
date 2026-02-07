@@ -5,7 +5,7 @@ import { Snappy } from "@snappy/snappy";
 import { YooKassa } from "@snappy/yoo-kassa";
 import { Bot } from "gramio";
 
-import { Callbacks, Commands, Locales, Messages, Storage, t } from "./app";
+import { Callbacks, Commands, Locale, Messages, Storage, t } from "./app";
 
 export type SnappyBotConfig = {
   botToken: string;
@@ -22,7 +22,7 @@ const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 const setLocalizedCommands = async (bot: Bot) => {
   await bot.api.setChatMenuButton({ menu_button: { type: `commands` } });
 
-  for (const locale of Locales.localeKeys) {
+  for (const locale of Locale.localeKeys) {
     await bot.api.setMyCommands({
       commands: commandKeys.map(name => ({ command: name, description: t(locale, `commands.${name}.menu`) })),
       language_code: locale,

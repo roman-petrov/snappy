@@ -4,7 +4,7 @@ import type { Bot } from "gramio";
 import type { Storage } from "./Storage";
 
 import { Keyboards } from "./Keyboards";
-import { Locales, t } from "./locales";
+import { Locale, t } from "./Locale";
 
 const register = (bot: Bot, storage: Storage) => {
   bot.on(`message`, async context => {
@@ -19,7 +19,7 @@ const register = (bot: Bot, storage: Storage) => {
       return;
     }
 
-    const localeKey = Locales.userLanguage(context.from.languageCode);
+    const localeKey = Locale.userLanguage(context.from.languageCode);
 
     storage.setUserText(userId, text);
 

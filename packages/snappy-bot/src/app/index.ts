@@ -2,7 +2,7 @@ export { Callbacks } from "./Callbacks";
 
 export { Commands } from "./Commands";
 
-export { Locales, t } from "./locales";
+export { Locale, t } from "./Locale";
 
 export { Messages } from "./Messages";
 
