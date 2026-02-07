@@ -21,6 +21,7 @@ export const Server = (configJson: string, options: ServerOptions) => {
   const stop = () => {
     process.stdout.write(`🚀 Stopping server…\n`);
     void bot.stop();
+    void httpServer.stop();
   };
 
   return { start, stop };
