@@ -47,11 +47,8 @@
     <div id="vanta-bg" aria-hidden="true"></div>
     <header class="site-header">
       <div class="header-inner">
-        <a href="/" class="logo">⚡ Snappy</a>
+        <a href="/" class="logo" title="Переключить тему">⚡ Snappy</a>
         <nav>
-          <button type="button" class="theme-toggle" aria-label="Переключить тему" title="Светлая / Тёмная">
-            <span class="theme-icon" aria-hidden="true">🌙</span>
-          </button>
           <a href="#features">Возможности</a>
           <a href="#examples">Примеры</a>
           <a href="#who">Для кого</a>
@@ -330,8 +327,6 @@
       (function () {
         function applyTheme(theme) {
           document.documentElement.dataset.theme = theme;
-          const icon = document.querySelector(".theme-icon");
-          if (icon) icon.textContent = theme === "dark" ? "☀️" : "🌙";
         }
 
         applyTheme("light");
@@ -356,7 +351,8 @@
           }
         }
 
-        document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+        document.querySelector(".logo")?.addEventListener("click", e => {
+          e.preventDefault();
           const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
           applyTheme(next);
           setTimeout(initVanta, 0);
