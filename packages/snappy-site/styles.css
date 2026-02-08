@@ -18,6 +18,11 @@
   --color-accent-glow: rgb(34 211 238 / 0.4);
   --rgb-accent: 34 211 238;
 
+  /* Accent: warm red (before / input) */
+  --color-accent-red: #f87171;
+  --color-accent-red-dim: #fca5a5;
+  --rgb-accent-red: 248 113 113;
+
   /* Text on dark — higher contrast for readability */
   --color-text: #fafafa;
   --color-text-heading: #ffffff;
@@ -478,7 +483,8 @@ nav a:hover {
 
 .example-before {
   background: var(--color-bg-elevated);
-  border-color: var(--color-border);
+  border-color: rgb(var(--rgb-accent-red) / 0.25);
+  box-shadow: 0 0 0 1px rgb(var(--rgb-accent-red) / 0.08);
 }
 
 .example-after {
@@ -495,6 +501,11 @@ nav a:hover {
   letter-spacing: var(--tracking-wide);
   color: var(--color-text-muted);
   margin-block-end: var(--space-3);
+}
+
+.example-before .example-title {
+  color: var(--color-accent-red);
+  font-weight: var(--weight-bold);
 }
 
 .example-after .example-title {
