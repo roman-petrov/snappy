@@ -1,3 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2">
-  <path d="M8 12l8 8 8-8" />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Три сходящихся импульса — абстрактная метафора мгновенной трансформации (правка / сокращение / стиль) -->
+  <path d="M16 16 L32 8 L32 24 Z" fill="#22d3ee" />
+  <path d="M16 16 L0 24 L0 8 Z" fill="#8b5cf6" />
+  <path d="M16 16 L8 0 L24 0 Z" fill="#f87171" />
 </svg>
