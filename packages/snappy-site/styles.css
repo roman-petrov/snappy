@@ -468,8 +468,19 @@ nav a:hover {
 
 .example-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr auto 1fr;
   gap: var(--space-5);
+  align-items: center;
+}
+
+.example-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  flex-shrink: 0;
 }
 
 .example-box {
@@ -722,6 +733,10 @@ nav a:hover {
   .example-row {
     grid-template-columns: 1fr;
     gap: var(--space-4);
+  }
+
+  .example-arrow {
+    transform: rotate(90deg);
   }
 
   .example-box {
