@@ -244,7 +244,7 @@ nav a:hover {
 #main {
   max-width: var(--content-width);
   margin-inline: auto;
-  padding: 0 var(--space-6) var(--space-16);
+  padding: 0 var(--space-6) var(--space-8);
 }
 
 /* ---------------------------------------------------------------------------
@@ -252,7 +252,7 @@ nav a:hover {
    --------------------------------------------------------------------------- */
 
 .hero {
-  padding-block: var(--space-24) var(--space-20);
+  padding-block: var(--space-24) 0;
   text-align: center;
   position: relative;
 }
@@ -351,7 +351,7 @@ nav a:hover {
    --------------------------------------------------------------------------- */
 
 .section {
-  padding-block: var(--space-16);
+  padding-block: var(--space-8);
 }
 
 .section h2 {
@@ -359,7 +359,7 @@ nav a:hover {
   font-weight: var(--weight-extrabold);
   color: var(--color-text-heading);
   letter-spacing: var(--tracking-tight);
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--space-2);
   padding-inline-start: var(--space-4);
   border-inline-start: 3px solid var(--color-accent);
   line-height: var(--leading-tight);
@@ -367,22 +367,8 @@ nav a:hover {
 
 .section-lead {
   color: var(--color-text-muted);
-  margin: 0 0 var(--space-10);
+  margin: 0 0 var(--space-5);
   font-size: var(--text-md);
-}
-
-.section-alt {
-  background: var(--color-bg-elevated);
-  border-radius: var(--radius);
-  padding: var(--space-10) var(--space-6);
-  margin-inline: calc(-1 * var(--space-4));
-  border: 1px solid var(--color-border);
-}
-
-.section-note {
-  color: var(--color-text-muted);
-  font-size: var(--text-md);
-  margin-block-start: var(--space-4);
 }
 
 /* ---------------------------------------------------------------------------
@@ -450,7 +436,7 @@ nav a:hover {
    --------------------------------------------------------------------------- */
 
 .example-block {
-  margin-block-end: var(--space-12);
+  margin-block-end: var(--space-6);
 }
 
 .example-block:last-child {
@@ -638,7 +624,7 @@ nav a:hover {
   padding: var(--space-20) var(--space-8);
   background: var(--color-bg-elevated);
   border-radius: var(--radius-lg);
-  margin-block-start: var(--space-16);
+  margin-block-start: var(--space-8);
   border: 1px solid var(--color-border);
   box-shadow: 0 0 0 1px rgb(var(--rgb-accent) / 0.1);
 }
@@ -668,8 +654,8 @@ nav a:hover {
    --------------------------------------------------------------------------- */
 
 .site-footer {
-  margin-block-start: var(--space-24);
-  padding: var(--space-14) var(--space-6);
+  margin-block-start: var(--space-12);
+  padding: var(--space-10) var(--space-6);
   background: var(--color-bg-elevated);
   border-block-start: 1px solid var(--color-border);
 }
@@ -707,7 +693,7 @@ nav a:hover {
   }
 
   .hero {
-    padding-block: var(--space-16) var(--space-14);
+    padding-block: var(--space-16) 0;
   }
 
   .hero h1 {
@@ -720,17 +706,12 @@ nav a:hover {
   }
 
   .section {
-    padding-block: var(--space-12);
+    padding-block: var(--space-6);
   }
 
   .section h2 {
     font-size: var(--text-2xl);
     padding-inline-start: var(--space-3);
-  }
-
-  .section-alt {
-    margin-inline: calc(-1 * var(--space-4));
-    padding: var(--space-8) var(--space-4);
   }
 
   .example-row {
@@ -765,7 +746,7 @@ nav a:hover {
 
   .cta-block {
     padding: var(--space-14) var(--space-4);
-    margin-block-start: var(--space-12);
+    margin-block-start: var(--space-6);
   }
 
   .cta-block h2 {
@@ -778,7 +759,7 @@ nav a:hover {
 
   .site-footer {
     padding: var(--space-10) var(--space-4);
-    margin-block-start: var(--space-16);
+    margin-block-start: var(--space-8);
   }
 
   nav {
