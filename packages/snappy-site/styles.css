@@ -253,10 +253,19 @@ a:focus-visible {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
   font-weight: var(--weight-extrabold);
   font-size: var(--text-xl);
   color: var(--color-accent);
   letter-spacing: var(--tracking-tight);
+}
+
+.logo-icon {
+  width: 1.25em;
+  height: 1.25em;
+  vertical-align: -0.25em;
 }
 
 .logo:hover {
@@ -734,7 +743,7 @@ nav a:hover {
 }
 
 .footer-inner .logo {
-  display: inline-block;
+  display: inline-flex;
   margin-block-end: var(--space-3);
   color: var(--color-accent);
 }
