@@ -1,14 +1,16 @@
 /* cspell:word csvg cpath */
 /* ---------------------------------------------------------------------------
-   Snappy — Dark theme, electric cyan accent. Single source of truth.
+   Snappy — Dark/light theme, electric cyan accent. Default: light.
    --------------------------------------------------------------------------- */
 
-:root {
+:root,
+[data-theme="dark"] {
   /* Dark palette */
   --color-bg: #0a0a0c;
   --color-bg-elevated: #111114;
   --color-bg-card: #16161a;
   --color-bg-card-hover: #1a1a1f;
+  --color-bg-header: rgb(10 10 12 / 0.9);
   --color-border: #35353a;
   --color-border-bright: #52525b;
 
@@ -17,19 +19,74 @@
   --color-accent-dim: #06b6d4;
   --color-accent-glow: rgb(34 211 238 / 0.4);
   --rgb-accent: 34 211 238;
+  --color-on-accent: #0a0a0c;
 
   /* Accent: warm red (before / input) */
   --color-accent-red: #f87171;
   --color-accent-red-dim: #fca5a5;
   --rgb-accent-red: 248 113 113;
 
-  /* Text on dark — higher contrast for readability */
+  /* Text on dark */
   --color-text: #fafafa;
   --color-text-heading: #ffffff;
   --color-text-body: #e4e4e7;
   --color-text-muted: #a1a1aa;
   --color-focus-ring: var(--color-accent);
 
+  /* Grid & overlays */
+  --color-grid: rgb(255 255 255 / 0.02);
+  --shadow-card: 0 4px 20px rgb(0 0 0 / 0.12);
+  --shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(var(--rgb-accent) / 0.06);
+  --shadow-btn: 0 0 20px rgb(var(--rgb-accent) / 0.35);
+  --shadow-btn-hover: 0 0 28px rgb(var(--rgb-accent) / 0.5);
+  --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.12) 0%, transparent 60%);
+}
+
+[data-theme="light"] {
+  --color-bg: #f5f5f7;
+  --color-bg-elevated: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-card-hover: #fafafa;
+  --color-bg-header: rgb(255 255 255 / 0.9);
+  --color-border: #e4e4e7;
+  --color-border-bright: #d4d4d8;
+
+  --color-accent: #0891b2;
+  --color-accent-dim: #0e7490;
+  --color-accent-glow: rgb(8 145 178 / 0.35);
+  --rgb-accent: 8 145 178;
+  --color-on-accent: #ffffff;
+
+  --color-accent-red: #dc2626;
+  --color-accent-red-dim: #ef4444;
+  --rgb-accent-red: 220 38 38;
+
+  --color-text: #18181b;
+  --color-text-heading: #09090b;
+  --color-text-body: #27272a;
+  --color-text-muted: #71717a;
+
+  --color-grid: rgb(0 0 0 / 0.04);
+  --shadow-card: 0 2px 12px rgb(0 0 0 / 0.06);
+  --shadow-card-hover: 0 8px 24px rgb(0 0 0 / 0.1), 0 0 0 1px rgb(var(--rgb-accent) / 0.12);
+  --shadow-btn: 0 2px 12px rgb(var(--rgb-accent) / 0.3);
+  --shadow-btn-hover: 0 4px 20px rgb(var(--rgb-accent) / 0.4);
+  --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.1) 0%, transparent 60%);
+}
+
+[data-theme="light"] #vanta-bg {
+  display: none;
+}
+
+[data-theme="light"] .icon-telegram {
+  filter: brightness(0) invert(1);
+}
+
+[data-theme="light"] .example-before {
+  background: #fafafa;
+}
+
+:root {
   /* Spacing */
   --space-1: 0.25rem;
   --space-2: 0.5rem;
@@ -67,15 +124,10 @@
   --weight-bold: 700;
   --weight-extrabold: 800;
 
-  /* Radii & shadows */
+  /* Radii */
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
-  --shadow-card: 0 4px 20px rgb(0 0 0 / 0.12);
-  --shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(var(--rgb-accent) / 0.06);
-  --shadow-btn: 0 0 20px rgb(var(--rgb-accent) / 0.35);
-  --shadow-btn-hover: 0 0 28px rgb(var(--rgb-accent) / 0.5);
-  --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.12) 0%, transparent 60%);
 
   /* Motion */
   --ease: 0.2s ease;
@@ -86,7 +138,7 @@
   --content-width: 1100px;
   --content-narrow: 36rem;
 
-  /* Telegram icon (white on accent buttons) */
+  /* Telegram icon on accent buttons (fill via var — dark in dark theme, white in light) */
   --icon-telegram: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a0a0c' d='M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z'/%3E%3C/svg%3E");
 }
 
@@ -119,6 +171,9 @@ body {
   background: var(--color-bg);
   min-height: 100vh;
   position: relative;
+  transition:
+    color var(--ease),
+    background-color var(--ease);
 }
 
 /* Subtle grid + gradient background */
@@ -128,8 +183,8 @@ body::before {
   inset: 0;
   z-index: -2;
   background:
-    linear-gradient(rgb(255 255 255 / 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 0.02) 1px, transparent 1px);
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
   background-size: 64px 64px;
   background-position: 0 0;
   pointer-events: none;
@@ -144,6 +199,12 @@ body::after {
     radial-gradient(ellipse 100% 80% at 50% -20%, rgb(var(--rgb-accent) / 0.08) 0%, transparent 50%),
     radial-gradient(ellipse 60% 40% at 80% 50%, rgb(var(--rgb-accent) / 0.04) 0%, transparent 45%);
   pointer-events: none;
+}
+
+[data-theme="light"] body::after {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% -20%, rgb(var(--rgb-accent) / 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 80% 50%, rgb(var(--rgb-accent) / 0.03) 0%, transparent 45%);
 }
 
 #vanta-bg {
@@ -176,7 +237,7 @@ a:focus-visible {
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgb(10 10 12 / 0.9);
+  background: var(--color-bg-header);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
 }
@@ -209,6 +270,27 @@ nav {
   gap: var(--space-6);
 }
 
+.theme-toggle {
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity var(--ease);
+}
+
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
 nav a {
   color: var(--color-text-muted);
   font-weight: var(--weight-medium);
@@ -222,7 +304,7 @@ nav a:hover {
 
 .nav-cta {
   background: var(--color-accent);
-  color: var(--color-bg) !important;
+  color: var(--color-on-accent) !important;
   padding: var(--space-2) var(--space-4);
   border-radius: var(--radius-sm);
   font-weight: var(--weight-semibold);
@@ -317,7 +399,7 @@ nav a:hover {
 
 .btn-primary {
   background: var(--color-accent);
-  color: var(--color-bg);
+  color: var(--color-on-accent);
   border: none;
   box-shadow: var(--shadow-btn);
   outline: 2px solid transparent;
@@ -615,7 +697,7 @@ nav a:hover {
   justify-content: center;
   font-size: var(--text-sm);
   font-weight: var(--weight-bold);
-  color: var(--color-bg);
+  color: var(--color-on-accent);
   background: var(--color-accent);
   border-radius: 50%;
   line-height: 1;

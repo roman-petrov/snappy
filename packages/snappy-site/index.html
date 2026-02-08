@@ -49,6 +49,9 @@
       <div class="header-inner">
         <a href="/" class="logo">⚡ Snappy</a>
         <nav>
+          <button type="button" class="theme-toggle" aria-label="Переключить тему" title="Светлая / Тёмная">
+            <span class="theme-icon" aria-hidden="true">🌙</span>
+          </button>
           <a href="#features">Возможности</a>
           <a href="#examples">Примеры</a>
           <a href="#who">Для кого</a>
@@ -325,23 +328,39 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
       (function () {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-        try {
-          VANTA.FOG({
-            el: "#vanta-bg",
-            highlightColor: 0x1a3d42,
-            midtoneColor: 0x0d1f22,
-            lowlightColor: 0x0a0a0c,
-            baseColor: 0x0a0a0c,
-            blurFactor: 0.6,
-            speed: 0.4,
-            zoom: 1.2,
-            mouseControls: false,
-            touchControls: false,
-          });
-        } catch {
-          /* WebGL fallback: keep static gradient */
+        function applyTheme(theme) {
+          document.documentElement.dataset.theme = theme;
+          const icon = document.querySelector(".theme-icon");
+          if (icon) icon.textContent = theme === "dark" ? "☀️" : "🌙";
         }
+
+        applyTheme("light");
+
+        function initVanta() {
+          if (document.documentElement.dataset.theme === "light") return;
+          try {
+            VANTA.FOG({
+              el: "#vanta-bg",
+              highlightColor: 0x1a3d42,
+              midtoneColor: 0x0d1f22,
+              lowlightColor: 0x0a0a0c,
+              baseColor: 0x0a0a0c,
+              blurFactor: 0.6,
+              speed: 0.4,
+              zoom: 1.2,
+              mouseControls: false,
+              touchControls: false,
+            });
+          } catch {
+            /* WebGL fallback: keep static gradient */
+          }
+        }
+
+        document.querySelector(".theme-toggle")?.addEventListener("click", () => {
+          const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+          applyTheme(next);
+          setTimeout(initVanta, 0);
+        });
       })();
       AOS.init({
         duration: 400,
