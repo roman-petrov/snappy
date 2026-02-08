@@ -66,8 +66,8 @@
   --radius-sm: 8px;
   --radius: 12px;
   --radius-lg: 16px;
-  --shadow-card: 0 4px 24px rgb(0 0 0 / 0.25);
-  --shadow-card-hover: 0 8px 32px rgb(0 0 0 / 0.35), 0 0 0 1px rgb(var(--rgb-accent) / 0.15);
+  --shadow-card: 0 4px 20px rgb(0 0 0 / 0.12);
+  --shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(var(--rgb-accent) / 0.06);
   --shadow-btn: 0 0 20px rgb(var(--rgb-accent) / 0.35);
   --shadow-btn-hover: 0 0 28px rgb(var(--rgb-accent) / 0.5);
   --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.12) 0%, transparent 60%);
@@ -387,7 +387,6 @@ nav a:hover {
 
 .card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
   border-radius: var(--radius);
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
@@ -397,7 +396,6 @@ nav a:hover {
 .card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-card-hover);
-  border-color: var(--color-border-bright);
   background: var(--color-bg-card-hover);
 }
 
@@ -409,9 +407,8 @@ nav a:hover {
   margin-block-end: var(--space-4);
   padding: var(--space-3) var(--space-4);
   min-width: 3.5rem;
-  background: rgb(var(--rgb-accent) / 0.12);
+  background: rgb(var(--rgb-accent) / 0.08);
   border-radius: var(--radius-sm);
-  border: 1px solid rgb(var(--rgb-accent) / 0.2);
 }
 
 .card h3,
@@ -534,15 +531,14 @@ nav a:hover {
   background: var(--color-bg-card);
   border-radius: var(--radius-sm);
   font-size: var(--text-md);
-  border: 1px solid var(--color-border);
   border-inline-start: 3px solid var(--color-accent);
+  box-shadow: var(--shadow-card);
   transition: var(--transition);
 }
 
 .styles-list li:hover {
   background: var(--color-bg-card-hover);
-  border-color: var(--color-border-bright);
-  border-inline-start-color: var(--color-accent);
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* ---------------------------------------------------------------------------
@@ -561,13 +557,12 @@ nav a:hover {
   padding: var(--space-4) var(--space-5);
   background: var(--color-bg-card);
   border-radius: var(--radius-sm);
-  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
   transition: var(--transition);
 }
 
 .faq-item:hover {
-  border-color: var(--color-border-bright);
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .faq-item dt {
