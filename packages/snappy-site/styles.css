@@ -9,8 +9,8 @@
   --color-bg-elevated: #111114;
   --color-bg-card: #16161a;
   --color-bg-card-hover: #1a1a1f;
-  --color-border: #27272a;
-  --color-border-bright: #3f3f46;
+  --color-border: #35353a;
+  --color-border-bright: #52525b;
 
   /* Accent: electric cyan */
   --color-accent: #22d3ee;
@@ -18,11 +18,11 @@
   --color-accent-glow: rgb(34 211 238 / 0.4);
   --rgb-accent: 34 211 238;
 
-  /* Text on dark */
+  /* Text on dark — higher contrast for readability */
   --color-text: #fafafa;
   --color-text-heading: #ffffff;
-  --color-text-body: #d4d4d8;
-  --color-text-muted: #71717a;
+  --color-text-body: #e4e4e7;
+  --color-text-muted: #a1a1aa;
   --color-focus-ring: var(--color-accent);
 
   /* Spacing */
