@@ -33,6 +33,7 @@
     />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -43,11 +44,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="bg-blobs" aria-hidden="true">
-      <span class="bg-blob bg-blob-1"></span>
-      <span class="bg-blob bg-blob-2"></span>
-      <span class="bg-blob bg-blob-3"></span>
-    </div>
+    <div id="vanta-bg" aria-hidden="true"></div>
     <header class="site-header">
       <div class="header-inner">
         <a href="/" class="logo">⚡ Snappy</a>
@@ -323,8 +320,29 @@
         <a href="https://t.me/sn4ppy_bot" target="_blank" rel="noopener">@sn4ppy_bot</a>
       </div>
     </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
+      (function () {
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        try {
+          VANTA.FOG({
+            el: "#vanta-bg",
+            highlightColor: 0x1a3d42,
+            midtoneColor: 0x0d1f22,
+            lowlightColor: 0x0a0a0c,
+            baseColor: 0x0a0a0c,
+            blurFactor: 0.6,
+            speed: 0.4,
+            zoom: 1.2,
+            mouseControls: false,
+            touchControls: false,
+          });
+        } catch {
+          /* WebGL fallback: keep static gradient */
+        }
+      })();
       AOS.init({
         duration: 400,
         easing: "ease-out-cubic",
