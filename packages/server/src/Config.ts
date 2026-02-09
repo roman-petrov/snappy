@@ -5,6 +5,8 @@
 /* eslint-disable preserve-caught-error */
 import { z } from "zod";
 
+const appConfig = { freeRequestLimit: 10, premiumPrice: 299 } as const;
+
 const loadedSchema = z.object({
   botToken: z.string().min(1, `botToken is required`),
   gigaChatAuthKey: z.string().min(1, `gigaChatAuthKey is required`),
@@ -12,7 +14,7 @@ const loadedSchema = z.object({
   yooKassaShopId: z.string().optional(),
 });
 
-export type LoadedConfig = z.infer<typeof loadedSchema>;
+export type LoadedConfig = typeof appConfig & z.infer<typeof loadedSchema>;
 
 export const Config = (raw: string, source = `config`): LoadedConfig => {
   let data: unknown;
@@ -28,5 +30,5 @@ export const Config = (raw: string, source = `config`): LoadedConfig => {
     throw new Error(`Invalid config:\n${issues}`);
   }
 
-  return result.data;
+  return { ...result.data, ...appConfig };
 };

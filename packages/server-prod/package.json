@@ -6,6 +6,11 @@
   "main": "./src/main.ts",
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "@snappy/server": "workspace:*"
+    "@snappy/server": "workspace:*",
+    "@snappy/snappy-bot": "workspace:*",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }

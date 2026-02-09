@@ -7,7 +7,8 @@ import { Build } from "./Build";
 
 const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `src`, `main.ts`);
 const distServerPath = (root: string) => join(root, `dist`, `server.js`);
-const spawnOptions = { stderr: `inherit` as const, stdin: `ignore` as const, stdout: `inherit` as const };
+const spawnOptions = { stderr: `inherit` as const, stdin: `inherit` as const, stdout: `inherit` as const };
+const vitePort = 5173;
 
 const runDev = async (root: string) => {
   const proc = Bun.spawn([`bun`, `--watch`, `run`, serverMainPath(root)], {
@@ -16,7 +17,7 @@ const runDev = async (root: string) => {
     ...spawnOptions,
   });
 
-  await open(`http://localhost`);
+  await open(`http://localhost:${vitePort}`);
 
   return proc.exited;
 };
