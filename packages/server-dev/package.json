@@ -5,10 +5,6 @@
   "private": true,
   "main": "./src/main.ts",
   "dependencies": {
-    "@snappy/server": "workspace:*",
-    "livereload": "^0.10.3"
-  },
-  "devDependencies": {
-    "@types/livereload": "^0.9.5"
+    "@snappy/server": "workspace:*"
   }
 }

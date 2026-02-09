@@ -5,18 +5,23 @@ import open from "open";
 
 import { Build } from "./Build";
 
+const siteDir = (root: string) => join(root, `packages`, `snappy-site`);
 const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `src`, `main.ts`);
 const distServerPath = (root: string) => join(root, `dist`, `server.js`);
 const spawnOptions = { stderr: `inherit` as const, stdin: `ignore` as const, stdout: `inherit` as const };
+const vitePort = 5173;
 
 const runDev = async (root: string) => {
+  Bun.spawn([`bun`, `run`, `dev`], { cwd: siteDir(root), ...spawnOptions });
+  await Bun.sleep(3000);
+
   const proc = Bun.spawn([`bun`, `--watch`, `run`, serverMainPath(root)], {
     cwd: root,
     env: { ...process.env, NODE_ENV: `development` },
     ...spawnOptions,
   });
 
-  await open(`http://localhost`);
+  await open(`http://localhost:${vitePort}`);
 
   return proc.exited;
 };
