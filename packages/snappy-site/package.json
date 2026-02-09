@@ -4,11 +4,9 @@
   "type": "module",
   "private": true,
   "dependencies": {
-    "@fontsource-variable/inter": "^5.2.8",
-    "aos": "^2.3.4"
+    "@fontsource-variable/inter": "^5.2.8"
   },
   "devDependencies": {
-    "@types/aos": "^3.0.7",
     "vite": "8.0.0-beta.13"
   }
 }

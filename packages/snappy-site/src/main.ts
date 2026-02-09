@@ -1,11 +1,35 @@
+/* eslint-disable functional/no-loop-statements */
+/* eslint-disable unicorn/require-module-specifiers */
 // cspell:word vanta lowlight midtone
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
-import aos from "aos";
-import "aos/dist/aos.css";
 
 const applyTheme = (theme: string) => (document.documentElement.dataset[`theme`] = theme);
+
+const initScrollAnimations = (): void => {
+  const rootMargin = `60px 0px`;
+
+  const observer = new IntersectionObserver(
+    entries => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add(`scroll-visible`);
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { root: undefined, rootMargin, threshold: 0 },
+  );
+
+  for (const element of document.querySelectorAll(`[data-aos]`)) {
+    const delay = element.getAttribute(`data-aos-delay`);
+    if (delay !== null && element instanceof HTMLElement) {
+      element.style.setProperty(`--aos-delay`, `${delay}ms`);
+    }
+    observer.observe(element);
+  }
+};
 
 applyTheme(`light`);
 
@@ -50,7 +74,7 @@ document.querySelector(`.logo`)?.addEventListener(`click`, clickEvent => {
   requestAnimationFrame(syncVanta);
 });
 
-aos.init({ duration: 400, easing: `ease-out-cubic`, offset: 60, once: true });
+initScrollAnimations();
 
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/consistent-type-definitions */
 declare global {
@@ -60,3 +84,5 @@ declare global {
   }
 }
 /* eslint-enable @typescript-eslint/naming-convention, @typescript-eslint/consistent-type-definitions */
+
+export {};
