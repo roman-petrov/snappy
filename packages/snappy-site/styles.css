@@ -1,4 +1,6 @@
-/* cspell:word csvg cpath */
+/* cspell:word csvg cpath vanta */
+@import "@fontsource-variable/inter";
+
 /* ---------------------------------------------------------------------------
    Snappy — Dark/light theme, electric cyan accent. Default: light.
    --------------------------------------------------------------------------- */
@@ -94,7 +96,7 @@
   --space-24: 6rem;
 
   /* Typography */
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
   --text-base: 1rem;

@@ -33,15 +33,9 @@
     />
 
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
     <link rel="stylesheet" href="styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js"></script>
   </head>
   <body>
     <div id="vanta-bg" aria-hidden="true"></div>
@@ -322,50 +316,6 @@
         <a href="https://t.me/sn4ppy_bot" target="_blank" rel="noopener">@sn4ppy_bot</a>
       </div>
     </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.fog.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <script>
-      (function () {
-        function applyTheme(theme) {
-          document.documentElement.dataset.theme = theme;
-        }
-
-        applyTheme("light");
-
-        function initVanta() {
-          if (document.documentElement.dataset.theme === "light") return;
-          try {
-            VANTA.FOG({
-              el: "#vanta-bg",
-              highlightColor: 0x1a3d42,
-              midtoneColor: 0x0d1f22,
-              lowlightColor: 0x0a0a0c,
-              baseColor: 0x0a0a0c,
-              blurFactor: 0.6,
-              speed: 1.0,
-              zoom: 1.2,
-              mouseControls: false,
-              touchControls: false,
-            });
-          } catch {
-            /* WebGL fallback: keep static gradient */
-          }
-        }
-
-        document.querySelector(".logo")?.addEventListener("click", e => {
-          e.preventDefault();
-          const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
-          applyTheme(next);
-          setTimeout(initVanta, 0);
-        });
-      })();
-      AOS.init({
-        duration: 400,
-        easing: "ease-out-cubic",
-        once: true,
-        offset: 60,
-      });
-    </script>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -24,7 +24,8 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "types": ["vite/client", "bun"]
   },
   "include": ["./**/*.*"]
 }

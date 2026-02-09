@@ -2,10 +2,14 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-undef */
 import fs from "node:fs";
-import { extname, join } from "node:path";
+import { join } from "node:path";
 
 const distDir = `dist`;
-const siteStaticExtensions = new Set([`.css`, `.html`, `.ico`, `.svg`]);
+const siteDir = (root: string) => join(root, `packages`, `snappy-site`);
+const siteDist = (root: string) => join(siteDir(root), distDir);
+const serverDir = (root: string) => join(root, `packages`, `server-prod`);
+const serverDist = (root: string) => join(serverDir(root), distDir);
+const wwwDir = (root: string) => join(root, distDir, `www`);
 
 const ensureDir = (dir: string): void => {
   if (!fs.existsSync(dir)) {
@@ -13,45 +17,44 @@ const ensureDir = (dir: string): void => {
   }
 };
 
-const copySiteStatic = (root: string): void => {
-  const siteDir = join(root, `packages`, `snappy-site`);
-  const outDir = join(root, distDir, `www`);
-  ensureDir(outDir);
-  const entries = fs.readdirSync(siteDir, { withFileTypes: true });
-  const files = entries.filter(entry => entry.isFile() && siteStaticExtensions.has(extname(entry.name)));
-  for (const entry of files) {
-    fs.copyFileSync(join(siteDir, entry.name), join(outDir, entry.name));
+const copyDir = (src: string, destination: string): void => {
+  ensureDir(destination);
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const entry of entries) {
+    const srcPath = join(src, entry.name);
+    const destinationPath = join(destination, entry.name);
+    if (entry.isDirectory()) {
+      copyDir(srcPath, destinationPath);
+    } else {
+      fs.copyFileSync(srcPath, destinationPath);
+    }
   }
 };
 
-const runBunBuild = async (cwd: string, entry: string, outfile: string) => {
-  const proc = Bun.spawn([`bun`, `build`, entry, `--outfile`, outfile, `--target`, `node`, `--minify`], {
-    cwd,
-    stderr: `inherit`,
-    stdin: `ignore`,
-    stdout: `inherit`,
-  });
+const spawn = async (cmd: string[], cwd: string): Promise<number> =>
+  Bun.spawn(cmd, { cwd, stderr: `inherit`, stdin: `ignore`, stdout: `inherit` }).exited.then(code => code);
 
-  const code = await proc.exited;
+const buildSite = async (root: string): Promise<number> => spawn([`bunx`, `vite`, `build`], siteDir(root));
+const buildServer = async (root: string): Promise<number> => spawn([`bunx`, `vite`, `build`], serverDir(root));
 
-  return code;
-};
-
-const build = async (root: string) => {
+const build = async (root: string): Promise<number> => {
   const dist = join(root, distDir);
   fs.rmSync(dist, { force: true, recursive: true });
-  ensureDir(dist);
 
-  copySiteStatic(root);
-
-  const serverEntry = join(root, `packages`, `server-prod`, `src`, `main.ts`);
-  const serverOut = join(root, distDir, `server.js`);
-  const serverResult = await runBunBuild(root, serverEntry, serverOut);
-  if (serverResult !== 0) {
-    return serverResult;
+  const siteExit = await buildSite(root);
+  if (siteExit !== 0) {
+    return siteExit;
   }
+
+  const serverExit = await buildServer(root);
+  if (serverExit !== 0) {
+    return serverExit;
+  }
+
+  copyDir(serverDist(root), join(root, distDir));
+  copyDir(siteDist(root), wwwDir(root));
 
   return 0;
 };
 
-export const Build = { build };
+export const Build = { build, buildSite };
