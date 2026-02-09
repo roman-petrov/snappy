@@ -68,7 +68,7 @@
   --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.1) 0%, transparent 60%);
 }
 
-[data-theme="light"] #vanta-bg {
+[data-theme="light"] #fog-bg {
   display: none;
 }
 
@@ -199,7 +199,7 @@ body::after {
     radial-gradient(ellipse 60% 40% at 80% 50%, rgb(var(--rgb-accent) / 0.03) 0%, transparent 45%);
 }
 
-#vanta-bg {
+#fog-bg {
   position: fixed;
   inset: 0;
   z-index: -3;

@@ -1,9 +1,6 @@
 /* eslint-disable functional/no-loop-statements */
-/* eslint-disable unicorn/require-module-specifiers */
-// cspell:word vanta lowlight midtone
-/* eslint-disable init-declarations */
-/* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
+import { Fog } from "./Fog.js";
 
 const applyTheme = (theme: string) => (document.documentElement.dataset[`theme`] = theme);
 
@@ -33,56 +30,30 @@ const initScrollAnimations = (): void => {
 
 applyTheme(`light`);
 
-type VantaEffect = { destroy: () => void };
+const fogRef = { current: undefined as ReturnType<typeof Fog> | undefined };
 
-let vantaEffect: undefined | VantaEffect;
-
-const syncVanta = (): void => {
-  if (vantaEffect !== undefined) {
-    vantaEffect.destroy();
-    vantaEffect = undefined;
+const syncFog = (): void => {
+  if (fogRef.current !== undefined) {
+    fogRef.current.stop();
+    fogRef.current = undefined;
   }
   if (document.documentElement.dataset[`theme`] === `light`) {
     return;
   }
-  const element = document.querySelector(`#vanta-bg`);
-  if (element === null) {
+  const element = document.querySelector(`#fog-bg`);
+  if (element === null || !(element instanceof HTMLElement)) {
     return;
   }
-  const three = window.THREE;
-  const vanta = window.VANTA;
-
-  vantaEffect = vanta.FOG({
-    baseColor: 0x0a_0a_0c,
-    blurFactor: 0.6,
-    el: element,
-    highlightColor: 0x1a_3d_42,
-    lowlightColor: 0x0a_0a_0c,
-    midtoneColor: 0x0d_1f_22,
-    mouseControls: false,
-    speed: 1,
-    THREE: three,
-    touchControls: false,
-    zoom: 1.2,
-  });
+  fogRef.current = Fog(element, { blurFactor: 0.5, speed: 2, zoom: 2 });
+  fogRef.current.start();
 };
 
 document.querySelector(`.logo`)?.addEventListener(`click`, clickEvent => {
   clickEvent.preventDefault();
   const next = document.documentElement.dataset[`theme`] === `dark` ? `light` : `dark`;
   applyTheme(next);
-  requestAnimationFrame(syncVanta);
+  requestAnimationFrame(syncFog);
 });
 
 initScrollAnimations();
-
-/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/consistent-type-definitions */
-declare global {
-  interface Window {
-    THREE: Record<string, unknown>;
-    VANTA: { FOG: (options: Record<string, unknown>) => VantaEffect };
-  }
-}
-/* eslint-enable @typescript-eslint/naming-convention, @typescript-eslint/consistent-type-definitions */
-
-export {};
+syncFog();
