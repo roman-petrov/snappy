@@ -5,12 +5,16 @@ import { AppConfiguration } from "./AppConfiguration";
 import { Config } from "./Config";
 import { HttpServer, type HttpServerOptions } from "./HttpServer";
 
-export type ServerOptions = HttpServerOptions & { snappyVersion?: string };
+const noopServer = { start: () => {}, stop: async () => {} };
+
+export type ServerOptions =
+  | (HttpServerOptions & { serveSite?: boolean; snappyVersion?: string })
+  | { serveSite: false; snappyVersion?: string };
 
 export const Server = (configJson: string, options: ServerOptions) => {
   const config = { ...Config(configJson), ...options };
   const bot = SnappyBot({ ...config, ...AppConfiguration });
-  const httpServer = HttpServer(config);
+  const httpServer = options.serveSite === false ? noopServer : HttpServer(config as HttpServerOptions);
 
   const start = () => {
     process.stdout.write(`🚀 Starting server…\n`);
