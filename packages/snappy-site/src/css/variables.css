@@ -1,0 +1,126 @@
+/* cspell:word csvg cpath */
+:root,
+[data-theme="dark"] {
+  --color-bg: #0a0a0c;
+  --color-bg-elevated: #111114;
+  --color-bg-card: rgb(22 22 26 / 0.3);
+  --color-bg-card-hover: rgb(26 26 31 / 0.4);
+  --color-bg-card-border: rgb(255 255 255 / 0.12);
+  --color-bg-icon: rgb(255 255 255 / 0.06);
+  --color-bg-card-features: rgb(20 38 48 / 0.5);
+  --color-bg-card-features-hover: rgb(25 45 58 / 0.6);
+  --color-bg-card-examples: rgb(48 28 38 / 0.5);
+  --color-bg-card-examples-hover: rgb(55 35 48 / 0.6);
+  --color-bg-card-styles: rgb(38 28 52 / 0.5);
+  --color-bg-card-styles-hover: rgb(45 35 62 / 0.6);
+  --color-bg-card-who: rgb(22 45 42 / 0.5);
+  --color-bg-card-who-hover: rgb(28 52 50 / 0.6);
+  --color-bg-card-faq: rgb(52 42 22 / 0.5);
+  --color-bg-card-faq-hover: rgb(60 50 28 / 0.6);
+  --color-bg-card-start: rgb(22 45 38 / 0.5);
+  --color-bg-card-start-hover: rgb(28 52 45 / 0.6);
+  --color-bg-header: rgb(10 10 12 / 0.9);
+  --color-border: #35353a;
+  --color-accent: #67e8f9;
+  --rgb-accent: 103 232 249;
+  --color-on-accent: #0a0a0c;
+  --color-accent-red: #fca5a5;
+  --rgb-accent-red: 252 165 165;
+  --color-text: #fafafa;
+  --color-text-heading: #ffffff;
+  --color-text-body: #e4e4e7;
+  --color-text-muted: #a1a1aa;
+  --color-focus-ring: var(--color-accent);
+  --color-grid: rgb(255 255 255 / 0.02);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.06);
+  --shadow-btn: 0 0 20px rgb(var(--rgb-accent) / 0.35);
+  --shadow-btn-hover: 0 0 28px rgb(var(--rgb-accent) / 0.5);
+}
+
+[data-theme="light"] {
+  --color-bg: #f5f5f7;
+  --color-bg-elevated: #ffffff;
+  --color-bg-card: rgb(255 255 255 / 0.3);
+  --color-bg-card-hover: rgb(255 255 255 / 0.5);
+  --color-bg-card-border: rgb(0 0 0 / 0.08);
+  --color-bg-icon: rgb(0 0 0 / 0.04);
+  --color-bg-card-features: rgb(205 228 245 / 0.8);
+  --color-bg-card-features-hover: rgb(195 220 240 / 0.9);
+  --color-bg-card-examples: rgb(238 225 232 / 0.8);
+  --color-bg-card-examples-hover: rgb(230 212 222 / 0.9);
+  --color-bg-card-styles: rgb(222 215 240 / 0.8);
+  --color-bg-card-styles-hover: rgb(212 202 232 / 0.9);
+  --color-bg-card-who: rgb(205 238 228 / 0.8);
+  --color-bg-card-who-hover: rgb(195 232 220 / 0.9);
+  --color-bg-card-faq: rgb(245 235 212 / 0.8);
+  --color-bg-card-faq-hover: rgb(238 225 198 / 0.9);
+  --color-bg-card-start: rgb(215 245 230 / 0.8);
+  --color-bg-card-start-hover: rgb(205 238 218 / 0.9);
+  --color-bg-header: rgb(255 255 255 / 0.9);
+  --color-border: #e4e4e7;
+  --color-accent: #0891b2;
+  --rgb-accent: 8 145 178;
+  --color-on-accent: #ffffff;
+  --color-accent-red: #dc2626;
+  --rgb-accent-red: 220 38 38;
+  --color-text: #18181b;
+  --color-text-heading: #09090b;
+  --color-text-body: #27272a;
+  --color-text-muted: #71717a;
+  --color-grid: rgb(0 0 0 / 0.04);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.03);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.05);
+  --shadow-btn: 0 2px 12px rgb(var(--rgb-accent) / 0.3);
+  --shadow-btn-hover: 0 4px 20px rgb(var(--rgb-accent) / 0.4);
+
+  & #fog-bg {
+    display: none;
+  }
+  & .icon-telegram {
+    filter: brightness(0) invert(1);
+  }
+}
+
+:root {
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.0625rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-hero: clamp(2.5rem, 6vw, 4rem);
+  --leading-tight: 1.1;
+  --leading-relaxed: 1.6;
+  --leading-body: 1.65;
+  --tracking-tight: -0.03em;
+  --tracking-wide: 0.04em;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --ease: 0.2s ease;
+  --transition: transform var(--ease), box-shadow var(--ease), border-color var(--ease), background-color var(--ease);
+  --transition-btn: transform var(--ease), box-shadow var(--ease), outline-color var(--ease);
+  --content-width: 1100px;
+  --content-narrow: 36rem;
+  --icon-telegram: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230a0a0c' d='M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z'/%3E%3C/svg%3E");
+}
