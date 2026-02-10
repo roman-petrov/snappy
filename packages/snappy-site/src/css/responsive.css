@@ -35,7 +35,8 @@
     margin-bottom: var(--space-8);
   }
 
-  .hero .btn-primary {
+  .hero .btn-primary,
+  .cta-block .btn-primary {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -97,15 +98,6 @@
     & p {
       font-size: var(--text-base);
     }
-  }
-
-  .cta-block .btn-primary {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    padding: var(--space-3) var(--space-4);
-    font-size: var(--text-sm);
   }
 
   .site-footer {

@@ -195,44 +195,7 @@
   gap: 0;
 }
 
-.who-item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-5);
-  padding: var(--space-5) 0;
-  position: relative;
-
-  &:not(:last-child)::after {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    bottom: 0;
-    height: 1px;
-    background: var(--color-divider);
-  }
-
-  & h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--color-text-heading);
-    margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
-  }
-
-  & p {
-    margin: 0;
-    font-size: var(--text-md);
-    color: var(--color-text-muted);
-    line-height: var(--leading-relaxed);
-  }
-}
-
-.who-icon {
-  font-size: 2rem;
-  line-height: 1;
-}
-
-/* FAQ: simple Q&A list */
+.who-item,
 .faq-item {
   padding: var(--space-5) 0;
   position: relative;
@@ -245,21 +208,36 @@
     height: 1px;
     background: var(--color-divider);
   }
+}
 
-  & dt {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--color-text-heading);
-    margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
-  }
+.who-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-5);
+}
 
-  & dd {
-    margin: 0;
-    font-size: var(--text-md);
-    color: var(--color-text-muted);
-    line-height: var(--leading-relaxed);
-  }
+.who-item h3,
+.faq-item dt,
+.card h3 {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  margin: 0 0 var(--space-2);
+  letter-spacing: var(--tracking-tight);
+}
+
+.who-item p,
+.faq-item dd,
+.card p {
+  margin: 0;
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
+}
+
+.who-icon {
+  font-size: 2rem;
+  line-height: 1;
 }
 
 /* Start: timeline */
@@ -276,21 +254,6 @@
   width: 2px;
   background: var(--color-border);
   border-radius: 1px;
-}
-
-.card h3 {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
-  color: var(--color-text-heading);
-  margin: 0 0 var(--space-2);
-  letter-spacing: var(--tracking-tight);
-}
-
-.card p {
-  margin: 0;
-  font-size: var(--text-md);
-  color: var(--color-text-muted);
-  line-height: var(--leading-relaxed);
 }
 
 .features-grid {
