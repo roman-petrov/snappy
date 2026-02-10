@@ -7,21 +7,20 @@ const cmdTest = `bun test`;
 const cmdLintTsc = `bunx tsc --noEmit`;
 const cmdLintEslint = `bunx eslint .`;
 const cmdLintPrettier = `bunx prettier --check .`;
-const cmdLintStylelint = `bunx stylelint --max-warnings=0 ./packages/**/*.css`;
-const cmdLintStylelintCi = `bunx stylelint stylelint --max-warnings=0 ./packages/**/*.css`;
+const cmdLintStylelint = `bunx stylelint --max-warnings=0 **/*.css`;
 const cmdLintCspell = `bunx cspell .`;
 const cmdLintJscpd = `bunx jscpd .`;
 const cmdLintMarkdown = `bunx markdownlint .`;
 const cmdFixEslint = `bunx eslint --fix .`;
 const cmdFixPrettier = `bunx prettier --write .`;
-const cmdFixStylelint = `bunx stylelint --fix stylelint --max-warnings=0 ./packages/**/*.css`;
+const cmdFixStylelint = `bunx stylelint --fix --max-warnings=0 **/*.css`;
 
 const cmdCi = [
   cmdTest,
   cmdLintTsc,
   cmdLintEslint,
   cmdLintPrettier,
-  cmdLintStylelintCi,
+  cmdLintStylelint,
   cmdLintCspell,
   cmdLintJscpd,
   cmdLintMarkdown,
