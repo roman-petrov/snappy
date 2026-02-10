@@ -39,6 +39,10 @@
     font-size: var(--text-base);
   }
 
+  .pill {
+    flex-direction: column;
+  }
+
   .who-item {
     grid-template-columns: auto 1fr;
     gap: var(--space-4);
