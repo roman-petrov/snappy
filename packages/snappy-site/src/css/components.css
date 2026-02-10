@@ -214,6 +214,15 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-5);
+
+  & .who-icon {
+    grid-column: 1;
+    grid-row: 1 / -1;
+  }
+  & h3,
+  & p {
+    grid-column: 2;
+  }
 }
 
 .who-item h3,
