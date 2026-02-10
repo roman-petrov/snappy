@@ -1,6 +1,6 @@
 {
   "absolute": true,
-  "ignore": [".github", ".jscpd", "**/dist/**", "**/*.html", "node_modules"],
+  "ignore": [".github", ".jscpd", "**/dist/**", "**/*.html", "**/node_modules", "**/packages/*/src/generated"],
   "ignorePattern": ["import.*from.*"],
   "gitignore": true,
   "mode": "strict",

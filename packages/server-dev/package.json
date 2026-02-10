@@ -5,8 +5,8 @@
   "private": true,
   "main": "./src/main.ts",
   "dependencies": {
-    "@snappy/server": "workspace:*",
-    "@snappy/snappy-bot": "workspace:*",
-    "vite": "8.0.0-beta.13"
+    "@snappy/config": "workspace:*",
+    "@snappy/db": "workspace:*",
+    "@snappy/snappy-bot": "workspace:*"
   }
 }

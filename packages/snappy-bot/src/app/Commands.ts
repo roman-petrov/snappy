@@ -16,8 +16,7 @@ const register = (
 ) => {
   bot.command(`start`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const userId = context.from.id;
-    const remaining = storage.remainingRequests(userId, freeRequestLimit);
+    const remaining = await storage.remainingRequests(context.from.id, freeRequestLimit, context.from.username);
 
     await context.send(t(localeKey, `commands.start.welcome`));
     await context.send(t(localeKey, `commands.start.help`, { count: remaining }));
@@ -37,8 +36,7 @@ const register = (
 
   bot.command(`balance`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const userId = context.from.id;
-    const remaining = storage.remainingRequests(userId, freeRequestLimit);
+    const remaining = await storage.remainingRequests(context.from.id, freeRequestLimit, context.from.username);
     const premiumStatus = t(localeKey, `commands.balance.inactive`);
 
     await context.send(t(localeKey, `commands.balance.free`, { count: remaining, status: premiumStatus }));

@@ -1,6 +1,0 @@
-{
-  "botToken": "your_telegram_bot_token_here",
-  "gigaChatAuthKey": "your_gigachat_authorization_key",
-  "yooKassaShopId": "your_shop_id",
-  "yooKassaSecretKey": "your_secret_key"
-}

@@ -6,3 +6,4 @@ cascadia
 sonarjs
 bunx
 modelcontextprotocol
+autoincrement

@@ -27,6 +27,16 @@ jobs:
         id: build
         uses: ./.github/actions/build-and-release
 
+      - name: 🗄️ Run database migrations
+        if: inputs.version == ''
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: bunx prisma migrate deploy
+
       - name: 📥 Download release artifact
         env:
           GH_TOKEN: ${{ github.token }}
@@ -46,8 +56,16 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
-          SNAPPY_CONFIG: ${{ secrets.SNAPPY_CONFIG }}
           SNAPPY_VERSION: ${{ inputs.version || steps.build.outputs.version }}
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          GIGACHAT_AUTH_KEY: ${{ secrets.GIGACHAT_AUTH_KEY }}
+          YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
+          YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
           SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
           DIST_ZIP: dist.zip

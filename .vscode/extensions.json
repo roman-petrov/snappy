@@ -10,6 +10,7 @@
     "yoavbls.pretty-ts-errors",
     "fabiospampinato.vscode-highlight",
     "Prisma.prisma",
+    "ms-azuretools.vscode-docker",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",

@@ -26,6 +26,8 @@ export default defineConfig([
             arg: true,
             Args: true,
             args: true,
+            db: true,
+            Db: true,
             Dev: true,
             dev: true,
             Dir: true,

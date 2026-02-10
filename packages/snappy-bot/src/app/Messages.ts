@@ -1,12 +1,12 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
-import type { Storage } from "./Storage";
+import type { UserTexts } from "./UserTexts";
 
 import { Keyboards } from "./Keyboards";
 import { Locale, t } from "./Locale";
 
-const register = (bot: Bot, storage: Storage) => {
+const register = (bot: Bot, userTexts: UserTexts) => {
   bot.on(`message`, async context => {
     const userId = context.from.id;
     const { text } = context;
@@ -21,7 +21,7 @@ const register = (bot: Bot, storage: Storage) => {
 
     const localeKey = Locale.userLanguage(context.from.languageCode);
 
-    storage.setUserText(userId, text);
+    userTexts.set(userId, text);
 
     await context.send(t(localeKey, `features.choose`), { reply_markup: Keyboards.featuresKeyboard(localeKey) });
   });

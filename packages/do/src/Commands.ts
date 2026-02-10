@@ -14,6 +14,13 @@ const cmdLintMarkdown = `bunx markdownlint .`;
 const cmdFixEslint = `bunx eslint --fix .`;
 const cmdFixPrettier = `bunx prettier --write .`;
 const cmdFixStylelint = `bunx stylelint --fix --max-warnings=0 **/*.css`;
+const cmdDbGenerate = `bunx prisma generate`;
+const cmdDbPush = `bunx prisma db push`;
+const cmdDbMigrateDev = `bunx prisma migrate dev`;
+const cmdDbMigrateDeploy = `bunx prisma migrate deploy`;
+const cmdDbMigrateReset = `bunx prisma migrate reset`;
+const cmdDbStudio = `bunx prisma studio`;
+const cmdDbSeed = `bunx prisma db seed`;
 
 const cmdCi = [
   cmdTest,
@@ -46,6 +53,21 @@ const commands = [
   { command: cmdFixEslint, description: `ESLint: auto-fix issues where possible.`, name: `fix:eslint` },
   { command: cmdFixPrettier, description: `Prettier: format and write files.`, name: `fix:prettier` },
   { command: cmdFixStylelint, description: `Stylelint: auto-fix CSS/SCSS.`, name: `fix:stylelint` },
+  { command: cmdDbGenerate, description: `Database: generate Prisma client.`, name: `db:generate` },
+  { command: cmdDbPush, description: `Database: push schema to database without migrations.`, name: `db:push` },
+  { command: cmdDbMigrateDev, description: `Database: create and apply migration (dev).`, name: `db:migrate:dev` },
+  {
+    command: cmdDbMigrateDeploy,
+    description: `Database: apply pending migrations (production).`,
+    name: `db:migrate:deploy`,
+  },
+  {
+    command: cmdDbMigrateReset,
+    description: `Database: reset database and apply all migrations.`,
+    name: `db:migrate:reset`,
+  },
+  { command: cmdDbStudio, description: `Database: open Prisma Studio GUI.`, name: `db:studio` },
+  { command: cmdDbSeed, description: `Database: seed database with initial data.`, name: `db:seed` },
 ] as const;
 
 const commandByName = (name: string) => commands.find(c => c.name === name);

@@ -5,8 +5,9 @@
   "private": true,
   "main": "./src/main.ts",
   "dependencies": {
+    "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/server": "workspace:*",
+    "@snappy/db": "workspace:*",
     "@snappy/snappy-bot": "workspace:*",
     "express": "^5.2.1"
   },

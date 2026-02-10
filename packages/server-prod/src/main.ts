@@ -1,24 +1,21 @@
 /* eslint-disable sonarjs/x-powered-by */
+import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { Config } from "@snappy/server";
+import { Database } from "@snappy/db";
 import { SnappyBot } from "@snappy/snappy-bot";
 import express from "express";
 import http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
 
-const envConfig = process.env[`SNAPPY_CONFIG`];
-if (envConfig === undefined) {
-  throw new Error(`SNAPPY_CONFIG environment variable is not set`);
-}
-const configJson = _.base64decode(envConfig);
 const sslCertB64 = process.env[`SSL_CERT_PEM`];
 const sslKeyB64 = process.env[`SSL_KEY_PEM`];
 const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCertB64);
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
-const snappyVersion = process.env[`SNAPPY_VERSION`];
+const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-const bot = SnappyBot({ ...Config(configJson), snappyVersion });
+const db = Database(Config.dbUrl);
+const bot = SnappyBot({ ...Config, db, version });
 const portHttp = 80;
 const portHttps = 443;
 const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;

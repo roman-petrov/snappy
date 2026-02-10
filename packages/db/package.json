@@ -1,0 +1,15 @@
+{
+  "name": "@snappy/db",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "@snappy/config": "workspace:*"
+  },
+  "devDependencies": {
+    "prisma": "^7.3.0"
+  }
+}

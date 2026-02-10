@@ -14,7 +14,7 @@ export const CSpellConfig = {
   dictionaryDefinitions: [{ name: `customWords`, path: `./.words.txt` }],
   enabledFileTypes: { "*": true },
   enableGlobDot: true,
-  ignorePaths: [`.git`, `.vscode/**`],
+  ignorePaths: [`.git`, `.vscode/**`, `**/node_modules/**`, `**/*.sql`, `bun.lockb`, `**/packages/*/src/generated/**`],
   import: `@cspell/dict-ru_ru/cspell-ext.json`,
   language: `en_US`,
   useGitignore: true,
