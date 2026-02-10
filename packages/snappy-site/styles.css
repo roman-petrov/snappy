@@ -405,21 +405,23 @@ nav {
     background: rgb(var(--rgb-accent) / 0.08);
     border-radius: var(--radius-sm);
   }
+}
 
-  & h3 {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--color-text-heading);
-    margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
-  }
+.card h3,
+.faq-item dt {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  margin: 0 0 var(--space-2);
+  letter-spacing: var(--tracking-tight);
+}
 
-  & p {
-    margin: 0;
-    font-size: var(--text-md);
-    color: var(--color-text-muted);
-    line-height: var(--leading-relaxed);
-  }
+.card p,
+.faq-item dd {
+  margin: 0;
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  line-height: var(--leading-relaxed);
 }
 
 .faq-item {
@@ -431,21 +433,6 @@ nav {
 
   &:hover {
     box-shadow: var(--shadow-card-hover);
-  }
-
-  & dt {
-    font-size: var(--text-lg);
-    font-weight: var(--weight-bold);
-    color: var(--color-text-heading);
-    margin: 0 0 var(--space-2);
-    letter-spacing: var(--tracking-tight);
-  }
-
-  & dd {
-    margin: 0;
-    font-size: var(--text-md);
-    color: var(--color-text-muted);
-    line-height: var(--leading-relaxed);
   }
 }
 
