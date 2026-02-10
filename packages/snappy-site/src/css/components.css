@@ -1,3 +1,36 @@
+.btn {
+  display: inline-block;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  border-radius: var(--radius-sm);
+  transition: var(--transition-btn);
+}
+
+.btn-primary {
+  color: var(--color-on-accent);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  background: var(--color-accent);
+  border: none;
+  box-shadow: var(--shadow-btn);
+
+  &:hover {
+    text-decoration: none;
+    box-shadow: var(--shadow-btn-hover);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline-color: var(--color-text-muted);
+  }
+}
+
+.btn-lg {
+  padding: var(--space-4) var(--space-8);
+  font-size: var(--text-md);
+}
+
 .hero {
   position: relative;
   padding-block: var(--space-24) var(--space-6);
@@ -30,39 +63,6 @@
   & strong {
     color: var(--color-accent);
   }
-}
-
-.btn {
-  display: inline-block;
-  padding: var(--space-3) var(--space-6);
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
-  border-radius: var(--radius-sm);
-  transition: var(--transition-btn);
-}
-
-.btn-primary {
-  color: var(--color-on-accent);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  background: var(--color-accent);
-  border: none;
-  box-shadow: var(--shadow-btn);
-
-  &:hover {
-    text-decoration: none;
-    box-shadow: var(--shadow-btn-hover);
-    transform: translateY(-2px);
-  }
-
-  &:focus-visible {
-    outline-color: var(--color-text-muted);
-  }
-}
-
-.btn-lg {
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--text-md);
 }
 
 .icon-telegram {
@@ -211,6 +211,11 @@
   }
 }
 
+.who-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
 .who-item {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -244,11 +249,6 @@
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
   color: var(--color-text-muted);
-}
-
-.who-icon {
-  font-size: 2rem;
-  line-height: 1;
 }
 
 /* Start: timeline */
@@ -313,16 +313,6 @@
   color: var(--color-accent);
 }
 
-.example-before .example-title {
-  font-weight: var(--weight-bold);
-  color: var(--color-accent-red);
-}
-
-.example-after .example-title {
-  font-weight: var(--weight-bold);
-  color: var(--color-accent);
-}
-
 .example-title {
   display: block;
   margin-block-end: var(--space-3);
@@ -331,6 +321,16 @@
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
+}
+
+.example-before .example-title {
+  font-weight: var(--weight-bold);
+  color: var(--color-accent-red);
+}
+
+.example-after .example-title {
+  font-weight: var(--weight-bold);
+  color: var(--color-accent);
 }
 
 .faq-list {
