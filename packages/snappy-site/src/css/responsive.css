@@ -31,16 +31,17 @@
   .example-arrow {
     transform: rotate(90deg);
   }
-  #examples .card {
+  .example-panel {
     padding: var(--space-4);
     min-height: auto;
   }
-  #examples .card p {
+  .example-panel p {
     font-size: var(--text-base);
   }
 
-  #who .features-grid {
-    grid-template-columns: 1fr;
+  .who-item {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-4);
   }
 
   .card {
