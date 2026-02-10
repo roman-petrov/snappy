@@ -1,5 +1,5 @@
 /* Mobile: 360px min supported */
-@media (max-width: 640px) {
+@media (width <= 640px) {
   .header-inner {
     padding-inline: var(--space-4);
   }
@@ -31,15 +31,15 @@
   }
 
   .hero-lead {
-    font-size: var(--text-base);
     margin-bottom: var(--space-8);
+    font-size: var(--text-base);
   }
 
   .hero .btn-primary,
   .cta-block .btn-primary {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 100%;
     padding: var(--space-3) var(--space-4);
     font-size: var(--text-sm);
@@ -49,22 +49,26 @@
   .section {
     padding-block: var(--space-6);
   }
+
   .section h2 {
-    font-size: var(--text-2xl);
     padding-inline-start: var(--space-3);
+    font-size: var(--text-2xl);
   }
 
   .example-row {
     grid-template-columns: 1fr;
     gap: var(--space-4);
   }
+
   .example-arrow {
     transform: rotate(90deg);
   }
+
   .example-panel {
-    padding: var(--space-4);
     min-height: auto;
+    padding: var(--space-4);
   }
+
   .example-panel p {
     font-size: var(--text-base);
   }
@@ -81,6 +85,7 @@
   .card {
     padding: var(--space-5);
   }
+
   .card h3 {
     font-size: var(--text-md);
   }
@@ -92,9 +97,11 @@
     &::before {
       inset-inline: 10%;
     }
+
     & h2 {
       font-size: var(--text-2xl);
     }
+
     & p {
       font-size: var(--text-base);
     }

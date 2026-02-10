@@ -11,28 +11,28 @@ html {
 }
 
 body {
+  position: relative;
+  min-height: 100vh;
   margin: 0;
   font-family: var(--font-sans);
   font-size: var(--text-base);
   line-height: var(--leading-body);
   color: var(--color-text-body);
   background: var(--color-bg);
-  min-height: 100vh;
-  position: relative;
   transition:
     color var(--ease),
     background-color var(--ease);
 
   &::before {
-    content: "";
     position: fixed;
     inset: 0;
     z-index: -2;
+    pointer-events: none;
+    content: "";
     background:
       linear-gradient(var(--color-grid) 1px, transparent 1px),
       linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
     background-size: 64px 64px;
-    pointer-events: none;
   }
 }
 
@@ -50,6 +50,7 @@ a {
   &:hover {
     text-decoration: underline;
   }
+
   &:focus-visible {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
