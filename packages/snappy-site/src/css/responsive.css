@@ -51,9 +51,12 @@
   }
 
   .cta-block {
-    padding: var(--space-14) var(--space-4);
-    margin-block-start: var(--space-6);
+    padding: var(--space-12) var(--space-4);
+    margin-block-start: var(--space-10);
 
+    &::before {
+      inset-inline: 10%;
+    }
     & h2 {
       font-size: var(--text-2xl);
     }
