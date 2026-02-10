@@ -31,11 +31,11 @@
   .example-arrow {
     transform: rotate(90deg);
   }
-  .example-box {
+  #examples .card {
     padding: var(--space-4);
     min-height: auto;
   }
-  .example-box p {
+  #examples .card p {
     font-size: var(--text-base);
   }
 

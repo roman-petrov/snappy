@@ -94,70 +94,7 @@
   font-size: var(--text-md);
 }
 
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-6);
-}
-
-#who .features-grid {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-#features .card {
-  background: var(--color-bg-card-features);
-}
-#features .card:hover {
-  background: var(--color-bg-card-features-hover);
-}
-
-#examples .example-box {
-  background: var(--color-bg-card-examples);
-}
-#examples .example-box:hover {
-  transform: scale(1.02);
-  background: var(--color-bg-card-examples-hover);
-}
-
-#styles .styles-list li {
-  background: var(--color-bg-card-styles);
-}
-#styles .styles-list li:hover {
-  background: var(--color-bg-card-styles-hover);
-}
-
-#who .card {
-  background: var(--color-bg-card-who);
-}
-#who .card:hover {
-  background: var(--color-bg-card-who-hover);
-}
-
-#faq .faq-item {
-  background: var(--color-bg-card-faq);
-}
-#faq .faq-item:hover {
-  background: var(--color-bg-card-faq-hover);
-}
-
-.start-card {
-  background: var(--color-bg-card-start);
-  border: 1px solid var(--color-bg-card-border);
-  border-inline-start: 3px solid var(--color-accent);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-  box-shadow: var(--shadow-card);
-  transition: var(--transition);
-}
-
-.start-card:hover {
-  transform: scale(1.02);
-  background: var(--color-bg-card-start-hover);
-  box-shadow: var(--shadow-card-hover);
-}
-
 .card {
-  background: var(--color-bg-card);
   border: 1px solid var(--color-bg-card-border);
   border-radius: var(--radius);
   padding: var(--space-6);
@@ -167,24 +104,88 @@
   &:hover {
     transform: scale(1.02);
     box-shadow: var(--shadow-card-hover);
-    background: var(--color-bg-card-hover);
+  }
+}
+
+.card .card-icon {
+  font-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-block-end: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  min-width: 3.5rem;
+  background: var(--color-bg-icon);
+  border-radius: var(--radius-sm);
+}
+
+#features .card {
+  background: var(--color-bg-card-features);
+
+  &:hover {
+    background: var(--color-bg-card-features-hover);
+  }
+}
+
+#who .card {
+  background: var(--color-bg-card-who);
+
+  &:hover {
+    background: var(--color-bg-card-who-hover);
+  }
+}
+
+#examples .card {
+  background: var(--color-bg-card-examples);
+  padding: var(--space-5) var(--space-6);
+  min-height: 6rem;
+
+  &:hover {
+    background: var(--color-bg-card-examples-hover);
   }
 
-  & .card-icon {
-    font-size: 2rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-block-end: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    min-width: 3.5rem;
-    background: var(--color-bg-icon);
-    border-radius: var(--radius-sm);
+  & p {
+    margin: 0;
+    font-size: var(--text-md);
+    line-height: 1.6;
+    color: var(--color-text-body);
+  }
+}
+
+#styles .card {
+  background: var(--color-bg-card-styles);
+  padding: var(--space-3) var(--space-4);
+  padding-inline-start: var(--space-5);
+  border-inline-start: 3px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-md);
+
+  &:hover {
+    background: var(--color-bg-card-styles-hover);
+  }
+}
+
+#faq .card {
+  background: var(--color-bg-card-faq);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-sm);
+
+  &:hover {
+    background: var(--color-bg-card-faq-hover);
+  }
+}
+
+#start .card {
+  background: var(--color-bg-card-start);
+  border-inline-start: 3px solid var(--color-accent);
+
+  &:hover {
+    background: var(--color-bg-card-start-hover);
   }
 }
 
 .card h3,
-.faq-item dt {
+.card dt {
   font-size: var(--text-lg);
   font-weight: var(--weight-bold);
   color: var(--color-text-heading);
@@ -193,26 +194,21 @@
 }
 
 .card p,
-.faq-item dd {
+.card dd {
   margin: 0;
   font-size: var(--text-md);
   color: var(--color-text-muted);
   line-height: var(--leading-relaxed);
 }
 
-.faq-item {
-  padding: var(--space-4) var(--space-5);
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-bg-card-border);
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-card);
-  transition: var(--transition);
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-6);
+}
 
-  &:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-card-hover);
-    background: var(--color-bg-card-hover);
-  }
+#who .features-grid {
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .example-block {
@@ -251,23 +247,6 @@
   flex-shrink: 0;
 }
 
-.example-box {
-  background: var(--color-bg-card);
-  border: 1px solid var(--color-bg-card-border);
-  border-radius: var(--radius);
-  padding: var(--space-5) var(--space-6);
-  box-shadow: var(--shadow-card);
-  min-height: 6rem;
-  transition: var(--transition);
-
-  & p {
-    margin: 0;
-    font-size: var(--text-md);
-    line-height: 1.6;
-    color: var(--color-text-body);
-  }
-}
-
 .example-before .example-title {
   color: var(--color-accent-red);
   font-weight: var(--weight-bold);
@@ -294,24 +273,6 @@
   margin: 0;
   display: grid;
   gap: var(--space-3);
-
-  & li {
-    padding: var(--space-3) var(--space-4);
-    padding-inline-start: var(--space-5);
-    background: var(--color-bg-card);
-    border: 1px solid var(--color-bg-card-border);
-    border-inline-start: 3px solid var(--color-accent);
-    border-radius: var(--radius-sm);
-    font-size: var(--text-md);
-    box-shadow: var(--shadow-card);
-    transition: var(--transition);
-
-    &:hover {
-      transform: scale(1.02);
-      background: var(--color-bg-card-hover);
-      box-shadow: var(--shadow-card-hover);
-    }
-  }
 }
 
 .faq-list {
