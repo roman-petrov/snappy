@@ -152,26 +152,40 @@
   background: rgb(var(--rgb-accent) / 0.04);
 }
 
-/* Styles: pills/chips */
+/* Styles: pills in column with two-tone design */
 .styles-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+  flex-direction: column;
+  gap: var(--space-2);
 }
 
 .pill {
-  display: inline-block;
-  padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
-  font-size: var(--text-md);
-  background: rgb(var(--rgb-accent) / 0.08);
+  display: flex;
+  overflow: hidden;
+  border-radius: var(--radius);
   border: 1px solid rgb(var(--rgb-accent) / 0.2);
   transition: var(--transition);
 }
 
 .pill:hover {
+  border-color: rgb(var(--rgb-accent) / 0.4);
+}
+
+.pill-left {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
   background: rgb(var(--rgb-accent) / 0.12);
-  border-color: rgb(var(--rgb-accent) / 0.3);
+  color: var(--color-text-heading);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-md);
+}
+
+.pill-right {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  background: rgb(var(--rgb-accent) / 0.04);
+  color: var(--color-text-muted);
+  font-size: var(--text-md);
 }
 
 /* Who: list with dividers */
