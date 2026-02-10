@@ -115,6 +115,7 @@
   background: var(--color-bg-card-examples);
 }
 #examples .example-box:hover {
+  transform: scale(1.02);
   background: var(--color-bg-card-examples-hover);
 }
 
@@ -150,6 +151,7 @@
 }
 
 .start-card:hover {
+  transform: scale(1.02);
   background: var(--color-bg-card-start-hover);
   box-shadow: var(--shadow-card-hover);
 }
@@ -163,6 +165,7 @@
   transition: var(--transition);
 
   &:hover {
+    transform: scale(1.02);
     box-shadow: var(--shadow-card-hover);
     background: var(--color-bg-card-hover);
   }
@@ -206,6 +209,7 @@
   transition: var(--transition);
 
   &:hover {
+    transform: scale(1.02);
     box-shadow: var(--shadow-card-hover);
     background: var(--color-bg-card-hover);
   }
@@ -303,6 +307,7 @@
     transition: var(--transition);
 
     &:hover {
+      transform: scale(1.02);
       background: var(--color-bg-card-hover);
       box-shadow: var(--shadow-card-hover);
     }
