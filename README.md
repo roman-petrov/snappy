@@ -9,6 +9,7 @@
   - [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)
   - [Cascadia Code](https://fonts.google.com/specimen/Cascadia+Code)
 - 🔌 Install recommended workspace `VSCode` extensions.
+- [Docker](https://www.docker.com/products/docker-desktop/)
 - [pgAdmin](https://www.pgadmin.org/download/)
 
 ## Workflow
