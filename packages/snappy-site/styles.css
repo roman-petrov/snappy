@@ -5,8 +5,10 @@
 [data-theme="dark"] {
   --color-bg: #0a0a0c;
   --color-bg-elevated: #111114;
-  --color-bg-card: #16161a;
-  --color-bg-card-hover: #1a1a1f;
+  --color-bg-card: rgb(22 22 26 / 0.3);
+  --color-bg-card-hover: rgb(26 26 31 / 0.4);
+  --color-bg-card-border: rgb(255 255 255 / 0.08);
+  --color-bg-icon: rgb(255 255 255 / 0.06);
   --color-bg-header: rgb(10 10 12 / 0.9);
   --color-border: #35353a;
   --color-accent: #22d3ee;
@@ -20,8 +22,8 @@
   --color-text-muted: #a1a1aa;
   --color-focus-ring: var(--color-accent);
   --color-grid: rgb(255 255 255 / 0.02);
-  --shadow-card: 0 4px 20px rgb(0 0 0 / 0.12);
-  --shadow-card-hover: 0 12px 40px rgb(0 0 0 / 0.18), 0 0 0 1px rgb(var(--rgb-accent) / 0.06);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.04);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.06);
   --shadow-btn: 0 0 20px rgb(var(--rgb-accent) / 0.35);
   --shadow-btn-hover: 0 0 28px rgb(var(--rgb-accent) / 0.5);
   --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.12) 0%, transparent 60%);
@@ -30,8 +32,10 @@
 [data-theme="light"] {
   --color-bg: #f5f5f7;
   --color-bg-elevated: #ffffff;
-  --color-bg-card: #ffffff;
-  --color-bg-card-hover: #fafafa;
+  --color-bg-card: rgb(255 255 255 / 0.3);
+  --color-bg-card-hover: rgb(255 255 255 / 0.5);
+  --color-bg-card-border: rgb(0 0 0 / 0.08);
+  --color-bg-icon: rgb(0 0 0 / 0.04);
   --color-bg-header: rgb(255 255 255 / 0.9);
   --color-border: #e4e4e7;
   --color-accent: #0891b2;
@@ -44,8 +48,8 @@
   --color-text-body: #27272a;
   --color-text-muted: #71717a;
   --color-grid: rgb(0 0 0 / 0.04);
-  --shadow-card: 0 2px 12px rgb(0 0 0 / 0.06);
-  --shadow-card-hover: 0 8px 24px rgb(0 0 0 / 0.1), 0 0 0 1px rgb(var(--rgb-accent) / 0.12);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / 0.03);
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 0.05);
   --shadow-btn: 0 2px 12px rgb(var(--rgb-accent) / 0.3);
   --shadow-btn-hover: 0 4px 20px rgb(var(--rgb-accent) / 0.4);
   --shadow-glow: radial-gradient(ellipse 80% 50% at 50% 0%, rgb(var(--rgb-accent) / 0.1) 0%, transparent 60%);
@@ -55,9 +59,6 @@
   }
   & .icon-telegram {
     filter: brightness(0) invert(1);
-  }
-  & .example-before {
-    background: #fafafa;
   }
   & body::after {
     background:
@@ -383,13 +384,13 @@ nav {
 
 .card {
   background: var(--color-bg-card);
+  border: 1px solid var(--color-bg-card-border);
   border-radius: var(--radius);
   padding: var(--space-6);
   box-shadow: var(--shadow-card);
   transition: var(--transition);
 
   &:hover {
-    transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover);
     background: var(--color-bg-card-hover);
   }
@@ -402,7 +403,7 @@ nav {
     margin-block-end: var(--space-4);
     padding: var(--space-3) var(--space-4);
     min-width: 3.5rem;
-    background: rgb(var(--rgb-accent) / 0.08);
+    background: var(--color-bg-icon);
     border-radius: var(--radius-sm);
   }
 }
@@ -427,12 +428,14 @@ nav {
 .faq-item {
   padding: var(--space-4) var(--space-5);
   background: var(--color-bg-card);
+  border: 1px solid var(--color-bg-card-border);
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-card);
   transition: var(--transition);
 
   &:hover {
     box-shadow: var(--shadow-card-hover);
+    background: var(--color-bg-card-hover);
   }
 }
 
@@ -450,7 +453,6 @@ nav {
   color: var(--color-accent);
   margin: 0 0 var(--space-3);
   padding: var(--space-2) var(--space-3);
-  background: rgb(var(--rgb-accent) / 0.1);
   border-radius: var(--radius-sm);
   border: 1px solid rgb(var(--rgb-accent) / 0.2);
   display: inline-block;
@@ -474,9 +476,11 @@ nav {
 }
 
 .example-box {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-bg-card-border);
   border-radius: var(--radius);
   padding: var(--space-5) var(--space-6);
-  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-card);
   min-height: 6rem;
 
   & p {
@@ -487,29 +491,14 @@ nav {
   }
 }
 
-.example-before {
-  background: var(--color-bg-elevated);
-  border-color: rgb(var(--rgb-accent-red) / 0.25);
-  box-shadow: 0 0 0 1px rgb(var(--rgb-accent-red) / 0.08);
-
-  & .example-title {
-    color: var(--color-accent-red);
-    font-weight: var(--weight-bold);
-  }
-  & p {
-    color: var(--color-text-muted);
-  }
+.example-before .example-title {
+  color: var(--color-accent-red);
+  font-weight: var(--weight-bold);
 }
 
-.example-after {
-  background: var(--color-bg-card);
-  border-color: rgb(var(--rgb-accent) / 0.3);
-  box-shadow: 0 0 0 1px rgb(var(--rgb-accent) / 0.15);
-
-  & .example-title {
-    color: var(--color-accent);
-    font-weight: var(--weight-bold);
-  }
+.example-after .example-title {
+  color: var(--color-accent);
+  font-weight: var(--weight-bold);
 }
 
 .example-title {
@@ -533,9 +522,10 @@ nav {
     padding: var(--space-3) var(--space-4);
     padding-inline-start: var(--space-5);
     background: var(--color-bg-card);
+    border: 1px solid var(--color-bg-card-border);
+    border-inline-start: 3px solid var(--color-accent);
     border-radius: var(--radius-sm);
     font-size: var(--text-md);
-    border-inline-start: 3px solid var(--color-accent);
     box-shadow: var(--shadow-card);
     transition: var(--transition);
 
@@ -593,7 +583,6 @@ nav {
   border-radius: var(--radius-lg);
   margin-block-start: var(--space-8);
   border: 1px solid var(--color-border);
-  box-shadow: 0 0 0 1px rgb(var(--rgb-accent) / 0.1);
 
   & h2 {
     font-size: var(--text-3xl);
