@@ -9,6 +9,7 @@
     "oven.bun-vscode",
     "yoavbls.pretty-ts-errors",
     "fabiospampinato.vscode-highlight",
+    "Prisma.prisma",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
