@@ -4,11 +4,11 @@ import { useSearchParams } from "react-router-dom";
 import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
 import { PasswordInput } from "../../shared/PasswordInput";
-import { api } from "../Api";
+import { api } from "../core/Api";
 import { Card } from "./Card";
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 import styles from "./Login.module.css";
-import { PASSWORD_MIN_LENGTH, passwordValid } from "../Password";
+import { PASSWORD_MIN_LENGTH, passwordValid } from "../core/Password";
 
 export const ResetPassword = () => {
   const [searchParameters] = useSearchParams();

@@ -1,4 +1,4 @@
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 import { Pill } from "./Pill";
 import { Section } from "./Section";
 import styles from "./StylesSection.module.css";

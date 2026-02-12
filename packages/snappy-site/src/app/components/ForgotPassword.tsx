@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
-import { api } from "../Api";
+import { api } from "../core/Api";
 import { Card } from "./Card";
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 import styles from "./Login.module.css";
 
 export const ForgotPassword = () => {
@@ -61,7 +61,9 @@ export const ForgotPassword = () => {
               autoComplete="email"
               className={styles[`input`]}
               id="forgot-email"
-              onChange={e => { setEmail(e.target.value); }}
+              onChange={e => {
+                setEmail(e.target.value);
+              }}
               required
               type="email"
               value={email}

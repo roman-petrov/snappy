@@ -3,8 +3,8 @@ import type { MouseEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Theme } from "../../core/Theme";
-import { clearToken, getToken } from "../Auth";
-import { t } from "../Locale";
+import { clearToken, getToken } from "../core/Auth";
+import { t } from "../core/Locale";
 
 type HeaderItem =
   | { label: string; onClick: () => void; type: `button` }

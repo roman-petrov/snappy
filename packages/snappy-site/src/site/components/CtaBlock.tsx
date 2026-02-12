@@ -1,7 +1,7 @@
 import { Button } from "../../shared/Button";
 import { TelegramIcon } from "../../shared/TelegramIcon";
 import styles from "./CtaBlock.module.css";
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 
 export const CtaBlock = () => (
   <section className={styles[`block`]}>

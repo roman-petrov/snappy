@@ -2,14 +2,14 @@ import { renderToString } from "react-dom/server";
 
 import { Landing } from "./components/Landing";
 import localeData from "./locales";
-import { SiteLocaleStore } from "./SiteLocaleStore";
+import { SiteLocaleStore } from "./core/SiteLocaleStore";
 
 export type SiteLocaleKey = `en` | `ru`;
 
-export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string }
+export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
 export const getMeta = (locale: SiteLocaleKey): SiteMeta => {
-  const {meta} = localeData[locale];
+  const { meta } = localeData[locale];
 
   return { ...meta, htmlLang: locale };
 };

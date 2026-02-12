@@ -1,7 +1,7 @@
 import DOMPurify from "isomorphic-dompurify";
 
 import { ExampleBlock } from "./ExampleBlock";
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 import { Section } from "./Section";
 
 export const Examples = () => (

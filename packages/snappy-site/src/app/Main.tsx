@@ -3,13 +3,13 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterP
 
 import "./styles.css";
 import { Theme } from "../core/Theme";
-import { getToken } from "./Auth";
 import { Dashboard } from "./components/Dashboard";
 import { ForgotPassword } from "./components/ForgotPassword";
 import { Layout } from "./components/Layout";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
+import { getToken } from "./core/Auth";
 
 Theme.restore();
 

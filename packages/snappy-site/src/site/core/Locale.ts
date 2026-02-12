@@ -1,5 +1,5 @@
-import { Translate } from "../shared/Translate";
-import localeData from "./locales";
+import { Translate } from "../../shared/Translate";
+import localeData from "../locales";
 import { SiteLocaleStore } from "./SiteLocaleStore";
 
 export type SiteLocale = keyof typeof localeData;

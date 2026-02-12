@@ -1,6 +1,6 @@
-import { LocaleStore } from "../shared/LocaleStore";
-import { Translate } from "../shared/Translate";
-import localeData from "./locales";
+import { LocaleStore } from "../../shared/LocaleStore";
+import { Translate } from "../../shared/Translate";
+import localeData from "../locales";
 
 export type AppLocale = keyof typeof localeData;
 

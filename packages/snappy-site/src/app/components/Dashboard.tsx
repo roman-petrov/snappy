@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "../../shared/Button";
-import { api } from "../Api";
-import { getToken } from "../Auth";
+import { api } from "../core/Api";
+import { getToken } from "../core/Auth";
 import { Card } from "./Card";
 import styles from "./Dashboard.module.css";
-import { featureEmoji, featureKeys } from "../Features";
-import { t } from "../Locale";
+import { featureEmoji, featureKeys } from "../core/Features";
+import { t } from "../core/Locale";
 
 export const Dashboard = () => {
   const token = getToken() ?? ``;
@@ -101,7 +101,9 @@ export const Dashboard = () => {
                 className={styles[`textarea`]}
                 disabled={loading}
                 id="dashboard-text"
-                onChange={e => { setText(e.target.value); }}
+                onChange={e => {
+                  setText(e.target.value);
+                }}
                 placeholder={t(`dashboard.textPlaceholder`)}
                 value={text}
               />
@@ -114,7 +116,9 @@ export const Dashboard = () => {
                 className={styles[`select`]}
                 disabled={loading}
                 id="dashboard-feature"
-                onChange={e => { setFeature(e.target.value); }}
+                onChange={e => {
+                  setFeature(e.target.value);
+                }}
                 value={feature}
               >
                 {featureKeys.map(k => (
@@ -137,7 +141,9 @@ export const Dashboard = () => {
                     onClick={() => {
                       void navigator.clipboard.writeText(result).then(() => {
                         setCopied(true);
-                        setTimeout(() => { setCopied(false); }, 2000);
+                        setTimeout(() => {
+                          setCopied(false);
+                        }, 2000);
                       });
                     }}
                     type="button"
