@@ -1,0 +1,81 @@
+---
+description:
+  React component structure (one component per file, props types, View/State pattern). Builds on programming and
+  typescript rules. Use when writing or reviewing React components.
+globs: "**/*.tsx"
+alwaysApply: false
+---
+
+# React
+
+Follow the **programming** and **typescript** rules. This rule adds React-specific conventions only.
+
+---
+
+## General principles
+
+- **One component per file** — each component lives in its own file; do not put multiple component definitions in one
+  file.
+- **Always export the props type** — the type of a component’s props must be exported so it can be reused (e.g. by state
+  hooks or parents).
+- **Props type naming** — always name the component’s props type `<ComponentName>Props` (e.g. `ButtonProps` for
+  `Button`, `InputViewProps` for `InputView`).
+
+---
+
+## View/State pattern
+
+Split each React component into **entry**, **state**, and **view** so that logic and UI are separated and the view stays
+presentational.
+
+- **Entry** (`ComponentName.tsx`): Public API. Declares props, imports the state hook and the view; renders
+  `<ComponentView {...useComponentState(props)} />`. No JSX layout here.
+- **State** (`ComponentName.state.ts` or `.tsx`): Hook `useComponentState(props)` that takes component props and returns
+  the props for the view. Holds all hooks (`useState`, `useEffect`, etc.), derived values, and event handlers. Can be
+  stateless: then it only maps/derives view props from input props.
+- **View** (`ComponentName.view.tsx`): Presentational component `ComponentView`. Receives
+  `ViewProps = ReturnType<typeof useComponentState>`. No hooks; only props and JSX. Export view props type as
+  `ReturnType<typeof useComponentState>` for single source of truth.
+
+Rules:
+
+- Entry file does not contain layout JSX; it only composes state and view.
+- View never uses hooks; it only receives props and renders.
+- View props type is always `ReturnType<typeof useComponentState>`, not a hand-written duplicate.
+- State hook returns a single object that is spread into the view (`<View {...useState(props)} />`).
+
+Example (abstract component):
+
+```tsx
+// ComponentName.tsx — entry
+import { useComponentNameState } from "./ComponentName.state";
+import { ComponentNameView } from "./ComponentName.view";
+
+export type ComponentNameProps = { label: string; value: number; onChange: (n: number) => void };
+
+export const ComponentName = (props: ComponentNameProps) => <ComponentNameView {...useComponentNameState(props)} />;
+```
+
+```ts
+// ComponentName.state.ts — state (can be stateless: no useState/useEffect)
+import type { ComponentNameProps } from "./ComponentName";
+
+export const useComponentNameState = ({ label, value, onChange }: ComponentNameProps) => {
+  const handleChange = (n: number) => onChange(n);
+  return { label, value, onChange: handleChange };
+};
+```
+
+```tsx
+// ComponentName.view.tsx — view
+import type { useComponentNameState } from "./ComponentName.state";
+
+export type ComponentNameViewProps = ReturnType<typeof useComponentNameState>;
+
+export const ComponentNameView = ({ label, value, onChange }: ComponentNameViewProps) => (
+  <div>
+    <span>{label}</span>
+    <input type="number" value={value} onChange={e => onChange(Number(e.target.value))} />
+  </div>
+);
+```
