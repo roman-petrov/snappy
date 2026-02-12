@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
-import type { Snappy } from "@snappy/snappy";
-import type { YooKassa } from "@snappy/yoo-kassa";
 import type { Bot } from "gramio";
 
 import type { Storage } from "./Storage";
@@ -16,10 +14,9 @@ export type CallbacksConfig = {
   premiumPrice: number;
   storage: Storage;
   userTexts: UserTexts;
-  yooKassa: YooKassa;
 };
 
-const register = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
+const register = (bot: Bot, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const telegramId = context.from.id;
     const telegramUsername = context.from.username;
@@ -34,13 +31,9 @@ const register = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
 
     if (data === `premium:buy`) {
       try {
-        const paymentUrl = await config.yooKassa.paymentUrl(
-          telegramId,
-          config.premiumPrice,
-          `Snappy Bot - Premium подписка (30 дней)`,
-        );
+        const url = await config.storage.paymentUrl(telegramId);
         await context.answerCallbackQuery();
-        await context.send(`💳 ${paymentUrl}`);
+        await context.send(`💳 ${url}`);
       } catch (error) {
         console.error(`Payment error:`, error);
         await context.answerCallbackQuery();
@@ -70,9 +63,12 @@ const register = (bot: Bot, snappy: Snappy, config: CallbacksConfig) => {
       await context.send(t(localeKey, `features.processing`));
 
       try {
-        const processedText = await snappy.processText(text, feature);
-
-        await config.storage.incrementRequestCount(telegramId, telegramUsername);
+        const processedText = await config.storage.process(
+          telegramId,
+          text,
+          feature,
+          telegramUsername,
+        );
 
         await context.send(t(localeKey, `features.result`, { text: processedText }));
 

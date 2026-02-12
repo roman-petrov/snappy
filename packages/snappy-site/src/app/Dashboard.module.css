@@ -1,0 +1,108 @@
+.section {
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-xl);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.card {
+  padding: var(--space-4);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.balance {
+  font-size: var(--text-lg);
+  color: var(--color-text-body);
+}
+
+.premiumLink {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-on-accent);
+  text-decoration: none;
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+}
+
+.premiumLink:hover {
+  text-decoration: none;
+}
+
+.textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 120px;
+  padding: var(--space-4);
+  font-family: inherit;
+  font-size: var(--text-base);
+  color: var(--color-text-body);
+  resize: vertical;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.textarea:focus {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-3);
+  font-size: var(--text-base);
+  color: var(--color-text-body);
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.btn {
+  padding: var(--space-3) var(--space-4);
+  margin-top: var(--space-4);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  color: var(--color-on-accent);
+  cursor: pointer;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.result {
+  padding: var(--space-4);
+  margin-top: var(--space-4);
+  word-break: break-word;
+  white-space: pre-wrap;
+  background: var(--color-bg-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.error {
+  margin-top: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--color-accent-red);
+}
+
+@media (width <= 640px) {
+  .card {
+    padding: var(--space-3);
+  }
+}

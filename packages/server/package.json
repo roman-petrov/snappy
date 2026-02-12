@@ -1,21 +1,22 @@
 {
-  "name": "@snappy/server-prod",
+  "name": "@snappy/server",
   "version": "0.0.0",
   "type": "module",
   "private": true,
-  "main": "./src/main.ts",
+  "main": "./src/index.ts",
   "dependencies": {
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
-    "@snappy/server": "workspace:*",
     "@snappy/snappy": "workspace:*",
-    "@snappy/snappy-bot": "workspace:*",
     "@snappy/yoo-kassa": "workspace:*",
-    "express": "^5.2.1"
+    "bcryptjs": "^2.4.3",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.6",
-    "vite": "8.0.0-beta.13"
+    "@types/jsonwebtoken": "^9.0.7"
   }
 }

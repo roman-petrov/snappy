@@ -1,61 +1,100 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Database } from "@snappy/db";
+import type { FeatureType } from "@snappy/snappy";
 
-import { Time } from "@snappy/core";
+const headers = (apiKey: string) => ({ "Content-Type": `application/json`, "X-Bot-Api-Key": apiKey });
 
-export const Storage = (db: Database) => {
-  const resetInterval = Time.dayInMs;
+const remainingRequests = async (
+  apiBaseUrl: string,
+  apiKey: string,
+  telegramId: number,
+  _freeRequestLimit: number,
+  _telegramUsername?: string,
+): Promise<number> => {
+  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/user/remaining?telegramId=${telegramId}`;
+  const res = await fetch(url, { headers: headers(apiKey), method: `GET` });
 
-  const ensureUser = async (telegramId: number, telegramUsername?: string) =>
-    db.user.upsert({
-      create: { telegramId, telegramUsername: telegramUsername ?? undefined },
-      update: telegramUsername === undefined ? {} : { telegramUsername },
-      where: { telegramId },
-    });
+  if (!res.ok) {
+    return 0;
+  }
 
-  const byUserId = (userId: number) => ({ where: { userId } }) as const;
-  const resetData = () => ({ lastReset: new Date(), requestCount: 0 }) as const;
-  const needsReset = (lastReset: Date) => Date.now() - lastReset.getTime() > resetInterval;
+  const data = (await res.json()) as { remaining?: number };
 
-  const canMakeRequest = async (telegramId: number, freeRequestLimit: number, telegramUsername?: string) => {
-    const user = await ensureUser(telegramId, telegramUsername);
+  return typeof data.remaining === `number` ? data.remaining : 0;
+};
 
-    const settings = await db.snappySettings.upsert({
-      create: { ...resetData(), userId: user.id },
-      update: {},
-      ...byUserId(user.id),
-    });
+const canMakeRequest = async (
+  apiBaseUrl: string,
+  apiKey: string,
+  telegramId: number,
+  freeRequestLimit: number,
+  telegramUsername?: string,
+): Promise<boolean> => {
+  const remaining = await remainingRequests(apiBaseUrl, apiKey, telegramId, freeRequestLimit, telegramUsername);
 
-    if (needsReset(settings.lastReset)) {
-      await db.snappySettings.update({ data: resetData(), ...byUserId(user.id) });
+  return remaining > 0;
+};
 
-      return true;
-    }
+const process = async (
+  apiBaseUrl: string,
+  apiKey: string,
+  telegramId: number,
+  text: string,
+  feature: FeatureType,
+  _telegramUsername?: string,
+): Promise<string> => {
+  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/process`;
+  const res = await fetch(url, {
+    body: JSON.stringify({ feature, telegramId, text }),
+    headers: headers(apiKey),
+    method: `POST`,
+  });
 
-    return settings.requestCount < freeRequestLimit;
+  if (!res.ok) {
+    const err = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(err.error ?? `Process failed`);
+  }
+
+  const data = (await res.json()) as { text?: string };
+
+  return typeof data.text === `string` ? data.text : ``;
+};
+
+const fetchPaymentUrl = async (apiBaseUrl: string, apiKey: string, telegramId: number): Promise<string> => {
+  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/premium/payment-url`;
+  const res = await fetch(url, {
+    body: JSON.stringify({ telegramId }),
+    headers: headers(apiKey),
+    method: `POST`,
+  });
+
+  if (!res.ok) {
+    const err = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(err.error ?? `Payment failed`);
+  }
+
+  const data = (await res.json()) as { url?: string };
+
+  if (typeof data.url !== `string`) {
+    throw new Error(`No payment URL`);
+  }
+
+  return data.url;
+};
+
+export type StorageConfig = { apiBaseUrl: string; apiKey: string };
+
+export const Storage = (config: StorageConfig) => {
+  const { apiBaseUrl, apiKey } = config;
+
+  return {
+    canMakeRequest: (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
+      canMakeRequest(apiBaseUrl, apiKey, telegramId, freeRequestLimit, telegramUsername),
+    paymentUrl: (telegramId: number) => fetchPaymentUrl(apiBaseUrl, apiKey, telegramId),
+    process: (telegramId: number, text: string, feature: FeatureType, telegramUsername?: string) =>
+      process(apiBaseUrl, apiKey, telegramId, text, feature, telegramUsername),
+    remainingRequests: (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
+      remainingRequests(apiBaseUrl, apiKey, telegramId, freeRequestLimit, telegramUsername),
   };
-
-  const incrementRequestCount = async (telegramId: number, telegramUsername?: string) => {
-    const user = await ensureUser(telegramId, telegramUsername);
-    await db.snappySettings.upsert({
-      create: { ...resetData(), requestCount: 1, userId: user.id },
-      update: { requestCount: { increment: 1 } },
-      ...byUserId(user.id),
-    });
-  };
-
-  const remainingRequests = async (telegramId: number, freeRequestLimit: number, telegramUsername?: string) => {
-    const user = await ensureUser(telegramId, telegramUsername);
-    const settings = await db.snappySettings.findUnique(byUserId(user.id));
-
-    return settings === null
-      ? freeRequestLimit
-      : needsReset(settings.lastReset)
-        ? freeRequestLimit
-        : Math.max(0, freeRequestLimit - settings.requestCount);
-  };
-
-  return { canMakeRequest, incrementRequestCount, remainingRequests };
 };
 
 export type Storage = ReturnType<typeof Storage>;

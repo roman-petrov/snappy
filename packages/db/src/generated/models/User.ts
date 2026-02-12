@@ -40,6 +40,10 @@ export type UserMinAggregateOutputType = {
   id: number | null
   telegramId: number | null
   telegramUsername: string | null
+  email: string | null
+  passwordHash: string | null
+  resetToken: string | null
+  resetTokenExpires: Date | null
   createdAt: Date | null
 }
 
@@ -47,6 +51,10 @@ export type UserMaxAggregateOutputType = {
   id: number | null
   telegramId: number | null
   telegramUsername: string | null
+  email: string | null
+  passwordHash: string | null
+  resetToken: string | null
+  resetTokenExpires: Date | null
   createdAt: Date | null
 }
 
@@ -54,6 +62,10 @@ export type UserCountAggregateOutputType = {
   id: number
   telegramId: number
   telegramUsername: number
+  email: number
+  passwordHash: number
+  resetToken: number
+  resetTokenExpires: number
   createdAt: number
   _all: number
 }
@@ -73,6 +85,10 @@ export type UserMinAggregateInputType = {
   id?: true
   telegramId?: true
   telegramUsername?: true
+  email?: true
+  passwordHash?: true
+  resetToken?: true
+  resetTokenExpires?: true
   createdAt?: true
 }
 
@@ -80,6 +96,10 @@ export type UserMaxAggregateInputType = {
   id?: true
   telegramId?: true
   telegramUsername?: true
+  email?: true
+  passwordHash?: true
+  resetToken?: true
+  resetTokenExpires?: true
   createdAt?: true
 }
 
@@ -87,6 +107,10 @@ export type UserCountAggregateInputType = {
   id?: true
   telegramId?: true
   telegramUsername?: true
+  email?: true
+  passwordHash?: true
+  resetToken?: true
+  resetTokenExpires?: true
   createdAt?: true
   _all?: true
 }
@@ -179,8 +203,12 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: number
-  telegramId: number
+  telegramId: number | null
   telegramUsername: string | null
+  email: string | null
+  passwordHash: string | null
+  resetToken: string | null
+  resetTokenExpires: Date | null
   createdAt: Date
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -209,16 +237,24 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.IntFilter<"User"> | number
-  telegramId?: Prisma.IntFilter<"User"> | number
+  telegramId?: Prisma.IntNullableFilter<"User"> | number | null
   telegramUsername?: Prisma.StringNullableFilter<"User"> | string | null
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
+  resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   snappySettings?: Prisma.SnappySettingsListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  telegramId?: Prisma.SortOrder
+  telegramId?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   snappySettings?: Prisma.SnappySettingsOrderByRelationAggregateInput
 }
@@ -226,18 +262,26 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   telegramId?: number
+  email?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   telegramUsername?: Prisma.StringNullableFilter<"User"> | string | null
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  resetToken?: Prisma.StringNullableFilter<"User"> | string | null
+  resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   snappySettings?: Prisma.SnappySettingsListRelationFilter
-}, "id" | "telegramId">
+}, "id" | "telegramId" | "email">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  telegramId?: Prisma.SortOrder
+  telegramId?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramUsername?: Prisma.SortOrderInput | Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  resetTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -251,58 +295,90 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
-  telegramId?: Prisma.IntWithAggregatesFilter<"User"> | number
+  telegramId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   telegramUsername?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  resetToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  resetTokenExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
 
 export type UserCreateInput = {
-  telegramId: number
+  telegramId?: number | null
   telegramUsername?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
   createdAt?: Date | string
   snappySettings?: Prisma.SnappySettingsCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
   id?: number
-  telegramId: number
+  telegramId?: number | null
   telegramUsername?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
   createdAt?: Date | string
   snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   snappySettings?: Prisma.SnappySettingsUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   snappySettings?: Prisma.SnappySettingsUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
   id?: number
-  telegramId: number
+  telegramId?: number | null
   telegramUsername?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
   createdAt?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -310,6 +386,10 @@ export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   telegramId?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -322,6 +402,10 @@ export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   telegramId?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -329,6 +413,10 @@ export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   telegramId?: Prisma.SortOrder
   telegramUsername?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
+  resetToken?: Prisma.SortOrder
+  resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -342,8 +430,8 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -354,8 +442,20 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type UserCreateNestedOneWithoutSnappySettingsInput = {
@@ -373,15 +473,23 @@ export type UserUpdateOneRequiredWithoutSnappySettingsNestedInput = {
 }
 
 export type UserCreateWithoutSnappySettingsInput = {
-  telegramId: number
+  telegramId?: number | null
   telegramUsername?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
   createdAt?: Date | string
 }
 
 export type UserUncheckedCreateWithoutSnappySettingsInput = {
   id?: number
-  telegramId: number
+  telegramId?: number | null
   telegramUsername?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
   createdAt?: Date | string
 }
 
@@ -402,15 +510,23 @@ export type UserUpdateToOneWithWhereWithoutSnappySettingsInput = {
 }
 
 export type UserUpdateWithoutSnappySettingsInput = {
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserUncheckedUpdateWithoutSnappySettingsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  telegramId?: Prisma.IntFieldUpdateOperationsInput | number
+  telegramId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   telegramUsername?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -449,6 +565,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   id?: boolean
   telegramId?: boolean
   telegramUsername?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  resetToken?: boolean
+  resetTokenExpires?: boolean
   createdAt?: boolean
   snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -458,6 +578,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   telegramId?: boolean
   telegramUsername?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  resetToken?: boolean
+  resetTokenExpires?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -465,6 +589,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   id?: boolean
   telegramId?: boolean
   telegramUsername?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  resetToken?: boolean
+  resetTokenExpires?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -472,10 +600,14 @@ export type UserSelectScalar = {
   id?: boolean
   telegramId?: boolean
   telegramUsername?: boolean
+  email?: boolean
+  passwordHash?: boolean
+  resetToken?: boolean
+  resetTokenExpires?: boolean
   createdAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "telegramId" | "telegramUsername" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "telegramId" | "telegramUsername" | "email" | "passwordHash" | "resetToken" | "resetTokenExpires" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -490,8 +622,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    telegramId: number
+    telegramId: number | null
     telegramUsername: string | null
+    email: string | null
+    passwordHash: string | null
+    resetToken: string | null
+    resetTokenExpires: Date | null
     createdAt: Date
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -920,6 +1056,10 @@ export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'Int'>
   readonly telegramId: Prisma.FieldRef<"User", 'Int'>
   readonly telegramUsername: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly resetToken: Prisma.FieldRef<"User", 'String'>
+  readonly resetTokenExpires: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
 }
     
@@ -1139,7 +1279,7 @@ export type UserCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
   /**
    * The data needed to create a User.
    */
-  data: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
+  data?: Prisma.XOR<Prisma.UserCreateInput, Prisma.UserUncheckedCreateInput>
 }
 
 /**

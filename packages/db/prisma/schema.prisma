@@ -8,10 +8,14 @@ datasource db {
 }
 
 model User {
-  id               Int      @id @default(autoincrement())
-  telegramId       Int      @unique
-  telegramUsername String?
-  createdAt        DateTime @default(now())
+  id                 Int       @id @default(autoincrement())
+  telegramId         Int?      @unique
+  telegramUsername   String?
+  email              String?   @unique
+  passwordHash       String?
+  resetToken         String?
+  resetTokenExpires  DateTime?
+  createdAt          DateTime  @default(now())
 
   snappySettings SnappySettings[]
 

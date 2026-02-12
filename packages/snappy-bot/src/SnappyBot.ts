@@ -1,39 +1,27 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
-import type { Database } from "@snappy/db";
-
-import { Snappy } from "@snappy/snappy";
-import { YooKassa } from "@snappy/yoo-kassa";
 import { Bot } from "gramio";
 
 import { Callbacks, Commands, Locale, Messages, Storage, t, UserTexts } from "./app";
 
 export type SnappyBotConfig = {
+  apiBaseUrl: string;
+  apiKey: string;
   botToken: string;
-  db: Database;
   freeRequestLimit: number;
-  gigaChatAuthKey: string;
   premiumPrice: number;
   version?: string;
-  yooKassaSecretKey?: string;
-  yooKassaShopId?: string;
 };
 
 export const SnappyBot = ({
+  apiBaseUrl,
+  apiKey,
   botToken,
-  db,
   freeRequestLimit,
-  gigaChatAuthKey,
   premiumPrice,
   version,
-  yooKassaSecretKey,
-  yooKassaShopId,
 }: SnappyBotConfig) => {
-  const snappy = Snappy({ gigaChatAuthKey });
-  const yooKassa = YooKassa({ secretKey: yooKassaSecretKey, shopId: yooKassaShopId });
   const bot = new Bot(botToken);
-  const storage = Storage(db);
+  const storage = Storage({ apiBaseUrl, apiKey });
   const userTexts = UserTexts();
   const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
@@ -54,7 +42,7 @@ export const SnappyBot = ({
 
   Commands.register(bot, freeRequestLimit, premiumPrice, version, storage);
   Messages.register(bot, userTexts);
-  Callbacks.register(bot, snappy, { freeRequestLimit, premiumPrice, storage, userTexts, yooKassa });
+  Callbacks.register(bot, { freeRequestLimit, premiumPrice, storage, userTexts });
   bot.onStart(setLocalizedCommands);
 
   const start = async () => {
