@@ -9,6 +9,6 @@
     "@snappy/db": "workspace:*",
     "@snappy/snappy": "workspace:*",
     "@snappy/yoo-kassa": "workspace:*",
-    "gramio": "^0.4.12"
+    "gramio": "^0.4.13"
   }
 }

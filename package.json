@@ -7,6 +7,6 @@
   "dependencies": {
     "@snappy/config": "workspace:*",
     "@snappy/do": "workspace:*",
-    "prisma": "^7.3.0"
+    "prisma": "^7.4.0"
   }
 }
