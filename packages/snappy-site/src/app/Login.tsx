@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
-import { useLocale } from "../shared/LocaleContext";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
@@ -10,7 +9,6 @@ import { t } from "./Locale";
 import styles from "./Login.module.css";
 
 export const Login = () => {
-  useLocale();
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [remember, setRemember] = useState(false);

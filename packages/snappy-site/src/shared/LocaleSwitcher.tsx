@@ -1,8 +1,8 @@
-import { useLocale } from "./LocaleContext";
+import { getLocale, setLocale } from "./LocaleStore";
 import styles from "./LocaleSwitcher.module.css";
 
 export const LocaleSwitcher = () => {
-  const { locale, setLocale } = useLocale();
+  const locale = getLocale();
   const next = locale === `en` ? `ru` : `en`;
   return (
     <button

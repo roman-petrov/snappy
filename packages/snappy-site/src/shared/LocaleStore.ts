@@ -10,10 +10,16 @@ const readStored = (): LocaleKey => {
   return stored === `en` || stored === `ru` ? stored : `ru`;
 };
 
-let current: LocaleKey = readStored();
+export const getLocale = (): LocaleKey => readStored();
 
-export const getLocale = (): LocaleKey => current;
-
-export const setCurrentLocale = (next: LocaleKey): void => {
-  current = next;
+export const setLocale = (next: LocaleKey): void => {
+  localStorage.setItem(STORAGE_KEY, next);
+  if (typeof document !== `undefined`) {
+    document.documentElement.lang = next;
+    location.reload();
+  }
 };
+
+if (typeof document !== `undefined`) {
+  document.documentElement.lang = readStored();
+}

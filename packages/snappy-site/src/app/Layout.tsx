@@ -2,7 +2,6 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
 import { LocaleSwitcher } from "../shared/LocaleSwitcher";
-import { useLocale } from "../shared/LocaleContext";
 import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
 import { t } from "./Locale";
@@ -11,7 +10,6 @@ import styles from "./Layout.module.css";
 const APP_BASE = `/app`;
 
 export const Layout = () => {
-  useLocale();
   const token = getToken();
   const location = useLocation();
   const navigate = useNavigate();

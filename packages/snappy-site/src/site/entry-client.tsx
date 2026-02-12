@@ -1,7 +1,6 @@
 import "../../styles.css";
 import { hydrateRoot } from "react-dom/client";
 
-import { LocaleProvider } from "../shared/LocaleContext";
 import { Fog } from "../Fog.js";
 import { Theme } from "../Theme.js";
 import { Landing } from "./Landing.js";
@@ -28,12 +27,7 @@ const syncFog = (): void => {
 
 const root = document.querySelector(`#root`);
 if (root !== null) {
-  hydrateRoot(
-    root,
-    <LocaleProvider>
-      <Landing onThemeToggle={() => requestAnimationFrame(syncFog)} />
-    </LocaleProvider>,
-  );
+  hydrateRoot(root, <Landing onThemeToggle={() => requestAnimationFrame(syncFog)} />);
 }
 
 syncFog();
