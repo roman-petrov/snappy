@@ -1,5 +1,10 @@
 /* eslint-disable unicorn/filename-case */
 export const en = {
+  meta: {
+    title: `Snappy — AI for text in Telegram: edit, shorten, change style in seconds`,
+    description: `Fix errors, shorten and change the tone of text in seconds. Snappy is a smart Telegram bot for posts, emails and ads. Results right in the chat.`,
+    keywords: `text editor, fix errors, shorten text, change text style, AI for text, Telegram bot, text editing`,
+  },
   nav: {
     features: `Features`,
     examples: `Examples`,

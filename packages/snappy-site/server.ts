@@ -13,6 +13,9 @@ const PORT = 5173;
 
 type SiteLocaleKey = `en` | `ru`;
 
+const escapeAttr = (s: string): string =>
+  s.replace(/&/gu, `&amp;`).replace(/"/gu, `&quot;`).replace(/</gu, `&lt;`).replace(/>/gu, `&gt;`);
+
 const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey => {
   if (cookieHeader === undefined) return `ru`;
   const match = cookieHeader
@@ -22,6 +25,16 @@ const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey => {
   const value = match?.split(`=`)[1];
   return value === `en` || value === `ru` ? value : `ru`;
 };
+
+const injectMeta = (
+  template: string,
+  meta: { description: string; htmlLang: string; keywords: string; title: string },
+): string =>
+  template
+    .replace(/\{\{title\}\}/gu, escapeAttr(meta.title))
+    .replace(/\{\{description\}\}/gu, escapeAttr(meta.description))
+    .replace(/\{\{keywords\}\}/gu, escapeAttr(meta.keywords))
+    .replace(/\{\{htmlLang\}\}/gu, meta.htmlLang);
 
 const main = async () => {
   const app = express();
@@ -55,9 +68,11 @@ const main = async () => {
       const locale = localeFromCookie(request.headers.cookie);
       let template = readFileSync(join(root, `src`, `site`, `index.html`), `utf8`);
       template = await vite.transformIndexHtml(request.originalUrl ?? `/`, template);
-      const { render } = (await vite.ssrLoadModule(`/src/site/entry-server.tsx`)) as {
+      const { getMeta, render } = (await vite.ssrLoadModule(`/src/site/entry-server.tsx`)) as {
+        getMeta: (locale: SiteLocaleKey) => { description: string; htmlLang: string; keywords: string; title: string };
         render: (locale: SiteLocaleKey) => string;
       };
+      template = injectMeta(template, getMeta(locale));
       const html = render(locale);
       const out = template.replace(ROOT_PLACEHOLDER, `<div id="root">${html}</div>`);
       response.type(`html`).send(out);
