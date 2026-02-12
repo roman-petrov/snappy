@@ -1,9 +1,9 @@
 import type { useDashboardState } from "./Dashboard.state";
 
 import { Button } from "../../shared/Button";
-import { Card } from "./Card";
-import styles from "./Dashboard.module.css";
+import { Card } from "../../shared/Card";
 import { t } from "../core/Locale";
+import styles from "./Dashboard.module.css";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 
