@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
@@ -129,9 +130,7 @@ export const Register = () => {
             <Button type="submit" primary disabled={loading || !passwordValid(password)}>
               {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
             </Button>
-            <Link to="/login" className={styles[`link`]}>
-              {t(`registerPage.haveAccount`)}
-            </Link>
+            <AccentLink to="/login">{t(`registerPage.haveAccount`)}</AccentLink>
           </div>
         </form>
       </div>

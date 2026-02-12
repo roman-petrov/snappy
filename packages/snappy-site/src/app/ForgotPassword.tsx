@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { api } from "./Api";
 import { t } from "./Locale";
@@ -38,9 +37,7 @@ export const ForgotPassword = () => {
           <h1 className={styles[`title`]}>{t(`forgotPage.checkEmail`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.checkEmailLead`)}</p>
           <div className={styles[`actions`]}>
-            <Link to="/login" className={styles[`link`]}>
-              {t(`forgotPage.backToLogin`)}
-            </Link>
+            <AccentLink to="/login">{t(`forgotPage.backToLogin`)}</AccentLink>
           </div>
         </div>
       </div>
@@ -72,9 +69,7 @@ export const ForgotPassword = () => {
             <Button type="submit" primary disabled={loading}>
               {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             </Button>
-            <Link to="/login" className={styles[`link`]}>
-              {t(`forgotPage.loginLink`)}
-            </Link>
+            <AccentLink to="/login">{t(`forgotPage.loginLink`)}</AccentLink>
           </div>
         </form>
       </div>

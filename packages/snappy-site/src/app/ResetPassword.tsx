@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
+import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
@@ -46,9 +47,7 @@ export const ResetPassword = () => {
           <h1 className={styles[`title`]}>{t(`resetPage.invalidLink`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.invalidLinkLead`)}</p>
           <div className={styles[`actions`]}>
-            <Link to="/forgot-password" className={styles[`link`]}>
-              {t(`resetPage.requestAgain`)}
-            </Link>
+            <AccentLink to="/forgot-password">{t(`resetPage.requestAgain`)}</AccentLink>
           </div>
         </div>
       </div>
@@ -62,9 +61,7 @@ export const ResetPassword = () => {
           <h1 className={styles[`title`]}>{t(`resetPage.done`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.doneLead`)}</p>
           <div className={styles[`actions`]}>
-            <Link to="/login" className={styles[`link`]}>
-              {t(`resetPage.loginLink`)}
-            </Link>
+            <AccentLink to="/login">{t(`resetPage.loginLink`)}</AccentLink>
           </div>
         </div>
       </div>

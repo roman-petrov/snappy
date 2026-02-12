@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
+import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
@@ -89,12 +90,8 @@ export const Login = () => {
             <Button disabled={loading} primary type="submit">
               {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
             </Button>
-            <Link className={styles[`link`]} to="/forgot-password">
-              {t(`loginPage.forgotPassword`)}
-            </Link>
-            <Link className={styles[`link`]} to="/register">
-              {t(`loginPage.registerLink`)}
-            </Link>
+            <AccentLink to="/forgot-password">{t(`loginPage.forgotPassword`)}</AccentLink>
+            <AccentLink to="/register">{t(`loginPage.registerLink`)}</AccentLink>
           </div>
         </form>
       </div>

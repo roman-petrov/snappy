@@ -20,6 +20,7 @@
 }
 
 .title {
+  padding-inline-start: var(--space-4);
   margin: 0 0 var(--space-6);
   font-size: var(--text-2xl);
   font-weight: var(--weight-extrabold);
@@ -27,7 +28,6 @@
   color: var(--color-text-heading);
   letter-spacing: var(--tracking-tight);
   border-inline-start: 3px solid var(--color-accent);
-  padding-inline-start: var(--space-4);
 }
 
 .authLead {
@@ -43,8 +43,8 @@
 
 .rememberRow {
   display: flex;
-  align-items: center;
   gap: var(--space-2);
+  align-items: center;
   margin-bottom: var(--space-4);
 }
 
@@ -90,8 +90,8 @@
 }
 
 .error {
-  margin-top: var(--space-2);
   padding: var(--space-3);
+  margin-top: var(--space-2);
   font-size: var(--text-sm);
   color: var(--color-accent-red);
   background: rgb(var(--rgb-accent-red) / 10%);
@@ -103,16 +103,6 @@
   flex-direction: column;
   gap: var(--space-3);
   margin-top: var(--space-6);
-}
-
-.link {
-  font-size: var(--text-sm);
-  color: var(--color-accent);
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
 }
 
 .passwordBlock {
@@ -139,8 +129,8 @@
 
 .strengthRow {
   display: flex;
-  align-items: center;
   gap: var(--space-2);
+  align-items: center;
   margin-bottom: var(--space-3);
 }
 
@@ -153,9 +143,9 @@
 .strengthBar {
   flex: 1;
   height: 6px;
+  overflow: hidden;
   background: var(--color-border);
   border-radius: 3px;
-  overflow: hidden;
 }
 
 .strengthFill {
@@ -177,7 +167,7 @@
 }
 
 .strengthText {
+  min-width: 4.5rem;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
-  min-width: 4.5rem;
 }

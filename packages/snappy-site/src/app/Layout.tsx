@@ -1,7 +1,9 @@
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { Header } from "../shared/Header";
 import { LocaleSwitcher } from "../shared/LocaleSwitcher";
+import { MutedLink } from "../shared/MutedLink";
 import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
 import { t } from "./Locale";
@@ -15,49 +17,36 @@ export const Layout = () => {
 
   return (
     <div className={styles[`wrap`]}>
-      <header className={styles[`header`]}>
-        <div className={styles[`inner`]}>
-          <Link
-            className={styles[`logo`]}
-            to="/"
-            title={t(`themeToggle`)}
-            onClick={e => {
-              e.preventDefault();
-              Theme.toggle();
+      <Header
+        logoTo="/"
+        logoOnClick={e => {
+          e.preventDefault();
+          Theme.toggle();
+        }}
+        logoTitle={t(`themeToggle`)}
+      >
+        {isAuth ? (
+          <Button
+            onClick={() => {
+              clearToken();
+              navigate(`/login`, { replace: true });
             }}
+            type="button"
           >
-            <img src="/favicon.svg" alt="" className={styles[`logoIcon`]} aria-hidden="true" />
-            Snappy
-          </Link>
-          <nav className={styles[`nav`]}>
-            {isAuth ? (
-              <Button
-                onClick={() => {
-                  clearToken();
-                  navigate(`/login`, { replace: true });
-                }}
-                type="button"
-              >
-                {t(`logout`)}
-              </Button>
-            ) : (
-              <>
-                {location.pathname !== `/login` && (
-                  <Link className={styles[`navLink`]} to="/login">
-                    {t(`login`)}
-                  </Link>
-                )}
-                {location.pathname !== `/register` && (
-                  <Link className={styles[`navLink`]} to="/register">
-                    {t(`register`)}
-                  </Link>
-                )}
-              </>
+            {t(`logout`)}
+          </Button>
+        ) : (
+          <>
+            {location.pathname !== `/login` && (
+              <MutedLink to="/login">{t(`login`)}</MutedLink>
             )}
-            <LocaleSwitcher />
-          </nav>
-        </div>
-      </header>
+            {location.pathname !== `/register` && (
+              <MutedLink to="/register">{t(`register`)}</MutedLink>
+            )}
+          </>
+        )}
+        <LocaleSwitcher />
+      </Header>
       <main className={styles[`main`]}>
         <Outlet />
       </main>
