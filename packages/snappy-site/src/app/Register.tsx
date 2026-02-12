@@ -6,6 +6,7 @@ import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
+import { Card } from "./Card";
 import { t } from "./Locale";
 import {
   generatePassword,
@@ -59,7 +60,7 @@ export const Register = () => {
 
   return (
     <div className={styles[`authPage`]}>
-      <div className={styles[`authPanel`]}>
+      <Card glass narrow className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`registerPage.title`)}</h1>
           <div className={styles[`field`]}>
@@ -133,7 +134,7 @@ export const Register = () => {
             <AccentLink to="/login">{t(`registerPage.haveAccount`)}</AccentLink>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };

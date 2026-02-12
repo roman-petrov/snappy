@@ -5,6 +5,7 @@ import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
+import { Card } from "./Card";
 import { setToken } from "./Auth";
 import { t } from "./Locale";
 import styles from "./Login.module.css";
@@ -42,7 +43,7 @@ export const Login = () => {
 
   return (
     <div className={styles[`authPage`]}>
-      <div className={styles[`authPanel`]}>
+      <Card glass narrow className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`loginPage.title`)}</h1>
           <div className={styles[`field`]}>
@@ -94,7 +95,7 @@ export const Login = () => {
             <AccentLink to="/register">{t(`loginPage.registerLink`)}</AccentLink>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };

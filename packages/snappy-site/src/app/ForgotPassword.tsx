@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { api } from "./Api";
+import { Card } from "./Card";
 import { t } from "./Locale";
 import styles from "./Login.module.css";
 
@@ -33,20 +34,20 @@ export const ForgotPassword = () => {
   if (sent) {
     return (
       <div className={styles[`authPage`]}>
-        <div className={styles[`authPanel`]}>
+        <Card glass narrow className={styles[`authPanel`]}>
           <h1 className={styles[`title`]}>{t(`forgotPage.checkEmail`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.checkEmailLead`)}</p>
           <div className={styles[`actions`]}>
             <AccentLink to="/login">{t(`forgotPage.backToLogin`)}</AccentLink>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className={styles[`authPage`]}>
-      <div className={styles[`authPanel`]}>
+      <Card glass narrow className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`forgotPage.title`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.lead`)}</p>
@@ -72,7 +73,7 @@ export const ForgotPassword = () => {
             <AccentLink to="/login">{t(`forgotPage.loginLink`)}</AccentLink>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };

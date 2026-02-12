@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "../shared/Button";
 import { api } from "./Api";
 import { getToken } from "./Auth";
+import { Card } from "./Card";
 import styles from "./Dashboard.module.css";
 import { featureEmoji, featureKeys } from "./Features";
 import { t } from "./Locale";
@@ -71,7 +72,7 @@ export const Dashboard = () => {
 
       <section className={styles[`section`]}>
         <h2 className={styles[`sectionTitle`]}>{t(`dashboard.balance`)}</h2>
-        <div className={styles[`card`]}>
+        <Card>
           <div className={styles[`balanceRow`]}>
             <p className={styles[`balance`]}>
               <span className={styles[`balanceIcon`]} aria-hidden>
@@ -83,14 +84,14 @@ export const Dashboard = () => {
               {t(`dashboard.getPremium`)}
             </Button>
           </div>
-        </div>
+        </Card>
       </section>
 
       <section className={styles[`section`]}>
         <h2 className={styles[`sectionTitle`]}>{t(`dashboard.process`)}</h2>
         <p className={styles[`sectionDesc`]}>{t(`dashboard.processDesc`)}</p>
         <form onSubmit={processText}>
-          <div className={styles[`card`]}>
+          <Card>
             <div className={styles[`formGroup`]}>
               <label className={styles[`label`]} htmlFor="dashboard-text">
                 {t(`dashboard.text`)}
@@ -146,7 +147,7 @@ export const Dashboard = () => {
                 <div className={styles[`result`]}>{result}</div>
               </div>
             )}
-          </div>
+          </Card>
         </form>
       </section>
     </>

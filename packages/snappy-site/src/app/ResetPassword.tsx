@@ -5,6 +5,7 @@ import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
+import { Card } from "./Card";
 import { t } from "./Locale";
 import { passwordValid, PASSWORD_MIN_LENGTH } from "./Password";
 import styles from "./Login.module.css";
@@ -43,13 +44,13 @@ export const ResetPassword = () => {
   if (token === ``) {
     return (
       <div className={styles[`authPage`]}>
-        <div className={styles[`authPanel`]}>
+        <Card glass narrow className={styles[`authPanel`]}>
           <h1 className={styles[`title`]}>{t(`resetPage.invalidLink`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.invalidLinkLead`)}</p>
           <div className={styles[`actions`]}>
             <AccentLink to="/forgot-password">{t(`resetPage.requestAgain`)}</AccentLink>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
@@ -57,20 +58,20 @@ export const ResetPassword = () => {
   if (done) {
     return (
       <div className={styles[`authPage`]}>
-        <div className={styles[`authPanel`]}>
+        <Card glass narrow className={styles[`authPanel`]}>
           <h1 className={styles[`title`]}>{t(`resetPage.done`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.doneLead`)}</p>
           <div className={styles[`actions`]}>
             <AccentLink to="/login">{t(`resetPage.loginLink`)}</AccentLink>
           </div>
-        </div>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className={styles[`authPage`]}>
-      <div className={styles[`authPanel`]}>
+      <Card glass narrow className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`resetPage.title`)}</h1>
           <PasswordInput
@@ -90,7 +91,7 @@ export const ResetPassword = () => {
             </Button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 };
