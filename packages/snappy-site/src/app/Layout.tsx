@@ -1,5 +1,6 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 
+import { Button } from "../shared/Button";
 import { clearToken, getToken } from "./Auth";
 import styles from "./Layout.module.css";
 
@@ -17,7 +18,7 @@ export const Layout = () => {
           </Link>
           <nav className={styles[`nav`]}>
             {isAuth ? (
-              <button
+              <Button
                 onClick={() => {
                   clearToken();
                   window.location.href = `/login`;
@@ -25,7 +26,7 @@ export const Layout = () => {
                 type="button"
               >
                 Выйти
-              </button>
+              </Button>
             ) : (
               <>
                 {location.pathname !== `/login` && <Link to="/login">Вход</Link>}

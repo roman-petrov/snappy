@@ -21,22 +21,6 @@
   color: var(--color-text-body);
 }
 
-.premiumLink {
-  display: inline-block;
-  padding: var(--space-2) var(--space-4);
-  margin-top: var(--space-3);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
-  color: var(--color-on-accent);
-  text-decoration: none;
-  background: var(--color-accent);
-  border-radius: var(--radius-sm);
-}
-
-.premiumLink:hover {
-  text-decoration: none;
-}
-
 .textarea {
   box-sizing: border-box;
   width: 100%;
@@ -68,21 +52,8 @@
   border-radius: var(--radius-sm);
 }
 
-.btn {
-  padding: var(--space-3) var(--space-4);
+.submitRow {
   margin-top: var(--space-4);
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
-  color: var(--color-on-accent);
-  cursor: pointer;
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--radius-sm);
-}
-
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
 }
 
 .result {

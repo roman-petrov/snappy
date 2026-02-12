@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
+import { Button } from "../shared/Button";
 import { api } from "./Api";
 import styles from "./Login.module.css";
 
@@ -61,9 +62,9 @@ export const ForgotPassword = () => {
       </div>
       {error !== `` && <p className={styles[`error`]}>{error}</p>}
       <div className={styles[`actions`]}>
-        <button type="submit" className={styles[`btn`]} disabled={loading}>
+        <Button type="submit" primary disabled={loading}>
           {loading ? `Отправка…` : `Отправить`}
-        </button>
+        </Button>
         <Link to="/login" className={styles[`link`]}>
           Вход
         </Link>

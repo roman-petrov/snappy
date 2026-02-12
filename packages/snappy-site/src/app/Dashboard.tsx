@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { Button } from "../shared/Button";
 import { api } from "./Api";
 import { getToken } from "./Auth";
 import styles from "./Dashboard.module.css";
@@ -68,16 +69,14 @@ export const Dashboard = () => {
         <h2 className={styles[`title`]}>Баланс</h2>
         <div className={styles[`card`]}>
           <p className={styles[`balance`]}>Бесплатных запросов: {remaining ?? `—`}</p>
-          <a
-            className={styles[`premiumLink`]}
-            href="#"
-            onClick={e => {
-              e.preventDefault();
+          <Button
+            primary
+            onClick={() => {
               openPremium();
             }}
           >
             Оформить Premium
-          </a>
+          </Button>
         </div>
       </section>
 
@@ -108,9 +107,9 @@ export const Dashboard = () => {
                 </option>
               ))}
             </select>
-            <button className={styles[`btn`]} disabled={loading} type="submit">
+            <Button className={styles[`submitRow`]} disabled={loading} primary type="submit">
               {loading ? `Обработка…` : `Обработать`}
-            </button>
+            </Button>
             {error !== `` && <p className={styles[`error`]}>{error}</p>}
             {result !== `` && <div className={styles[`result`]}>{result}</div>}
           </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { Button } from "../shared/Button";
 import { api } from "./Api";
 import { setToken } from "./Auth";
 import styles from "./Login.module.css";
@@ -67,9 +68,9 @@ export const Login = () => {
       </div>
       {error !== `` && <p className={styles[`error`]}>{error}</p>}
       <div className={styles[`actions`]}>
-        <button type="submit" className={styles[`btn`]} disabled={loading}>
+        <Button type="submit" primary disabled={loading}>
           {loading ? `Вход…` : `Войти`}
-        </button>
+        </Button>
         <Link to="/forgot-password" className={styles[`link`]}>
           Забыли пароль?
         </Link>

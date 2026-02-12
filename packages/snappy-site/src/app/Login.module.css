@@ -50,22 +50,6 @@
   margin-top: var(--space-6);
 }
 
-.btn {
-  padding: var(--space-3) var(--space-4);
-  font-size: var(--text-base);
-  font-weight: var(--weight-medium);
-  color: var(--color-on-accent);
-  cursor: pointer;
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--radius-sm);
-}
-
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
 .link {
   font-size: var(--text-sm);
   color: var(--color-accent);

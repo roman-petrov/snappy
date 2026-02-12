@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
+import { Button } from "../shared/Button";
 import { api } from "./Api";
 import styles from "./Login.module.css";
 
@@ -78,9 +79,9 @@ export const ResetPassword = () => {
       </div>
       {error !== `` && <p className={styles[`error`]}>{error}</p>}
       <div className={styles[`actions`]}>
-        <button type="submit" className={styles[`btn`]} disabled={loading}>
+        <Button type="submit" primary disabled={loading}>
           {loading ? `Сохранение…` : `Сохранить`}
-        </button>
+        </Button>
       </div>
     </form>
   );
