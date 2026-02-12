@@ -2,6 +2,7 @@ import type { useLoginState } from "./Login.state";
 
 import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
+import { Input } from "../../shared/Input";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { t } from "../core/Locale";
 import { Card } from "./Card";
@@ -24,20 +25,15 @@ export const LoginView = ({
     <Card className={styles[`authPanel`]} glass narrow>
       <form className={styles[`form`]} onSubmit={onSubmit}>
         <h1 className={styles[`title`]}>{t(`loginPage.title`)}</h1>
-        <div className={styles[`field`]}>
-          <label className={styles[`label`]} htmlFor="login-email">
-            {t(`loginPage.email`)}
-          </label>
-          <input
-            autoComplete="email"
-            className={styles[`input`]}
-            id="login-email"
-            onChange={e => onEmailChange(e.target.value)}
-            required
-            type="email"
-            value={email}
-          />
-        </div>
+        <Input
+          autoComplete="email"
+          id="login-email"
+          label={t(`loginPage.email`)}
+          onChange={onEmailChange}
+          required
+          type="email"
+          value={email}
+        />
         <PasswordInput
           autoComplete="current-password"
           disabled={loading}

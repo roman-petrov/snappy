@@ -2,6 +2,8 @@ import type { usePasswordInputState } from "./PasswordInput.state";
 
 import eyeClosedSvg from "../app/assets/eye-closed.svg?raw";
 import eyeOpenSvg from "../app/assets/eye-open.svg?raw";
+import { Input } from "./Input";
+import inputStyles from "./Input.module.css";
 import styles from "./PasswordInput.module.css";
 
 export type PasswordInputViewProps = ReturnType<typeof usePasswordInputState>;
@@ -20,18 +22,18 @@ export const PasswordInputView = ({
   value,
   visible,
 }: PasswordInputViewProps) => (
-  <div className={styles[`field`]}>
-    <label className={styles[`label`]} htmlFor={id}>
+  <div className={inputStyles[`field`]}>
+    <label className={inputStyles[`label`]} htmlFor={id}>
       {label}
     </label>
     <div className={styles[`wrap`]}>
-      <input
+      <Input
         autoComplete={autoComplete}
-        className={styles[`input`]}
         disabled={disabled}
         id={id}
+        inputClassName={styles[`input`]}
         minLength={minLength}
-        onChange={e => onChange(e.target.value)}
+        onChange={onChange}
         required={required}
         type={inputType}
         value={value}

@@ -2,6 +2,7 @@ import type { useRegisterState } from "./Register.state";
 
 import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
+import { Input } from "../../shared/Input";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
@@ -29,20 +30,15 @@ export const RegisterView = ({
     <Card className={styles[`authPanel`]} glass narrow>
       <form className={styles[`form`]} onSubmit={onSubmit}>
         <h1 className={styles[`title`]}>{t(`registerPage.title`)}</h1>
-        <div className={styles[`field`]}>
-          <label className={styles[`label`]} htmlFor="reg-email">
-            {t(`registerPage.email`)}
-          </label>
-          <input
-            autoComplete="email"
-            className={styles[`input`]}
-            id="reg-email"
-            onChange={e => onEmailChange(e.target.value)}
-            required
-            type="email"
-            value={email}
-          />
-        </div>
+        <Input
+          autoComplete="email"
+          id="reg-email"
+          label={t(`registerPage.email`)}
+          onChange={onEmailChange}
+          required
+          type="email"
+          value={email}
+        />
         <div className={styles[`passwordBlock`]}>
           <PasswordInput
             autoComplete="new-password"
