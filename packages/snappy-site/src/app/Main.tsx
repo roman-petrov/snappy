@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
@@ -9,7 +10,7 @@ import { Login } from "./Login";
 import { Register } from "./Register";
 import { ResetPassword } from "./ResetPassword";
 
-const Protected = ({ children }: { children: React.ReactNode }) =>
+const Protected = ({ children }: { children: ReactNode }) =>
   getToken() !== undefined ? <>{children}</> : <Navigate to="/login" replace />;
 
 createRoot(document.getElementById(`app-root`)!).render(

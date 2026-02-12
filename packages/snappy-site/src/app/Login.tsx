@@ -36,48 +36,52 @@ export const Login = () => {
   };
 
   return (
-    <form className={styles[`form`]} onSubmit={submit}>
-      <h1 className={styles[`title`]}>Вход</h1>
-      <div className={styles[`field`]}>
-        <label className={styles[`label`]} htmlFor="login-email">
-          Email
-        </label>
-        <input
-          id="login-email"
-          type="email"
-          className={styles[`input`]}
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
+    <div className={styles[`authPage`]}>
+      <div className={styles[`authPanel`]}>
+        <form className={styles[`form`]} onSubmit={submit}>
+          <h1 className={styles[`title`]}>Вход</h1>
+          <div className={styles[`field`]}>
+            <label className={styles[`label`]} htmlFor="login-email">
+              Email
+            </label>
+            <input
+              id="login-email"
+              type="email"
+              className={styles[`input`]}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </div>
+          <div className={styles[`field`]}>
+            <label className={styles[`label`]} htmlFor="login-password">
+              Пароль
+            </label>
+            <input
+              id="login-password"
+              type="password"
+              className={styles[`input`]}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+          </div>
+          {error !== `` && <p className={styles[`error`]}>{error}</p>}
+          <div className={styles[`actions`]}>
+            <Button type="submit" primary disabled={loading}>
+              {loading ? `Вход…` : `Войти`}
+            </Button>
+            <Link to="/forgot-password" className={styles[`link`]}>
+              Забыли пароль?
+            </Link>
+            <Link to="/register" className={styles[`link`]}>
+              Регистрация
+            </Link>
+          </div>
+        </form>
       </div>
-      <div className={styles[`field`]}>
-        <label className={styles[`label`]} htmlFor="login-password">
-          Пароль
-        </label>
-        <input
-          id="login-password"
-          type="password"
-          className={styles[`input`]}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-          autoComplete="current-password"
-        />
-      </div>
-      {error !== `` && <p className={styles[`error`]}>{error}</p>}
-      <div className={styles[`actions`]}>
-        <Button type="submit" primary disabled={loading}>
-          {loading ? `Вход…` : `Войти`}
-        </Button>
-        <Link to="/forgot-password" className={styles[`link`]}>
-          Забыли пароль?
-        </Link>
-        <Link to="/register" className={styles[`link`]}>
-          Регистрация
-        </Link>
-      </div>
-    </form>
+    </div>
   );
 };

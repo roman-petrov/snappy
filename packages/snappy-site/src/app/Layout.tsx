@@ -13,7 +13,8 @@ export const Layout = () => {
     <div className={styles[`wrap`]}>
       <header className={styles[`header`]}>
         <div className={styles[`inner`]}>
-          <Link className={styles[`logo`]} to="/">
+          <Link className={styles[`logo`]} to="/" title="Snappy">
+            <img src="/favicon.svg" alt="" className={styles[`logoIcon`]} aria-hidden="true" />
             Snappy
           </Link>
           <nav className={styles[`nav`]}>
@@ -29,8 +30,16 @@ export const Layout = () => {
               </Button>
             ) : (
               <>
-                {location.pathname !== `/login` && <Link to="/login">Вход</Link>}
-                {location.pathname !== `/register` && <Link to="/register">Регистрация</Link>}
+                {location.pathname !== `/login` && (
+                  <Link className={styles[`navLink`]} to="/login">
+                    Вход
+                  </Link>
+                )}
+                {location.pathname !== `/register` && (
+                  <Link className={styles[`navLink`]} to="/register">
+                    Регистрация
+                  </Link>
+                )}
               </>
             )}
           </nav>

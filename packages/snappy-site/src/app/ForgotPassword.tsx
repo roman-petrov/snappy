@@ -32,43 +32,51 @@ export const ForgotPassword = () => {
 
   if (sent) {
     return (
-      <div className={styles[`form`]}>
-        <h1 className={styles[`title`]}>Проверьте почту</h1>
-        <p>Если аккаунт с таким email есть, мы отправили ссылку для сброса пароля.</p>
-        <Link to="/login" className={styles[`link`]}>
-          Вернуться ко входу
-        </Link>
+      <div className={styles[`authPage`]}>
+        <div className={styles[`authPanel`]}>
+          <h1 className={styles[`title`]}>Проверьте почту</h1>
+          <p className={styles[`authLead`]}>Если аккаунт с таким email есть, мы отправили ссылку для сброса пароля.</p>
+          <div className={styles[`actions`]}>
+            <Link to="/login" className={styles[`link`]}>
+              Вернуться ко входу
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <form className={styles[`form`]} onSubmit={submit}>
-      <h1 className={styles[`title`]}>Забыли пароль</h1>
-      <p>Введите email — мы отправим ссылку для сброса пароля.</p>
-      <div className={styles[`field`]}>
-        <label className={styles[`label`]} htmlFor="forgot-email">
-          Email
-        </label>
-        <input
-          id="forgot-email"
-          type="email"
-          className={styles[`input`]}
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
+    <div className={styles[`authPage`]}>
+      <div className={styles[`authPanel`]}>
+        <form className={styles[`form`]} onSubmit={submit}>
+          <h1 className={styles[`title`]}>Забыли пароль</h1>
+          <p className={styles[`authLead`]}>Введите email — мы отправим ссылку для сброса пароля.</p>
+          <div className={styles[`field`]}>
+            <label className={styles[`label`]} htmlFor="forgot-email">
+              Email
+            </label>
+            <input
+              id="forgot-email"
+              type="email"
+              className={styles[`input`]}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </div>
+          {error !== `` && <p className={styles[`error`]}>{error}</p>}
+          <div className={styles[`actions`]}>
+            <Button type="submit" primary disabled={loading}>
+              {loading ? `Отправка…` : `Отправить`}
+            </Button>
+            <Link to="/login" className={styles[`link`]}>
+              Вход
+            </Link>
+          </div>
+        </form>
       </div>
-      {error !== `` && <p className={styles[`error`]}>{error}</p>}
-      <div className={styles[`actions`]}>
-        <Button type="submit" primary disabled={loading}>
-          {loading ? `Отправка…` : `Отправить`}
-        </Button>
-        <Link to="/login" className={styles[`link`]}>
-          Вход
-        </Link>
-      </div>
-    </form>
+    </div>
   );
 };

@@ -65,48 +65,66 @@ export const Dashboard = () => {
 
   return (
     <>
+      <h1 className={styles[`pageTitle`]}>Личный кабинет</h1>
+
       <section className={styles[`section`]}>
-        <h2 className={styles[`title`]}>Баланс</h2>
+        <h2 className={styles[`sectionTitle`]}>Баланс</h2>
         <div className={styles[`card`]}>
-          <p className={styles[`balance`]}>Бесплатных запросов: {remaining ?? `—`}</p>
-          <Button
-            primary
-            onClick={() => {
-              openPremium();
-            }}
-          >
-            Оформить Premium
-          </Button>
+          <div className={styles[`balanceRow`]}>
+            <p className={styles[`balance`]}>
+              Бесплатных запросов: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
+            </p>
+            <Button
+              primary
+              onClick={() => {
+                openPremium();
+              }}
+            >
+              Оформить Premium
+            </Button>
+          </div>
         </div>
       </section>
 
       <section className={styles[`section`]}>
-        <h2 className={styles[`title`]}>Обработка текста</h2>
+        <h2 className={styles[`sectionTitle`]}>Обработка текста</h2>
         <form onSubmit={processText}>
           <div className={styles[`card`]}>
-            <textarea
-              className={styles[`textarea`]}
-              disabled={loading}
-              onChange={e => {
-                setText(e.target.value);
-              }}
-              placeholder="Введите текст..."
-              value={text}
-            />
-            <select
-              className={styles[`select`]}
-              disabled={loading}
-              onChange={e => {
-                setFeature(e.target.value);
-              }}
-              value={feature}
-            >
-              {featureKeys.map(k => (
-                <option key={k} value={k}>
-                  {featureLabels[k]}
-                </option>
-              ))}
-            </select>
+            <div className={styles[`formGroup`]}>
+              <label className={styles[`label`]} htmlFor="dashboard-text">
+                Текст
+              </label>
+              <textarea
+                id="dashboard-text"
+                className={styles[`textarea`]}
+                disabled={loading}
+                onChange={e => {
+                  setText(e.target.value);
+                }}
+                placeholder="Введите текст для обработки..."
+                value={text}
+              />
+            </div>
+            <div className={styles[`formGroup`]}>
+              <label className={styles[`label`]} htmlFor="dashboard-feature">
+                Действие
+              </label>
+              <select
+                id="dashboard-feature"
+                className={styles[`select`]}
+                disabled={loading}
+                onChange={e => {
+                  setFeature(e.target.value);
+                }}
+                value={feature}
+              >
+                {featureKeys.map(k => (
+                  <option key={k} value={k}>
+                    {featureLabels[k]}
+                  </option>
+                ))}
+              </select>
+            </div>
             <Button className={styles[`submitRow`]} disabled={loading} primary type="submit">
               {loading ? `Обработка…` : `Обработать`}
             </Button>

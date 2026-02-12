@@ -40,46 +40,50 @@ export const Register = () => {
   };
 
   return (
-    <form className={styles[`form`]} onSubmit={submit}>
-      <h1 className={styles[`title`]}>Регистрация</h1>
-      <div className={styles[`field`]}>
-        <label className={styles[`label`]} htmlFor="reg-email">
-          Email
-        </label>
-        <input
-          id="reg-email"
-          type="email"
-          className={styles[`input`]}
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          required
-          autoComplete="email"
-        />
+    <div className={styles[`authPage`]}>
+      <div className={styles[`authPanel`]}>
+        <form className={styles[`form`]} onSubmit={submit}>
+          <h1 className={styles[`title`]}>Регистрация</h1>
+          <div className={styles[`field`]}>
+            <label className={styles[`label`]} htmlFor="reg-email">
+              Email
+            </label>
+            <input
+              id="reg-email"
+              type="email"
+              className={styles[`input`]}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+          </div>
+          <div className={styles[`field`]}>
+            <label className={styles[`label`]} htmlFor="reg-password">
+              Пароль (не менее 6 символов)
+            </label>
+            <input
+              id="reg-password"
+              type="password"
+              className={styles[`input`]}
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              minLength={6}
+              autoComplete="new-password"
+            />
+          </div>
+          {error !== `` && <p className={styles[`error`]}>{error}</p>}
+          <div className={styles[`actions`]}>
+            <Button type="submit" primary disabled={loading}>
+              {loading ? `Регистрация…` : `Зарегистрироваться`}
+            </Button>
+            <Link to="/login" className={styles[`link`]}>
+              Уже есть аккаунт — войти
+            </Link>
+          </div>
+        </form>
       </div>
-      <div className={styles[`field`]}>
-        <label className={styles[`label`]} htmlFor="reg-password">
-          Пароль (не менее 6 символов)
-        </label>
-        <input
-          id="reg-password"
-          type="password"
-          className={styles[`input`]}
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          required
-          minLength={6}
-          autoComplete="new-password"
-        />
-      </div>
-      {error !== `` && <p className={styles[`error`]}>{error}</p>}
-      <div className={styles[`actions`]}>
-        <Button type="submit" primary disabled={loading}>
-          {loading ? `Регистрация…` : `Зарегистрироваться`}
-        </Button>
-        <Link to="/login" className={styles[`link`]}>
-          Уже есть аккаунт — войти
-        </Link>
-      </div>
-    </form>
+    </div>
   );
 };
