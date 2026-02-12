@@ -63,4 +63,19 @@ export default defineConfig([
   },
   { files: [`**/*.js`], rules: pluginTypescriptESLint.configs.disableTypeChecked.rules },
   { files: [`**/*.test.ts`], rules: { "@typescript-eslint/no-magic-numbers": `off` } },
+  {
+    // See https://github.com/typescript-eslint/typescript-eslint/issues/2607 for more information.
+    files: [`**/*.tsx`],
+    rules: {
+      "@typescript-eslint/naming-convention": [
+        `error`,
+        {
+          format: [`camelCase`, `PascalCase`],
+          leadingUnderscore: `forbid`,
+          selector: `variable`,
+          trailingUnderscore: `forbid`,
+        },
+      ],
+    },
+  },
 ]);
