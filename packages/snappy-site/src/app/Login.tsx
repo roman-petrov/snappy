@@ -10,7 +10,7 @@ import { t } from "./Locale";
 import styles from "./Login.module.css";
 
 export const Login = () => {
-  const { locale } = useLocale();
+  useLocale();
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [remember, setRemember] = useState(false);
@@ -26,7 +26,7 @@ export const Login = () => {
       const res = await api.login(email.trim(), password);
       const data = (await res.json()) as { error?: string; token?: string };
       if (!res.ok) {
-        setError(data.error ?? t(locale, `loginPage.errorLogin`));
+        setError(data.error ?? t(`loginPage.errorLogin`));
 
         return;
       }
@@ -35,7 +35,7 @@ export const Login = () => {
         navigate(`/`, { replace: true });
       }
     } catch {
-      setError(t(locale, `loginPage.errorNetwork`));
+      setError(t(`loginPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -45,10 +45,10 @@ export const Login = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>{t(locale, `loginPage.title`)}</h1>
+          <h1 className={styles[`title`]}>{t(`loginPage.title`)}</h1>
           <div className={styles[`field`]}>
             <label className={styles[`label`]} htmlFor="login-email">
-              {t(locale, `loginPage.email`)}
+              {t(`loginPage.email`)}
             </label>
             <input
               autoComplete="email"
@@ -66,7 +66,7 @@ export const Login = () => {
             autoComplete="current-password"
             disabled={loading}
             id="login-password"
-            label={t(locale, `loginPage.password`)}
+            label={t(`loginPage.password`)}
             onChange={setPassword}
             required
             value={password}
@@ -83,19 +83,19 @@ export const Login = () => {
               type="checkbox"
             />
             <label className={styles[`rememberLabel`]} htmlFor="login-remember">
-              {t(locale, `loginPage.remember`)}
+              {t(`loginPage.remember`)}
             </label>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button disabled={loading} primary type="submit">
-              {loading ? t(locale, `loginPage.submitting`) : t(locale, `loginPage.submit`)}
+              {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
             </Button>
             <Link className={styles[`link`]} to="/forgot-password">
-              {t(locale, `loginPage.forgotPassword`)}
+              {t(`loginPage.forgotPassword`)}
             </Link>
             <Link className={styles[`link`]} to="/register">
-              {t(locale, `loginPage.registerLink`)}
+              {t(`loginPage.registerLink`)}
             </Link>
           </div>
         </form>

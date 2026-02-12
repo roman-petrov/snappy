@@ -11,7 +11,7 @@ import styles from "./Layout.module.css";
 const APP_BASE = `/app`;
 
 export const Layout = () => {
-  const { locale } = useLocale();
+  useLocale();
   const token = getToken();
   const location = useLocation();
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export const Layout = () => {
           <Link
             className={styles[`logo`]}
             to={APP_BASE}
-            title={t(locale, `themeToggle`)}
+            title={t(`themeToggle`)}
             onClick={e => {
               e.preventDefault();
               Theme.toggle();
@@ -42,18 +42,18 @@ export const Layout = () => {
                 }}
                 type="button"
               >
-                {t(locale, `logout`)}
+                {t(`logout`)}
               </Button>
             ) : (
               <>
                 {location.pathname !== `${APP_BASE}/login` && (
                   <Link className={styles[`navLink`]} to={`${APP_BASE}/login`}>
-                    {t(locale, `login`)}
+                    {t(`login`)}
                   </Link>
                 )}
                 {location.pathname !== `${APP_BASE}/register` && (
                   <Link className={styles[`navLink`]} to={`${APP_BASE}/register`}>
-                    {t(locale, `register`)}
+                    {t(`register`)}
                   </Link>
                 )}
               </>

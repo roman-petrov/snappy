@@ -2,13 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Button } from "../shared/Button";
-import { useLocale } from "../shared/LocaleContext";
 import { api } from "./Api";
 import { t } from "./Locale";
 import styles from "./Login.module.css";
 
 export const ForgotPassword = () => {
-  const { locale } = useLocale();
   const [email, setEmail] = useState(``);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState(``);
@@ -22,12 +20,12 @@ export const ForgotPassword = () => {
       const res = await api.forgotPassword(email.trim());
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };
-        setError(data.error ?? t(locale, `forgotPage.error`));
+        setError(data.error ?? t(`forgotPage.error`));
         return;
       }
       setSent(true);
     } catch {
-      setError(t(locale, `forgotPage.errorNetwork`));
+      setError(t(`forgotPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -37,11 +35,11 @@ export const ForgotPassword = () => {
     return (
       <div className={styles[`authPage`]}>
         <div className={styles[`authPanel`]}>
-          <h1 className={styles[`title`]}>{t(locale, `forgotPage.checkEmail`)}</h1>
-          <p className={styles[`authLead`]}>{t(locale, `forgotPage.checkEmailLead`)}</p>
+          <h1 className={styles[`title`]}>{t(`forgotPage.checkEmail`)}</h1>
+          <p className={styles[`authLead`]}>{t(`forgotPage.checkEmailLead`)}</p>
           <div className={styles[`actions`]}>
             <Link to="/login" className={styles[`link`]}>
-              {t(locale, `forgotPage.backToLogin`)}
+              {t(`forgotPage.backToLogin`)}
             </Link>
           </div>
         </div>
@@ -53,11 +51,11 @@ export const ForgotPassword = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>{t(locale, `forgotPage.title`)}</h1>
-          <p className={styles[`authLead`]}>{t(locale, `forgotPage.lead`)}</p>
+          <h1 className={styles[`title`]}>{t(`forgotPage.title`)}</h1>
+          <p className={styles[`authLead`]}>{t(`forgotPage.lead`)}</p>
           <div className={styles[`field`]}>
             <label className={styles[`label`]} htmlFor="forgot-email">
-              {t(locale, `forgotPage.email`)}
+              {t(`forgotPage.email`)}
             </label>
             <input
               id="forgot-email"
@@ -72,10 +70,10 @@ export const ForgotPassword = () => {
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading}>
-              {loading ? t(locale, `forgotPage.submitting`) : t(locale, `forgotPage.submit`)}
+              {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             </Button>
             <Link to="/login" className={styles[`link`]}>
-              {t(locale, `forgotPage.loginLink`)}
+              {t(`forgotPage.loginLink`)}
             </Link>
           </div>
         </form>

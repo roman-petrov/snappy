@@ -1,8 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = `snappy-locale`;
+import { type LocaleKey, setCurrentLocale } from "./LocaleStore";
 
-export type LocaleKey = `en` | `ru`;
+const STORAGE_KEY = `snappy-locale`;
 
 const defaultLocale = (): LocaleKey => {
   if (typeof document === `undefined`) {
@@ -12,6 +12,8 @@ const defaultLocale = (): LocaleKey => {
   return stored === `en` || stored === `ru` ? stored : `ru`;
 };
 
+export type { LocaleKey } from "./LocaleStore";
+
 type ContextValue = { locale: LocaleKey; setLocale: (next: LocaleKey) => void };
 
 const LocaleContext = createContext<ContextValue | null>(null);
@@ -19,10 +21,12 @@ const LocaleContext = createContext<ContextValue | null>(null);
 export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   const [locale, setLocaleState] = useState<LocaleKey>(defaultLocale);
   useEffect(() => {
+    setCurrentLocale(locale);
     document.documentElement.lang = locale;
   }, [locale]);
   const setLocale = useCallback((next: LocaleKey) => {
     setLocaleState(next);
+    setCurrentLocale(next);
     localStorage.setItem(STORAGE_KEY, next);
   }, []);
   const value = useMemo(() => ({ locale, setLocale }), [locale, setLocale]);

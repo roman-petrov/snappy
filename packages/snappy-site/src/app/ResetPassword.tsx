@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { Button } from "../shared/Button";
-import { useLocale } from "../shared/LocaleContext";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { t } from "./Locale";
@@ -10,7 +9,6 @@ import { passwordValid, PASSWORD_MIN_LENGTH } from "./Password";
 import styles from "./Login.module.css";
 
 export const ResetPassword = () => {
-  const { locale } = useLocale();
   const [searchParams] = useSearchParams();
   const token = searchParams.get(`token`) ?? ``;
   const [password, setPassword] = useState(``);
@@ -22,7 +20,7 @@ export const ResetPassword = () => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(t(locale, `resetPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
+      setError(t(`resetPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
       return;
     }
     setLoading(true);
@@ -30,12 +28,12 @@ export const ResetPassword = () => {
       const res = await api.resetPassword(token, password);
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };
-        setError(data.error ?? t(locale, `resetPage.error`));
+        setError(data.error ?? t(`resetPage.error`));
         return;
       }
       setDone(true);
     } catch {
-      setError(t(locale, `resetPage.errorNetwork`));
+      setError(t(`resetPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -45,11 +43,11 @@ export const ResetPassword = () => {
     return (
       <div className={styles[`authPage`]}>
         <div className={styles[`authPanel`]}>
-          <h1 className={styles[`title`]}>{t(locale, `resetPage.invalidLink`)}</h1>
-          <p className={styles[`authLead`]}>{t(locale, `resetPage.invalidLinkLead`)}</p>
+          <h1 className={styles[`title`]}>{t(`resetPage.invalidLink`)}</h1>
+          <p className={styles[`authLead`]}>{t(`resetPage.invalidLinkLead`)}</p>
           <div className={styles[`actions`]}>
             <Link to="/forgot-password" className={styles[`link`]}>
-              {t(locale, `resetPage.requestAgain`)}
+              {t(`resetPage.requestAgain`)}
             </Link>
           </div>
         </div>
@@ -61,11 +59,11 @@ export const ResetPassword = () => {
     return (
       <div className={styles[`authPage`]}>
         <div className={styles[`authPanel`]}>
-          <h1 className={styles[`title`]}>{t(locale, `resetPage.done`)}</h1>
-          <p className={styles[`authLead`]}>{t(locale, `resetPage.doneLead`)}</p>
+          <h1 className={styles[`title`]}>{t(`resetPage.done`)}</h1>
+          <p className={styles[`authLead`]}>{t(`resetPage.doneLead`)}</p>
           <div className={styles[`actions`]}>
             <Link to="/login" className={styles[`link`]}>
-              {t(locale, `resetPage.loginLink`)}
+              {t(`resetPage.loginLink`)}
             </Link>
           </div>
         </div>
@@ -77,10 +75,10 @@ export const ResetPassword = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>{t(locale, `resetPage.title`)}</h1>
+          <h1 className={styles[`title`]}>{t(`resetPage.title`)}</h1>
           <PasswordInput
             id="reset-password"
-            label={t(locale, `resetPage.passwordLabel`, { min: PASSWORD_MIN_LENGTH })}
+            label={t(`resetPage.passwordLabel`, { min: PASSWORD_MIN_LENGTH })}
             value={password}
             onChange={setPassword}
             autoComplete="new-password"
@@ -91,7 +89,7 @@ export const ResetPassword = () => {
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading}>
-              {loading ? t(locale, `resetPage.submitting`) : t(locale, `resetPage.submit`)}
+              {loading ? t(`resetPage.submitting`) : t(`resetPage.submit`)}
             </Button>
           </div>
         </form>

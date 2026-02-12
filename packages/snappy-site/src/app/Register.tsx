@@ -17,7 +17,7 @@ import {
 import styles from "./Login.module.css";
 
 export const Register = () => {
-  const { locale } = useLocale();
+  useLocale();
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [error, setError] = useState(``);
@@ -26,17 +26,17 @@ export const Register = () => {
   const strength = passwordStrength(password);
   const requirements = [
     {
-      label: t(locale, `registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
+      label: t(`registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
       check: passwordRequirementChecks[0]!.check,
     },
-    { label: t(locale, `registerPage.requirementLetters`), check: passwordRequirementChecks[1]!.check },
+    { label: t(`registerPage.requirementLetters`), check: passwordRequirementChecks[1]!.check },
   ];
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(t(locale, `registerPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
+      setError(t(`registerPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
       return;
     }
     setLoading(true);
@@ -44,7 +44,7 @@ export const Register = () => {
       const res = await api.register(email.trim(), password);
       const data = (await res.json()) as { token?: string; error?: string };
       if (!res.ok) {
-        setError(data.error ?? t(locale, `registerPage.errorRegister`));
+        setError(data.error ?? t(`registerPage.errorRegister`));
         return;
       }
       if (data.token) {
@@ -52,7 +52,7 @@ export const Register = () => {
         navigate(`/`, { replace: true });
       }
     } catch {
-      setError(t(locale, `registerPage.errorNetwork`));
+      setError(t(`registerPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -62,10 +62,10 @@ export const Register = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>{t(locale, `registerPage.title`)}</h1>
+          <h1 className={styles[`title`]}>{t(`registerPage.title`)}</h1>
           <div className={styles[`field`]}>
             <label className={styles[`label`]} htmlFor="reg-email">
-              {t(locale, `registerPage.email`)}
+              {t(`registerPage.email`)}
             </label>
             <input
               id="reg-email"
@@ -80,7 +80,7 @@ export const Register = () => {
           <div className={styles[`passwordBlock`]}>
             <PasswordInput
               id="reg-password"
-              label={t(locale, `registerPage.password`)}
+              label={t(`registerPage.password`)}
               value={password}
               onChange={setPassword}
               autoComplete="new-password"
@@ -97,7 +97,7 @@ export const Register = () => {
               ))}
             </div>
             <div className={styles[`strengthRow`]}>
-              <span className={styles[`strengthLabel`]}>{t(locale, `registerPage.strength`)}:</span>
+              <span className={styles[`strengthLabel`]}>{t(`registerPage.strength`)}:</span>
               <div className={styles[`strengthBar`]}>
                 <div
                   className={styles[`strengthFill`]}
@@ -116,23 +116,23 @@ export const Register = () => {
               </div>
               <span className={styles[`strengthText`]}>
                 {strength === "weak"
-                  ? t(locale, `registerPage.strengthWeak`)
+                  ? t(`registerPage.strengthWeak`)
                   : strength === "medium"
-                    ? t(locale, `registerPage.strengthMedium`)
-                    : t(locale, `registerPage.strengthStrong`)}
+                    ? t(`registerPage.strengthMedium`)
+                    : t(`registerPage.strengthStrong`)}
               </span>
             </div>
             <Button type="button" onClick={() => setPassword(generatePassword())} disabled={loading}>
-              {t(locale, `registerPage.generatePassword`)}
+              {t(`registerPage.generatePassword`)}
             </Button>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading || !passwordValid(password)}>
-              {loading ? t(locale, `registerPage.submitting`) : t(locale, `registerPage.submit`)}
+              {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
             </Button>
             <Link to="/login" className={styles[`link`]}>
-              {t(locale, `registerPage.haveAccount`)}
+              {t(`registerPage.haveAccount`)}
             </Link>
           </div>
         </form>
