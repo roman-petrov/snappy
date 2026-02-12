@@ -7,8 +7,21 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createServer as createViteServer } from "vite";
 
+const COOKIE_NAME = `snappy-locale`;
 const ROOT_PLACEHOLDER = /<div id="root">\s*<\/div>/u;
 const PORT = 5173;
+
+type SiteLocaleKey = `en` | `ru`;
+
+const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey => {
+  if (cookieHeader === undefined) return `ru`;
+  const match = cookieHeader
+    .split(`;`)
+    .map(s => s.trim())
+    .find(s => s.startsWith(`${COOKIE_NAME}=`));
+  const value = match?.split(`=`)[1];
+  return value === `en` || value === `ru` ? value : `ru`;
+};
 
 const main = async () => {
   const app = express();
@@ -39,10 +52,13 @@ const main = async () => {
 
   app.get(`/`, async (request, response, next) => {
     try {
+      const locale = localeFromCookie(request.headers.cookie);
       let template = readFileSync(join(root, `src`, `site`, `index.html`), `utf8`);
       template = await vite.transformIndexHtml(request.originalUrl ?? `/`, template);
-      const { render } = (await vite.ssrLoadModule(`/src/site/entry-server.tsx`)) as { render: () => string };
-      const html = render();
+      const { render } = (await vite.ssrLoadModule(`/src/site/entry-server.tsx`)) as {
+        render: (locale: SiteLocaleKey) => string;
+      };
+      const html = render(locale);
       const out = template.replace(ROOT_PLACEHOLDER, `<div id="root">${html}</div>`);
       response.type(`html`).send(out);
     } catch (error) {

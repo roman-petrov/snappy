@@ -1,7 +1,7 @@
 import { Button } from "../shared/Button";
 import { LocaleSwitcher } from "../shared/LocaleSwitcher";
 import { Theme } from "../Theme";
-import { t } from "./Locale";
+import { SiteLocale, t } from "./Locale";
 
 const TelegramIcon = () => <span className="icon-telegram" aria-hidden="true" />;
 
@@ -21,7 +21,7 @@ export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
           <a href="#faq">{t(`nav.faq`)}</a>
           <a href="#start">{t(`nav.start`)}</a>
           <a href="/app">{t(`nav.cabinet`)}</a>
-          <LocaleSwitcher />
+          <LocaleSwitcher getLocale={SiteLocale.getSiteLocale} setLocale={SiteLocale.setSiteLocale} />
         </nav>
       </div>
     </header>

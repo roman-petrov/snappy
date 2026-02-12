@@ -3,16 +3,18 @@ const STORAGE_KEY = `snappy-locale`;
 export type LocaleKey = `en` | `ru`;
 
 const readStored = (): LocaleKey => {
-  if (typeof localStorage === `undefined`) {
-    return `ru`;
-  }
+  if (typeof localStorage === `undefined`) return `ru`;
   const stored = localStorage.getItem(STORAGE_KEY);
   return stored === `en` || stored === `ru` ? stored : `ru`;
 };
 
-export const getLocale = (): LocaleKey => readStored();
+const getLocale = (): LocaleKey => {
+  const locale = readStored();
+  if (typeof document !== `undefined`) document.documentElement.lang = locale;
+  return locale;
+};
 
-export const setLocale = (next: LocaleKey): void => {
+const setLocale = (next: LocaleKey): void => {
   localStorage.setItem(STORAGE_KEY, next);
   if (typeof document !== `undefined`) {
     document.documentElement.lang = next;
@@ -20,6 +22,4 @@ export const setLocale = (next: LocaleKey): void => {
   }
 };
 
-if (typeof document !== `undefined`) {
-  document.documentElement.lang = readStored();
-}
+export const LocaleStore = { getLocale, setLocale };

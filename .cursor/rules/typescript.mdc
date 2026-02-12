@@ -2,7 +2,7 @@
 description:
   TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions, module
   export conventions). Builds on programming rule. Use when writing or reviewing TypeScript code.
-globs: "**/*.ts"
+globs: "**/*.{ts,tsx}"
 alwaysApply: false
 ---
 
@@ -17,7 +17,9 @@ rule adds TypeScript-specific rules only.
 
 ### File naming
 
-Use **PascalCase** for `.ts` files; _exceptions_: `main.ts`, `index.ts`.
+Use **PascalCase** for `.ts` and `.tsx` files. _Exceptions_ (keep as-is): `main`, `index`, `entry-*` (e.g.
+`entry-client.tsx`, `entry-server.tsx`), and the **locales** folder and its files (e.g. `locales/en.ts`,
+`locales/ru.ts`).
 
 ---
 
@@ -170,7 +172,7 @@ export type Timer = ReturnType<typeof Timer>;
 
 ### Project & files
 
-- [ ] Files in PascalCase (except `main.ts`, `index.ts`)
+- [ ] Files in PascalCase (except `main`, `index`, `entry-*`, and `locales/` and its files)
 
 ### Types
 
