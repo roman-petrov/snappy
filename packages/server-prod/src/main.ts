@@ -1,5 +1,3 @@
-/* eslint-disable sonarjs/x-powered-by */
-/* eslint-disable functional/no-expression-statements */
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Database } from "@snappy/db";
@@ -8,6 +6,7 @@ import { Snappy } from "@snappy/snappy";
 import { SnappyBot } from "@snappy/snappy-bot";
 import { YooKassa } from "@snappy/yoo-kassa";
 import express from "express";
+import { existsSync, readFileSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
@@ -18,7 +17,6 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-
 const db = Database(Config.dbUrl);
 const snappy = Snappy({ gigaChatAuthKey: Config.gigaChatAuthKey });
 const yooKassa = YooKassa({ secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId });
@@ -36,6 +34,13 @@ const app = createApp({
 app.disable(`x-powered-by`);
 app.get(`/`, createSsrHandler(root));
 app.use(express.static(root));
+const appIndexPath = join(root, `app`, `index.html`);
+app.get(/^\/app(\/.*)?$/u, (_request, response, next) => {
+  if (!existsSync(appIndexPath)) {
+    return next();
+  }
+  response.type(`html`).send(readFileSync(appIndexPath, `utf8`));
+});
 
 const bot = SnappyBot({
   apiBaseUrl: Config.apiBaseUrl,

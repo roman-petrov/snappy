@@ -41,24 +41,68 @@ const runStep = async (root: string, cmd: string[], label: string) => {
   return 0;
 };
 
-const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `src`, `main.ts`);
-const sitePath = (root: string) => join(root, `packages`, `snappy-site`);
-const distServerPath = (root: string) => join(root, `dist`, `server.js`);
-const vitePort = 5173;
-
-const devSteps: [string[], string][] = [
+const DB_STEPS: [string[], string][] = [
   [[`docker`, `compose`, `up`, `-d`], `Database container`],
   [[`bunx`, `prisma`, `db`, `push`, `--accept-data-loss`], `Schema sync`],
   [[`bunx`, `prisma`, `db`, `seed`], `Seed`],
 ];
 
-const runDev = async (root: string) => {
-  log.section(`🚀 Dev`);
-  for (const [cmd, label] of devSteps) {
+const dbStart = async (root: string): Promise<number> => {
+  for (const [cmd, label] of DB_STEPS) {
     const code = await runStep(root, cmd, label);
     if (code !== 0) {
       return code;
     }
+  }
+
+  return 0;
+};
+
+const dbStop = async (root: string): Promise<void> => {
+  process.stdout.write(`  Stopping database...\n`);
+  await run(root, [`docker`, `compose`, `down`], { silent: true });
+  process.stdout.write(`  Done\n`);
+};
+
+const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `src`, `main.ts`);
+const sitePath = (root: string) => join(root, `packages`, `snappy-site`);
+const distServerPath = (root: string) => join(root, `dist`, `server.js`);
+const vitePort = 5173;
+
+const withShutdown = (root: string, onKill: () => void) => {
+  const state = { done: false };
+
+  const shutdown = async () => {
+    if (state.done) {
+      return;
+    }
+    state.done = true;
+    process.stdout.write(`\nShutdown\n`);
+    onKill();
+    await dbStop(root);
+  };
+  process.on(`SIGINT`, async () => {
+    await shutdown();
+    process.exit(0);
+  });
+  process.on(`SIGTERM`, async () => {
+    await shutdown();
+    process.exit(0);
+  });
+
+  return async (exitCodePromise: Promise<number>) => {
+    const code = await exitCodePromise;
+    await shutdown();
+
+    return code;
+  };
+};
+
+const runDev = async (root: string) => {
+  log.section(`🚀 Dev`);
+  const dbCode = await dbStart(root);
+  if (dbCode !== 0) {
+    return dbCode;
   }
 
   log.section(`🖥️ Servers`);
@@ -72,48 +116,35 @@ const runDev = async (root: string) => {
   });
   log.ok(`http://localhost:${vitePort} 🌐`);
 
-  const shutdownState = { done: false };
-
-  const shutdown = async () => {
-    if (shutdownState.done) {
-      return;
-    }
-
-    shutdownState.done = true;
-    process.stdout.write(`\nShutdown\n`);
+  const runUntilExit = withShutdown(root, () => {
     viteProc.kill();
     serverProc.kill();
-    process.stdout.write(`  Stopping database...\n`);
-
-    await run(root, [`docker`, `compose`, `down`], { silent: true });
-    process.stdout.write(`  Done\n`);
-  };
-
-  process.on(`SIGINT`, async () => {
-    await shutdown();
-    process.exit(0);
-  });
-  process.on(`SIGTERM`, async () => {
-    await shutdown();
-    process.exit(0);
   });
 
   await open(`http://localhost:${vitePort}`);
-  const exitCode = await serverProc.exited;
 
-  await shutdown();
-
-  return exitCode;
+  return runUntilExit(serverProc.exited);
 };
 
 const runProd = async (root: string) => {
+  log.section(`📦 Build`);
   const buildExit = await Build.build(root);
-
   if (buildExit !== 0) {
     return buildExit;
   }
 
-  return run(root, [`node`, distServerPath(root)], { env: undefined });
+  log.section(`🚀 Prod`);
+  const dbCode = await dbStart(root);
+  if (dbCode !== 0) {
+    return dbCode;
+  }
+
+  log.section(`🖥️ Server`);
+
+  const serverProc = Bun.spawn([`node`, distServerPath(root)], { cwd: root, ...spawnOptions });
+  const runUntilExit = withShutdown(root, () => serverProc.kill());
+
+  return runUntilExit(serverProc.exited);
 };
 
 export const RunAll = { runDev, runProd };
