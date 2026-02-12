@@ -1,0 +1,34 @@
+.pill {
+  display: flex;
+  overflow: hidden;
+  border: 1px solid rgb(var(--rgb-accent) / 20%);
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+.pill:hover {
+  border-color: rgb(var(--rgb-accent) / 40%);
+}
+
+.pillLeft {
+  flex-shrink: 0;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-md);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-heading);
+  background: rgb(var(--rgb-accent) / 12%);
+}
+
+.pillRight {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  background: rgb(var(--rgb-accent) / 4%);
+}
+
+@media (width <= 640px) {
+  .pill {
+    flex-direction: column;
+  }
+}
