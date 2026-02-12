@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import "./styles.css";
 import { Theme } from "../Theme";
 import { getToken } from "./Auth";
 import { Dashboard } from "./Dashboard";

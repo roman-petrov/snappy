@@ -63,7 +63,7 @@ const runDev = async (root: string) => {
 
   log.section(`🖥️ Servers`);
 
-  const viteProc = Bun.spawn([`bunx`, `vite`], { cwd: sitePath(root), ...spawnOptions });
+  const viteProc = Bun.spawn([`bun`, `run`, `dev`], { cwd: sitePath(root), ...spawnOptions });
 
   const serverProc = Bun.spawn([`bun`, `--watch`, `run`, serverMainPath(root)], {
     cwd: root,

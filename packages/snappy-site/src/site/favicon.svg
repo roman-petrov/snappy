@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <g transform="translate(16 16) scale(1.35) translate(-18 -16)">
+    <circle cx="23" cy="16" r="5" fill="#22d3ee" />
+    <circle cx="23" cy="16" r="5" fill="#8b5cf6" transform="rotate(120 16 16)" />
+    <circle cx="23" cy="16" r="5" fill="#f87171" transform="rotate(240 16 16)" />
+  </g>
+</svg>

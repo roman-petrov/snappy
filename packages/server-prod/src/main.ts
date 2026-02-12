@@ -3,7 +3,7 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Database } from "@snappy/db";
-import { createApp } from "@snappy/server";
+import { createApp, createSsrHandler } from "@snappy/server";
 import { Snappy } from "@snappy/snappy";
 import { SnappyBot } from "@snappy/snappy-bot";
 import { YooKassa } from "@snappy/yoo-kassa";
@@ -21,10 +21,7 @@ const root = join(import.meta.dirname, `www`);
 
 const db = Database(Config.dbUrl);
 const snappy = Snappy({ gigaChatAuthKey: Config.gigaChatAuthKey });
-const yooKassa = YooKassa({
-  secretKey: Config.yooKassaSecretKey,
-  shopId: Config.yooKassaShopId,
-});
+const yooKassa = YooKassa({ secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId });
 
 const app = createApp({
   botApiKey: Config.botApiKey,
@@ -37,6 +34,7 @@ const app = createApp({
 });
 
 app.disable(`x-powered-by`);
+app.get(`/`, createSsrHandler(root));
 app.use(express.static(root));
 
 const bot = SnappyBot({
