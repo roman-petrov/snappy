@@ -1,8 +1,8 @@
 import styles from "./Pill.module.css";
 
-type Props = { name: string; hint: string };
+interface Props { hint: string; name: string; }
 
-export const Pill = ({ name, hint }: Props) => (
+export const Pill = ({ hint, name }: Props) => (
   <div className={styles[`pill`]}>
     <span className={styles[`pillLeft`]}>{name}</span>
     <span className={styles[`pillRight`]}>{hint}</span>

@@ -1,5 +1,5 @@
-import { LocaleSwitcher } from "../shared/LocaleSwitcher";
 import { Header } from "../shared/Header";
+import { LocaleSwitcher } from "../shared/LocaleSwitcher";
 import { MutedLink } from "../shared/MutedLink";
 import { Theme } from "../Theme";
 import { SiteLocale, t } from "./Locale";

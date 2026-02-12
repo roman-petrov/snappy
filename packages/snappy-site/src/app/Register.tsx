@@ -8,14 +8,14 @@ import { api } from "./Api";
 import { setToken } from "./Auth";
 import { Card } from "./Card";
 import { t } from "./Locale";
+import styles from "./Login.module.css";
 import {
   generatePassword,
+  PASSWORD_MIN_LENGTH,
   passwordRequirementChecks,
   passwordStrength,
   passwordValid,
-  PASSWORD_MIN_LENGTH,
 } from "./Password";
-import styles from "./Login.module.css";
 
 export const Register = () => {
   const [email, setEmail] = useState(``);
@@ -24,12 +24,13 @@ export const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const strength = passwordStrength(password);
+
   const requirements = [
     {
-      label: t(`registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
       check: passwordRequirementChecks[0]!.check,
+      label: t(`registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
     },
-    { label: t(`registerPage.requirementLetters`), check: passwordRequirementChecks[1]!.check },
+    { check: passwordRequirementChecks[1]!.check, label: t(`registerPage.requirementLetters`) },
   ];
 
   const submit = async (e: React.FormEvent) => {
@@ -37,14 +38,16 @@ export const Register = () => {
     setError(``);
     if (!passwordValid(password)) {
       setError(t(`registerPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
+
       return;
     }
     setLoading(true);
     try {
       const res = await api.register(email.trim(), password);
-      const data = (await res.json()) as { token?: string; error?: string };
+      const data = (await res.json()) as { error?: string; token?: string; };
       if (!res.ok) {
         setError(data.error ?? t(`registerPage.errorRegister`));
+
         return;
       }
       if (data.token) {
@@ -60,7 +63,7 @@ export const Register = () => {
 
   return (
     <div className={styles[`authPage`]}>
-      <Card glass narrow className={styles[`authPanel`]}>
+      <Card className={styles[`authPanel`]} glass narrow>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`registerPage.title`)}</h1>
           <div className={styles[`field`]}>
@@ -68,30 +71,30 @@ export const Register = () => {
               {t(`registerPage.email`)}
             </label>
             <input
-              id="reg-email"
-              type="email"
-              className={styles[`input`]}
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
               autoComplete="email"
+              className={styles[`input`]}
+              id="reg-email"
+              onChange={e => { setEmail(e.target.value); }}
+              required
+              type="email"
+              value={email}
             />
           </div>
           <div className={styles[`passwordBlock`]}>
             <PasswordInput
+              autoComplete="new-password"
+              disabled={loading}
               id="reg-password"
               label={t(`registerPage.password`)}
-              value={password}
-              onChange={setPassword}
-              autoComplete="new-password"
-              required
               minLength={PASSWORD_MIN_LENGTH}
-              disabled={loading}
+              onChange={setPassword}
+              required
+              value={password}
             />
             <div className={styles[`requirements`]}>
-              {requirements.map(({ label, check }) => (
-                <span key={label} className={check(password) ? styles[`requirementMet`] : styles[`requirement`]}>
-                  {check(password) ? "✓ " : ""}
+              {requirements.map(({ check, label }) => (
+                <span className={check(password) ? styles[`requirementMet`] : styles[`requirement`]} key={label}>
+                  {check(password) ? `✓ ` : ``}
                   {label}
                 </span>
               ))}
@@ -105,30 +108,30 @@ export const Register = () => {
                   style={{
                     width:
                       password.length === 0
-                        ? "0%"
-                        : strength === "weak"
-                          ? "33%"
-                          : strength === "medium"
-                            ? "66%"
-                            : "100%",
+                        ? `0%`
+                        : strength === `weak`
+                          ? `33%`
+                          : strength === `medium`
+                            ? `66%`
+                            : `100%`,
                   }}
                 />
               </div>
               <span className={styles[`strengthText`]}>
-                {strength === "weak"
+                {strength === `weak`
                   ? t(`registerPage.strengthWeak`)
-                  : strength === "medium"
+                  : strength === `medium`
                     ? t(`registerPage.strengthMedium`)
                     : t(`registerPage.strengthStrong`)}
               </span>
             </div>
-            <Button type="button" onClick={() => setPassword(generatePassword())} disabled={loading}>
+            <Button disabled={loading} onClick={() => { setPassword(generatePassword()); }} type="button">
               {t(`registerPage.generatePassword`)}
             </Button>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
-            <Button type="submit" primary disabled={loading || !passwordValid(password)}>
+            <Button disabled={loading || !passwordValid(password)} primary type="submit">
               {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
             </Button>
             <AccentLink to="/login">{t(`registerPage.haveAccount`)}</AccentLink>

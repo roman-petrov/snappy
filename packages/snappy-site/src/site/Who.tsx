@@ -10,10 +10,10 @@ const WHO = [
 ] as const;
 
 export const Who = () => (
-  <Section id="who" title={t(`who.title`)} lead={t(`who.lead`)}>
+  <Section id="who" lead={t(`who.lead`)} title={t(`who.title`)}>
     <div>
       {WHO.map(({ icon, key }) => (
-        <WhoItem key={key} icon={icon} title={t(`${key}.title`)} description={t(`${key}.desc`)} />
+        <WhoItem description={t(`${key}.desc`)} icon={icon} key={key} title={t(`${key}.title`)} />
       ))}
     </div>
   </Section>

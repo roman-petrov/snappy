@@ -1,22 +1,15 @@
-import { t } from "./Locale";
-import { FaqItem } from "./FaqItem";
-import { Section } from "./Section";
 import styles from "./Faq.module.css";
+import { FaqItem } from "./FaqItem";
+import { t } from "./Locale";
+import { Section } from "./Section";
 
-const FAQ = [
-  `faq.free`,
-  `faq.registration`,
-  `faq.languages`,
-  `faq.privacy`,
-  `faq.length`,
-  `faq.difference`,
-] as const;
+const FAQ = [`faq.free`, `faq.registration`, `faq.languages`, `faq.privacy`, `faq.length`, `faq.difference`] as const;
 
 export const Faq = () => (
-  <Section id="faq" title={t(`faq.title`)} lead={t(`faq.lead`)}>
+  <Section id="faq" lead={t(`faq.lead`)} title={t(`faq.title`)}>
     <dl className={styles[`list`]}>
-      {FAQ.map((key) => (
-        <FaqItem key={key} question={t(`${key}.q`)} answer={t(`${key}.a`)} />
+      {FAQ.map(key => (
+        <FaqItem answer={t(`${key}.a`)} key={key} question={t(`${key}.q`)} />
       ))}
     </dl>
   </Section>

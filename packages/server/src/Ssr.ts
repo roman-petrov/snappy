@@ -1,4 +1,5 @@
 import type { RequestHandler } from "express";
+
 import { Ssr } from "@snappy/snappy-site/ssr";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -20,6 +21,7 @@ export const createSsrHandler = (clientRoot: string): RequestHandler => {
       const render = typeof module_.render === `function` ? module_.render : undefined;
       if (render === undefined) {
         next(new Error(`SSR entry did not export render`));
+
         return;
       }
       response

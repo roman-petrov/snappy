@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements */
+ 
 import { Config } from "@snappy/config";
 import { Database } from "@snappy/db";
 import { createApp } from "@snappy/server";
@@ -9,10 +9,7 @@ import http from "node:http";
 
 const db = Database(Config.dbUrl);
 const snappy = Snappy({ gigaChatAuthKey: Config.gigaChatAuthKey });
-const yooKassa = YooKassa({
-  secretKey: Config.yooKassaSecretKey,
-  shopId: Config.yooKassaShopId,
-});
+const yooKassa = YooKassa({ secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId });
 
 const app = createApp({
   allowCorsOrigin: `http://localhost:5173`,
@@ -26,6 +23,7 @@ const app = createApp({
 });
 
 const server = http.createServer(app);
+
 const bot = SnappyBot({
   apiBaseUrl: Config.apiBaseUrl,
   apiKey: Config.botApiKey,

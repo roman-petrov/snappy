@@ -6,8 +6,8 @@ import { LocaleSwitcher } from "../shared/LocaleSwitcher";
 import { MutedLink } from "../shared/MutedLink";
 import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
-import { t } from "./Locale";
 import styles from "./Layout.module.css";
+import { t } from "./Locale";
 
 export const Layout = () => {
   const token = getToken();
@@ -18,12 +18,12 @@ export const Layout = () => {
   return (
     <div className={styles[`wrap`]}>
       <Header
-        logoTo="/"
         logoOnClick={e => {
           e.preventDefault();
           Theme.toggle();
         }}
         logoTitle={t(`themeToggle`)}
+        logoTo="/"
       >
         {isAuth ? (
           <Button

@@ -1,11 +1,12 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Request, Response } from "express";
 
-import { Storage } from "../Storage";
 import type { AppContext } from "../Types";
 
-const remaining = (ctx: AppContext) => async (req: Request, res: Response) => {
-  const userId = (req as Request & { userId?: number }).userId;
+import { Storage } from "../Storage";
+
+const remaining = (context: AppContext) => async (request: Request, res: Response) => {
+  const {userId} = (request as Request & { userId?: number });
 
   if (userId === undefined) {
     res.status(401).json({ error: `Unauthorized` });
@@ -13,7 +14,7 @@ const remaining = (ctx: AppContext) => async (req: Request, res: Response) => {
     return;
   }
 
-  const count = await Storage.remainingByUserId(ctx.db, userId, ctx.freeRequestLimit);
+  const count = await Storage.remainingByUserId(context.db, userId, context.freeRequestLimit);
 
   res.json({ remaining: count });
 };

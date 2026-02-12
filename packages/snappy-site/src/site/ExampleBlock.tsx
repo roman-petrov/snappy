@@ -1,15 +1,10 @@
 import type { ReactNode } from "react";
+
 import styles from "./ExampleBlock.module.css";
 
-type Props = {
-  label: string;
-  beforeLabel: string;
-  afterLabel: string;
-  before: string;
-  after: ReactNode;
-};
+interface Props { after: ReactNode; afterLabel: string; before: string; beforeLabel: string; label: string; }
 
-export const ExampleBlock = ({ label, beforeLabel, afterLabel, before, after }: Props) => (
+export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: Props) => (
   <div className={styles[`block`]}>
     <p className={styles[`label`]}>{label}</p>
     <div className={styles[`row`]}>
@@ -17,7 +12,7 @@ export const ExampleBlock = ({ label, beforeLabel, afterLabel, before, after }: 
         <span className={styles[`panelTitle`]}>{beforeLabel}</span>
         <p>{before}</p>
       </div>
-      <span className={styles[`arrow`]} aria-hidden="true">
+      <span aria-hidden="true" className={styles[`arrow`]}>
         →
       </span>
       <div className={`${styles[`panel`]} ${styles[`after`]}`}>

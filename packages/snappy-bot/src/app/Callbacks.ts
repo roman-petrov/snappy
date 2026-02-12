@@ -63,12 +63,7 @@ const register = (bot: Bot, config: CallbacksConfig) => {
       await context.send(t(localeKey, `features.processing`));
 
       try {
-        const processedText = await config.storage.process(
-          telegramId,
-          text,
-          feature,
-          telegramUsername,
-        );
+        const processedText = await config.storage.process(telegramId, text, feature, telegramUsername);
 
         await context.send(t(localeKey, `features.result`, { text: processedText }));
 

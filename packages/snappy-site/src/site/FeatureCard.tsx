@@ -1,8 +1,8 @@
 import styles from "./FeatureCard.module.css";
 
-type Props = { icon: string; title: string; description: string };
+interface Props { description: string; icon: string; title: string; }
 
-export const FeatureCard = ({ icon, title, description }: Props) => (
+export const FeatureCard = ({ description, icon, title }: Props) => (
   <div className={styles[`card`]}>
     <span className={styles[`cardIcon`]}>{icon}</span>
     <h3>{title}</h3>

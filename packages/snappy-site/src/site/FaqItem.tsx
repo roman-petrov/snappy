@@ -1,8 +1,8 @@
 import styles from "./FaqItem.module.css";
 
-type Props = { question: string; answer: string };
+interface Props { answer: string; question: string; }
 
-export const FaqItem = ({ question, answer }: Props) => (
+export const FaqItem = ({ answer, question }: Props) => (
   <div className={styles[`item`]}>
     <dt>{question}</dt>
     <dd>{answer}</dd>

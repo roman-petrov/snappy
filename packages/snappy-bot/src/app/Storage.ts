@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements */
+ 
 import type { FeatureType } from "@snappy/snappy";
 
 const headers = (apiKey: string) => ({ "Content-Type": `application/json`, "X-Bot-Api-Key": apiKey });
@@ -10,7 +10,7 @@ const remainingRequests = async (
   _freeRequestLimit: number,
   _telegramUsername?: string,
 ): Promise<number> => {
-  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/user/remaining?telegramId=${telegramId}`;
+  const url = `${apiBaseUrl.replace(/\/$/u, ``)}/api/user/remaining?telegramId=${telegramId}`;
   const res = await fetch(url, { headers: headers(apiKey), method: `GET` });
 
   if (!res.ok) {
@@ -42,7 +42,8 @@ const process = async (
   feature: FeatureType,
   _telegramUsername?: string,
 ): Promise<string> => {
-  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/process`;
+  const url = `${apiBaseUrl.replace(/\/$/u, ``)}/api/process`;
+
   const res = await fetch(url, {
     body: JSON.stringify({ feature, telegramId, text }),
     headers: headers(apiKey),
@@ -50,8 +51,8 @@ const process = async (
   });
 
   if (!res.ok) {
-    const err = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(err.error ?? `Process failed`);
+    const error = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(error.error ?? `Process failed`);
   }
 
   const data = (await res.json()) as { text?: string };
@@ -60,22 +61,18 @@ const process = async (
 };
 
 const fetchPaymentUrl = async (apiBaseUrl: string, apiKey: string, telegramId: number): Promise<string> => {
-  const url = `${apiBaseUrl.replace(/\/$/, ``)}/api/premium/payment-url`;
-  const res = await fetch(url, {
-    body: JSON.stringify({ telegramId }),
-    headers: headers(apiKey),
-    method: `POST`,
-  });
+  const url = `${apiBaseUrl.replace(/\/$/u, ``)}/api/premium/payment-url`;
+  const res = await fetch(url, { body: JSON.stringify({ telegramId }), headers: headers(apiKey), method: `POST` });
 
   if (!res.ok) {
-    const err = (await res.json().catch(() => ({}))) as { error?: string };
-    throw new Error(err.error ?? `Payment failed`);
+    const error = (await res.json().catch(() => ({}))) as { error?: string };
+    throw new Error(error.error ?? `Payment failed`);
   }
 
   const data = (await res.json()) as { url?: string };
 
   if (typeof data.url !== `string`) {
-    throw new Error(`No payment URL`);
+    throw new TypeError(`No payment URL`);
   }
 
   return data.url;
@@ -87,12 +84,12 @@ export const Storage = (config: StorageConfig) => {
   const { apiBaseUrl, apiKey } = config;
 
   return {
-    canMakeRequest: (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
+    canMakeRequest: async (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
       canMakeRequest(apiBaseUrl, apiKey, telegramId, freeRequestLimit, telegramUsername),
-    paymentUrl: (telegramId: number) => fetchPaymentUrl(apiBaseUrl, apiKey, telegramId),
-    process: (telegramId: number, text: string, feature: FeatureType, telegramUsername?: string) =>
+    paymentUrl: async (telegramId: number) => fetchPaymentUrl(apiBaseUrl, apiKey, telegramId),
+    process: async (telegramId: number, text: string, feature: FeatureType, telegramUsername?: string) =>
       process(apiBaseUrl, apiKey, telegramId, text, feature, telegramUsername),
-    remainingRequests: (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
+    remainingRequests: async (telegramId: number, freeRequestLimit: number, telegramUsername?: string) =>
       remainingRequests(apiBaseUrl, apiKey, telegramId, freeRequestLimit, telegramUsername),
   };
 };

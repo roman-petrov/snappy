@@ -5,8 +5,8 @@ import type { AppContext } from "../Types";
 
 const premiumTitle = `Snappy Bot - Premium подписка (30 дней)`;
 
-const paymentUrl = (ctx: AppContext) => async (req: Request, res: Response) => {
-  const userId = (req as Request & { userId?: number }).userId;
+const paymentUrl = (context: AppContext) => async (request: Request, res: Response) => {
+  const {userId} = (request as Request & { userId?: number });
 
   if (userId === undefined) {
     res.status(401).json({ error: `Unauthorized` });
@@ -15,7 +15,7 @@ const paymentUrl = (ctx: AppContext) => async (req: Request, res: Response) => {
   }
 
   try {
-    const url = await ctx.yooKassa.paymentUrl(userId, ctx.premiumPrice, premiumTitle);
+    const url = await context.yooKassa.paymentUrl(userId, context.premiumPrice, premiumTitle);
 
     res.json({ url });
   } catch {

@@ -3,13 +3,14 @@ import type { Request, Response } from "express";
 
 import { type FeatureType, Prompts } from "@snappy/snappy";
 
-import { Storage } from "../Storage";
 import type { AppContext } from "../Types";
+
+import { Storage } from "../Storage";
 
 const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
 
-const processHandler = (ctx: AppContext) => async (req: Request, res: Response) => {
-  const userId = (req as Request & { userId?: number }).userId;
+const processHandler = (context: AppContext) => async (request: Request, res: Response) => {
+  const {userId} = (request as Request & { userId?: number });
 
   if (userId === undefined) {
     res.status(401).json({ error: `Unauthorized` });
@@ -17,7 +18,7 @@ const processHandler = (ctx: AppContext) => async (req: Request, res: Response) 
     return;
   }
 
-  const { text, feature } = (req.body as { text?: string; feature?: string }) ?? {};
+  const { feature, text } = (request.body as { feature?: string; text?: string; }) ?? {};
 
   if (typeof text !== `string` || text.trim() === `` || typeof feature !== `string` || !isFeatureType(feature)) {
     res.status(400).json({ error: `text and feature required; feature must be valid` });
@@ -25,7 +26,7 @@ const processHandler = (ctx: AppContext) => async (req: Request, res: Response) 
     return;
   }
 
-  const can = await Storage.canMakeRequestByUserId(ctx.db, userId, ctx.freeRequestLimit);
+  const can = await Storage.canMakeRequestByUserId(context.db, userId, context.freeRequestLimit);
 
   if (!can) {
     res.status(429).json({ error: `Request limit reached` });
@@ -34,9 +35,9 @@ const processHandler = (ctx: AppContext) => async (req: Request, res: Response) 
   }
 
   try {
-    const result = await ctx.snappy.processText(text.trim(), feature);
+    const result = await context.snappy.processText(text.trim(), feature);
 
-    await Storage.incrementRequestByUserId(ctx.db, userId);
+    await Storage.incrementRequestByUserId(context.db, userId);
 
     res.json({ text: result });
   } catch {

@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
+
 import { Link } from "react-router-dom";
 
 import styles from "./MutedLink.module.css";
 
-type Props = { href?: string; to?: string; children: ReactNode };
+interface Props { children: ReactNode; href?: string; to?: string; }
 
-export const MutedLink = ({ href, to, children }: Props) => {
+export const MutedLink = ({ children, href, to }: Props) => {
   const className = styles[`link`];
   if (to !== undefined) {
     return (
@@ -14,6 +15,7 @@ export const MutedLink = ({ href, to, children }: Props) => {
       </Link>
     );
   }
+
   return (
     <a className={className} href={href ?? `#`}>
       {children}

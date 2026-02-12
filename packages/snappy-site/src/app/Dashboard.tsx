@@ -40,6 +40,7 @@ export const Dashboard = () => {
       const data = (await res.json()) as { error?: string; text?: string };
       if (!res.ok) {
         setError(data.error ?? t(`dashboard.error`));
+
         return;
       }
       setResult(data.text ?? ``);
@@ -75,12 +76,12 @@ export const Dashboard = () => {
         <Card>
           <div className={styles[`balanceRow`]}>
             <p className={styles[`balance`]}>
-              <span className={styles[`balanceIcon`]} aria-hidden>
+              <span aria-hidden className={styles[`balanceIcon`]}>
                 🪙
               </span>
               {t(`dashboard.freeRequests`)}: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
             </p>
-            <Button primary onClick={() => openPremium()}>
+            <Button onClick={async () => openPremium()} primary>
               {t(`dashboard.getPremium`)}
             </Button>
           </div>
@@ -97,10 +98,10 @@ export const Dashboard = () => {
                 {t(`dashboard.text`)}
               </label>
               <textarea
-                id="dashboard-text"
                 className={styles[`textarea`]}
                 disabled={loading}
-                onChange={e => setText(e.target.value)}
+                id="dashboard-text"
+                onChange={e => { setText(e.target.value); }}
                 placeholder={t(`dashboard.textPlaceholder`)}
                 value={text}
               />
@@ -110,10 +111,10 @@ export const Dashboard = () => {
                 {t(`dashboard.action`)}
               </label>
               <select
-                id="dashboard-feature"
                 className={styles[`select`]}
                 disabled={loading}
-                onChange={e => setFeature(e.target.value)}
+                id="dashboard-feature"
+                onChange={e => { setFeature(e.target.value); }}
                 value={feature}
               >
                 {featureKeys.map(k => (
@@ -132,14 +133,14 @@ export const Dashboard = () => {
                 <div className={styles[`resultHeader`]}>
                   <span className={styles[`resultLabel`]}>{t(`dashboard.result`)}</span>
                   <button
-                    type="button"
                     className={styles[`copyBtn`]}
                     onClick={() => {
                       void navigator.clipboard.writeText(result).then(() => {
                         setCopied(true);
-                        setTimeout(() => setCopied(false), 2000);
+                        setTimeout(() => { setCopied(false); }, 2000);
                       });
                     }}
+                    type="button"
                   >
                     {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
                   </button>

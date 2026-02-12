@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { AccentLink } from "../shared/AccentLink";
 import { Button } from "../shared/Button";
 import { api } from "./Api";
@@ -21,6 +22,7 @@ export const ForgotPassword = () => {
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };
         setError(data.error ?? t(`forgotPage.error`));
+
         return;
       }
       setSent(true);
@@ -34,7 +36,7 @@ export const ForgotPassword = () => {
   if (sent) {
     return (
       <div className={styles[`authPage`]}>
-        <Card glass narrow className={styles[`authPanel`]}>
+        <Card className={styles[`authPanel`]} glass narrow>
           <h1 className={styles[`title`]}>{t(`forgotPage.checkEmail`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.checkEmailLead`)}</p>
           <div className={styles[`actions`]}>
@@ -47,7 +49,7 @@ export const ForgotPassword = () => {
 
   return (
     <div className={styles[`authPage`]}>
-      <Card glass narrow className={styles[`authPanel`]}>
+      <Card className={styles[`authPanel`]} glass narrow>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>{t(`forgotPage.title`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.lead`)}</p>
@@ -56,18 +58,18 @@ export const ForgotPassword = () => {
               {t(`forgotPage.email`)}
             </label>
             <input
-              id="forgot-email"
-              type="email"
-              className={styles[`input`]}
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
               autoComplete="email"
+              className={styles[`input`]}
+              id="forgot-email"
+              onChange={e => { setEmail(e.target.value); }}
+              required
+              type="email"
+              value={email}
             />
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
-            <Button type="submit" primary disabled={loading}>
+            <Button disabled={loading} primary type="submit">
               {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             </Button>
             <AccentLink to="/login">{t(`forgotPage.loginLink`)}</AccentLink>

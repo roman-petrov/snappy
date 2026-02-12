@@ -1,8 +1,8 @@
 import styles from "./WhoItem.module.css";
 
-type Props = { icon: string; title: string; description: string };
+interface Props { description: string; icon: string; title: string; }
 
-export const WhoItem = ({ icon, title, description }: Props) => (
+export const WhoItem = ({ description, icon, title }: Props) => (
   <div className={styles[`item`]}>
     <span className={styles[`icon`]}>{icon}</span>
     <h3>{title}</h3>

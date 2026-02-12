@@ -1,4 +1,5 @@
 import type { Fog as FogInstance } from "./Fog";
+
 import { Fog } from "./Fog";
 
 const STORAGE_KEY = `snappy_theme`;
@@ -16,7 +17,6 @@ const current = (): Theme => {
 };
 
 let afterChange: (() => void) | undefined;
-
 const fogRef: { current: FogInstance | undefined } = { current: undefined };
 
 const syncFog = (): void => {
@@ -24,10 +24,10 @@ const syncFog = (): void => {
     fogRef.current.stop();
     fogRef.current = undefined;
   }
-  if (document.documentElement.dataset[`theme`] === `light`) return;
-  const el = document.querySelector(`#fog-bg`);
-  if (el instanceof HTMLElement) {
-    fogRef.current = Fog(el, FOG_OPTIONS);
+  if (document.documentElement.dataset[`theme`] === `light`) {return;}
+  const element = document.querySelector(`#fog-bg`);
+  if (element instanceof HTMLElement) {
+    fogRef.current = Fog(element, FOG_OPTIONS);
     fogRef.current.start();
   }
 };

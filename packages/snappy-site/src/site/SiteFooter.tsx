@@ -5,10 +5,11 @@ export const SiteFooter = () => (
   <footer className={styles[`footer`]}>
     <div className={styles[`inner`]}>
       <span className={styles[`logo`]}>
-        <img src="/favicon.svg" alt="" className={styles[`logoIcon`]} width={20} height={20} aria-hidden="true" /> Snappy
+        <img alt="" aria-hidden="true" className={styles[`logoIcon`]} height={20} src="/favicon.svg" width={20} />{` `}
+        Snappy
       </span>
       <p>{t(`footer.tagline`)}</p>
-      <a href="https://t.me/sn4ppy_bot" target="_blank" rel="noopener">
+      <a href="https://t.me/sn4ppy_bot" rel="noopener" target="_blank">
         @sn4ppy_bot
       </a>
     </div>
