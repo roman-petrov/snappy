@@ -4,8 +4,11 @@
  */
 import express from "express";
 import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
+
+const root = dirname(fileURLToPath(import.meta.url));
 
 const COOKIE_NAME = `snappy-locale`;
 const ROOT_PLACEHOLDER = /<div id="root">\s*<\/div>/u;
@@ -40,14 +43,9 @@ const main = async () => {
   const app = express();
   const vite = await createViteServer({ appType: `custom`, server: { middlewareMode: true } });
 
-  const root = import.meta.dirname;
-
-  app.get(`/favicon.svg`, (_request, response) => response.sendFile(join(root, `src`, `site`, `favicon.svg`)));
-
-  const appDir = join(root, `src`, `app`);
-  app.get(`/app/favicon.svg`, (_request, response) =>
-    response.type(`image/svg+xml`).sendFile(join(appDir, `favicon.svg`)),
-  );
+  const faviconPath = join(root, `favicon.svg`);
+  app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
+  app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
   app.get(/^\/app(\/.*)?$/u, (request, response, next) => {
     if (/\.[a-z0-9]+$/i.test(request.path)) return next();

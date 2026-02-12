@@ -26,7 +26,7 @@ export const Layout = () => {
               Theme.toggle();
             }}
           >
-            <img src="favicon.svg" alt="" className={styles[`logoIcon`]} aria-hidden="true" />
+            <img src="/favicon.svg" alt="" className={styles[`logoIcon`]} aria-hidden="true" />
             Snappy
           </Link>
           <nav className={styles[`nav`]}>
