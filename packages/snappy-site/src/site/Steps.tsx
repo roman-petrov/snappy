@@ -1,8 +1,8 @@
 import styles from "./Steps.module.css";
 
-interface Props { items: string[] }
+export type StepsProps = { items: string[] };
 
-export const Steps = ({ items }: Props) => (
+export const Steps = ({ items }: StepsProps) => (
   <div className={styles[`timeline`]}>
     <ol className={styles[`steps`]}>
       {items.map((text, index) => (

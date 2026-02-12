@@ -1,8 +1,7 @@
 import { Button } from "../shared/Button";
+import { TelegramIcon } from "../shared/TelegramIcon";
 import styles from "./CtaBlock.module.css";
 import { t } from "./Locale";
-
-const TelegramIcon = () => <span aria-hidden="true" className="icon-telegram" />;
 
 export const CtaBlock = () => (
   <section className={styles[`block`]}>

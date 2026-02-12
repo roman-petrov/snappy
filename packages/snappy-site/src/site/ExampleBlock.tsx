@@ -2,9 +2,15 @@ import type { ReactNode } from "react";
 
 import styles from "./ExampleBlock.module.css";
 
-interface Props { after: ReactNode; afterLabel: string; before: string; beforeLabel: string; label: string; }
+export type ExampleBlockProps = {
+  after: ReactNode;
+  afterLabel: string;
+  before: string;
+  beforeLabel: string;
+  label: string;
+};
 
-export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: Props) => (
+export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: ExampleBlockProps) => (
   <div className={styles[`block`]}>
     <p className={styles[`label`]}>{label}</p>
     <div className={styles[`row`]}>

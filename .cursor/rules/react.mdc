@@ -25,8 +25,13 @@ Follow the **programming** and **typescript** rules. This rule adds React-specif
 
 ## View/State pattern
 
-Split each React component into **entry**, **state**, and **view** so that logic and UI are separated and the view stays
-presentational.
+Apply this pattern to components that have **logic or state** (hooks, derived values, event handlers, conditionals). If
+a component has no logic/state or it is very simple (e.g. purely presentational, a single expression), the View/State
+split is not required — keep it as a single component file. **Do not use View/State when the state hook would not use
+the component’s props** (e.g. it only returns static or globally derived data); keep such components in a single file.
+
+When the pattern applies, split the component into **entry**, **state**, and **view** so that logic and UI are separated
+and the view stays presentational.
 
 - **Entry** (`ComponentName.tsx`): Public API. Declares props, imports the state hook and the view; renders
   `<ComponentView {...useComponentState(props)} />`. No JSX layout here.
@@ -39,8 +44,16 @@ presentational.
 
 Rules:
 
-- Entry file does not contain layout JSX; it only composes state and view.
-- View never uses hooks; it only receives props and renders.
+- Entry file does not contain layout JSX; it only composes state and view. **No logic** (no conditionals, no derived
+  values, no hooks).
+- View never uses hooks; it only receives props and renders. **No logic** — no conditionals, no computed values, no
+  class-name building; only JSX that uses the props as given by state.
+- **All logic lives only in the State file**: conditionals, derived values, event handlers, hooks, and any decision of
+  "what to pass" or "how to compute" must be in the state hook. The entry and view files must be logic-free.
+- **State file must not contain JSX** — the state hook only returns data (props for the view); all markup lives in the
+  view file.
+- **CSS module styles** — import styles from CSS modules (e.g. `ComponentName.module.css`) only in the **View** file;
+  the state and entry files must not import CSS modules.
 - View props type is always `ReturnType<typeof useComponentState>`, not a hand-written duplicate.
 - State hook returns a single object that is spread into the view (`<View {...useState(props)} />`).
 

@@ -1,8 +1,7 @@
 import { Button } from "../shared/Button";
+import { TelegramIcon } from "../shared/TelegramIcon";
 import styles from "./Hero.module.css";
 import { t } from "./Locale";
-
-const TelegramIcon = () => <span aria-hidden="true" className="icon-telegram" />;
 
 export const Hero = () => (
   <section className={styles[`hero`]}>

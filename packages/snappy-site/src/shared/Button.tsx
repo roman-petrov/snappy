@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import styles from "./Button.module.css";
 
-interface Props {
+export type ButtonProps = {
   children: ReactNode;
   className?: string;
   disabled?: boolean;
@@ -11,7 +11,7 @@ interface Props {
   onClick?: () => void;
   primary?: boolean;
   type?: `button` | `submit`;
-}
+};
 
 export const Button = ({
   children,
@@ -22,26 +22,24 @@ export const Button = ({
   onClick,
   primary = false,
   type = `button`,
-}: Props) => {
+}: ButtonProps) => {
   const classNames = [styles[`root`], primary ? styles[`primary`] : ``, large ? styles[`large`] : ``, className]
     .filter(Boolean)
     .join(` `);
 
-  if (href !== undefined) {
-    return (
-      <a
-        className={classNames}
-        href={href}
-        onClick={onClick}
-        rel={href.startsWith(`http`) ? `noopener` : undefined}
-        target={href.startsWith(`http`) ? `_blank` : undefined}
-      >
-        {children}
-      </a>
-    );
-  }
+  const isLink = href !== undefined;
 
-  return (
+  return isLink && href !== undefined ? (
+    <a
+      className={classNames}
+      href={href}
+      onClick={onClick}
+      rel={href.startsWith(`http`) ? `noopener` : undefined}
+      target={href.startsWith(`http`) ? `_blank` : undefined}
+    >
+      {children}
+    </a>
+  ) : (
     <button className={classNames} disabled={disabled} onClick={onClick} type={type}>
       {children}
     </button>

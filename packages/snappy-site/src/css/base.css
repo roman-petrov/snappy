@@ -57,12 +57,3 @@ a {
     border-radius: 4px;
   }
 }
-
-.icon-telegram {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-inline-end: var(--space-2);
-  vertical-align: middle;
-  background: var(--icon-telegram) center / contain no-repeat;
-}

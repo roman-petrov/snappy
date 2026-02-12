@@ -5,7 +5,8 @@ export const SiteFooter = () => (
   <footer className={styles[`footer`]}>
     <div className={styles[`inner`]}>
       <span className={styles[`logo`]}>
-        <img alt="" aria-hidden="true" className={styles[`logoIcon`]} height={20} src="/favicon.svg" width={20} />{` `}
+        <img alt="" aria-hidden="true" className={styles[`logoIcon`]} height={20} src="/favicon.svg" width={20} />
+        {` `}
         Snappy
       </span>
       <p>{t(`footer.tagline`)}</p>

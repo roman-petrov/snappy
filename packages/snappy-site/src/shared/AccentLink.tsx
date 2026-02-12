@@ -4,19 +4,16 @@ import { Link } from "react-router-dom";
 
 import styles from "./AccentLink.module.css";
 
-interface Props { children: ReactNode; href?: string; to?: string; }
+export type AccentLinkProps = { children: ReactNode; href?: string; to?: string };
 
-export const AccentLink = ({ children, href, to }: Props) => {
+export const AccentLink = ({ children, href, to }: AccentLinkProps) => {
   const className = styles[`link`];
-  if (to !== undefined) {
-    return (
-      <Link className={className} to={to} viewTransition>
-        {children}
-      </Link>
-    );
-  }
 
-  return (
+  return to !== undefined ? (
+    <Link className={className} to={to} viewTransition>
+      {children}
+    </Link>
+  ) : (
     <a className={className} href={href ?? `#`}>
       {children}
     </a>
