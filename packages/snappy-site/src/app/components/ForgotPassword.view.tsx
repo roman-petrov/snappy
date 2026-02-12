@@ -20,7 +20,7 @@ export const ForgotPasswordView = ({
   if (sent) {
     return (
       <div className={styles[`authPage`]}>
-        <Card className={styles[`authPanel`]} glass narrow>
+        <Card>
           <h1 className={styles[`title`]}>{t(`forgotPage.checkEmail`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.checkEmailLead`)}</p>
           <div className={styles[`actions`]}>
@@ -33,7 +33,7 @@ export const ForgotPasswordView = ({
 
   return (
     <div className={styles[`authPage`]}>
-      <Card className={styles[`authPanel`]} glass narrow>
+      <Card>
         <form className={styles[`form`]} onSubmit={onSubmit}>
           <h1 className={styles[`title`]}>{t(`forgotPage.title`)}</h1>
           <p className={styles[`authLead`]}>{t(`forgotPage.lead`)}</p>

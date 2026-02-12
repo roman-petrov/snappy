@@ -22,7 +22,7 @@ export const ResetPasswordView = ({
   if (token === ``) {
     return (
       <div className={styles[`authPage`]}>
-        <Card className={styles[`authPanel`]} glass narrow>
+        <Card>
           <h1 className={styles[`title`]}>{t(`resetPage.invalidLink`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.invalidLinkLead`)}</p>
           <div className={styles[`actions`]}>
@@ -36,7 +36,7 @@ export const ResetPasswordView = ({
   if (done) {
     return (
       <div className={styles[`authPage`]}>
-        <Card className={styles[`authPanel`]} glass narrow>
+        <Card>
           <h1 className={styles[`title`]}>{t(`resetPage.done`)}</h1>
           <p className={styles[`authLead`]}>{t(`resetPage.doneLead`)}</p>
           <div className={styles[`actions`]}>
@@ -49,7 +49,7 @@ export const ResetPasswordView = ({
 
   return (
     <div className={styles[`authPage`]}>
-      <Card className={styles[`authPanel`]} glass narrow>
+      <Card>
         <form className={styles[`form`]} onSubmit={onSubmit}>
           <h1 className={styles[`title`]}>{t(`resetPage.title`)}</h1>
           <PasswordInput

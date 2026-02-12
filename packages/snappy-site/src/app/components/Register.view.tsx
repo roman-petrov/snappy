@@ -28,7 +28,7 @@ export const RegisterView = ({
   strengthText,
 }: RegisterViewProps) => (
   <div className={styles[`authPage`]}>
-    <Card className={styles[`authPanel`]} glass narrow>
+    <Card>
       <form className={styles[`form`]} onSubmit={onSubmit}>
         <h1 className={styles[`title`]}>{t(`registerPage.title`)}</h1>
         <Input

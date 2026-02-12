@@ -22,7 +22,7 @@ export const LoginView = ({
   remember,
 }: LoginViewProps) => (
   <div className={styles[`authPage`]}>
-    <Card className={styles[`authPanel`]} glass narrow>
+    <Card>
       <form className={styles[`form`]} onSubmit={onSubmit}>
         <h1 className={styles[`title`]}>{t(`loginPage.title`)}</h1>
         <Input
