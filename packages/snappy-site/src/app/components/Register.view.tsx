@@ -4,6 +4,7 @@ import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
 import { Input } from "../../shared/Input";
 import { PasswordInput } from "../../shared/PasswordInput";
+import { PasswordStrength } from "../../shared/PasswordStrength";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
 import { Card } from "./Card";
@@ -50,28 +51,17 @@ export const RegisterView = ({
             required
             value={password}
           />
-          <div className={styles[`requirements`]}>
-            {requirements.map(({ check, label }) => (
-              <span className={check(password) ? styles[`requirementMet`] : styles[`requirement`]} key={label}>
-                {check(password) ? `✓ ` : ``}
-                {label}
-              </span>
-            ))}
-          </div>
-          <div className={styles[`strengthRow`]}>
-            <span className={styles[`strengthLabel`]}>{t(`registerPage.strength`)}:</span>
-            <div className={styles[`strengthBar`]}>
-              <div
-                className={styles[`strengthFill`]}
-                data-strength={strength}
-                style={{ width: strengthBarWidth }}
-              />
-            </div>
-            <span className={styles[`strengthText`]}>{strengthText}</span>
-          </div>
-          <Button disabled={loading} onClick={onGeneratePassword} type="button">
-            {t(`registerPage.generatePassword`)}
-          </Button>
+          <PasswordStrength
+            disabled={loading}
+            generateLabel={t(`registerPage.generatePassword`)}
+            onGeneratePassword={onGeneratePassword}
+            password={password}
+            requirements={requirements}
+            strength={strength}
+            strengthBarWidth={strengthBarWidth}
+            strengthLabel={`${t(`registerPage.strength`)}:`}
+            strengthText={strengthText}
+          />
         </div>
         {error !== `` && <p className={styles[`error`]}>{error}</p>}
         <div className={styles[`actions`]}>
