@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { Button } from "../../shared/Button";
 import { api } from "../core/Api";
 import { getToken } from "../core/Auth";
-import { Card } from "./Card";
-import styles from "./Dashboard.module.css";
 import { featureEmoji, featureKeys } from "../core/Features";
 import { t } from "../core/Locale";
+import { Card } from "./Card";
+import styles from "./Dashboard.module.css";
 
 export const Dashboard = () => {
   const token = getToken() ?? ``;

@@ -1,7 +1,7 @@
+import { Theme } from "../../core/Theme";
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
 import { MutedLink } from "../../shared/MutedLink";
-import { Theme } from "../../core/Theme";
 import { SiteLocale, t } from "../core/Locale";
 
 export const SiteHeader = () => (

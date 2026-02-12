@@ -3,8 +3,8 @@ import { useState } from "react";
 import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
 import { api } from "../core/Api";
-import { Card } from "./Card";
 import { t } from "../core/Locale";
+import { Card } from "./Card";
 import styles from "./Login.module.css";
 
 export const ForgotPassword = () => {

@@ -5,10 +5,10 @@ import { AccentLink } from "../../shared/AccentLink";
 import { Button } from "../../shared/Button";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { api } from "../core/Api";
-import { Card } from "./Card";
 import { t } from "../core/Locale";
-import styles from "./Login.module.css";
 import { PASSWORD_MIN_LENGTH, passwordValid } from "../core/Password";
+import { Card } from "./Card";
+import styles from "./Login.module.css";
 
 export const ResetPassword = () => {
   const [searchParameters] = useSearchParams();

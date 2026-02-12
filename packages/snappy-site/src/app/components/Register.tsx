@@ -6,9 +6,7 @@ import { Button } from "../../shared/Button";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { api } from "../core/Api";
 import { setToken } from "../core/Auth";
-import { Card } from "./Card";
 import { t } from "../core/Locale";
-import styles from "./Login.module.css";
 import {
   generatePassword,
   PASSWORD_MIN_LENGTH,
@@ -16,6 +14,8 @@ import {
   passwordStrength,
   passwordValid,
 } from "../core/Password";
+import { Card } from "./Card";
+import styles from "./Login.module.css";
 
 export const Register = () => {
   const [email, setEmail] = useState(``);

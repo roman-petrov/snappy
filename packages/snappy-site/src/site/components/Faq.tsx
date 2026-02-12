@@ -1,6 +1,6 @@
+import { t } from "../core/Locale";
 import styles from "./Faq.module.css";
 import { FaqItem } from "./FaqItem";
-import { t } from "../core/Locale";
 import { Section } from "./Section";
 
 export const Faq = () => (

@@ -6,8 +6,8 @@ import { Button } from "../../shared/Button";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { api } from "../core/Api";
 import { setToken } from "../core/Auth";
-import { Card } from "./Card";
 import { t } from "../core/Locale";
+import { Card } from "./Card";
 import styles from "./Login.module.css";
 
 export const Login = () => {

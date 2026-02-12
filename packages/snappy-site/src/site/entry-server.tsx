@@ -1,8 +1,8 @@
 import { renderToString } from "react-dom/server";
 
 import { Landing } from "./components/Landing";
-import localeData from "./locales";
 import { SiteLocaleStore } from "./core/SiteLocaleStore";
+import localeData from "./locales";
 
 export type SiteLocaleKey = `en` | `ru`;
 
