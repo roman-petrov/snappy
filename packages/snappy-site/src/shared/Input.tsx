@@ -27,7 +27,7 @@ export const Input = ({
   type = `text`,
   value,
 }: InputProps) => {
-  const inputEl = (
+  const inputElement = (
     <input
       autoComplete={autoComplete}
       className={inputClassName ?? styles[`input`]}
@@ -42,7 +42,7 @@ export const Input = ({
   );
 
   if (label === undefined) {
-    return inputEl;
+    return inputElement;
   }
 
   return (
@@ -50,7 +50,7 @@ export const Input = ({
       <label className={styles[`label`]} htmlFor={id}>
         {label}
       </label>
-      {inputEl}
+      {inputElement}
     </div>
   );
 };

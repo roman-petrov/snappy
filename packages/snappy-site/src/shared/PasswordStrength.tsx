@@ -6,7 +6,7 @@ export type PasswordStrengthProps = {
   generateLabel: string;
   onGeneratePassword: () => void;
   password: string;
-  requirements: ReadonlyArray<{ check: (s: string) => boolean; label: string }>;
+  requirements: readonly { check: (s: string) => boolean; label: string }[];
   strength: `medium` | `strong` | `weak`;
   strengthBarWidth: string;
   strengthLabel: string;

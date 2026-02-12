@@ -18,8 +18,8 @@ export const useRegisterState = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const strength = passwordStrength(password);
+
   const requirements = [
     { check: passwordRequirementChecks[0]!.check, label: t(`registerPage.requirementMin`, { min: passwordMinLength }) },
     { check: passwordRequirementChecks[1]!.check, label: t(`registerPage.requirementLetters`) },
