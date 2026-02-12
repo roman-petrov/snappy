@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 
 import styles from "./Header.module.css";
-
 import { Logo } from "./Logo";
 
 export type HeaderProps = {

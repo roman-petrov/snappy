@@ -1,7 +1,7 @@
+import styles from "./Faq.module.css";
 import { FaqItem } from "./FaqItem";
 import { t } from "./Locale";
 import { Section } from "./Section";
-import styles from "./Faq.module.css";
 
 export const Faq = () => (
   <Section id="faq" lead={t(`faq.lead`)} title={t(`faq.title`)}>

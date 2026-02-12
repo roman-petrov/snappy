@@ -6,7 +6,7 @@ import { SiteLocaleStore } from "./SiteLocaleStore";
 
 export type SiteLocaleKey = `en` | `ru`;
 
-export interface SiteMeta { description: string; htmlLang: string; keywords: string; title: string }
+export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string }
 
 export const getMeta = (locale: SiteLocaleKey): SiteMeta => {
   const {meta} = localeData[locale];

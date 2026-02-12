@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { t } from "../app/Locale";
-
 import type { PasswordInputProps } from "./PasswordInput";
+
+import { t } from "../app/Locale";
 
 export const usePasswordInputState = (props: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);

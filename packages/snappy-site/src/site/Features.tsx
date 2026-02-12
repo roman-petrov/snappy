@@ -1,7 +1,7 @@
 import { FeatureCard } from "./FeatureCard";
+import styles from "./Features.module.css";
 import { t } from "./Locale";
 import { Section } from "./Section";
-import styles from "./Features.module.css";
 
 export const Features = () => (
   <Section id="features" lead={t(`features.lead`)} title={t(`features.title`)}>

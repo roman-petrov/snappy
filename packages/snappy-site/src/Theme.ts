@@ -1,5 +1,3 @@
-import type { Fog as FogInstance } from "./Fog";
-
 import { Fog } from "./Fog";
 
 const storageKey = `snappy_theme`;
@@ -17,7 +15,7 @@ const current = (): Theme => {
 };
 
 let afterChange: (() => void) | undefined;
-const fogRef: { current: FogInstance | undefined } = { current: undefined };
+const fogRef: { current: Fog | undefined } = { current: undefined };
 
 const syncFog = (): void => {
   if (fogRef.current !== undefined) {

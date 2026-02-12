@@ -15,13 +15,13 @@ const logoContent = (
 export const Logo = ({ href, onClick, title, to }: LogoProps) => {
   const className = styles[`logo`];
 
-  return to !== undefined ? (
-    <Link className={className} onClick={onClick} title={title} to={to}>
-      {logoContent}
-    </Link>
-  ) : (
+  return to === undefined ? (
     <a className={className} href={href ?? `/`} onClick={onClick} title={title}>
       {logoContent}
     </a>
+  ) : (
+    <Link className={className} onClick={onClick} title={title} to={to}>
+      {logoContent}
+    </Link>
   );
 };

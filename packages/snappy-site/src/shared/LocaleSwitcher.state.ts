@@ -1,7 +1,7 @@
+import type { LocaleSwitcherProps } from "./LocaleSwitcher";
+
 import { t as appT } from "../app/Locale";
 import { LocaleStore } from "./LocaleStore";
-
-import type { LocaleSwitcherProps } from "./LocaleSwitcher";
 
 export const useLocaleSwitcherState = (props: LocaleSwitcherProps = {}) => {
   const get = props.getLocale ?? LocaleStore.getLocale;

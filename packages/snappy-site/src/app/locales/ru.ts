@@ -46,7 +46,6 @@ export const ru = {
   },
   localeSwitcher: `Переключить на английский`,
   login: `Вход`,
-  passwordInput: { hidePassword: `Скрыть пароль`, showPassword: `Показать пароль` },
   loginPage: {
     email: `Email`,
     errorLogin: `Ошибка входа`,
@@ -60,6 +59,7 @@ export const ru = {
     title: `Вход`,
   },
   logout: `Выйти`,
+  passwordInput: { hidePassword: `Скрыть пароль`, showPassword: `Показать пароль` },
   register: `Регистрация`,
   registerPage: {
     email: `Email`,

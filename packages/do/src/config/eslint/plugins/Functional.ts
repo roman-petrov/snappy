@@ -22,7 +22,7 @@ export default defineConfig([
   },
   { files: [`packages/*/src/main.ts`], rules: { "functional/no-expression-statements": `off` } },
   {
-    files: [`**/*.test.ts`],
+    files: [`**/*.{test,config,setup,state,dom}.{js,ts,tsx}`, `**/use*.ts`],
     rules: {
       "functional/immutable-data": `off`,
       "functional/no-expression-statements": `off`,

@@ -1,4 +1,5 @@
 import type { MouseEvent } from "react";
+
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Theme } from "../Theme";
@@ -6,8 +7,8 @@ import { clearToken, getToken } from "./Auth";
 import { t } from "./Locale";
 
 type HeaderItem =
-  | { type: `button`; label: string; onClick: () => void }
-  | { type: `link`; to: string; label: string }
+  | { label: string; onClick: () => void; type: `button`; }
+  | { label: string; to: string; type: `link`; }
   | { type: `locale` };
 
 export const useLayoutState = () => {
@@ -29,10 +30,10 @@ export const useLayoutState = () => {
         { type: `locale` },
       ]
     : [
-        ...(location.pathname !== `/login` ? [{ type: `link` as const, to: `/login`, label: t(`login`) }] : []),
-        ...(location.pathname !== `/register`
-          ? [{ type: `link` as const, to: `/register`, label: t(`register`) }]
-          : []),
+        ...(location.pathname === `/login` ? [] : [{ label: t(`login`), to: `/login`, type: `link` as const }]),
+        ...(location.pathname === `/register`
+          ? []
+          : [{ label: t(`register`), to: `/register`, type: `link` as const }]),
         { type: `locale` },
       ];
 
