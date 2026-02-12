@@ -23,6 +23,17 @@ Use **PascalCase** for `.ts` and `.tsx` files. _Exceptions_ (keep as-is): `main`
 
 ---
 
+## 🏷 Naming conventions
+
+- **Types**: `PascalCase`
+- **Regular variables**: `camelCase`
+- **Exported variables**: `PascalCase`
+- **Parameters**: `camelCase`
+- **Properties and methods in object literals**: `camelCase`
+- leading and trailing underscores are **forbidden**, except for unused parameters.
+
+---
+
 ## 📐 Types
 
 ### Infer types from values
