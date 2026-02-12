@@ -4,14 +4,8 @@ import { MutedLink } from "../shared/MutedLink";
 import { Theme } from "../Theme";
 import { SiteLocale, t } from "./Locale";
 
-type Props = { onThemeToggle?: () => void };
-
-export const SiteHeader = ({ onThemeToggle }: Props = {}) => (
-  <Header
-    logoHref="/"
-    logoOnClick={Theme.onLogoClick(onThemeToggle)}
-    logoTitle={t(`themeToggle`)}
-  >
+export const SiteHeader = () => (
+  <Header logoHref="/" logoOnClick={Theme.onLogoClick()} logoTitle={t(`themeToggle`)}>
     <MutedLink href="#features">{t(`nav.features`)}</MutedLink>
     <MutedLink href="#examples">{t(`nav.examples`)}</MutedLink>
     <MutedLink href="#who">{t(`nav.who`)}</MutedLink>

@@ -10,11 +10,9 @@ import { StylesSection } from "./StylesSection";
 import { Who } from "./Who";
 import styles from "./Landing.module.css";
 
-type Props = { onThemeToggle?: () => void };
-
-export const Landing = ({ onThemeToggle }: Props = {}) => (
+export const Landing = () => (
   <>
-    <SiteHeader onThemeToggle={onThemeToggle} />
+    <SiteHeader />
     <main id="main" className={styles[`main`]}>
       <Hero />
       <Features />

@@ -1,5 +1,9 @@
+import type { Fog as FogInstance } from "./Fog";
+import { Fog } from "./Fog";
+
 const STORAGE_KEY = `snappy_theme`;
 const THEMES = [`light`, `dark`] as const;
+const FOG_OPTIONS = { blurFactor: 0.5, speed: 2, zoom: 2 };
 
 export type Theme = (typeof THEMES)[number];
 const DEFAULT: Theme = `light`;
@@ -11,6 +15,23 @@ const current = (): Theme => {
   return isTheme(v) ? v : DEFAULT;
 };
 
+let afterChange: (() => void) | undefined;
+
+const fogRef: { current: FogInstance | undefined } = { current: undefined };
+
+const syncFog = (): void => {
+  if (fogRef.current !== undefined) {
+    fogRef.current.stop();
+    fogRef.current = undefined;
+  }
+  if (document.documentElement.dataset[`theme`] === `light`) return;
+  const el = document.querySelector(`#fog-bg`);
+  if (el instanceof HTMLElement) {
+    fogRef.current = Fog(el, FOG_OPTIONS);
+    fogRef.current.start();
+  }
+};
+
 const apply = (theme: Theme): void => {
   document.documentElement.dataset[`theme`] = theme;
   try {
@@ -18,6 +39,7 @@ const apply = (theme: Theme): void => {
   } catch {
     //
   }
+  afterChange?.();
 };
 
 const toggle = (): void => {
@@ -25,6 +47,9 @@ const toggle = (): void => {
 };
 
 const restore = (): void => {
+  if (document.querySelector(`#fog-bg`) instanceof HTMLElement) {
+    afterChange = () => requestAnimationFrame(syncFog);
+  }
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (isTheme(saved ?? ``)) {
