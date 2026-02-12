@@ -17,15 +17,15 @@ const Protected = ({ children }: { children: ReactNode }) =>
 Theme.restore();
 
 createRoot(document.getElementById(`app-root`)!).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/app">
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+      <Route element={<Layout />} path="/">
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route
-          path="/"
+          index
           element={
             <Protected>
               <Dashboard />

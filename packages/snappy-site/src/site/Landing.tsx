@@ -27,7 +27,7 @@ export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
           <a href="#who">Для кого</a>
           <a href="#faq">Вопросы</a>
           <a href="#start">Как начать</a>
-          <a href="/app.html">Личный кабинет</a>
+          <a href="/app">Личный кабинет</a>
           <Button href="https://t.me/sn4ppy_bot" primary className="nav-cta">
             <TelegramIcon /> Открыть в Telegram
           </Button>

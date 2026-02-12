@@ -1,13 +1,16 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
 import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
 import styles from "./Layout.module.css";
 
+const APP_BASE = `/app`;
+
 export const Layout = () => {
   const token = getToken();
   const location = useLocation();
+  const navigate = useNavigate();
   const isAuth = token !== undefined;
 
   return (
@@ -16,7 +19,7 @@ export const Layout = () => {
         <div className={styles[`inner`]}>
           <Link
             className={styles[`logo`]}
-            to="/"
+            to={APP_BASE}
             title="Переключить тему"
             onClick={e => {
               e.preventDefault();
@@ -31,7 +34,7 @@ export const Layout = () => {
               <Button
                 onClick={() => {
                   clearToken();
-                  window.location.href = `/login`;
+                  navigate(`/login`, { replace: true });
                 }}
                 type="button"
               >
@@ -39,13 +42,13 @@ export const Layout = () => {
               </Button>
             ) : (
               <>
-                {location.pathname !== `/login` && (
-                  <Link className={styles[`navLink`]} to="/login">
+                {location.pathname !== `${APP_BASE}/login` && (
+                  <Link className={styles[`navLink`]} to={`${APP_BASE}/login`}>
                     Вход
                   </Link>
                 )}
-                {location.pathname !== `/register` && (
-                  <Link className={styles[`navLink`]} to="/register">
+                {location.pathname !== `${APP_BASE}/register` && (
+                  <Link className={styles[`navLink`]} to={`${APP_BASE}/register`}>
                     Регистрация
                   </Link>
                 )}
