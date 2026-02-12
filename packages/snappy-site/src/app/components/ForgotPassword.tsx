@@ -1,10 +1,10 @@
 import { useState } from "react";
 
-import { AccentLink } from "../shared/AccentLink";
-import { Button } from "../shared/Button";
-import { api } from "./Api";
+import { AccentLink } from "../../shared/AccentLink";
+import { Button } from "../../shared/Button";
+import { api } from "../Api";
 import { Card } from "./Card";
-import { t } from "./Locale";
+import { t } from "../Locale";
 import styles from "./Login.module.css";
 
 export const ForgotPassword = () => {

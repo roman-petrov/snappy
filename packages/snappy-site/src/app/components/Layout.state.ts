@@ -2,13 +2,13 @@ import type { MouseEvent } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { Theme } from "../Theme";
-import { clearToken, getToken } from "./Auth";
-import { t } from "./Locale";
+import { Theme } from "../../core/Theme";
+import { clearToken, getToken } from "../Auth";
+import { t } from "../Locale";
 
 type HeaderItem =
-  | { label: string; onClick: () => void; type: `button`; }
-  | { label: string; to: string; type: `link`; }
+  | { label: string; onClick: () => void; type: `button` }
+  | { label: string; to: string; type: `link` }
   | { type: `locale` };
 
 export const useLayoutState = () => {

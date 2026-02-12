@@ -1,8 +1,8 @@
-import { Header } from "../shared/Header";
-import { LocaleSwitcher } from "../shared/LocaleSwitcher";
-import { MutedLink } from "../shared/MutedLink";
-import { Theme } from "../Theme";
-import { SiteLocale, t } from "./Locale";
+import { Header } from "../../shared/Header";
+import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
+import { MutedLink } from "../../shared/MutedLink";
+import { Theme } from "../../core/Theme";
+import { SiteLocale, t } from "../Locale";
 
 export const SiteHeader = () => (
   <Header logoHref="/" logoOnClick={Theme.onLogoClick()} logoTitle={t(`themeToggle`)}>

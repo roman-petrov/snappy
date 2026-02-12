@@ -1,4 +1,4 @@
-import { t } from "./Locale";
+import { t } from "../Locale";
 import styles from "./SiteFooter.module.css";
 
 export const SiteFooter = () => (

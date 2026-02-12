@@ -1,7 +1,7 @@
-import { Button } from "../shared/Button";
-import { TelegramIcon } from "../shared/TelegramIcon";
+import { Button } from "../../shared/Button";
+import { TelegramIcon } from "../../shared/TelegramIcon";
 import styles from "./Hero.module.css";
-import { t } from "./Locale";
+import { t } from "../Locale";
 
 export const Hero = () => (
   <section className={styles[`hero`]}>

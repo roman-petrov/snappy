@@ -1,6 +1,6 @@
 import styles from "./Faq.module.css";
 import { FaqItem } from "./FaqItem";
-import { t } from "./Locale";
+import { t } from "../Locale";
 import { Section } from "./Section";
 
 export const Faq = () => (

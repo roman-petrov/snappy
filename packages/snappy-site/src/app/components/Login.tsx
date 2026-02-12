@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { AccentLink } from "../shared/AccentLink";
-import { Button } from "../shared/Button";
-import { PasswordInput } from "../shared/PasswordInput";
-import { api } from "./Api";
-import { setToken } from "./Auth";
+import { AccentLink } from "../../shared/AccentLink";
+import { Button } from "../../shared/Button";
+import { PasswordInput } from "../../shared/PasswordInput";
+import { api } from "../Api";
+import { setToken } from "../Auth";
 import { Card } from "./Card";
-import { t } from "./Locale";
+import { t } from "../Locale";
 import styles from "./Login.module.css";
 
 export const Login = () => {

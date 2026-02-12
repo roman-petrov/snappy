@@ -1,7 +1,7 @@
 import { hydrateRoot } from "react-dom/client";
 
-import { Theme } from "../Theme.js";
-import { Landing } from "./Landing.js";
+import { Theme } from "../core/Theme.js";
+import { Landing } from "./components/Landing.js";
 
 Theme.restore();
 

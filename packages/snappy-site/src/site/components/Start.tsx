@@ -1,4 +1,4 @@
-import { t } from "./Locale";
+import { t } from "../Locale";
 import { Section } from "./Section";
 import { Steps } from "./Steps";
 

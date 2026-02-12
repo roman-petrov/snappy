@@ -1,6 +1,6 @@
 import { renderToString } from "react-dom/server";
 
-import { Landing } from "./Landing";
+import { Landing } from "./components/Landing";
 import localeData from "./locales";
 import { SiteLocaleStore } from "./SiteLocaleStore";
 

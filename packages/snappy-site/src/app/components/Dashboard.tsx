@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { Button } from "../shared/Button";
-import { api } from "./Api";
-import { getToken } from "./Auth";
+import { Button } from "../../shared/Button";
+import { api } from "../Api";
+import { getToken } from "../Auth";
 import { Card } from "./Card";
 import styles from "./Dashboard.module.css";
-import { featureEmoji, featureKeys } from "./Features";
-import { t } from "./Locale";
+import { featureEmoji, featureKeys } from "../Features";
+import { t } from "../Locale";
 
 export const Dashboard = () => {
   const token = getToken() ?? ``;
