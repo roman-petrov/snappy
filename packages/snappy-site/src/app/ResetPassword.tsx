@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
+import { passwordValid, PASSWORD_MIN_LENGTH } from "./Password";
 import styles from "./Login.module.css";
 
 export const ResetPassword = () => {
@@ -16,8 +18,8 @@ export const ResetPassword = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(``);
-    if (password.length < 6) {
-      setError(`Пароль не менее 6 символов`);
+    if (!passwordValid(password)) {
+      setError(`Пароль: не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры`);
       return;
     }
     setLoading(true);
@@ -73,21 +75,16 @@ export const ResetPassword = () => {
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
           <h1 className={styles[`title`]}>Новый пароль</h1>
-          <div className={styles[`field`]}>
-            <label className={styles[`label`]} htmlFor="reset-password">
-              Пароль (не менее 6 символов)
-            </label>
-            <input
-              id="reset-password"
-              type="password"
-              className={styles[`input`]}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={6}
-              autoComplete="new-password"
-            />
-          </div>
+          <PasswordInput
+            id="reset-password"
+            label={`Пароль (не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры)`}
+            value={password}
+            onChange={setPassword}
+            autoComplete="new-password"
+            required
+            minLength={PASSWORD_MIN_LENGTH}
+            disabled={loading}
+          />
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading}>

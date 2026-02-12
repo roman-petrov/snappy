@@ -2,8 +2,16 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
+import {
+  generatePassword,
+  passwordRequirements,
+  passwordStrength,
+  passwordValid,
+  PASSWORD_MIN_LENGTH,
+} from "./Password";
 import styles from "./Login.module.css";
 
 export const Register = () => {
@@ -12,12 +20,13 @@ export const Register = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const strength = passwordStrength(password);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(``);
-    if (password.length < 6) {
-      setError(`Пароль не менее 6 символов`);
+    if (!passwordValid(password)) {
+      setError(`Пароль: не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры`);
       return;
     }
     setLoading(true);
@@ -58,24 +67,54 @@ export const Register = () => {
               autoComplete="email"
             />
           </div>
-          <div className={styles[`field`]}>
-            <label className={styles[`label`]} htmlFor="reg-password">
-              Пароль (не менее 6 символов)
-            </label>
-            <input
+          <div className={styles[`passwordBlock`]}>
+            <PasswordInput
               id="reg-password"
-              type="password"
-              className={styles[`input`]}
+              label="Пароль"
               value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              minLength={6}
+              onChange={setPassword}
               autoComplete="new-password"
+              required
+              minLength={PASSWORD_MIN_LENGTH}
+              disabled={loading}
             />
+            <div className={styles[`requirements`]}>
+              {passwordRequirements.map(({ label, check }) => (
+                <span key={label} className={check(password) ? styles[`requirementMet`] : styles[`requirement`]}>
+                  {check(password) ? "✓ " : ""}
+                  {label}
+                </span>
+              ))}
+            </div>
+            <div className={styles[`strengthRow`]}>
+              <span className={styles[`strengthLabel`]}>Надёжность:</span>
+              <div className={styles[`strengthBar`]}>
+                <div
+                  className={styles[`strengthFill`]}
+                  data-strength={strength}
+                  style={{
+                    width:
+                      password.length === 0
+                        ? "0%"
+                        : strength === "weak"
+                          ? "33%"
+                          : strength === "medium"
+                            ? "66%"
+                            : "100%",
+                  }}
+                />
+              </div>
+              <span className={styles[`strengthText`]}>
+                {strength === "weak" ? "Слабый" : strength === "medium" ? "Средний" : "Надёжный"}
+              </span>
+            </div>
+            <Button type="button" onClick={() => setPassword(generatePassword())} disabled={loading}>
+              Сгенерировать пароль
+            </Button>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
-            <Button type="submit" primary disabled={loading}>
+            <Button type="submit" primary disabled={loading || !passwordValid(password)}>
               {loading ? `Регистрация…` : `Зарегистрироваться`}
             </Button>
             <Link to="/login" className={styles[`link`]}>

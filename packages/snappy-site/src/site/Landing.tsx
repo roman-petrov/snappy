@@ -9,16 +9,7 @@ export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
   <>
     <header className="site-header">
       <div className="header-inner">
-        <a
-          href="/"
-          className="logo"
-          title="Переключить тему"
-          onClick={e => {
-            e.preventDefault();
-            Theme.toggle();
-            onThemeToggle?.();
-          }}
-        >
+        <a href="/" className="logo" title="Переключить тему" onClick={Theme.onLogoClick(onThemeToggle)}>
           <img src="/favicon.svg" alt="" className="logo-icon" aria-hidden="true" /> Snappy
         </a>
         <nav>

@@ -7,6 +7,10 @@ import { Storage } from "../Storage";
 import type { AppContext } from "../Types";
 
 const resetTokenExpiresHours = 1;
+const passwordMinLength = 8;
+const hasLetter = (s: string) => /[a-zA-Z]/.test(s);
+const hasDigit = (s: string) => /[0-9]/.test(s);
+const passwordValid = (s: string) => s.length >= passwordMinLength && hasLetter(s) && hasDigit(s);
 
 const register = (ctx: AppContext) => async (req: Request, res: Response) => {
   if (ctx.jwtSecret === ``) {
@@ -17,8 +21,8 @@ const register = (ctx: AppContext) => async (req: Request, res: Response) => {
 
   const { email, password } = (req.body as { email?: string; password?: string }) ?? {};
 
-  if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || password.length < 6) {
-    res.status(400).json({ error: `Invalid email or password` });
+  if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || !passwordValid(password)) {
+    res.status(400).json({ error: `Invalid email or password (min 8 chars, letters and digits)` });
 
     return;
   }
@@ -103,8 +107,8 @@ const forgotPassword = (ctx: AppContext) => async (req: Request, res: Response) 
 const resetPassword = (ctx: AppContext) => async (req: Request, res: Response) => {
   const { token, newPassword } = (req.body as { token?: string; newPassword?: string }) ?? {};
 
-  if (typeof token !== `string` || token === `` || typeof newPassword !== `string` || newPassword.length < 6) {
-    res.status(400).json({ error: `Token and new password (min 6 chars) required` });
+  if (typeof token !== `string` || token === `` || typeof newPassword !== `string` || !passwordValid(newPassword)) {
+    res.status(400).json({ error: `Token and new password (min 8 chars, letters and digits) required` });
 
     return;
   }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
 import styles from "./Login.module.css";
@@ -9,6 +10,7 @@ import styles from "./Login.module.css";
 export const Login = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
+  const [remember, setRemember] = useState(false);
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -25,7 +27,7 @@ export const Login = () => {
         return;
       }
       if (data.token) {
-        setToken(data.token);
+        setToken(data.token, remember);
         navigate(`/`, { replace: true });
       }
     } catch {
@@ -54,19 +56,27 @@ export const Login = () => {
               autoComplete="email"
             />
           </div>
-          <div className={styles[`field`]}>
-            <label className={styles[`label`]} htmlFor="login-password">
-              Пароль
-            </label>
+          <PasswordInput
+            id="login-password"
+            label="Пароль"
+            value={password}
+            onChange={setPassword}
+            autoComplete="current-password"
+            required
+            disabled={loading}
+          />
+          <div className={styles[`rememberRow`]}>
             <input
-              id="login-password"
-              type="password"
-              className={styles[`input`]}
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-              autoComplete="current-password"
+              id="login-remember"
+              type="checkbox"
+              className={styles[`checkbox`]}
+              checked={remember}
+              onChange={e => setRemember(e.target.checked)}
+              disabled={loading}
             />
+            <label className={styles[`rememberLabel`]} htmlFor="login-remember">
+              Запомнить
+            </label>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
