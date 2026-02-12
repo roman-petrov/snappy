@@ -1,4 +1,3 @@
-import "./styles.css";
 import { hydrateRoot } from "react-dom/client";
 
 import { Fog } from "../Fog.js";
