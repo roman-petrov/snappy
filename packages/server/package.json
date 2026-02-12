@@ -9,6 +9,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
     "@snappy/snappy": "workspace:*",
+    "@snappy/snappy-site": "workspace:*",
     "@snappy/yoo-kassa": "workspace:*",
     "bcryptjs": "^2.4.3",
     "express": "^5.2.1",
