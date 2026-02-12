@@ -1,5 +1,8 @@
 import type { usePasswordInputState } from "./PasswordInput.state";
 
+import eyeClosedSvg from "../app/assets/eye-closed.svg?raw";
+import eyeOpenSvg from "../app/assets/eye-open.svg?raw";
+
 import styles from "./PasswordInput.module.css";
 
 export type PasswordInputViewProps = ReturnType<typeof usePasswordInputState>;
@@ -42,9 +45,13 @@ export const PasswordInputView = ({
         title={ariaLabel}
         type="button"
       >
-        <span aria-hidden className={styles[`icon`]}>
-          {visible ? `👀` : `👁`}
-        </span>
+        <span
+          aria-hidden
+          className={styles[`icon`]}
+          dangerouslySetInnerHTML={{
+            __html: (visible ? eyeClosedSvg : eyeOpenSvg).replace(/^<svg/, `<svg width="100%" height="100%"`),
+          }}
+        />
       </button>
     </div>
   </div>
