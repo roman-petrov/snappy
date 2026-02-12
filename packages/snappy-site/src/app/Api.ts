@@ -1,5 +1,8 @@
-const env = import.meta.env as { DEV?: boolean; VITE_API_URL?: string };
-const apiBase = env.VITE_API_URL ?? (env.DEV === true ? `http://localhost:3000` : ``);
+const env = import.meta.env as Record<string, unknown>;
+
+const apiBase =
+  (env.VITE_API_URL as string | undefined) ?? (env.DEV as boolean ? `http://localhost:3000` : ``);
+
 const authHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 
 export const api = {

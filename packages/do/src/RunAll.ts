@@ -41,14 +41,14 @@ const runStep = async (root: string, cmd: string[], label: string) => {
   return 0;
 };
 
-const DB_STEPS: [string[], string][] = [
+const dbSteps: [string[], string][] = [
   [[`docker`, `compose`, `up`, `-d`], `Database container`],
   [[`bunx`, `prisma`, `db`, `push`, `--accept-data-loss`], `Schema sync`],
   [[`bunx`, `prisma`, `db`, `seed`], `Seed`],
 ];
 
 const dbStart = async (root: string): Promise<number> => {
-  for (const [cmd, label] of DB_STEPS) {
+  for (const [cmd, label] of dbSteps) {
     const code = await runStep(root, cmd, label);
     if (code !== 0) {
       return code;

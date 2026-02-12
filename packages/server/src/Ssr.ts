@@ -17,8 +17,8 @@ export const createSsrHandler = (clientRoot: string): RequestHandler => {
     try {
       const locale = Ssr.localeFromCookie(request.headers.cookie);
       const template = readFileSync(templatePath, `utf8`);
-      const module_ = await import(ssrEntryPath);
-      const render = typeof module_.render === `function` ? module_.render : undefined;
+      const ssrModule = await import(ssrEntryPath);
+      const render = typeof ssrModule.render === `function` ? ssrModule.render : undefined;
       if (render === undefined) {
         next(new Error(`SSR entry did not export render`));
 
@@ -28,7 +28,7 @@ export const createSsrHandler = (clientRoot: string): RequestHandler => {
         .type(`html`)
         .send(
           Ssr.buildHtml(locale, template, {
-            getMeta: typeof module_.getMeta === `function` ? module_.getMeta : undefined,
+            getMeta: typeof ssrModule.getMeta === `function` ? ssrModule.getMeta : undefined,
             render,
           }),
         );

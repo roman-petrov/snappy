@@ -12,7 +12,7 @@ import type { SiteLocaleKey, SiteMeta } from "./src/Ssr";
 import { Ssr } from "./src/Ssr";
 
 const root = import.meta.dirname;
-const PORT = 5173;
+const port = 5173;
 
 const main = async () => {
   const app = express();
@@ -22,7 +22,9 @@ const main = async () => {
   app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
   app.get(/^\/app(\/.*)?$/u, (request, response, next) => {
-    if (/\.[\da-z]+$/i.test(request.path)) {return next();}
+    if (/\.[\da-z]+$/i.test(request.path)) {
+      return next();
+    }
     (async () => {
       try {
         let html = readFileSync(join(root, `src`, `app`, `index.html`), `utf8`);
@@ -53,8 +55,8 @@ const main = async () => {
 
   app.use(vite.middlewares);
 
-  app.listen(PORT, () => {
-    process.stdout.write(`  Site (SSR) http://localhost:${PORT}\n`);
+  app.listen(port, () => {
+    process.stdout.write(`  Site (SSR) http://localhost:${port}\n`);
   });
 };
 

@@ -2,18 +2,18 @@ import type { Fog as FogInstance } from "./Fog";
 
 import { Fog } from "./Fog";
 
-const STORAGE_KEY = `snappy_theme`;
-const THEMES = [`light`, `dark`] as const;
-const FOG_OPTIONS = { blurFactor: 0.5, speed: 2, zoom: 2 };
+const storageKey = `snappy_theme`;
+const themes = [`light`, `dark`] as const;
+const fogOptions = { blurFactor: 0.5, speed: 2, zoom: 2 };
 
-export type Theme = (typeof THEMES)[number];
-const DEFAULT: Theme = `light`;
-const isTheme = (v: string): v is Theme => THEMES.includes(v as Theme);
+export type Theme = (typeof themes)[number];
+const defaultTheme: Theme = `light`;
+const isTheme = (v: string): v is Theme => themes.includes(v as Theme);
 
 const current = (): Theme => {
   const v = document.documentElement.dataset[`theme`] ?? ``;
 
-  return isTheme(v) ? v : DEFAULT;
+  return isTheme(v) ? v : defaultTheme;
 };
 
 let afterChange: (() => void) | undefined;
@@ -24,10 +24,12 @@ const syncFog = (): void => {
     fogRef.current.stop();
     fogRef.current = undefined;
   }
-  if (document.documentElement.dataset[`theme`] === `light`) {return;}
+  if (document.documentElement.dataset[`theme`] === `light`) {
+    return;
+  }
   const element = document.querySelector(`#fog-bg`);
   if (element instanceof HTMLElement) {
-    fogRef.current = Fog(element, FOG_OPTIONS);
+    fogRef.current = Fog(element, fogOptions);
     fogRef.current.start();
   }
 };
@@ -35,7 +37,7 @@ const syncFog = (): void => {
 const apply = (theme: Theme): void => {
   document.documentElement.dataset[`theme`] = theme;
   try {
-    localStorage.setItem(STORAGE_KEY, theme);
+    localStorage.setItem(storageKey, theme);
   } catch {
     //
   }
@@ -51,7 +53,7 @@ const restore = (): void => {
     afterChange = () => requestAnimationFrame(syncFog);
   }
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(storageKey);
     if (isTheme(saved ?? ``)) {
       apply(saved as Theme);
 
@@ -60,7 +62,7 @@ const restore = (): void => {
   } catch {
     //
   }
-  apply(DEFAULT);
+  apply(defaultTheme);
 };
 
 const onLogoClick = (after?: () => void) => (e: { preventDefault: () => void }) => {
