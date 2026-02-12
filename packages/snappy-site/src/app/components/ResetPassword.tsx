@@ -6,7 +6,7 @@ import { Button } from "../../shared/Button";
 import { PasswordInput } from "../../shared/PasswordInput";
 import { api } from "../core/Api";
 import { t } from "../core/Locale";
-import { PASSWORD_MIN_LENGTH, passwordValid } from "../core/Password";
+import { passwordMinLength, passwordValid } from "../core/Password";
 import { Card } from "./Card";
 import styles from "./Login.module.css";
 
@@ -22,7 +22,7 @@ export const ResetPassword = () => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(t(`resetPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
+      setError(t(`resetPage.passwordRule`, { min: passwordMinLength }));
 
       return;
     }
@@ -80,8 +80,8 @@ export const ResetPassword = () => {
             autoComplete="new-password"
             disabled={loading}
             id="reset-password"
-            label={t(`resetPage.passwordLabel`, { min: PASSWORD_MIN_LENGTH })}
-            minLength={PASSWORD_MIN_LENGTH}
+            label={t(`resetPage.passwordLabel`, { min: passwordMinLength })}
+            minLength={passwordMinLength}
             onChange={setPassword}
             required
             value={password}

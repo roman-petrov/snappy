@@ -1,11 +1,11 @@
 /** Min length and rules for password (aligned with server). */
-export const PASSWORD_MIN_LENGTH = 8;
+export const passwordMinLength = 8;
 
 const hasLetter = (s: string) => /[A-Za-z]/u.test(s);
 const hasDigit = (s: string) => /\d/u.test(s);
 
 export const passwordRequirementChecks: { check: (s: string) => boolean }[] = [
-  { check: s => s.length >= PASSWORD_MIN_LENGTH },
+  { check: s => s.length >= passwordMinLength },
   { check: s => hasLetter(s) && hasDigit(s) },
 ];
 

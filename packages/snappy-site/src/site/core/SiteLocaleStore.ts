@@ -1,4 +1,4 @@
-const COOKIE_NAME = `snappy-locale`;
+const cookieName = `snappy-locale`;
 
 export type SiteLocaleKey = `en` | `ru`;
 
@@ -9,7 +9,7 @@ const parseCookie = (): SiteLocaleKey => {
   const match = document.cookie
     .split(`;`)
     .map(s => s.trim())
-    .find(s => s.startsWith(`${COOKIE_NAME}=`));
+    .find(s => s.startsWith(`${cookieName}=`));
 
   const value = match?.split(`=`)[1];
 
@@ -37,7 +37,7 @@ export const SiteLocaleStore = (() => {
     if (typeof document === `undefined`) {
       return;
     }
-    document.cookie = `${COOKIE_NAME}=${next}; path=/; max-age=31536000`;
+    document.cookie = `${cookieName}=${next}; path=/; max-age=31536000`;
     document.documentElement.lang = next;
     location.reload();
   };

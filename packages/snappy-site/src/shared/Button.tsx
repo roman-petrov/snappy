@@ -29,7 +29,7 @@ export const Button = ({
 
   const isLink = href !== undefined;
 
-  return isLink && href !== undefined ? (
+  return isLink ? (
     <a
       className={classNames}
       href={href}

@@ -9,7 +9,7 @@ import { setToken } from "../core/Auth";
 import { t } from "../core/Locale";
 import {
   generatePassword,
-  PASSWORD_MIN_LENGTH,
+  passwordMinLength,
   passwordRequirementChecks,
   passwordStrength,
   passwordValid,
@@ -26,10 +26,7 @@ export const Register = () => {
   const strength = passwordStrength(password);
 
   const requirements = [
-    {
-      check: passwordRequirementChecks[0]!.check,
-      label: t(`registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
-    },
+    { check: passwordRequirementChecks[0]!.check, label: t(`registerPage.requirementMin`, { min: passwordMinLength }) },
     { check: passwordRequirementChecks[1]!.check, label: t(`registerPage.requirementLetters`) },
   ];
 
@@ -37,7 +34,7 @@ export const Register = () => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(t(`registerPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
+      setError(t(`registerPage.passwordRule`, { min: passwordMinLength }));
 
       return;
     }
@@ -88,7 +85,7 @@ export const Register = () => {
               disabled={loading}
               id="reg-password"
               label={t(`registerPage.password`)}
-              minLength={PASSWORD_MIN_LENGTH}
+              minLength={passwordMinLength}
               onChange={setPassword}
               required
               value={password}
