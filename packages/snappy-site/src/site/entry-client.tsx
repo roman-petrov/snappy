@@ -1,13 +1,11 @@
 import "../../styles.css";
 import { hydrateRoot } from "react-dom/client";
+
 import { Fog } from "../Fog.js";
+import { Theme } from "../Theme.js";
 import { Landing } from "./Landing.js";
 
-const applyTheme = (theme: string) => {
-  document.documentElement.dataset[`theme`] = theme;
-};
-
-applyTheme(`light`);
+Theme.restore();
 
 const fogRef = { current: undefined as Fog | undefined };
 
@@ -27,16 +25,9 @@ const syncFog = (): void => {
   fogRef.current.start();
 };
 
-const root = document.getElementById(`root`);
+const root = document.querySelector(`#root`);
 if (root !== null) {
-  hydrateRoot(root, <Landing />);
+  hydrateRoot(root, <Landing onThemeToggle={() => requestAnimationFrame(syncFog)} />);
 }
-
-document.querySelector(`.logo`)?.addEventListener(`click`, clickEvent => {
-  clickEvent.preventDefault();
-  const next = document.documentElement.dataset[`theme`] === `dark` ? `light` : `dark`;
-  applyTheme(next);
-  requestAnimationFrame(syncFog);
-});
 
 syncFog();

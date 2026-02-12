@@ -1,12 +1,24 @@
 import { Button } from "../shared/Button";
+import { Theme } from "../Theme";
 
 const TelegramIcon = () => <span className="icon-telegram" aria-hidden="true" />;
 
-export const Landing = () => (
+type LandingProps = { onThemeToggle?: () => void };
+
+export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
   <>
     <header className="site-header">
       <div className="header-inner">
-        <a href="/" className="logo" title="Переключить тему">
+        <a
+          href="/"
+          className="logo"
+          title="Переключить тему"
+          onClick={e => {
+            e.preventDefault();
+            Theme.toggle();
+            onThemeToggle?.();
+          }}
+        >
           <img src="/favicon.svg" alt="" className="logo-icon" aria-hidden="true" /> Snappy
         </a>
         <nav>
@@ -94,7 +106,9 @@ export const Landing = () => (
                 среду?
               </p>
             </div>
-            <span className="example-arrow" aria-hidden="true">→</span>
+            <span className="example-arrow" aria-hidden="true">
+              →
+            </span>
             <div className="example-panel example-after">
               <span className="example-title">Стало</span>
               <p>
@@ -111,7 +125,9 @@ export const Landing = () => (
               <span className="example-title">Было</span>
               <p>Семинар переносится на 15:00. Уведомляю всех участников.</p>
             </div>
-            <span className="example-arrow" aria-hidden="true">→</span>
+            <span className="example-arrow" aria-hidden="true">
+              →
+            </span>
             <div className="example-panel example-after">
               <span className="example-title">Стало</span>
               <p>
@@ -131,12 +147,15 @@ export const Landing = () => (
                 скидка 10% для новых клиентов.
               </p>
             </div>
-            <span className="example-arrow" aria-hidden="true">→</span>
+            <span className="example-arrow" aria-hidden="true">
+              →
+            </span>
             <div className="example-panel example-after">
               <span className="example-title">Стало</span>
               <p>
-                Доставка по городу — <strong>до 2 часов</strong> 🚚<br /><br />• При заказе от 1000 ₽<br />•
-                <em>Скидка 10%</em> для новых клиентов 🎁
+                Доставка по городу — <strong>до 2 часов</strong> 🚚
+                <br />
+                <br />• При заказе от 1000 ₽<br />•<em>Скидка 10%</em> для новых клиентов 🎁
               </p>
             </div>
           </div>
@@ -180,8 +199,8 @@ export const Landing = () => (
             <span className="who-icon">📱</span>
             <h3>SMM и контент-менеджеры</h3>
             <p>
-              Посты, сторис, объявления — один черновик и несколько вариантов тона или длины без копирования в
-              сторонние сервисы.
+              Посты, сторис, объявления — один черновик и несколько вариантов тона или длины без копирования в сторонние
+              сервисы.
             </p>
           </div>
           <div className="who-item">
@@ -258,8 +277,8 @@ export const Landing = () => (
       <section id="start" className="section">
         <h2>🚀 Как начать</h2>
         <p className="section-lead">
-          Подходит для соцсетей, писем, объявлений и любых задач, где важны скорость и качество текста. Быстрее и
-          проще, чем править вручную или гонять текст по разным сервисам.
+          Подходит для соцсетей, писем, объявлений и любых задач, где важны скорость и качество текста. Быстрее и проще,
+          чем править вручную или гонять текст по разным сервисам.
         </p>
         <div className="steps-timeline">
           <ol className="steps">

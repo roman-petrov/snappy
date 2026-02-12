@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
 import styles from "./Layout.module.css";
 
@@ -13,7 +14,15 @@ export const Layout = () => {
     <div className={styles[`wrap`]}>
       <header className={styles[`header`]}>
         <div className={styles[`inner`]}>
-          <Link className={styles[`logo`]} to="/" title="Snappy">
+          <Link
+            className={styles[`logo`]}
+            to="/"
+            title="Переключить тему"
+            onClick={e => {
+              e.preventDefault();
+              Theme.toggle();
+            }}
+          >
             <img src="/favicon.svg" alt="" className={styles[`logoIcon`]} aria-hidden="true" />
             Snappy
           </Link>
