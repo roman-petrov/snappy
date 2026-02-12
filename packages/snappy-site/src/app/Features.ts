@@ -11,4 +11,17 @@ export const featureLabels: Record<string, string> = {
   styleSelling: `Продающий стиль`,
 };
 
+export const featureEmoji: Record<string, string> = {
+  addEmoji: `😀`,
+  expand: `📝`,
+  fixErrors: `✏️`,
+  improveReadability: `📖`,
+  shorten: `✂️`,
+  styleBusiness: `💼`,
+  styleFriendly: `🤝`,
+  styleHumorous: `😄`,
+  styleNeutral: `⚖️`,
+  styleSelling: `🛒`,
+};
+
 export const featureKeys = Object.keys(featureLabels) as [string, ...string[]];

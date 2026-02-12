@@ -4,7 +4,7 @@ import { Button } from "../shared/Button";
 import { api } from "./Api";
 import { getToken } from "./Auth";
 import styles from "./Dashboard.module.css";
-import { featureKeys, featureLabels } from "./Features";
+import { featureEmoji, featureKeys, featureLabels } from "./Features";
 
 export const Dashboard = () => {
   const token = getToken() ?? ``;
@@ -14,6 +14,7 @@ export const Dashboard = () => {
   const [result, setResult] = useState(``);
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     api.remaining(token).then(async res => {
@@ -41,6 +42,7 @@ export const Dashboard = () => {
         return;
       }
       setResult(data.text ?? ``);
+      setCopied(false);
       if (typeof data.text === `string` && remaining !== undefined) {
         setRemaining(remaining - 1);
       }
@@ -72,6 +74,9 @@ export const Dashboard = () => {
         <div className={styles[`card`]}>
           <div className={styles[`balanceRow`]}>
             <p className={styles[`balance`]}>
+              <span className={styles[`balanceIcon`]} aria-hidden>
+                🪙
+              </span>
               Бесплатных запросов: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
             </p>
             <Button
@@ -88,6 +93,9 @@ export const Dashboard = () => {
 
       <section className={styles[`section`]}>
         <h2 className={styles[`sectionTitle`]}>Обработка текста</h2>
+        <p className={styles[`sectionDesc`]}>
+          Выберите действие и введите текст — результат можно скопировать одним нажатием.
+        </p>
         <form onSubmit={processText}>
           <div className={styles[`card`]}>
             <div className={styles[`formGroup`]}>
@@ -120,7 +128,7 @@ export const Dashboard = () => {
               >
                 {featureKeys.map(k => (
                   <option key={k} value={k}>
-                    {featureLabels[k]}
+                    {featureEmoji[k]} {featureLabels[k]}
                   </option>
                 ))}
               </select>
@@ -129,7 +137,26 @@ export const Dashboard = () => {
               {loading ? `Обработка…` : `Обработать`}
             </Button>
             {error !== `` && <p className={styles[`error`]}>{error}</p>}
-            {result !== `` && <div className={styles[`result`]}>{result}</div>}
+            {result !== `` && (
+              <div className={styles[`resultWrap`]}>
+                <div className={styles[`resultHeader`]}>
+                  <span className={styles[`resultLabel`]}>Результат</span>
+                  <button
+                    type="button"
+                    className={styles[`copyBtn`]}
+                    onClick={() => {
+                      void navigator.clipboard.writeText(result).then(() => {
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      });
+                    }}
+                  >
+                    {copied ? `Скопировано ✓` : `Копировать`}
+                  </button>
+                </div>
+                <div className={styles[`result`]}>{result}</div>
+              </div>
+            )}
           </div>
         </form>
       </section>
