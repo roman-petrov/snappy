@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "../shared/Button";
+import { useLocale } from "../shared/LocaleContext";
 import { api } from "./Api";
 import { getToken } from "./Auth";
 import styles from "./Dashboard.module.css";
-import { featureEmoji, featureKeys, featureLabels } from "./Features";
+import { featureEmoji, featureKeys } from "./Features";
+import { t } from "./Locale";
 
 export const Dashboard = () => {
+  const { locale } = useLocale();
   const token = getToken() ?? ``;
   const [remaining, setRemaining] = useState<number | undefined>(undefined);
   const [text, setText] = useState(``);
@@ -37,8 +40,7 @@ export const Dashboard = () => {
       const res = await api.process(token, text.trim(), feature);
       const data = (await res.json()) as { error?: string; text?: string };
       if (!res.ok) {
-        setError(data.error ?? `Ошибка`);
-
+        setError(data.error ?? t(locale, `dashboard.error`));
         return;
       }
       setResult(data.text ?? ``);
@@ -47,7 +49,7 @@ export const Dashboard = () => {
         setRemaining(remaining - 1);
       }
     } catch {
-      setError(`Ошибка сети`);
+      setError(t(locale, `dashboard.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -67,80 +69,69 @@ export const Dashboard = () => {
 
   return (
     <>
-      <h1 className={styles[`pageTitle`]}>Личный кабинет</h1>
+      <h1 className={styles[`pageTitle`]}>{t(locale, `dashboard.title`)}</h1>
 
       <section className={styles[`section`]}>
-        <h2 className={styles[`sectionTitle`]}>Баланс</h2>
+        <h2 className={styles[`sectionTitle`]}>{t(locale, `dashboard.balance`)}</h2>
         <div className={styles[`card`]}>
           <div className={styles[`balanceRow`]}>
             <p className={styles[`balance`]}>
               <span className={styles[`balanceIcon`]} aria-hidden>
                 🪙
               </span>
-              Бесплатных запросов: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
+              {t(locale, `dashboard.freeRequests`)}: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
             </p>
-            <Button
-              primary
-              onClick={() => {
-                openPremium();
-              }}
-            >
-              Оформить Premium
+            <Button primary onClick={() => openPremium()}>
+              {t(locale, `dashboard.getPremium`)}
             </Button>
           </div>
         </div>
       </section>
 
       <section className={styles[`section`]}>
-        <h2 className={styles[`sectionTitle`]}>Обработка текста</h2>
-        <p className={styles[`sectionDesc`]}>
-          Выберите действие и введите текст — результат можно скопировать одним нажатием.
-        </p>
+        <h2 className={styles[`sectionTitle`]}>{t(locale, `dashboard.process`)}</h2>
+        <p className={styles[`sectionDesc`]}>{t(locale, `dashboard.processDesc`)}</p>
         <form onSubmit={processText}>
           <div className={styles[`card`]}>
             <div className={styles[`formGroup`]}>
               <label className={styles[`label`]} htmlFor="dashboard-text">
-                Текст
+                {t(locale, `dashboard.text`)}
               </label>
               <textarea
                 id="dashboard-text"
                 className={styles[`textarea`]}
                 disabled={loading}
-                onChange={e => {
-                  setText(e.target.value);
-                }}
-                placeholder="Введите текст для обработки..."
+                onChange={e => setText(e.target.value)}
+                placeholder={t(locale, `dashboard.textPlaceholder`)}
                 value={text}
               />
             </div>
             <div className={styles[`formGroup`]}>
               <label className={styles[`label`]} htmlFor="dashboard-feature">
-                Действие
+                {t(locale, `dashboard.action`)}
               </label>
               <select
                 id="dashboard-feature"
                 className={styles[`select`]}
                 disabled={loading}
-                onChange={e => {
-                  setFeature(e.target.value);
-                }}
+                onChange={e => setFeature(e.target.value)}
                 value={feature}
               >
                 {featureKeys.map(k => (
                   <option key={k} value={k}>
-                    {featureEmoji[k]} {featureLabels[k]}
+                    {featureEmoji[k]} {t(locale, `features.${k}`)}
                   </option>
                 ))}
               </select>
             </div>
             <Button className={styles[`submitRow`]} disabled={loading} primary type="submit">
-              {loading ? `Обработка…` : `Обработать`}
+              {loading ? t(locale, `dashboard.submitting`) : t(locale, `dashboard.submit`)}
             </Button>
             {error !== `` && <p className={styles[`error`]}>{error}</p>}
             {result !== `` && (
               <div className={styles[`resultWrap`]}>
                 <div className={styles[`resultHeader`]}>
-                  <span className={styles[`resultLabel`]}>Результат</span>
+                  <span className={styles[`resultLabel`]}>{t(locale, `dashboard.result`)}</span>
                   <button
                     type="button"
                     className={styles[`copyBtn`]}
@@ -151,7 +142,7 @@ export const Dashboard = () => {
                       });
                     }}
                   >
-                    {copied ? `Скопировано ✓` : `Копировать`}
+                    {copied ? t(locale, `dashboard.copied`) : t(locale, `dashboard.copy`)}
                   </button>
                 </div>
                 <div className={styles[`result`]}>{result}</div>

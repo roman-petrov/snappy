@@ -4,12 +4,12 @@ export const PASSWORD_MIN_LENGTH = 8;
 const hasLetter = (s: string) => /[a-zA-Z]/.test(s);
 const hasDigit = (s: string) => /[0-9]/.test(s);
 
-export const passwordRequirements: { label: string; check: (s: string) => boolean }[] = [
-  { label: `Не менее ${PASSWORD_MIN_LENGTH} символов`, check: s => s.length >= PASSWORD_MIN_LENGTH },
-  { label: `Буквы и цифры`, check: s => hasLetter(s) && hasDigit(s) },
+export const passwordRequirementChecks: { check: (s: string) => boolean }[] = [
+  { check: s => s.length >= PASSWORD_MIN_LENGTH },
+  { check: s => hasLetter(s) && hasDigit(s) },
 ];
 
-export const passwordValid = (s: string): boolean => passwordRequirements.every(({ check }) => check(s));
+export const passwordValid = (s: string): boolean => passwordRequirementChecks.every(({ check }) => check(s));
 
 type Strength = "weak" | "medium" | "strong";
 

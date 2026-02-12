@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { useLocale } from "../shared/LocaleContext";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
+import { t } from "./Locale";
 import {
   generatePassword,
-  passwordRequirements,
+  passwordRequirementChecks,
   passwordStrength,
   passwordValid,
   PASSWORD_MIN_LENGTH,
@@ -15,18 +17,26 @@ import {
 import styles from "./Login.module.css";
 
 export const Register = () => {
+  const { locale } = useLocale();
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const strength = passwordStrength(password);
+  const requirements = [
+    {
+      label: t(locale, `registerPage.requirementMin`, { min: PASSWORD_MIN_LENGTH }),
+      check: passwordRequirementChecks[0]!.check,
+    },
+    { label: t(locale, `registerPage.requirementLetters`), check: passwordRequirementChecks[1]!.check },
+  ];
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(`Пароль: не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры`);
+      setError(t(locale, `registerPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
       return;
     }
     setLoading(true);
@@ -34,7 +44,7 @@ export const Register = () => {
       const res = await api.register(email.trim(), password);
       const data = (await res.json()) as { token?: string; error?: string };
       if (!res.ok) {
-        setError(data.error ?? `Ошибка регистрации`);
+        setError(data.error ?? t(locale, `registerPage.errorRegister`));
         return;
       }
       if (data.token) {
@@ -42,7 +52,7 @@ export const Register = () => {
         navigate(`/`, { replace: true });
       }
     } catch {
-      setError(`Ошибка сети`);
+      setError(t(locale, `registerPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -52,10 +62,10 @@ export const Register = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>Регистрация</h1>
+          <h1 className={styles[`title`]}>{t(locale, `registerPage.title`)}</h1>
           <div className={styles[`field`]}>
             <label className={styles[`label`]} htmlFor="reg-email">
-              Email
+              {t(locale, `registerPage.email`)}
             </label>
             <input
               id="reg-email"
@@ -70,7 +80,7 @@ export const Register = () => {
           <div className={styles[`passwordBlock`]}>
             <PasswordInput
               id="reg-password"
-              label="Пароль"
+              label={t(locale, `registerPage.password`)}
               value={password}
               onChange={setPassword}
               autoComplete="new-password"
@@ -79,7 +89,7 @@ export const Register = () => {
               disabled={loading}
             />
             <div className={styles[`requirements`]}>
-              {passwordRequirements.map(({ label, check }) => (
+              {requirements.map(({ label, check }) => (
                 <span key={label} className={check(password) ? styles[`requirementMet`] : styles[`requirement`]}>
                   {check(password) ? "✓ " : ""}
                   {label}
@@ -87,7 +97,7 @@ export const Register = () => {
               ))}
             </div>
             <div className={styles[`strengthRow`]}>
-              <span className={styles[`strengthLabel`]}>Надёжность:</span>
+              <span className={styles[`strengthLabel`]}>{t(locale, `registerPage.strength`)}:</span>
               <div className={styles[`strengthBar`]}>
                 <div
                   className={styles[`strengthFill`]}
@@ -105,20 +115,24 @@ export const Register = () => {
                 />
               </div>
               <span className={styles[`strengthText`]}>
-                {strength === "weak" ? "Слабый" : strength === "medium" ? "Средний" : "Надёжный"}
+                {strength === "weak"
+                  ? t(locale, `registerPage.strengthWeak`)
+                  : strength === "medium"
+                    ? t(locale, `registerPage.strengthMedium`)
+                    : t(locale, `registerPage.strengthStrong`)}
               </span>
             </div>
             <Button type="button" onClick={() => setPassword(generatePassword())} disabled={loading}>
-              Сгенерировать пароль
+              {t(locale, `registerPage.generatePassword`)}
             </Button>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading || !passwordValid(password)}>
-              {loading ? `Регистрация…` : `Зарегистрироваться`}
+              {loading ? t(locale, `registerPage.submitting`) : t(locale, `registerPage.submit`)}
             </Button>
             <Link to="/login" className={styles[`link`]}>
-              Уже есть аккаунт — войти
+              {t(locale, `registerPage.haveAccount`)}
             </Link>
           </div>
         </form>

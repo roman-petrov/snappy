@@ -1,13 +1,17 @@
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { LocaleSwitcher } from "../shared/LocaleSwitcher";
+import { useLocale } from "../shared/LocaleContext";
 import { Theme } from "../Theme";
 import { clearToken, getToken } from "./Auth";
+import { t } from "./Locale";
 import styles from "./Layout.module.css";
 
 const APP_BASE = `/app`;
 
 export const Layout = () => {
+  const { locale } = useLocale();
   const token = getToken();
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,7 +24,7 @@ export const Layout = () => {
           <Link
             className={styles[`logo`]}
             to={APP_BASE}
-            title="Переключить тему"
+            title={t(locale, `themeToggle`)}
             onClick={e => {
               e.preventDefault();
               Theme.toggle();
@@ -38,22 +42,23 @@ export const Layout = () => {
                 }}
                 type="button"
               >
-                Выйти
+                {t(locale, `logout`)}
               </Button>
             ) : (
               <>
                 {location.pathname !== `${APP_BASE}/login` && (
                   <Link className={styles[`navLink`]} to={`${APP_BASE}/login`}>
-                    Вход
+                    {t(locale, `login`)}
                   </Link>
                 )}
                 {location.pathname !== `${APP_BASE}/register` && (
                   <Link className={styles[`navLink`]} to={`${APP_BASE}/register`}>
-                    Регистрация
+                    {t(locale, `register`)}
                   </Link>
                 )}
               </>
             )}
+            <LocaleSwitcher />
           </nav>
         </div>
       </header>

@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { useLocale } from "../shared/LocaleContext";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
 import { setToken } from "./Auth";
+import { t } from "./Locale";
 import styles from "./Login.module.css";
 
 export const Login = () => {
+  const { locale } = useLocale();
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [remember, setRemember] = useState(false);
@@ -21,9 +24,10 @@ export const Login = () => {
     setLoading(true);
     try {
       const res = await api.login(email.trim(), password);
-      const data = (await res.json()) as { token?: string; error?: string };
+      const data = (await res.json()) as { error?: string; token?: string };
       if (!res.ok) {
-        setError(data.error ?? `Ошибка входа`);
+        setError(data.error ?? t(locale, `loginPage.errorLogin`));
+
         return;
       }
       if (data.token) {
@@ -31,7 +35,7 @@ export const Login = () => {
         navigate(`/`, { replace: true });
       }
     } catch {
-      setError(`Ошибка сети`);
+      setError(t(locale, `loginPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -41,53 +45,57 @@ export const Login = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>Вход</h1>
+          <h1 className={styles[`title`]}>{t(locale, `loginPage.title`)}</h1>
           <div className={styles[`field`]}>
             <label className={styles[`label`]} htmlFor="login-email">
-              Email
+              {t(locale, `loginPage.email`)}
             </label>
             <input
-              id="login-email"
-              type="email"
-              className={styles[`input`]}
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
               autoComplete="email"
+              className={styles[`input`]}
+              id="login-email"
+              onChange={e => {
+                setEmail(e.target.value);
+              }}
+              required
+              type="email"
+              value={email}
             />
           </div>
           <PasswordInput
-            id="login-password"
-            label="Пароль"
-            value={password}
-            onChange={setPassword}
             autoComplete="current-password"
-            required
             disabled={loading}
+            id="login-password"
+            label={t(locale, `loginPage.password`)}
+            onChange={setPassword}
+            required
+            value={password}
           />
           <div className={styles[`rememberRow`]}>
             <input
-              id="login-remember"
-              type="checkbox"
-              className={styles[`checkbox`]}
               checked={remember}
-              onChange={e => setRemember(e.target.checked)}
+              className={styles[`checkbox`]}
               disabled={loading}
+              id="login-remember"
+              onChange={e => {
+                setRemember(e.target.checked);
+              }}
+              type="checkbox"
             />
             <label className={styles[`rememberLabel`]} htmlFor="login-remember">
-              Запомнить
+              {t(locale, `loginPage.remember`)}
             </label>
           </div>
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
-            <Button type="submit" primary disabled={loading}>
-              {loading ? `Вход…` : `Войти`}
+            <Button disabled={loading} primary type="submit">
+              {loading ? t(locale, `loginPage.submitting`) : t(locale, `loginPage.submit`)}
             </Button>
-            <Link to="/forgot-password" className={styles[`link`]}>
-              Забыли пароль?
+            <Link className={styles[`link`]} to="/forgot-password">
+              {t(locale, `loginPage.forgotPassword`)}
             </Link>
-            <Link to="/register" className={styles[`link`]}>
-              Регистрация
+            <Link className={styles[`link`]} to="/register">
+              {t(locale, `loginPage.registerLink`)}
             </Link>
           </div>
         </form>

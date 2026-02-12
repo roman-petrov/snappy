@@ -2,12 +2,15 @@ import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 import { Button } from "../shared/Button";
+import { useLocale } from "../shared/LocaleContext";
 import { PasswordInput } from "../shared/PasswordInput";
 import { api } from "./Api";
+import { t } from "./Locale";
 import { passwordValid, PASSWORD_MIN_LENGTH } from "./Password";
 import styles from "./Login.module.css";
 
 export const ResetPassword = () => {
+  const { locale } = useLocale();
   const [searchParams] = useSearchParams();
   const token = searchParams.get(`token`) ?? ``;
   const [password, setPassword] = useState(``);
@@ -19,7 +22,7 @@ export const ResetPassword = () => {
     e.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
-      setError(`Пароль: не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры`);
+      setError(t(locale, `resetPage.passwordRule`, { min: PASSWORD_MIN_LENGTH }));
       return;
     }
     setLoading(true);
@@ -27,12 +30,12 @@ export const ResetPassword = () => {
       const res = await api.resetPassword(token, password);
       if (!res.ok) {
         const data = (await res.json()) as { error?: string };
-        setError(data.error ?? `Ошибка`);
+        setError(data.error ?? t(locale, `resetPage.error`));
         return;
       }
       setDone(true);
     } catch {
-      setError(`Ошибка сети`);
+      setError(t(locale, `resetPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -42,11 +45,11 @@ export const ResetPassword = () => {
     return (
       <div className={styles[`authPage`]}>
         <div className={styles[`authPanel`]}>
-          <h1 className={styles[`title`]}>Неверная ссылка</h1>
-          <p className={styles[`authLead`]}>Используйте ссылку из письма для сброса пароля.</p>
+          <h1 className={styles[`title`]}>{t(locale, `resetPage.invalidLink`)}</h1>
+          <p className={styles[`authLead`]}>{t(locale, `resetPage.invalidLinkLead`)}</p>
           <div className={styles[`actions`]}>
             <Link to="/forgot-password" className={styles[`link`]}>
-              Запросить снова
+              {t(locale, `resetPage.requestAgain`)}
             </Link>
           </div>
         </div>
@@ -58,11 +61,11 @@ export const ResetPassword = () => {
     return (
       <div className={styles[`authPage`]}>
         <div className={styles[`authPanel`]}>
-          <h1 className={styles[`title`]}>Пароль изменён</h1>
-          <p className={styles[`authLead`]}>Теперь можно войти с новым паролем.</p>
+          <h1 className={styles[`title`]}>{t(locale, `resetPage.done`)}</h1>
+          <p className={styles[`authLead`]}>{t(locale, `resetPage.doneLead`)}</p>
           <div className={styles[`actions`]}>
             <Link to="/login" className={styles[`link`]}>
-              Войти
+              {t(locale, `resetPage.loginLink`)}
             </Link>
           </div>
         </div>
@@ -74,10 +77,10 @@ export const ResetPassword = () => {
     <div className={styles[`authPage`]}>
       <div className={styles[`authPanel`]}>
         <form className={styles[`form`]} onSubmit={submit}>
-          <h1 className={styles[`title`]}>Новый пароль</h1>
+          <h1 className={styles[`title`]}>{t(locale, `resetPage.title`)}</h1>
           <PasswordInput
             id="reset-password"
-            label={`Пароль (не менее ${PASSWORD_MIN_LENGTH} символов, буквы и цифры)`}
+            label={t(locale, `resetPage.passwordLabel`, { min: PASSWORD_MIN_LENGTH })}
             value={password}
             onChange={setPassword}
             autoComplete="new-password"
@@ -88,7 +91,7 @@ export const ResetPassword = () => {
           {error !== `` && <p className={styles[`error`]}>{error}</p>}
           <div className={styles[`actions`]}>
             <Button type="submit" primary disabled={loading}>
-              {loading ? `Сохранение…` : `Сохранить`}
+              {loading ? t(locale, `resetPage.submitting`) : t(locale, `resetPage.submit`)}
             </Button>
           </div>
         </form>
