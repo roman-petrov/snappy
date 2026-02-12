@@ -44,7 +44,9 @@ export const en = {
     submitting: `Sending…`,
     title: `Forgot password`,
   },
+  localeSwitcher: `Switch to Russian`,
   login: `Log in`,
+  passwordInput: { hidePassword: `Hide password`, showPassword: `Show password` },
   loginPage: {
     email: `Email`,
     errorLogin: `Login error`,

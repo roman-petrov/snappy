@@ -12,6 +12,6 @@ export const SiteHeader = () => (
     <MutedLink href="#faq">{t(`nav.faq`)}</MutedLink>
     <MutedLink href="#start">{t(`nav.start`)}</MutedLink>
     <MutedLink href="/app">{t(`nav.cabinet`)}</MutedLink>
-    <LocaleSwitcher getLocale={SiteLocale.getSiteLocale} setLocale={SiteLocale.setSiteLocale} />
+    <LocaleSwitcher getLocale={SiteLocale.getSiteLocale} setLocale={SiteLocale.setSiteLocale} t={SiteLocale.t} />
   </Header>
 );

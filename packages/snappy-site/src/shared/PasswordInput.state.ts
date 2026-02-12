@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { t } from "../app/Locale";
+
 import type { PasswordInputProps } from "./PasswordInput";
 
 export const usePasswordInputState = (props: PasswordInputProps) => {
@@ -8,7 +10,7 @@ export const usePasswordInputState = (props: PasswordInputProps) => {
 
   return {
     ...props,
-    ariaLabel: visible ? `Скрыть пароль` : `Показать пароль`,
+    ariaLabel: visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`),
     inputType: visible ? `text` : `password`,
     toggleVisible,
     visible,

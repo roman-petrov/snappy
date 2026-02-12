@@ -30,7 +30,9 @@ export const useLayoutState = () => {
       ]
     : [
         ...(location.pathname !== `/login` ? [{ type: `link` as const, to: `/login`, label: t(`login`) }] : []),
-        ...(location.pathname !== `/register` ? [{ type: `link` as const, to: `/register`, label: t(`register`) }] : []),
+        ...(location.pathname !== `/register`
+          ? [{ type: `link` as const, to: `/register`, label: t(`register`) }]
+          : []),
         { type: `locale` },
       ];
 
@@ -39,10 +41,5 @@ export const useLayoutState = () => {
     Theme.toggle();
   };
 
-  return {
-    headerItems,
-    logoOnClick,
-    logoTitle: t(`themeToggle`),
-    logoTo: `/` as const,
-  };
+  return { headerItems, logoOnClick, logoTitle: t(`themeToggle`), logoTo: `/` as const };
 };

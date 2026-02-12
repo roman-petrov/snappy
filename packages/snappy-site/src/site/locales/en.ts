@@ -110,6 +110,7 @@ export const en = {
     selling: { hint: `benefits and calls to action`, name: `🎯 Selling` },
     title: `🎭 Ready text styles`,
   },
+  localeSwitcher: `Switch to Russian`,
   themeToggle: `Toggle theme`,
   who: {
     ads: {

@@ -44,7 +44,9 @@ export const ru = {
     submitting: `Отправка…`,
     title: `Забыли пароль`,
   },
+  localeSwitcher: `Переключить на английский`,
   login: `Вход`,
+  passwordInput: { hidePassword: `Скрыть пароль`, showPassword: `Показать пароль` },
   loginPage: {
     email: `Email`,
     errorLogin: `Ошибка входа`,

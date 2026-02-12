@@ -44,7 +44,7 @@ export const Register = () => {
     setLoading(true);
     try {
       const res = await api.register(email.trim(), password);
-      const data = (await res.json()) as { error?: string; token?: string; };
+      const data = (await res.json()) as { error?: string; token?: string };
       if (!res.ok) {
         setError(data.error ?? t(`registerPage.errorRegister`));
 
@@ -74,7 +74,9 @@ export const Register = () => {
               autoComplete="email"
               className={styles[`input`]}
               id="reg-email"
-              onChange={e => { setEmail(e.target.value); }}
+              onChange={e => {
+                setEmail(e.target.value);
+              }}
               required
               type="email"
               value={email}
@@ -125,7 +127,13 @@ export const Register = () => {
                     : t(`registerPage.strengthStrong`)}
               </span>
             </div>
-            <Button disabled={loading} onClick={() => { setPassword(generatePassword()); }} type="button">
+            <Button
+              disabled={loading}
+              onClick={() => {
+                setPassword(generatePassword());
+              }}
+              type="button"
+            >
               {t(`registerPage.generatePassword`)}
             </Button>
           </div>
