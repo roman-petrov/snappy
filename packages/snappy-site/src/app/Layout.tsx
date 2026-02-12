@@ -29,7 +29,7 @@ export const Layout = () => {
           <Button
             onClick={() => {
               clearToken();
-              navigate(`/login`, { replace: true });
+              navigate(`/login`, { replace: true, viewTransition: true });
             }}
             type="button"
           >
@@ -37,12 +37,8 @@ export const Layout = () => {
           </Button>
         ) : (
           <>
-            {location.pathname !== `/login` && (
-              <MutedLink to="/login">{t(`login`)}</MutedLink>
-            )}
-            {location.pathname !== `/register` && (
-              <MutedLink to="/register">{t(`register`)}</MutedLink>
-            )}
+            {location.pathname !== `/login` && <MutedLink to="/login">{t(`login`)}</MutedLink>}
+            {location.pathname !== `/register` && <MutedLink to="/register">{t(`register`)}</MutedLink>}
           </>
         )}
         <LocaleSwitcher />

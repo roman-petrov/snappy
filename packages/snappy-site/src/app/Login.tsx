@@ -32,7 +32,7 @@ export const Login = () => {
       }
       if (data.token) {
         setToken(data.token, remember);
-        navigate(`/`, { replace: true });
+        navigate(`/`, { replace: true, viewTransition: true });
       }
     } catch {
       setError(t(`loginPage.errorNetwork`));

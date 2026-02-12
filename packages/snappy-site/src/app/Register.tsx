@@ -49,7 +49,7 @@ export const Register = () => {
       }
       if (data.token) {
         setToken(data.token);
-        navigate(`/`, { replace: true });
+        navigate(`/`, { replace: true, viewTransition: true });
       }
     } catch {
       setError(t(`registerPage.errorNetwork`));

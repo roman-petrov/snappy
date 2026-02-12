@@ -9,7 +9,7 @@ export const AccentLink = ({ href, to, children }: Props) => {
   const className = styles[`link`];
   if (to !== undefined) {
     return (
-      <Link className={className} to={to}>
+      <Link className={className} to={to} viewTransition>
         {children}
       </Link>
     );

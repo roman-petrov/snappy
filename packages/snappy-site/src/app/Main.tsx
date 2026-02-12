@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 
 import "./styles.css";
 import { Theme } from "../Theme";
@@ -16,26 +16,26 @@ import { ResetPassword } from "./ResetPassword";
 const Protected = ({ children }: { children: ReactNode }) =>
   getToken() === undefined ? <Navigate replace to="/login" /> : <>{children}</>;
 
+const routes = createRoutesFromElements(
+  <Route element={<Layout />} path="/">
+    <Route element={<Login />} path="login" />
+    <Route element={<Register />} path="register" />
+    <Route element={<ForgotPassword />} path="forgot-password" />
+    <Route element={<ResetPassword />} path="reset-password" />
+    <Route
+      element={
+        <Protected>
+          <Dashboard />
+        </Protected>
+      }
+      index
+    />
+    <Route element={<Navigate replace to="/" />} path="*" />
+  </Route>,
+);
+
+const router = createBrowserRouter(routes, { basename: `/app` });
+
 Theme.restore();
 
-createRoot(document.querySelector(`#app-root`)!).render(
-  <BrowserRouter basename="/app">
-    <Routes>
-      <Route element={<Layout />} path="/">
-        <Route element={<Login />} path="login" />
-        <Route element={<Register />} path="register" />
-        <Route element={<ForgotPassword />} path="forgot-password" />
-        <Route element={<ResetPassword />} path="reset-password" />
-        <Route
-          element={
-            <Protected>
-              <Dashboard />
-            </Protected>
-          }
-          index
-        />
-      </Route>
-      <Route element={<Navigate replace to="/" />} path="*" />
-    </Routes>
-  </BrowserRouter>,
-);
+createRoot(document.querySelector(`#app-root`)!).render(<RouterProvider router={router} />);
