@@ -12,7 +12,7 @@ export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
     <header className="site-header">
       <div className="header-inner">
         <a href="/" className="logo" title={t(`themeToggle`)} onClick={Theme.onLogoClick(onThemeToggle)}>
-          <img src="/favicon.svg" alt="" className="logo-icon" aria-hidden="true" /> Snappy
+          <img src="/favicon.svg" alt="" className="logo-icon" width={20} height={20} aria-hidden="true" /> Snappy
         </a>
         <nav>
           <a href="#features">{t(`nav.features`)}</a>
@@ -249,7 +249,7 @@ export const Landing = ({ onThemeToggle }: LandingProps = {}) => (
     <footer className="site-footer">
       <div className="footer-inner">
         <span className="logo">
-          <img src="/favicon.svg" alt="" className="logo-icon" aria-hidden="true" /> Snappy
+          <img src="/favicon.svg" alt="" className="logo-icon" width={20} height={20} aria-hidden="true" /> Snappy
         </span>
         <p>{t(`footer.tagline`)}</p>
         <a href="https://t.me/sn4ppy_bot" target="_blank" rel="noopener">
