@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createServer as createViteServer } from "vite";
+import beautify from "js-beautify";
 
 const root = dirname(fileURLToPath(import.meta.url));
 
@@ -38,6 +39,8 @@ const injectMeta = (
     .replace(/\{\{description\}\}/gu, escapeAttr(meta.description))
     .replace(/\{\{keywords\}\}/gu, escapeAttr(meta.keywords))
     .replace(/\{\{htmlLang\}\}/gu, meta.htmlLang);
+
+const formatHtml = (html: string): string => beautify.html(html, { indent_size: 2, end_with_newline: true });
 
 const main = async () => {
   const app = express();
@@ -73,7 +76,7 @@ const main = async () => {
       template = injectMeta(template, getMeta(locale));
       const html = render(locale);
       const out = template.replace(ROOT_PLACEHOLDER, `<div id="root">${html}</div>`);
-      response.type(`html`).send(out);
+      response.type(`html`).send(formatHtml(out));
     } catch (error) {
       vite.ssrFixStacktrace(error as Error);
       next(error);

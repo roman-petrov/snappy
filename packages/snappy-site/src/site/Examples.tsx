@@ -1,46 +1,20 @@
+import DOMPurify from "isomorphic-dompurify";
 import { t } from "./Locale";
 import { ExampleBlock } from "./ExampleBlock";
 import { Section } from "./Section";
 
-const EXAMPLES = [
-  {
-    labelKey: `examples.fixErrors` as const,
-    before: `привет написал тебе вчера насчёт встречи не знаю получилось ли у тебя прочитать давай созвонимся в среду?`,
-    after: `Привет! Написал тебе вчера насчёт встречи — не знаю, получилось ли у тебя прочитать. Давай созвонимся в среду?`,
-  },
-  {
-    labelKey: `examples.friendlyStyle` as const,
-    before: `Семинар переносится на 15:00. Уведомляю всех участников.`,
-    after: (
-      <>
-        Эй, друзья! 👋 Семинар переносим на <strong>15:00</strong> — предупреждаю заранее, чтобы все успели. До встречи!
-        ✨
-      </>
-    ),
-  },
-  {
-    labelKey: `examples.readability` as const,
-    before: `Мы занимаемся доставкой по городу в течение 2 часов при заказе от 1000 рублей при этом у нас действует скидка 10% для новых клиентов.`,
-    after: (
-      <>
-        Доставка по городу — <strong>до 2 часов</strong> 🚚
-        <br />
-        <br />• При заказе от 1000 ₽<br />•<em>Скидка 10%</em> для новых клиентов 🎁
-      </>
-    ),
-  },
-] as const;
+const EXAMPLE_KEYS = [`examples.fixErrors`, `examples.friendlyStyle`, `examples.readability`] as const;
 
 export const Examples = () => (
   <Section id="examples" title={t(`examples.title`)} lead={t(`examples.lead`)}>
-    {EXAMPLES.map(({ labelKey, before, after }) => (
+    {EXAMPLE_KEYS.map(key => (
       <ExampleBlock
-        key={labelKey}
-        label={t(labelKey)}
+        key={key}
+        label={t(key)}
         beforeLabel={t(`examples.before`)}
         afterLabel={t(`examples.after`)}
-        before={before}
-        after={after}
+        before={t(`${key}Before`)}
+        after={<span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t(`${key}After`)) }} />}
       />
     ))}
   </Section>

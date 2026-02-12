@@ -52,6 +52,12 @@ export const en = {
     readability: `Readability and structure`,
     before: `Before`,
     after: `After`,
+    fixErrorsBefore: `hey wrote you yesterday about the meeting not sure if you got to read it lets have a call on wednesday`,
+    fixErrorsAfter: `Hey! Wrote you yesterday about the meeting — not sure if you got to read it. Let's have a call on Wednesday?`,
+    friendlyStyleBefore: `Seminar rescheduled to 3 PM. Notifying all participants.`,
+    friendlyStyleAfter: `Hey everyone! 👋 We're moving the seminar to <strong>3 PM</strong> — giving a heads-up so you can make it. See you there! ✨`,
+    readabilityBefore: `We provide city delivery within 2 hours for orders over 1000 rubles and we offer a 10% discount for new customers.`,
+    readabilityAfter: `City delivery — <strong>within 2 hours</strong> 🚚<br><br>• Orders over 1000 ₽<br>•<em>10% discount</em> for new customers 🎁`,
   },
   styles: {
     title: `🎭 Ready text styles`,
