@@ -6,7 +6,7 @@ import pluginTypescriptESLint from "typescript-eslint";
 export default defineConfig([
   ...pluginTypescriptESLint.configs.all,
   {
-    files: [`**/*.{js,ts}`],
+    files: [`**/*.{js,ts,tsx}`],
     rules: {
       "@typescript-eslint/adjacent-overload-signatures": `off`,
       "@typescript-eslint/consistent-type-definitions": [`error`, `type`],
