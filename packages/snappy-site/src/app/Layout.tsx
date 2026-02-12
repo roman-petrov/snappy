@@ -7,8 +7,6 @@ import { clearToken, getToken } from "./Auth";
 import { t } from "./Locale";
 import styles from "./Layout.module.css";
 
-const APP_BASE = `/app`;
-
 export const Layout = () => {
   const token = getToken();
   const location = useLocation();
@@ -21,7 +19,7 @@ export const Layout = () => {
         <div className={styles[`inner`]}>
           <Link
             className={styles[`logo`]}
-            to={APP_BASE}
+            to="/"
             title={t(`themeToggle`)}
             onClick={e => {
               e.preventDefault();
@@ -44,13 +42,13 @@ export const Layout = () => {
               </Button>
             ) : (
               <>
-                {location.pathname !== `${APP_BASE}/login` && (
-                  <Link className={styles[`navLink`]} to={`${APP_BASE}/login`}>
+                {location.pathname !== `/login` && (
+                  <Link className={styles[`navLink`]} to="/login">
                     {t(`login`)}
                   </Link>
                 )}
-                {location.pathname !== `${APP_BASE}/register` && (
-                  <Link className={styles[`navLink`]} to={`${APP_BASE}/register`}>
+                {location.pathname !== `/register` && (
+                  <Link className={styles[`navLink`]} to="/register">
                     {t(`register`)}
                   </Link>
                 )}
