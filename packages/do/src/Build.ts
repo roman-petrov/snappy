@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
-import { spawn } from "node:child_process";
+import { Process } from "@snappy/node";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -31,18 +31,10 @@ const copyDir = (src: string, destination: string): void => {
   }
 };
 
-const run = (cmd: string[], cwd: string): Promise<number> =>
-  new Promise((resolve, reject) => {
-    const [exe, ...args] = cmd;
-    const proc = spawn(exe ?? ``, args, { cwd, stdio: `inherit` });
-    proc.on(`close`, (code: number | null) => resolve(code ?? 0));
-    proc.on(`error`, reject);
-  });
-
 const buildSite = async (root: string): Promise<number> => {
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteExit = await run([`npx`, `vite`, `build`], site);
+  const siteExit = await Process.spawn(site, Process.toolArgv(`vite`, [`build`]));
   if (siteExit !== 0) {
     return siteExit;
   }
@@ -50,14 +42,14 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await run([`npx`, `vite`, `build`, `--config`, `vite.app.config.js`], site);
+  const appExit = await Process.spawn(site, Process.toolArgv(`vite`, [`build`, `--config`, `vite.app.config.js`]));
   if (appExit !== 0) {
     return appExit;
   }
 
-  const ssrExit = await run(
-    [`npx`, `vite`, `build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`],
+  const ssrExit = await Process.spawn(
     site,
+    Process.toolArgv(`vite`, [`build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`]),
   );
   if (ssrExit !== 0) {
     return ssrExit;
@@ -66,7 +58,8 @@ const buildSite = async (root: string): Promise<number> => {
   return 0;
 };
 
-const buildServer = async (root: string): Promise<number> => run([`npx`, `vite`, `build`], serverDir(root));
+const buildServer = async (root: string): Promise<number> =>
+  Process.spawn(serverDir(root), Process.toolArgv(`vite`, [`build`]));
 
 const build = async (root: string): Promise<number> => {
   const dist = join(root, distDir);

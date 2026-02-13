@@ -4,6 +4,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable no-await-in-loop */
+import { Process } from "@snappy/node";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import open from "open";
@@ -11,23 +12,12 @@ import open from "open";
 import { Build } from "./Build";
 
 const spawnOptions = { stderr: `inherit` as const, stdin: `inherit` as const, stdout: `inherit` as const };
-const silentOptions = { stderr: `ignore` as const, stdin: `inherit` as const, stdout: `ignore` as const };
 
-const run = async (
+const run = (
   cwd: string,
-  cmd: string[],
+  command: string,
   options?: { env?: Record<string, string>; silent?: boolean },
-): Promise<number> =>
-  new Promise((resolve, reject) => {
-    const proc = spawn(cmd.join(` `), [], {
-      cwd,
-      shell: true,
-      ...(options?.silent === true ? silentOptions : spawnOptions),
-      ...(options?.env !== undefined && { env: { ...process.env, ...options.env } }),
-    });
-    proc.on(`close`, code => resolve(code ?? 0));
-    proc.on(`error`, reject);
-  });
+): Promise<number> => Process.spawnShell(cwd, command, options);
 
 const log = {
   fail: (label: string) => process.stderr.write(`  ❌ ${label}\n`),
@@ -36,9 +26,9 @@ const log = {
   step: (label: string) => process.stdout.write(`  ⏳ ${label}...\n`),
 };
 
-const runStep = async (root: string, cmd: string[], label: string) => {
+const runStep = async (root: string, command: string, label: string) => {
   log.step(label);
-  const code = await run(root, cmd, { silent: true });
+  const code = await run(root, command, { silent: true });
 
   if (code !== 0) {
     log.fail(label);
@@ -50,15 +40,15 @@ const runStep = async (root: string, cmd: string[], label: string) => {
   return 0;
 };
 
-const dbSteps: [string[], string][] = [
-  [[`docker`, `compose`, `up`, `-d`], `Database container`],
-  [[`npx`, `prisma`, `db`, `push`, `--accept-data-loss`], `Schema sync`],
-  [[`npx`, `prisma`, `db`, `seed`], `Seed`],
+const dbSteps: [string, string][] = [
+  [`docker compose up -d`, `Database container`],
+  [Process.toolCommand(`prisma`, [`db`, `push`, `--accept-data-loss`]), `Schema sync`],
+  [Process.toolCommand(`prisma`, [`db`, `seed`]), `Seed`],
 ];
 
 const dbStart = async (root: string): Promise<number> => {
-  for (const [cmd, label] of dbSteps) {
-    const code = await runStep(root, cmd, label);
+  for (const [command, label] of dbSteps) {
+    const code = await runStep(root, command, label);
     if (code !== 0) {
       return code;
     }
@@ -69,7 +59,7 @@ const dbStart = async (root: string): Promise<number> => {
 
 const dbStop = async (root: string): Promise<void> => {
   process.stdout.write(`  Stopping database...\n`);
-  await run(root, [`docker`, `compose`, `down`], { silent: true });
+  await run(root, `docker compose down`, { silent: true });
   process.stdout.write(`  Done\n`);
 };
 

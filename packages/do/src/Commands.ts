@@ -1,26 +1,30 @@
+import { Process } from "@snappy/node";
+
 export type Command = { command: string; description: string; name: string };
+
+const cmd = (tool: string, args: string[]) => Process.toolCommand(tool, args);
 
 const cmdRun = `run`;
 const cmdDev = `dev`;
 const cmdBuild = `build`;
-const cmdTest = `npx vitest run`;
-const cmdLintTsc = `npx tsc --noEmit`;
-const cmdLintEslint = `npx eslint .`;
-const cmdLintPrettier = `npx prettier --check .`;
-const cmdLintStylelint = `npx stylelint --max-warnings=0 **/*.css`;
-const cmdLintCspell = `npx cspell .`;
-const cmdLintJscpd = `npx jscpd .`;
-const cmdLintMarkdown = `npx markdownlint .`;
-const cmdFixEslint = `npx eslint --fix .`;
-const cmdFixPrettier = `npx prettier --write .`;
-const cmdFixStylelint = `npx stylelint --fix --max-warnings=0 **/*.css`;
-const cmdDbGenerate = `npx prisma generate`;
-const cmdDbPush = `npx prisma db push`;
-const cmdDbMigrateDev = `npx prisma migrate dev`;
-const cmdDbMigrateDeploy = `npx prisma migrate deploy`;
-const cmdDbMigrateReset = `npx prisma migrate reset`;
-const cmdDbStudio = `npx prisma studio`;
-const cmdDbSeed = `npx prisma db seed`;
+const cmdTest = cmd(`vitest`, [`run`]);
+const cmdLintTsc = cmd(`tsc`, [`--noEmit`]);
+const cmdLintEslint = cmd(`eslint`, [`.`]);
+const cmdLintPrettier = cmd(`prettier`, [`--check`, `.`]);
+const cmdLintStylelint = cmd(`stylelint`, [`--max-warnings=0`, `**/*.css`]);
+const cmdLintCspell = cmd(`cspell`, [`.`]);
+const cmdLintJscpd = cmd(`jscpd`, [`.`]);
+const cmdLintMarkdown = cmd(`markdownlint`, [`.`]);
+const cmdFixEslint = cmd(`eslint`, [`--fix`, `.`]);
+const cmdFixPrettier = cmd(`prettier`, [`--write`, `.`]);
+const cmdFixStylelint = cmd(`stylelint`, [`--fix`, `--max-warnings=0`, `**/*.css`]);
+const cmdDbGenerate = cmd(`prisma`, [`generate`]);
+const cmdDbPush = cmd(`prisma`, [`db`, `push`]);
+const cmdDbMigrateDev = cmd(`prisma`, [`migrate`, `dev`]);
+const cmdDbMigrateDeploy = cmd(`prisma`, [`migrate`, `deploy`]);
+const cmdDbMigrateReset = cmd(`prisma`, [`migrate`, `reset`]);
+const cmdDbStudio = cmd(`prisma`, [`studio`]);
+const cmdDbSeed = cmd(`prisma`, [`db`, `seed`]);
 
 const cmdCi = [
   cmdTest,
