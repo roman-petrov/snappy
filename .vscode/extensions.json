@@ -11,6 +11,7 @@
     "fabiospampinato.vscode-highlight",
     "Prisma.prisma",
     "ms-azuretools.vscode-docker",
+    "vitest.explorer",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
