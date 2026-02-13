@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
