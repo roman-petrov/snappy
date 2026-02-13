@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-export const featureEmoji: Record<string, string> = {
+import type { FeatureType } from "@snappy/server-api";
+
+export const featureEmoji: Record<FeatureType, string> = {
   addEmoji: `😀`,
   expand: `📝`,
   fixErrors: `✏️`,
@@ -12,4 +13,6 @@ export const featureEmoji: Record<string, string> = {
   styleSelling: `🛒`,
 };
 
-export const featureKeys = Object.keys(featureEmoji) as [string, ...string[]];
+export { defaultFeature, featureKeys } from "@snappy/server-api";
+
+export type { FeatureType } from "@snappy/server-api";
