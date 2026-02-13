@@ -1,9 +1,10 @@
 /* eslint-disable functional/immutable-data */
-/* eslint-disable @typescript-eslint/strict-void-return */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable sonarjs/os-command */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Process } from "@snappy/node";
 import { spawn } from "node:child_process";
 import { join } from "node:path";
@@ -13,7 +14,7 @@ import { Build } from "./Build";
 
 const spawnOptions = { stderr: `inherit` as const, stdin: `inherit` as const, stdout: `inherit` as const };
 
-const run = (
+const run = async (
   cwd: string,
   command: string,
   options?: { env?: Record<string, string>; silent?: boolean },
@@ -68,8 +69,12 @@ const sitePath = (root: string) => join(root, `packages`, `snappy-site`);
 const distServerPath = (root: string) => join(root, `dist`, `server.js`);
 const vitePort = 5173;
 
-const procExited = (proc: ReturnType<typeof spawn>): Promise<number> =>
-  new Promise(resolve => proc.on(`close`, code => resolve(code ?? 0)));
+const procExited = async (proc: ReturnType<typeof spawn>): Promise<number> =>
+  new Promise(resolve => {
+    proc.on(`close`, (code: number | null) => {
+      resolve(code ?? 0);
+    });
+  });
 
 const withShutdown = (root: string, onKill: () => void) => {
   const state = { done: false };

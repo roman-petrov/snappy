@@ -15,4 +15,6 @@ export type FeatureType = (typeof featureKeys)[number];
 
 export { featureKeys };
 
-export const defaultFeature: FeatureType = featureKeys[0];
+const [defaultFeature] = featureKeys;
+
+export { defaultFeature };

@@ -19,9 +19,9 @@ const parseBearerToken = (auth: string | undefined): string | undefined =>
 const parseBotTelegramId = (request: Request): number | undefined => {
   const body = request.body as ApiBotBody;
   const raw = _.isNumber(body.telegramId) ? body.telegramId : request.query[`telegramId`];
-  const n = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
+  const num = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
 
-  return Number.isNaN(n) ? undefined : n;
+  return Number.isNaN(num) ? undefined : num;
 };
 
 const requireJwt = (context: AppContext) => (request: Request, response: Response, next: () => void) => {
@@ -69,10 +69,10 @@ const requireUser =
   (context: AppContext, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
       const token = parseBearerToken(request.headers.authorization);
-      if (token === undefined || context.jwtSecret === ``) return false;
+      if (token === undefined || context.jwtSecret === ``) {return false;}
 
       const payload = Jwt.verify(token, context.jwtSecret);
-      if (payload === undefined) return false;
+      if (payload === undefined) {return false;}
 
       (request as Request & { userId: number }).userId = payload.userId;
 
@@ -82,10 +82,10 @@ const requireUser =
     const tryBot = (): boolean => {
       const key = request.headers[`x-bot-api-key`];
       const received = _.isString(key) ? key : ``;
-      if (botApiKey === `` || received !== botApiKey) return false;
+      if (botApiKey === `` || received !== botApiKey) {return false;}
 
       const telegramId = parseBotTelegramId(request);
-      if (telegramId === undefined) return false;
+      if (telegramId === undefined) {return false;}
 
       (request as Request & { telegramId: number }).telegramId = telegramId;
 

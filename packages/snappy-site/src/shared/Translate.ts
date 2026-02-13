@@ -8,7 +8,7 @@ const resolveByPath = (current: unknown, keys: string[]): unknown => {
     return current;
   }
   const [first, ...rest] = keys;
-  if (first === undefined || !_.isObject(current) || current === null || !(first in current)) {
+  if (first === undefined || current === null || !_.isObject(current) || !(first in current)) {
     return notFound;
   }
 

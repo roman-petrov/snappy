@@ -65,7 +65,7 @@ export const YooKassa = (credentials: YooKassaCredentials) => {
     type ApiResponse = { confirmation: { confirmationUrl: string; type: string } };
 
     const jsonData: unknown = await response.json();
-    if (!_.isObject(jsonData) || jsonData === null || !(`confirmation` in jsonData)) {
+    if (jsonData === null || !_.isObject(jsonData) || !(`confirmation` in jsonData)) {
       throw new Error(`Invalid response from YooKassa`);
     }
 
@@ -90,7 +90,7 @@ export const YooKassa = (credentials: YooKassaCredentials) => {
     }
 
     const jsonData: unknown = await response.json();
-    if (!_.isObject(jsonData) || jsonData === null || !(`status` in jsonData) || !(`paid` in jsonData)) {
+    if (jsonData === null || !_.isObject(jsonData) || !(`status` in jsonData) || !(`paid` in jsonData)) {
       return false;
     }
     const apiResponse = jsonData as { paid: boolean; status: string };

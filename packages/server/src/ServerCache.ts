@@ -1,4 +1,5 @@
 /* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { RequestHandler } from "express";
@@ -74,10 +75,16 @@ export const ServerCache = () => {
   };
 
   const preferredEncoding = (acceptEncoding: string | undefined): `br` | `gzip` | undefined => {
-    if (acceptEncoding === undefined) return undefined;
+    if (acceptEncoding === undefined) {
+      return undefined;
+    }
     const s = acceptEncoding.toLowerCase();
-    if (s.includes(`br`)) return `br`;
-    if (s.includes(`gzip`)) return `gzip`;
+    if (s.includes(`br`)) {
+      return `br`;
+    }
+    if (s.includes(`gzip`)) {
+      return `gzip`;
+    }
 
     return undefined;
   };
@@ -128,7 +135,7 @@ export const ServerCache = () => {
         return;
       }
 
-      let raw: Buffer | undefined;
+      let raw: Buffer | undefined = undefined;
       try {
         raw = readFileSync(filePath);
       } catch {

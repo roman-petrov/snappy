@@ -8,5 +8,8 @@
     "@snappy/config": "workspace:*",
     "@snappy/do": "workspace:*",
     "prisma": "^7.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
   }
 }

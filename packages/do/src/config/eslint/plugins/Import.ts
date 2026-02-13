@@ -12,7 +12,7 @@ export default defineConfig([
       "import/namespace": `off`,
       "import/no-extraneous-dependencies": [
         `error`,
-        { devDependencies: [`packages/*/*`], includeInternal: true, includeTypes: true },
+        { devDependencies: [`packages/*/*`, `**/*.test.ts`], includeInternal: true, includeTypes: true },
       ],
       "import/no-named-as-default": `off`,
       "import/no-named-as-default-member": `off`,

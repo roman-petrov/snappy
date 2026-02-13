@@ -125,4 +125,5 @@ const systemPrompts = {
 const systemPrompt = (feature: FeatureType) => systemPrompts[feature];
 
 export const Prompts = { systemPrompt, systemPrompts };
+
 export type { FeatureType } from "@snappy/server-api";

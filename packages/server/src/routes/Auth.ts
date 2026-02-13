@@ -20,15 +20,15 @@ const hasDigit = (s: string) => /\d/u.test(s);
 const passwordValid = (s: string) => s.length >= passwordMinLength && hasLetter(s) && hasDigit(s);
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
-const jwtUnavailable = (ctx: AppContext, res: Response): boolean => {
-  if (ctx.jwtSecret !== ``) return false;
-  res.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
+const jwtUnavailable = (context: AppContext, response: Response): boolean => {
+  if (context.jwtSecret !== ``) {return false;}
+  response.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
 
   return true;
 };
 
 const register = (context: AppContext) => async (request: Request, response: Response) => {
-  if (jwtUnavailable(context, response)) return;
+  if (jwtUnavailable(context, response)) {return;}
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 
@@ -57,7 +57,7 @@ const register = (context: AppContext) => async (request: Request, response: Res
 };
 
 const login = (context: AppContext) => async (request: Request, response: Response) => {
-  if (jwtUnavailable(context, response)) return;
+  if (jwtUnavailable(context, response)) {return;}
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 

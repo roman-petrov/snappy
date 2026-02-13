@@ -2,8 +2,9 @@
 /* eslint-disable functional/no-promise-reject */
 import { _ } from "@snappy/core";
 
-import { Endpoints } from "./Endpoints";
 import type { FeatureType } from "./Features";
+
+import { Endpoints } from "./Endpoints";
 
 type Auth = BotAuth | JwtAuth;
 

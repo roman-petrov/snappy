@@ -3,7 +3,6 @@ import { Process } from "@snappy/node";
 export type Command = { command: string; description: string; name: string };
 
 const cmd = (tool: string, args: string[]) => Process.toolCommand(tool, args);
-
 const cmdRun = `run`;
 const cmdDev = `dev`;
 const cmdBuild = `build`;
