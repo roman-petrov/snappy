@@ -1,9 +1,8 @@
 /* eslint-disable functional/no-expression-statements */
+import type { ApiProcessBody } from "@snappy/server-api";
 import type { Request, Response } from "express";
 
 import { type FeatureType, Prompts } from "@snappy/snappy";
-
-import type { ApiProcessBody } from "@snappy/server-api";
 
 import type { AppContext } from "../Types";
 

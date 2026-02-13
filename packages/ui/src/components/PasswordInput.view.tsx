@@ -22,8 +22,8 @@ export const PasswordInputView = ({
   value,
   visible,
 }: PasswordInputViewProps) => (
-  <div className={inputStyles[`field`]}>
-    <label className={inputStyles[`label`]} htmlFor={id}>
+  <div className={inputStyles.field}>
+    <label className={inputStyles.label} htmlFor={id}>
       {label}
     </label>
     <div className={styles.wrap}>

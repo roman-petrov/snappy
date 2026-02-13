@@ -37,8 +37,8 @@ export const useDashboardState = () => {
       if (remaining !== undefined) {
         setRemaining(remaining - 1);
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`dashboard.errorNetwork`));
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : t(`dashboard.errorNetwork`));
     } finally {
       setLoading(false);
     }

@@ -1,3 +1,5 @@
+/* eslint-disable unicorn/filename-case */
+/* eslint-disable functional/no-expression-statements */
 import { ensureFogContainer, Theme } from "@snappy/ui";
 import { hydrateRoot } from "react-dom/client";
 

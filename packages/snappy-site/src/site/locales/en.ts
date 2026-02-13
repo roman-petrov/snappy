@@ -1,4 +1,5 @@
-/* eslint-disable unicorn/filename-case */
+/* eslint-disable id-length */
+
 export const en = {
   cta: {
     button: `Open in Telegram`,

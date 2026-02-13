@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
+import type { ServerApi } from "@snappy/server-api";
 import type { Bot } from "gramio";
 
-import type { ServerApi } from "@snappy/server-api";
 import type { UserTexts } from "./UserTexts";
 
 import { Keyboards } from "./Keyboards";

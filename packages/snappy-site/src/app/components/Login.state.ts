@@ -21,8 +21,8 @@ export const useLoginState = () => {
       const { token } = await api.login(email.trim(), password);
       setToken(token, remember);
       navigate(`/`, { replace: true, viewTransition: true });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`loginPage.errorNetwork`));
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : t(`loginPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

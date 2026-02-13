@@ -1,8 +1,7 @@
 /* jscpd:ignore-start */
 /* eslint-disable functional/no-expression-statements */
-import type { Bot } from "gramio";
-
 import type { ServerApi } from "@snappy/server-api";
+import type { Bot } from "gramio";
 
 import { Keyboards } from "./Keyboards";
 import { Locale, t } from "./Locale";

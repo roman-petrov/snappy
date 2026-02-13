@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Request, Response } from "express";
-
 import type { ApiBotBody } from "@snappy/server-api";
+import type { Request, Response } from "express";
 
 import type { AppContext } from "./Types";
 

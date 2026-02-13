@@ -25,8 +25,8 @@ export const useResetPasswordState = () => {
     try {
       await api.resetPassword(token, password);
       setDone(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`resetPage.errorNetwork`));
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : t(`resetPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

@@ -48,8 +48,8 @@ export const useRegisterState = () => {
       const { token } = await api.register(email.trim(), password);
       setToken(token);
       navigate(`/`, { replace: true, viewTransition: true });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`registerPage.errorNetwork`));
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : t(`registerPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

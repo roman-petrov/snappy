@@ -16,8 +16,8 @@ export const useForgotPasswordState = () => {
     try {
       await api.forgotPassword(email.trim());
       setSent(true);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t(`forgotPage.errorNetwork`));
+    } catch (error_) {
+      setError(error_ instanceof Error ? error_.message : t(`forgotPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
