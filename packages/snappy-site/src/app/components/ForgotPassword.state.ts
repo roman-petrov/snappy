@@ -23,12 +23,5 @@ export const useForgotPasswordState = () => {
     }
   };
 
-  return {
-    email,
-    error,
-    loading,
-    onEmailChange: setEmail,
-    onSubmit,
-    sent,
-  };
+  return { email, error, loading, onEmailChange: setEmail, onSubmit, sent };
 };

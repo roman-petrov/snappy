@@ -35,7 +35,9 @@ const makeT = <T extends string>(
     const localeKey = getLocale();
     const messages = locale(localeKey);
     const value = resolveByPath(messages, key.split(`.`));
-    if (value === notFound) {return key;}
+    if (value === notFound) {
+      return key;
+    }
     const template = String(value);
 
     return parameters === undefined ? template : interpolate(template, Object.entries(parameters));

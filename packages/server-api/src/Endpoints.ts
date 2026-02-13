@@ -5,11 +5,7 @@ export const Endpoints = {
     register: `/api/auth/register`,
     resetPassword: `/api/auth/reset-password`,
   },
-  premium: {
-    paymentUrl: `/api/premium/payment-url`,
-  },
+  premium: { paymentUrl: `/api/premium/payment-url` },
   process: `/api/process`,
-  user: {
-    remaining: `/api/user/remaining`,
-  },
+  user: { remaining: `/api/user/remaining` },
 } as const;

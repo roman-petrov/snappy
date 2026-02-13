@@ -26,13 +26,7 @@ export const useRegisterState = () => {
   ];
 
   const strengthBarWidth =
-    password.length === 0
-      ? `0%`
-      : strength === `weak`
-        ? `33%`
-        : strength === `medium`
-          ? `66%`
-          : `100%`;
+    password.length === 0 ? `0%` : strength === `weak` ? `33%` : strength === `medium` ? `66%` : `100%`;
 
   const strengthText =
     strength === `weak`

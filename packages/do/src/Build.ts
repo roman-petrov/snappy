@@ -38,19 +38,25 @@ const buildSite = async (root: string): Promise<number> => {
   const site = siteDir(root);
   const dist = siteDist(root);
   const siteExit = await spawn([`bunx`, `vite`, `build`], site);
-  if (siteExit !== 0) {return siteExit;}
+  if (siteExit !== 0) {
+    return siteExit;
+  }
 
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
   const appExit = await spawn([`bunx`, `vite`, `build`, `--config`, `vite.app.config.ts`], site);
-  if (appExit !== 0) {return appExit;}
+  if (appExit !== 0) {
+    return appExit;
+  }
 
   const ssrExit = await spawn(
     [`bunx`, `vite`, `build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`],
     site,
   );
-  if (ssrExit !== 0) {return ssrExit;}
+  if (ssrExit !== 0) {
+    return ssrExit;
+  }
 
   return 0;
 };
@@ -62,10 +68,14 @@ const build = async (root: string): Promise<number> => {
   fs.rmSync(dist, { force: true, recursive: true });
 
   const siteExit = await buildSite(root);
-  if (siteExit !== 0) {return siteExit;}
+  if (siteExit !== 0) {
+    return siteExit;
+  }
 
   const serverExit = await buildServer(root);
-  if (serverExit !== 0) {return serverExit;}
+  if (serverExit !== 0) {
+    return serverExit;
+  }
 
   copyDir(serverDist(root), join(root, distDir));
   copyDir(siteDist(root), wwwDir(root));

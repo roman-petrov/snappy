@@ -1,4 +1,3 @@
- 
 import { Config } from "@snappy/config";
 import { Database } from "@snappy/db";
 import { createApp } from "@snappy/server";

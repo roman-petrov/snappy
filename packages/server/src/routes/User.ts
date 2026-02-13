@@ -6,7 +6,7 @@ import type { AppContext } from "../Types";
 import { Storage } from "../Storage";
 
 const remaining = (context: AppContext) => async (request: Request, res: Response) => {
-  const {userId} = (request as Request & { userId?: number });
+  const { userId } = request as Request & { userId?: number };
 
   if (userId === undefined) {
     res.status(401).json({ error: `Unauthorized` });

@@ -12,13 +12,7 @@ export type SnappyBotConfig = {
   version?: string;
 };
 
-export const SnappyBot = ({
-  apiBaseUrl,
-  apiKey,
-  botToken,
-  premiumPrice,
-  version,
-}: SnappyBotConfig) => {
+export const SnappyBot = ({ apiBaseUrl, apiKey, botToken, premiumPrice, version }: SnappyBotConfig) => {
   const bot = new Bot(botToken);
   const api = ServerApi({ auth: { apiKey, type: `bot` }, baseUrl: apiBaseUrl });
   const userTexts = UserTexts();
