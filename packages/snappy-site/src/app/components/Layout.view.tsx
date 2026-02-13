@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Link } from "@snappy/ui";
 import { Outlet } from "react-router-dom";
 

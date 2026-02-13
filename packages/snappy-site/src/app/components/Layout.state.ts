@@ -7,7 +7,7 @@ import { clearToken, getToken } from "../core/Auth";
 import { t } from "../core/Locale";
 
 type HeaderItem =
-  | { label: string; onClick: () => void; type: `button` }
+  | { label: string; onClick: () => Promise<void>; type: `button` }
   | { label: string; to: string; type: `link` }
   | { type: `locale` };
 
@@ -21,9 +21,9 @@ export const useLayoutState = () => {
     ? [
         {
           label: t(`logout`),
-          onClick: () => {
+          onClick: async () => {
             clearToken();
-            navigate(`/login`, { replace: true, viewTransition: true });
+            await navigate(`/login`, { replace: true, viewTransition: true });
           },
           type: `button`,
         },

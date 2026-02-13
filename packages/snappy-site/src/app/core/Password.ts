@@ -31,11 +31,11 @@ export const passwordStrength = (s: string): Strength => {
   if (s.length >= passwordMinLength && variety >= 2) {
     return `medium`;
   }
+
   return `weak`;
 };
 
 const chars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
-
 const defaultPasswordLength = 12;
 
 export const generatePassword = (length = defaultPasswordLength): string => {
