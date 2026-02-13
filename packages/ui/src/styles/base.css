@@ -2,10 +2,6 @@ html {
   scroll-behavior: smooth;
 }
 
-:is(#features, #examples, #who, #faq, #start) {
-  scroll-margin-top: 4rem;
-}
-
 * {
   box-sizing: border-box;
 }

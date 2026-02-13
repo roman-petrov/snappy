@@ -1,0 +1,13 @@
+{
+  "name": "@snappy/server-api",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/snappy": "workspace:*"
+  }
+}
