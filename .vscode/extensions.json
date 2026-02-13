@@ -12,6 +12,7 @@
     "Prisma.prisma",
     "ms-azuretools.vscode-docker",
     "vitest.explorer",
+    "webpro.vscode-knip",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
