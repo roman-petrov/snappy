@@ -37,7 +37,6 @@ const config: KnipConfig = {
     "**/*.module.css.d.ts": [`exports`],
     "**/entry-server.tsx": [`exports`],
     "packages/do/src/config/index.esm.js": [`exports`],
-    "packages/do/src/Instructions.ts": [`exports`],
   },
   ignoreUnresolved: [`tsx/esm`],
   includeEntryExports: true,
