@@ -1,5 +1,4 @@
-import { Button } from "../../shared/Button";
-import { TelegramIcon } from "../../shared/TelegramIcon";
+import { Button, TelegramIcon } from "@snappy/ui";
 import { t } from "../core/Locale";
 import styles from "./CtaBlock.module.css";
 

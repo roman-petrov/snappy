@@ -10,7 +10,7 @@ export type InputProps = {
   minLength?: number;
   onChange: (value: string) => void;
   required?: boolean;
-  type?: `email` | `text`;
+  type?: `email` | `password` | `text`;
   value: string;
 };
 

@@ -1,7 +1,6 @@
 import type { useDashboardState } from "./Dashboard.state";
 
-import { Button } from "../../shared/Button";
-import { Card } from "../../shared/Card";
+import { Button, Card } from "@snappy/ui";
 import { t } from "../core/Locale";
 import styles from "./Dashboard.module.css";
 

@@ -1,4 +1,5 @@
-import { Link } from "../../shared/Link";
+import { Link } from "@snappy/ui";
+
 import { t } from "../core/Locale";
 import styles from "./SiteFooter.module.css";
 

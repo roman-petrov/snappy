@@ -1,6 +1,6 @@
 @import url("@fontsource-variable/inter");
-@import url("../css/variables.css");
-@import url("../css/base.css");
+@import url("./variables.css");
+@import url("./base.css");
 
 /* View Transition API: cross-fade between routes */
 @supports (view-transition-name: none) {

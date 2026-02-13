@@ -1,14 +1,14 @@
 .root {
   display: inline-block;
   padding: var(--space-3) var(--space-6);
+  font-family: inherit;
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
   border-radius: var(--radius-sm);
   transition: var(--transition-btn);
-  border: none;
-  cursor: pointer;
-  text-decoration: none;
-  font-family: inherit;
 }
 
 .root:focus-visible {
@@ -38,7 +38,7 @@
 }
 
 .root:disabled {
-  opacity: 0.6;
   cursor: not-allowed;
+  opacity: 0.6;
   transform: none;
 }

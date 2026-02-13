@@ -1,10 +1,6 @@
 import type { useLoginState } from "./Login.state";
 
-import { Link } from "../../shared/Link";
-import { Button } from "../../shared/Button";
-import { Input } from "../../shared/Input";
-import { Panel } from "../../shared/Panel";
-import { PasswordInput } from "../../shared/PasswordInput";
+import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
 import { t } from "../core/Locale";
 import styles from "./Login.module.css";
 
@@ -35,10 +31,12 @@ export const LoginView = ({
       <PasswordInput
         autoComplete="current-password"
         disabled={loading}
+        hidePasswordLabel={t(`passwordInput.hidePassword`)}
         id="login-password"
         label={t(`loginPage.password`)}
         onChange={onPasswordChange}
         required
+        showPasswordLabel={t(`passwordInput.showPassword`)}
         value={password}
       />
       <div className={styles[`rememberRow`]}>

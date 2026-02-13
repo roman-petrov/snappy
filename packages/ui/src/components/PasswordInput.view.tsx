@@ -1,7 +1,7 @@
 import type { usePasswordInputState } from "./PasswordInput.state";
 
-import eyeClosedSvg from "../app/assets/eye-closed.svg?raw";
-import eyeOpenSvg from "../app/assets/eye-open.svg?raw";
+import eyeClosedSvg from "../assets/eye-closed.svg?raw";
+import eyeOpenSvg from "../assets/eye-open.svg?raw";
 import { Input } from "./Input";
 import inputStyles from "./Input.module.css";
 import styles from "./PasswordInput.module.css";
@@ -35,7 +35,7 @@ export const PasswordInputView = ({
         minLength={minLength}
         onChange={onChange}
         required={required}
-        type={inputType}
+        type={inputType as `password` | `text`}
         value={value}
       />
       <button

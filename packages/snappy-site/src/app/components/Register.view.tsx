@@ -1,11 +1,6 @@
 import type { useRegisterState } from "./Register.state";
 
-import { Link } from "../../shared/Link";
-import { Button } from "../../shared/Button";
-import { Input } from "../../shared/Input";
-import { Panel } from "../../shared/Panel";
-import { PasswordInput } from "../../shared/PasswordInput";
-import { PasswordStrength } from "../../shared/PasswordStrength";
+import { Button, Input, Link, Panel, PasswordInput, PasswordStrength } from "@snappy/ui";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
 import styles from "./Login.module.css";
@@ -42,11 +37,13 @@ export const RegisterView = ({
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}
+          hidePasswordLabel={t(`passwordInput.hidePassword`)}
           id="reg-password"
           label={t(`registerPage.password`)}
           minLength={passwordMinLength}
           onChange={onPasswordChange}
           required
+          showPasswordLabel={t(`passwordInput.showPassword`)}
           value={password}
         />
         <PasswordStrength

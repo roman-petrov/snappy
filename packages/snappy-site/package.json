@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
+    "@snappy/ui": "workspace:*",
     "isomorphic-dompurify": "^3.0.0-rc.2",
     "js-beautify": "^1.15.4",
     "react": "^19.0.0",

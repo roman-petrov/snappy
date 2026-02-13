@@ -1,9 +1,6 @@
 import type { useResetPasswordState } from "./ResetPassword.state";
 
-import { Link } from "../../shared/Link";
-import { Button } from "../../shared/Button";
-import { Panel } from "../../shared/Panel";
-import { PasswordInput } from "../../shared/PasswordInput";
+import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
 import styles from "./Login.module.css";
@@ -45,11 +42,13 @@ export const ResetPasswordView = ({
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}
+          hidePasswordLabel={t(`passwordInput.hidePassword`)}
           id="reset-password"
           label={t(`resetPage.passwordLabel`, { min: passwordMinLength })}
           minLength={passwordMinLength}
           onChange={onPasswordChange}
           required
+          showPasswordLabel={t(`passwordInput.showPassword`)}
           value={password}
         />
         {error !== `` && <p className={styles[`error`]}>{error}</p>}

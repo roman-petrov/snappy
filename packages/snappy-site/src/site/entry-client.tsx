@@ -1,8 +1,9 @@
 import { hydrateRoot } from "react-dom/client";
 
-import { Theme } from "../core/Theme.js";
+import { ensureFogContainer, Theme } from "@snappy/ui";
 import { Landing } from "./components/Landing.js";
 
+ensureFogContainer();
 Theme.restore();
 
 const root = document.querySelector(`#root`);

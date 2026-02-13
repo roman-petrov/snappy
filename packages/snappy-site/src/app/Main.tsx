@@ -1,8 +1,6 @@
-import { createRoot } from "react-dom/client";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 
-import "./styles.css";
-import { Theme } from "../core/Theme";
+import { startApp } from "@snappy/ui";
 import { Dashboard } from "./components/Dashboard";
 import { ForgotPassword } from "./components/ForgotPassword";
 import { Layout } from "./components/Layout";
@@ -11,9 +9,8 @@ import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
 import { getToken } from "./core/Auth";
 
-Theme.restore();
-
-createRoot(document.querySelector(`#app-root`)!).render(
+startApp(
+  document.querySelector(`#app-root`)!,
   <RouterProvider
     router={createBrowserRouter(
       createRoutesFromElements(

@@ -2,10 +2,9 @@ import { Outlet } from "react-router-dom";
 
 import type { useLayoutState } from "./Layout.state";
 
-import { Button } from "../../shared/Button";
+import { Button, Link } from "@snappy/ui";
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import { Link } from "../../shared/Link";
 import styles from "./Layout.module.css";
 
 export type LayoutViewProps = ReturnType<typeof useLayoutState>;

@@ -1,9 +1,6 @@
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
-import { Link } from "../../shared/Link";
-import { Button } from "../../shared/Button";
-import { Input } from "../../shared/Input";
-import { Panel } from "../../shared/Panel";
+import { Button, Input, Link, Panel } from "@snappy/ui";
 import { t } from "../core/Locale";
 import styles from "./Login.module.css";
 
