@@ -85,13 +85,8 @@ export const Ssr = () => {
         }
         const { entry: ssrEntry, template } = await ensureLoaded();
         const html = SiteSsr.buildHtml(locale, template, ssrEntry);
-        cache.set(key, Buffer.from(html, `utf8`), `text/html`);
-        const entry = cache.get(key);
-        if (entry === undefined) {
-          next(new Error(`Cache set failed`));
-        } else {
-          cache.sendCached(response, entry, request.headers[`accept-encoding`], `text/html`);
-        }
+        const entry = cache.set(key, Buffer.from(html, `utf8`), `text/html`);
+        cache.sendCached(response, entry, request.headers[`accept-encoding`], `text/html`);
       } catch (error) {
         next(error);
       }

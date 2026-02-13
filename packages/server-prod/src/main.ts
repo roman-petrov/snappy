@@ -48,12 +48,8 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
 
     return undefined;
   }
-  cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`);
-  const entry = cache.get(appIndexKey);
-  if (entry === undefined) {
-    return next();
-  }
 
+  const entry = cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`);
   cache.sendCached(response, entry, request.headers[`accept-encoding`], `text/html`);
 
   return undefined;

@@ -7,11 +7,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { brotliCompressSync, gzipSync } from "node:zlib";
 
-export type CachedEntry = {
-  brotli?: Buffer;
-  gzip?: Buffer;
-  raw: Buffer;
-};
+export type CachedEntry = { brotli?: Buffer; gzip?: Buffer; raw: Buffer };
 
 const compressible = (contentType: string): boolean => {
   const base = contentType.split(`;`)[0]?.trim().toLowerCase() ?? ``;
@@ -61,7 +57,7 @@ export const ServerCache = () => {
   const store = new Map<string, CachedEntry>();
   const get = (key: string): CachedEntry | undefined => store.get(key);
 
-  const set = (key: string, raw: Buffer, contentType = `application/octet-stream`): void => {
+  const set = (key: string, raw: Buffer, contentType = `application/octet-stream`): CachedEntry => {
     const entry: CachedEntry = { raw };
     if (compressible(contentType)) {
       const { brotli, gzip } = compress(raw);
@@ -69,6 +65,8 @@ export const ServerCache = () => {
       entry.gzip = gzip;
     }
     store.set(key, entry);
+
+    return entry;
   };
 
   const deleteKey = (key: string): void => {
@@ -149,27 +147,12 @@ export const ServerCache = () => {
         return;
       }
       const contentType = contentTypeFromPath(pathname);
-      set(key, raw, contentType);
-
-      const entry = get(key);
-      if (entry === undefined) {
-        next();
-
-        return;
-      }
-
+      const entry = set(key, raw, contentType);
       sendCached(response, entry, request.headers[`accept-encoding`], contentType);
     };
   };
 
-  return {
-    createStatic,
-    delete: deleteKey,
-    get,
-    preferredEncoding,
-    sendCached,
-    set,
-  };
+  return { createStatic, delete: deleteKey, get, sendCached, set };
 };
 
 export type ServerCache = ReturnType<typeof ServerCache>;
