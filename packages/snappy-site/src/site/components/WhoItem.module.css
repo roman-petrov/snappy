@@ -16,10 +16,10 @@
 }
 
 .icon {
-  font-size: 2rem;
-  line-height: 1;
   grid-row: 1 / -1;
   grid-column: 1;
+  font-size: 2rem;
+  line-height: 1;
 }
 
 .item h3,
