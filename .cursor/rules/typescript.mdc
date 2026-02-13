@@ -1,7 +1,7 @@
 ---
 description:
-  TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions, module
-  export conventions). Builds on programming rule. Use when writing or reviewing TypeScript code.
+  TypeScript coding style (type inference, naming, undefined, ===, braces, type not interface, arrow functions, barrel
+  files, export/import from index only). Builds on programming rule. Use when writing or reviewing TypeScript code.
 globs: "**/*.{ts,tsx}"
 alwaysApply: false
 ---
@@ -126,6 +126,17 @@ const label = (status: Status) => (status === "pending" ? "Waiting" : status ===
 
 ## 📦 Modules
 
+### Barrel files & import/export
+
+- **Export all modules** from packages and directories.
+- Use **barrel files** (`index.ts`) in every directory.
+- In `index.ts`: list all files with `export * from "./File"` (and subfolders with `export * from "./folder"`). **Do
+  not** re-export individual types or constants by name; use only `export *`.
+- In parent directories: export everything from child directories and from the current directory —
+  `export * from "./folder1"`, `export * from "./folder2"`, `export * from "./File"`, etc.
+- **Always import from barrel files** (e.g. `from "@repo/package"` or `from "./components"`), never from the concrete
+  file (e.g. not `from "./components/Button"`).
+
 ### Module scope
 
 - Don't use **`let`** at module level (only `const` or functions).
@@ -206,6 +217,10 @@ export type Timer = ReturnType<typeof Timer>;
 
 ### Modules
 
+- [ ] Barrel files in every directory; all modules exported from packages/directories
+- [ ] In `index.ts`: only `export * from "./file"` / `export * from "./folder"`, no named exports of types/constants
+- [ ] Parent directories re-export all children and current-dir files via `export *`
+- [ ] Imports only from barrel files (package or directory), never from concrete files
 - [ ] No `let` at module level (except in factory closure)
 - [ ] Pure module: `export const X = { fn1, fn2 }` (no individual exports)
 - [ ] Factory: functions declared as local `const` before `return`, not inlined
