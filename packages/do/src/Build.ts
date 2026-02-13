@@ -45,7 +45,7 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await spawn([`bunx`, `vite`, `build`, `--config`, `vite.app.config.ts`], site);
+  const appExit = await spawn([`bunx`, `vite`, `build`, `--config`, `vite.app.config.js`], site);
   if (appExit !== 0) {
     return appExit;
   }
