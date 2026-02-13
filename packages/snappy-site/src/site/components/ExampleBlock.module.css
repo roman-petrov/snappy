@@ -48,7 +48,7 @@
   border-color: var(--color-accent);
 }
 
-.panelTitle {
+.panel-title {
   display: block;
   margin-block-end: var(--space-3);
   font-size: var(--text-xs);
@@ -57,12 +57,12 @@
   letter-spacing: var(--tracking-wide);
 }
 
-.before .panelTitle {
+.before .panel-title {
   font-weight: var(--weight-bold);
   color: var(--color-accent-red);
 }
 
-.after .panelTitle {
+.after .panel-title {
   font-weight: var(--weight-bold);
   color: var(--color-accent);
 }

@@ -13,7 +13,7 @@
   transform: scale(1.02);
 }
 
-.cardIcon {
+.card-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;

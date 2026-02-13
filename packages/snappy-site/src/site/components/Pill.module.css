@@ -10,7 +10,7 @@
   border-color: rgb(var(--rgb-accent) / 40%);
 }
 
-.pillLeft {
+.pill-left {
   flex-shrink: 0;
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-md);
@@ -19,7 +19,7 @@
   background: rgb(var(--rgb-accent) / 12%);
 }
 
-.pillRight {
+.pill-right {
   flex: 1;
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-md);

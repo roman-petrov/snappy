@@ -1,4 +1,4 @@
-.pageTitle {
+.page-title {
   padding-inline-start: var(--space-4);
   margin: 0 0 var(--space-8);
   font-size: var(--text-2xl);
@@ -17,7 +17,7 @@
   margin-bottom: 0;
 }
 
-.sectionTitle {
+.section-title {
   margin: 0 0 var(--space-2);
   font-size: var(--text-lg);
   font-weight: var(--weight-bold);
@@ -25,20 +25,20 @@
   letter-spacing: var(--tracking-tight);
 }
 
-.sectionDesc {
+.section-desc {
   margin: 0 0 var(--space-4);
   font-size: var(--text-sm);
   line-height: var(--leading-relaxed);
   color: var(--color-text-muted);
 }
 
-.balanceIcon {
+.balance-icon {
   margin-inline-end: var(--space-2);
   font-size: 1.25em;
   vertical-align: -0.2em;
 }
 
-.balanceRow {
+.balance-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-4);
@@ -52,17 +52,17 @@
   color: var(--color-text-body);
 }
 
-.balanceCount {
+.balance-count {
   font-size: var(--text-2xl);
   font-weight: var(--weight-extrabold);
   color: var(--color-accent);
 }
 
-.formGroup {
+.form-group {
   margin-bottom: var(--space-4);
 }
 
-.formGroup:last-of-type {
+.form-group:last-of-type {
   margin-bottom: 0;
 }
 
@@ -136,11 +136,11 @@
   border-color: var(--color-text-muted);
 }
 
-.submitRow {
+.submit-row {
   margin-top: var(--space-5);
 }
 
-.resultWrap {
+.result-wrap {
   margin-top: var(--space-5);
   overflow: hidden;
   background: rgb(var(--rgb-accent) / 6%);
@@ -148,7 +148,7 @@
   border-radius: var(--radius-sm);
 }
 
-.resultHeader {
+.result-header {
   display: flex;
   gap: var(--space-3);
   align-items: center;
@@ -158,13 +158,13 @@
   border-block-end: 1px solid rgb(var(--rgb-accent) / 20%);
 }
 
-.resultLabel {
+.result-label {
   font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   color: var(--color-text-heading);
 }
 
-.copyBtn {
+.copy-btn {
   padding: var(--space-1) var(--space-3);
   font-family: inherit;
   font-size: var(--text-sm);
@@ -180,12 +180,12 @@
     color var(--ease);
 }
 
-.copyBtn:hover {
+.copy-btn:hover {
   background: rgb(var(--rgb-accent) / 15%);
   border-color: var(--color-accent);
 }
 
-.copyBtn:focus {
+.copy-btn:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgb(var(--rgb-accent) / 30%);
 }
@@ -195,7 +195,7 @@
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
   color: var(--color-text-body);
-  word-break: break-word;
+  overflow-wrap: break-word;
   white-space: pre-wrap;
 }
 
@@ -209,7 +209,7 @@
 }
 
 @media (width <= 640px) {
-  .balanceRow {
+  .balance-row {
     flex-direction: column;
     align-items: flex-start;
   }
