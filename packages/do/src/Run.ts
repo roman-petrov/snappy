@@ -6,24 +6,11 @@ import type { Readable } from "node:stream";
 
 import { spawn } from "node:child_process";
 
-const defaultTimeoutMs = 300_000;
-const outputTruncate = 50_000;
-
-type RunOptions = { stdio?: `inherit` | `pipe`; timeoutMs?: number };
-
-type RunResult = { durationMs: number; exitCode: number; stderr: string; stdout: string; timedOut: boolean };
-
-const truncate = (s: string, max: number): { text: string; truncated: boolean } => {
-  if (s.length <= max) {
-    return { text: s, truncated: false };
-  }
-
-  return { text: `${s.slice(0, max)}\n\n[... output truncated ...]`, truncated: true };
-};
-
-const exitCodeTimeout = 124;
 const msPerSecond = 1000;
-const timedOutInsertIndex = 3;
+
+type RunOptions = { stdio?: `inherit` | `pipe` };
+
+type RunResult = { durationMs: number; exitCode: number; stderr: string; stdout: string };
 
 const readStream = async (stream: null | Readable): Promise<string> => {
   if (stream === null) {
@@ -43,7 +30,7 @@ const readStream = async (stream: null | Readable): Promise<string> => {
 };
 
 const run = async (rootDir: string, command: string, options: RunOptions = {}): Promise<RunResult> => {
-  const { stdio = `pipe`, timeoutMs = defaultTimeoutMs } = options;
+  const { stdio = `pipe` } = options;
   const start = Date.now();
 
   const proc = spawn(command, [], {
@@ -52,48 +39,31 @@ const run = async (rootDir: string, command: string, options: RunOptions = {}): 
     stdio: stdio === `inherit` ? `inherit` : [`ignore`, `pipe`, `pipe`],
   });
 
-  const timedOutRef = { current: false };
-
-  const timeout = setTimeout(() => {
-    timedOutRef.current = true;
-    proc.kill();
-  }, timeoutMs);
-
   const [stdout, stderr] =
     stdio === `pipe` && proc.stdout !== null && proc.stderr !== null
       ? await Promise.all([readStream(proc.stdout), readStream(proc.stderr)])
       : [``, ``];
 
   const exitCode = await new Promise<number>(resolve => {
-    proc.on(`close`, code => resolve(timedOutRef.current ? exitCodeTimeout : (code ?? 1)));
+    proc.on(`close`, code => resolve(code ?? 1));
   });
-  clearTimeout(timeout);
+
   const durationMs = Date.now() - start;
 
-  return { durationMs, exitCode, stderr, stdout, timedOut: timedOutRef.current };
+  return { durationMs, exitCode, stderr, stdout };
 };
 
-const formatResult = (name: string, result: RunResult): string => {
-  const { text: so } = truncate(result.stdout, outputTruncate);
-  const { text: stderrText } = truncate(result.stderr, outputTruncate);
-
-  const baseLines: string[] = [
+const formatResult = (name: string, result: RunResult): string =>
+  [
     `Command: ${name}`,
     `Exit code: ${result.exitCode}`,
     `Duration: ${(result.durationMs / msPerSecond).toFixed(2)}s`,
     ``,
     `--- stdout ---`,
-    so,
+    result.stdout,
     ``,
     `--- stderr ---`,
-    stderrText,
-  ];
-
-  const lines = result.timedOut
-    ? [...baseLines.slice(0, timedOutInsertIndex), `(Timed out.)`, ``, ...baseLines.slice(timedOutInsertIndex)]
-    : baseLines;
-
-  return lines.join(`\n`);
-};
+    result.stderr,
+  ].join(`\n`);
 
 export const Run = { formatResult, run };

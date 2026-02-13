@@ -2,7 +2,7 @@ import { Build } from "./Build";
 import { Run } from "./Run";
 import { RunAll } from "./RunAll";
 
-export type ExecuteOptions = { stdio?: `inherit` | `pipe`; timeoutMs?: number };
+export type ExecuteOptions = { stdio?: `inherit` | `pipe` };
 
 export type ExecuteResult = { exitCode: number; message: string };
 
@@ -27,8 +27,8 @@ const run = async (
 
     return { exitCode, message: `Run exited with code ${exitCode}.` };
   }
-  const { stdio = `pipe`, timeoutMs } = options;
-  const result = await Run.run(root, command, { stdio, timeoutMs });
+  const { stdio = `pipe` } = options;
+  const result = await Run.run(root, command, { stdio });
   const message = stdio === `inherit` ? `Exited with code ${result.exitCode}.` : Run.formatResult(script, result);
 
   return { exitCode: result.exitCode, message };

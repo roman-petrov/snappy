@@ -33,10 +33,7 @@ server.registerTool(
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
-    const result = await Execute.run(root, resolved.command, script, {
-      stdio: script === `dev` ? `inherit` : `pipe`,
-      timeoutMs: script === `dev` ? 600_000 : undefined,
-    });
+    const result = await Execute.run(root, resolved.command, script, { stdio: script === `dev` ? `inherit` : `pipe` });
 
     return { content: [{ text: result.message, type: `text` as const }] };
   },
