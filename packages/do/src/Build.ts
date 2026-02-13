@@ -44,14 +44,23 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await Process.spawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]));
+  const appExit = await Process.spawn(
+    site,
+    Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]),
+  );
   if (appExit !== 0) {
     return appExit;
   }
 
   const ssrExit = await Process.spawn(
     site,
-    Process.toolArgv(workflowRunner, `vite`, [`build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`]),
+    Process.toolArgv(workflowRunner, `vite`, [
+      `build`,
+      `--ssr`,
+      `src/site/entry-server.tsx`,
+      `--outDir`,
+      `dist/server`,
+    ]),
   );
   if (ssrExit !== 0) {
     return ssrExit;

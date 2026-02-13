@@ -21,14 +21,18 @@ const passwordValid = (s: string) => s.length >= passwordMinLength && hasLetter(
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
 const jwtUnavailable = (context: AppContext, response: Response): boolean => {
-  if (context.jwtSecret !== ``) {return false;}
+  if (context.jwtSecret !== ``) {
+    return false;
+  }
   response.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
 
   return true;
 };
 
 const register = (context: AppContext) => async (request: Request, response: Response) => {
-  if (jwtUnavailable(context, response)) {return;}
+  if (jwtUnavailable(context, response)) {
+    return;
+  }
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 
@@ -57,7 +61,9 @@ const register = (context: AppContext) => async (request: Request, response: Res
 };
 
 const login = (context: AppContext) => async (request: Request, response: Response) => {
-  if (jwtUnavailable(context, response)) {return;}
+  if (jwtUnavailable(context, response)) {
+    return;
+  }
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 
