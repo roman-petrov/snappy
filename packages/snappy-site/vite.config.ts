@@ -1,3 +1,4 @@
+// cspell:word lightningcss
 import { join } from "node:path";
 import { defineConfig } from "vite";
 import typedCssModules from "vite-plugin-typed-css-modules";
