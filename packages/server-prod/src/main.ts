@@ -35,11 +35,13 @@ app.disable(`x-powered-by`);
 app.get(`/`, createSsrHandler(root));
 app.use(express.static(root));
 const appIndexPath = join(root, `app`, `index.html`);
-app.get(/^\/app(\/.*)?$/u, (_request, response, next) => {
+app.get(/^\/app(?:\/.*)?$/u, (_request, response, next) => {
   if (!existsSync(appIndexPath)) {
     return next();
   }
   response.type(`html`).send(readFileSync(appIndexPath, `utf8`));
+
+  return undefined;
 });
 
 const bot = SnappyBot({

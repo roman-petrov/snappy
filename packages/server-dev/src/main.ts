@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/void-use */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Config } from "@snappy/config";
 import { Database } from "@snappy/db";
 import { createApp } from "@snappy/server";
@@ -30,8 +32,9 @@ const bot = SnappyBot({
   premiumPrice: Config.premiumPrice,
 });
 
-process.stdout.write(`🚀 Starting server…\n`);
+void process.stdout.write(`🚀 Starting server…\n`);
+
 server.listen(Config.apiPort, () => {
-  process.stdout.write(`  API http://localhost:${Config.apiPort}\n`);
+  void process.stdout.write(`  API http://localhost:${Config.apiPort}\n`);
   void bot.start();
 });

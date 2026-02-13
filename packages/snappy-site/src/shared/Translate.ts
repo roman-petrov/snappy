@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 const notFound = Symbol(`notFound`);
 
 const resolveByPath = (current: unknown, keys: string[]): unknown => {

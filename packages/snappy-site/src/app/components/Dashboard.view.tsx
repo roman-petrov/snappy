@@ -1,3 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Card } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";

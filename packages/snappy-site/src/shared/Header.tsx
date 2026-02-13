@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 
 import styles from "./Header.module.css";
 import { Logo } from "./Logo";
@@ -6,7 +6,7 @@ import { Logo } from "./Logo";
 export type HeaderProps = {
   children: ReactNode;
   logoHref?: string;
-  logoOnClick?: (e: React.MouseEvent) => void;
+  logoOnClick?: (event: MouseEvent) => void;
   logoTitle?: string;
   logoTo?: string;
 };

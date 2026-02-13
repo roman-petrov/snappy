@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { ServerApi } from "@snappy/server-api";
 
 const env = import.meta.env as Record<string, unknown>;

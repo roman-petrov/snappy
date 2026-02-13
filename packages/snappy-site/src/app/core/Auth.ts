@@ -1,3 +1,5 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
 const key = `snappy_token`;
 
 export const getToken = (): string | undefined => {

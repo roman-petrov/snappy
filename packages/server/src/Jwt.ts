@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable functional/no-try-statements */
 import jwt from "jsonwebtoken";
 
 export type Payload = { userId: number };

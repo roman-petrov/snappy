@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import styles from "./Header.module.css";
 
-export type LogoProps = { href?: string; onClick?: (e: MouseEvent) => void; title?: string; to?: string };
+export type LogoProps = { href?: string; onClick?: (event: MouseEvent) => void; title?: string; to?: string };
 
 const logoContent = (
   <>

@@ -1,7 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
 import type { ApiProcessBody } from "@snappy/server-api";
 import type { Request, Response } from "express";
 
+import { HttpStatus } from "@snappy/core";
 import { type FeatureType, Prompts } from "@snappy/snappy";
 
 import type { AppContext } from "../Types";
@@ -10,11 +14,11 @@ import { Storage } from "../Storage";
 
 const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
 
-const processHandler = (context: AppContext) => async (request: Request, res: Response) => {
+const processHandler = (context: AppContext) => async (request: Request, response: Response) => {
   const { userId } = request as Request & { userId?: number };
 
   if (userId === undefined) {
-    res.status(401).json({ error: `Unauthorized` });
+    response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
 
     return;
   }
@@ -22,7 +26,7 @@ const processHandler = (context: AppContext) => async (request: Request, res: Re
   const { feature, text } = (request.body as ApiProcessBody) ?? {};
 
   if (typeof text !== `string` || text.trim() === `` || typeof feature !== `string` || !isFeatureType(feature)) {
-    res.status(400).json({ error: `text and feature required; feature must be valid` });
+    response.status(HttpStatus.badRequest).json({ error: `text and feature required; feature must be valid` });
 
     return;
   }
@@ -30,7 +34,7 @@ const processHandler = (context: AppContext) => async (request: Request, res: Re
   const can = await Storage.canMakeRequestByUserId(context.db, userId, context.freeRequestLimit);
 
   if (!can) {
-    res.status(429).json({ error: `Request limit reached` });
+    response.status(HttpStatus.tooManyRequests).json({ error: `Request limit reached` });
 
     return;
   }
@@ -40,9 +44,9 @@ const processHandler = (context: AppContext) => async (request: Request, res: Re
 
     await Storage.incrementRequestByUserId(context.db, userId);
 
-    res.json({ text: result });
+    response.json({ text: result });
   } catch {
-    res.status(500).json({ error: `Processing failed` });
+    response.status(HttpStatus.internalServerError).json({ error: `Processing failed` });
   }
 };
 

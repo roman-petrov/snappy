@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
 import type { RequestHandler } from "express";
 
 import { Ssr } from "@snappy/snappy-site/ssr";

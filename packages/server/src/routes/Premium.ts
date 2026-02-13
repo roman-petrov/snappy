@@ -1,15 +1,18 @@
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
 import type { Request, Response } from "express";
+
+import { HttpStatus } from "@snappy/core";
 
 import type { AppContext } from "../Types";
 
 const premiumTitle = `Snappy Bot - Premium подписка (30 дней)`;
 
-const paymentUrl = (context: AppContext) => async (request: Request, res: Response) => {
+const paymentUrl = (context: AppContext) => async (request: Request, response: Response) => {
   const { userId } = request as Request & { userId?: number };
 
   if (userId === undefined) {
-    res.status(401).json({ error: `Unauthorized` });
+    response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
 
     return;
   }
@@ -17,9 +20,9 @@ const paymentUrl = (context: AppContext) => async (request: Request, res: Respon
   try {
     const url = await context.yooKassa.paymentUrl(userId, context.premiumPrice, premiumTitle);
 
-    res.json({ url });
+    response.json({ url });
   } catch {
-    res.status(500).json({ error: `Payment error` });
+    response.status(HttpStatus.internalServerError).json({ error: `Payment error` });
   }
 };
 

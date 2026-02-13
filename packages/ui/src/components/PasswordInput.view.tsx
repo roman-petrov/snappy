@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { usePasswordInputState } from "./PasswordInput.state";
 
 import eyeClosedSvg from "../assets/eye-closed.svg?raw";

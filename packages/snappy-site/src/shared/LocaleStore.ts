@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-expression-statements */
 const storageKey = `snappy-locale`;
 
 export type LocaleKey = `en` | `ru`;

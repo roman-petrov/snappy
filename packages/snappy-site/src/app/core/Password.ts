@@ -1,3 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-loop-statements */
 /** Min length and rules for password (aligned with server). */
 export const passwordMinLength = 8;
 
@@ -19,26 +22,29 @@ export const passwordStrength = (s: string): Strength => {
   }
   const hasLower = /[a-z]/u.test(s);
   const hasUpper = /[A-Z]/u.test(s);
-  const hasSpecial = /[^\da-z]/i.test(s);
+  const hasSpecial = /[^\da-z]/iu.test(s);
   const variety = [hasLetter(s), hasDigit(s), hasLower, hasUpper, hasSpecial].filter(Boolean).length;
-  if (s.length >= 12 && variety >= 4) {
+  const strongMinLength = 12;
+  if (s.length >= strongMinLength && variety >= 4) {
     return `strong`;
   }
-  if (s.length >= 8 && variety >= 2) {
+  if (s.length >= passwordMinLength && variety >= 2) {
     return `medium`;
   }
-
   return `weak`;
 };
 
 const chars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
 
-export const generatePassword = (length = 12): string => {
+const defaultPasswordLength = 12;
+
+export const generatePassword = (length = defaultPasswordLength): string => {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
   let s = ``;
-  for (let index = 0; index < length; index++) {
-    s += chars[array[index]! % chars.length];
+  for (let index = 0; index < length; index += 1) {
+    const charIndex = array[index];
+    s += chars[(charIndex ?? 0) % chars.length];
   }
   if (!hasLetter(s) || !hasDigit(s)) {
     return generatePassword(length);

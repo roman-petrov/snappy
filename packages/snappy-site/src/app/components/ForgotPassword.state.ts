@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 
 import { api } from "../core/Api";
 import { t } from "../core/Locale";
@@ -9,7 +9,7 @@ export const useForgotPasswordState = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (event: React.FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(``);
     setLoading(true);

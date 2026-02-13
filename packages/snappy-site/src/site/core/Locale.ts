@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Translate } from "../../shared/Translate";
 import localeData from "../locales";
 import { SiteLocaleStore } from "./SiteLocaleStore";

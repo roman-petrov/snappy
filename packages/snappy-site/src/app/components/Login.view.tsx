@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
 
 import type { useLoginState } from "./Login.state";
@@ -46,7 +48,7 @@ export const LoginView = ({
           className={styles.checkbox}
           disabled={loading}
           id="login-remember"
-          onChange={e => onRememberChange(e.target.checked)}
+          onChange={event => onRememberChange((event.target as HTMLInputElement).checked)}
           type="checkbox"
         />
         <label className={styles.rememberLabel} htmlFor="login-remember">

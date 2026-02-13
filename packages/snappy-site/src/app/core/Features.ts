@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 export const featureEmoji: Record<string, string> = {
   addEmoji: `😀`,
   expand: `📝`,

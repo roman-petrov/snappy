@@ -13,8 +13,9 @@ const gigaChatAuthKey = env[`GIGACHAT_AUTH_KEY`] ?? ``;
 const premiumPrice = 299;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
-const apiPort = Number(env[`API_PORT`] ?? 3000);
-const apiBaseUrl = env[`API_BASE_URL`] ?? `http://localhost:3000`;
+const defaultApiPort = 3000;
+const apiPort = Number(env[`API_PORT`] ?? defaultApiPort);
+const apiBaseUrl = env[`API_BASE_URL`] ?? `http://localhost:${defaultApiPort}`;
 const botApiKey = env[`BOT_API_KEY`] ?? ``;
 const jwtSecret = env[`JWT_SECRET`] ?? ``;
 

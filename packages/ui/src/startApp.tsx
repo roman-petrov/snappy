@@ -1,3 +1,5 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-expression-statements */
 import type { ReactNode } from "react";
 
 import { createRoot } from "react-dom/client";
@@ -8,7 +10,7 @@ import { Theme } from "./theme/Theme";
 const fogId = `fog-bg`;
 
 export const ensureFogContainer = (): void => {
-  if (document.getElementById(fogId) !== null) {
+  if (document.querySelector(`#${fogId}`) !== null) {
     return;
   }
   const div = document.createElement(`div`);

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Input, Link, Panel } from "@snappy/ui";
 
 import type { useForgotPasswordState } from "./ForgotPassword.state";

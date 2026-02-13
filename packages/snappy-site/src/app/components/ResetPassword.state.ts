@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { api } from "../core/Api";
@@ -13,7 +13,7 @@ export const useResetPasswordState = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
 
-  const submit = async (event: React.FormEvent) => {
+  const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
@@ -37,7 +37,7 @@ export const useResetPasswordState = () => {
     error,
     loading,
     onPasswordChange: setPassword,
-    onSubmit: (event: React.FormEvent) => {
+    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => {
       void submit(event);
     },
     password,

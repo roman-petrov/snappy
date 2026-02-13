@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
@@ -13,14 +13,14 @@ export const useLoginState = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const onSubmit = async (event: React.FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(``);
     setLoading(true);
     try {
       const { token } = await api.login(email.trim(), password);
       setToken(token, remember);
-      navigate(`/`, { replace: true, viewTransition: true });
+      void navigate(`/`, { replace: true, viewTransition: true });
     } catch (error_) {
       setError(error_ instanceof Error ? error_.message : t(`loginPage.errorNetwork`));
     } finally {

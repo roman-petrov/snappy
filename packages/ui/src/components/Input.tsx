@@ -34,7 +34,7 @@ export const Input = ({
       disabled={disabled}
       id={id}
       minLength={minLength}
-      onChange={e => onChange(e.target.value)}
+      onChange={event => onChange(event.target.value)}
       required={required}
       type={type}
       value={value}

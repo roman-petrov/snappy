@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import { HttpStatus } from "@snappy/core";
 import { Endpoints } from "@snappy/server-api";
 import express from "express";
 
@@ -18,12 +19,12 @@ export const createApp = (options: CreateAppOptions) => {
   const app = express();
 
   if (allowCorsOrigin !== undefined && allowCorsOrigin !== ``) {
-    app.use((request, res, next) => {
-      res.setHeader(`Access-Control-Allow-Origin`, allowCorsOrigin);
-      res.setHeader(`Access-Control-Allow-Methods`, `GET, POST, OPTIONS`);
-      res.setHeader(`Access-Control-Allow-Headers`, `Content-Type, Authorization`);
+    app.use((request, response, next) => {
+      response.setHeader(`Access-Control-Allow-Origin`, allowCorsOrigin);
+      response.setHeader(`Access-Control-Allow-Methods`, `GET, POST, OPTIONS`);
+      response.setHeader(`Access-Control-Allow-Headers`, `Content-Type, Authorization`);
       if (request.method === `OPTIONS`) {
-        res.sendStatus(204);
+        response.sendStatus(HttpStatus.noContent);
 
         return;
       }

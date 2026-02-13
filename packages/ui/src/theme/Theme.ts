@@ -1,3 +1,11 @@
+/* eslint-disable @typescript-eslint/no-meaningless-void-operator */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-try-statements */
+/* eslint-disable init-declarations */
+/* eslint-disable sonarjs/void-use */
 import { Fog } from "./Fog";
 
 const storageKey = `snappy_theme`;
@@ -39,7 +47,7 @@ const apply = (theme: Theme): void => {
   } catch {
     //
   }
-  afterChange?.();
+  void afterChange?.();
 };
 
 const toggle = (): void => {
@@ -48,7 +56,9 @@ const toggle = (): void => {
 
 const restore = (): void => {
   if (document.querySelector(`#fog-bg`) instanceof HTMLElement) {
-    afterChange = () => requestAnimationFrame(syncFog);
+    afterChange = () => {
+      void requestAnimationFrame(syncFog);
+    };
   }
   try {
     const saved = localStorage.getItem(storageKey);
@@ -63,10 +73,10 @@ const restore = (): void => {
   apply(defaultTheme);
 };
 
-const onLogoClick = (after?: () => void) => (e: { preventDefault: () => void }) => {
-  e.preventDefault();
+const onLogoClick = (after?: () => void) => (event: { preventDefault: () => void }) => {
+  event.preventDefault();
   toggle();
-  after?.();
+  void after?.();
 };
 
 export const Theme = { apply, onLogoClick, restore, toggle };

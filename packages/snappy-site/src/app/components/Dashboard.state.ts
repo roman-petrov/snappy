@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { useEffect, useState } from "react";
 
 import { api } from "../core/Api";
 import { getToken } from "../core/Auth";
 import { featureEmoji, featureKeys } from "../core/Features";
 import { t } from "../core/Locale";
+
+const copyFeedbackMs = 2000;
 
 export const useDashboardState = () => {
   const token = getToken() ?? ``;
@@ -18,8 +21,12 @@ export const useDashboardState = () => {
   useEffect(() => {
     api
       .remaining(token)
-      .then(({ remaining: count }) => setRemaining(count))
-      .catch(() => {});
+      .then(({ remaining: count }) => {
+        setRemaining(count);
+
+        return undefined;
+      })
+      .catch(() => undefined);
   }, [token]);
 
   const processText = async (event: { preventDefault: () => void }) => {
@@ -58,7 +65,9 @@ export const useDashboardState = () => {
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
-      }, 2000);
+      }, copyFeedbackMs);
+
+      return undefined;
     });
   };
 

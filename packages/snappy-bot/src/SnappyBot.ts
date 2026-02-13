@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-loop-statements */
+/* eslint-disable no-await-in-loop */
 import { ServerApi } from "@snappy/server-api";
 import { Bot } from "gramio";
 

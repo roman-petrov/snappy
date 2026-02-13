@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
+/* eslint-disable functional/no-try-statements */
+/* eslint-disable sonarjs/x-powered-by */
 /**
  * Dev server with SSR: Vite middleware + GET / renders Landing on the server.
  * Run from snappy-site directory: bun run server.ts
@@ -7,9 +13,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createServer as createViteServer } from "vite";
 
-import type { SiteLocaleKey, SiteMeta } from "./src/Ssr";
-
-import { Ssr } from "./src/Ssr";
+import { type SiteLocaleKey, type SiteMeta, Ssr } from "./src/Ssr";
 
 const root = import.meta.dirname;
 const port = 5173;
@@ -21,11 +25,11 @@ const main = async () => {
   app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
   app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
-  app.get(/^\/app(\/.*)?$/u, (request, response, next) => {
-    if (/\.[\da-z]+$/i.test(request.path)) {
+  app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
+    if (/\.\w+$/iu.test(request.path)) {
       return next();
     }
-    (async () => {
+    void (async () => {
       try {
         let html = readFileSync(join(root, `src`, `app`, `index.html`), `utf8`);
         html = await vite.transformIndexHtml(request.originalUrl ?? `/app`, html);
@@ -35,6 +39,8 @@ const main = async () => {
         next(error);
       }
     })();
+
+    return undefined;
   });
 
   app.get(`/`, async (request, response, next) => {

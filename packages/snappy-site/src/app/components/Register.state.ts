@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { type SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
@@ -21,8 +21,11 @@ export const useRegisterState = () => {
   const strength = passwordStrength(password);
 
   const requirements = [
-    { check: passwordRequirementChecks[0]!.check, label: t(`registerPage.requirementMin`, { min: passwordMinLength }) },
-    { check: passwordRequirementChecks[1]!.check, label: t(`registerPage.requirementLetters`) },
+    {
+      check: passwordRequirementChecks[0]?.check ?? (() => false),
+      label: t(`registerPage.requirementMin`, { min: passwordMinLength }),
+    },
+    { check: passwordRequirementChecks[1]?.check ?? (() => false), label: t(`registerPage.requirementLetters`) },
   ];
 
   const strengthBarWidth =
@@ -35,7 +38,7 @@ export const useRegisterState = () => {
         ? t(`registerPage.strengthMedium`)
         : t(`registerPage.strengthStrong`);
 
-  const onSubmit = async (event: React.FormEvent) => {
+  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
@@ -47,7 +50,7 @@ export const useRegisterState = () => {
     try {
       const { token } = await api.register(email.trim(), password);
       setToken(token);
-      navigate(`/`, { replace: true, viewTransition: true });
+      void navigate(`/`, { replace: true, viewTransition: true });
     } catch (error_) {
       setError(error_ instanceof Error ? error_.message : t(`registerPage.errorNetwork`));
     } finally {

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable functional/no-promise-reject */
 import type { FeatureType } from "@snappy/snappy";
 
 import { Endpoints } from "./Endpoints";
@@ -98,7 +100,7 @@ export const ServerApi = (config: Config) => {
           parseRemaining,
         );
 
-  const process = async (authParameter: number | string, text: string, feature: FeatureType | string) =>
+  const process = async (authParameter: number | string, text: string, feature: FeatureType) =>
     auth.type === `jwt`
       ? request(
           `${base}${Endpoints.process}`,

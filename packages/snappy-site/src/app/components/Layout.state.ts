@@ -37,8 +37,8 @@ export const useLayoutState = () => {
         { type: `locale` },
       ];
 
-  const logoOnClick = (e: MouseEvent) => {
-    e.preventDefault();
+  const logoOnClick = (event: MouseEvent) => {
+    event.preventDefault();
     Theme.toggle();
   };
 
