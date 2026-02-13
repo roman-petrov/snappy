@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable sonarjs/os-command */
 import type { Readable } from "node:stream";
+
 import { spawn } from "node:child_process";
 
 const defaultTimeoutMs = 300_000;
@@ -24,17 +25,19 @@ const exitCodeTimeout = 124;
 const msPerSecond = 1000;
 const timedOutInsertIndex = 3;
 
-const readStream = async (stream: Readable | null): Promise<string> => {
+const readStream = async (stream: null | Readable): Promise<string> => {
   if (stream === null) {
     return ``;
   }
   const chunks: Buffer[] = [];
 
   return new Promise((resolve, reject) => {
-    stream.on(`data`, (chunk: Buffer) => chunks.push(chunk));
+    stream.on(`data`, (chunk: Buffer) => {
+      chunks.push(chunk);
+    });
     stream.on(`end`, () => resolve(Buffer.concat(chunks).toString(`utf8`)));
-    stream.on(`error`, (err: Error) => {
-      reject(err);
+    stream.on(`error`, (error: Error) => {
+      reject(error);
     });
   });
 };

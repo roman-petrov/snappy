@@ -71,7 +71,7 @@ const vitePort = 5173;
 
 const procExited = async (proc: ReturnType<typeof spawn>): Promise<number> =>
   new Promise(resolve => {
-    proc.on(`close`, (code: number | null) => {
+    proc.on(`close`, (code: null | number) => {
       resolve(code ?? 0);
     });
   });

@@ -1,3 +1,4 @@
+/* eslint-disable init-declarations */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
@@ -135,7 +136,7 @@ export const ServerCache = () => {
         return;
       }
 
-      let raw: Buffer | undefined = undefined;
+      let raw: Buffer | undefined;
       try {
         raw = readFileSync(filePath);
       } catch {
