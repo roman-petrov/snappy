@@ -10,7 +10,9 @@ export const ESLintConfig = defineConfig([
   {
     languageOptions: {
       globals: { ...globals.browser, ...globals.es2025, ...globals.node },
-      parserOptions: { projectService: true },
+      parserOptions: {
+        projectService: { allowDefaultProject: [`packages/*/vite.config.js`, `packages/*/vite.app.config.js`] },
+      },
     },
     rules: prettierConfig.rules,
   },
