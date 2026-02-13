@@ -5,7 +5,7 @@ import type { useLayoutState } from "./Layout.state";
 import { Button } from "../../shared/Button";
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import { MutedLink } from "../../shared/MutedLink";
+import { Link } from "../../shared/Link";
 import styles from "./Layout.module.css";
 
 export type LayoutViewProps = ReturnType<typeof useLayoutState>;
@@ -19,9 +19,9 @@ export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: Layo
             {item.label}
           </Button>
         ) : item.type === `link` ? (
-          <MutedLink key={index} to={item.to}>
+          <Link key={index} muted to={item.to}>
             {item.label}
-          </MutedLink>
+          </Link>
         ) : (
           <LocaleSwitcher key={index} />
         ),

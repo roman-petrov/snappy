@@ -1,6 +1,6 @@
 import type { useLoginState } from "./Login.state";
 
-import { AccentLink } from "../../shared/AccentLink";
+import { Link } from "../../shared/Link";
 import { Button } from "../../shared/Button";
 import { Input } from "../../shared/Input";
 import { Panel } from "../../shared/Panel";
@@ -59,8 +59,8 @@ export const LoginView = ({
         <Button disabled={loading} primary type="submit">
           {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
         </Button>
-        <AccentLink to="/forgot-password">{t(`loginPage.forgotPassword`)}</AccentLink>
-        <AccentLink to="/register">{t(`loginPage.registerLink`)}</AccentLink>
+        <Link to="/forgot-password">{t(`loginPage.forgotPassword`)}</Link>
+        <Link to="/register">{t(`loginPage.registerLink`)}</Link>
       </div>
     </form>
   </Panel>

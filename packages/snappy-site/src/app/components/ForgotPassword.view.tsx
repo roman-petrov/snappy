@@ -1,6 +1,6 @@
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
-import { AccentLink } from "../../shared/AccentLink";
+import { Link } from "../../shared/Link";
 import { Button } from "../../shared/Button";
 import { Input } from "../../shared/Input";
 import { Panel } from "../../shared/Panel";
@@ -21,7 +21,7 @@ export const ForgotPasswordView = ({
     return (
       <Panel lead={t(`forgotPage.checkEmailLead`)} title={t(`forgotPage.checkEmail`)}>
         <div className={styles[`actions`]}>
-          <AccentLink to="/login">{t(`forgotPage.backToLogin`)}</AccentLink>
+          <Link to="/login">{t(`forgotPage.backToLogin`)}</Link>
         </div>
       </Panel>
     );
@@ -44,7 +44,7 @@ export const ForgotPasswordView = ({
           <Button disabled={loading} primary type="submit">
             {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
           </Button>
-          <AccentLink to="/login">{t(`forgotPage.loginLink`)}</AccentLink>
+          <Link to="/login">{t(`forgotPage.loginLink`)}</Link>
         </div>
       </form>
     </Panel>

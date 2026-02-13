@@ -1,6 +1,6 @@
 import type { useResetPasswordState } from "./ResetPassword.state";
 
-import { AccentLink } from "../../shared/AccentLink";
+import { Link } from "../../shared/Link";
 import { Button } from "../../shared/Button";
 import { Panel } from "../../shared/Panel";
 import { PasswordInput } from "../../shared/PasswordInput";
@@ -23,7 +23,7 @@ export const ResetPasswordView = ({
     return (
       <Panel lead={t(`resetPage.invalidLinkLead`)} title={t(`resetPage.invalidLink`)}>
         <div className={styles[`actions`]}>
-          <AccentLink to="/forgot-password">{t(`resetPage.requestAgain`)}</AccentLink>
+          <Link to="/forgot-password">{t(`resetPage.requestAgain`)}</Link>
         </div>
       </Panel>
     );
@@ -33,7 +33,7 @@ export const ResetPasswordView = ({
     return (
       <Panel lead={t(`resetPage.doneLead`)} title={t(`resetPage.done`)}>
         <div className={styles[`actions`]}>
-          <AccentLink to="/login">{t(`resetPage.loginLink`)}</AccentLink>
+          <Link to="/login">{t(`resetPage.loginLink`)}</Link>
         </div>
       </Panel>
     );

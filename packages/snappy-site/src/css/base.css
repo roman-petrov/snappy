@@ -42,18 +42,3 @@ body {
   z-index: -3;
   pointer-events: none;
 }
-
-a {
-  color: var(--color-accent);
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-focus-ring);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-}

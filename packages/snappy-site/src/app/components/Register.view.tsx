@@ -1,6 +1,6 @@
 import type { useRegisterState } from "./Register.state";
 
-import { AccentLink } from "../../shared/AccentLink";
+import { Link } from "../../shared/Link";
 import { Button } from "../../shared/Button";
 import { Input } from "../../shared/Input";
 import { Panel } from "../../shared/Panel";
@@ -66,7 +66,7 @@ export const RegisterView = ({
         <Button disabled={loading || !passwordValid} primary type="submit">
           {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         </Button>
-        <AccentLink to="/login">{t(`registerPage.haveAccount`)}</AccentLink>
+        <Link to="/login">{t(`registerPage.haveAccount`)}</Link>
       </div>
     </form>
   </Panel>

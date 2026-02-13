@@ -1,3 +1,4 @@
+import { Link } from "../../shared/Link";
 import { t } from "../core/Locale";
 import styles from "./SiteFooter.module.css";
 
@@ -10,9 +11,9 @@ export const SiteFooter = () => (
         Snappy
       </span>
       <p>{t(`footer.tagline`)}</p>
-      <a href="https://t.me/sn4ppy_bot" rel="noopener" target="_blank">
+      <Link href="https://t.me/sn4ppy_bot" rel="noopener" target="_blank">
         @sn4ppy_bot
-      </a>
+      </Link>
     </div>
   </footer>
 );
