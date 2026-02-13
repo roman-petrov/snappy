@@ -1,7 +1,9 @@
 import { Commands } from "./Commands";
 
 type ResolveError = { error: string; ok: false };
+
 type ResolveOk = { command: string; ok: true };
+
 type ResolveResult = ResolveError | ResolveOk;
 
 const resolve = (script: string): ResolveResult => {

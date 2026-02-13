@@ -1,7 +1,5 @@
 import { Process } from "@snappy/node";
 
-type Command = { command: string; description: string; name: string };
-
 const workflowRunner = `bun` as const;
 const cmd = (tool: string, args: string[]) => Process.toolCommand(workflowRunner, tool, args);
 const cmdRun = `run`;
