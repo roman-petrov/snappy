@@ -2,9 +2,8 @@ import { Build } from "./Build";
 import { Run } from "./Run";
 import { RunAll } from "./RunAll";
 
-export type ExecuteOptions = { stdio?: `inherit` | `pipe` };
-
-export type ExecuteResult = { exitCode: number; message: string };
+type ExecuteOptions = { stdio?: `inherit` | `pipe` };
+type ExecuteResult = { exitCode: number; message: string };
 
 const run = async (
   root: string,

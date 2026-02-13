@@ -1,6 +1,6 @@
 import { Process } from "@snappy/node";
 
-export type Command = { command: string; description: string; name: string };
+type Command = { command: string; description: string; name: string };
 
 const workflowRunner = `bun` as const;
 const cmd = (tool: string, args: string[]) => Process.toolCommand(workflowRunner, tool, args);
@@ -15,6 +15,7 @@ const cmdLintStylelint = cmd(`stylelint`, [`--max-warnings=0`, `**/*.css`]);
 const cmdLintCspell = cmd(`cspell`, [`.`]);
 const cmdLintJscpd = cmd(`jscpd`, [`.`]);
 const cmdLintMarkdown = cmd(`markdownlint`, [`.`]);
+const cmdLintKnip = cmd(`knip`, []);
 const cmdFixEslint = cmd(`eslint`, [`--fix`, `.`]);
 const cmdFixPrettier = cmd(`prettier`, [`--write`, `.`]);
 const cmdFixStylelint = cmd(`stylelint`, [`--fix`, `--max-warnings=0`, `**/*.css`]);
@@ -34,6 +35,7 @@ const cmdCi = [
   cmdLintStylelint,
   cmdLintCspell,
   cmdLintJscpd,
+  cmdLintKnip,
   cmdLintMarkdown,
 ].join(` && `);
 
@@ -44,7 +46,7 @@ const commands = [
   { command: cmdTest, description: `Run tests via vitest.`, name: `test` },
   {
     command: cmdCi,
-    description: `Full CI pipeline: run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, markdown).`,
+    description: `Full CI pipeline: run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown).`,
     name: `ci`,
   },
   { command: cmdLintTsc, description: `TypeScript: type-check only (tsc --noEmit).`, name: `lint:tsc` },
@@ -53,6 +55,7 @@ const commands = [
   { command: cmdLintStylelint, description: `Stylelint: lint CSS/SCSS.`, name: `lint:stylelint` },
   { command: cmdLintCspell, description: `CSpell: spell-check project files.`, name: `lint:cspell` },
   { command: cmdLintJscpd, description: `JSCPD: detect code duplication.`, name: `lint:jscpd` },
+  { command: cmdLintKnip, description: `Knip: unused files, dependencies, exports.`, name: `lint:knip` },
   { command: cmdLintMarkdown, description: `Markdownlint: lint markdown files.`, name: `lint:markdown` },
   { command: cmdFixEslint, description: `ESLint: auto-fix issues where possible.`, name: `fix:eslint` },
   { command: cmdFixPrettier, description: `Prettier: format and write files.`, name: `fix:prettier` },

@@ -3,6 +3,10 @@
     "do": {
       "command": "bun",
       "args": ["do-mcp"]
+    },
+    "knip": {
+      "command": "bun",
+      "args": ["x", "@knip/mcp"]
     }
   }
 }

@@ -23,6 +23,8 @@ jobs:
             arg: lint:cspell
           - name: 🔍 JSCPD Check
             arg: lint:jscpd
+          - name: 🔎 Knip Check
+            arg: lint:knip
           - name: 📄 Markdown Lint Check
             arg: lint:markdown
 

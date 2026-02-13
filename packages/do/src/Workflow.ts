@@ -1,10 +1,8 @@
 import { Commands } from "./Commands";
 
-export type ResolveError = { error: string; ok: false };
-
-export type ResolveOk = { command: string; ok: true };
-
-export type ResolveResult = ResolveError | ResolveOk;
+type ResolveError = { error: string; ok: false };
+type ResolveOk = { command: string; ok: true };
+type ResolveResult = ResolveError | ResolveOk;
 
 const resolve = (script: string): ResolveResult => {
   const cmd = Commands.commandByName(script);

@@ -2,10 +2,7 @@ import type { ReactNode } from "react";
 
 import styles from "./FormErrorAndActions.module.css";
 
-export type FormErrorAndActionsProps = {
-  children: ReactNode;
-  error: string;
-};
+export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 
 export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProps) => (
   <>
@@ -16,6 +13,4 @@ export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProp
 
 export type FormActionsProps = { children: ReactNode };
 
-export const FormActions = ({ children }: FormActionsProps) => (
-  <div className={styles.actions}>{children}</div>
-);
+export const FormActions = ({ children }: FormActionsProps) => <div className={styles.actions}>{children}</div>;

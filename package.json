@@ -10,6 +10,7 @@
     "prisma": "^7.4.0"
   },
   "devDependencies": {
+    "@knip/mcp": "^0.0.18",
     "vitest": "^3.2.4"
   }
 }
