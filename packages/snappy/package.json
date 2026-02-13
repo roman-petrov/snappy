@@ -5,6 +5,7 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@snappy/server-api": "workspace:*",
     "gigachat": "^0.0.18"
   }
 }

@@ -1,7 +1,8 @@
-/* eslint-disable no-undef */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import { spawn } from "node:child_process";
+
 const defaultTimeoutMs = 300_000;
 const outputTruncate = 50_000;
 
@@ -21,16 +22,24 @@ const exitCodeTimeout = 124;
 const msPerSecond = 1000;
 const timedOutInsertIndex = 3;
 
+const readStream = (stream: NodeJS.ReadableStream | null): Promise<string> => {
+  if (stream === null) return Promise.resolve(``);
+  const chunks: Buffer[] = [];
+  return new Promise((resolve, reject) => {
+    stream.on(`data`, (chunk: Buffer) => chunks.push(chunk));
+    stream.on(`end`, () => resolve(Buffer.concat(chunks).toString(`utf8`)));
+    stream.on(`error`, reject);
+  });
+};
+
 const run = async (rootDir: string, command: string, options: RunOptions = {}): Promise<RunResult> => {
   const { stdio = `pipe`, timeoutMs = defaultTimeoutMs } = options;
   const start = Date.now();
-  const isWin = process.platform === `win32`;
 
-  const proc = Bun.spawn(isWin ? [`cmd.exe`, `/c`, command] : [`sh`, `-c`, command], {
+  const proc = spawn(command, [], {
     cwd: rootDir,
-    stderr: stdio === `inherit` ? `inherit` : `pipe`,
-    stdin: `ignore`,
-    stdout: stdio === `inherit` ? `inherit` : `pipe`,
+    shell: true,
+    stdio: stdio === `inherit` ? `inherit` : [`ignore`, `pipe`, `pipe`],
   });
 
   const timedOutRef = { current: false };
@@ -41,12 +50,13 @@ const run = async (rootDir: string, command: string, options: RunOptions = {}): 
   }, timeoutMs);
 
   const [stdout, stderr] =
-    stdio === `pipe`
-      ? await Promise.all([new Response(proc.stdout).text(), new Response(proc.stderr).text()])
+    stdio === `pipe` && proc.stdout !== null && proc.stderr !== null
+      ? await Promise.all([readStream(proc.stdout), readStream(proc.stderr)])
       : [``, ``];
+  const exitCode = await new Promise<number>(resolve => {
+    proc.on(`close`, code => resolve(timedOutRef.current ? exitCodeTimeout : (code ?? 1)));
+  });
   clearTimeout(timeout);
-  const exited = await proc.exited;
-  const exitCode = timedOutRef.current ? exitCodeTimeout : (exited ?? 1);
   const durationMs = Date.now() - start;
 
   return { durationMs, exitCode, stderr, stdout, timedOut: timedOutRef.current };

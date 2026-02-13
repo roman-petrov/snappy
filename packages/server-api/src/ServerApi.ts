@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
 import { _ } from "@snappy/core";
-import type { FeatureType } from "@snappy/snappy";
 
 import { Endpoints } from "./Endpoints";
+import type { FeatureType } from "./Features";
 
 type Auth = BotAuth | JwtAuth;
 

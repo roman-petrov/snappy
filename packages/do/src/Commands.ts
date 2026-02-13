@@ -3,24 +3,24 @@ export type Command = { command: string; description: string; name: string };
 const cmdRun = `run`;
 const cmdDev = `dev`;
 const cmdBuild = `build`;
-const cmdTest = `bun test`;
-const cmdLintTsc = `bunx tsc --noEmit`;
-const cmdLintEslint = `bunx eslint .`;
-const cmdLintPrettier = `bunx prettier --check .`;
-const cmdLintStylelint = `bunx stylelint --max-warnings=0 **/*.css`;
-const cmdLintCspell = `bunx cspell .`;
-const cmdLintJscpd = `bunx jscpd .`;
-const cmdLintMarkdown = `bunx markdownlint .`;
-const cmdFixEslint = `bunx eslint --fix .`;
-const cmdFixPrettier = `bunx prettier --write .`;
-const cmdFixStylelint = `bunx stylelint --fix --max-warnings=0 **/*.css`;
-const cmdDbGenerate = `bunx prisma generate`;
-const cmdDbPush = `bunx prisma db push`;
-const cmdDbMigrateDev = `bunx prisma migrate dev`;
-const cmdDbMigrateDeploy = `bunx prisma migrate deploy`;
-const cmdDbMigrateReset = `bunx prisma migrate reset`;
-const cmdDbStudio = `bunx prisma studio`;
-const cmdDbSeed = `bunx prisma db seed`;
+const cmdTest = `npx vitest run`;
+const cmdLintTsc = `npx tsc --noEmit`;
+const cmdLintEslint = `npx eslint .`;
+const cmdLintPrettier = `npx prettier --check .`;
+const cmdLintStylelint = `npx stylelint --max-warnings=0 **/*.css`;
+const cmdLintCspell = `npx cspell .`;
+const cmdLintJscpd = `npx jscpd .`;
+const cmdLintMarkdown = `npx markdownlint .`;
+const cmdFixEslint = `npx eslint --fix .`;
+const cmdFixPrettier = `npx prettier --write .`;
+const cmdFixStylelint = `npx stylelint --fix --max-warnings=0 **/*.css`;
+const cmdDbGenerate = `npx prisma generate`;
+const cmdDbPush = `npx prisma db push`;
+const cmdDbMigrateDev = `npx prisma migrate dev`;
+const cmdDbMigrateDeploy = `npx prisma migrate deploy`;
+const cmdDbMigrateReset = `npx prisma migrate reset`;
+const cmdDbStudio = `npx prisma studio`;
+const cmdDbSeed = `npx prisma db seed`;
 
 const cmdCi = [
   cmdTest,
@@ -37,7 +37,7 @@ const commands = [
   { command: cmdRun, description: `Build and run server (server-prod → node dist/server.js).`, name: `run` },
   { command: cmdDev, description: `Run server in watch (server-dev).`, name: `dev` },
   { command: cmdBuild, description: `Build server into dist/server.js, static into dist/www.`, name: `build` },
-  { command: cmdTest, description: `Run tests via bun test.`, name: `test` },
+  { command: cmdTest, description: `Run tests via vitest.`, name: `test` },
   {
     command: cmdCi,
     description: `Full CI pipeline: run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, markdown).`,

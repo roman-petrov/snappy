@@ -1,8 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { type FeatureType, Prompts } from "@snappy/snappy";
+const featureKeys = [
+  `addEmoji`,
+  `expand`,
+  `fixErrors`,
+  `improveReadability`,
+  `shorten`,
+  `styleBusiness`,
+  `styleFriendly`,
+  `styleHumorous`,
+  `styleNeutral`,
+  `styleSelling`,
+] as const;
 
-export type { FeatureType } from "@snappy/snappy";
+export type FeatureType = (typeof featureKeys)[number];
 
-export const featureKeys: FeatureType[] = Object.keys(Prompts.systemPrompts) as FeatureType[];
+export { featureKeys };
 
-export const defaultFeature: FeatureType = featureKeys[0] ?? `addEmoji`;
+export const defaultFeature: FeatureType = featureKeys[0];

@@ -1,3 +1,5 @@
+import type { FeatureType } from "@snappy/server-api";
+
 const systemPrompts = {
   addEmoji: `Ты креативный редактор социальных медиа. Твоя задача - добавить эмодзи в текст.
 
@@ -118,10 +120,9 @@ const systemPrompts = {
 - Текст должен мотивировать к действию
 
 Верни ТОЛЬКО переработанный текст без комментариев и пояснений.`,
-} as const satisfies Record<string, string>;
-
-export type FeatureType = keyof typeof systemPrompts;
+} as const satisfies Record<FeatureType, string>;
 
 const systemPrompt = (feature: FeatureType) => systemPrompts[feature];
 
 export const Prompts = { systemPrompt, systemPrompts };
+export type { FeatureType } from "@snappy/server-api";

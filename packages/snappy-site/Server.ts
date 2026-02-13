@@ -6,7 +6,7 @@
 /* eslint-disable sonarjs/x-powered-by */
 /**
  * Dev server with SSR: Vite middleware + GET / renders Landing on the server.
- * Run from snappy-site directory: bun run server.ts
+ * Run from snappy-site directory: npm run dev (or node --import tsx/esm server.ts)
  */
 import express from "express";
 import { readFileSync } from "node:fs";

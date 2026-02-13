@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
-/* eslint-disable no-undef */
+import { spawn } from "node:child_process";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -31,13 +31,18 @@ const copyDir = (src: string, destination: string): void => {
   }
 };
 
-const spawn = async (cmd: string[], cwd: string): Promise<number> =>
-  Bun.spawn(cmd, { cwd, stderr: `inherit`, stdin: `ignore`, stdout: `inherit` }).exited.then(code => code);
+const run = (cmd: string[], cwd: string): Promise<number> =>
+  new Promise((resolve, reject) => {
+    const [exe, ...args] = cmd;
+    const proc = spawn(exe ?? ``, args, { cwd, stdio: `inherit` });
+    proc.on(`close`, (code: number | null) => resolve(code ?? 0));
+    proc.on(`error`, reject);
+  });
 
 const buildSite = async (root: string): Promise<number> => {
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteExit = await spawn([`bunx`, `vite`, `build`], site);
+  const siteExit = await run([`npx`, `vite`, `build`], site);
   if (siteExit !== 0) {
     return siteExit;
   }
@@ -45,13 +50,13 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await spawn([`bunx`, `vite`, `build`, `--config`, `vite.app.config.js`], site);
+  const appExit = await run([`npx`, `vite`, `build`, `--config`, `vite.app.config.js`], site);
   if (appExit !== 0) {
     return appExit;
   }
 
-  const ssrExit = await spawn(
-    [`bunx`, `vite`, `build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`],
+  const ssrExit = await run(
+    [`npx`, `vite`, `build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`],
     site,
   );
   if (ssrExit !== 0) {
@@ -61,7 +66,7 @@ const buildSite = async (root: string): Promise<number> => {
   return 0;
 };
 
-const buildServer = async (root: string): Promise<number> => spawn([`bunx`, `vite`, `build`], serverDir(root));
+const buildServer = async (root: string): Promise<number> => run([`npx`, `vite`, `build`], serverDir(root));
 
 const build = async (root: string): Promise<number> => {
   const dist = join(root, distDir);

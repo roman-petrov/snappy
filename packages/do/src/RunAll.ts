@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable no-undef */
 /* eslint-disable no-await-in-loop */
+import { spawn } from "node:child_process";
 import { join } from "node:path";
 import open from "open";
 
@@ -13,12 +13,21 @@ import { Build } from "./Build";
 const spawnOptions = { stderr: `inherit` as const, stdin: `inherit` as const, stdout: `inherit` as const };
 const silentOptions = { stderr: `ignore` as const, stdin: `inherit` as const, stdout: `ignore` as const };
 
-const run = async (cwd: string, cmd: string[], options?: { env?: Record<string, string>; silent?: boolean }) =>
-  Bun.spawn(cmd, {
-    cwd,
-    ...(options?.silent === true ? silentOptions : spawnOptions),
-    ...(options?.env !== undefined && { env: { ...process.env, ...options.env } }),
-  }).exited;
+const run = async (
+  cwd: string,
+  cmd: string[],
+  options?: { env?: Record<string, string>; silent?: boolean },
+): Promise<number> =>
+  new Promise((resolve, reject) => {
+    const proc = spawn(cmd.join(` `), [], {
+      cwd,
+      shell: true,
+      ...(options?.silent === true ? silentOptions : spawnOptions),
+      ...(options?.env !== undefined && { env: { ...process.env, ...options.env } }),
+    });
+    proc.on(`close`, code => resolve(code ?? 0));
+    proc.on(`error`, reject);
+  });
 
 const log = {
   fail: (label: string) => process.stderr.write(`  ❌ ${label}\n`),
@@ -43,8 +52,8 @@ const runStep = async (root: string, cmd: string[], label: string) => {
 
 const dbSteps: [string[], string][] = [
   [[`docker`, `compose`, `up`, `-d`], `Database container`],
-  [[`bunx`, `prisma`, `db`, `push`, `--accept-data-loss`], `Schema sync`],
-  [[`bunx`, `prisma`, `db`, `seed`], `Seed`],
+  [[`npx`, `prisma`, `db`, `push`, `--accept-data-loss`], `Schema sync`],
+  [[`npx`, `prisma`, `db`, `seed`], `Seed`],
 ];
 
 const dbStart = async (root: string): Promise<number> => {
@@ -68,6 +77,9 @@ const serverMainPath = (root: string) => join(root, `packages`, `server-dev`, `s
 const sitePath = (root: string) => join(root, `packages`, `snappy-site`);
 const distServerPath = (root: string) => join(root, `dist`, `server.js`);
 const vitePort = 5173;
+
+const procExited = (proc: ReturnType<typeof spawn>): Promise<number> =>
+  new Promise(resolve => proc.on(`close`, code => resolve(code ?? 0)));
 
 const withShutdown = (root: string, onKill: () => void) => {
   const state = { done: false };
@@ -107,10 +119,11 @@ const runDev = async (root: string) => {
 
   log.section(`🖥️ Servers`);
 
-  const viteProc = Bun.spawn([`bun`, `run`, `dev`], { cwd: sitePath(root), ...spawnOptions });
+  const viteProc = spawn(`npm run dev`, [], { cwd: sitePath(root), shell: true, ...spawnOptions });
 
-  const serverProc = Bun.spawn([`bun`, `--watch`, `run`, serverMainPath(root)], {
+  const serverProc = spawn(`node --watch --import tsx/esm "${serverMainPath(root)}"`, [], {
     cwd: root,
+    shell: true,
     ...spawnOptions,
     env: { ...process.env, NODE_ENV: `development` },
   });
@@ -123,7 +136,7 @@ const runDev = async (root: string) => {
 
   await open(`http://localhost:${vitePort}`);
 
-  return runUntilExit(serverProc.exited);
+  return runUntilExit(procExited(serverProc));
 };
 
 const runProd = async (root: string) => {
@@ -141,10 +154,10 @@ const runProd = async (root: string) => {
 
   log.section(`🖥️ Server`);
 
-  const serverProc = Bun.spawn([`node`, distServerPath(root)], { cwd: root, ...spawnOptions });
+  const serverProc = spawn(`node "${distServerPath(root)}"`, [], { cwd: root, shell: true, ...spawnOptions });
   const runUntilExit = withShutdown(root, () => serverProc.kill());
 
-  return runUntilExit(serverProc.exited);
+  return runUntilExit(procExited(serverProc));
 };
 
 export const RunAll = { runDev, runProd };

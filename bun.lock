@@ -100,6 +100,7 @@
       "name": "@snappy/server-api",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/core": "workspace:*",
         "@snappy/snappy": "workspace:*",
       },
     },
@@ -144,6 +145,7 @@
       "name": "@snappy/snappy-bot",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/core": "workspace:*",
         "@snappy/server-api": "workspace:*",
         "@snappy/snappy": "workspace:*",
         "gramio": "^0.4.13",
@@ -195,6 +197,9 @@
     "packages/yoo-kassa": {
       "name": "@snappy/yoo-kassa",
       "version": "0.0.0",
+      "dependencies": {
+        "@snappy/core": "workspace:*",
+      },
     },
   },
   "packages": {
