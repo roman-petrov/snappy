@@ -46,7 +46,6 @@ const config: KnipConfig = {
     "packages/db": { entry: [`src/Seed.ts`], ignore: [`src/generated/**`], ignoreFiles: [`src/Seed.ts`] },
     "packages/do": { ignoreDependencies: doIgnoreDeps },
     "packages/server": { ignoreDependencies: [`@snappy/config`] },
-    "packages/server-prod": { ignoreDependencies: [`express`, `@types/express`] },
     "packages/snappy-site": {
       entry: snappySiteEntry,
       ignoreDependencies: [`@fontsource-variable/inter`],
