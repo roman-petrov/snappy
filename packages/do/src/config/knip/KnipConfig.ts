@@ -48,7 +48,7 @@ const config: KnipConfig = {
     "packages/snappy-site": {
       entry: snappySiteEntry,
       ignoreDependencies: [`@fontsource-variable/inter`],
-      ignoreFiles: [`Server.ts`, `vite.app.config.ts`, `vite.app.config.js`, `src/**`],
+      ignoreFiles: [`vite.app.config.ts`, `vite.app.config.js`],
     },
     "packages/ui": { ignoreDependencies: [`@fontsource-variable/inter`] },
   },
