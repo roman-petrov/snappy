@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import type { ServerApi } from "@snappy/server-api";
+
 import { useEffect, useState } from "react";
 
 import { api } from "../core/Api";
 import { getToken } from "../core/Auth";
 import { featureEmoji, featureKeys } from "../core/Features";
 import { t } from "../core/Locale";
+
+type ProcessFeature = Parameters<ServerApi[`process`]>[2];
 
 const copyFeedbackMs = 2000;
 
@@ -38,7 +42,7 @@ export const useDashboardState = () => {
     }
     setLoading(true);
     try {
-      const { text: processed } = await api.process(token, text.trim(), feature);
+      const { text: processed } = await api.process(token, text.trim(), feature as ProcessFeature);
       setResult(processed);
       setCopied(false);
       if (remaining !== undefined) {
