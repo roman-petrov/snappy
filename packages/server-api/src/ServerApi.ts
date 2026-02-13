@@ -3,6 +3,7 @@
 import { _ } from "@snappy/core";
 
 import type { FeatureType } from "./Features";
+import type { ApiAuthResult, ApiOkResult, ApiPaymentUrlResult, ApiProcessResult, ApiRemainingResult } from "./Types";
 
 import { Endpoints } from "./Endpoints";
 
@@ -31,9 +32,9 @@ const handleResponse = async <T>(response: Response, parse: (data: Record<string
 const request = async <T>(url: string, init: RequestInit, parse: (data: Record<string, unknown>) => T): Promise<T> =>
   handleResponse(await fetch(url, init), parse);
 
-const parseOk = () => ({ ok: true }) as const;
+const parseOk = (): ApiOkResult => ({ ok: true });
 
-const parseToken = (data: Record<string, unknown>) => {
+const parseToken = (data: Record<string, unknown>): ApiAuthResult => {
   const token = data[`token`];
   if (!_.isString(token)) {
     throw new TypeError(`Invalid response`);
@@ -42,7 +43,7 @@ const parseToken = (data: Record<string, unknown>) => {
   return { token };
 };
 
-const parseUrl = (data: Record<string, unknown>) => {
+const parseUrl = (data: Record<string, unknown>): ApiPaymentUrlResult => {
   const url = data[`url`];
   if (!_.isString(url)) {
     throw new TypeError(`Invalid response`);
@@ -51,9 +52,11 @@ const parseUrl = (data: Record<string, unknown>) => {
   return { url };
 };
 
-const parseText = (data: Record<string, unknown>) => ({ text: _.isString(data[`text`]) ? data[`text`] : `` });
+const parseText = (data: Record<string, unknown>): ApiProcessResult => ({
+  text: _.isString(data[`text`]) ? data[`text`] : ``,
+});
 
-const parseRemaining = (data: Record<string, unknown>) => ({
+const parseRemaining = (data: Record<string, unknown>): ApiRemainingResult => ({
   remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0,
 });
 

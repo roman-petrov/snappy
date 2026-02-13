@@ -33,8 +33,14 @@ const snappySiteEntry = [
 const config: KnipConfig = {
   ignore: [`packages/**/generated/**`],
   ignoreExportsUsedInFile: true,
-  ignoreIssues: { "packages/do/src/Instructions.ts": [`exports`] },
+  ignoreIssues: {
+    "**/*.module.css.d.ts": [`exports`],
+    "**/entry-server.tsx": [`exports`],
+    "packages/do/src/config/index.esm.js": [`exports`],
+    "packages/do/src/Instructions.ts": [`exports`],
+  },
   ignoreUnresolved: [`tsx/esm`],
+  includeEntryExports: true,
   workspaces: {
     ".": { entry: rootEntry, ignoreDependencies: [`@knip/mcp`], ignoreFiles: [`*.config.js`, `knip.config.ts`] },
     "packages/db": { entry: [`src/Seed.ts`], ignore: [`src/generated/**`], ignoreFiles: [`src/Seed.ts`] },
