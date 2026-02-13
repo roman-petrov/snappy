@@ -4,9 +4,7 @@ import jwt from "jsonwebtoken";
 
 export type Payload = { userId: number };
 
-const defaultExpiresIn = `7d`;
-
-const sign = (userId: number, secret: string, expiresIn: string = defaultExpiresIn): string =>
+const sign = (userId: number, secret: string, expiresIn = `7d`): string =>
   jwt.sign({ userId } as Payload, secret, { expiresIn } as jwt.SignOptions);
 
 const verify = (token: string, secret: string): Payload | undefined => {

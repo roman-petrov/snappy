@@ -7,6 +7,7 @@
 /* eslint-disable functional/no-try-statements */
 import type { RequestHandler } from "express";
 
+import { _ } from "@snappy/core";
 import { type SiteLocaleKey, type SiteMeta, Ssr as SiteSsr } from "@snappy/snappy-site/ssr";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,47 +23,27 @@ export const Ssr = () => {
     const ssrEntryPath = pathToFileURL(join(clientRoot, `server`, `entry-server.js`)).href;
     const template = readFileSync(templatePath, `utf8`);
     const ssrModule = await import(ssrEntryPath);
-    const render = typeof ssrModule.render === `function` ? ssrModule.render : undefined;
+    const render = _.isFunction(ssrModule.render) ? ssrModule.render : undefined;
 
     if (render === undefined) {
       throw new Error(`SSR entry did not export render`);
     }
 
-    return {
-      entry: { getMeta: typeof ssrModule.getMeta === `function` ? ssrModule.getMeta : undefined, render },
-      template,
-    };
+    return { entry: { getMeta: _.isFunction(ssrModule.getMeta) ? ssrModule.getMeta : undefined, render }, template };
   };
 
-  const createSsrHandler = (clientRoot: string): RequestHandler => {
-    const templatePath = join(clientRoot, `index.html`);
-    const ssrEntryPath = pathToFileURL(join(clientRoot, `server`, `entry-server.js`)).href;
-
-    return async (request, response, next) => {
+  const createSsrHandler =
+    (clientRoot: string): RequestHandler =>
+    async (request, response, next) => {
       try {
         const locale = SiteSsr.localeFromCookie(request.headers.cookie);
-        const template = readFileSync(templatePath, `utf8`);
-        const ssrModule = await import(ssrEntryPath);
-        const render = typeof ssrModule.render === `function` ? ssrModule.render : undefined;
-        if (render === undefined) {
-          next(new Error(`SSR entry did not export render`));
+        const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
-          return;
-        }
-
-        response
-          .type(`html`)
-          .send(
-            SiteSsr.buildHtml(locale, template, {
-              getMeta: typeof ssrModule.getMeta === `function` ? ssrModule.getMeta : undefined,
-              render,
-            }),
-          );
+        response.type(`html`).send(SiteSsr.buildHtml(locale, template, entry));
       } catch (error) {
         next(error);
       }
     };
-  };
 
   const createCachedSsrHandler = (clientRoot: string, cache: ServerCache): RequestHandler => {
     const loadedRef: { promise?: Promise<{ entry: SsrEntry; template: string }> } = {};

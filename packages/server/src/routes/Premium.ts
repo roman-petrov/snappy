@@ -6,8 +6,6 @@ import { HttpStatus } from "@snappy/core";
 
 import type { AppContext } from "../Types";
 
-const premiumTitle = `Snappy Bot - Premium подписка (30 дней)`;
-
 const paymentUrl = (context: AppContext) => async (request: Request, response: Response) => {
   const { userId } = request as Request & { userId?: number };
 
@@ -18,7 +16,11 @@ const paymentUrl = (context: AppContext) => async (request: Request, response: R
   }
 
   try {
-    const url = await context.yooKassa.paymentUrl(userId, context.premiumPrice, premiumTitle);
+    const url = await context.yooKassa.paymentUrl(
+      userId,
+      context.premiumPrice,
+      `Snappy Bot - Premium подписка (30 дней)`,
+    );
 
     response.json({ url });
   } catch {

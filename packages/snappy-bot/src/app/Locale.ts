@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { _ } from "@snappy/core";
 import localeData from "./locales";
 
 export type Locale = keyof typeof localeData;
@@ -14,7 +15,7 @@ const resolveByPath = (current: unknown, keys: string[]) => {
 
   const [first, ...rest] = keys;
 
-  if (first === undefined || typeof current !== `object` || current === null || !(first in current)) {
+  if (first === undefined || !_.isObject(current) || current === null || !(first in current)) {
     return notFound;
   }
 

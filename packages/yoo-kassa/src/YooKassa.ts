@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-expression-statements */
+import { _ } from "@snappy/core";
+
 export type YooKassaCredentials = { secretKey?: string; shopId?: string };
 
 type YooKassaPaymentRequest = {
@@ -63,7 +65,7 @@ export const YooKassa = (credentials: YooKassaCredentials) => {
     type ApiResponse = { confirmation: { confirmationUrl: string; type: string } };
 
     const jsonData: unknown = await response.json();
-    if (typeof jsonData !== `object` || jsonData === null || !(`confirmation` in jsonData)) {
+    if (!_.isObject(jsonData) || jsonData === null || !(`confirmation` in jsonData)) {
       throw new Error(`Invalid response from YooKassa`);
     }
 
@@ -88,7 +90,7 @@ export const YooKassa = (credentials: YooKassaCredentials) => {
     }
 
     const jsonData: unknown = await response.json();
-    if (typeof jsonData !== `object` || jsonData === null || !(`status` in jsonData) || !(`paid` in jsonData)) {
+    if (!_.isObject(jsonData) || jsonData === null || !(`status` in jsonData) || !(`paid` in jsonData)) {
       return false;
     }
     const apiResponse = jsonData as { paid: boolean; status: string };

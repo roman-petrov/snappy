@@ -11,7 +11,7 @@ export const cssModulesCamelCasePlugin = (): Plugin => ({
       return undefined;
     }
 
-    if (typeof code !== `string` || !code.includes(`export default`)) {
+    if (!_.isString(code) || !code.includes(`export default`)) {
       return undefined;
     }
 

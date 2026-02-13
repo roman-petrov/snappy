@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
+import { _ } from "@snappy/core";
 import type { FeatureType } from "@snappy/snappy";
 
 import { Endpoints } from "./Endpoints";
@@ -33,7 +34,7 @@ const parseOk = () => ({ ok: true }) as const;
 
 const parseToken = (data: Record<string, unknown>) => {
   const token = data[`token`];
-  if (typeof token !== `string`) {
+  if (!_.isString(token)) {
     throw new TypeError(`Invalid response`);
   }
 
@@ -42,17 +43,17 @@ const parseToken = (data: Record<string, unknown>) => {
 
 const parseUrl = (data: Record<string, unknown>) => {
   const url = data[`url`];
-  if (typeof url !== `string`) {
+  if (!_.isString(url)) {
     throw new TypeError(`Invalid response`);
   }
 
   return { url };
 };
 
-const parseText = (data: Record<string, unknown>) => ({ text: typeof data[`text`] === `string` ? data[`text`] : `` });
+const parseText = (data: Record<string, unknown>) => ({ text: _.isString(data[`text`]) ? data[`text`] : `` });
 
 const parseRemaining = (data: Record<string, unknown>) => ({
-  remaining: typeof data[`remaining`] === `number` ? data[`remaining`] : 0,
+  remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0,
 });
 
 export const ServerApi = (config: Config) => {

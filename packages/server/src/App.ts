@@ -14,13 +14,13 @@ import { User } from "./routes/User";
 export type CreateAppOptions = AppContext & { allowCorsOrigin?: string; botApiKey: string };
 
 export const createApp = (options: CreateAppOptions) => {
-  const { allowCorsOrigin, botApiKey, db, freeRequestLimit, jwtSecret, premiumPrice, snappy, yooKassa } = options;
-  const context: AppContext = { db, freeRequestLimit, jwtSecret, premiumPrice, snappy, yooKassa };
+  const { allowCorsOrigin, botApiKey, ...context } = options;
   const app = express();
+  const corsOrigin = allowCorsOrigin ?? ``;
 
-  if (allowCorsOrigin !== undefined && allowCorsOrigin !== ``) {
+  if (corsOrigin !== ``) {
     app.use((request, response, next) => {
-      response.setHeader(`Access-Control-Allow-Origin`, allowCorsOrigin);
+      response.setHeader(`Access-Control-Allow-Origin`, corsOrigin);
       response.setHeader(`Access-Control-Allow-Methods`, `GET, POST, OPTIONS`);
       response.setHeader(`Access-Control-Allow-Headers`, `Content-Type, Authorization`);
       if (request.method === `OPTIONS`) {

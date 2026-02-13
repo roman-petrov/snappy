@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { _ } from "@snappy/core";
+
 const notFound = Symbol(`notFound`);
 
 const resolveByPath = (current: unknown, keys: string[]): unknown => {
@@ -6,7 +8,7 @@ const resolveByPath = (current: unknown, keys: string[]): unknown => {
     return current;
   }
   const [first, ...rest] = keys;
-  if (first === undefined || typeof current !== `object` || current === null || !(first in current)) {
+  if (first === undefined || !_.isObject(current) || current === null || !(first in current)) {
     return notFound;
   }
 

@@ -5,7 +5,7 @@
 import type { ApiAuthBody, ApiForgotPasswordBody, ApiResetPasswordBody } from "@snappy/server-api";
 import type { Request, Response } from "express";
 
-import { HttpStatus, Time } from "@snappy/core";
+import { _, HttpStatus, Time } from "@snappy/core";
 
 import type { AppContext } from "../Types";
 
@@ -15,21 +15,24 @@ import { Storage } from "../Storage";
 
 const resetTokenExpiresHours = 1;
 const passwordMinLength = 8;
-const msPerHour = Time.hourInMs;
 const hasLetter = (s: string) => /[A-Za-z]/u.test(s);
 const hasDigit = (s: string) => /\d/u.test(s);
 const passwordValid = (s: string) => s.length >= passwordMinLength && hasLetter(s) && hasDigit(s);
+const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
+const jwtUnavailable = (ctx: AppContext, res: Response): boolean => {
+  if (ctx.jwtSecret !== ``) return false;
+  res.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
+
+  return true;
+};
 
 const register = (context: AppContext) => async (request: Request, response: Response) => {
-  if (context.jwtSecret === ``) {
-    response.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
-
-    return;
-  }
+  if (jwtUnavailable(context, response)) return;
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 
-  if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || !passwordValid(password)) {
+  if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
     response
       .status(HttpStatus.badRequest)
       .json({ error: `Invalid email or password (min 8 chars, letters and digits)` });
@@ -37,7 +40,7 @@ const register = (context: AppContext) => async (request: Request, response: Res
     return;
   }
 
-  const normalized = email.trim().toLowerCase();
+  const normalized = normalizeEmail(email);
   const existing = await context.db.user.findUnique({ where: { email: normalized } });
 
   if (existing !== null) {
@@ -54,21 +57,17 @@ const register = (context: AppContext) => async (request: Request, response: Res
 };
 
 const login = (context: AppContext) => async (request: Request, response: Response) => {
-  if (context.jwtSecret === ``) {
-    response.status(HttpStatus.serviceUnavailable).json({ error: `JWT_SECRET not configured` });
-
-    return;
-  }
+  if (jwtUnavailable(context, response)) return;
 
   const { email, password } = (request.body as ApiAuthBody) ?? {};
 
-  if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || password === ``) {
+  if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
     response.status(HttpStatus.badRequest).json({ error: `Invalid email or password` });
 
     return;
   }
 
-  const normalized = email.trim().toLowerCase();
+  const normalized = normalizeEmail(email);
   const user = await context.db.user.findUnique({ where: { email: normalized } });
 
   if (user?.passwordHash === null || user === null) {
@@ -92,13 +91,13 @@ const login = (context: AppContext) => async (request: Request, response: Respon
 const forgotPassword = (context: AppContext) => async (request: Request, response: Response) => {
   const { email } = (request.body as ApiForgotPasswordBody) ?? {};
 
-  if (typeof email !== `string` || email.trim() === ``) {
+  if (!_.isString(email) || email.trim() === ``) {
     response.status(HttpStatus.badRequest).json({ error: `Email required` });
 
     return;
   }
 
-  const normalized = email.trim().toLowerCase();
+  const normalized = normalizeEmail(email);
   const user = await context.db.user.findUnique({ where: { email: normalized } });
 
   if (user === null) {
@@ -108,7 +107,7 @@ const forgotPassword = (context: AppContext) => async (request: Request, respons
   }
 
   const resetToken = crypto.randomUUID();
-  const resetTokenExpires = new Date(Date.now() + resetTokenExpiresHours * msPerHour);
+  const resetTokenExpires = new Date(Date.now() + resetTokenExpiresHours * Time.hourInMs);
   await context.db.user.update({ data: { resetToken, resetTokenExpires }, where: { id: user.id } });
 
   response.json({ ok: true, resetToken });
@@ -117,7 +116,7 @@ const forgotPassword = (context: AppContext) => async (request: Request, respons
 const resetPassword = (context: AppContext) => async (request: Request, response: Response) => {
   const { newPassword, token } = (request.body as ApiResetPasswordBody) ?? {};
 
-  if (typeof token !== `string` || token === `` || typeof newPassword !== `string` || !passwordValid(newPassword)) {
+  if (!_.isString(token) || token === `` || !_.isString(newPassword) || !passwordValid(newPassword)) {
     response
       .status(HttpStatus.badRequest)
       .json({ error: `Token and new password (min 8 chars, letters and digits) required` });

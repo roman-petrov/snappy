@@ -74,16 +74,10 @@ export const ServerCache = () => {
   };
 
   const preferredEncoding = (acceptEncoding: string | undefined): `br` | `gzip` | undefined => {
-    if (acceptEncoding === undefined) {
-      return undefined;
-    }
+    if (acceptEncoding === undefined) return undefined;
     const s = acceptEncoding.toLowerCase();
-    if (s.includes(`br`)) {
-      return `br`;
-    }
-    if (s.includes(`gzip`)) {
-      return `gzip`;
-    }
+    if (s.includes(`br`)) return `br`;
+    if (s.includes(`gzip`)) return `gzip`;
 
     return undefined;
   };
@@ -134,13 +128,12 @@ export const ServerCache = () => {
         return;
       }
 
-      const raw = ((): Buffer | undefined => {
-        try {
-          return readFileSync(filePath);
-        } catch {
-          return undefined;
-        }
-      })();
+      let raw: Buffer | undefined;
+      try {
+        raw = readFileSync(filePath);
+      } catch {
+        raw = undefined;
+      }
       if (raw === undefined) {
         next();
 
