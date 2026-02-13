@@ -4,10 +4,10 @@ import { t } from "../core/Locale";
 import styles from "./SiteFooter.module.css";
 
 export const SiteFooter = () => (
-  <footer className={styles[`footer`]}>
-    <div className={styles[`inner`]}>
-      <span className={styles[`logo`]}>
-        <img alt="" aria-hidden="true" className={styles[`logoIcon`]} height={20} src="/favicon.svg" width={20} />
+  <footer className={styles.footer}>
+    <div className={styles.inner}>
+      <span className={styles.logo}>
+        <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} />
         {` `}
         Snappy
       </span>

@@ -26,12 +26,12 @@ export const PasswordInputView = ({
     <label className={inputStyles[`label`]} htmlFor={id}>
       {label}
     </label>
-    <div className={styles[`wrap`]}>
+    <div className={styles.wrap}>
       <Input
         autoComplete={autoComplete}
         disabled={disabled}
         id={id}
-        inputClassName={styles[`input`]}
+        inputClassName={styles.input}
         minLength={minLength}
         onChange={onChange}
         required={required}
@@ -40,7 +40,7 @@ export const PasswordInputView = ({
       />
       <button
         aria-label={ariaLabel}
-        className={styles[`toggle`]}
+        className={styles.toggle}
         disabled={disabled}
         onClick={toggleVisible}
         title={ariaLabel}
@@ -48,7 +48,7 @@ export const PasswordInputView = ({
       >
         <span
           aria-hidden
-          className={styles[`icon`]}
+          className={styles.icon}
           dangerouslySetInnerHTML={{
             __html: (visible ? eyeClosedSvg : eyeOpenSvg).replace(/^<svg/u, `<svg width="100%" height="100%"`),
           }}

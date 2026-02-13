@@ -12,10 +12,10 @@ export type HeaderProps = {
 };
 
 export const Header = ({ children, logoHref, logoOnClick, logoTitle, logoTo }: HeaderProps) => (
-  <header className={styles[`header`]}>
-    <div className={styles[`inner`]}>
+  <header className={styles.header}>
+    <div className={styles.inner}>
       <Logo href={logoHref} onClick={logoOnClick} title={logoTitle} to={logoTo} />
-      <nav className={styles[`nav`]}>{children}</nav>
+      <nav className={styles.nav}>{children}</nav>
     </div>
   </header>
 );

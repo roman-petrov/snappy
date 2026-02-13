@@ -10,7 +10,7 @@ import styles from "./Layout.module.css";
 export type LayoutViewProps = ReturnType<typeof useLayoutState>;
 
 export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: LayoutViewProps) => (
-  <div className={styles[`wrap`]}>
+  <div className={styles.wrap}>
     <Header logoOnClick={logoOnClick} logoTitle={logoTitle} logoTo={logoTo}>
       {headerItems.map((item, index) =>
         item.type === `button` ? (
@@ -26,7 +26,7 @@ export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: Layo
         ),
       )}
     </Header>
-    <main className={styles[`main`]}>
+    <main className={styles.main}>
       <Outlet />
     </main>
   </div>

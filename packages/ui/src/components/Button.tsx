@@ -23,7 +23,7 @@ export const Button = ({
   primary = false,
   type = `button`,
 }: ButtonProps) => {
-  const classNames = [styles[`root`], primary ? styles[`primary`] : ``, large ? styles[`large`] : ``, className]
+  const classNames = [styles.root, primary ? styles.primary : ``, large ? styles.large : ``, className]
     .filter(Boolean)
     .join(` `);
 

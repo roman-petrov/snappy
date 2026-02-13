@@ -8,12 +8,12 @@ export type LogoProps = { href?: string; onClick?: (e: MouseEvent) => void; titl
 
 const logoContent = (
   <>
-    <img alt="" aria-hidden="true" className={styles[`logoIcon`]} height={20} src="/favicon.svg" width={20} /> Snappy
+    <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} /> Snappy
   </>
 );
 
 export const Logo = ({ href, onClick, title, to }: LogoProps) => {
-  const className = styles[`logo`];
+  const className = styles.logo;
 
   return to === undefined ? (
     <a className={className} href={href ?? `/`} onClick={onClick} title={title}>

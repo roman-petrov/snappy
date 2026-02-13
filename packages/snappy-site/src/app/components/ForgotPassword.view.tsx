@@ -18,7 +18,7 @@ export const ForgotPasswordView = ({
   if (sent) {
     return (
       <Panel lead={t(`forgotPage.checkEmailLead`)} title={t(`forgotPage.checkEmail`)}>
-        <div className={styles[`actions`]}>
+        <div className={styles.actions}>
           <Link to="/login">{t(`forgotPage.backToLogin`)}</Link>
         </div>
       </Panel>
@@ -27,7 +27,7 @@ export const ForgotPasswordView = ({
 
   return (
     <Panel lead={t(`forgotPage.lead`)} title={t(`forgotPage.title`)}>
-      <form className={styles[`form`]} onSubmit={onSubmit}>
+      <form className={styles.form} onSubmit={onSubmit}>
         <Input
           autoComplete="email"
           id="forgot-email"
@@ -37,8 +37,8 @@ export const ForgotPasswordView = ({
           type="email"
           value={email}
         />
-        {error !== `` && <p className={styles[`error`]}>{error}</p>}
-        <div className={styles[`actions`]}>
+        {error !== `` && <p className={styles.error}>{error}</p>}
+        <div className={styles.actions}>
           <Button disabled={loading} primary type="submit">
             {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
           </Button>

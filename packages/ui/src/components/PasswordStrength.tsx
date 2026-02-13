@@ -25,20 +25,20 @@ export const PasswordStrength = ({
   strengthText,
 }: PasswordStrengthProps) => (
   <>
-    <div className={styles[`requirements`]}>
+    <div className={styles.requirements}>
       {requirements.map(({ check, label }) => (
-        <span className={check(password) ? styles[`requirementMet`] : styles[`requirement`]} key={label}>
+        <span className={check(password) ? styles.requirementMet : styles.requirement} key={label}>
           {check(password) ? `✓ ` : ``}
           {label}
         </span>
       ))}
     </div>
-    <div className={styles[`strengthRow`]}>
-      <span className={styles[`strengthLabel`]}>{strengthLabel}</span>
-      <div className={styles[`strengthBar`]}>
-        <div className={styles[`strengthFill`]} data-strength={strength} style={{ width: strengthBarWidth }} />
+    <div className={styles.strengthRow}>
+      <span className={styles.strengthLabel}>{strengthLabel}</span>
+      <div className={styles.strengthBar}>
+        <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
       </div>
-      <span className={styles[`strengthText`]}>{strengthText}</span>
+      <span className={styles.strengthText}>{strengthText}</span>
     </div>
     <Button disabled={disabled} onClick={onGeneratePassword} type="button">
       {generateLabel}

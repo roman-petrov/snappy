@@ -11,18 +11,18 @@ export type ExampleBlockProps = {
 };
 
 export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: ExampleBlockProps) => (
-  <div className={styles[`block`]}>
-    <p className={styles[`label`]}>{label}</p>
-    <div className={styles[`row`]}>
-      <div className={`${styles[`panel`]} ${styles[`before`]}`}>
-        <span className={styles[`panelTitle`]}>{beforeLabel}</span>
+  <div className={styles.block}>
+    <p className={styles.label}>{label}</p>
+    <div className={styles.row}>
+      <div className={`${styles.panel} ${styles.before}`}>
+        <span className={styles.panelTitle}>{beforeLabel}</span>
         <p>{before}</p>
       </div>
-      <span aria-hidden="true" className={styles[`arrow`]}>
+      <span aria-hidden="true" className={styles.arrow}>
         →
       </span>
-      <div className={`${styles[`panel`]} ${styles[`after`]}`}>
-        <span className={styles[`panelTitle`]}>{afterLabel}</span>
+      <div className={`${styles.panel} ${styles.after}`}>
+        <span className={styles.panelTitle}>{afterLabel}</span>
         <p>{after}</p>
       </div>
     </div>

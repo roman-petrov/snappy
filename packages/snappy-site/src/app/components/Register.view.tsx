@@ -24,7 +24,7 @@ export const RegisterView = ({
   strengthText,
 }: RegisterViewProps) => (
   <Panel title={t(`registerPage.title`)}>
-    <form className={styles[`form`]} onSubmit={onSubmit}>
+    <form className={styles.form} onSubmit={onSubmit}>
       <Input
         autoComplete="email"
         id="reg-email"
@@ -34,7 +34,7 @@ export const RegisterView = ({
         type="email"
         value={email}
       />
-      <div className={styles[`passwordBlock`]}>
+      <div className={styles.passwordBlock}>
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}
@@ -59,8 +59,8 @@ export const RegisterView = ({
           strengthText={strengthText}
         />
       </div>
-      {error !== `` && <p className={styles[`error`]}>{error}</p>}
-      <div className={styles[`actions`]}>
+      {error !== `` && <p className={styles.error}>{error}</p>}
+      <div className={styles.actions}>
         <Button disabled={loading || !passwordValid} primary type="submit">
           {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         </Button>

@@ -13,7 +13,7 @@ import { Who } from "./Who";
 export const Landing = () => (
   <>
     <SiteHeader />
-    <main className={styles[`main`]} id="main">
+    <main className={styles.main} id="main">
       <Hero />
       <Features />
       <Examples />

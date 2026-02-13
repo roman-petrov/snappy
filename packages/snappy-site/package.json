@@ -13,8 +13,9 @@
     "dev": "bun run server.ts"
   },
   "dependencies": {
-    "@snappy/server-api": "workspace:*",
     "@fontsource-variable/inter": "^5.2.8",
+    "@snappy/core": "workspace:*",
+    "@snappy/server-api": "workspace:*",
     "@snappy/ui": "workspace:*",
     "isomorphic-dompurify": "^3.0.0-rc.2",
     "js-beautify": "^1.15.4",
@@ -28,6 +29,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "express": "^5.2.1",
-    "vite": "8.0.0-beta.13"
+    "vite": "8.0.0-beta.13",
+    "vite-plugin-typed-css-modules": "^0.5.3"
   }
 }

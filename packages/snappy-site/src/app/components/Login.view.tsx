@@ -19,7 +19,7 @@ export const LoginView = ({
   remember,
 }: LoginViewProps) => (
   <Panel title={t(`loginPage.title`)}>
-    <form className={styles[`form`]} onSubmit={onSubmit}>
+    <form className={styles.form} onSubmit={onSubmit}>
       <Input
         autoComplete="email"
         id="login-email"
@@ -40,21 +40,21 @@ export const LoginView = ({
         showPasswordLabel={t(`passwordInput.showPassword`)}
         value={password}
       />
-      <div className={styles[`rememberRow`]}>
+      <div className={styles.rememberRow}>
         <input
           checked={remember}
-          className={styles[`checkbox`]}
+          className={styles.checkbox}
           disabled={loading}
           id="login-remember"
           onChange={e => onRememberChange(e.target.checked)}
           type="checkbox"
         />
-        <label className={styles[`rememberLabel`]} htmlFor="login-remember">
+        <label className={styles.rememberLabel} htmlFor="login-remember">
           {t(`loginPage.remember`)}
         </label>
       </div>
-      {error !== `` && <p className={styles[`error`]}>{error}</p>}
-      <div className={styles[`actions`]}>
+      {error !== `` && <p className={styles.error}>{error}</p>}
+      <div className={styles.actions}>
         <Button disabled={loading} primary type="submit">
           {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
         </Button>

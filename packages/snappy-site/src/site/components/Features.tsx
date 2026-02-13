@@ -5,7 +5,7 @@ import { Section } from "./Section";
 
 export const Features = () => (
   <Section id="features" lead={t(`features.lead`)} title={t(`features.title`)}>
-    <div className={styles[`grid`]}>
+    <div className={styles.grid}>
       {[
         { descKey: `features.fixErrors.desc` as const, icon: `📝`, titleKey: `features.fixErrors.title` as const },
         { descKey: `features.shorten.desc` as const, icon: `✂️`, titleKey: `features.shorten.title` as const },

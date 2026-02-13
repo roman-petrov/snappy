@@ -20,7 +20,7 @@ export const ResetPasswordView = ({
   if (token === ``) {
     return (
       <Panel lead={t(`resetPage.invalidLinkLead`)} title={t(`resetPage.invalidLink`)}>
-        <div className={styles[`actions`]}>
+        <div className={styles.actions}>
           <Link to="/forgot-password">{t(`resetPage.requestAgain`)}</Link>
         </div>
       </Panel>
@@ -30,7 +30,7 @@ export const ResetPasswordView = ({
   if (done) {
     return (
       <Panel lead={t(`resetPage.doneLead`)} title={t(`resetPage.done`)}>
-        <div className={styles[`actions`]}>
+        <div className={styles.actions}>
           <Link to="/login">{t(`resetPage.loginLink`)}</Link>
         </div>
       </Panel>
@@ -39,7 +39,7 @@ export const ResetPasswordView = ({
 
   return (
     <Panel title={t(`resetPage.title`)}>
-      <form className={styles[`form`]} onSubmit={onSubmit}>
+      <form className={styles.form} onSubmit={onSubmit}>
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}
@@ -52,8 +52,8 @@ export const ResetPasswordView = ({
           showPasswordLabel={t(`passwordInput.showPassword`)}
           value={password}
         />
-        {error !== `` && <p className={styles[`error`]}>{error}</p>}
-        <div className={styles[`actions`]}>
+        {error !== `` && <p className={styles.error}>{error}</p>}
+        <div className={styles.actions}>
           <Button disabled={loading} primary type="submit">
             {loading ? t(`resetPage.submitting`) : t(`resetPage.submit`)}
           </Button>

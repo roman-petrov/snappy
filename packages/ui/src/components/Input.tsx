@@ -30,7 +30,7 @@ export const Input = ({
   const inputElement = (
     <input
       autoComplete={autoComplete}
-      className={inputClassName ?? styles[`input`]}
+      className={inputClassName ?? styles.input}
       disabled={disabled}
       id={id}
       minLength={minLength}
@@ -46,8 +46,8 @@ export const Input = ({
   }
 
   return (
-    <div className={className ? `${styles[`field`]} ${className}`.trim() : styles[`field`]}>
-      <label className={styles[`label`]} htmlFor={id}>
+    <div className={className ? `${styles.field} ${className}`.trim() : styles.field}>
+      <label className={styles.label} htmlFor={id}>
         {label}
       </label>
       {inputElement}

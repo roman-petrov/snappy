@@ -24,17 +24,17 @@ export const DashboardView = ({
   text,
 }: DashboardViewProps) => (
   <>
-    <h1 className={styles[`pageTitle`]}>{t(`dashboard.title`)}</h1>
+    <h1 className={styles.pageTitle}>{t(`dashboard.title`)}</h1>
 
-    <section className={styles[`section`]}>
-      <h2 className={styles[`sectionTitle`]}>{t(`dashboard.balance`)}</h2>
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>{t(`dashboard.balance`)}</h2>
       <Card>
-        <div className={styles[`balanceRow`]}>
-          <p className={styles[`balance`]}>
-            <span aria-hidden className={styles[`balanceIcon`]}>
+        <div className={styles.balanceRow}>
+          <p className={styles.balance}>
+            <span aria-hidden className={styles.balanceIcon}>
               🪙
             </span>
-            {t(`dashboard.freeRequests`)}: <span className={styles[`balanceCount`]}>{remaining ?? `—`}</span>
+            {t(`dashboard.freeRequests`)}: <span className={styles.balanceCount}>{remaining ?? `—`}</span>
           </p>
           <Button onClick={onPremiumClick} primary>
             {t(`dashboard.getPremium`)}
@@ -43,17 +43,17 @@ export const DashboardView = ({
       </Card>
     </section>
 
-    <section className={styles[`section`]}>
-      <h2 className={styles[`sectionTitle`]}>{t(`dashboard.process`)}</h2>
-      <p className={styles[`sectionDesc`]}>{t(`dashboard.processDesc`)}</p>
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>{t(`dashboard.process`)}</h2>
+      <p className={styles.sectionDesc}>{t(`dashboard.processDesc`)}</p>
       <form onSubmit={onSubmit}>
         <Card>
-          <div className={styles[`formGroup`]}>
-            <label className={styles[`label`]} htmlFor="dashboard-text">
+          <div className={styles.formGroup}>
+            <label className={styles.label} htmlFor="dashboard-text">
               {t(`dashboard.text`)}
             </label>
             <textarea
-              className={styles[`textarea`]}
+              className={styles.textarea}
               disabled={loading}
               id="dashboard-text"
               onChange={event => {
@@ -63,12 +63,12 @@ export const DashboardView = ({
               value={text}
             />
           </div>
-          <div className={styles[`formGroup`]}>
-            <label className={styles[`label`]} htmlFor="dashboard-feature">
+          <div className={styles.formGroup}>
+            <label className={styles.label} htmlFor="dashboard-feature">
               {t(`dashboard.action`)}
             </label>
             <select
-              className={styles[`select`]}
+              className={styles.select}
               disabled={loading}
               id="dashboard-feature"
               onChange={event => {
@@ -83,19 +83,19 @@ export const DashboardView = ({
               ))}
             </select>
           </div>
-          <Button className={styles[`submitRow`]} disabled={loading} primary type="submit">
+          <Button className={styles.submitRow} disabled={loading} primary type="submit">
             {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
           </Button>
-          {error !== `` && <p className={styles[`error`]}>{error}</p>}
+          {error !== `` && <p className={styles.error}>{error}</p>}
           {result !== `` && (
-            <div className={styles[`resultWrap`]}>
-              <div className={styles[`resultHeader`]}>
-                <span className={styles[`resultLabel`]}>{t(`dashboard.result`)}</span>
-                <button className={styles[`copyBtn`]} onClick={onCopyResult} type="button">
+            <div className={styles.resultWrap}>
+              <div className={styles.resultHeader}>
+                <span className={styles.resultLabel}>{t(`dashboard.result`)}</span>
+                <button className={styles.copyBtn} onClick={onCopyResult} type="button">
                   {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
                 </button>
               </div>
-              <div className={styles[`result`]}>{result}</div>
+              <div className={styles.result}>{result}</div>
             </div>
           )}
         </Card>
