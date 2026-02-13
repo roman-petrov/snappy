@@ -5,6 +5,7 @@ import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
 import type { useLoginState } from "./Login.state";
 
 import { t } from "../core/Locale";
+import { FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
 
 export type LoginViewProps = ReturnType<typeof useLoginState>;
@@ -55,14 +56,13 @@ export const LoginView = ({
           {t(`loginPage.remember`)}
         </label>
       </div>
-      {error !== `` && <p className={styles.error}>{error}</p>}
-      <div className={styles.actions}>
+      <FormErrorAndActions error={error}>
         <Button disabled={loading} primary type="submit">
           {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
         </Button>
         <Link to="/forgot-password">{t(`loginPage.forgotPassword`)}</Link>
         <Link to="/register">{t(`loginPage.registerLink`)}</Link>
-      </div>
+      </FormErrorAndActions>
     </form>
   </Panel>
 );

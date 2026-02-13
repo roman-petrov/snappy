@@ -6,6 +6,7 @@ import type { useRegisterState } from "./Register.state";
 
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
+import { FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
 
 export type RegisterViewProps = ReturnType<typeof useRegisterState>;
@@ -61,13 +62,12 @@ export const RegisterView = ({
           strengthText={strengthText}
         />
       </div>
-      {error !== `` && <p className={styles.error}>{error}</p>}
-      <div className={styles.actions}>
+      <FormErrorAndActions error={error}>
         <Button disabled={loading || !passwordValid} primary type="submit">
           {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         </Button>
         <Link to="/login">{t(`registerPage.haveAccount`)}</Link>
-      </div>
+      </FormErrorAndActions>
     </form>
   </Panel>
 );

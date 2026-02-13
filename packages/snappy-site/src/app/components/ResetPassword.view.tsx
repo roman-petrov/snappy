@@ -4,6 +4,7 @@ import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
+import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
 
 export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
@@ -20,9 +21,9 @@ export const ResetPasswordView = ({
   if (token === ``) {
     return (
       <Panel lead={t(`resetPage.invalidLinkLead`)} title={t(`resetPage.invalidLink`)}>
-        <div className={styles.actions}>
+        <FormActions>
           <Link to="/forgot-password">{t(`resetPage.requestAgain`)}</Link>
-        </div>
+        </FormActions>
       </Panel>
     );
   }
@@ -30,9 +31,9 @@ export const ResetPasswordView = ({
   if (done) {
     return (
       <Panel lead={t(`resetPage.doneLead`)} title={t(`resetPage.done`)}>
-        <div className={styles.actions}>
+        <FormActions>
           <Link to="/login">{t(`resetPage.loginLink`)}</Link>
-        </div>
+        </FormActions>
       </Panel>
     );
   }
@@ -52,12 +53,11 @@ export const ResetPasswordView = ({
           showPasswordLabel={t(`passwordInput.showPassword`)}
           value={password}
         />
-        {error !== `` && <p className={styles.error}>{error}</p>}
-        <div className={styles.actions}>
+        <FormErrorAndActions error={error}>
           <Button disabled={loading} primary type="submit">
             {loading ? t(`resetPage.submitting`) : t(`resetPage.submit`)}
           </Button>
-        </div>
+        </FormErrorAndActions>
       </form>
     </Panel>
   );
