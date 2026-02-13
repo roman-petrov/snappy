@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import type { ApiAuthBody, ApiForgotPasswordBody, ApiResetPasswordBody } from "@snappy/server-api";
 import type { Request, Response } from "express";
 
 import type { AppContext } from "../Types";
@@ -20,7 +21,7 @@ const register = (context: AppContext) => async (request: Request, res: Response
     return;
   }
 
-  const { email, password } = (request.body as { email?: string; password?: string }) ?? {};
+  const { email, password } = (request.body as ApiAuthBody) ?? {};
 
   if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || !passwordValid(password)) {
     res.status(400).json({ error: `Invalid email or password (min 8 chars, letters and digits)` });
@@ -51,7 +52,7 @@ const login = (context: AppContext) => async (request: Request, res: Response) =
     return;
   }
 
-  const { email, password } = (request.body as { email?: string; password?: string }) ?? {};
+  const { email, password } = (request.body as ApiAuthBody) ?? {};
 
   if (typeof email !== `string` || email.trim() === `` || typeof password !== `string` || password === ``) {
     res.status(400).json({ error: `Invalid email or password` });
@@ -81,7 +82,7 @@ const login = (context: AppContext) => async (request: Request, res: Response) =
 };
 
 const forgotPassword = (context: AppContext) => async (request: Request, res: Response) => {
-  const { email } = (request.body as { email?: string }) ?? {};
+  const { email } = (request.body as ApiForgotPasswordBody) ?? {};
 
   if (typeof email !== `string` || email.trim() === ``) {
     res.status(400).json({ error: `Email required` });
@@ -106,7 +107,7 @@ const forgotPassword = (context: AppContext) => async (request: Request, res: Re
 };
 
 const resetPassword = (context: AppContext) => async (request: Request, res: Response) => {
-  const { newPassword, token } = (request.body as { newPassword?: string; token?: string; }) ?? {};
+  const { newPassword, token } = (request.body as ApiResetPasswordBody) ?? {};
 
   if (typeof token !== `string` || token === `` || typeof newPassword !== `string` || !passwordValid(newPassword)) {
     res.status(400).json({ error: `Token and new password (min 8 chars, letters and digits) required` });

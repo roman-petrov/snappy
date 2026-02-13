@@ -15,6 +15,7 @@ export type LinkProps = {
 
 export const Link = ({ children, href, muted = false, rel, target, to }: LinkProps) => {
   const className = styles[muted ? `muted` : `accent`];
+
   return to === undefined ? (
     <a className={className} href={href ?? `#`} rel={rel} target={target}>
       {children}

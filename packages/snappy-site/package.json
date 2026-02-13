@@ -13,6 +13,7 @@
     "dev": "bun run server.ts"
   },
   "dependencies": {
+    "@snappy/server-api": "workspace:*",
     "@fontsource-variable/inter": "^5.2.8",
     "@snappy/ui": "workspace:*",
     "isomorphic-dompurify": "^3.0.0-rc.2",

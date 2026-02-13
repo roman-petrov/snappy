@@ -5,6 +5,7 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@snappy/server-api": "workspace:*",
     "@snappy/snappy": "workspace:*",
     "gramio": "^0.4.13"
   }

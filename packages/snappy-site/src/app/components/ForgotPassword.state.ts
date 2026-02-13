@@ -9,21 +9,15 @@ export const useForgotPasswordState = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(``);
     setLoading(true);
     try {
-      const res = await api.forgotPassword(email.trim());
-      if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
-        setError(data.error ?? t(`forgotPage.error`));
-
-        return;
-      }
+      await api.forgotPassword(email.trim());
       setSent(true);
-    } catch {
-      setError(t(`forgotPage.errorNetwork`));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(`forgotPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

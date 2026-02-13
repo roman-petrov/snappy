@@ -1,8 +1,8 @@
 import type { MouseEvent } from "react";
 
+import { Theme } from "@snappy/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { Theme } from "@snappy/ui";
 import { clearToken, getToken } from "../core/Auth";
 import { t } from "../core/Locale";
 

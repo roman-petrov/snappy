@@ -1,4 +1,5 @@
 import { Button, TelegramIcon } from "@snappy/ui";
+
 import { t } from "../core/Locale";
 import styles from "./Hero.module.css";
 

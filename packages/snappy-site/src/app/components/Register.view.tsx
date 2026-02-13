@@ -1,6 +1,7 @@
+import { Button, Input, Link, Panel, PasswordInput, PasswordStrength } from "@snappy/ui";
+
 import type { useRegisterState } from "./Register.state";
 
-import { Button, Input, Link, Panel, PasswordInput, PasswordStrength } from "@snappy/ui";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
 import styles from "./Login.module.css";

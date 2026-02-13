@@ -3,23 +3,17 @@
 /* eslint-disable functional/no-try-statements */
 import type { Bot } from "gramio";
 
-import type { Storage } from "./Storage";
+import type { ServerApi } from "@snappy/server-api";
 import type { UserTexts } from "./UserTexts";
 
 import { Keyboards } from "./Keyboards";
 import { Locale, t } from "./Locale";
 
-export type CallbacksConfig = {
-  freeRequestLimit: number;
-  premiumPrice: number;
-  storage: Storage;
-  userTexts: UserTexts;
-};
+export type CallbacksConfig = { api: ServerApi; userTexts: UserTexts };
 
 const register = (bot: Bot, config: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const telegramId = context.from.id;
-    const telegramUsername = context.from.username;
     const localeKey = Locale.userLanguage(context.from.languageCode);
     const { data } = context;
 
@@ -31,7 +25,7 @@ const register = (bot: Bot, config: CallbacksConfig) => {
 
     if (data === `premium:buy`) {
       try {
-        const url = await config.storage.paymentUrl(telegramId);
+        const { url } = await config.api.premiumUrl(telegramId);
         await context.answerCallbackQuery();
         await context.send(`💳 ${url}`);
       } catch (error) {
@@ -47,7 +41,7 @@ const register = (bot: Bot, config: CallbacksConfig) => {
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if (!(await config.storage.canMakeRequest(telegramId, config.freeRequestLimit, telegramUsername))) {
+      if ((await config.api.remaining(telegramId)).remaining <= 0) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
@@ -63,7 +57,7 @@ const register = (bot: Bot, config: CallbacksConfig) => {
       await context.send(t(localeKey, `features.processing`));
 
       try {
-        const processedText = await config.storage.process(telegramId, text, feature, telegramUsername);
+        const { text: processedText } = await config.api.process(telegramId, text, feature);
 
         await context.send(t(localeKey, `features.result`, { text: processedText }));
 

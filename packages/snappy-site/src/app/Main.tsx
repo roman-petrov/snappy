@@ -1,6 +1,6 @@
+import { startApp } from "@snappy/ui";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 
-import { startApp } from "@snappy/ui";
 import { Dashboard } from "./components/Dashboard";
 import { ForgotPassword } from "./components/ForgotPassword";
 import { Layout } from "./components/Layout";

@@ -46,7 +46,6 @@ const bot = SnappyBot({
   apiBaseUrl: Config.apiBaseUrl,
   apiKey: Config.botApiKey,
   botToken: Config.botToken,
-  freeRequestLimit: Config.freeRequestLimit,
   premiumPrice: Config.premiumPrice,
   version,
 });

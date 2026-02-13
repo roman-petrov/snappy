@@ -3,6 +3,8 @@ import type { Request, Response } from "express";
 
 import { type FeatureType, Prompts } from "@snappy/snappy";
 
+import type { ApiProcessBody } from "@snappy/server-api";
+
 import type { AppContext } from "../Types";
 
 import { Storage } from "../Storage";
@@ -10,7 +12,7 @@ import { Storage } from "../Storage";
 const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
 
 const processHandler = (context: AppContext) => async (request: Request, res: Response) => {
-  const {userId} = (request as Request & { userId?: number });
+  const { userId } = request as Request & { userId?: number };
 
   if (userId === undefined) {
     res.status(401).json({ error: `Unauthorized` });
@@ -18,7 +20,7 @@ const processHandler = (context: AppContext) => async (request: Request, res: Re
     return;
   }
 
-  const { feature, text } = (request.body as { feature?: string; text?: string; }) ?? {};
+  const { feature, text } = (request.body as ApiProcessBody) ?? {};
 
   if (typeof text !== `string` || text.trim() === `` || typeof feature !== `string` || !isFeatureType(feature)) {
     res.status(400).json({ error: `text and feature required; feature must be valid` });

@@ -1,6 +1,7 @@
+import { Link, Theme } from "@snappy/ui";
+
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import { Link, Theme } from "@snappy/ui";
 import { SiteLocale, t } from "../core/Locale";
 
 export const SiteHeader = () => (

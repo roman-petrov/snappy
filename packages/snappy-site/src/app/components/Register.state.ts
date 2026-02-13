@@ -41,8 +41,8 @@ export const useRegisterState = () => {
         ? t(`registerPage.strengthMedium`)
         : t(`registerPage.strengthStrong`);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
       setError(t(`registerPage.passwordRule`, { min: passwordMinLength }));
@@ -51,19 +51,11 @@ export const useRegisterState = () => {
     }
     setLoading(true);
     try {
-      const res = await api.register(email.trim(), password);
-      const data = (await res.json()) as { error?: string; token?: string };
-      if (!res.ok) {
-        setError(data.error ?? t(`registerPage.errorRegister`));
-
-        return;
-      }
-      if (data.token) {
-        setToken(data.token);
-        navigate(`/`, { replace: true, viewTransition: true });
-      }
-    } catch {
-      setError(t(`registerPage.errorNetwork`));
+      const { token } = await api.register(email.trim(), password);
+      setToken(token);
+      navigate(`/`, { replace: true, viewTransition: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(`registerPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

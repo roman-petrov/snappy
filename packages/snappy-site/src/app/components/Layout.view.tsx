@@ -1,8 +1,8 @@
+import { Button, Link } from "@snappy/ui";
 import { Outlet } from "react-router-dom";
 
 import type { useLayoutState } from "./Layout.state";
 
-import { Button, Link } from "@snappy/ui";
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
 import styles from "./Layout.module.css";

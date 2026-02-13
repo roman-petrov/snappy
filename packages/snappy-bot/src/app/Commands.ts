@@ -2,24 +2,18 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Bot } from "gramio";
 
-import type { Storage } from "./Storage";
+import type { ServerApi } from "@snappy/server-api";
 
 import { Keyboards } from "./Keyboards";
 import { Locale, t } from "./Locale";
 
-const register = (
-  bot: Bot,
-  freeRequestLimit: number,
-  premiumPrice: number,
-  snappyVersion: string | undefined,
-  storage: Storage,
-) => {
+const register = (bot: Bot, premiumPrice: number, snappyVersion: string | undefined, api: ServerApi) => {
   bot.command(`start`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const remaining = await storage.remainingRequests(context.from.id, freeRequestLimit, context.from.username);
+    const { remaining: remainingCount } = await api.remaining(context.from.id);
 
     await context.send(t(localeKey, `commands.start.welcome`));
-    await context.send(t(localeKey, `commands.start.help`, { count: remaining }));
+    await context.send(t(localeKey, `commands.start.help`, { count: remainingCount }));
   });
 
   bot.command(`help`, async context => {
@@ -36,10 +30,10 @@ const register = (
 
   bot.command(`balance`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const remaining = await storage.remainingRequests(context.from.id, freeRequestLimit, context.from.username);
+    const { remaining: remainingCount } = await api.remaining(context.from.id);
     const premiumStatus = t(localeKey, `commands.balance.inactive`);
 
-    await context.send(t(localeKey, `commands.balance.free`, { count: remaining, status: premiumStatus }));
+    await context.send(t(localeKey, `commands.balance.free`, { count: remainingCount, status: premiumStatus }));
   });
 
   bot.command(`premium`, async context => {

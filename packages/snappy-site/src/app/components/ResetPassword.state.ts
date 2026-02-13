@@ -13,8 +13,8 @@ export const useResetPasswordState = () => {
   const [error, setError] = useState(``);
   const [loading, setLoading] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(``);
     if (!passwordValid(password)) {
       setError(t(`resetPage.passwordRule`, { min: passwordMinLength }));
@@ -23,16 +23,10 @@ export const useResetPasswordState = () => {
     }
     setLoading(true);
     try {
-      const res = await api.resetPassword(token, password);
-      if (!res.ok) {
-        const data = (await res.json()) as { error?: string };
-        setError(data.error ?? t(`resetPage.error`));
-
-        return;
-      }
+      await api.resetPassword(token, password);
       setDone(true);
-    } catch {
-      setError(t(`resetPage.errorNetwork`));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(`resetPage.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -43,8 +37,8 @@ export const useResetPasswordState = () => {
     error,
     loading,
     onPasswordChange: setPassword,
-    onSubmit: (e: React.FormEvent) => {
-      void submit(e);
+    onSubmit: (event: React.FormEvent) => {
+      void submit(event);
     },
     password,
     token,

@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import { Endpoints } from "@snappy/server-api";
 import express from "express";
 
 import type { AppContext } from "./Types";
@@ -32,14 +33,14 @@ export const createApp = (options: CreateAppOptions) => {
 
   app.use(express.json());
 
-  app.post(`/api/auth/register`, Auth.register(context));
-  app.post(`/api/auth/login`, Auth.login(context));
-  app.post(`/api/auth/forgot-password`, Auth.forgotPassword(context));
-  app.post(`/api/auth/reset-password`, Auth.resetPassword(context));
+  app.post(Endpoints.auth.register, Auth.register(context));
+  app.post(Endpoints.auth.login, Auth.login(context));
+  app.post(Endpoints.auth.forgotPassword, Auth.forgotPassword(context));
+  app.post(Endpoints.auth.resetPassword, Auth.resetPassword(context));
 
-  app.get(`/api/user/remaining`, Middleware.requireUser(context, botApiKey), User.remaining(context));
-  app.post(`/api/process`, Middleware.requireUser(context, botApiKey), Process.process(context));
-  app.post(`/api/premium/payment-url`, Middleware.requireUser(context, botApiKey), Premium.paymentUrl(context));
+  app.get(Endpoints.user.remaining, Middleware.requireUser(context, botApiKey), User.remaining(context));
+  app.post(Endpoints.process, Middleware.requireUser(context, botApiKey), Process.process(context));
+  app.post(Endpoints.premium.paymentUrl, Middleware.requireUser(context, botApiKey), Premium.paymentUrl(context));
 
   return app;
 };

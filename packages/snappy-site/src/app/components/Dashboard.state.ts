@@ -16,12 +16,10 @@ export const useDashboardState = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    api.remaining(token).then(async response => {
-      if (response.ok) {
-        const data = (await response.json()) as { remaining?: number };
-        setRemaining(data.remaining);
-      }
-    });
+    api
+      .remaining(token)
+      .then(({ remaining: count }) => setRemaining(count))
+      .catch(() => {});
   }, [token]);
 
   const processText = async (event: { preventDefault: () => void }) => {
@@ -33,20 +31,14 @@ export const useDashboardState = () => {
     }
     setLoading(true);
     try {
-      const response = await api.process(token, text.trim(), feature);
-      const data = (await response.json()) as { error?: string; text?: string };
-      if (!response.ok) {
-        setError(data.error ?? t(`dashboard.error`));
-
-        return;
-      }
-      setResult(data.text ?? ``);
+      const { text: processed } = await api.process(token, text.trim(), feature);
+      setResult(processed);
       setCopied(false);
-      if (typeof data.text === `string` && remaining !== undefined) {
+      if (remaining !== undefined) {
         setRemaining(remaining - 1);
       }
-    } catch {
-      setError(t(`dashboard.errorNetwork`));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(`dashboard.errorNetwork`));
     } finally {
       setLoading(false);
     }
@@ -54,11 +46,8 @@ export const useDashboardState = () => {
 
   const openPremium = async () => {
     try {
-      const response = await api.premiumUrl(token);
-      const data = (await response.json()) as { error?: string; url?: string };
-      if (response.ok && data.url) {
-        window.open(data.url, `_blank`);
-      }
+      const { url } = await api.premiumUrl(token);
+      window.open(url, `_blank`);
     } catch {
       //
     }

@@ -1,13 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
+import { ServerApi } from "@snappy/server-api";
 import { Bot } from "gramio";
 
-import { Callbacks, Commands, Locale, Messages, Storage, t, UserTexts } from "./app";
+import { Callbacks, Commands, Locale, Messages, t, UserTexts } from "./app";
 
 export type SnappyBotConfig = {
   apiBaseUrl: string;
   apiKey: string;
   botToken: string;
-  freeRequestLimit: number;
   premiumPrice: number;
   version?: string;
 };
@@ -16,12 +16,11 @@ export const SnappyBot = ({
   apiBaseUrl,
   apiKey,
   botToken,
-  freeRequestLimit,
   premiumPrice,
   version,
 }: SnappyBotConfig) => {
   const bot = new Bot(botToken);
-  const storage = Storage({ apiBaseUrl, apiKey });
+  const api = ServerApi({ auth: { apiKey, type: `bot` }, baseUrl: apiBaseUrl });
   const userTexts = UserTexts();
   const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
@@ -40,9 +39,9 @@ export const SnappyBot = ({
     });
   };
 
-  Commands.register(bot, freeRequestLimit, premiumPrice, version, storage);
+  Commands.register(bot, premiumPrice, version, api);
   Messages.register(bot, userTexts);
-  Callbacks.register(bot, { freeRequestLimit, premiumPrice, storage, userTexts });
+  Callbacks.register(bot, { api, userTexts });
   bot.onStart(setLocalizedCommands);
 
   const start = async () => {

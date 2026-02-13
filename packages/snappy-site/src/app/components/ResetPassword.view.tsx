@@ -1,6 +1,7 @@
+import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
+
 import type { useResetPasswordState } from "./ResetPassword.state";
 
-import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
 import { t } from "../core/Locale";
 import { passwordMinLength } from "../core/Password";
 import styles from "./Login.module.css";

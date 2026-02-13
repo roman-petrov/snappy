@@ -1,6 +1,8 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Request, Response } from "express";
 
+import type { ApiBotBody } from "@snappy/server-api";
+
 import type { AppContext } from "./Types";
 
 import { Jwt } from "./Jwt";
@@ -39,7 +41,7 @@ const requireBotKey = (botApiKey: string) => (request: Request, res: Response, n
     return;
   }
 
-  const body = request.body as { telegramId?: number };
+  const body = request.body as ApiBotBody;
 
   const telegramId =
     typeof body.telegramId === `number`
@@ -57,7 +59,7 @@ const requireBotKey = (botApiKey: string) => (request: Request, res: Response, n
 };
 
 const resolveUserIdFromBot = (context: AppContext) => async (request: Request, _res: Response, next: () => void) => {
-  const {telegramId} = (request as Request & { telegramId?: number });
+  const { telegramId } = request as Request & { telegramId?: number };
 
   if (telegramId === undefined) {
     next();
@@ -71,66 +73,66 @@ const resolveUserIdFromBot = (context: AppContext) => async (request: Request, _
 };
 
 const requireUser = (context: AppContext, botApiKey: string) => (request: Request, res: Response, next: () => void) => {
-    const tryJwt = () => {
-      const auth = request.headers.authorization;
+  const tryJwt = () => {
+    const auth = request.headers.authorization;
 
-      const token =
-        typeof auth === `string` && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
+    const token =
+      typeof auth === `string` && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
 
-      if (token === undefined || context.jwtSecret === ``) {
-        return false;
-      }
-
-      const payload = Jwt.verify(token, context.jwtSecret);
-      if (payload === undefined) {
-        return false;
-      }
-
-      (request as Request & { userId: number }).userId = payload.userId;
-
-      return true;
-    };
-
-    const tryBot = () => {
-      const key = request.headers[`x-bot-api-key`];
-      const received = typeof key === `string` ? key : ``;
-      if (botApiKey === `` || received !== botApiKey) {
-        return false;
-      }
-
-      const body = request.body as { telegramId?: number };
-
-      const telegramId =
-        typeof body.telegramId === `number`
-          ? body.telegramId
-          : Number(typeof request.query[`telegramId`] === `string` ? request.query[`telegramId`] : Number.NaN);
-      if (Number.isNaN(telegramId)) {
-        return false;
-      }
-
-      (request as Request & { telegramId: number }).telegramId = telegramId;
-
-      return true;
-    };
-
-    if (tryJwt()) {
-      next();
-
-      return;
+    if (token === undefined || context.jwtSecret === ``) {
+      return false;
     }
 
-    if (!tryBot()) {
-      res.status(401).json({ error: `Unauthorized` });
-
-      return;
+    const payload = Jwt.verify(token, context.jwtSecret);
+    if (payload === undefined) {
+      return false;
     }
 
-    void (async () => {
-      const {telegramId} = (request as Request & { telegramId: number });
-      const user = await Storage.ensureUserByTelegramId(context.db, telegramId);
-      (request as Request & { userId: number }).userId = user.id;
-      next();
-    })();
+    (request as Request & { userId: number }).userId = payload.userId;
+
+    return true;
   };
+
+  const tryBot = () => {
+    const key = request.headers[`x-bot-api-key`];
+    const received = typeof key === `string` ? key : ``;
+    if (botApiKey === `` || received !== botApiKey) {
+      return false;
+    }
+
+    const body = request.body as ApiBotBody;
+
+    const telegramId =
+      typeof body.telegramId === `number`
+        ? body.telegramId
+        : Number(typeof request.query[`telegramId`] === `string` ? request.query[`telegramId`] : Number.NaN);
+    if (Number.isNaN(telegramId)) {
+      return false;
+    }
+
+    (request as Request & { telegramId: number }).telegramId = telegramId;
+
+    return true;
+  };
+
+  if (tryJwt()) {
+    next();
+
+    return;
+  }
+
+  if (!tryBot()) {
+    res.status(401).json({ error: `Unauthorized` });
+
+    return;
+  }
+
+  void (async () => {
+    const { telegramId } = request as Request & { telegramId: number };
+    const user = await Storage.ensureUserByTelegramId(context.db, telegramId);
+    (request as Request & { userId: number }).userId = user.id;
+    next();
+  })();
+};
 
 export const Middleware = { requireBotKey, requireJwt, requireUser, resolveUserIdFromBot };

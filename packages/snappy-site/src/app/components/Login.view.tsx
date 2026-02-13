@@ -1,6 +1,7 @@
+import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
+
 import type { useLoginState } from "./Login.state";
 
-import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
 import { t } from "../core/Locale";
 import styles from "./Login.module.css";
 

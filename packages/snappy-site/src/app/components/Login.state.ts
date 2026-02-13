@@ -13,24 +13,16 @@ export const useLoginState = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setError(``);
     setLoading(true);
     try {
-      const res = await api.login(email.trim(), password);
-      const data = (await res.json()) as { error?: string; token?: string };
-      if (!res.ok) {
-        setError(data.error ?? t(`loginPage.errorLogin`));
-
-        return;
-      }
-      if (data.token) {
-        setToken(data.token, remember);
-        navigate(`/`, { replace: true, viewTransition: true });
-      }
-    } catch {
-      setError(t(`loginPage.errorNetwork`));
+      const { token } = await api.login(email.trim(), password);
+      setToken(token, remember);
+      navigate(`/`, { replace: true, viewTransition: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t(`loginPage.errorNetwork`));
     } finally {
       setLoading(false);
     }

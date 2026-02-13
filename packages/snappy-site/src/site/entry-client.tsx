@@ -1,6 +1,6 @@
+import { ensureFogContainer, Theme } from "@snappy/ui";
 import { hydrateRoot } from "react-dom/client";
 
-import { ensureFogContainer, Theme } from "@snappy/ui";
 import { Landing } from "./components/Landing.js";
 
 ensureFogContainer();
