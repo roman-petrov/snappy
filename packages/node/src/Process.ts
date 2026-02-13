@@ -7,26 +7,15 @@ export type Runner = `bun` | `npx`;
 
 type SpawnOptions = { env?: Record<string, string>; silent?: boolean; stdio?: `ignore` | `inherit` | `pipe` };
 
-const runnerFromEnv = (): Runner => {
-  const v = process.env[`PROCESS_RUNNER`];
-
-  if (v === `bun` || v === `npx`) {
-    return v;
-  }
-
-  return `npx`;
-};
-
 type StdioTuple = [`ignore` | `inherit`, `ignore` | `inherit` | `pipe`, `ignore` | `inherit` | `pipe`];
 
 const stdioInherit: StdioTuple = [`inherit`, `inherit`, `inherit`];
 const stdioSilent: StdioTuple = [`inherit`, `ignore`, `ignore`];
-const runner: Runner = runnerFromEnv();
 
-const toolArgv = (tool: string, args: string[]): string[] =>
+const toolArgv = (runner: Runner, tool: string, args: string[]): string[] =>
   runner === `bun` ? [`bun`, `x`, tool, ...args] : [`npx`, tool, ...args];
 
-const toolCommand = (tool: string, args: string[]): string =>
+const toolCommand = (runner: Runner, tool: string, args: string[]): string =>
   runner === `bun` ? `bun x ${tool} ${args.join(` `)}` : `npx ${tool} ${args.join(` `)}`;
 
 const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): Promise<number> =>
@@ -59,4 +48,4 @@ const spawnShell = async (cwd: string, command: string, options: SpawnOptions = 
     proc.on(`error`, reject);
   });
 
-export const Process = { runner, spawn, spawnShell, toolArgv, toolCommand };
+export const Process = { spawn, spawnShell, toolArgv, toolCommand };

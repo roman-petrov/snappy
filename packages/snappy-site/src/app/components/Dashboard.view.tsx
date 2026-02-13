@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Card } from "@snappy/ui";
 
+import type { FeatureType } from "../core/Features";
 import type { useDashboardState } from "./Dashboard.state";
 
 import { t } from "../core/Locale";
@@ -75,7 +76,7 @@ export const DashboardView = ({
               disabled={loading}
               id="dashboard-feature"
               onChange={event => {
-                onFeatureChange(event.target.value);
+                onFeatureChange(event.target.value as FeatureType);
               }}
               value={feature}
             >

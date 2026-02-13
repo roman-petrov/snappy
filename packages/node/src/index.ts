@@ -1,1 +1,1 @@
-export { Process } from "./Process";
+export { Process, type Runner } from "./Process";

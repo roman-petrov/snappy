@@ -1,6 +1,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
-import { Process } from "@snappy/node";
+import { Process, type Runner } from "@snappy/node";
+
+const workflowRunner: Runner = `bun`;
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -34,7 +36,7 @@ const copyDir = (src: string, destination: string): void => {
 const buildSite = async (root: string): Promise<number> => {
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteExit = await Process.spawn(site, Process.toolArgv(`vite`, [`build`]));
+  const siteExit = await Process.spawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]));
   if (siteExit !== 0) {
     return siteExit;
   }
@@ -42,14 +44,14 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await Process.spawn(site, Process.toolArgv(`vite`, [`build`, `--config`, `vite.app.config.js`]));
+  const appExit = await Process.spawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]));
   if (appExit !== 0) {
     return appExit;
   }
 
   const ssrExit = await Process.spawn(
     site,
-    Process.toolArgv(`vite`, [`build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`]),
+    Process.toolArgv(workflowRunner, `vite`, [`build`, `--ssr`, `src/site/entry-server.tsx`, `--outDir`, `dist/server`]),
   );
   if (ssrExit !== 0) {
     return ssrExit;
@@ -59,7 +61,7 @@ const buildSite = async (root: string): Promise<number> => {
 };
 
 const buildServer = async (root: string): Promise<number> =>
-  Process.spawn(serverDir(root), Process.toolArgv(`vite`, [`build`]));
+  Process.spawn(serverDir(root), Process.toolArgv(workflowRunner, `vite`, [`build`]));
 
 const build = async (root: string): Promise<number> => {
   const dist = join(root, distDir);

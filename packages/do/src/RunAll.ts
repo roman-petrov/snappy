@@ -5,7 +5,9 @@
 /* eslint-disable sonarjs/os-command */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { Process } from "@snappy/node";
+import { Process, type Runner } from "@snappy/node";
+
+const workflowRunner: Runner = `bun`;
 import { spawn } from "node:child_process";
 import { join } from "node:path";
 import open from "open";
@@ -43,8 +45,8 @@ const runStep = async (root: string, command: string, label: string) => {
 
 const dbSteps: [string, string][] = [
   [`docker compose up -d`, `Database container`],
-  [Process.toolCommand(`prisma`, [`db`, `push`, `--accept-data-loss`]), `Schema sync`],
-  [Process.toolCommand(`prisma`, [`db`, `seed`]), `Seed`],
+  [Process.toolCommand(workflowRunner, `prisma`, [`db`, `push`, `--accept-data-loss`]), `Schema sync`],
+  [Process.toolCommand(workflowRunner, `prisma`, [`db`, `seed`]), `Seed`],
 ];
 
 const dbStart = async (root: string): Promise<number> => {
