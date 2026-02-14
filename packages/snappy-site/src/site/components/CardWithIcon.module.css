@@ -14,7 +14,7 @@
   transform: scale(1.02);
 }
 
-.featureIcon {
+.feature-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -71,7 +71,7 @@
   background: var(--color-divider);
 }
 
-.whoIcon {
+.who-icon {
   grid-row: 1 / -1;
   grid-column: 1;
   font-size: 2rem;
