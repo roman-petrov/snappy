@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { I18n } from "@snappy/core";
 
 const makeT = <T extends string>(

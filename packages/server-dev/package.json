@@ -6,10 +6,7 @@
   "main": "./src/main.ts",
   "dependencies": {
     "@snappy/config": "workspace:*",
-    "@snappy/db": "workspace:*",
     "@snappy/server": "workspace:*",
-    "@snappy/snappy": "workspace:*",
-    "@snappy/snappy-bot": "workspace:*",
-    "@snappy/yoo-kassa": "workspace:*"
+    "@snappy/snappy-bot": "workspace:*"
   }
 }

@@ -1,4 +1,5 @@
 import type { Config } from "@snappy/config";
+
 import { Database } from "@snappy/db";
 import { Snappy } from "@snappy/snappy";
 import { YooKassa } from "@snappy/yoo-kassa";

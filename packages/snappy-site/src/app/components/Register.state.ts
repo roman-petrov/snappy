@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
 import { setToken } from "../core/Auth";
+import { useAsyncSubmit } from "../core/hooks";
 import { t } from "../core/Locale";
 import {
   generatePassword,
@@ -11,7 +12,6 @@ import {
   passwordStrength,
   passwordValid,
 } from "../core/Password";
-import { useAsyncSubmit } from "../core/hooks";
 
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);

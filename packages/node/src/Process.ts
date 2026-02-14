@@ -2,6 +2,7 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable sonarjs/os-command */
 import type { ChildProcess } from "node:child_process";
+
 import { spawn as nodeSpawn } from "node:child_process";
 
 export type Runner = `bun` | `npx`;
@@ -22,7 +23,7 @@ const toolCommand = (runner: Runner, tool: string, args: string[]): string =>
 const spawnEnv = (options: SpawnOptions): Record<string, string> | undefined =>
   options.env === undefined ? undefined : { ...process.env, ...options.env };
 
-const waitExit = (proc: ChildProcess): Promise<number> =>
+const waitExit = async (proc: ChildProcess): Promise<number> =>
   new Promise((resolve, reject) => {
     proc.on(`close`, (code: null | number) => resolve(code ?? 0));
     proc.on(`error`, reject);
@@ -41,7 +42,6 @@ const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): P
 
 const spawnShell = async (cwd: string, command: string, options: SpawnOptions = {}): Promise<number> => {
   const stdio: StdioTuple = options.silent === true ? stdioSilent : stdioInherit;
-
   const proc = nodeSpawn(command, [], { cwd, env: spawnEnv(options), shell: true, stdio });
 
   return waitExit(proc);

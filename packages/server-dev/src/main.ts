@@ -6,7 +6,6 @@ import { SnappyBot } from "@snappy/snappy-bot";
 import http from "node:http";
 
 const app = createApp({ ...CreateAppContext.createAppOptions(Config), allowCorsOrigin: `http://localhost:5173` });
-
 const server = http.createServer(app);
 
 const bot = SnappyBot({

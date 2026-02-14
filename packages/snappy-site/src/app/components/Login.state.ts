@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
 import { setToken } from "../core/Auth";
-import { t } from "../core/Locale";
 import { useAsyncSubmit } from "../core/hooks";
 
 export const useLoginState = () => {
