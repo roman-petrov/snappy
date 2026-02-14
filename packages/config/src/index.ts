@@ -1,1 +1,1 @@
-export { Config } from "./Config";
+export * from "./Config";

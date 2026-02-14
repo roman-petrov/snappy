@@ -1,9 +1,9 @@
-export { Callbacks } from "./Callbacks";
+export * from "./Callbacks";
 
-export { Commands } from "./Commands";
+export * from "./Commands";
 
-export { Locale, t } from "./Locale";
+export * from "./Locale";
 
-export { Messages } from "./Messages";
+export * from "./Messages";
 
-export { UserTexts } from "./UserTexts";
+export * from "./UserTexts";

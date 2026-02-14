@@ -34,5 +34,3 @@ export const SiteLocaleStore = (() => {
 
   return { getSiteLocale, setServerLocale, setSiteLocale };
 })();
-
-export { type SiteLocaleKey } from "./LocaleCookie";
