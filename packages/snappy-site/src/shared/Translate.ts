@@ -1,32 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { _ } from "@snappy/core";
-
-const notFound = Symbol(`notFound`);
-
-const resolveByPath = (current: unknown, keys: string[]): unknown => {
-  if (keys.length === 0) {
-    return current;
-  }
-  const [first, ...rest] = keys;
-  if (first === undefined || current === null || !_.isObject(current) || !(first in current)) {
-    return notFound;
-  }
-
-  return resolveByPath((current as Record<string, unknown>)[first], rest);
-};
-
-const interpolate = (template: string, entries: [string, number | string][]): string => {
-  if (entries.length === 0) {
-    return template;
-  }
-  const [first, ...rest] = entries;
-  if (first === undefined) {
-    return template;
-  }
-  const [key, value] = first;
-
-  return interpolate(template.replace(`{${key}}`, String(value)), rest);
-};
+import { I18n } from "@snappy/core";
 
 const makeT = <T extends string>(
   localeData: Record<T, unknown>,
@@ -37,13 +10,13 @@ const makeT = <T extends string>(
   return (key: string, parameters?: Record<string, number | string>) => {
     const localeKey = getLocale();
     const messages = locale(localeKey);
-    const value = resolveByPath(messages, key.split(`.`));
-    if (value === notFound) {
+    const value = I18n.resolveByPath(messages, key.split(`.`));
+    if (value === I18n.notFoundSymbol) {
       return key;
     }
     const template = String(value);
 
-    return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
+    return parameters === undefined ? template : I18n.interpolate(template, Object.entries(parameters));
   };
 };
 

@@ -17,9 +17,9 @@ rule adds TypeScript-specific rules only.
 
 ### File naming
 
-Use **PascalCase** for `.ts` and `.tsx` files. _Exceptions_ (keep as-is): `main`, `index`, `entry-*` (e.g.
-`entry-client.tsx`, `entry-server.tsx`), and the **locales** folder and its files (e.g. `locales/en.ts`,
-`locales/ru.ts`).
+Use **PascalCase** for `.ts` and `.tsx` files. _Exceptions_: `main`, `index`, `entry-*` (e.g. `entry-client.tsx`,
+`entry-server.tsx`), the **locales** folder and its files (e.g. `locales/en.ts`, `locales/ru.ts`). Use **camelCase** for
+files that contain only React hooks (e.g. `useAsyncSubmit.ts`).
 
 ---
 
@@ -194,7 +194,7 @@ export type Timer = ReturnType<typeof Timer>;
 
 ### Project & files
 
-- [ ] Files in PascalCase (except `main`, `index`, `entry-*`, and `locales/` and its files)
+- [ ] Files in PascalCase (except `main`, `index`, `entry-*`, `locales/` and its files; hook files in camelCase)
 
 ### Types
 

@@ -1,10 +1,7 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { Database } from "@snappy/db";
-import { createApp, ServerCache, Ssr } from "@snappy/server";
-import { Snappy } from "@snappy/snappy";
+import { createApp, CreateAppContext, ServerCache, Ssr } from "@snappy/server";
 import { SnappyBot } from "@snappy/snappy-bot";
-import { YooKassa } from "@snappy/yoo-kassa";
 import { existsSync, readFileSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
@@ -16,19 +13,7 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-const db = Database(Config.dbUrl);
-const snappy = Snappy({ gigaChatAuthKey: Config.gigaChatAuthKey });
-const yooKassa = YooKassa({ secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId });
-
-const app = createApp({
-  botApiKey: Config.botApiKey,
-  db,
-  freeRequestLimit: Config.freeRequestLimit,
-  jwtSecret: Config.jwtSecret,
-  premiumPrice: Config.premiumPrice,
-  snappy,
-  yooKassa,
-});
+const app = createApp(CreateAppContext.createAppOptions(Config));
 
 app.disable(`x-powered-by`);
 

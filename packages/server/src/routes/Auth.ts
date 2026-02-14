@@ -29,69 +29,73 @@ const jwtUnavailable = (context: AppContext, response: Response): boolean => {
   return true;
 };
 
-const register = (context: AppContext) => async (request: Request, response: Response) => {
+const withJwt = async (context: AppContext, response: Response, run: () => Promise<void>): Promise<void> => {
   if (jwtUnavailable(context, response)) {
     return;
   }
 
-  const { email, password } = (request.body as ApiAuthBody) ?? {};
+  await run();
+};
 
-  if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
-    response
-      .status(HttpStatus.badRequest)
-      .json({ error: `Invalid email or password (min 8 chars, letters and digits)` });
+const register = (context: AppContext) => async (request: Request, response: Response) => {
+  await withJwt(context, response, async () => {
+    const { email, password } = (request.body as ApiAuthBody) ?? {};
 
-    return;
-  }
+    if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
+      response
+        .status(HttpStatus.badRequest)
+        .json({ error: `Invalid email or password (min 8 chars, letters and digits)` });
 
-  const normalized = normalizeEmail(email);
-  const existing = await context.db.user.findUnique({ where: { email: normalized } });
+      return;
+    }
 
-  if (existing !== null) {
-    response.status(HttpStatus.conflict).json({ error: `Email already registered` });
+    const normalized = normalizeEmail(email);
+    const existing = await context.db.user.findUnique({ where: { email: normalized } });
 
-    return;
-  }
+    if (existing !== null) {
+      response.status(HttpStatus.conflict).json({ error: `Email already registered` });
 
-  const passwordHash = await Password.hash(password);
-  const user = await Storage.ensureUserByEmail(context.db, normalized, passwordHash);
-  const token = Jwt.sign(user.id, context.jwtSecret);
+      return;
+    }
 
-  response.status(HttpStatus.created).json({ token });
+    const passwordHash = await Password.hash(password);
+    const user = await Storage.ensureUserByEmail(context.db, normalized, passwordHash);
+    const token = Jwt.sign(user.id, context.jwtSecret);
+
+    response.status(HttpStatus.created).json({ token });
+  });
 };
 
 const login = (context: AppContext) => async (request: Request, response: Response) => {
-  if (jwtUnavailable(context, response)) {
-    return;
-  }
+  await withJwt(context, response, async () => {
+    const { email, password } = (request.body as ApiAuthBody) ?? {};
 
-  const { email, password } = (request.body as ApiAuthBody) ?? {};
+    if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
+      response.status(HttpStatus.badRequest).json({ error: `Invalid email or password` });
 
-  if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
-    response.status(HttpStatus.badRequest).json({ error: `Invalid email or password` });
+      return;
+    }
 
-    return;
-  }
+    const normalized = normalizeEmail(email);
+    const user = await context.db.user.findUnique({ where: { email: normalized } });
 
-  const normalized = normalizeEmail(email);
-  const user = await context.db.user.findUnique({ where: { email: normalized } });
+    if (user?.passwordHash === null || user === null) {
+      response.status(HttpStatus.unauthorized).json({ error: `Invalid credentials` });
 
-  if (user?.passwordHash === null || user === null) {
-    response.status(HttpStatus.unauthorized).json({ error: `Invalid credentials` });
+      return;
+    }
 
-    return;
-  }
+    const ok = await Password.verify(password, user.passwordHash);
+    if (!ok) {
+      response.status(HttpStatus.unauthorized).json({ error: `Invalid credentials` });
 
-  const ok = await Password.verify(password, user.passwordHash);
-  if (!ok) {
-    response.status(HttpStatus.unauthorized).json({ error: `Invalid credentials` });
+      return;
+    }
 
-    return;
-  }
+    const token = Jwt.sign(user.id, context.jwtSecret);
 
-  const token = Jwt.sign(user.id, context.jwtSecret);
-
-  response.json({ token });
+    response.json({ token });
+  });
 };
 
 const forgotPassword = (context: AppContext) => async (request: Request, response: Response) => {

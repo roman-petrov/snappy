@@ -3,23 +3,9 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable init-declarations */
 /* eslint-disable unicorn/no-document-cookie */
-const cookieName = `snappy-locale`;
+import { LocaleCookie } from "./LocaleCookie";
 
-export type SiteLocaleKey = `en` | `ru`;
-
-const parseCookie = (): SiteLocaleKey => {
-  if (typeof document === `undefined`) {
-    return `ru`;
-  }
-  const match = document.cookie
-    .split(`;`)
-    .map(s => s.trim())
-    .find(s => s.startsWith(`${cookieName}=`));
-
-  const value = match?.split(`=`)[1];
-
-  return value === `en` || value === `ru` ? value : `ru`;
-};
+export type SiteLocaleKey = import("./LocaleCookie").SiteLocaleKey;
 
 export const SiteLocaleStore = (() => {
   let serverLocale: SiteLocaleKey | undefined;
@@ -32,7 +18,8 @@ export const SiteLocaleStore = (() => {
     if (typeof window === `undefined`) {
       return serverLocale ?? `ru`;
     }
-    const locale = parseCookie();
+
+    const locale = LocaleCookie.parseLocaleFromCookie(document.cookie);
     document.documentElement.lang = locale;
 
     return locale;
@@ -42,7 +29,7 @@ export const SiteLocaleStore = (() => {
     if (typeof document === `undefined`) {
       return;
     }
-    document.cookie = `${cookieName}=${next}; path=/; max-age=31536000`;
+    document.cookie = `${LocaleCookie.cookieName}=${next}; path=/; max-age=31536000`;
     document.documentElement.lang = next;
     location.reload();
   };

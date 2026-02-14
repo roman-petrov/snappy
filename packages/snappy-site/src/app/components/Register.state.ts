@@ -11,12 +11,12 @@ import {
   passwordStrength,
   passwordValid,
 } from "../core/Password";
+import { useAsyncSubmit } from "../core/hooks";
 
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
+  const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `registerPage.errorNetwork` });
   const navigate = useNavigate();
   const strength = passwordStrength(password);
 
@@ -38,24 +38,18 @@ export const useRegisterState = () => {
         ? t(`registerPage.strengthMedium`)
         : t(`registerPage.strengthStrong`);
 
-  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+  const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(``);
     if (!passwordValid(password)) {
       setError(t(`registerPage.passwordRule`, { min: passwordMinLength }));
 
       return;
     }
-    setLoading(true);
-    try {
+    void wrapSubmit(async () => {
       const { token } = await api.register(email.trim(), password);
       setToken(token);
       void navigate(`/`, { replace: true, viewTransition: true });
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : t(`registerPage.errorNetwork`));
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   const onGeneratePassword = () => setPassword(generatePassword());

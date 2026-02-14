@@ -20,6 +20,9 @@ Follow the **programming** and **typescript** rules. This rule adds React-specif
   hooks or parents).
 - **Props type naming** — always name the component’s props type `<ComponentName>Props` (e.g. `ButtonProps` for
   `Button`, `InputViewProps` for `InputView`).
+- **Hooks in `hooks` directory** — all hook modules (files that export React hooks) must live in a directory named
+  `hooks` (e.g. `hooks/useFormState.ts`, `app/core/hooks/useFormState.ts`). Hook file names use camelCase (see
+  TypeScript rule).
 
 ---
 

@@ -32,6 +32,12 @@ const handleResponse = async <T>(response: Response, parse: (data: Record<string
 const request = async <T>(url: string, init: RequestInit, parse: (data: Record<string, unknown>) => T): Promise<T> =>
   handleResponse(await fetch(url, init), parse);
 
+const postJson = async <T>(
+  url: string,
+  body: Record<string, unknown>,
+  parse: (data: Record<string, unknown>) => T,
+): Promise<T> => request(url, { body: JSON.stringify(body), headers: jsonHeaders, method: `POST` }, parse);
+
 const parseOk = (): ApiOkResult => ({ ok: true });
 
 const parseToken = (data: Record<string, unknown>): ApiAuthResult => {
@@ -65,32 +71,16 @@ export const ServerApi = (config: Config) => {
   const base = baseUrl.replace(/\/$/u, ``);
 
   const forgotPassword = async (email: string) =>
-    request(
-      `${base}${Endpoints.auth.forgotPassword}`,
-      { body: JSON.stringify({ email }), headers: jsonHeaders, method: `POST` },
-      parseOk,
-    );
+    postJson(`${base}${Endpoints.auth.forgotPassword}`, { email }, parseOk);
 
   const login = async (email: string, password: string) =>
-    request(
-      `${base}${Endpoints.auth.login}`,
-      { body: JSON.stringify({ email, password }), headers: jsonHeaders, method: `POST` },
-      parseToken,
-    );
+    postJson(`${base}${Endpoints.auth.login}`, { email, password }, parseToken);
 
   const register = async (email: string, password: string) =>
-    request(
-      `${base}${Endpoints.auth.register}`,
-      { body: JSON.stringify({ email, password }), headers: jsonHeaders, method: `POST` },
-      parseToken,
-    );
+    postJson(`${base}${Endpoints.auth.register}`, { email, password }, parseToken);
 
   const resetPassword = async (token: string, newPassword: string) =>
-    request(
-      `${base}${Endpoints.auth.resetPassword}`,
-      { body: JSON.stringify({ newPassword, token }), headers: jsonHeaders, method: `POST` },
-      parseOk,
-    );
+    postJson(`${base}${Endpoints.auth.resetPassword}`, { newPassword, token }, parseOk);
 
   const remaining = async (authParameter: number | string) =>
     auth.type === `jwt`

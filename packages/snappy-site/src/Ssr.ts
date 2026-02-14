@@ -4,10 +4,11 @@
  */
 import beautify from "js-beautify";
 
-const cookieName = `snappy-locale`;
+import { LocaleCookie } from "./site/core/LocaleCookie";
+
 const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 
-export type SiteLocaleKey = `en` | `ru`;
+export type SiteLocaleKey = import("./site/core/LocaleCookie").SiteLocaleKey;
 
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
@@ -16,19 +17,8 @@ type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale
 const escapeAttribute = (s: string): string =>
   s.replaceAll(`&`, `&amp;`).replaceAll(`"`, `&quot;`).replaceAll(`<`, `&lt;`).replaceAll(`>`, `&gt;`);
 
-const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey => {
-  if (cookieHeader === undefined) {
-    return `ru`;
-  }
-  const match = cookieHeader
-    .split(`;`)
-    .map(s => s.trim())
-    .find(s => s.startsWith(`${cookieName}=`));
-
-  const value = match?.split(`=`)[1];
-
-  return value === `en` || value === `ru` ? value : `ru`;
-};
+const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey =>
+  LocaleCookie.parseLocaleFromCookie(cookieHeader);
 
 const injectMeta = (template: string, meta: SiteMeta): string =>
   template
@@ -45,4 +35,11 @@ const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry): st
   return formatHtml(t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`));
 };
 
-export const Ssr = { buildHtml, cookieName, formatHtml, injectMeta, localeFromCookie, rootPlaceholder };
+export const Ssr = {
+  buildHtml,
+  cookieName: LocaleCookie.cookieName,
+  formatHtml,
+  injectMeta,
+  localeFromCookie,
+  rootPlaceholder,
+};

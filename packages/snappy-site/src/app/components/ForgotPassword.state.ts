@@ -1,26 +1,19 @@
 import { type SyntheticEvent, useState } from "react";
 
 import { api } from "../core/Api";
-import { t } from "../core/Locale";
+import { useAsyncSubmit } from "../core/hooks";
 
 export const useForgotPasswordState = () => {
   const [email, setEmail] = useState(``);
   const [sent, setSent] = useState(false);
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
+  const { error, loading, wrapSubmit } = useAsyncSubmit({ errorKey: `forgotPage.errorNetwork` });
 
-  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+  const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(``);
-    setLoading(true);
-    try {
+    void wrapSubmit(async () => {
       await api.forgotPassword(email.trim());
       setSent(true);
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : t(`forgotPage.errorNetwork`));
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return { email, error, loading, onEmailChange: setEmail, onSubmit, sent };

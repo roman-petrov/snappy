@@ -4,28 +4,22 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../core/Api";
 import { setToken } from "../core/Auth";
 import { t } from "../core/Locale";
+import { useAsyncSubmit } from "../core/hooks";
 
 export const useLoginState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [remember, setRemember] = useState(false);
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
+  const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `loginPage.errorNetwork` });
   const navigate = useNavigate();
 
-  const onSubmit = async (event: SyntheticEvent<HTMLFormElement>) => {
+  const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError(``);
-    setLoading(true);
-    try {
+    void wrapSubmit(async () => {
       const { token } = await api.login(email.trim(), password);
       setToken(token, remember);
       void navigate(`/`, { replace: true, viewTransition: true });
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : t(`loginPage.errorNetwork`));
-    } finally {
-      setLoading(false);
-    }
+    });
   };
 
   return {

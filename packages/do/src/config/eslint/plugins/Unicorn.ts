@@ -64,7 +64,7 @@ export default defineConfig([
     },
   },
   {
-    files: [`**/index.*`, `**/*.{config,setup}*.*`, `**/main.*`],
+    files: [`**/index.*`, `**/*.{config,setup}*.*`, `**/main.*`, `**/use*.ts`],
     rules: { "unicorn/filename-case": [`error`, { case: `camelCase` }] },
   },
 ]);

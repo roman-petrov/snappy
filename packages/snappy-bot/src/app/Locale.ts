@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { _ } from "@snappy/core";
+import { I18n } from "@snappy/core";
 
 import localeData from "./locales";
 
@@ -7,51 +7,19 @@ export type Locale = keyof typeof localeData;
 
 const localeKeys = Object.keys(localeData) as Locale[];
 const locale = (localeKey: Locale) => localeData[localeKey];
-const notFound = Symbol(`notFound`);
-
-const resolveByPath = (current: unknown, keys: string[]) => {
-  if (keys.length === 0) {
-    return current;
-  }
-
-  const [first, ...rest] = keys;
-
-  if (first === undefined || current === null || !_.isObject(current) || !(first in current)) {
-    return notFound;
-  }
-
-  return resolveByPath((current as Record<string, unknown>)[first], rest);
-};
-
-const interpolate = (template: string, entries: [string, number | string][]) => {
-  if (entries.length === 0) {
-    return template;
-  }
-
-  const [first, ...rest] = entries;
-
-  if (first === undefined) {
-    return template;
-  }
-
-  const [key, value] = first;
-  const next = template.replace(`{${key}}`, String(value));
-
-  return interpolate(next, rest);
-};
 
 export const t = (localeKey: Locale, key: string, parameters?: Record<string, number | string>) => {
   const messages = locale(localeKey);
   const keys = key.split(`.`);
-  const value = resolveByPath(messages as unknown, keys);
+  const value = I18n.resolveByPath(messages as unknown, keys);
 
-  if (value === notFound) {
+  if (value === I18n.notFoundSymbol) {
     return key;
   }
 
   const template = String(value);
 
-  return parameters === undefined ? template : interpolate(template, Object.entries(parameters));
+  return parameters === undefined ? template : I18n.interpolate(template, Object.entries(parameters));
 };
 
 const userLanguage = (languageCode?: string) => {
