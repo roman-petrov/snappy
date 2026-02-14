@@ -4,11 +4,9 @@
  */
 import beautify from "js-beautify";
 
-import { LocaleCookie } from "./site/core/LocaleCookie";
+import { LocaleCookie, type SiteLocaleKey } from "./site/core/LocaleCookie";
 
 const rootPlaceholder = /<div id="root">\s*<\/div>/u;
-
-export type SiteLocaleKey = import("./site/core/LocaleCookie").SiteLocaleKey;
 
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 

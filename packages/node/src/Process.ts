@@ -1,13 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable sonarjs/os-command */
-import type { ChildProcess } from "node:child_process";
-
-import { spawn as nodeSpawn } from "node:child_process";
+import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 
 export type Runner = `bun` | `npx`;
 
-type SpawnOptions = { env?: NodeJS.ProcessEnv; silent?: boolean; stdio?: `ignore` | `inherit` | `pipe` };
+type ProcessEnv = Record<string, string | undefined>;
+
+type SpawnOptions = { env?: ProcessEnv; silent?: boolean; stdio?: `ignore` | `inherit` | `pipe` };
 
 type StdioTuple = [`ignore` | `inherit`, `ignore` | `inherit` | `pipe`, `ignore` | `inherit` | `pipe`];
 
@@ -20,7 +20,7 @@ const toolArgv = (runner: Runner, tool: string, args: string[]): string[] =>
 const toolCommand = (runner: Runner, tool: string, args: string[]): string =>
   runner === `bun` ? `bun x ${tool} ${args.join(` `)}` : `npx ${tool} ${args.join(` `)}`;
 
-const spawnEnv = (options: SpawnOptions): NodeJS.ProcessEnv | undefined =>
+const spawnEnv = (options: SpawnOptions): ProcessEnv | undefined =>
   options.env === undefined ? undefined : { ...process.env, ...options.env };
 
 const waitExit = async (proc: ChildProcess): Promise<number> =>

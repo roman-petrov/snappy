@@ -3,9 +3,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable init-declarations */
 /* eslint-disable unicorn/no-document-cookie */
-import { LocaleCookie } from "./LocaleCookie";
-
-export type SiteLocaleKey = import("./LocaleCookie").SiteLocaleKey;
+import { LocaleCookie, type SiteLocaleKey } from "./LocaleCookie";
 
 export const SiteLocaleStore = (() => {
   let serverLocale: SiteLocaleKey | undefined;
@@ -36,3 +34,5 @@ export const SiteLocaleStore = (() => {
 
   return { getSiteLocale, setServerLocale, setSiteLocale };
 })();
+
+export { type SiteLocaleKey } from "./LocaleCookie";

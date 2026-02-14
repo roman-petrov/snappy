@@ -13,7 +13,9 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { createServer as createViteServer } from "vite";
 
-import { type SiteLocaleKey, type SiteMeta, Ssr } from "./src/Ssr";
+import type { SiteLocaleKey } from "./src/site/core/LocaleCookie";
+
+import { type SiteMeta, Ssr } from "./src/Ssr";
 
 const root = import.meta.dirname;
 const port = 5173;
