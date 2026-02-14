@@ -9,7 +9,6 @@ const config: KnipConfig = {
     "packages/do/src/config/index.esm.js": [`exports`],
   },
   ignoreUnresolved: [`tsx/esm`],
-  includeEntryExports: true,
   workspaces: {
     ".": {
       entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
