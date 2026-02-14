@@ -32,3 +32,5 @@ export const Config = {
   yooKassaSecretKey,
   yooKassaShopId,
 };
+
+export type Config = typeof Config;

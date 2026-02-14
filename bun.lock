@@ -93,6 +93,7 @@
       "name": "@snappy/server",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/db": "workspace:*",
         "@snappy/server-api": "workspace:*",
@@ -121,11 +122,8 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/config": "workspace:*",
-        "@snappy/db": "workspace:*",
         "@snappy/server": "workspace:*",
-        "@snappy/snappy": "workspace:*",
         "@snappy/snappy-bot": "workspace:*",
-        "@snappy/yoo-kassa": "workspace:*",
       },
     },
     "packages/server-prod": {
@@ -134,11 +132,8 @@
       "dependencies": {
         "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
-        "@snappy/db": "workspace:*",
         "@snappy/server": "workspace:*",
-        "@snappy/snappy": "workspace:*",
         "@snappy/snappy-bot": "workspace:*",
-        "@snappy/yoo-kassa": "workspace:*",
       },
       "devDependencies": {
         "tsx": "^4.21.0",

@@ -9,7 +9,7 @@ export const useLoginState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [remember, setRemember] = useState(false);
-  const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `loginPage.errorNetwork` });
+  const { error, loading, wrapSubmit } = useAsyncSubmit({ errorKey: `loginPage.errorNetwork` });
   const navigate = useNavigate();
 
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {

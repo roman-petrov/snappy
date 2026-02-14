@@ -7,8 +7,8 @@ import { YooKassa } from "@snappy/yoo-kassa";
 type CreateAppContextConfig = {
   dbUrl: string;
   gigaChatAuthKey: string;
-  yooKassaSecretKey: string;
-  yooKassaShopId: string;
+  yooKassaSecretKey?: string;
+  yooKassaShopId?: string;
 };
 
 const create = (config: CreateAppContextConfig) => {
