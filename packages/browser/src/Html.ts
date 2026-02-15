@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "dompurify";
 
 const text = (html: string) => ({ dangerouslySetInnerHTML: { __html: DOMPurify.sanitize(html) } });
 
