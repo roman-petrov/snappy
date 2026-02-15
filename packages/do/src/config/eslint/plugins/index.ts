@@ -6,6 +6,7 @@ import pluginPerfectionist from "./Perfectionist";
 import pluginPromise from "./Promise";
 import pluginReact from "./React";
 import pluginReactHooks from "./ReactHooks";
+import pluginReactRefresh from "./ReactRefresh";
 import pluginRegExp from "./RegExp";
 import pluginSonarJs from "./SonarJs";
 import pluginStylistic from "./Stylistic";
@@ -28,4 +29,5 @@ export default [
   ...pluginSonarJs,
   ...pluginReact,
   ...pluginReactHooks,
+  ...pluginReactRefresh,
 ];
