@@ -1,11 +1,11 @@
 /* eslint-disable functional/no-expression-statements */
-import type { ServerApp } from "@snappy/server-app";
+import type { ServerAppApi } from "@snappy/server-app";
 import type { Request, Response } from "express";
 
 import { hasError } from "../ApiResult";
 import { RequireUserId } from "./RequireUserId";
 
-const paymentUrl = (api: ServerApp[`api`]) => async (request: Request, response: Response) => {
+const paymentUrl = (api: ServerAppApi) => async (request: Request, response: Response) => {
   await RequireUserId.withUserId(request, response, async userId => {
     const result = await api.premium.paymentUrl(userId);
 

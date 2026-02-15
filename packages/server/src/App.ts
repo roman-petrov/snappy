@@ -1,5 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
-import type { ServerApp } from "@snappy/server-app";
+import type { ServerAppApi } from "@snappy/server-app";
 
 import { HttpStatus } from "@snappy/core";
 import { Endpoints } from "@snappy/server-api";
@@ -11,7 +11,7 @@ import { Premium } from "./routes/Premium";
 import { Process } from "./routes/Process";
 import { User } from "./routes/User";
 
-export type CreateAppOptions = { allowCorsOrigin?: string; api: ServerApp[`api`]; botApiKey: string };
+export type CreateAppOptions = { allowCorsOrigin?: string; api: ServerAppApi; botApiKey: string };
 
 export const createApp = (options: CreateAppOptions) => {
   const { allowCorsOrigin, api, botApiKey } = options;

@@ -1,16 +1,28 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Config } from "@snappy/config";
 
+import { Database } from "@snappy/db";
+import { Snappy } from "@snappy/snappy";
 import { SnappyBot } from "@snappy/snappy-bot";
+import { YooKassa } from "@snappy/yoo-kassa";
 
-import { CreateContext } from "./Context";
 import { ServerAppApi } from "./ServerAppApi";
 
 export type ServerAppConfig = Config;
 
 export const ServerApp = (config: ServerAppConfig, options?: { version?: string }) => {
-  const context = CreateContext.create(config);
-  const api = ServerAppApi(context);
+  const db = Database(config.dbUrl);
+  const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
+  const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
+
+  const api = ServerAppApi({
+    db,
+    freeRequestLimit: config.freeRequestLimit,
+    jwtSecret: config.jwtSecret,
+    premiumPrice: config.premiumPrice,
+    snappy,
+    yooKassa,
+  });
 
   const bot = SnappyBot({
     apiBaseUrl: config.apiBaseUrl,

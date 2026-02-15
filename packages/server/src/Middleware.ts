@@ -2,7 +2,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 import type { ApiBotBody } from "@snappy/server-api";
-import type { ServerApp } from "@snappy/server-app";
+import type { ServerAppApi } from "@snappy/server-app";
 import type { Request, Response } from "express";
 
 import { _, HttpStatus } from "@snappy/core";
@@ -20,7 +20,7 @@ const parseBotTelegramId = (request: Request): number | undefined => {
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-const requireJwt = (api: ServerApp[`api`]) => (request: Request, response: Response, next: () => void) => {
+const requireJwt = (api: ServerAppApi) => (request: Request, response: Response, next: () => void) => {
   const token = parseBearerToken(request.headers.authorization);
 
   if (token === undefined) {
@@ -62,7 +62,7 @@ const requireBotKey = (botApiKey: string) => (request: Request, response: Respon
 };
 
 const requireUser =
-  (api: ServerApp[`api`], botApiKey: string) => (request: Request, response: Response, next: () => void) => {
+  (api: ServerAppApi, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
       const token = parseBearerToken(request.headers.authorization);
       if (token === undefined) {

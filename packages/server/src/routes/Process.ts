@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-expression-statements */
 import type { ApiProcessBody } from "@snappy/server-api";
-import type { ServerApp } from "@snappy/server-app";
+import type { ServerAppApi } from "@snappy/server-app";
 import type { Request, Response } from "express";
 
 import { HttpStatus } from "@snappy/core";
@@ -9,7 +9,7 @@ import { HttpStatus } from "@snappy/core";
 import { hasError } from "../ApiResult";
 
 export const Process = {
-  process: (api: ServerApp[`api`]) => async (request: Request, response: Response) => {
+  process: (api: ServerAppApi) => async (request: Request, response: Response) => {
     const { userId } = request as Request & { userId?: number };
 
     if (userId === undefined) {
