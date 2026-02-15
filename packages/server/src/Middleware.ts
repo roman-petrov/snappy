@@ -2,14 +2,10 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 import type { ApiBotBody } from "@snappy/server-api";
+import type { ServerApp } from "@snappy/server-app";
 import type { Request, Response } from "express";
 
 import { _, HttpStatus } from "@snappy/core";
-
-import type { AppContext } from "./Types";
-
-import { Jwt } from "./Jwt";
-import { Storage } from "./Storage";
 
 const bearerPrefix = `Bearer `;
 
@@ -17,23 +13,23 @@ const parseBearerToken = (auth: string | undefined): string | undefined =>
   _.isString(auth) && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
 
 const parseBotTelegramId = (request: Request): number | undefined => {
-  const body = request.body as ApiBotBody;
-  const raw = _.isNumber(body.telegramId) ? body.telegramId : request.query[`telegramId`];
+  const body = request.body as ApiBotBody | undefined;
+  const raw = _.isNumber(body?.telegramId) ? body.telegramId : request.query[`telegramId`];
   const numberValue = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
 
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-const requireJwt = (context: AppContext) => (request: Request, response: Response, next: () => void) => {
+const requireJwt = (api: ServerApp[`api`]) => (request: Request, response: Response, next: () => void) => {
   const token = parseBearerToken(request.headers.authorization);
 
-  if (token === undefined || context.jwtSecret === ``) {
+  if (token === undefined) {
     response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
 
     return;
   }
 
-  const payload = Jwt.verify(token, context.jwtSecret);
+  const payload = api.jwt.verify(token);
   if (payload === undefined) {
     response.status(HttpStatus.unauthorized).json({ error: `Invalid token` });
 
@@ -66,14 +62,14 @@ const requireBotKey = (botApiKey: string) => (request: Request, response: Respon
 };
 
 const requireUser =
-  (context: AppContext, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
+  (api: ServerApp[`api`], botApiKey: string) => (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
       const token = parseBearerToken(request.headers.authorization);
-      if (token === undefined || context.jwtSecret === ``) {
+      if (token === undefined) {
         return false;
       }
 
-      const payload = Jwt.verify(token, context.jwtSecret);
+      const payload = api.jwt.verify(token);
       if (payload === undefined) {
         return false;
       }
@@ -114,7 +110,7 @@ const requireUser =
 
     void (async () => {
       const { telegramId } = request as Request & { telegramId: number };
-      const user = await Storage.ensureUserByTelegramId(context.db, telegramId);
+      const user = await api.ensureUserByTelegramId(telegramId);
       (request as Request & { userId: number }).userId = user.id;
       next();
     })();

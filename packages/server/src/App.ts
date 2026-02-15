@@ -1,9 +1,9 @@
 /* eslint-disable functional/no-expression-statements */
+import type { ServerApp } from "@snappy/server-app";
+
 import { HttpStatus } from "@snappy/core";
 import { Endpoints } from "@snappy/server-api";
 import express from "express";
-
-import type { AppContext } from "./Types";
 
 import { Middleware } from "./Middleware";
 import { Auth } from "./routes/Auth";
@@ -11,10 +11,10 @@ import { Premium } from "./routes/Premium";
 import { Process } from "./routes/Process";
 import { User } from "./routes/User";
 
-export type CreateAppOptions = AppContext & { allowCorsOrigin?: string; botApiKey: string };
+export type CreateAppOptions = { allowCorsOrigin?: string; api: ServerApp[`api`]; botApiKey: string };
 
 export const createApp = (options: CreateAppOptions) => {
-  const { allowCorsOrigin, botApiKey, ...context } = options;
+  const { allowCorsOrigin, api, botApiKey } = options;
   const app = express();
   const corsOrigin = allowCorsOrigin ?? ``;
 
@@ -34,14 +34,14 @@ export const createApp = (options: CreateAppOptions) => {
 
   app.use(express.json());
 
-  app.post(Endpoints.auth.register, Auth.register(context));
-  app.post(Endpoints.auth.login, Auth.login(context));
-  app.post(Endpoints.auth.forgotPassword, Auth.forgotPassword(context));
-  app.post(Endpoints.auth.resetPassword, Auth.resetPassword(context));
+  app.post(Endpoints.auth.register, Auth.register(api));
+  app.post(Endpoints.auth.login, Auth.login(api));
+  app.post(Endpoints.auth.forgotPassword, Auth.forgotPassword(api));
+  app.post(Endpoints.auth.resetPassword, Auth.resetPassword(api));
 
-  app.get(Endpoints.user.remaining, Middleware.requireUser(context, botApiKey), User.remaining(context));
-  app.post(Endpoints.process, Middleware.requireUser(context, botApiKey), Process.process(context));
-  app.post(Endpoints.premium.paymentUrl, Middleware.requireUser(context, botApiKey), Premium.paymentUrl(context));
+  app.get(Endpoints.user.remaining, Middleware.requireUser(api, botApiKey), User.remaining(api));
+  app.post(Endpoints.process, Middleware.requireUser(api, botApiKey), Process.process(api));
+  app.post(Endpoints.premium.paymentUrl, Middleware.requireUser(api, botApiKey), Premium.paymentUrl(api));
 
   return app;
 };

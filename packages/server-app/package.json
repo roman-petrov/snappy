@@ -1,0 +1,22 @@
+{
+  "name": "@snappy/server-app",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@snappy/config": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/db": "workspace:*",
+    "@snappy/server-api": "workspace:*",
+    "@snappy/snappy": "workspace:*",
+    "@snappy/snappy-bot": "workspace:*",
+    "@snappy/yoo-kassa": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.7"
+  }
+}

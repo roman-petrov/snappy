@@ -6,6 +6,7 @@
   "main": "./src/main.ts",
   "dependencies": {
     "@snappy/config": "workspace:*",
-    "@snappy/server": "workspace:*"
+    "@snappy/server": "workspace:*",
+    "@snappy/server-app": "workspace:*"
   }
 }

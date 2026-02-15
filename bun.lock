@@ -103,22 +103,14 @@
       "name": "@snappy/server",
       "version": "0.0.0",
       "dependencies": {
-        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
-        "@snappy/db": "workspace:*",
         "@snappy/server-api": "workspace:*",
-        "@snappy/snappy": "workspace:*",
-        "@snappy/snappy-bot": "workspace:*",
+        "@snappy/server-app": "workspace:*",
         "@snappy/snappy-site": "workspace:*",
-        "@snappy/yoo-kassa": "workspace:*",
-        "bcryptjs": "^2.4.3",
         "express": "^5.2.1",
-        "jsonwebtoken": "^9.0.2",
       },
       "devDependencies": {
-        "@types/bcryptjs": "^2.4.6",
         "@types/express": "^5.0.6",
-        "@types/jsonwebtoken": "^9.0.7",
       },
     },
     "packages/server-api": {
@@ -126,6 +118,25 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
+      },
+    },
+    "packages/server-app": {
+      "name": "@snappy/server-app",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/config": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "@snappy/db": "workspace:*",
+        "@snappy/server-api": "workspace:*",
+        "@snappy/snappy": "workspace:*",
+        "@snappy/snappy-bot": "workspace:*",
+        "@snappy/yoo-kassa": "workspace:*",
+        "bcryptjs": "^2.4.3",
+        "jsonwebtoken": "^9.0.2",
+      },
+      "devDependencies": {
+        "@types/bcryptjs": "^2.4.6",
+        "@types/jsonwebtoken": "^9.0.7",
       },
     },
     "packages/server-dev": {
@@ -761,6 +772,8 @@
     "@snappy/server": ["@snappy/server@workspace:packages/server"],
 
     "@snappy/server-api": ["@snappy/server-api@workspace:packages/server-api"],
+
+    "@snappy/server-app": ["@snappy/server-app@workspace:packages/server-app"],
 
     "@snappy/server-dev": ["@snappy/server-dev@workspace:packages/server-dev"],
 

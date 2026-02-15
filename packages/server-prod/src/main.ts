@@ -1,6 +1,7 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { createApp, CreateAppContext, createBot, ServerCache, Ssr } from "@snappy/server";
+import { createApp, ServerCache, Ssr } from "@snappy/server";
+import { ServerApp } from "@snappy/server-app";
 import { existsSync, readFileSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
@@ -12,7 +13,8 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-const app = createApp(CreateAppContext.createAppOptions(Config));
+const appContext = ServerApp(Config, { version });
+const app = createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 
 app.disable(`x-powered-by`);
 
@@ -39,7 +41,6 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
   return undefined;
 });
 
-const bot = createBot(Config, { version });
 const portHttp = 80;
 const portHttps = 443;
 const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
@@ -54,7 +55,7 @@ const httpServer = useHttps
   : http.createServer(handler);
 
 process.stdout.write(`🚀 Starting server…\n`);
-void bot.start();
+void appContext.start();
 await ssr.prewarmSsr(root, cache, [`ru`, `en`]);
 httpServer.listen(port, () => {
   process.stdout.write(`🌐 Site server started on port ${port} (${useHttps ? `HTTPS` : `HTTP`})\n`);
