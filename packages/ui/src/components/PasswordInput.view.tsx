@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { usePasswordInputState } from "./PasswordInput.state";
 
-import eyeClosedSvg from "../assets/eye-closed.svg?raw";
-import eyeOpenSvg from "../assets/eye-open.svg?raw";
+import eyeClosed from "../assets/eye-closed.svg";
+import eyeOpen from "../assets/eye-open.svg";
 import { Input } from "./Input";
 import inputStyles from "./Input.module.css";
 import styles from "./PasswordInput.module.css";
@@ -47,11 +47,7 @@ export const PasswordInputView = ({
         title={ariaLabel}
         type="button"
       >
-        <span
-          aria-hidden
-          className={styles.icon}
-          dangerouslySetInnerHTML={{ __html: visible ? eyeClosedSvg : eyeOpenSvg }}
-        />
+        <img alt="" aria-hidden className={styles.icon} src={visible ? eyeClosed : eyeOpen} />
       </button>
     </div>
   </div>
