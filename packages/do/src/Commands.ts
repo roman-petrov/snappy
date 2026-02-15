@@ -25,18 +25,18 @@ const cmdDbMigrateReset = cmd(`prisma`, [`migrate`, `reset`]);
 const cmdDbStudio = cmd(`prisma`, [`studio`]);
 const cmdDbSeed = cmd(`prisma`, [`db`, `seed`]);
 
-const cmdCi = [
-  cmdBuild,
-  cmdTest,
-  cmdLintTsc,
-  cmdLintEslint,
-  cmdLintPrettier,
-  cmdLintStylelint,
-  cmdLintCspell,
-  cmdLintJscpd,
-  cmdLintKnip,
-  cmdLintMarkdown,
-].join(` && `);
+const ciStepNames = [
+  `build`,
+  `test`,
+  `lint:tsc`,
+  `lint:eslint`,
+  `lint:prettier`,
+  `lint:stylelint`,
+  `lint:cspell`,
+  `lint:jscpd`,
+  `lint:knip`,
+  `lint:markdown`,
+] as const;
 
 const commands = [
   { command: cmdRun, description: `Build and run server (server-prod → node dist/server.js).`, name: `run` },
@@ -44,7 +44,7 @@ const commands = [
   { command: cmdBuild, description: `Build server into dist/server.js, static into dist/www.`, name: `build` },
   { command: cmdTest, description: `Run tests via vitest.`, name: `test` },
   {
-    command: cmdCi,
+    command: `ci`,
     description: `Full CI pipeline: build, run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown).`,
     name: `ci`,
   },
@@ -78,4 +78,4 @@ const commands = [
 
 const commandByName = (name: string) => commands.find(c => c.name === name);
 
-export const Commands = { commandByName, commands };
+export const Commands = { ciStepNames, commandByName, commands };
