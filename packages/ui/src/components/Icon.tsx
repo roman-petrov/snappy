@@ -1,11 +1,11 @@
 /* eslint-disable react/no-danger */
-import { type IconName, iconSvg } from "../assets";
+import { IconSvg } from "../assets";
 import styles from "./Icon.module.css";
 
-export type { IconName } from "../assets";
+export type Icon = keyof typeof IconSvg;
 
-export type IconProps = { cn?: string; name: IconName };
+export type IconProps = { cn?: string; name: Icon };
 
 export const Icon = ({ cn = ``, name }: IconProps) => (
-  <span aria-hidden className={`${styles.root} ${cn}`.trim()} dangerouslySetInnerHTML={{ __html: iconSvg[name] }} />
+  <span aria-hidden className={`${styles.root} ${cn}`.trim()} dangerouslySetInnerHTML={{ __html: IconSvg[name] }} />
 );
