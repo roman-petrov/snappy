@@ -1,5 +1,7 @@
 export * from "./App";
 
+export * from "./Bot";
+
 export * from "./CreateAppContext";
 
 export * from "./ServerCache";

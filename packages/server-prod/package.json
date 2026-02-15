@@ -7,8 +7,7 @@
   "dependencies": {
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/server": "workspace:*",
-    "@snappy/snappy-bot": "workspace:*"
+    "@snappy/server": "workspace:*"
   },
   "devDependencies": {
     "tsx": "^4.21.0",

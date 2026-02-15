@@ -1,7 +1,6 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { createApp, CreateAppContext, ServerCache, Ssr } from "@snappy/server";
-import { SnappyBot } from "@snappy/snappy-bot";
+import { createApp, CreateAppContext, createBot, ServerCache, Ssr } from "@snappy/server";
 import { existsSync, readFileSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
@@ -40,14 +39,7 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
   return undefined;
 });
 
-const bot = SnappyBot({
-  apiBaseUrl: Config.apiBaseUrl,
-  apiKey: Config.botApiKey,
-  botToken: Config.botToken,
-  premiumPrice: Config.premiumPrice,
-  version,
-});
-
+const bot = createBot(Config, { version });
 const portHttp = 80;
 const portHttps = 443;
 const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
