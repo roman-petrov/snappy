@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 
 import styles from "./Button.module.css";
+import { Icon, type IconName } from "./Icon";
 
 export type ButtonProps = {
   children: ReactNode;
   cn?: string;
   disabled?: boolean;
   href?: string;
+  icon?: IconName;
   large?: boolean;
   onClick?: () => void;
   primary?: boolean;
@@ -18,6 +20,7 @@ export const Button = ({
   cn = ``,
   disabled = false,
   href,
+  icon,
   large = false,
   onClick,
   primary = false,
@@ -29,6 +32,13 @@ export const Button = ({
 
   const isLink = href !== undefined;
 
+  const content = (
+    <>
+      {icon ? <Icon cn={styles.icon} name={icon} /> : undefined}
+      {children}
+    </>
+  );
+
   return isLink ? (
     <a
       className={classNames}
@@ -37,11 +47,11 @@ export const Button = ({
       rel={href.startsWith(`http`) ? `noopener` : undefined}
       target={href.startsWith(`http`) ? `_blank` : undefined}
     >
-      {children}
+      {content}
     </a>
   ) : (
     <button className={classNames} disabled={disabled} onClick={onClick} type={type}>
-      {children}
+      {content}
     </button>
   );
 };
