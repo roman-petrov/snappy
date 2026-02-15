@@ -1,24 +1,16 @@
 import { Commands } from "./Commands";
+import { Execute } from "./Execute";
 
-type ResolveError = { error: string; ok: false };
+type ResolveResult = ReturnType<typeof Execute.resolve>;
 
-type ResolveOk = { command: string; ok: true };
-
-type ResolveResult = ResolveError | ResolveOk;
-
-const resolve = (script: string): ResolveResult => {
-  const cmd = Commands.commandByName(script);
-  if (cmd === undefined) {
-    return { error: `Unknown command: ${script}`, ok: false };
-  }
-
-  return { command: cmd.command, ok: true };
-};
+const resolve = (name: string): ResolveResult => Execute.resolve(name);
 
 const formatCommandsHelp = (): string => {
-  const padEnd = 14;
+  const padEnd = 16;
 
-  return Commands.commands.map(c => `  ${c.name.padEnd(padEnd)} ${c.description}`).join(`\n`);
+  return Commands.list()
+    .map(c => `  ${c.name.padEnd(padEnd)} ${c.description}`)
+    .join(`\n`);
 };
 
 export const Workflow = { formatCommandsHelp, resolve };

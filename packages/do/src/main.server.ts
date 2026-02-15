@@ -13,7 +13,7 @@ import { Workflow } from "./Workflow";
 
 const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run npm run in the terminal.`;
 const root = Scripts.rootDir();
-const names = Commands.commands.map(c => c.name);
+const names = Commands.list().map(c => c.name);
 const scriptEnum = z.enum(names as [string, ...string[]]);
 const inputSchema = z.object({ script: scriptEnum });
 
@@ -32,7 +32,7 @@ server.registerTool(
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
-    const result = await Execute.run(root, resolved.command, script, { stdio: script === `dev` ? `inherit` : `pipe` });
+    const result = await Execute.run(root, resolved.name, { mcp: true });
 
     return { content: [{ text: result.message, type: `text` as const }] };
   },

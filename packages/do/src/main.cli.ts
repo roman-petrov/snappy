@@ -19,5 +19,5 @@ if (!resolved.ok) {
   process.exit(1);
 }
 
-const result = await Execute.run(root, resolved.command, name, { stdio: `inherit` });
+const result = await Execute.run(root, resolved.name);
 process.exit(result.exitCode);
