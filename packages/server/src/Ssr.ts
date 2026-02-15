@@ -8,7 +8,7 @@
 import type { RequestHandler } from "express";
 
 import { _ } from "@snappy/core";
-import { type SiteLocaleKey, type SiteMeta, Ssr as SiteSsr } from "@snappy/snappy-site";
+import { type SiteLocaleKey, type SiteMeta, Ssr as SiteSsr } from "@snappy/snappy-site/Ssr";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";

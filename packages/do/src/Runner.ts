@@ -1,6 +1,14 @@
+/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable sonarjs/os-command */
+import { Process } from "@snappy/node";
+import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
+import { join } from "node:path";
+import open from "open";
+
+import { Build } from "./Build";
 import { Commands } from "./Commands";
 
 const reset = `\u001B[0m`;
@@ -24,7 +32,7 @@ const tree = (name: string): TreeNode | undefined => {
   if (definition === undefined) {
     return undefined;
   }
-  if (definition.type === `leaf`) {
+  if (`run` in definition) {
     return { children: [], name };
   }
 
@@ -39,46 +47,109 @@ const treeLine = (prefix: string, connector: string, label: string, status: `fai
   process.stdout.write(`${prefix}${connector}─ ${icon} ${cyan}${label}${reset}\n`);
 };
 
-const runLeaf = async (root: string, name: string, context: TreeContext, verbose: boolean): Promise<RunResult> => {
-  const definition = Commands.byName(name);
-  if (definition?.type !== `leaf`) {
-    return { exitCode: 1, message: `Unknown: ${name}` };
+const runShell = async (root: string, command: string, silent: boolean): Promise<number> =>
+  Process.spawnShell(root, command, { silent });
+
+const runner = `bun` as const;
+
+const spawnProc = (root: string, run: { command: string; cwd: string; env?: Record<string, string> }): ChildProcess =>
+  nodeSpawn(run.command, [], {
+    cwd: join(root, run.cwd),
+    env: run.env === undefined ? process.env : { ...process.env, ...run.env },
+    shell: true,
+    stdio: `inherit`,
+  });
+
+const killBackground = (processes: ChildProcess[]): void => {
+  for (const proc of processes) {
+    proc.kill(`SIGTERM`);
   }
-
-  const { exitCode, message } = await definition.execute(root);
-
-  if (!verbose) {
-    treeLine(context.prefix, context.connector, definition.label, exitCode === 0 ? `ok` : `fail`);
-  }
-
-  return { exitCode, message };
 };
 
-const runNode = async (
+const runLeaf = async (
   root: string,
   name: string,
   context: TreeContext,
   verbose: boolean,
-  isRoot?: boolean,
+  backgroundProcesses: ChildProcess[],
 ): Promise<RunResult> => {
+  const definition = Commands.byName(name);
+  if (definition === undefined || !(`run` in definition)) {
+    return { exitCode: 1, message: `Unknown: ${name}` };
+  }
+
+  const { label, run } = definition;
+
+  const exitCode = await (`handler` in run
+    ? Build.build(root)
+    : `tool` in run
+      ? runShell(root, Process.toolCommand(runner, run.tool, run.args), `silent` in run && run.silent === true)
+      : `command` in run && `cwd` in run
+        ? (async () => {
+            const proc = spawnProc(root, run);
+
+            if (run.background === true) {
+              backgroundProcesses.push(proc);
+
+              return 0;
+            }
+
+            if (run.openUrl !== undefined) {
+              open(run.openUrl).catch(() => undefined);
+            }
+
+            const code = await new Promise<number>(resolve => {
+              proc.on(`exit`, (c: null | number) => {
+                resolve(c ?? 1);
+              });
+            });
+            killBackground(backgroundProcesses);
+
+            if (run.shutdown !== undefined) {
+              await runShell(root, run.shutdown.command, true);
+            }
+
+            return code;
+          })()
+        : runShell(root, run.command, `silent` in run && run.silent === true));
+
+  if (!verbose) {
+    treeLine(context.prefix, context.connector, label, exitCode === 0 ? `ok` : `fail`);
+  }
+
+  return { exitCode, message: `` };
+};
+
+type RunNodeOptions = { backgroundProcesses: ChildProcess[]; context: TreeContext; isRoot?: boolean; verbose: boolean };
+
+const runNode = async (root: string, name: string, options: RunNodeOptions): Promise<RunResult> => {
+  const { backgroundProcesses, context, isRoot, verbose } = options;
   const definition = Commands.byName(name);
   if (definition === undefined) {
     return { exitCode: 1, message: `Unknown: ${name}` };
   }
 
-  if (definition.type === `leaf`) {
-    return runLeaf(root, name, context, verbose);
+  if (`run` in definition) {
+    return runLeaf(root, name, context, verbose, backgroundProcesses);
   }
 
+  const { children, label } = definition;
+
   if (isRoot !== true && !verbose) {
-    treeLine(context.prefix, context.connector, definition.label, `node`);
+    treeLine(context.prefix, context.connector, label, `node`);
   }
 
   const childPrefix = context.prefix + (context.connector === end ? `   ` : `${bar}  `);
-  const siblings = definition.children;
-  for (const [index, child] of siblings.entries()) {
-    const childConnector = index === siblings.length - 1 ? end : br;
-    const result = await runNode(root, child, { connector: childConnector, prefix: childPrefix }, verbose);
+
+  for (const [index, child] of children.entries()) {
+    const childConnector = index === children.length - 1 ? end : br;
+
+    const result = await runNode(root, child, {
+      backgroundProcesses,
+      context: { connector: childConnector, prefix: childPrefix },
+      verbose,
+    });
+
     if (result.exitCode !== 0) {
       return result;
     }
@@ -87,24 +158,36 @@ const runNode = async (
   return { exitCode: 0, message: `` };
 };
 
-const run = async (root: string, name: string, options: { verbose?: boolean } = {}): Promise<RunResult> => {
-  const { verbose = false } = options;
+const resolve = (name: string): { error: string; ok: false } | { name: string; ok: true } =>
+  Commands.byName(name) === undefined ? { error: `Unknown command: ${name}`, ok: false } : { name, ok: true };
+
+const run = async (
+  root: string,
+  name: string,
+  options: { mcp?: boolean; verbose?: boolean } = {},
+): Promise<RunResult> => {
+  const definition = Commands.byName(name);
+  const verbose = options.verbose ?? (options.mcp === true || definition?.interactive === true);
   const node = tree(name);
   if (node === undefined) {
     return { exitCode: 1, message: `Unknown command: ${name}` };
   }
 
-  const rootDefinition = Commands.byName(name);
   if (!verbose) {
     process.stdout.write(`\n`);
-    if (node.children.length > 0 && rootDefinition !== undefined) {
-      process.stdout.write(` ${yellow}${br}${reset}─ ${cyan}${rootDefinition.label}${reset}\n`);
+    if (node.children.length > 0 && definition !== undefined) {
+      process.stdout.write(` ${yellow}${br}${reset}─ ${cyan}${definition.label}${reset}\n`);
     }
   }
 
-  const result = await runNode(root, name, { connector: br, prefix: ` ` }, verbose, true);
+  const result = await runNode(root, name, {
+    backgroundProcesses: [],
+    context: { connector: br, prefix: ` ` },
+    isRoot: true,
+    verbose,
+  });
 
-  if (!verbose && result.exitCode !== 0 && result.message) {
+  if (!verbose && result.exitCode !== 0 && result.message.length > 0) {
     process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
   }
 
@@ -113,4 +196,9 @@ const run = async (root: string, name: string, options: { verbose?: boolean } = 
   return { ...result, message };
 };
 
-export const Runner = { run, tree };
+const formatCommandsHelp = (): string =>
+  Commands.list()
+    .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
+    .join(`\n`);
+
+export const Runner = { formatCommandsHelp, resolve, run, tree };

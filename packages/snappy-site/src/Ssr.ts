@@ -1,10 +1,9 @@
-/**
- * Shared SSR logic for site: locale, meta injection, HTML formatting.
- * Used by dev server (server.ts) and prod handler (@snappy/server Ssr.ts).
- */
+/* eslint-disable unicorn/prefer-export-from */
 import beautify from "js-beautify";
 
 import { LocaleCookie, type SiteLocaleKey } from "./site/core/LocaleCookie";
+
+export type { SiteLocaleKey };
 
 const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 

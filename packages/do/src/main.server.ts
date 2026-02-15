@@ -6,10 +6,9 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 
 import { Commands } from "./Commands";
-import { Execute } from "./Execute";
 import { Instructions } from "./Instructions";
+import { Runner } from "./Runner";
 import { Scripts } from "./Scripts";
-import { Workflow } from "./Workflow";
 
 const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run npm run in the terminal.`;
 const root = Scripts.rootDir();
@@ -28,11 +27,11 @@ server.registerTool(
   `workflow_run`,
   { description: workflowRunDescription, inputSchema },
   async ({ script }: WorkflowRunInput) => {
-    const resolved = Workflow.resolve(script);
+    const resolved = Runner.resolve(script);
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
-    const result = await Execute.run(root, resolved.name, { mcp: true });
+    const result = await Runner.run(root, resolved.name, { mcp: true });
 
     return { content: [{ text: result.message, type: `text` as const }] };
   },

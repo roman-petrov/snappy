@@ -1,11 +1,4 @@
-import { Process } from "@snappy/node";
-
-import { Build } from "./Build";
-import { Run } from "./Run";
-import { RunAll } from "./RunAll";
-
-const runner = `bun` as const;
-const cmd = (tool: string, args: string[]) => Process.toolCommand(runner, tool, args);
+import type { CmdDefinition } from "./CommandTypes";
 
 const lintSteps = [
   `lint:tsc`,
@@ -18,187 +11,163 @@ const lintSteps = [
   `lint:markdown`,
 ] as const;
 
-type CommandDefinition = CompositeDefinition | LeafDefinition;
-
-type CompositeDefinition = { children: readonly string[]; description: string; label: string; type: `composite` };
-
-type ExecuteFn = (root: string) => Promise<RunResult>;
-
-type LeafDefinition = { description: string; execute: ExecuteFn; interactive?: boolean; label: string; type: `leaf` };
-
-type RunResult = { exitCode: number; message: string };
-
-const shellExecute =
-  (name: string, command: string): ExecuteFn =>
-  async root => {
-    const result = await Run.run(root, command, { stdio: `pipe` });
-    const message = result.exitCode === 0 ? `` : Run.formatResult(name, result);
-
-    return { exitCode: result.exitCode, message };
-  };
-
-const defs: Record<string, CommandDefinition> = {
+const defs: Record<string, CmdDefinition> = {
+  [`db:container:up`]: {
+    description: `Docker: start DB container.`,
+    label: `🐳 Database container`,
+    run: { command: `docker compose up -d`, silent: true },
+  },
+  [`db:dev`]: {
+    children: [`db:container:up`, `db:push:dev`, `db:seed`],
+    description: `DB for dev/run: container up + schema push + seed.`,
+    label: `🗄️ Database`,
+  },
   [`db:generate`]: {
     description: `Prisma: generate client.`,
-    execute: shellExecute(`db:generate`, cmd(`prisma`, [`generate`])),
     label: `🗄️ Generate Prisma client`,
-    type: `leaf`,
+    run: { args: [`generate`], tool: `prisma` },
   },
   [`db:migrate:deploy`]: {
     description: `Prisma: apply migrations.`,
-    execute: shellExecute(`db:migrate:deploy`, cmd(`prisma`, [`migrate`, `deploy`])),
     label: `🗄️ Apply migrations`,
-    type: `leaf`,
+    run: { args: [`migrate`, `deploy`], tool: `prisma` },
   },
   [`db:migrate:dev`]: {
     description: `Prisma: create migration.`,
-    execute: shellExecute(`db:migrate:dev`, cmd(`prisma`, [`migrate`, `dev`])),
     label: `🗄️ Create migration`,
-    type: `leaf`,
+    run: { args: [`migrate`, `dev`], tool: `prisma` },
   },
   [`db:migrate:reset`]: {
     description: `Prisma: reset DB.`,
-    execute: shellExecute(`db:migrate:reset`, cmd(`prisma`, [`migrate`, `reset`])),
     label: `🗄️ Reset database`,
-    type: `leaf`,
+    run: { args: [`migrate`, `reset`], tool: `prisma` },
+  },
+  [`db:push:dev`]: {
+    description: `Prisma: push schema (accept data loss, for dev/run).`,
+    label: `🗄️ Schema sync`,
+    run: { args: [`db`, `push`, `--accept-data-loss`], silent: true, tool: `prisma` },
   },
   [`db:push`]: {
     description: `Prisma: push schema.`,
-    execute: shellExecute(`db:push`, cmd(`prisma`, [`db`, `push`])),
     label: `🗄️ Push schema`,
-    type: `leaf`,
+    run: { args: [`db`, `push`], tool: `prisma` },
   },
   [`db:seed`]: {
     description: `Prisma: seed DB.`,
-    execute: shellExecute(`db:seed`, cmd(`prisma`, [`db`, `seed`])),
     label: `🗄️ Seed database`,
-    type: `leaf`,
+    run: { args: [`db`, `seed`], silent: true, tool: `prisma` },
   },
   [`db:studio`]: {
     description: `Prisma: Studio GUI.`,
-    execute: shellExecute(`db:studio`, cmd(`prisma`, [`studio`])),
     label: `🗄️ Prisma Studio`,
-    type: `leaf`,
+    run: { args: [`studio`], tool: `prisma` },
   },
   [`fix:eslint`]: {
     description: `ESLint: auto-fix.`,
-    execute: shellExecute(`fix:eslint`, cmd(`eslint`, [`--fix`, `.`])),
     label: `🔧 ESLint auto-fix`,
-    type: `leaf`,
+    run: { args: [`--fix`, `.`], tool: `eslint` },
   },
   [`fix:prettier`]: {
     description: `Prettier: format and write.`,
-    execute: shellExecute(`fix:prettier`, cmd(`prettier`, [`--write`, `.`])),
     label: `✨ Prettier format`,
-    type: `leaf`,
+    run: { args: [`--write`, `.`], tool: `prettier` },
   },
   [`fix:stylelint`]: {
     description: `Stylelint: auto-fix.`,
-    execute: shellExecute(`fix:stylelint`, cmd(`stylelint`, [`--fix`, `--max-warnings=0`, `**/*.css`])),
     label: `🎨 Stylelint auto-fix`,
-    type: `leaf`,
+    run: { args: [`--fix`, `--max-warnings=0`, `**/*.css`], tool: `stylelint` },
   },
   [`lint:cspell`]: {
     description: `CSpell: spell-check.`,
-    execute: shellExecute(`lint:cspell`, cmd(`cspell`, [`.`])),
     label: `📝 Spell-check`,
-    type: `leaf`,
+    run: { args: [`.`], tool: `cspell` },
   },
   [`lint:eslint`]: {
     description: `ESLint: lint source code.`,
-    execute: shellExecute(`lint:eslint`, cmd(`eslint`, [`.`])),
     label: `🔍 ESLint`,
-    type: `leaf`,
+    run: { args: [`.`], tool: `eslint` },
   },
   [`lint:jscpd`]: {
     description: `JSCPD: detect duplication.`,
-    execute: shellExecute(`lint:jscpd`, cmd(`jscpd`, [`.`])),
     label: `📋 Detect duplication`,
-    type: `leaf`,
+    run: { args: [`.`], tool: `jscpd` },
   },
   [`lint:knip`]: {
     description: `Knip: unused files, deps, exports.`,
-    execute: shellExecute(`lint:knip`, cmd(`knip`, [])),
     label: `🧹 Unused code`,
-    type: `leaf`,
+    run: { args: [], tool: `knip` },
   },
   [`lint:markdown`]: {
     description: `Markdownlint: lint markdown.`,
-    execute: shellExecute(`lint:markdown`, cmd(`markdownlint`, [`.`])),
     label: `📄 Markdown lint`,
-    type: `leaf`,
+    run: { args: [`.`], tool: `markdownlint` },
   },
   [`lint:prettier`]: {
     description: `Prettier: check formatting.`,
-    execute: shellExecute(`lint:prettier`, cmd(`prettier`, [`--check`, `.`])),
     label: `✨ Check formatting`,
-    type: `leaf`,
+    run: { args: [`--check`, `.`], tool: `prettier` },
   },
   [`lint:stylelint`]: {
     description: `Stylelint: lint CSS/SCSS.`,
-    execute: shellExecute(`lint:stylelint`, cmd(`stylelint`, [`--max-warnings=0`, `**/*.css`])),
     label: `🎨 CSS lint`,
-    type: `leaf`,
+    run: { args: [`--max-warnings=0`, `**/*.css`], tool: `stylelint` },
   },
   [`lint:tsc`]: {
     description: `TypeScript: type-check only.`,
-    execute: shellExecute(`lint:tsc`, cmd(`tsc`, [`--noEmit`])),
     label: `📘 Type-check`,
-    type: `leaf`,
+    run: { args: [`--noEmit`], tool: `tsc` },
+  },
+  [`server:api:dev`]: {
+    description: `Run server-dev (API).`,
+    label: `⚙️ API dev`,
+    run: {
+      command: `node --watch --import tsx/esm packages/server-dev/src/main.ts`,
+      cwd: `.`,
+      env: { NODE_ENV: `development` },
+      openUrl: `http://localhost:5173`,
+      shutdown: { command: `docker compose down` },
+    },
+  },
+  [`server:dev`]: {
+    children: [`server:site:dev`, `server:api:dev`],
+    description: `Run dev servers (snappy-site + server-dev).`,
+    label: `🖥️ Servers`,
+  },
+  [`server:prod`]: {
+    description: `Run prod server (node dist/server.js).`,
+    label: `🖥️ Server`,
+    run: { command: `node dist/server.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
+  },
+  [`server:site:dev`]: {
+    description: `Run snappy-site dev server.`,
+    label: `🌐 Site dev`,
+    run: { background: true, command: `npm run dev`, cwd: `packages/snappy-site` },
   },
   build: {
     description: `Build server into dist/server.js, static into dist/www.`,
-    execute: async root => {
-      const exitCode = await Build.build(root);
-
-      return { exitCode, message: exitCode === 0 ? `` : `Build failed.` };
-    },
     label: `📦 Build`,
-    type: `leaf`,
+    run: { handler: `build` },
   },
   ci: {
     children: [`test`, `lint`, `build`],
     description: `Full CI pipeline: test + all linters + build.`,
     label: `🔄 CI pipeline`,
-    type: `composite`,
   },
-  dev: {
-    description: `Run server in watch (server-dev).`,
-    execute: async root => {
-      const exitCode = await RunAll.runDev(root);
-
-      return { exitCode, message: `Dev exited with code ${exitCode}.` };
-    },
-    interactive: true,
-    label: `🚀 Dev server`,
-    type: `leaf`,
-  },
+  dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
   lint: {
     children: [...lintSteps],
     description: `All linters: tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown.`,
     label: `📋 All linters`,
-    type: `composite`,
   },
   run: {
+    children: [`build`, `db:dev`, `server:prod`],
     description: `Build and run server (server-prod → node dist/server.js).`,
-    execute: async root => {
-      const exitCode = await RunAll.runProd(root);
-
-      return { exitCode, message: `Run exited with code ${exitCode}.` };
-    },
-    interactive: true,
     label: `▶️ Run prod`,
-    type: `leaf`,
   },
-  test: {
-    description: `Run tests via vitest.`,
-    execute: shellExecute(`test`, cmd(`vitest`, [`run`])),
-    label: `🧪 Tests`,
-    type: `leaf`,
-  },
+  test: { description: `Run tests via vitest.`, label: `🧪 Tests`, run: { args: [`run`], tool: `vitest` } },
 };
 
-const byName = (name: string): CommandDefinition | undefined => defs[name];
+const byName = (name: string): CmdDefinition | undefined => defs[name];
 
 const list = (): { description: string; name: string }[] =>
   Object.entries(defs).map(([name, definition]) => ({ description: definition.description, name }));
