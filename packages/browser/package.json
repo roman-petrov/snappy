@@ -1,0 +1,13 @@
+{
+  "name": "@snappy/browser",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "isomorphic-dompurify": "^3.0.0-rc.2"
+  }
+}

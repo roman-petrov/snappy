@@ -1,4 +1,4 @@
-import DOMPurify from "isomorphic-dompurify";
+import { $ } from "@snappy/browser";
 
 import { t } from "../core/Locale";
 import { ExampleBlock } from "./ExampleBlock";
@@ -8,7 +8,7 @@ export const Examples = () => (
   <Section id="examples" lead={t(`examples.lead`)} title={t(`examples.title`)}>
     {([`examples.fixErrors`, `examples.friendlyStyle`, `examples.readability`] as const).map(key => (
       <ExampleBlock
-        after={<span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(t(`${key}After`)) }} />}
+        after={<span {...$.html(t(`${key}After`))} />}
         afterLabel={t(`examples.after`)}
         before={t(`${key}Before`)}
         beforeLabel={t(`examples.before`)}

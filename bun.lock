@@ -13,6 +13,13 @@
         "vitest": "^3.2.4",
       },
     },
+    "packages/browser": {
+      "name": "@snappy/browser",
+      "version": "0.0.0",
+      "dependencies": {
+        "isomorphic-dompurify": "^3.0.0-rc.2",
+      },
+    },
     "packages/config": {
       "name": "@snappy/config",
       "version": "0.0.0",
@@ -165,10 +172,10 @@
       "version": "0.0.0",
       "dependencies": {
         "@fontsource-variable/inter": "^5.2.8",
+        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/server-api": "workspace:*",
         "@snappy/ui": "workspace:*",
-        "isomorphic-dompurify": "^3.0.0-rc.2",
         "js-beautify": "^1.15.4",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
@@ -738,6 +745,8 @@
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
 
     "@sindresorhus/merge-streams": ["@sindresorhus/merge-streams@4.0.0", "", {}, "sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ=="],
+
+    "@snappy/browser": ["@snappy/browser@workspace:packages/browser"],
 
     "@snappy/config": ["@snappy/config@workspace:packages/config"],
 
