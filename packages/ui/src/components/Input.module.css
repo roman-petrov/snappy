@@ -28,7 +28,7 @@
 .input:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgb(var(--rgb-accent) / 20%);
+  box-shadow: var(--focus-ring-shadow);
 }
 
 .input::placeholder {

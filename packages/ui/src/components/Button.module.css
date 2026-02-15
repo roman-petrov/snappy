@@ -12,8 +12,8 @@
 }
 
 .root:focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
+  outline: var(--focus-ring-outline);
+  outline-offset: var(--focus-ring-outline-offset);
 }
 
 .primary {

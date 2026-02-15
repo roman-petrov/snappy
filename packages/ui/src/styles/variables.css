@@ -26,6 +26,9 @@
   --color-text-body: #e4e4e7;
   --color-text-muted: #a1a1aa;
   --color-focus-ring: var(--color-accent);
+  --focus-ring-shadow: 0 0 0 4px rgb(var(--rgb-accent) / 35%);
+  --focus-ring-outline: 2px solid var(--color-focus-ring);
+  --focus-ring-outline-offset: 2px;
   --color-grid: rgb(255 255 255 / 2%);
   --shadow-card: 0 1px 3px rgb(0 0 0 / 4%);
   --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 6%);
@@ -58,6 +61,10 @@
   --color-text-heading: #09090b;
   --color-text-body: #27272a;
   --color-text-muted: #71717a;
+  --color-focus-ring: var(--color-accent);
+  --focus-ring-shadow: 0 0 0 4px rgb(var(--rgb-accent) / 35%);
+  --focus-ring-outline: 2px solid var(--color-focus-ring);
+  --focus-ring-outline-offset: 2px;
   --color-grid: rgb(0 0 0 / 4%);
   --shadow-card: 0 1px 3px rgb(0 0 0 / 3%);
   --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 5%);
