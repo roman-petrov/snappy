@@ -3,14 +3,14 @@ import type { Config } from "@snappy/config";
 
 import { SnappyBot } from "@snappy/snappy-bot";
 
-import { createApi } from "./Api";
 import { CreateContext } from "./Context";
+import { ServerAppApi } from "./ServerAppApi";
 
 export type ServerAppConfig = Config;
 
 export const ServerApp = (config: ServerAppConfig, options?: { version?: string }) => {
   const context = CreateContext.create(config);
-  const api = createApi(context);
+  const api = ServerAppApi(context);
 
   const bot = SnappyBot({
     apiBaseUrl: config.apiBaseUrl,
