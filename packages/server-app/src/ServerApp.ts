@@ -8,9 +8,7 @@ import { YooKassa } from "@snappy/yoo-kassa";
 
 import { ServerAppApi } from "./ServerAppApi";
 
-export type ServerAppConfig = Config;
-
-export const ServerApp = (config: ServerAppConfig, options?: { version?: string }) => {
+export const ServerApp = (config: Config, options?: { version?: string }) => {
   const db = Database(config.dbUrl);
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
   const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });

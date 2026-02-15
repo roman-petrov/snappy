@@ -30,22 +30,23 @@ export type ServerAppApiContext = {
   yooKassa: YooKassa;
 };
 
-export const ServerAppApi = (context: ServerAppApiContext) => {
-  const { db, freeRequestLimit, jwtSecret, premiumPrice, snappy, yooKassa } = context;
+export const ServerAppApi = ({
+  db,
+  freeRequestLimit,
+  jwtSecret,
+  premiumPrice,
+  snappy,
+  yooKassa,
+}: ServerAppApiContext) => {
   const resetTokenExpiresHours = 1;
   const passwordMinLength = 8;
   const resetInterval = Time.dayInMs;
   const byUserId = (userId: number) => ({ where: { userId } }) as const;
   const resetData = () => ({ lastReset: new Date(), requestCount: 0 }) as const;
   const needsReset = (lastReset: Date) => Date.now() - lastReset.getTime() > resetInterval;
-  const hasLetter = (s: string) => /[A-Za-z]/u.test(s);
-  const hasDigit = (s: string) => /\d/u.test(s);
-  const passwordValid = (s: string) => s.length >= passwordMinLength && hasLetter(s) && hasDigit(s);
+  const passwordValid = (s: string) => s.length >= passwordMinLength && /[A-Za-z]/u.test(s) && /\d/u.test(s);
   const normalizeEmail = (email: string) => email.trim().toLowerCase();
   const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
-
-  const ensureUserByEmail = async (email: string, passwordHash: string) =>
-    db.user.create({ data: { email, passwordHash } });
 
   const ensureUserByTelegramId = async (telegramId: number, telegramUsername?: string) =>
     db.user.upsert({
@@ -62,30 +63,6 @@ export const ServerAppApi = (context: ServerAppApiContext) => {
       : needsReset(settings.lastReset)
         ? freeRequestLimit
         : Math.max(0, freeRequestLimit - settings.requestCount);
-  };
-
-  const canMakeRequestByUserId = async (userId: number): Promise<boolean> => {
-    const settings = await db.snappySettings.upsert({
-      create: { ...resetData(), userId },
-      update: {},
-      ...byUserId(userId),
-    });
-
-    if (needsReset(settings.lastReset)) {
-      await db.snappySettings.update({ data: resetData(), ...byUserId(userId) });
-
-      return true;
-    }
-
-    return settings.requestCount < freeRequestLimit;
-  };
-
-  const incrementRequestByUserId = async (userId: number) => {
-    await db.snappySettings.upsert({
-      create: { ...resetData(), requestCount: 1, userId },
-      update: { requestCount: { increment: 1 } },
-      ...byUserId(userId),
-    });
   };
 
   const jwtUnavailable = (): ApiRegisterResult | undefined =>
@@ -109,7 +86,7 @@ export const ServerAppApi = (context: ServerAppApiContext) => {
     }
 
     const hash = await Password.hash(password);
-    const user = await ensureUserByEmail(normalized, hash);
+    const user = await db.user.create({ data: { email: normalized, passwordHash: hash } });
     const token = Jwt.sign(user.id, jwtSecret);
 
     return { token };
@@ -189,14 +166,27 @@ export const ServerAppApi = (context: ServerAppApiContext) => {
       return { error: `text and feature required; feature must be valid`, status: HttpStatus.badRequest };
     }
 
-    const can = await canMakeRequestByUserId(userId);
-    if (!can) {
+    const settings = await db.snappySettings.upsert({
+      create: { ...resetData(), userId },
+      update: {},
+      ...byUserId(userId),
+    });
+
+    const reset = needsReset(settings.lastReset);
+    if (reset) {
+      await db.snappySettings.update({ data: resetData(), ...byUserId(userId) });
+    }
+    if (!reset && settings.requestCount >= freeRequestLimit) {
       return { error: `Request limit reached`, status: HttpStatus.tooManyRequests };
     }
 
     try {
       const value = await snappy.processText(text.trim(), feature);
-      await incrementRequestByUserId(userId);
+      await db.snappySettings.upsert({
+        create: { ...resetData(), requestCount: 1, userId },
+        update: { requestCount: { increment: 1 } },
+        ...byUserId(userId),
+      });
 
       return { text: value };
     } catch {
@@ -214,12 +204,10 @@ export const ServerAppApi = (context: ServerAppApiContext) => {
     }
   };
 
-  const verifyToken = (token: string): undefined | { userId: number } => Jwt.verify(token, jwtSecret) ?? undefined;
-
   return {
     auth: { forgotPassword, login, register, resetPassword },
     ensureUserByTelegramId,
-    jwt: { verify: verifyToken },
+    jwt: { verify: (token: string) => Jwt.verify(token, jwtSecret) ?? undefined },
     premium: { paymentUrl },
     process,
     user: { remaining: remainingByUserId },
