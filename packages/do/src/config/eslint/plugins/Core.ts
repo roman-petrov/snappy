@@ -5,7 +5,7 @@ export default defineConfig([
   js.configs.all,
   {
     rules: {
-      "arrow-parens": [`error`, `as-needed`],
+      "arrow-parens": `off`,
       "camelcase": `off`,
       "capitalized-comments": [`error`, `always`, { ignorePattern: `jscpd|cspell` }],
       "complexity": `off`,

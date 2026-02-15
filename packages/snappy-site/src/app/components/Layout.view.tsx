@@ -14,17 +14,17 @@ export type LayoutViewProps = ReturnType<typeof useLayoutState>;
 export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: LayoutViewProps) => (
   <div className={styles.wrap}>
     <Header logoOnClick={logoOnClick} logoTitle={logoTitle} logoTo={logoTo}>
-      {headerItems.map((item, index) =>
+      {headerItems.map(item =>
         item.type === `button` ? (
-          <Button key={index} onClick={item.onClick} type="button">
+          <Button onClick={item.onClick} type="button">
             {item.label}
           </Button>
         ) : item.type === `link` ? (
-          <Link key={index} muted to={item.to}>
+          <Link muted to={item.to}>
             {item.label}
           </Link>
         ) : (
-          <LocaleSwitcher key={index} />
+          <LocaleSwitcher />
         ),
       )}
     </Header>
