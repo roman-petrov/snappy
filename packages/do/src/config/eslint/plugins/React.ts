@@ -7,6 +7,7 @@ export default defineConfig([
     rules: {
       ...pluginReact.configs.flat[`all`]?.rules,
       ...pluginReact.configs.flat[`jsx-runtime`]?.rules,
+      "react/button-has-type": `off`,
       "react/function-component-definition": [
         `error`,
         { namedComponents: `arrow-function`, unnamedComponents: `arrow-function` },
