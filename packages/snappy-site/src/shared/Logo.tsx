@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-component-props */
 import type { MouseEvent } from "react";
 
 import { Link } from "react-router-dom";

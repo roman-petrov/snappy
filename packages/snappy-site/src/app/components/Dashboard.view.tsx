@@ -88,7 +88,7 @@ export const DashboardView = ({
               ))}
             </select>
           </div>
-          <Button className={styles.submitRow} disabled={loading} primary type="submit">
+          <Button cn={styles.submitRow} disabled={loading} primary type="submit">
             {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
           </Button>
           {error !== `` && <p className={styles.error}>{error}</p>}

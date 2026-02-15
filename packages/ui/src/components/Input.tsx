@@ -2,7 +2,7 @@ import styles from "./Input.module.css";
 
 export type InputProps = {
   autoComplete?: string;
-  className?: string;
+  cn?: string;
   disabled?: boolean;
   id: string;
   inputClassName?: string;
@@ -16,7 +16,7 @@ export type InputProps = {
 
 export const Input = ({
   autoComplete,
-  className = ``,
+  cn = ``,
   disabled = false,
   id,
   inputClassName,
@@ -46,7 +46,7 @@ export const Input = ({
   }
 
   return (
-    <div className={className ? `${styles.field} ${className}`.trim() : styles.field}>
+    <div className={cn ? `${styles.field} ${cn}`.trim() : styles.field}>
       <label className={styles.label} htmlFor={id}>
         {label}
       </label>

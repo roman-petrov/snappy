@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-component-props */
 import type { ReactNode } from "react";
 
 import { Link as RouterLink } from "react-router-dom";

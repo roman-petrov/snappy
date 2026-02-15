@@ -4,7 +4,7 @@ import styles from "./Button.module.css";
 
 export type ButtonProps = {
   children: ReactNode;
-  className?: string;
+  cn?: string;
   disabled?: boolean;
   href?: string;
   large?: boolean;
@@ -15,7 +15,7 @@ export type ButtonProps = {
 
 export const Button = ({
   children,
-  className = ``,
+  cn = ``,
   disabled = false,
   href,
   large = false,
@@ -23,7 +23,7 @@ export const Button = ({
   primary = false,
   type = `button`,
 }: ButtonProps) => {
-  const classNames = [styles.root, primary ? styles.primary : ``, large ? styles.large : ``, className]
+  const classNames = [styles.root, primary ? styles.primary : ``, large ? styles.large : ``, cn]
     .filter(Boolean)
     .join(` `);
 
