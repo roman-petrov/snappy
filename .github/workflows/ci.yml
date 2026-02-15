@@ -11,6 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         task:
+          - name: 🏗️ Build
+            arg: build
           - name: 🧪 Run Tests
             arg: test
           - name: 📘 TypeScript Check

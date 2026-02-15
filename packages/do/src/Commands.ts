@@ -26,6 +26,7 @@ const cmdDbStudio = cmd(`prisma`, [`studio`]);
 const cmdDbSeed = cmd(`prisma`, [`db`, `seed`]);
 
 const cmdCi = [
+  cmdBuild,
   cmdTest,
   cmdLintTsc,
   cmdLintEslint,
@@ -44,7 +45,7 @@ const commands = [
   { command: cmdTest, description: `Run tests via vitest.`, name: `test` },
   {
     command: cmdCi,
-    description: `Full CI pipeline: run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown).`,
+    description: `Full CI pipeline: build, run tests and all linters (tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown).`,
     name: `ci`,
   },
   { command: cmdLintTsc, description: `TypeScript: type-check only (tsc --noEmit).`, name: `lint:tsc` },
