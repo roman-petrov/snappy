@@ -7,11 +7,7 @@ import http from "node:http";
 
 const appContext = ServerApp(Config);
 
-const app = createApp({
-  allowCorsOrigin: `http://localhost:5173`,
-  api: appContext.api,
-  botApiKey: Config.botApiKey,
-});
+const app = createApp({ allowCorsOrigin: `http://localhost:5173`, api: appContext.api, botApiKey: Config.botApiKey });
 
 const server = http.createServer(app);
 
