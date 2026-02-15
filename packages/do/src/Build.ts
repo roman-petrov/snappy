@@ -33,42 +33,35 @@ const copyDir = (src: string, destination: string): void => {
   }
 };
 
-const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number> => {
-  const result = await Process.spawn(cwd, argv, capture ? { capture: true } : {});
+type SpawnResult = { exitCode: number; stderr: string; stdout: string };
 
-  if (typeof result === `object` && result.exitCode !== 0) {
-    if (result.stderr.length > 0) {
-      process.stderr.write(result.stderr);
-    }
-    if (result.stdout.length > 0) {
-      process.stdout.write(result.stdout);
-    }
-  }
+const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number | SpawnResult> =>
+  Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
-  return typeof result === `object` ? result.exitCode : result;
-};
-
-const buildSite = async (root: string, capture: boolean): Promise<number> => {
+const buildSite = async (root: string, capture: boolean): Promise<number | SpawnResult> => {
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteExit = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
+  const siteResult = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
+  const siteExit = typeof siteResult === `object` ? siteResult.exitCode : siteResult;
   if (siteExit !== 0) {
-    return siteExit;
+    return siteResult;
   }
 
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await runSpawn(
+  const appResult = await runSpawn(
     site,
     Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]),
     capture,
   );
+
+  const appExit = typeof appResult === `object` ? appResult.exitCode : appResult;
   if (appExit !== 0) {
-    return appExit;
+    return appResult;
   }
 
-  const ssrExit = await runSpawn(
+  const ssrResult = await runSpawn(
     site,
     Process.toolArgv(workflowRunner, `vite`, [
       `build`,
@@ -79,29 +72,33 @@ const buildSite = async (root: string, capture: boolean): Promise<number> => {
     ]),
     capture,
   );
+
+  const ssrExit = typeof ssrResult === `object` ? ssrResult.exitCode : ssrResult;
   if (ssrExit !== 0) {
-    return ssrExit;
+    return ssrResult;
   }
 
   return 0;
 };
 
-const buildServer = async (root: string, capture: boolean): Promise<number> =>
+const buildServer = async (root: string, capture: boolean): Promise<number | SpawnResult> =>
   runSpawn(serverDir(root), Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
 
-const build = async (root: string, options: { capture?: true } = {}): Promise<number> => {
+const build = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
   const dist = join(root, distDir);
   fs.rmSync(dist, { force: true, recursive: true });
 
   const capture = options.capture === true;
-  const siteExit = await buildSite(root, capture);
+  const siteResult = await buildSite(root, capture);
+  const siteExit = typeof siteResult === `object` ? siteResult.exitCode : siteResult;
   if (siteExit !== 0) {
-    return siteExit;
+    return siteResult;
   }
 
-  const serverExit = await buildServer(root, capture);
+  const serverResult = await buildServer(root, capture);
+  const serverExit = typeof serverResult === `object` ? serverResult.exitCode : serverResult;
   if (serverExit !== 0) {
-    return serverExit;
+    return serverResult;
   }
 
   copyDir(serverDist(root), join(root, distDir));

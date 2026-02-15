@@ -47,24 +47,13 @@ const treeLine = (prefix: string, connector: string, label: string, status: `fai
   process.stdout.write(`${prefix}${connector}─ ${icon} ${cyan}${label}${reset}\n`);
 };
 
-const writeCaptured = (stderr: string, stdout: string): void => {
-  if (stderr.length > 0) {
-    process.stderr.write(stderr);
-  }
-  if (stdout.length > 0) {
-    process.stdout.write(stdout);
-  }
-};
+type ShellResult = number | { exitCode: number; stderr: string; stdout: string };
 
-const runShell = async (root: string, command: string, options: { capture?: true; silent?: true }): Promise<number> => {
-  const result = await Process.spawnShell(root, command, options);
-
-  if (typeof result === `object` && result.exitCode !== 0) {
-    writeCaptured(result.stderr, result.stdout);
-  }
-
-  return typeof result === `object` ? result.exitCode : result;
-};
+const runShell = async (
+  root: string,
+  command: string,
+  options: { capture?: true; silent?: true },
+): Promise<ShellResult> => Process.spawnShell(root, command, options);
 
 const runner = `bun` as const;
 
@@ -97,7 +86,7 @@ const runLeaf = async (
   const { label, run } = definition;
   const capture = !verbose;
 
-  const exitCode = await (`handler` in run
+  const rawResult = await (`handler` in run
     ? Build.build(root, capture ? { capture: true } : {})
     : `tool` in run
       ? runShell(root, Process.toolCommand(runner, run.tool, run.args), capture ? { capture: true } : {})
@@ -123,15 +112,29 @@ const runLeaf = async (
             killBackground(backgroundProcesses);
 
             if (run.shutdown !== undefined) {
-              await runShell(root, run.shutdown.command, { silent: true });
+              const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
+
+              return typeof shutdownResult === `object` ? shutdownResult.exitCode : shutdownResult;
             }
 
             return code;
           })()
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
+  const exitCode = typeof rawResult === `object` ? rawResult.exitCode : rawResult;
+
   if (!verbose) {
     treeLine(context.prefix, context.connector, label, exitCode === 0 ? `ok` : `fail`);
+  }
+
+  if (exitCode !== 0 && typeof rawResult === `object`) {
+    process.stderr.write(`\n${red}${fail} Error running ${label}${reset}\n\n`);
+    if (rawResult.stderr.length > 0) {
+      process.stderr.write(rawResult.stderr);
+    }
+    if (rawResult.stdout.length > 0) {
+      process.stdout.write(rawResult.stdout);
+    }
   }
 
   return { exitCode, message: `` };
