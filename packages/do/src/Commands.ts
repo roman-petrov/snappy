@@ -15,7 +15,7 @@ const defs: Record<string, CmdDefinition> = {
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
     label: `🐳 Database container`,
-    run: { command: `docker compose up -d`, silent: true },
+    run: { command: `docker compose up -d` },
   },
   [`db:dev`]: {
     children: [`db:container:up`, `db:push:dev`, `db:seed`],
@@ -45,7 +45,7 @@ const defs: Record<string, CmdDefinition> = {
   [`db:push:dev`]: {
     description: `Prisma: push schema (accept data loss, for dev/run).`,
     label: `🗄️ Schema sync`,
-    run: { args: [`db`, `push`, `--accept-data-loss`], silent: true, tool: `prisma` },
+    run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`db:push`]: {
     description: `Prisma: push schema.`,
@@ -55,7 +55,7 @@ const defs: Record<string, CmdDefinition> = {
   [`db:seed`]: {
     description: `Prisma: seed DB.`,
     label: `🗄️ Seed database`,
-    run: { args: [`db`, `seed`], silent: true, tool: `prisma` },
+    run: { args: [`db`, `seed`], tool: `prisma` },
   },
   [`db:studio`]: {
     description: `Prisma: Studio GUI.`,

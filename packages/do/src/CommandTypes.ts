@@ -4,7 +4,7 @@ export type CmdDefinition =
   | { description: string; interactive?: true; label: string; run: CmdRunDef };
 
 export type CmdRunDef =
-  | { args: string[]; silent?: true; tool: string }
+  | { args: string[]; tool: string }
   | {
       background?: true;
       command: string;
@@ -13,5 +13,5 @@ export type CmdRunDef =
       openUrl?: string;
       shutdown?: { command: string };
     }
-  | { command: string; silent?: true }
+  | { command: string }
   | { handler: `build` };

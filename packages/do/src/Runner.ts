@@ -47,8 +47,24 @@ const treeLine = (prefix: string, connector: string, label: string, status: `fai
   process.stdout.write(`${prefix}${connector}─ ${icon} ${cyan}${label}${reset}\n`);
 };
 
-const runShell = async (root: string, command: string, silent: boolean): Promise<number> =>
-  Process.spawnShell(root, command, { silent });
+const writeCaptured = (stderr: string, stdout: string): void => {
+  if (stderr.length > 0) {
+    process.stderr.write(stderr);
+  }
+  if (stdout.length > 0) {
+    process.stdout.write(stdout);
+  }
+};
+
+const runShell = async (root: string, command: string, options: { capture?: true; silent?: true }): Promise<number> => {
+  const result = await Process.spawnShell(root, command, options);
+
+  if (typeof result === `object` && result.exitCode !== 0) {
+    writeCaptured(result.stderr, result.stdout);
+  }
+
+  return typeof result === `object` ? result.exitCode : result;
+};
 
 const runner = `bun` as const;
 
@@ -79,11 +95,12 @@ const runLeaf = async (
   }
 
   const { label, run } = definition;
+  const capture = !verbose;
 
   const exitCode = await (`handler` in run
-    ? Build.build(root)
+    ? Build.build(root, capture ? { capture: true } : {})
     : `tool` in run
-      ? runShell(root, Process.toolCommand(runner, run.tool, run.args), `silent` in run && run.silent === true)
+      ? runShell(root, Process.toolCommand(runner, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
         ? (async () => {
             const proc = spawnProc(root, run);
@@ -106,12 +123,12 @@ const runLeaf = async (
             killBackground(backgroundProcesses);
 
             if (run.shutdown !== undefined) {
-              await runShell(root, run.shutdown.command, true);
+              await runShell(root, run.shutdown.command, { silent: true });
             }
 
             return code;
           })()
-        : runShell(root, run.command, `silent` in run && run.silent === true));
+        : runShell(root, run.command, capture ? { capture: true } : {}));
 
   if (!verbose) {
     treeLine(context.prefix, context.connector, label, exitCode === 0 ? `ok` : `fail`);

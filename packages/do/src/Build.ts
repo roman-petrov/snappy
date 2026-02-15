@@ -33,10 +33,25 @@ const copyDir = (src: string, destination: string): void => {
   }
 };
 
-const buildSite = async (root: string): Promise<number> => {
+const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number> => {
+  const result = await Process.spawn(cwd, argv, capture ? { capture: true } : {});
+
+  if (typeof result === `object` && result.exitCode !== 0) {
+    if (result.stderr.length > 0) {
+      process.stderr.write(result.stderr);
+    }
+    if (result.stdout.length > 0) {
+      process.stdout.write(result.stdout);
+    }
+  }
+
+  return typeof result === `object` ? result.exitCode : result;
+};
+
+const buildSite = async (root: string, capture: boolean): Promise<number> => {
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteExit = await Process.spawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]));
+  const siteExit = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
   if (siteExit !== 0) {
     return siteExit;
   }
@@ -44,15 +59,16 @@ const buildSite = async (root: string): Promise<number> => {
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
 
-  const appExit = await Process.spawn(
+  const appExit = await runSpawn(
     site,
     Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]),
+    capture,
   );
   if (appExit !== 0) {
     return appExit;
   }
 
-  const ssrExit = await Process.spawn(
+  const ssrExit = await runSpawn(
     site,
     Process.toolArgv(workflowRunner, `vite`, [
       `build`,
@@ -61,6 +77,7 @@ const buildSite = async (root: string): Promise<number> => {
       `--outDir`,
       `dist/server`,
     ]),
+    capture,
   );
   if (ssrExit !== 0) {
     return ssrExit;
@@ -69,19 +86,20 @@ const buildSite = async (root: string): Promise<number> => {
   return 0;
 };
 
-const buildServer = async (root: string): Promise<number> =>
-  Process.spawn(serverDir(root), Process.toolArgv(workflowRunner, `vite`, [`build`]));
+const buildServer = async (root: string, capture: boolean): Promise<number> =>
+  runSpawn(serverDir(root), Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
 
-const build = async (root: string): Promise<number> => {
+const build = async (root: string, options: { capture?: true } = {}): Promise<number> => {
   const dist = join(root, distDir);
   fs.rmSync(dist, { force: true, recursive: true });
 
-  const siteExit = await buildSite(root);
+  const capture = options.capture === true;
+  const siteExit = await buildSite(root, capture);
   if (siteExit !== 0) {
     return siteExit;
   }
 
-  const serverExit = await buildServer(root);
+  const serverExit = await buildServer(root, capture);
   if (serverExit !== 0) {
     return serverExit;
   }
