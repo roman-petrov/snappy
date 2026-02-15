@@ -50,9 +50,7 @@ export const PasswordInputView = ({
         <span
           aria-hidden
           className={styles.icon}
-          dangerouslySetInnerHTML={{
-            __html: (visible ? eyeClosedSvg : eyeOpenSvg).replace(/^<svg/u, `<svg width="100%" height="100%"`),
-          }}
+          dangerouslySetInnerHTML={{ __html: visible ? eyeClosedSvg : eyeOpenSvg }}
         />
       </button>
     </div>
