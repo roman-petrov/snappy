@@ -5,7 +5,8 @@ import type { Express, Request, Response } from "express";
 
 import { HttpStatus } from "@snappy/core";
 
-import { ApiResult } from "./ApiResult";
+const hasError = (r: unknown): r is { error: string; status: number } =>
+  typeof r === `object` && r !== null && `error` in r && `status` in r;
 
 export type Route<TSuccess = unknown> = {
   auth?: boolean;
@@ -34,7 +35,7 @@ const bind = (
 
     const handler = async (request: Request, response: Response): Promise<void> => {
       const result = await route.run(api, request);
-      if (ApiResult.hasError(result)) {
+      if (hasError(result)) {
         response.status(result.status).json({ error: result.error });
 
         return;
