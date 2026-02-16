@@ -8,7 +8,7 @@ import { YooKassa } from "@snappy/yoo-kassa";
 
 import { ServerAppApi } from "./ServerAppApi";
 
-export const ServerApp = (config: Config, options?: { version?: string }) => {
+export const ServerApp = (config: Config, options: { botBaseUrl: string; version?: string }) => {
   const db = Database(config.dbUrl);
   const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
   const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
@@ -23,11 +23,11 @@ export const ServerApp = (config: Config, options?: { version?: string }) => {
   });
 
   const bot = SnappyBot({
-    apiBaseUrl: config.apiBaseUrl,
     apiKey: config.botApiKey,
+    apiUrl: options.botBaseUrl,
     botToken: config.botToken,
     premiumPrice: config.premiumPrice,
-    ...(options?.version !== undefined && { version: options.version }),
+    ...(options.version !== undefined && { version: options.version }),
   });
 
   const start = async () => {

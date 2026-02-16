@@ -7,16 +7,16 @@ import { Bot } from "gramio";
 import { Callbacks, Commands, Locale, Messages, t, UserTexts } from "./app";
 
 export type SnappyBotConfig = {
-  apiBaseUrl: string;
   apiKey: string;
+  apiUrl: string;
   botToken: string;
   premiumPrice: number;
   version?: string;
 };
 
-export const SnappyBot = ({ apiBaseUrl, apiKey, botToken, premiumPrice, version }: SnappyBotConfig) => {
+export const SnappyBot = ({ apiKey, apiUrl, botToken, premiumPrice, version }: SnappyBotConfig) => {
   const bot = new Bot(botToken);
-  const api = ServerApi({ auth: { apiKey, type: `bot` }, baseUrl: apiBaseUrl });
+  const api = ServerApi({ auth: { apiKey, type: `bot` }, baseUrl: apiUrl });
   const userTexts = UserTexts();
   const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 

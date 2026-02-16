@@ -11,9 +11,14 @@ const sslCertB64 = process.env[`SSL_CERT_PEM`];
 const sslKeyB64 = process.env[`SSL_KEY_PEM`];
 const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCertB64);
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
+const portHttp = 80;
+const portHttps = 443;
+const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
+const port = useHttps ? portHttps : portHttp;
+const botBaseUrl = useHttps ? `https://localhost:${portHttps}` : `http://localhost:${portHttp}`;
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
-const appContext = ServerApp(Config, { version });
+const appContext = ServerApp(Config, { botBaseUrl, version });
 const app = App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 
 app.disable(`x-powered-by`);
@@ -40,11 +45,6 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
 
   return undefined;
 });
-
-const portHttp = 80;
-const portHttps = 443;
-const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
-const port = useHttps ? portHttps : portHttp;
 
 const handler = (request: http.IncomingMessage, response: http.ServerResponse) => {
   app(request, response);

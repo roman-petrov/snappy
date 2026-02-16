@@ -5,7 +5,8 @@ import { App } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import http from "node:http";
 
-const appContext = ServerApp(Config);
+const port = 3000;
+const appContext = ServerApp(Config, { botBaseUrl: `http://localhost:${port}` });
 
 const app = App.createApp({
   allowCorsOrigin: `http://localhost:5173`,
@@ -17,7 +18,7 @@ const server = http.createServer(app);
 
 void process.stdout.write(`🚀 Starting server…\n`);
 
-server.listen(Config.apiPort, () => {
-  void process.stdout.write(`  API http://localhost:${Config.apiPort}\n`);
+server.listen(port, () => {
+  void process.stdout.write(`  API http://localhost:${port}\n`);
   void appContext.start();
 });
