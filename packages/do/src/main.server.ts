@@ -18,6 +18,8 @@ const inputSchema = z.object({ script: scriptEnum });
 
 type WorkflowRunInput = z.infer<typeof inputSchema>;
 
+const stripAnsi = (s: string): string => s.replace(/\u001B\[[0-9;]*m/gu, ``);
+
 const server = new McpServer(
   { name: `do`, version: `0.0.0` },
   { capabilities: { resources: {}, tools: {} }, instructions: Instructions.instructions },
@@ -32,8 +34,9 @@ server.registerTool(
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
     const result = await Runner.run(root, resolved.name, { mcp: true });
+    const text = stripAnsi(result.message);
 
-    return { content: [{ text: result.message, type: `text` as const }] };
+    return { content: [{ text, type: `text` as const }] };
   },
 );
 

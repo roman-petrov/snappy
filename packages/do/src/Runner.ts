@@ -77,6 +77,7 @@ const runLeaf = async (
   context: TreeContext,
   verbose: boolean,
   backgroundProcesses: ChildProcess[],
+  mcp: boolean,
 ): Promise<RunResult> => {
   const definition = Commands.byName(name);
   if (definition === undefined || !(`run` in definition)) {
@@ -84,50 +85,54 @@ const runLeaf = async (
   }
 
   const { label, run } = definition;
-  const capture = !verbose;
+  const capture = !verbose || mcp;
 
   const rawResult = await (`handler` in run
     ? Build.build(root, capture ? { capture: true } : {})
     : `tool` in run
       ? runShell(root, Process.toolCommand(runner, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
-        ? (async () => {
-            const proc = spawnProc(root, run);
+        ? mcp
+          ? runShell(join(root, run.cwd), run.command, { capture: true })
+          : (async () => {
+              const proc = spawnProc(root, run);
 
-            if (run.background === true) {
-              backgroundProcesses.push(proc);
+              if (run.background === true) {
+                backgroundProcesses.push(proc);
 
-              return 0;
-            }
+                return 0;
+              }
 
-            if (run.openUrl !== undefined) {
-              open(run.openUrl).catch(() => undefined);
-            }
+              if (run.openUrl !== undefined) {
+                open(run.openUrl).catch(() => undefined);
+              }
 
-            const code = await new Promise<number>(resolve => {
-              proc.on(`exit`, (c: null | number) => {
-                resolve(c ?? 1);
+              const code = await new Promise<number>(resolve => {
+                proc.on(`exit`, (c: null | number) => {
+                  resolve(c ?? 1);
+                });
               });
-            });
-            killBackground(backgroundProcesses);
+              killBackground(backgroundProcesses);
 
-            if (run.shutdown !== undefined) {
-              const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
+              if (run.shutdown !== undefined) {
+                const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
 
-              return typeof shutdownResult === `object` ? shutdownResult.exitCode : shutdownResult;
-            }
+                return typeof shutdownResult === `object` ? shutdownResult.exitCode : shutdownResult;
+              }
 
-            return code;
-          })()
+              return code;
+            })()
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
   const exitCode = typeof rawResult === `object` ? rawResult.exitCode : rawResult;
+  const message =
+    typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
-  if (!verbose) {
+  if (!mcp && !verbose) {
     treeLine(context.prefix, context.connector, label, exitCode === 0 ? `ok` : `fail`);
   }
 
-  if (exitCode !== 0 && typeof rawResult === `object`) {
+  if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
     process.stderr.write(`\n${red}${fail} Error running ${label}${reset}\n\n`);
     if (rawResult.stderr.length > 0) {
       process.stderr.write(rawResult.stderr);
@@ -137,25 +142,31 @@ const runLeaf = async (
     }
   }
 
-  return { exitCode, message: `` };
+  return { exitCode, message };
 };
 
-type RunNodeOptions = { backgroundProcesses: ChildProcess[]; context: TreeContext; isRoot?: boolean; verbose: boolean };
+type RunNodeOptions = {
+  backgroundProcesses: ChildProcess[];
+  context: TreeContext;
+  isRoot?: boolean;
+  mcp?: boolean;
+  verbose: boolean;
+};
 
 const runNode = async (root: string, name: string, options: RunNodeOptions): Promise<RunResult> => {
-  const { backgroundProcesses, context, isRoot, verbose } = options;
+  const { backgroundProcesses, context, isRoot, mcp = false, verbose } = options;
   const definition = Commands.byName(name);
   if (definition === undefined) {
     return { exitCode: 1, message: `Unknown: ${name}` };
   }
 
   if (`run` in definition) {
-    return runLeaf(root, name, context, verbose, backgroundProcesses);
+    return runLeaf(root, name, context, verbose, backgroundProcesses, mcp);
   }
 
   const { children, label } = definition;
 
-  if (isRoot !== true && !verbose) {
+  if (!mcp && isRoot !== true && !verbose) {
     treeLine(context.prefix, context.connector, label, `node`);
   }
 
@@ -167,6 +178,7 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
     const result = await runNode(root, child, {
       backgroundProcesses,
       context: { connector: childConnector, prefix: childPrefix },
+      mcp,
       verbose,
     });
 
@@ -193,7 +205,7 @@ const run = async (
     return { exitCode: 1, message: `Unknown command: ${name}` };
   }
 
-  if (!verbose) {
+  if (!options.mcp && !verbose) {
     process.stdout.write(`\n`);
     if (node.children.length > 0 && definition !== undefined) {
       process.stdout.write(` ${yellow}${br}${reset}─ ${cyan}${definition.label}${reset}\n`);
@@ -204,10 +216,11 @@ const run = async (
     backgroundProcesses: [],
     context: { connector: br, prefix: ` ` },
     isRoot: true,
+    mcp: options.mcp,
     verbose,
   });
 
-  if (!verbose && result.exitCode !== 0 && result.message.length > 0) {
+  if (!options.mcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
     process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
   }
 
