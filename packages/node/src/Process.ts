@@ -57,8 +57,10 @@ const waitOrCapture = async (proc: ChildProcess, capture: boolean): Promise<numb
   if (capture && proc.stdout !== null && proc.stderr !== null) {
     const [stdout, stderr] = await Promise.all([readStream(proc.stdout), readStream(proc.stderr)]);
     const exitCode = await waitExit(proc);
+
     return { exitCode, stderr, stdout };
   }
+
   return waitExit(proc);
 };
 
@@ -73,12 +75,14 @@ const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): P
         : [stdioInherit[0], options.stdio ?? `inherit`, options.stdio ?? `inherit`];
 
   const proc = nodeSpawn(exe ?? ``, args, { cwd, env: spawnEnv(options), stdio });
+
   return waitOrCapture(proc, options.capture === true);
 };
 
 const spawnShell = async (cwd: string, command: string, options: SpawnOptions = {}): Promise<number | SpawnResult> => {
   const stdio: StdioTuple = options.capture === true ? stdioPipe : options.silent === true ? stdioSilent : stdioInherit;
   const proc = nodeSpawn(command, [], { cwd, env: spawnEnv(options), shell: true, stdio });
+
   return waitOrCapture(proc, options.capture === true);
 };
 
