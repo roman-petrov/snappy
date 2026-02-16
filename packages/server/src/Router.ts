@@ -19,37 +19,32 @@ export type Route<TSuccess = unknown> = {
   successStatus?: HttpStatus;
 };
 
-const hasError = (r: unknown): r is { error: string; status: number } => _.isObject(r) && `error` in r && `status` in r;
-
-const hasToken = (r: object): r is { token: string } =>
-  `token` in r && typeof (r as { token: unknown }).token === `string`;
-
 type BindOptions = { api: ServerAppApi; botApiKey: string; routes: Route[] };
 
-const bind = (app: Express, options: BindOptions): void => {
-  const { api, botApiKey, routes } = options;
-
+const bind = (app: Express, { api, botApiKey, routes }: BindOptions): void => {
   for (const route of routes) {
     const handler = async (request: Request, response: Response): Promise<void> => {
       const result = await route.run(api, request);
-      if (hasError(result)) {
+      if (
+        _.isObject(result) &&
+        `error` in result &&
+        `status` in result &&
+        _.isString(result.error) &&
+        _.isNumber(result.status)
+      ) {
         response.status(result.status).json({ error: result.error });
 
         return;
       }
 
-      const body = route.successBody(result);
-      if (route.setAuthCookie === true && _.isObject(result) && hasToken(result)) {
-        response.cookie(AuthCookie.name, result.token, {
-          httpOnly: true,
-          maxAge: AuthCookie.maxAgeMs,
-          sameSite: `lax`,
-        });
+      const token = _.isObject(result) && `token` in result ? (result as { token: unknown }).token : undefined;
+      if (route.setAuthCookie === true && _.isString(token)) {
+        response.cookie(AuthCookie.name, token, { httpOnly: true, maxAge: AuthCookie.maxAgeMs, sameSite: `lax` });
       }
       if (route.clearAuthCookie === true) {
         response.clearCookie(AuthCookie.name);
       }
-      response.status(route.successStatus ?? HttpStatus.ok).json(body);
+      response.status(route.successStatus ?? HttpStatus.ok).json(route.successBody(result));
     };
 
     const middlewares = route.auth === true ? [Middleware.requireUser(api, botApiKey)] : [];
