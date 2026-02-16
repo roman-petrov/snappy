@@ -12,7 +12,12 @@ const token = (header: string) => {
     .map(segment => segment.trimStart())
     .find(segment => segment.startsWith(prefix));
 
-  return part === undefined ? undefined : part.slice(prefix.length).trim();
+  if (part === undefined) {
+    return undefined;
+  }
+  const value = part.slice(prefix.length).trim();
+
+  return value === `` ? undefined : value;
 };
 
 export const AuthCookie = { maxAgeMs, name, token };
