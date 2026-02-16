@@ -8,6 +8,6 @@
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
     "@snappy/snappy": "workspace:*",
-    "gramio": "^0.4.13"
+    "gramio": "^0.4.14"
   }
 }
