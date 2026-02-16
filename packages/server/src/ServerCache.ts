@@ -11,7 +11,7 @@ import { brotliCompressSync, gzipSync } from "node:zlib";
 
 export type CachedEntry = { brotli?: Buffer; gzip?: Buffer; raw: Buffer };
 
-const compressible = (contentType: string): boolean => {
+const compressible = (contentType: string) => {
   const base = contentType.split(`;`)[0]?.trim().toLowerCase() ?? ``;
 
   return (
@@ -42,7 +42,7 @@ const contentTypesByExt: Record<string, string> = {
   xml: `application/xml`,
 };
 
-const contentTypeFromPath = (pathname: string): string => {
+const contentTypeFromPath = (pathname: string) => {
   const lastDot = pathname.lastIndexOf(`.`);
   const ext = lastDot === -1 ? `` : pathname.slice(lastDot + 1).toLowerCase();
 
@@ -71,7 +71,7 @@ export const ServerCache = () => {
     return entry;
   };
 
-  const deleteKey = (key: string): void => {
+  const deleteKey = (key: string) => {
     store.delete(key);
   };
 
@@ -95,7 +95,7 @@ export const ServerCache = () => {
     entry: CachedEntry,
     acceptEncoding: string | undefined,
     contentType: string,
-  ): void => {
+  ) => {
     response.type(contentType);
     response.setHeader(`Vary`, `Accept-Encoding`);
     const enc = preferredEncoding(acceptEncoding);

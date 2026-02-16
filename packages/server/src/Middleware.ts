@@ -11,7 +11,7 @@ import { AuthCookie } from "./AuthCookie";
 
 const requireUser =
   (api: ServerAppApi, botApiKey: string) => async (request: Request, response: Response, next: () => void) => {
-    const tryJwt = (): boolean => {
+    const tryJwt = () => {
       const token = AuthCookie.token(request.headers.cookie ?? ``);
 
       if (token === undefined) {
@@ -28,7 +28,7 @@ const requireUser =
       return true;
     };
 
-    const tryBot = (): boolean => {
+    const tryBot = () => {
       const key = request.headers[`x-bot-api-key`];
       const received = _.isString(key) ? key : ``;
       if (botApiKey === `` || received !== botApiKey) {

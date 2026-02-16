@@ -1,8 +1,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
-import { Process, type Runner } from "@snappy/node";
+import { Process } from "@snappy/node";
 
-const workflowRunner: Runner = `bun`;
+const workflowRunner = `bun`;
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -13,13 +13,13 @@ const serverDir = (root: string) => join(root, `packages`, `server-prod`);
 const serverDist = (root: string) => join(serverDir(root), distDir);
 const wwwDir = (root: string) => join(root, distDir, `www`);
 
-const ensureDir = (dir: string): void => {
+const ensureDir = (dir: string) => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 };
 
-const copyDir = (src: string, destination: string): void => {
+const copyDir = (src: string, destination: string) => {
   ensureDir(destination);
   const entries = fs.readdirSync(src, { withFileTypes: true });
   for (const entry of entries) {
@@ -35,7 +35,7 @@ const copyDir = (src: string, destination: string): void => {
 
 type SpawnResult = { exitCode: number; stderr: string; stdout: string };
 
-const exitCode = (r: number | SpawnResult): number => (typeof r === `object` ? r.exitCode : r);
+const exitCode = (r: number | SpawnResult) => (typeof r === `object` ? r.exitCode : r);
 
 const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number | SpawnResult> =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});

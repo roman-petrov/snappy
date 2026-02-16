@@ -55,7 +55,7 @@ const runShell = async (
   options: { capture?: true; silent?: true },
 ): Promise<ShellResult> => Process.spawnShell(root, command, options);
 
-const runner = `bun` as const;
+const runner = `bun`;
 
 const spawnProc = (root: string, run: { command: string; cwd: string; env?: Record<string, string> }): ChildProcess =>
   nodeSpawn(run.command, [], {
@@ -65,7 +65,7 @@ const spawnProc = (root: string, run: { command: string; cwd: string; env?: Reco
     stdio: `inherit`,
   });
 
-const killBackground = (processes: ChildProcess[]): void => {
+const killBackground = (processes: ChildProcess[]) => {
   for (const proc of processes) {
     proc.kill(`SIGTERM`);
   }
@@ -227,7 +227,7 @@ const run = async (
   return { ...result, message };
 };
 
-const formatCommandsHelp = (): string =>
+const formatCommandsHelp = () =>
   Commands.list()
     .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
     .join(`\n`);

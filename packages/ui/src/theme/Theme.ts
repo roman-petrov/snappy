@@ -13,7 +13,7 @@ const themes = [`light`, `dark`] as const;
 const fogOptions = { blurFactor: 0.5, speed: 2, zoom: 2 };
 
 export type Theme = (typeof themes)[number];
-const defaultTheme: Theme = `light`;
+const defaultTheme = `light`;
 const isTheme = (v: string): v is Theme => themes.includes(v as Theme);
 
 const current = (): Theme => {
@@ -25,7 +25,7 @@ const current = (): Theme => {
 let afterChange: (() => void) | undefined;
 const fogRef: { current: Fog | undefined } = { current: undefined };
 
-const syncFog = (): void => {
+const syncFog = () => {
   if (fogRef.current !== undefined) {
     fogRef.current.stop();
     fogRef.current = undefined;
@@ -40,7 +40,7 @@ const syncFog = (): void => {
   }
 };
 
-const apply = (theme: Theme): void => {
+const apply = (theme: Theme) => {
   document.documentElement.dataset[`theme`] = theme;
   try {
     localStorage.setItem(storageKey, theme);
@@ -50,7 +50,7 @@ const apply = (theme: Theme): void => {
   void afterChange?.();
 };
 
-const toggle = (): void => {
+const toggle = () => {
   apply(current() === `dark` ? `light` : `dark`);
 };
 
@@ -62,8 +62,9 @@ const restore = (): void => {
   }
   try {
     const saved = localStorage.getItem(storageKey);
-    if (isTheme(saved ?? ``)) {
-      apply(saved as Theme);
+    const toApply = saved ?? ``;
+    if (isTheme(toApply)) {
+      apply(toApply);
 
       return;
     }

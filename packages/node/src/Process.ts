@@ -18,10 +18,10 @@ const stdioInherit: StdioTuple = [`inherit`, `inherit`, `inherit`];
 const stdioPipe: StdioTuple = [`ignore`, `pipe`, `pipe`];
 const stdioSilent: StdioTuple = [`inherit`, `ignore`, `ignore`];
 
-const toolArgv = (runner: Runner, tool: string, args: string[]): string[] =>
+const toolArgv = (runner: Runner, tool: string, args: string[]) =>
   runner === `bun` ? [`bun`, `x`, tool, ...args] : [`npx`, tool, ...args];
 
-const toolCommand = (runner: Runner, tool: string, args: string[]): string =>
+const toolCommand = (runner: Runner, tool: string, args: string[]) =>
   runner === `bun` ? `bun x ${tool} ${args.join(` `)}` : `npx ${tool} ${args.join(` `)}`;
 
 const spawnEnv = (options: SpawnOptions): ProcessEnv | undefined =>

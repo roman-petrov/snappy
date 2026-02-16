@@ -1,6 +1,6 @@
 import path from "node:path";
 
-const rootDir = (): string => {
+const rootDir = () => {
   const fromEnv = process.env[`MCP_SERVER_ROOT`];
 
   if (fromEnv !== undefined && fromEnv !== ``) {

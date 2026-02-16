@@ -21,7 +21,7 @@ export type Route<TSuccess = unknown> = {
 
 type BindOptions = { api: ServerAppApi; botApiKey: string; routes: Route[] };
 
-const bind = (app: Express, { api, botApiKey, routes }: BindOptions): void => {
+const bind = (app: Express, { api, botApiKey, routes }: BindOptions) => {
   for (const route of routes) {
     const handler = async (request: Request, response: Response): Promise<void> => {
       const result = await route.run(api, request);

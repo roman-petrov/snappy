@@ -10,13 +10,13 @@ export type SiteLocaleKey = `en` | `ru`;
 
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
-export const getMeta = (locale: SiteLocaleKey): SiteMeta => {
+export const getMeta = (locale: SiteLocaleKey) => {
   const { meta } = localeData[locale];
 
   return { ...meta, htmlLang: locale };
 };
 
-export const render = (locale: SiteLocaleKey = `ru`): string => {
+export const render = (locale: SiteLocaleKey = `ru`) => {
   SiteLocaleStore.setServerLocale(locale);
 
   return renderToString(<Landing />);

@@ -22,7 +22,7 @@ const getLocale = (): LocaleKey => {
   return locale;
 };
 
-const setLocale = (next: LocaleKey): void => {
+const setLocale = (next: LocaleKey) => {
   localStorage.setItem(storageKey, next);
   if (typeof document !== `undefined`) {
     document.documentElement.lang = next;

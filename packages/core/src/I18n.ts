@@ -17,7 +17,7 @@ const resolveByPath = (current: unknown, keys: string[]): unknown => {
   return resolveByPath((current as Record<string, unknown>)[first], rest);
 };
 
-const interpolate = (template: string, entries: [string, number | string][]): string => {
+const interpolate = (template: string, entries: [string, number | string][]) => {
   if (entries.length === 0) {
     return template;
   }

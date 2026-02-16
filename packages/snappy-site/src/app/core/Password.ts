@@ -8,7 +8,7 @@ const requirementChecks: { check: (s: string) => boolean }[] = [
   { check: s => hasLetter(s) && hasDigit(s) },
 ];
 
-const valid = (s: string): boolean => requirementChecks.every(({ check }) => check(s));
+const valid = (s: string) => requirementChecks.every(({ check }) => check(s));
 
 type Strength = `medium` | `strong` | `weak`;
 
@@ -34,7 +34,7 @@ const strength = (s: string): Strength => {
 const chars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;
 const defaultLength = 12;
 
-const generate = (length = defaultLength): string => {
+const generate = (length = defaultLength) => {
   const array = new Uint8Array(length);
   crypto.getRandomValues(array);
   const s = Array.from(array, byte => chars[byte % chars.length]).join(``);

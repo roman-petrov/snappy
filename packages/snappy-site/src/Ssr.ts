@@ -11,22 +11,21 @@ export type SiteMeta = { description: string; htmlLang: string; keywords: string
 
 type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
 
-const escapeAttribute = (s: string): string =>
+const escapeAttribute = (s: string) =>
   s.replaceAll(`&`, `&amp;`).replaceAll(`"`, `&quot;`).replaceAll(`<`, `&lt;`).replaceAll(`>`, `&gt;`);
 
-const localeFromCookie = (cookieHeader: string | undefined): SiteLocaleKey =>
-  LocaleCookie.parseLocaleFromCookie(cookieHeader);
+const localeFromCookie = (cookieHeader: string | undefined) => LocaleCookie.parseLocaleFromCookie(cookieHeader);
 
-const injectMeta = (template: string, meta: SiteMeta): string =>
+const injectMeta = (template: string, meta: SiteMeta) =>
   template
     .replaceAll(`{{title}}`, escapeAttribute(meta.title))
     .replaceAll(`{{description}}`, escapeAttribute(meta.description))
     .replaceAll(`{{keywords}}`, escapeAttribute(meta.keywords))
     .replaceAll(`{{htmlLang}}`, meta.htmlLang);
 
-const formatHtml = (html: string): string => beautify.html(html, { end_with_newline: true, indent_size: 2 });
+const formatHtml = (html: string) => beautify.html(html, { end_with_newline: true, indent_size: 2 });
 
-const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry): string => {
+const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) => {
   const t = entry.getMeta === undefined ? template : injectMeta(template, entry.getMeta(locale));
 
   return formatHtml(t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`));

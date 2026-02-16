@@ -9,7 +9,7 @@ import { Theme } from "./theme/Theme";
 
 const fogId = `fog-bg`;
 
-export const ensureFogContainer = (): void => {
+export const ensureFogContainer = () => {
   if (document.querySelector(`#${fogId}`) !== null) {
     return;
   }
@@ -19,7 +19,7 @@ export const ensureFogContainer = (): void => {
   document.body.prepend(div);
 };
 
-export const startApp = (container: HTMLElement, app: ReactNode): void => {
+export const startApp = (container: HTMLElement, app: ReactNode) => {
   ensureFogContainer();
   Theme.restore();
   createRoot(container).render(app);

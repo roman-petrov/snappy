@@ -8,7 +8,7 @@ import { LocaleCookie, type SiteLocaleKey } from "./LocaleCookie";
 export const SiteLocaleStore = (() => {
   let serverLocale: SiteLocaleKey | undefined;
 
-  const setServerLocale = (locale: SiteLocaleKey): void => {
+  const setServerLocale = (locale: SiteLocaleKey) => {
     serverLocale = locale;
   };
 
@@ -23,7 +23,7 @@ export const SiteLocaleStore = (() => {
     return locale;
   };
 
-  const setSiteLocale = (next: SiteLocaleKey): void => {
+  const setSiteLocale = (next: SiteLocaleKey) => {
     if (typeof document === `undefined`) {
       return;
     }

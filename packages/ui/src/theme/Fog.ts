@@ -144,7 +144,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
 
   const effectRef = { current: undefined as undefined | { destroy: () => void } };
 
-  const start = (): void => {
+  const start = () => {
     const canvas = document.createElement(`canvas`);
     canvas.setAttribute(`aria-hidden`, `true`);
 
@@ -190,7 +190,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
     const midtoneRgb = hexToRgb(config.midtoneColor);
     const highlightRgb = hexToRgb(config.highlightColor);
 
-    const resize = (): void => {
+    const resize = () => {
       const dpr = Math.min(devicePixelRatio, 2);
       const width = element.clientWidth;
       const height = element.clientHeight;
@@ -205,7 +205,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
     const timeStep = 0.01;
     const triangleCount = 6;
 
-    const tick = (): void => {
+    const tick = () => {
       state.time += timeStep * config.speed;
       gl.useProgram(program);
       gl.bindBuffer(gl.ARRAY_BUFFER, quadBuffer);
@@ -244,7 +244,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
     ro.observe(element);
     state.rafId = requestAnimationFrame(tick);
 
-    const destroy = (): void => {
+    const destroy = () => {
       cancelAnimationFrame(state.rafId);
       ro.disconnect();
       gl.deleteProgram(program);
@@ -255,7 +255,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
     effectRef.current = { destroy };
   };
 
-  const stop = (): void => {
+  const stop = () => {
     if (effectRef.current !== undefined) {
       effectRef.current.destroy();
       effectRef.current = undefined;
