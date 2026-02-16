@@ -1,18 +1,19 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
-import type { HttpStatus } from "@snappy/core";
 import type { ServerAppApi } from "@snappy/server-app";
 import type { Express, Request, Response } from "express";
+
+import { HttpStatus } from "@snappy/core";
 
 import { ApiResult } from "./ApiResult";
 
 export type Route<TSuccess = unknown> = {
-  auth?: `requireUser`;
+  auth?: boolean;
   method: `get` | `post`;
   path: string;
   run: (api: ServerAppApi, request: Request) => Promise<TSuccess | { error: string; status: number }>;
   successBody: (result: TSuccess) => object;
-  successStatus: HttpStatus;
+  successStatus?: HttpStatus;
 };
 
 const bind = (
@@ -27,7 +28,7 @@ const bind = (
 ): void => {
   for (const route of routes) {
     const middlewares =
-      route.auth === `requireUser`
+      route.auth === true
         ? [requireUser(api, botApiKey)]
         : ([] as ((request: Request, response: Response, next: () => void) => void)[]);
 
@@ -38,7 +39,7 @@ const bind = (
 
         return;
       }
-      response.status(route.successStatus).json(route.successBody(result));
+      response.status(route.successStatus ?? HttpStatus.ok).json(route.successBody(result));
     };
 
     if (route.method === `get`) {
