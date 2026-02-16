@@ -1,20 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type { ApiAuthBody, ApiForgotPasswordBody, ApiProcessBody, ApiResetPasswordBody } from "@snappy/server-api";
 import type { Request } from "express";
 
 import { HttpStatus } from "@snappy/core";
-import { Endpoints } from "@snappy/server-api";
+import {
+  type ApiAuthBody,
+  type ApiForgotPasswordBody,
+  type ApiProcessBody,
+  type ApiResetPasswordBody,
+  Endpoints,
+} from "@snappy/server-api";
 
-import type { RouteDef } from "./Router";
-
-import { Router } from "./Router";
+import { type Route, Router } from "./Router";
 
 const statusOk = 200;
 const body = <T>(request: Request): T => (request.body ?? {}) as T;
 
 const route = <T>(
-  r: Omit<RouteDef<T>, `successStatus`> & { successStatus?: typeof HttpStatus.created | typeof statusOk },
-): RouteDef<T> => ({ successStatus: statusOk, ...r });
+  r: Omit<Route<T>, `successStatus`> & { successStatus?: typeof HttpStatus.created | typeof statusOk },
+): Route<T> => ({ successStatus: statusOk, ...r });
 
 export const Routes = [
   route<{ token: string }>({
@@ -63,4 +66,4 @@ export const Routes = [
     run: Router.withUserId(async (api, id) => api.premium.paymentUrl(id)),
     successBody: r => ({ url: r.url }),
   }),
-] as RouteDef[];
+] as Route[];

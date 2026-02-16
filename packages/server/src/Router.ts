@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 import type { ServerAppApi } from "@snappy/server-app";
 import type { Request, Response } from "express";
@@ -6,13 +7,13 @@ import { HttpStatus } from "@snappy/core";
 
 import { ApiResult } from "./ApiResult";
 
-export type RouteDef<TSuccess = unknown> = {
+export type Route<TSuccess = unknown> = {
   auth?: `requireUser`;
   method: `get` | `post`;
   path: string;
   run: (api: ServerAppApi, request: Request) => Promise<TSuccess | { error: string; status: number }>;
   successBody: (result: TSuccess) => object;
-  successStatus: 200 | typeof HttpStatus.created;
+  successStatus: HttpStatus;
 };
 
 type RequestWithUserId = Request & { userId?: number };
@@ -52,46 +53,49 @@ const withUserIdAndBody =
     return run(api, id, bodyFromRequest(request));
   };
 
-const sendResult = (response: Response, def: RouteDef, result: unknown): void => {
+const sendResult = (response: Response, route: Route, result: unknown): void => {
   if (ApiResult.hasError(result)) {
     response.status(result.status).json({ error: result.error });
 
     return;
   }
 
-  response.status(def.successStatus).json(def.successBody(result));
+  response.status(route.successStatus).json(route.successBody(result));
 };
 
 const createHandler =
-  (def: RouteDef) =>
+  (route: Route) =>
   (api: ServerAppApi) =>
   async (request: Request, response: Response): Promise<void> => {
-    const result = await def.run(api, request);
+    const result = await route.run(api, request);
 
-    sendResult(response, def, result);
+    sendResult(response, route, result);
   };
 
 const bind = (
   app: ReturnType<typeof import("express")>,
   api: ServerAppApi,
   botApiKey: string,
-  defs: RouteDef[],
-  requireUser: (api: ServerAppApi, botApiKey: string) => (request: Request, res: Response, next: () => void) => void,
+  routes: Route[],
+  requireUser: (
+    api: ServerAppApi,
+    botApiKey: string,
+  ) => (request: Request, response: Response, next: () => void) => void,
 ): void => {
-  for (const def of defs) {
+  for (const route of routes) {
     const middlewares =
-      def.auth === `requireUser`
+      route.auth === `requireUser`
         ? [requireUser(api, botApiKey)]
-        : ([] as ((request: Request, res: Response, next: () => void) => void)[]);
+        : ([] as ((request: Request, response: Response, next: () => void) => void)[]);
 
-    const handler = createHandler(def)(api);
+    const handler = createHandler(route)(api);
 
     (
       app as {
         get: (path: string, ...handlers: unknown[]) => void;
         post: (path: string, ...handlers: unknown[]) => void;
       }
-    )[def.method](def.path, ...middlewares, handler);
+    )[route.method](route.path, ...middlewares, handler);
   }
 };
 
