@@ -57,19 +57,18 @@ const route = <T = unknown>(
   extra?: Partial<Route<T>>,
 ): Route<T> => ({ method, path, run, successBody, ...extra });
 
-const post = <T = unknown>(
-  path: string,
-  run: Route<T>[`run`],
-  successBody: Route<T>[`successBody`],
-  extra?: Partial<Route<T>>,
-): Route<T> => route(`post`, path, run, successBody, extra);
+const withMethod =
+  (method: `get` | `post`) =>
+  <T = unknown>(
+    path: string,
+    run: Route<T>[`run`],
+    successBody: Route<T>[`successBody`],
+    extra?: Partial<Route<T>>,
+  ): Route<T> =>
+    route(method, path, run, successBody, extra);
 
-const get = <T = unknown>(
-  path: string,
-  run: Route<T>[`run`],
-  successBody: Route<T>[`successBody`],
-  extra?: Partial<Route<T>>,
-): Route<T> => route(`get`, path, run, successBody, extra);
+const post = withMethod(`post`);
+const get = withMethod(`get`);
 
 export const Routes = [
   post(
