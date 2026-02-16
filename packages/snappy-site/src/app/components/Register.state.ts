@@ -1,5 +1,4 @@
 import { type SyntheticEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
 import { t } from "../core/Locale";
@@ -10,14 +9,13 @@ import {
   passwordStrength,
   passwordValid,
 } from "../core/Password";
-import { useAsyncSubmit } from "../hooks";
-import { $loggedIn } from "../Store";
+import { useAsyncSubmit, useRunAfterAuth } from "../hooks";
 
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `registerPage.errorNetwork` });
-  const navigate = useNavigate();
+  const runAfterAuth = useRunAfterAuth(wrapSubmit);
   const strength = passwordStrength(password);
 
   const requirements = [
@@ -45,10 +43,8 @@ export const useRegisterState = () => {
 
       return;
     }
-    void wrapSubmit(async () => {
+    runAfterAuth(async () => {
       await api.register(email.trim(), password);
-      $loggedIn.set(true);
-      void navigate(`/`, { replace: true, viewTransition: true });
     });
   };
 
