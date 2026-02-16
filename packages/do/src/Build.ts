@@ -107,4 +107,4 @@ const build = async (root: string, options: { capture?: true } = {}): Promise<nu
   return 0;
 };
 
-export const Build = { build, buildSite };
+export const Build = { build };

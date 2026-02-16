@@ -221,4 +221,4 @@ const formatCommandsHelp = (): string =>
     .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
     .join(`\n`);
 
-export const Runner = { formatCommandsHelp, resolve, run, tree };
+export const Runner = { formatCommandsHelp, resolve, run };
