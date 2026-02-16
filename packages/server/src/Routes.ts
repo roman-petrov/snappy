@@ -48,51 +48,58 @@ const withUserIdAndBody =
 
 const body = <T>(request: Request): T => (request.body ?? {}) as T;
 
+const post = <T = unknown>(
+  path: string,
+  run: Route<T>[`run`],
+  successBody: Route<T>[`successBody`],
+  extra?: Partial<Route<T>>,
+): Route<T> => ({ method: `post`, path, run, successBody, ...extra });
+
+const get = <T = unknown>(
+  path: string,
+  run: Route<T>[`run`],
+  successBody: Route<T>[`successBody`],
+  extra?: Partial<Route<T>>,
+): Route<T> => ({ method: `get`, path, run, successBody, ...extra });
+
 export const Routes = [
-  {
-    method: `post`,
-    path: Endpoints.auth.register,
-    run: withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
-    successBody: (r: { token: string }) => ({ token: r.token }),
-    successStatus: HttpStatus.created,
-  },
-  {
-    method: `post`,
-    path: Endpoints.auth.login,
-    run: withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
-    successBody: (r: { token: string }) => ({ token: r.token }),
-  },
-  {
-    method: `post`,
-    path: Endpoints.auth.forgotPassword,
-    run: withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
-    successBody: (r: { ok: true; resetToken?: string }) => r,
-  },
-  {
-    method: `post`,
-    path: Endpoints.auth.resetPassword,
-    run: withBody(async (api, b) => api.auth.resetPassword(b), body<ApiResetPasswordBody>),
-    successBody: (r: { ok: true }) => r,
-  },
-  {
-    auth: true,
-    method: `get`,
-    path: Endpoints.user.remaining,
-    run: withUserId(async (api, id) => api.user.remaining(id)),
-    successBody: (remaining: number) => ({ remaining }),
-  },
-  {
-    auth: true,
-    method: `post`,
-    path: Endpoints.process,
-    run: withUserIdAndBody(async (api, id, b) => api.process(id, b), body<ApiProcessBody>),
-    successBody: (r: { text: string }) => ({ text: r.text }),
-  },
-  {
-    auth: true,
-    method: `post`,
-    path: Endpoints.premium.paymentUrl,
-    run: withUserId(async (api, id) => api.premium.paymentUrl(id)),
-    successBody: (r: { url: string }) => ({ url: r.url }),
-  },
+  post(
+    Endpoints.auth.register,
+    withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
+    (r: { token: string }) => ({ token: r.token }),
+    { successStatus: HttpStatus.created },
+  ),
+  post(
+    Endpoints.auth.login,
+    withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
+    (r: { token: string }) => ({ token: r.token }),
+  ),
+  post(
+    Endpoints.auth.forgotPassword,
+    withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
+    (r: { ok: true; resetToken?: string }) => r,
+  ),
+  post(
+    Endpoints.auth.resetPassword,
+    withBody(async (api, b) => api.auth.resetPassword(b), body<ApiResetPasswordBody>),
+    (r: { ok: true }) => r,
+  ),
+  get(
+    Endpoints.user.remaining,
+    withUserId(async (api, id) => api.user.remaining(id)),
+    (remaining: number) => ({ remaining }),
+    { auth: true },
+  ),
+  post(
+    Endpoints.process,
+    withUserIdAndBody(async (api, id, b) => api.process(id, b), body<ApiProcessBody>),
+    (r: { text: string }) => ({ text: r.text }),
+    { auth: true },
+  ),
+  post(
+    Endpoints.premium.paymentUrl,
+    withUserId(async (api, id) => api.premium.paymentUrl(id)),
+    (r: { url: string }) => ({ url: r.url }),
+    { auth: true },
+  ),
 ] as Route[];
