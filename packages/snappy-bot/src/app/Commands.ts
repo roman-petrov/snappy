@@ -9,7 +9,8 @@ import { Locale, t } from "./Locale";
 const register = (bot: Bot, premiumPrice: number, snappyVersion: string | undefined, api: ServerApi) => {
   bot.command(`start`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const { remaining: remainingCount } = await api.remaining(context.from.id);
+    const remainingResult = await api.remaining(context.from.id);
+    const remainingCount = remainingResult.remaining;
 
     await context.send(t(localeKey, `commands.start.welcome`));
     await context.send(t(localeKey, `commands.start.help`, { count: remainingCount }));
@@ -29,7 +30,8 @@ const register = (bot: Bot, premiumPrice: number, snappyVersion: string | undefi
 
   bot.command(`balance`, async context => {
     const localeKey = Locale.userLanguage(context.from.languageCode);
-    const { remaining: remainingCount } = await api.remaining(context.from.id);
+    const remainingResult = await api.remaining(context.from.id);
+    const remainingCount = remainingResult.remaining;
     const premiumStatus = t(localeKey, `commands.balance.inactive`);
 
     await context.send(t(localeKey, `commands.balance.free`, { count: remainingCount, status: premiumStatus }));

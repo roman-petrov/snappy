@@ -22,14 +22,14 @@ export const useResetPasswordState = () => {
       return;
     }
     setLoading(true);
-    try {
-      await api.resetPassword(token, password);
-      setDone(true);
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : t(`resetPage.errorNetwork`));
-    } finally {
-      setLoading(false);
+    const result = await api.resetPassword(token, password);
+    setLoading(false);
+    if (result.status !== `ok`) {
+      setError(t(`resetPage.errors.${result.status}`));
+
+      return;
     }
+    setDone(true);
   };
 
   return {

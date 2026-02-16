@@ -14,14 +14,11 @@ export const useDashboardState = () => {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    api
-      .remaining(``)
-      .then(({ remaining: count }) => {
-        setRemaining(count);
+    void (async () => {
+      const response = await api.remaining(``);
 
-        return undefined;
-      })
-      .catch(() => undefined);
+      setRemaining(response.remaining);
+    })();
   }, []);
 
   const processText = async (event: { preventDefault: () => void }) => {
@@ -32,26 +29,24 @@ export const useDashboardState = () => {
       return;
     }
     setLoading(true);
-    try {
-      const { text: processed } = await api.process(``, text.trim(), feature);
-      setResult(processed);
-      setCopied(false);
-      if (remaining !== undefined) {
-        setRemaining(remaining - 1);
-      }
-    } catch (error_) {
-      setError(error_ instanceof Error ? error_.message : t(`dashboard.errorNetwork`));
-    } finally {
-      setLoading(false);
+    const processResult = await api.process(``, text.trim(), feature);
+    setLoading(false);
+    if (processResult.status !== `ok`) {
+      setError(t(`dashboard.errors.${processResult.status}`));
+
+      return;
+    }
+    setResult(processResult.text);
+    setCopied(false);
+    if (remaining !== undefined) {
+      setRemaining(remaining - 1);
     }
   };
 
   const openPremium = async () => {
-    try {
-      const { url } = await api.premiumUrl(``);
-      window.open(url, `_blank`);
-    } catch {
-      //
+    const response = await api.premiumUrl(``);
+    if (response.status === `ok`) {
+      window.open(response.url, `_blank`);
     }
   };
 

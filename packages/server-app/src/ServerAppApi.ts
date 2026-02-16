@@ -4,18 +4,18 @@
 import type { Database } from "@snappy/db";
 import type {
   ApiAuthBody,
-  ApiAuthSuccessInternal,
-  ApiError,
   ApiForgotPasswordBody,
   ApiForgotPasswordResult,
+  ApiLoginResult,
   ApiPaymentUrlResultUnion,
   ApiProcessResultUnion,
+  ApiRegisterResult,
   ApiResetPasswordBody,
   ApiResetPasswordResult,
 } from "@snappy/server-api";
 import type { YooKassa } from "@snappy/yoo-kassa";
 
-import { _, HttpStatus, Time } from "@snappy/core";
+import { _, Time } from "@snappy/core";
 import { type FeatureType, Prompts, type Snappy } from "@snappy/snappy";
 
 import { Jwt } from "./Jwt";
@@ -65,10 +65,10 @@ export const ServerAppApi = ({
         : Math.max(0, freeRequestLimit - settings.requestCount);
   };
 
-  const jwtUnavailable = (): ApiError | undefined =>
-    jwtSecret === `` ? { error: `JWT_SECRET not configured`, status: HttpStatus.serviceUnavailable } : undefined;
+  const jwtUnavailable = (): undefined | { status: `jwtUnavailable` } =>
+    jwtSecret === `` ? { status: `jwtUnavailable` } : undefined;
 
-  const withJwtGuard = async <T>(fn: () => Promise<ApiError | T>): Promise<ApiError | T> => {
+  const withJwtGuard = async <R>(fn: () => Promise<R>): Promise<R | { status: `jwtUnavailable` }> => {
     const error = jwtUnavailable();
 
     return error ?? fn();
@@ -76,16 +76,19 @@ export const ServerAppApi = ({
 
   const signToken = (userId: number) => Jwt.sign(userId, jwtSecret);
 
-  const register = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> =>
+  const register = async (body: ApiAuthBody): Promise<ApiRegisterResult> =>
     withJwtGuard(async () => {
       const { email, password } = body;
-      if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
-        return { error: `Invalid email or password (min 8 chars, letters and digits)`, status: HttpStatus.badRequest };
+      if (!_.isString(email) || email.trim() === `` || !_.isString(password)) {
+        return { status: `emailInvalidOrMissing` };
+      }
+      if (!passwordValid(password)) {
+        return { status: `passwordInvalid` };
       }
       const normalized = normalizeEmail(email);
       const existing = await db.user.findUnique({ where: { email: normalized } });
       if (existing !== null) {
-        return { error: `Email already registered`, status: HttpStatus.conflict };
+        return { status: `emailAlreadyRegistered` };
       }
       const hash = await Password.hash(password);
       const user = await db.user.create({ data: { email: normalized, passwordHash: hash } });
@@ -93,20 +96,20 @@ export const ServerAppApi = ({
       return { token: signToken(user.id) };
     });
 
-  const login = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> =>
+  const login = async (body: ApiAuthBody): Promise<ApiLoginResult> =>
     withJwtGuard(async () => {
       const { email, password } = body;
       if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
-        return { error: `Invalid email or password`, status: HttpStatus.badRequest };
+        return { status: `emailInvalidOrMissing` };
       }
       const normalized = normalizeEmail(email);
       const user = await db.user.findUnique({ where: { email: normalized } });
       if (user?.passwordHash === null || user === null) {
-        return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
+        return { status: `invalidCredentials` };
       }
       const ok = await Password.verify(password, user.passwordHash);
       if (!ok) {
-        return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
+        return { status: `invalidCredentials` };
       }
 
       return { token: signToken(user.id) };
@@ -115,13 +118,13 @@ export const ServerAppApi = ({
   const forgotPassword = async (body: ApiForgotPasswordBody): Promise<ApiForgotPasswordResult> => {
     const { email } = body;
     if (!_.isString(email) || email.trim() === ``) {
-      return { error: `Email required`, status: HttpStatus.badRequest };
+      return { status: `emailRequired` };
     }
 
     const normalized = normalizeEmail(email);
     const user = await db.user.findUnique({ where: { email: normalized } });
     if (user === null) {
-      return { ok: true };
+      return { status: `ok` };
     }
 
     const resetToken = crypto.randomUUID();
@@ -129,34 +132,31 @@ export const ServerAppApi = ({
     const { id } = user;
     await db.user.update({ data: { resetToken, resetTokenExpires }, where: { id } });
 
-    return { ok: true, resetToken };
+    return { resetToken, status: `ok` };
   };
 
   const resetPassword = async (body: ApiResetPasswordBody): Promise<ApiResetPasswordResult> => {
     const { newPassword, token } = body;
     if (!_.isString(token) || token === `` || !_.isString(newPassword) || !passwordValid(newPassword)) {
-      return {
-        error: `Token and new password (min 8 chars, letters and digits) required`,
-        status: HttpStatus.badRequest,
-      };
+      return { status: `tokenAndPasswordRequired` };
     }
 
     const user = await db.user.findFirst({ where: { resetToken: token, resetTokenExpires: { gt: new Date() } } });
     if (user === null) {
-      return { error: `Invalid or expired token`, status: HttpStatus.badRequest };
+      return { status: `invalidOrExpiredToken` };
     }
 
     const hash = await Password.hash(newPassword);
     const { id } = user;
     await db.user.update({ data: { passwordHash: hash, resetToken: null, resetTokenExpires: null }, where: { id } });
 
-    return { ok: true };
+    return { status: `ok` };
   };
 
   const process = async (userId: number, body: { feature?: string; text?: string }): Promise<ApiProcessResultUnion> => {
     const { feature, text } = body;
     if (!_.isString(text) || text.trim() === `` || !_.isString(feature) || !isFeatureType(feature)) {
-      return { error: `text and feature required; feature must be valid`, status: HttpStatus.badRequest };
+      return { status: `textAndFeatureRequired` };
     }
 
     const settings = await db.snappySettings.upsert({
@@ -170,7 +170,7 @@ export const ServerAppApi = ({
       await db.snappySettings.update({ data: resetData(), ...byUserId(userId) });
     }
     if (!reset && settings.requestCount >= freeRequestLimit) {
-      return { error: `Request limit reached`, status: HttpStatus.tooManyRequests };
+      return { status: `requestLimitReached` };
     }
 
     try {
@@ -181,9 +181,9 @@ export const ServerAppApi = ({
         ...byUserId(userId),
       });
 
-      return { text: value };
+      return { status: `ok`, text: value };
     } catch {
-      return { error: `Processing failed`, status: HttpStatus.internalServerError };
+      return { status: `processingFailed` };
     }
   };
 
@@ -191,9 +191,9 @@ export const ServerAppApi = ({
     try {
       const url = await yooKassa.paymentUrl(userId, premiumPrice, `Snappy Bot - Premium подписка (30 дней)`);
 
-      return { url };
+      return { status: `ok`, url };
     } catch {
-      return { error: `Payment error`, status: HttpStatus.internalServerError };
+      return { status: `paymentError` };
     }
   };
 

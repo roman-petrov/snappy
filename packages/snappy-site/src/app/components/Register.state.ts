@@ -6,8 +6,8 @@ import { useAsyncSubmit, useRunAfterAuth } from "../hooks";
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
-  const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `registerPage.errorNetwork` });
-  const runAfterAuth = useRunAfterAuth(wrapSubmit);
+  const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
+  const runAfterAuth = useRunAfterAuth(wrapSubmit, setError, t, `registerPage`);
   const strengthValue = Password.strength(password);
 
   const requirements = [
@@ -37,9 +37,7 @@ export const useRegisterState = () => {
 
       return;
     }
-    runAfterAuth(async () => {
-      await api.register(email.trim(), password);
-    });
+    runAfterAuth(async () => api.register(email.trim(), password));
   };
 
   const onGeneratePassword = () => setPassword(Password.generate());

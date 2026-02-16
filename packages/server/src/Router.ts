@@ -8,15 +8,19 @@ import { _, HttpStatus } from "@snappy/core";
 import { AuthCookie } from "./AuthCookie";
 import { Middleware } from "./Middleware";
 
+const genericStatusToHttp: Record<string, number> = {
+  jwtUnavailable: HttpStatus.serviceUnavailable,
+  unauthorized: HttpStatus.unauthorized,
+};
+
 export type Route<TSuccess = unknown> = {
   auth?: boolean;
   clearAuthCookie?: boolean;
   method: `get` | `post`;
   path: string;
-  run: (api: ServerAppApi, request: Request) => Promise<TSuccess | { error: string; status: number }>;
+  run: (api: ServerAppApi, request: Request) => Promise<TSuccess | { status: string }>;
   setAuthCookie?: boolean;
   successBody: (result: TSuccess) => object;
-  successStatus?: HttpStatus;
 };
 
 type BindOptions = { api: ServerAppApi; botApiKey: string; routes: Route[] };
@@ -25,14 +29,14 @@ const bind = (app: Express, { api, botApiKey, routes }: BindOptions) => {
   for (const route of routes) {
     const handler = async (request: Request, response: Response): Promise<void> => {
       const result = await route.run(api, request);
-      if (
-        _.isObject(result) &&
-        `error` in result &&
-        `status` in result &&
-        _.isString(result.error) &&
-        _.isNumber(result.status)
-      ) {
-        response.status(result.status).json({ error: result.error });
+      if (_.isObject(result) && `status` in result && _.isString(result.status) && result.status !== `ok`) {
+        const httpStatus = genericStatusToHttp[result.status];
+        if (httpStatus !== undefined) {
+          response.status(httpStatus).json({ status: result.status });
+
+          return;
+        }
+        response.status(HttpStatus.ok).json({ status: result.status });
 
         return;
       }
@@ -44,11 +48,15 @@ const bind = (app: Express, { api, botApiKey, routes }: BindOptions) => {
       if (route.clearAuthCookie === true) {
         response.clearCookie(AuthCookie.name);
       }
-      response.status(route.successStatus ?? HttpStatus.ok).json(route.successBody(result));
+      response.status(HttpStatus.ok).json(route.successBody(result));
     };
 
     const middlewares = route.auth === true ? [Middleware.requireUser(api, botApiKey)] : [];
-    (route.method === `get` ? app.get : app.post)(route.path, ...middlewares, handler);
+    if (route.method === `get`) {
+      app.get(route.path, ...middlewares, handler);
+    } else {
+      app.post(route.path, ...middlewares, handler);
+    }
   }
 };
 

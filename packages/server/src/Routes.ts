@@ -4,7 +4,6 @@
 import type { ServerAppApi } from "@snappy/server-app";
 import type { Request } from "express";
 
-import { HttpStatus } from "@snappy/core";
 import {
   type ApiAuthBody,
   type ApiForgotPasswordBody,
@@ -21,7 +20,7 @@ const getUserId = (request: Request): number | undefined => (request as RequestW
 
 const withBody =
   <TBody, TSuccess>(
-    run: (api: ServerAppApi, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
+    run: (api: ServerAppApi, body: TBody) => Promise<TSuccess | { status: string }>,
     bodyFromRequest: (request: Request) => TBody,
   ) =>
   async (api: ServerAppApi, request: Request) =>
@@ -33,17 +32,17 @@ const withUserIdRequired =
       api: ServerAppApi,
       userId: number,
       request: Request,
-    ) => Promise<TSuccess | { error: string; status: number }>,
+    ) => Promise<TSuccess | { status: string }>,
   ) =>
-  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> =>
+  async (api: ServerAppApi, request: Request): Promise<TSuccess | { status: string }> =>
     runWithId(api, getUserId(request) ?? 0, request);
 
 const withUserId = <TSuccess>(
-  run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { error: string; status: number }>,
+  run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { status: string }>,
 ) => withUserIdRequired(run);
 
 const withUserIdAndBody = <TBody, TSuccess>(
-  run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
+  run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { status: string }>,
   bodyFromRequest: (request: Request) => TBody,
 ) => withUserIdRequired(async (api, id, request) => run(api, id, bodyFromRequest(request)));
 
@@ -74,53 +73,53 @@ export const Routes = [
   post(
     Endpoints.auth.register,
     withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
-    () => ({ ok: true }) as const,
-    { setAuthCookie: true, successStatus: HttpStatus.created },
+    () => ({ status: `ok` as const }),
+    { setAuthCookie: true },
   ),
   post(
     Endpoints.auth.login,
     withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
-    () => ({ ok: true }) as const,
+    () => ({ status: `ok` as const }),
     { setAuthCookie: true },
   ),
   post(
     Endpoints.auth.logout,
-    async () => ({ ok: true }) as const,
-    (r: { ok: true }) => r,
+    async () => ({ status: `ok` as const }),
+    (r: { status: `ok` }) => r,
     { clearAuthCookie: true },
   ),
   get(
     Endpoints.auth.me,
-    async () => ({ ok: true }) as const,
-    (r: { ok: true }) => r,
+    async () => ({ status: `ok` as const }),
+    (r: { status: `ok` }) => r,
     { auth: true },
   ),
   post(
     Endpoints.auth.forgotPassword,
     withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
-    (r: { ok: true; resetToken?: string }) => r,
+    (r: { resetToken?: string; status: `ok`; }) => r,
   ),
   post(
     Endpoints.auth.resetPassword,
     withBody(async (api, b) => api.auth.resetPassword(b), body<ApiResetPasswordBody>),
-    (r: { ok: true }) => r,
+    () => ({ status: `ok` as const }),
   ),
   get(
     Endpoints.user.remaining,
     withUserId(async (api, id) => api.user.remaining(id)),
-    (remaining: number) => ({ remaining }),
+    (remaining: number) => ({ remaining, status: `ok` as const }),
     { auth: true },
   ),
   post(
     Endpoints.process,
     withUserIdAndBody(async (api, id, b) => api.process(id, b), body<ApiProcessBody>),
-    (r: { text: string }) => ({ text: r.text }),
+    (r: { text: string }) => ({ status: `ok` as const, text: r.text }),
     { auth: true },
   ),
   post(
     Endpoints.premium.paymentUrl,
     withUserId(async (api, id) => api.premium.paymentUrl(id)),
-    (r: { url: string }) => ({ url: r.url }),
+    (r: { url: string }) => ({ status: `ok` as const, url: r.url }),
     { auth: true },
   ),
 ] as Route[];

@@ -1,6 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-try-statements */
+
 import type { ServerApi } from "@snappy/server-api";
 import type { Bot } from "gramio";
 
@@ -24,15 +23,11 @@ const register = (bot: Bot, config: CallbacksConfig) => {
     }
 
     if (data === `premium:buy`) {
-      try {
-        const { url } = await config.api.premiumUrl(telegramId);
-        await context.answerCallbackQuery();
-        await context.send(`💳 ${url}`);
-      } catch (error) {
-        console.error(`Payment error:`, error);
-        await context.answerCallbackQuery();
-        await context.send(t(localeKey, `commands.premium.error`));
-      }
+      await context.answerCallbackQuery();
+      const premiumResult = await config.api.premiumUrl(telegramId);
+      await (premiumResult.status === `ok`
+        ? context.send(`💳 ${premiumResult.url}`)
+        : context.send(t(localeKey, `commands.premium.error`)));
 
       return;
     }
@@ -41,7 +36,8 @@ const register = (bot: Bot, config: CallbacksConfig) => {
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      if ((await config.api.remaining(telegramId)).remaining <= 0) {
+      const remainingResult = await config.api.remaining(telegramId);
+      if (remainingResult.remaining <= 0) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
@@ -56,14 +52,11 @@ const register = (bot: Bot, config: CallbacksConfig) => {
 
       await context.send(t(localeKey, `features.processing`));
 
-      try {
-        const { text: processedText } = await config.api.process(telegramId, text, feature);
-
-        await context.send(t(localeKey, `features.result`, { text: processedText }));
-
+      const processResult = await config.api.process(telegramId, text, feature);
+      if (processResult.status === `ok`) {
+        await context.send(t(localeKey, `features.result`, { text: processResult.text }));
         config.userTexts.clear(telegramId);
-      } catch (error) {
-        console.error(`GigaChat processing error:`, error);
+      } else {
         await context.send(t(localeKey, `features.error`));
       }
 

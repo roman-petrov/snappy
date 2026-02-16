@@ -55,7 +55,7 @@ const requireUser =
     }
 
     if (!tryBot()) {
-      response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
+      response.status(HttpStatus.unauthorized).json({ status: `unauthorized` });
 
       return;
     }
