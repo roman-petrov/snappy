@@ -15,60 +15,59 @@ type Config = { auth: Auth; baseUrl: string };
 
 type JwtAuth = { type: `jwt` };
 
-const jsonHeaders = { "Content-Type": `application/json` };
-const bearerHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
-const botHeader = (apiKey: string) => ({ "Content-Type": `application/json`, "X-Bot-Api-Key": apiKey });
-
-const handleResponse = async <T>(response: Response, parse: (data: Record<string, unknown>) => T): Promise<T> => {
-  const data = (await response.json().catch(() => ({}))) as Record<string, unknown> & { error?: string };
-
-  if (!response.ok) {
-    throw new Error(data.error ?? `Request failed`);
-  }
-
-  return parse(data);
-};
-
-const request = async <T>(url: string, init: RequestInit, parse: (data: Record<string, unknown>) => T): Promise<T> =>
-  handleResponse(await fetch(url, init), parse);
-
-const postJson = async <T>(
-  url: string,
-  body: Record<string, unknown>,
-  parse: (data: Record<string, unknown>) => T,
-): Promise<T> => request(url, { body: JSON.stringify(body), headers: jsonHeaders, method: `POST` }, parse);
-
-const parseOk = (): ApiOkResult => ({ ok: true });
-
-const parseToken = (data: Record<string, unknown>): ApiAuthResult => {
-  const token = data[`token`];
-  if (!_.isString(token)) {
-    throw new TypeError(`Invalid response`);
-  }
-
-  return { token };
-};
-
-const parseUrl = (data: Record<string, unknown>): ApiPaymentUrlResult => {
-  const url = data[`url`];
-  if (!_.isString(url)) {
-    throw new TypeError(`Invalid response`);
-  }
-
-  return { url };
-};
-
-const parseText = (data: Record<string, unknown>): ApiProcessResult => ({
-  text: _.isString(data[`text`]) ? data[`text`] : ``,
-});
-
-const parseRemaining = (data: Record<string, unknown>): ApiRemainingResult => ({
-  remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0,
-});
-
 export const ServerApi = (config: Config) => {
   const { auth, baseUrl } = config;
   const base = baseUrl.replace(/\/$/u, ``);
+  const jsonHeaders = { "Content-Type": `application/json` };
+  const bearerHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
+  const botHeader = (apiKey: string) => ({ "Content-Type": `application/json`, "X-Bot-Api-Key": apiKey });
+
+  const handleResponse = async <T>(response: Response, parse: (data: Record<string, unknown>) => T): Promise<T> => {
+    const data = (await response.json().catch(() => ({}))) as Record<string, unknown> & { error?: string };
+
+    if (!response.ok) {
+      throw new Error(data.error ?? `Request failed`);
+    }
+
+    return parse(data);
+  };
+
+  const request = async <T>(url: string, init: RequestInit, parse: (data: Record<string, unknown>) => T): Promise<T> =>
+    handleResponse(await fetch(url, init), parse);
+
+  const postJson = async <T>(
+    url: string,
+    body: Record<string, unknown>,
+    parse: (data: Record<string, unknown>) => T,
+  ): Promise<T> => request(url, { body: JSON.stringify(body), headers: jsonHeaders, method: `POST` }, parse);
+
+  const parseOk = (): ApiOkResult => ({ ok: true });
+
+  const parseToken = (data: Record<string, unknown>): ApiAuthResult => {
+    const token = data[`token`];
+    if (!_.isString(token)) {
+      throw new TypeError(`Invalid response`);
+    }
+
+    return { token };
+  };
+
+  const parseUrl = (data: Record<string, unknown>): ApiPaymentUrlResult => {
+    const url = data[`url`];
+    if (!_.isString(url)) {
+      throw new TypeError(`Invalid response`);
+    }
+
+    return { url };
+  };
+
+  const parseText = (data: Record<string, unknown>): ApiProcessResult => ({
+    text: _.isString(data[`text`]) ? data[`text`] : ``,
+  });
+
+  const parseRemaining = (data: Record<string, unknown>): ApiRemainingResult => ({
+    remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0,
+  });
 
   const forgotPassword = async (email: string) =>
     postJson(`${base}${Endpoints.auth.forgotPassword}`, { email }, parseOk);
