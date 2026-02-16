@@ -1,31 +1,43 @@
+/* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
+
 import { startApp } from "@snappy/ui";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 
-import { Dashboard } from "./components/Dashboard";
 import { ForgotPassword } from "./components/ForgotPassword";
 import { Layout } from "./components/Layout";
 import { Login } from "./components/Login";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
-import { getToken } from "./core/Auth";
+import { api } from "./core/Api";
+import { $loggedIn } from "./Store";
 
-startApp(
-  document.querySelector(`#app-root`)!,
-  <RouterProvider
-    router={createBrowserRouter(
-      createRoutesFromElements(
-        <Route element={<Layout />} path="/">
-          <Route element={<Login />} path="login" />
-          <Route element={<Register />} path="register" />
-          <Route element={<ForgotPassword />} path="forgot-password" />
-          <Route element={<ResetPassword />} path="reset-password" />
-          <Route element={getToken() === undefined ? <Navigate replace to="/login" /> : <Dashboard />} index />
-          <Route element={<Navigate replace to="/" />} path="*" />
-        </Route>,
-      ),
-      { basename: `/app` },
-    )}
-  />,
-);
+try {
+  await api.checkAuth();
+  $loggedIn.set(true);
+} catch {
+  $loggedIn.set(false);
+}
+
+const root = document.querySelector(`#app-root`);
+if (root instanceof HTMLElement) {
+  startApp(
+    root,
+    <RouterProvider
+      router={createBrowserRouter(
+        createRoutesFromElements(
+          <Route element={<Layout />} path="/">
+            <Route element={<Login />} path="login" />
+            <Route element={<Register />} path="register" />
+            <Route element={<ForgotPassword />} path="forgot-password" />
+            <Route element={<ResetPassword />} path="reset-password" />
+            <Route element={<ProtectedRoute />} index />
+            <Route element={<Navigate replace to="/" />} path="*" />
+          </Route>,
+        ),
+        { basename: `/app` },
+      )}
+    />,
+  );
+}

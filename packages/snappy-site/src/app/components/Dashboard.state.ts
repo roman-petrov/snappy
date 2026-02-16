@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { api } from "../core/Api";
-import { getToken } from "../core/Auth";
 import { defaultFeature, featureEmoji, featureKeys, type FeatureType } from "../core/Features";
 import { t } from "../core/Locale";
 
 const copyFeedbackMs = 2000;
 
 export const useDashboardState = () => {
-  const token = getToken() ?? ``;
   const [remaining, setRemaining] = useState<number | undefined>(undefined);
   const [text, setText] = useState(``);
   const [feature, setFeature] = useState<FeatureType>(defaultFeature);
@@ -19,14 +17,14 @@ export const useDashboardState = () => {
 
   useEffect(() => {
     api
-      .remaining(token)
+      .remaining(``)
       .then(({ remaining: count }) => {
         setRemaining(count);
 
         return undefined;
       })
       .catch(() => undefined);
-  }, [token]);
+  }, []);
 
   const processText = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -37,7 +35,7 @@ export const useDashboardState = () => {
     }
     setLoading(true);
     try {
-      const { text: processed } = await api.process(token, text.trim(), feature);
+      const { text: processed } = await api.process(``, text.trim(), feature);
       setResult(processed);
       setCopied(false);
       if (remaining !== undefined) {
@@ -52,7 +50,7 @@ export const useDashboardState = () => {
 
   const openPremium = async () => {
     try {
-      const { url } = await api.premiumUrl(token);
+      const { url } = await api.premiumUrl(``);
       window.open(url, `_blank`);
     } catch {
       //

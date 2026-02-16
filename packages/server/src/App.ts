@@ -4,7 +4,6 @@ import type { ServerAppApi } from "@snappy/server-app";
 import { HttpStatus } from "@snappy/core";
 import express from "express";
 
-import { Middleware } from "./Middleware";
 import { Router } from "./Router";
 import { Routes } from "./Routes";
 
@@ -18,8 +17,9 @@ const createApp = (options: CreateAppOptions) => {
   if (corsOrigin !== ``) {
     app.use((request, response, next) => {
       response.setHeader(`Access-Control-Allow-Origin`, corsOrigin);
+      response.setHeader(`Access-Control-Allow-Credentials`, `true`);
       response.setHeader(`Access-Control-Allow-Methods`, `GET, POST, OPTIONS`);
-      response.setHeader(`Access-Control-Allow-Headers`, `Content-Type, Authorization`);
+      response.setHeader(`Access-Control-Allow-Headers`, `Content-Type, X-Bot-Api-Key`);
       if (request.method === `OPTIONS`) {
         response.sendStatus(HttpStatus.noContent);
 
@@ -30,7 +30,8 @@ const createApp = (options: CreateAppOptions) => {
   }
 
   app.use(express.json());
-  Router.bind(app, api, botApiKey, Routes, Middleware.requireUser);
+
+  Router.bind(app, { api, botApiKey, routes: Routes });
 
   return app;
 };

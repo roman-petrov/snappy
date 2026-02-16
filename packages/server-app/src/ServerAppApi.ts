@@ -4,12 +4,12 @@
 import type { Database } from "@snappy/db";
 import type {
   ApiAuthBody,
+  ApiAuthSuccessInternal,
+  ApiError,
   ApiForgotPasswordBody,
   ApiForgotPasswordResult,
-  ApiLoginResult,
   ApiPaymentUrlResultUnion,
   ApiProcessResultUnion,
-  ApiRegisterResult,
   ApiResetPasswordBody,
   ApiResetPasswordResult,
 } from "@snappy/server-api";
@@ -65,10 +65,10 @@ export const ServerAppApi = ({
         : Math.max(0, freeRequestLimit - settings.requestCount);
   };
 
-  const jwtUnavailable = (): ApiRegisterResult | undefined =>
+  const jwtUnavailable = (): ApiError | undefined =>
     jwtSecret === `` ? { error: `JWT_SECRET not configured`, status: HttpStatus.serviceUnavailable } : undefined;
 
-  const register = async (body: ApiAuthBody): Promise<ApiRegisterResult> => {
+  const register = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> => {
     const unavailable = jwtUnavailable();
     if (unavailable !== undefined) {
       return unavailable;
@@ -92,7 +92,7 @@ export const ServerAppApi = ({
     return { token };
   };
 
-  const login = async (body: ApiAuthBody): Promise<ApiLoginResult> => {
+  const login = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> => {
     const unavailable = jwtUnavailable();
     if (unavailable !== undefined) {
       return unavailable;

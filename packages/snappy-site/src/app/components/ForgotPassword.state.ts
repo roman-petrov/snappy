@@ -1,7 +1,7 @@
 import { type SyntheticEvent, useState } from "react";
 
 import { api } from "../core/Api";
-import { useAsyncSubmit } from "../core/hooks";
+import { useAsyncSubmit } from "../hooks";
 
 export const useForgotPasswordState = () => {
   const [email, setEmail] = useState(``);

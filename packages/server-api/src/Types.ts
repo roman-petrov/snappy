@@ -1,6 +1,6 @@
 export type ApiAuthBody = { email?: string; password?: string };
 
-export type ApiAuthResult = { token: string };
+export type ApiAuthSuccessInternal = { token: string };
 
 export type ApiBotBody = { telegramId?: number };
 
@@ -9,8 +9,6 @@ export type ApiError = { error: string; status: number };
 export type ApiForgotPasswordBody = { email?: string };
 
 export type ApiForgotPasswordResult = ApiError | { ok: true; resetToken?: string };
-
-export type ApiLoginResult = ApiAuthResult | ApiError;
 
 export type ApiOkResult = { ok: true };
 
@@ -24,7 +22,7 @@ export type ApiProcessResult = { text: string };
 
 export type ApiProcessResultUnion = ApiError | ApiProcessResult;
 
-export type ApiRegisterResult = ApiAuthResult | ApiError;
+export type ApiRegisterResult = ApiError | ApiOkResult;
 
 export type ApiRemainingResult = { remaining: number };
 

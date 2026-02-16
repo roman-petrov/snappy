@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { t } from "../Locale";
+import { t } from "../core/Locale";
 
 export type UseAsyncSubmitOptions = { errorKey: string };
 

@@ -1,36 +1,91 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { _ } from "./_";
+import { noop } from "./Noop";
 
-describe(`_.base64decode`, () => {
+const { base64decode, camelCase, list, singleAction } = _;
+
+describe(`base64decode`, () => {
   test(`decodes base64 to UTF-8 string`, () => {
-    expect(_.base64decode(`SGVsbG8gd29ybGQ=`)).toBe(`Hello world`);
+    expect(base64decode(`SGVsbG8gd29ybGQ=`)).toBe(`Hello world`);
   });
 
   test(`decodes empty string`, () => {
-    expect(_.base64decode(``)).toBe(``);
+    expect(base64decode(``)).toBe(``);
   });
 
   test(`decodes UTF-8 multibyte characters`, () => {
-    expect(_.base64decode(`4pyT`)).toBe(`✓`);
+    expect(base64decode(`4pyT`)).toBe(`✓`);
   });
 });
 
-describe(`_.camelCase`, () => {
+describe(`camelCase`, () => {
   test(`converts hyphenated string to camelCase`, () => {
-    expect(_.camelCase(`foo-bar-baz`)).toBe(`fooBarBaz`);
+    expect(camelCase(`foo-bar-baz`)).toBe(`fooBarBaz`);
   });
 
   test(`returns input unchanged when it has no hyphens (already camelCase or single word)`, () => {
-    expect(_.camelCase(`fooBarBaz`)).toBe(`fooBarBaz`);
-    expect(_.camelCase(`word`)).toBe(`word`);
+    expect(camelCase(`fooBarBaz`)).toBe(`fooBarBaz`);
+    expect(camelCase(`word`)).toBe(`word`);
   });
 
   test(`single hyphen: second part becomes capitalized`, () => {
-    expect(_.camelCase(`first-name`)).toBe(`firstName`);
+    expect(camelCase(`first-name`)).toBe(`firstName`);
   });
 
   test(`empty input yields empty string`, () => {
-    expect(_.camelCase(``)).toBe(``);
+    expect(camelCase(``)).toBe(``);
+  });
+});
+
+describe(`list`, () => {
+  test(`initializes with empty array of items`, () => {
+    const { items } = list<object>();
+
+    expect(items()).toHaveLength(0);
+  });
+
+  test(`adds items into items array in correct order`, () => {
+    const { add, items } = list<object>();
+    const item1 = {};
+    const item2 = {};
+    const item3 = {};
+    add(item3);
+    add(item1);
+    add(item2);
+
+    expect(items()).toHaveLength(3);
+    expect(items().indexOf(item3)).toBe(0);
+    expect(items().indexOf(item1)).toBe(1);
+    expect(items().indexOf(item2)).toBe(2);
+  });
+
+  test(`removes items correctly`, () => {
+    const { add, items } = list<object>();
+    const item1 = {};
+    const item2 = {};
+    const item3 = {};
+    add(item3);
+    const removeItem1 = add(item1);
+    add(item2);
+    removeItem1();
+
+    expect(items()).toHaveLength(2);
+    expect(items().indexOf(item3)).toBe(0);
+    expect(items().indexOf(item1)).toBe(-1);
+    expect(items().indexOf(item2)).toBe(1);
+  });
+});
+
+describe(`singleAction`, () => {
+  const action1 = vi.fn(noop);
+  const action2 = vi.fn(noop);
+
+  test(`transforms multiple actions into single action`, () => {
+    const action = singleAction([action1, action2]);
+    action();
+
+    expect(action1).toHaveBeenCalledTimes(1);
+    expect(action2).toHaveBeenCalledTimes(1);
   });
 });

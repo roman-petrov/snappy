@@ -1,10 +1,12 @@
 import type { MouseEvent } from "react";
 
+import { useStoreValue } from "@snappy/store";
 import { Theme } from "@snappy/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { clearToken, getToken } from "../core/Auth";
+import { api } from "../core/Api";
 import { t } from "../core/Locale";
+import { $loggedIn } from "../Store";
 
 type HeaderItem =
   | { label: string; onClick: () => Promise<void>; type: `button` }
@@ -12,17 +14,16 @@ type HeaderItem =
   | { type: `locale` };
 
 export const useLayoutState = () => {
-  const token = getToken();
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuth = token !== undefined;
 
-  const headerItems: HeaderItem[] = isAuth
+  const headerItems: HeaderItem[] = useStoreValue($loggedIn)
     ? [
         {
           label: t(`logout`),
           onClick: async () => {
-            clearToken();
+            await api.logout();
+            $loggedIn.set(false);
             await navigate(`/login`, { replace: true, viewTransition: true });
           },
           type: `button`,

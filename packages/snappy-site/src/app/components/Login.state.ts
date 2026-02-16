@@ -2,8 +2,8 @@ import { type SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
-import { setToken } from "../core/Auth";
-import { useAsyncSubmit } from "../core/hooks";
+import { useAsyncSubmit } from "../hooks";
+import { $loggedIn } from "../Store";
 
 export const useLoginState = () => {
   const [email, setEmail] = useState(``);
@@ -15,8 +15,8 @@ export const useLoginState = () => {
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     void wrapSubmit(async () => {
-      const { token } = await api.login(email.trim(), password);
-      setToken(token, remember);
+      await api.login(email.trim(), password);
+      $loggedIn.set(true);
       void navigate(`/`, { replace: true, viewTransition: true });
     });
   };

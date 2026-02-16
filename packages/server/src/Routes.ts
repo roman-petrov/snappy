@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable functional/prefer-tacit */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { ServerAppApi } from "@snappy/server-app";
@@ -74,13 +75,26 @@ export const Routes = [
   post(
     Endpoints.auth.register,
     withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
-    (r: { token: string }) => ({ token: r.token }),
-    { successStatus: HttpStatus.created },
+    () => ({ ok: true }) as const,
+    { setAuthCookie: true, successStatus: HttpStatus.created },
   ),
   post(
     Endpoints.auth.login,
     withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
-    (r: { token: string }) => ({ token: r.token }),
+    () => ({ ok: true }) as const,
+    { setAuthCookie: true },
+  ),
+  post(
+    Endpoints.auth.logout,
+    async () => ({ ok: true }) as const,
+    (r: { ok: true }) => r,
+    { clearAuthCookie: true },
+  ),
+  get(
+    Endpoints.auth.me,
+    async () => ({ ok: true }) as const,
+    (r: { ok: true }) => r,
+    { auth: true },
   ),
   post(
     Endpoints.auth.forgotPassword,

@@ -7,13 +7,13 @@ import type { Request, Response } from "express";
 
 import { _, HttpStatus } from "@snappy/core";
 
-const bearerPrefix = `Bearer `;
+import { AuthCookie } from "./AuthCookie";
 
 const requireUser =
-  (api: ServerAppApi, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
+  (api: ServerAppApi, botApiKey: string) => async (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
-      const auth = request.headers.authorization;
-      const token = _.isString(auth) && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
+      const token = AuthCookie.token(request.headers.cookie ?? ``);
+
       if (token === undefined) {
         return false;
       }
@@ -60,12 +60,10 @@ const requireUser =
       return;
     }
 
-    void (async () => {
-      const { telegramId } = request as Request & { telegramId: number };
-      const user = await api.ensureUserByTelegramId(telegramId);
-      (request as Request & { userId: number }).userId = user.id;
-      next();
-    })();
+    const { telegramId } = request as Request & { telegramId: number };
+    const user = await api.ensureUserByTelegramId(telegramId);
+    (request as Request & { userId: number }).userId = user.id;
+    next();
   };
 
 export const Middleware = { requireUser };

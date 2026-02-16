@@ -2,8 +2,6 @@ import { type SyntheticEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { api } from "../core/Api";
-import { setToken } from "../core/Auth";
-import { useAsyncSubmit } from "../core/hooks";
 import { t } from "../core/Locale";
 import {
   generatePassword,
@@ -12,6 +10,8 @@ import {
   passwordStrength,
   passwordValid,
 } from "../core/Password";
+import { useAsyncSubmit } from "../hooks";
+import { $loggedIn } from "../Store";
 
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);
@@ -46,8 +46,8 @@ export const useRegisterState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const { token } = await api.register(email.trim(), password);
-      setToken(token);
+      await api.register(email.trim(), password);
+      $loggedIn.set(true);
       void navigate(`/`, { replace: true, viewTransition: true });
     });
   };

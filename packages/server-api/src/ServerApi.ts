@@ -3,7 +3,7 @@
 import { _ } from "@snappy/core";
 
 import type { FeatureType } from "./Features";
-import type { ApiAuthResult, ApiOkResult, ApiPaymentUrlResult, ApiProcessResult, ApiRemainingResult } from "./Types";
+import type { ApiOkResult, ApiPaymentUrlResult, ApiProcessResult, ApiRemainingResult } from "./Types";
 
 import { Endpoints } from "./Endpoints";
 
@@ -19,8 +19,8 @@ export const ServerApi = (config: Config) => {
   const { auth, baseUrl } = config;
   const base = baseUrl.replace(/\/$/u, ``);
   const jsonHeaders = { "Content-Type": `application/json` };
-  const bearerHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
   const botHeader = (apiKey: string) => ({ "Content-Type": `application/json`, "X-Bot-Api-Key": apiKey });
+  const credentials: RequestCredentials = auth.type === `jwt` ? `include` : `same-origin`;
 
   const handleResponse = async <T>(response: Response, parse: (data: Record<string, unknown>) => T): Promise<T> => {
     const data = (await response.json().catch(() => ({}))) as Record<string, unknown> & { error?: string };
@@ -33,7 +33,7 @@ export const ServerApi = (config: Config) => {
   };
 
   const request = async <T>(url: string, init: RequestInit, parse: (data: Record<string, unknown>) => T): Promise<T> =>
-    handleResponse(await fetch(url, init), parse);
+    handleResponse(await fetch(url, { ...init, credentials }), parse);
 
   const postJson = async <T>(
     url: string,
@@ -42,15 +42,6 @@ export const ServerApi = (config: Config) => {
   ): Promise<T> => request(url, { body: JSON.stringify(body), headers: jsonHeaders, method: `POST` }, parse);
 
   const parseOk = (): ApiOkResult => ({ ok: true });
-
-  const parseToken = (data: Record<string, unknown>): ApiAuthResult => {
-    const token = data[`token`];
-    if (!_.isString(token)) {
-      throw new TypeError(`Invalid response`);
-    }
-
-    return { token };
-  };
 
   const parseUrl = (data: Record<string, unknown>): ApiPaymentUrlResult => {
     const url = data[`url`];
@@ -72,22 +63,25 @@ export const ServerApi = (config: Config) => {
   const forgotPassword = async (email: string) =>
     postJson(`${base}${Endpoints.auth.forgotPassword}`, { email }, parseOk);
 
+  const logout = async () => postJson(`${base}${Endpoints.auth.logout}`, {}, parseOk);
+
   const login = async (email: string, password: string) =>
-    postJson(`${base}${Endpoints.auth.login}`, { email, password }, parseToken);
+    postJson(`${base}${Endpoints.auth.login}`, { email, password }, parseOk);
 
   const register = async (email: string, password: string) =>
-    postJson(`${base}${Endpoints.auth.register}`, { email, password }, parseToken);
+    postJson(`${base}${Endpoints.auth.register}`, { email, password }, parseOk);
 
   const resetPassword = async (token: string, newPassword: string) =>
     postJson(`${base}${Endpoints.auth.resetPassword}`, { newPassword, token }, parseOk);
 
+  const checkAuth = async () =>
+    auth.type === `jwt`
+      ? request(`${base}${Endpoints.auth.me}`, { method: `GET` }, parseOk)
+      : Promise.reject(new Error(`Not supported`));
+
   const remaining = async (authParameter: number | string) =>
     auth.type === `jwt`
-      ? request(
-          `${base}${Endpoints.user.remaining}`,
-          { headers: bearerHeader(authParameter as string), method: `GET` },
-          parseRemaining,
-        )
+      ? request(`${base}${Endpoints.user.remaining}`, { method: `GET` }, parseRemaining)
       : request(
           `${base}${Endpoints.user.remaining}?telegramId=${authParameter}`,
           { headers: botHeader(auth.apiKey), method: `GET` },
@@ -98,11 +92,7 @@ export const ServerApi = (config: Config) => {
     auth.type === `jwt`
       ? request(
           `${base}${Endpoints.process}`,
-          {
-            body: JSON.stringify({ feature, text }),
-            headers: { ...jsonHeaders, ...bearerHeader(authParameter as string) },
-            method: `POST`,
-          },
+          { body: JSON.stringify({ feature, text }), headers: jsonHeaders, method: `POST` },
           parseText,
         )
       : request(
@@ -119,11 +109,7 @@ export const ServerApi = (config: Config) => {
     auth.type === `jwt`
       ? request(
           `${base}${Endpoints.premium.paymentUrl}`,
-          {
-            body: JSON.stringify({}),
-            headers: { ...jsonHeaders, ...bearerHeader(authParameter as string) },
-            method: `POST`,
-          },
+          { body: JSON.stringify({}), headers: jsonHeaders, method: `POST` },
           parseUrl,
         )
       : request(
@@ -132,7 +118,7 @@ export const ServerApi = (config: Config) => {
           parseUrl,
         );
 
-  return { forgotPassword, login, premiumUrl, process, register, remaining, resetPassword };
+  return { checkAuth, forgotPassword, login, logout, premiumUrl, process, register, remaining, resetPassword };
 };
 
 export type ServerApi = ReturnType<typeof ServerApi>;
