@@ -68,56 +68,52 @@ export const ServerAppApi = ({
   const jwtUnavailable = (): ApiError | undefined =>
     jwtSecret === `` ? { error: `JWT_SECRET not configured`, status: HttpStatus.serviceUnavailable } : undefined;
 
-  const register = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> => {
-    const unavailable = jwtUnavailable();
-    if (unavailable !== undefined) {
-      return unavailable;
+  const withJwtGuard = async <T>(fn: () => Promise<ApiError | T>): Promise<ApiError | T> => {
+    const error = jwtUnavailable();
+    if (error !== undefined) {
+      return error;
     }
 
-    const { email, password } = body;
-    if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
-      return { error: `Invalid email or password (min 8 chars, letters and digits)`, status: HttpStatus.badRequest };
-    }
-
-    const normalized = normalizeEmail(email);
-    const existing = await db.user.findUnique({ where: { email: normalized } });
-    if (existing !== null) {
-      return { error: `Email already registered`, status: HttpStatus.conflict };
-    }
-
-    const hash = await Password.hash(password);
-    const user = await db.user.create({ data: { email: normalized, passwordHash: hash } });
-    const token = Jwt.sign(user.id, jwtSecret);
-
-    return { token };
+    return fn();
   };
 
-  const login = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> => {
-    const unavailable = jwtUnavailable();
-    if (unavailable !== undefined) {
-      return unavailable;
-    }
+  const signToken = (userId: number) => Jwt.sign(userId, jwtSecret);
 
-    const { email, password } = body;
-    if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
-      return { error: `Invalid email or password`, status: HttpStatus.badRequest };
-    }
+  const register = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> =>
+    withJwtGuard(async () => {
+      const { email, password } = body;
+      if (!_.isString(email) || email.trim() === `` || !_.isString(password) || !passwordValid(password)) {
+        return { error: `Invalid email or password (min 8 chars, letters and digits)`, status: HttpStatus.badRequest };
+      }
+      const normalized = normalizeEmail(email);
+      const existing = await db.user.findUnique({ where: { email: normalized } });
+      if (existing !== null) {
+        return { error: `Email already registered`, status: HttpStatus.conflict };
+      }
+      const hash = await Password.hash(password);
+      const user = await db.user.create({ data: { email: normalized, passwordHash: hash } });
 
-    const normalized = normalizeEmail(email);
-    const user = await db.user.findUnique({ where: { email: normalized } });
-    if (user?.passwordHash === null || user === null) {
-      return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
-    }
+      return { token: signToken(user.id) };
+    });
 
-    const ok = await Password.verify(password, user.passwordHash);
-    if (!ok) {
-      return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
-    }
+  const login = async (body: ApiAuthBody): Promise<ApiAuthSuccessInternal | ApiError> =>
+    withJwtGuard(async () => {
+      const { email, password } = body;
+      if (!_.isString(email) || email.trim() === `` || !_.isString(password) || password === ``) {
+        return { error: `Invalid email or password`, status: HttpStatus.badRequest };
+      }
+      const normalized = normalizeEmail(email);
+      const user = await db.user.findUnique({ where: { email: normalized } });
+      if (user?.passwordHash === null || user === null) {
+        return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
+      }
+      const ok = await Password.verify(password, user.passwordHash);
+      if (!ok) {
+        return { error: `Invalid credentials`, status: HttpStatus.unauthorized };
+      }
 
-    const token = Jwt.sign(user.id, jwtSecret);
-
-    return { token };
-  };
+      return { token: signToken(user.id) };
+    });
 
   const forgotPassword = async (body: ApiForgotPasswordBody): Promise<ApiForgotPasswordResult> => {
     const { email } = body;
