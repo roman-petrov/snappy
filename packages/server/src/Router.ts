@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 import type { ServerAppApi } from "@snappy/server-app";
-import type { Request, Response } from "express";
+import type { Express, Request, Response } from "express";
 
 import { HttpStatus } from "@snappy/core";
 
@@ -73,7 +73,7 @@ const createHandler =
   };
 
 const bind = (
-  app: ReturnType<typeof import("express")>,
+  app: Express,
   api: ServerAppApi,
   botApiKey: string,
   routes: Route[],
@@ -90,12 +90,11 @@ const bind = (
 
     const handler = createHandler(route)(api);
 
-    (
-      app as {
-        get: (path: string, ...handlers: unknown[]) => void;
-        post: (path: string, ...handlers: unknown[]) => void;
-      }
-    )[route.method](route.path, ...middlewares, handler);
+    if (route.method === `get`) {
+      app.get(route.path, ...middlewares, handler);
+    } else {
+      app.post(route.path, ...middlewares, handler);
+    }
   }
 };
 
