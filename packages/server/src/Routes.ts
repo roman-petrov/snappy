@@ -25,42 +25,49 @@ const withBody =
   async (api: ServerAppApi, request: Request) =>
     run(api, bodyFromRequest(request));
 
-const withUserId =
-  <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { error: string; status: number }>) =>
-  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> => {
-    const id = getUserId(request);
-
-    return id === undefined ? { error: `Unauthorized`, status: HttpStatus.unauthorized } : run(api, id);
-  };
-
-const withUserIdAndBody =
-  <TBody, TSuccess>(
-    run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
-    bodyFromRequest: (request: Request) => TBody,
+const withUserIdRequired =
+  <TSuccess>(
+    runWithId: (
+      api: ServerAppApi,
+      userId: number,
+      request: Request,
+    ) => Promise<TSuccess | { error: string; status: number }>,
   ) =>
-  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> => {
-    const id = getUserId(request);
+  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> =>
+    runWithId(api, getUserId(request) ?? 0, request);
 
-    return id === undefined
-      ? { error: `Unauthorized`, status: HttpStatus.unauthorized }
-      : run(api, id, bodyFromRequest(request));
-  };
+const withUserId = <TSuccess>(
+  run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { error: string; status: number }>,
+) => withUserIdRequired(run);
+
+const withUserIdAndBody = <TBody, TSuccess>(
+  run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
+  bodyFromRequest: (request: Request) => TBody,
+) => withUserIdRequired(async (api, id, request) => run(api, id, bodyFromRequest(request)));
 
 const body = <T>(request: Request): T => (request.body ?? {}) as T;
+
+const route = <T = unknown>(
+  method: `get` | `post`,
+  path: string,
+  run: Route<T>[`run`],
+  successBody: Route<T>[`successBody`],
+  extra?: Partial<Route<T>>,
+): Route<T> => ({ method, path, run, successBody, ...extra });
 
 const post = <T = unknown>(
   path: string,
   run: Route<T>[`run`],
   successBody: Route<T>[`successBody`],
   extra?: Partial<Route<T>>,
-): Route<T> => ({ method: `post`, path, run, successBody, ...extra });
+): Route<T> => route(`post`, path, run, successBody, extra);
 
 const get = <T = unknown>(
   path: string,
   run: Route<T>[`run`],
   successBody: Route<T>[`successBody`],
   extra?: Partial<Route<T>>,
-): Route<T> => ({ method: `get`, path, run, successBody, ...extra });
+): Route<T> => route(`get`, path, run, successBody, extra);
 
 export const Routes = [
   post(
