@@ -12,12 +12,12 @@ export const RegisterView = ({
   email,
   error,
   loading,
+  meetsMinLength,
   onEmailChange,
   onGeneratePassword,
   onPasswordChange,
   onSubmit,
   password,
-  passwordValid,
   requirements,
   strength,
   strengthBarWidth,
@@ -60,7 +60,7 @@ export const RegisterView = ({
         />
       </div>
       <FormErrorAndActions error={error}>
-        <Button disabled={loading || !passwordValid} primary type="submit">
+        <Button disabled={loading || !meetsMinLength} primary type="submit">
           {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         </Button>
         <Link to="/login">{t(`registerPage.haveAccount`)}</Link>

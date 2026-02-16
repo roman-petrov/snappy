@@ -28,9 +28,11 @@ export const useRegisterState = () => {
         ? t(`registerPage.strengthMedium`)
         : t(`registerPage.strengthStrong`);
 
+  const meetsMinLength = password.length >= Password.minLength;
+
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!Password.valid(password)) {
+    if (!meetsMinLength) {
       setError(t(`registerPage.passwordRule`, { min: Password.minLength }));
 
       return;
@@ -46,12 +48,12 @@ export const useRegisterState = () => {
     email,
     error,
     loading,
+    meetsMinLength,
     onEmailChange: setEmail,
     onGeneratePassword,
     onPasswordChange: setPassword,
     onSubmit,
     password,
-    passwordValid: Password.valid(password),
     requirements,
     strength: strengthValue,
     strengthBarWidth,
