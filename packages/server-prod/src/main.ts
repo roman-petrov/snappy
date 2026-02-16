@@ -1,6 +1,6 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { createApp, ServerCache, Ssr } from "@snappy/server";
+import { App, ServerCache, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { existsSync, readFileSync } from "node:fs";
 import http from "node:http";
@@ -14,7 +14,7 @@ const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
 const appContext = ServerApp(Config, { version });
-const app = createApp({ api: appContext.api, botApiKey: Config.botApiKey });
+const app = App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 
 app.disable(`x-powered-by`);
 
