@@ -3,7 +3,7 @@
 import type { ServerAppApi } from "@snappy/server-app";
 import type { Express, Request, Response } from "express";
 
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
 
 import { AuthCookie } from "./AuthCookie";
 import { Middleware } from "./Middleware";
@@ -19,8 +19,7 @@ export type Route<TSuccess = unknown> = {
   successStatus?: HttpStatus;
 };
 
-const hasError = (r: unknown): r is { error: string; status: number } =>
-  typeof r === `object` && r !== null && `error` in r && `status` in r;
+const hasError = (r: unknown): r is { error: string; status: number } => _.isObject(r) && `error` in r && `status` in r;
 
 const hasToken = (r: object): r is { token: string } =>
   `token` in r && typeof (r as { token: unknown }).token === `string`;
@@ -40,8 +39,8 @@ const bind = (app: Express, options: BindOptions): void => {
       }
 
       const body = route.successBody(result);
-      if (route.setAuthCookie === true && hasToken(result as object)) {
-        response.cookie(AuthCookie.name, (result as { token: string }).token, {
+      if (route.setAuthCookie === true && _.isObject(result) && hasToken(result)) {
+        response.cookie(AuthCookie.name, result.token, {
           httpOnly: true,
           maxAge: AuthCookie.maxAgeMs,
           sameSite: `lax`,
