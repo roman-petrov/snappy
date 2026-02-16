@@ -12,7 +12,7 @@ const config: KnipConfig = {
   workspaces: {
     ".": {
       entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
-      ignoreDependencies: [`@knip/mcp`],
+      ignoreDependencies: [`@knip/mcp`, `jsdom`],
     },
     "packages/db": { entry: [`src/Seed.ts`] },
     "packages/do": {
