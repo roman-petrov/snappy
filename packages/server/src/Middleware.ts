@@ -9,21 +9,11 @@ import { _, HttpStatus } from "@snappy/core";
 
 const bearerPrefix = `Bearer `;
 
-const parseBearerToken = (auth: string | undefined): string | undefined =>
-  _.isString(auth) && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
-
-const parseBotTelegramId = (request: Request): number | undefined => {
-  const body = request.body as ApiBotBody | undefined;
-  const raw = _.isNumber(body?.telegramId) ? body.telegramId : request.query[`telegramId`];
-  const numberValue = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
-
-  return Number.isNaN(numberValue) ? undefined : numberValue;
-};
-
 const requireUser =
   (api: ServerAppApi, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
-      const token = parseBearerToken(request.headers.authorization);
+      const auth = request.headers.authorization;
+      const token = _.isString(auth) && auth.startsWith(bearerPrefix) ? auth.slice(bearerPrefix.length) : undefined;
       if (token === undefined) {
         return false;
       }
@@ -45,7 +35,10 @@ const requireUser =
         return false;
       }
 
-      const telegramId = parseBotTelegramId(request);
+      const body = request.body as ApiBotBody | undefined;
+      const raw = _.isNumber(body?.telegramId) ? body.telegramId : request.query[`telegramId`];
+      const numberValue = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
+      const telegramId = Number.isNaN(numberValue) ? undefined : numberValue;
       if (telegramId === undefined) {
         return false;
       }
