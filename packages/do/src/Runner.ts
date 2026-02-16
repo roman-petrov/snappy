@@ -71,12 +71,7 @@ const killBackground = (processes: ChildProcess[]): void => {
   }
 };
 
-type RunLeafOptions = {
-  backgroundProcesses: ChildProcess[];
-  context: TreeContext;
-  mcp: boolean;
-  verbose: boolean;
-};
+type RunLeafOptions = { backgroundProcesses: ChildProcess[]; context: TreeContext; mcp: boolean; verbose: boolean };
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose } = options;
