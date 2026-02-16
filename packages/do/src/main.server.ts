@@ -18,7 +18,8 @@ const inputSchema = z.object({ script: scriptEnum });
 
 type WorkflowRunInput = z.infer<typeof inputSchema>;
 
-const stripAnsi = (s: string): string => s.replace(/\u001B\[[0-9;]*m/gu, ``);
+/* eslint-disable no-control-regex, regexp/hexadecimal-escape, regexp/letter-case, regexp/no-control-character, regexp/unicode-escape -- strip ANSI escapes, ESC control char required */
+const stripAnsi = (s: string): string => s.replaceAll(/\u001B\[[0-9;]*m/gu, ``);
 
 const server = new McpServer(
   { name: `do`, version: `0.0.0` },

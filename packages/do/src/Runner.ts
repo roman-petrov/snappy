@@ -71,14 +71,15 @@ const killBackground = (processes: ChildProcess[]): void => {
   }
 };
 
-const runLeaf = async (
-  root: string,
-  name: string,
-  context: TreeContext,
-  verbose: boolean,
-  backgroundProcesses: ChildProcess[],
-  mcp: boolean,
-): Promise<RunResult> => {
+type RunLeafOptions = {
+  backgroundProcesses: ChildProcess[];
+  context: TreeContext;
+  mcp: boolean;
+  verbose: boolean;
+};
+
+const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
+  const { backgroundProcesses, context, mcp, verbose } = options;
   const definition = Commands.byName(name);
   if (definition === undefined || !(`run` in definition)) {
     return { exitCode: 1, message: `Unknown: ${name}` };
@@ -125,6 +126,7 @@ const runLeaf = async (
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
   const exitCode = typeof rawResult === `object` ? rawResult.exitCode : rawResult;
+
   const message =
     typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
@@ -161,7 +163,7 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
   }
 
   if (`run` in definition) {
-    return runLeaf(root, name, context, verbose, backgroundProcesses, mcp);
+    return runLeaf(root, name, { backgroundProcesses, context, mcp, verbose });
   }
 
   const { children, label } = definition;
@@ -205,7 +207,8 @@ const run = async (
     return { exitCode: 1, message: `Unknown command: ${name}` };
   }
 
-  if (!options.mcp && !verbose) {
+  const isMcp = options.mcp === true;
+  if (!isMcp && !verbose) {
     process.stdout.write(`\n`);
     if (node.children.length > 0 && definition !== undefined) {
       process.stdout.write(` ${yellow}${br}${reset}─ ${cyan}${definition.label}${reset}\n`);
@@ -220,7 +223,7 @@ const run = async (
     verbose,
   });
 
-  if (!options.mcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
+  if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
     process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
   }
 

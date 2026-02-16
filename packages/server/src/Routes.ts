@@ -1,3 +1,4 @@
+/* eslint-disable functional/prefer-tacit */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { ServerAppApi } from "@snappy/server-app";
 import type { Request } from "express";
