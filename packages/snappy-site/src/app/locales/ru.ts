@@ -57,10 +57,7 @@ export const ru = {
     email: `Email`,
     errorLogin: `Ошибка входа`,
     errorNetwork: `Ошибка сети`,
-    errors: {
-      emailInvalidOrMissing: `Введите корректный email`,
-      invalidCredentials: `Неверный email или пароль`,
-    },
+    errors: { emailInvalidOrMissing: `Введите корректный email`, invalidCredentials: `Неверный email или пароль` },
     forgotPassword: `Забыли пароль?`,
     password: `Пароль`,
     registerLink: `Регистрация`,

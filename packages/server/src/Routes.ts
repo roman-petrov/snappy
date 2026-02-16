@@ -28,18 +28,13 @@ const withBody =
 
 const withUserIdRequired =
   <TSuccess>(
-    runWithId: (
-      api: ServerAppApi,
-      userId: number,
-      request: Request,
-    ) => Promise<TSuccess | { status: string }>,
+    runWithId: (api: ServerAppApi, userId: number, request: Request) => Promise<TSuccess | { status: string }>,
   ) =>
   async (api: ServerAppApi, request: Request): Promise<TSuccess | { status: string }> =>
     runWithId(api, getUserId(request) ?? 0, request);
 
-const withUserId = <TSuccess>(
-  run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { status: string }>,
-) => withUserIdRequired(run);
+const withUserId = <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { status: string }>) =>
+  withUserIdRequired(run);
 
 const withUserIdAndBody = <TBody, TSuccess>(
   run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { status: string }>,
@@ -97,7 +92,7 @@ export const Routes = [
   post(
     Endpoints.auth.forgotPassword,
     withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
-    (r: { resetToken?: string; status: `ok`; }) => r,
+    (r: { resetToken?: string; status: `ok` }) => r,
   ),
   post(
     Endpoints.auth.resetPassword,

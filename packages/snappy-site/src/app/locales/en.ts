@@ -57,10 +57,7 @@ export const en = {
     email: `Email`,
     errorLogin: `Login error`,
     errorNetwork: `Network error`,
-    errors: {
-      emailInvalidOrMissing: `Enter a valid email`,
-      invalidCredentials: `Invalid email or password`,
-    },
+    errors: { emailInvalidOrMissing: `Enter a valid email`, invalidCredentials: `Invalid email or password` },
     forgotPassword: `Forgot password?`,
     password: `Password`,
     registerLink: `Sign up`,
