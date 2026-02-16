@@ -40,15 +40,8 @@ export const SnappyBot = ({ apiKey, apiUrl, botToken, premiumPrice, version }: S
   Callbacks.register(bot, { api, userTexts });
   bot.onStart(setLocalizedCommands);
 
-  const start = async () => {
-    await bot.start();
-    process.stdout.write(`🤖 Bot started\n`);
-  };
-
-  const stop = async () => {
-    await bot.stop();
-    process.stdout.write(`🤖 Bot stopped\n`);
-  };
+  const start = async () => bot.start();
+  const stop = async () => bot.stop();
 
   return { start, stop };
 };
