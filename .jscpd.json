@@ -5,6 +5,7 @@
     ".jscpd",
     "**/dist/**",
     "**/*.html",
+    "**/*.test.ts",
     "**/package.json",
     "**/node_modules",
     "**/packages/*/src/generated"
