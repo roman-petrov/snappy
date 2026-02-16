@@ -10,7 +10,7 @@ export type RouteDef<TSuccess = unknown> = {
   auth?: `requireUser`;
   method: `get` | `post`;
   path: string;
-  run: (api: ServerAppApi, request: Request) => Promise<{ error: string; status: number } | TSuccess>;
+  run: (api: ServerAppApi, request: Request) => Promise<TSuccess | { error: string; status: number }>;
   successBody: (result: TSuccess) => object;
   successStatus: 200 | typeof HttpStatus.created;
 };
@@ -21,15 +21,15 @@ const getUserId = (request: Request): number | undefined => (request as RequestW
 
 const withBody =
   <TBody, TSuccess>(
-    run: (api: ServerAppApi, body: TBody) => Promise<{ error: string; status: number } | TSuccess>,
-    bodyFromReq: (req: Request) => TBody,
+    run: (api: ServerAppApi, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
+    bodyFromRequest: (request: Request) => TBody,
   ) =>
-  (api: ServerAppApi, request: Request) =>
-    run(api, bodyFromReq(request));
+  async (api: ServerAppApi, request: Request) =>
+    run(api, bodyFromRequest(request));
 
 const withUserId =
-  <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<{ error: string; status: number } | TSuccess>) =>
-  async (api: ServerAppApi, request: Request): Promise<{ error: string; status: number } | TSuccess> => {
+  <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { error: string; status: number }>) =>
+  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> => {
     const id = getUserId(request);
     if (id === undefined) {
       return { error: `Unauthorized`, status: HttpStatus.unauthorized };
@@ -40,19 +40,19 @@ const withUserId =
 
 const withUserIdAndBody =
   <TBody, TSuccess>(
-    run: (api: ServerAppApi, userId: number, body: TBody) => Promise<{ error: string; status: number } | TSuccess>,
-    bodyFromReq: (req: Request) => TBody,
+    run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { error: string; status: number }>,
+    bodyFromRequest: (request: Request) => TBody,
   ) =>
-  async (api: ServerAppApi, request: Request): Promise<{ error: string; status: number } | TSuccess> => {
+  async (api: ServerAppApi, request: Request): Promise<TSuccess | { error: string; status: number }> => {
     const id = getUserId(request);
     if (id === undefined) {
       return { error: `Unauthorized`, status: HttpStatus.unauthorized };
     }
 
-    return run(api, id, bodyFromReq(request));
+    return run(api, id, bodyFromRequest(request));
   };
 
-const sendResult = (response: Response, def: RouteDef<unknown>, result: unknown): void => {
+const sendResult = (response: Response, def: RouteDef, result: unknown): void => {
   if (ApiResult.hasError(result)) {
     response.status(result.status).json({ error: result.error });
 
@@ -63,7 +63,7 @@ const sendResult = (response: Response, def: RouteDef<unknown>, result: unknown)
 };
 
 const createHandler =
-  (def: RouteDef<unknown>) =>
+  (def: RouteDef) =>
   (api: ServerAppApi) =>
   async (request: Request, response: Response): Promise<void> => {
     const result = await def.run(api, request);
@@ -71,18 +71,19 @@ const createHandler =
     sendResult(response, def, result);
   };
 
-const bindRoutes = (
+const bind = (
   app: ReturnType<typeof import("express")>,
   api: ServerAppApi,
   botApiKey: string,
-  defs: Array<RouteDef<unknown>>,
-  requireUser: (api: ServerAppApi, botApiKey: string) => (req: Request, res: Response, next: () => void) => void,
+  defs: RouteDef[],
+  requireUser: (api: ServerAppApi, botApiKey: string) => (request: Request, res: Response, next: () => void) => void,
 ): void => {
   for (const def of defs) {
     const middlewares =
       def.auth === `requireUser`
         ? [requireUser(api, botApiKey)]
-        : ([] as Array<(req: Request, res: Response, next: () => void) => void>);
+        : ([] as ((request: Request, res: Response, next: () => void) => void)[]);
+
     const handler = createHandler(def)(api);
 
     (
@@ -94,4 +95,4 @@ const bindRoutes = (
   }
 };
 
-export const RouteHandler = { bindRoutes, createHandler, withBody, withUserId, withUserIdAndBody };
+export const Router = { bind, createHandler, withBody, withUserId, withUserIdAndBody };

@@ -5,8 +5,8 @@ import { HttpStatus } from "@snappy/core";
 import express from "express";
 
 import { Middleware } from "./Middleware";
-import { RouteDefs } from "./RouteDefs";
-import { RouteHandler } from "./RouteHandler";
+import { Router } from "./Router";
+import { Routes } from "./Routes";
 
 export type CreateAppOptions = { allowCorsOrigin?: string; api: ServerAppApi; botApiKey: string };
 
@@ -30,7 +30,7 @@ const createApp = (options: CreateAppOptions) => {
   }
 
   app.use(express.json());
-  RouteHandler.bindRoutes(app, api, botApiKey, RouteDefs, Middleware.requireUser);
+  Router.bind(app, api, botApiKey, Routes, Middleware.requireUser);
 
   return app;
 };
