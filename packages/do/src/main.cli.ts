@@ -18,5 +18,4 @@ if (!resolved.ok) {
   process.exit(1);
 }
 
-const result = await Runner.run(root, resolved.name);
-process.exit(result.exitCode);
+process.exit((await Runner.run(root, resolved.name)).exitCode);

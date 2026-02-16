@@ -1,16 +1,5 @@
 import type { CmdDefinition } from "./CommandTypes";
 
-const lintSteps = [
-  `lint:tsc`,
-  `lint:eslint`,
-  `lint:prettier`,
-  `lint:stylelint`,
-  `lint:cspell`,
-  `lint:jscpd`,
-  `lint:knip`,
-  `lint:markdown`,
-] as const;
-
 const defs: Record<string, CmdDefinition> = {
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
@@ -155,7 +144,16 @@ const defs: Record<string, CmdDefinition> = {
   },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
   lint: {
-    children: [...lintSteps],
+    children: [
+      `lint:tsc`,
+      `lint:eslint`,
+      `lint:prettier`,
+      `lint:stylelint`,
+      `lint:cspell`,
+      `lint:jscpd`,
+      `lint:knip`,
+      `lint:markdown`,
+    ],
     description: `All linters: tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown.`,
     label: `📋 All linters`,
   },

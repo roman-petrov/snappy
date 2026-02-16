@@ -55,22 +55,6 @@ const runShell = async (
   options: { capture?: true; silent?: true },
 ): Promise<ShellResult> => Process.spawnShell(root, command, options);
 
-const runner = `bun`;
-
-const spawnProc = (root: string, run: { command: string; cwd: string; env?: Record<string, string> }): ChildProcess =>
-  nodeSpawn(run.command, [], {
-    cwd: join(root, run.cwd),
-    env: run.env === undefined ? process.env : { ...process.env, ...run.env },
-    shell: true,
-    stdio: `inherit`,
-  });
-
-const killBackground = (processes: ChildProcess[]) => {
-  for (const proc of processes) {
-    proc.kill(`SIGTERM`);
-  }
-};
-
 type RunLeafOptions = { backgroundProcesses: ChildProcess[]; context: TreeContext; mcp: boolean; verbose: boolean };
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
@@ -86,12 +70,17 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const rawResult = await (`handler` in run
     ? Build.build(root, capture ? { capture: true } : {})
     : `tool` in run
-      ? runShell(root, Process.toolCommand(runner, run.tool, run.args), capture ? { capture: true } : {})
+      ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
         ? mcp
           ? runShell(join(root, run.cwd), run.command, { capture: true })
           : (async () => {
-              const proc = spawnProc(root, run);
+              const proc = nodeSpawn(run.command, [], {
+                cwd: join(root, run.cwd),
+                env: run.env === undefined ? process.env : { ...process.env, ...run.env },
+                shell: true,
+                stdio: `inherit`,
+              });
 
               if (run.background === true) {
                 backgroundProcesses.push(proc);
@@ -108,7 +97,10 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
                   resolve(c ?? 1);
                 });
               });
-              killBackground(backgroundProcesses);
+
+              for (const child of backgroundProcesses) {
+                child.kill(`SIGTERM`);
+              }
 
               if (run.shutdown !== undefined) {
                 const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });

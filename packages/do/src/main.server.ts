@@ -10,16 +10,10 @@ import { Instructions } from "./Instructions";
 import { Runner } from "./Runner";
 import { Scripts } from "./Scripts";
 
-const workflowRunDescription = `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run npm run in the terminal.`;
 const root = Scripts.rootDir();
-const names = Commands.list().map(c => c.name);
-const scriptEnum = z.enum(names as [string, ...string[]]);
-const inputSchema = z.object({ script: scriptEnum });
+const inputSchema = z.object({ script: z.enum(Commands.list().map(c => c.name) as [string, ...string[]]) });
 
 type WorkflowRunInput = z.infer<typeof inputSchema>;
-
-/* eslint-disable no-control-regex, regexp/hexadecimal-escape, regexp/letter-case, regexp/no-control-character, regexp/unicode-escape -- strip ANSI escapes, ESC control char required */
-const stripAnsi = (s: string) => s.replaceAll(/\u001B\[[0-9;]*m/gu, ``);
 
 const server = new McpServer(
   { name: `do`, version: `0.0.0` },
@@ -28,14 +22,18 @@ const server = new McpServer(
 
 server.registerTool(
   `workflow_run`,
-  { description: workflowRunDescription, inputSchema },
+  {
+    description: `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run npm run in the terminal.`,
+    inputSchema,
+  },
   async ({ script }: WorkflowRunInput) => {
     const resolved = Runner.resolve(script);
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
     const result = await Runner.run(root, resolved.name, { mcp: true });
-    const text = stripAnsi(result.message);
+    /* eslint-disable no-control-regex, regexp/hexadecimal-escape, regexp/letter-case, regexp/no-control-character, regexp/unicode-escape -- strip ANSI, ESC required */
+    const text = result.message.replaceAll(/\u001B\[[0-9;]*m/gu, ``);
 
     return { content: [{ text, type: `text` as const }] };
   },
@@ -49,6 +47,5 @@ server.registerResource(
   () => ({ contents: [{ text: Instructions.instructions, uri: instructionsUri }] }),
 );
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+await server.connect(new StdioServerTransport());
 console.error(`Do MCP server running on stdio`);
