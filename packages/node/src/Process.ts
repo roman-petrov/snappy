@@ -53,6 +53,15 @@ const waitExit = async (proc: ChildProcess): Promise<number> =>
 
 type SpawnResult = { exitCode: number; stderr: string; stdout: string };
 
+const waitOrCapture = async (proc: ChildProcess, capture: boolean): Promise<number | SpawnResult> => {
+  if (capture && proc.stdout !== null && proc.stderr !== null) {
+    const [stdout, stderr] = await Promise.all([readStream(proc.stdout), readStream(proc.stderr)]);
+    const exitCode = await waitExit(proc);
+    return { exitCode, stderr, stdout };
+  }
+  return waitExit(proc);
+};
+
 const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): Promise<number | SpawnResult> => {
   const [exe, ...args] = argv;
 
@@ -64,29 +73,13 @@ const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): P
         : [stdioInherit[0], options.stdio ?? `inherit`, options.stdio ?? `inherit`];
 
   const proc = nodeSpawn(exe ?? ``, args, { cwd, env: spawnEnv(options), stdio });
-
-  if (options.capture === true && proc.stdout !== null && proc.stderr !== null) {
-    const [stdout, stderr] = await Promise.all([readStream(proc.stdout), readStream(proc.stderr)]);
-    const exitCode = await waitExit(proc);
-
-    return { exitCode, stderr, stdout };
-  }
-
-  return waitExit(proc);
+  return waitOrCapture(proc, options.capture === true);
 };
 
 const spawnShell = async (cwd: string, command: string, options: SpawnOptions = {}): Promise<number | SpawnResult> => {
   const stdio: StdioTuple = options.capture === true ? stdioPipe : options.silent === true ? stdioSilent : stdioInherit;
   const proc = nodeSpawn(command, [], { cwd, env: spawnEnv(options), shell: true, stdio });
-
-  if (options.capture === true && proc.stdout !== null && proc.stderr !== null) {
-    const [stdout, stderr] = await Promise.all([readStream(proc.stdout), readStream(proc.stderr)]);
-    const exitCode = await waitExit(proc);
-
-    return { exitCode, stderr, stdout };
-  }
-
-  return waitExit(proc);
+  return waitOrCapture(proc, options.capture === true);
 };
 
 export const Process = { spawn, spawnShell, toolArgv, toolCommand };
