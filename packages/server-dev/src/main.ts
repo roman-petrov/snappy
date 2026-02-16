@@ -6,11 +6,13 @@ import { ServerApp } from "@snappy/server-app";
 import http from "node:http";
 
 const appContext = ServerApp(Config);
+
 const app = App.createApp({
   allowCorsOrigin: `http://localhost:5173`,
   api: appContext.api,
   botApiKey: Config.botApiKey,
 });
+
 const server = http.createServer(app);
 
 void process.stdout.write(`🚀 Starting server…\n`);
