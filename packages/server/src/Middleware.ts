@@ -20,47 +20,6 @@ const parseBotTelegramId = (request: Request): number | undefined => {
   return Number.isNaN(numberValue) ? undefined : numberValue;
 };
 
-const requireJwt = (api: ServerAppApi) => (request: Request, response: Response, next: () => void) => {
-  const token = parseBearerToken(request.headers.authorization);
-
-  if (token === undefined) {
-    response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
-
-    return;
-  }
-
-  const payload = api.jwt.verify(token);
-  if (payload === undefined) {
-    response.status(HttpStatus.unauthorized).json({ error: `Invalid token` });
-
-    return;
-  }
-
-  (request as Request & { userId: number }).userId = payload.userId;
-  next();
-};
-
-const requireBotKey = (botApiKey: string) => (request: Request, response: Response, next: () => void) => {
-  const received = request.headers[`x-bot-api-key`];
-  const key = _.isString(received) ? received : ``;
-
-  if (botApiKey === `` || key !== botApiKey) {
-    response.status(HttpStatus.unauthorized).json({ error: `Unauthorized` });
-
-    return;
-  }
-
-  const telegramId = parseBotTelegramId(request);
-  if (telegramId === undefined) {
-    response.status(HttpStatus.badRequest).json({ error: `telegramId required` });
-
-    return;
-  }
-
-  (request as Request & { telegramId: number }).telegramId = telegramId;
-  next();
-};
-
 const requireUser =
   (api: ServerAppApi, botApiKey: string) => (request: Request, response: Response, next: () => void) => {
     const tryJwt = (): boolean => {
@@ -116,4 +75,4 @@ const requireUser =
     })();
   };
 
-export const Middleware = { requireBotKey, requireJwt, requireUser };
+export const Middleware = { requireUser };
