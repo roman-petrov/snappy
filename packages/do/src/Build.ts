@@ -35,6 +35,8 @@ const copyDir = (src: string, destination: string): void => {
 
 type SpawnResult = { exitCode: number; stderr: string; stdout: string };
 
+const exitCode = (r: number | SpawnResult): number => (typeof r === `object` ? r.exitCode : r);
+
 const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number | SpawnResult> =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
@@ -42,8 +44,7 @@ const buildSite = async (root: string, capture: boolean): Promise<number | Spawn
   const site = siteDir(root);
   const dist = siteDist(root);
   const siteResult = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
-  const siteExit = typeof siteResult === `object` ? siteResult.exitCode : siteResult;
-  if (siteExit !== 0) {
+  if (exitCode(siteResult) !== 0) {
     return siteResult;
   }
 
@@ -56,8 +57,7 @@ const buildSite = async (root: string, capture: boolean): Promise<number | Spawn
     capture,
   );
 
-  const appExit = typeof appResult === `object` ? appResult.exitCode : appResult;
-  if (appExit !== 0) {
+  if (exitCode(appResult) !== 0) {
     return appResult;
   }
 
@@ -73,8 +73,7 @@ const buildSite = async (root: string, capture: boolean): Promise<number | Spawn
     capture,
   );
 
-  const ssrExit = typeof ssrResult === `object` ? ssrResult.exitCode : ssrResult;
-  if (ssrExit !== 0) {
+  if (exitCode(ssrResult) !== 0) {
     return ssrResult;
   }
 
@@ -90,14 +89,12 @@ const build = async (root: string, options: { capture?: true } = {}): Promise<nu
 
   const capture = options.capture === true;
   const siteResult = await buildSite(root, capture);
-  const siteExit = typeof siteResult === `object` ? siteResult.exitCode : siteResult;
-  if (siteExit !== 0) {
+  if (exitCode(siteResult) !== 0) {
     return siteResult;
   }
 
   const serverResult = await buildServer(root, capture);
-  const serverExit = typeof serverResult === `object` ? serverResult.exitCode : serverResult;
-  if (serverExit !== 0) {
+  if (exitCode(serverResult) !== 0) {
     return serverResult;
   }
 
