@@ -1,14 +1,6 @@
 import { type SyntheticEvent, useState } from "react";
 
-import { api } from "../core/Api";
-import { t } from "../core/Locale";
-import {
-  generatePassword,
-  passwordMinLength,
-  passwordRequirementChecks,
-  passwordStrength,
-  passwordValid,
-} from "../core/Password";
+import { api, Password, t } from "../core";
 import { useAsyncSubmit, useRunAfterAuth } from "../hooks";
 
 export const useRegisterState = () => {
@@ -16,30 +8,30 @@ export const useRegisterState = () => {
   const [password, setPassword] = useState(``);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit({ errorKey: `registerPage.errorNetwork` });
   const runAfterAuth = useRunAfterAuth(wrapSubmit);
-  const strength = passwordStrength(password);
+  const strengthValue = Password.strength(password);
 
   const requirements = [
     {
-      check: passwordRequirementChecks[0]?.check ?? (() => false),
-      label: t(`registerPage.requirementMin`, { min: passwordMinLength }),
+      check: Password.requirementChecks[0]?.check ?? (() => false),
+      label: t(`registerPage.requirementMin`, { min: Password.minLength }),
     },
-    { check: passwordRequirementChecks[1]?.check ?? (() => false), label: t(`registerPage.requirementLetters`) },
+    { check: Password.requirementChecks[1]?.check ?? (() => false), label: t(`registerPage.requirementLetters`) },
   ];
 
   const strengthBarWidth =
-    password.length === 0 ? `0%` : strength === `weak` ? `33%` : strength === `medium` ? `66%` : `100%`;
+    password.length === 0 ? `0%` : strengthValue === `weak` ? `33%` : strengthValue === `medium` ? `66%` : `100%`;
 
   const strengthText =
-    strength === `weak`
+    strengthValue === `weak`
       ? t(`registerPage.strengthWeak`)
-      : strength === `medium`
+      : strengthValue === `medium`
         ? t(`registerPage.strengthMedium`)
         : t(`registerPage.strengthStrong`);
 
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!passwordValid(password)) {
-      setError(t(`registerPage.passwordRule`, { min: passwordMinLength }));
+    if (!Password.valid(password)) {
+      setError(t(`registerPage.passwordRule`, { min: Password.minLength }));
 
       return;
     }
@@ -48,7 +40,7 @@ export const useRegisterState = () => {
     });
   };
 
-  const onGeneratePassword = () => setPassword(generatePassword());
+  const onGeneratePassword = () => setPassword(Password.generate());
 
   return {
     email,
@@ -59,9 +51,9 @@ export const useRegisterState = () => {
     onPasswordChange: setPassword,
     onSubmit,
     password,
-    passwordValid: passwordValid(password),
+    passwordValid: Password.valid(password),
     requirements,
-    strength,
+    strength: strengthValue,
     strengthBarWidth,
     strengthText,
   };

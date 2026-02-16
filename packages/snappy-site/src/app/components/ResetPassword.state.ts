@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { api } from "../core/Api";
 import { t } from "../core/Locale";
-import { passwordMinLength, passwordValid } from "../core/Password";
+import { Password } from "../core";
 
 export const useResetPasswordState = () => {
   const [searchParameters] = useSearchParams();
@@ -16,8 +16,8 @@ export const useResetPasswordState = () => {
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError(``);
-    if (!passwordValid(password)) {
-      setError(t(`resetPage.passwordRule`, { min: passwordMinLength }));
+    if (!Password.valid(password)) {
+      setError(t(`resetPage.passwordRule`, { min: Password.minLength }));
 
       return;
     }

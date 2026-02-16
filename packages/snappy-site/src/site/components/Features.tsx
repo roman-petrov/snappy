@@ -1,4 +1,4 @@
-import { t } from "../core/Locale";
+import { t } from "../core";
 import { FeatureCard } from "./FeatureCard";
 import styles from "./Features.module.css";
 import { Section } from "./Section";

@@ -1,6 +1,6 @@
 import { Button } from "@snappy/ui";
 
-import { t } from "../core/Locale";
+import { t } from "../core";
 import styles from "./CtaBlock.module.css";
 
 export const CtaBlock = () => (

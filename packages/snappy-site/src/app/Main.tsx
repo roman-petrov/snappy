@@ -10,7 +10,7 @@ import { Login } from "./components/Login";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { Register } from "./components/Register";
 import { ResetPassword } from "./components/ResetPassword";
-import { api } from "./core/Api";
+import { api } from "./core";
 import { $loggedIn } from "./Store";
 
 try {

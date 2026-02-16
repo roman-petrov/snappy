@@ -2,8 +2,7 @@ import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
 
 import type { useResetPasswordState } from "./ResetPassword.state";
 
-import { t } from "../core/Locale";
-import { passwordMinLength } from "../core/Password";
+import { Password, t } from "../core";
 import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
 
@@ -46,8 +45,8 @@ export const ResetPasswordView = ({
           disabled={loading}
           hidePasswordLabel={t(`passwordInput.hidePassword`)}
           id="reset-password"
-          label={t(`resetPage.passwordLabel`, { min: passwordMinLength })}
-          minLength={passwordMinLength}
+          label={t(`resetPage.passwordLabel`, { min: Password.minLength })}
+          minLength={Password.minLength}
           onChange={onPasswordChange}
           required
           showPasswordLabel={t(`passwordInput.showPassword`)}

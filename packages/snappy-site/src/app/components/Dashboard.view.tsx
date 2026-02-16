@@ -4,10 +4,9 @@
 /* eslint-disable @typescript-eslint/strict-void-return */
 import { Button, Card } from "@snappy/ui";
 
-import type { FeatureType } from "../core/Features";
 import type { useDashboardState } from "./Dashboard.state";
 
-import { t } from "../core/Locale";
+import { type FeatureType, t } from "../core";
 import styles from "./Dashboard.module.css";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;

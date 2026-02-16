@@ -2,7 +2,7 @@ import { Link, Theme } from "@snappy/ui";
 
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import { SiteLocale, t } from "../core/Locale";
+import { SiteLocale, t } from "../core";
 
 export const SiteHeader = () => (
   <Header logoHref="/" logoOnClick={Theme.onLogoClick()} logoTitle={t(`themeToggle`)}>

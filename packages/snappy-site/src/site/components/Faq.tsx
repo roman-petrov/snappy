@@ -1,4 +1,4 @@
-import { t } from "../core/Locale";
+import { t } from "../core";
 import styles from "./Faq.module.css";
 import { FaqItem } from "./FaqItem";
 import { Section } from "./Section";

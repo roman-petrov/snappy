@@ -1,6 +1,6 @@
 import { Link } from "@snappy/ui";
 
-import { t } from "../core/Locale";
+import { t } from "../core";
 import styles from "./SiteFooter.module.css";
 
 export const SiteFooter = () => (

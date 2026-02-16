@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prefer-export-from */
 import beautify from "js-beautify";
 
-import { LocaleCookie, type SiteLocaleKey } from "./site/core/LocaleCookie";
+import { LocaleCookie, type SiteLocaleKey } from "./site/core";
 
 export type { SiteLocaleKey };
 

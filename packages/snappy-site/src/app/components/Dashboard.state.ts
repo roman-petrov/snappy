@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { api } from "../core/Api";
-import { defaultFeature, featureEmoji, featureKeys, type FeatureType } from "../core/Features";
-import { t } from "../core/Locale";
+import { api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
 
 const copyFeedbackMs = 2000;
 

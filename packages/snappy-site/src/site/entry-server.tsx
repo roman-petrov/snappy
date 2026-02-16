@@ -3,7 +3,7 @@
 import { renderToString } from "react-dom/server";
 
 import { Landing } from "./components/Landing";
-import { SiteLocaleStore } from "./core/SiteLocaleStore";
+import { SiteLocaleStore } from "./core";
 import localeData from "./locales";
 
 export type SiteLocaleKey = `en` | `ru`;

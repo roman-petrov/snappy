@@ -2,8 +2,7 @@ import { Button, Input, Link, Panel, PasswordInput, PasswordStrength } from "@sn
 
 import type { useRegisterState } from "./Register.state";
 
-import { t } from "../core/Locale";
-import { passwordMinLength } from "../core/Password";
+import { Password, t } from "../core";
 import { FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
 
@@ -42,7 +41,7 @@ export const RegisterView = ({
           hidePasswordLabel={t(`passwordInput.hidePassword`)}
           id="reg-password"
           label={t(`registerPage.password`)}
-          minLength={passwordMinLength}
+          minLength={Password.minLength}
           onChange={onPasswordChange}
           required
           showPasswordLabel={t(`passwordInput.showPassword`)}

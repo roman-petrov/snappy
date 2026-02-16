@@ -1,6 +1,6 @@
 import { $ } from "@snappy/browser";
 
-import { t } from "../core/Locale";
+import { t } from "../core";
 import { ExampleBlock } from "./ExampleBlock";
 import { Section } from "./Section";
 

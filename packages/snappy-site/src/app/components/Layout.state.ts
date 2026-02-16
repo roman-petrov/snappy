@@ -4,8 +4,7 @@ import { useStoreValue } from "@snappy/store";
 import { Theme } from "@snappy/ui";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { api } from "../core/Api";
-import { t } from "../core/Locale";
+import { api, t } from "../core";
 import { $loggedIn } from "../Store";
 
 type HeaderItem =

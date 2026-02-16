@@ -1,4 +1,4 @@
-import { t } from "../core/Locale";
+import { t } from "../core";
 import { Section } from "./Section";
 import { WhoItem } from "./WhoItem";
 
