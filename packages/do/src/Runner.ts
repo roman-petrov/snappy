@@ -29,14 +29,12 @@ type TreeNode = { children: TreeNode[]; name: string };
 
 const tree = (name: string): TreeNode | undefined => {
   const definition = Commands.byName(name);
-  if (definition === undefined) {
-    return undefined;
-  }
-  if (`run` in definition) {
-    return { children: [], name };
-  }
 
-  return { children: definition.children.map(tree).filter((node): node is TreeNode => node !== undefined), name };
+  return definition === undefined
+    ? undefined
+    : `run` in definition
+      ? { children: [], name }
+      : { children: definition.children.map(tree).filter((node): node is TreeNode => node !== undefined), name };
 };
 
 type TreeContext = { connector: string; prefix: string };

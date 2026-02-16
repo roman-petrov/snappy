@@ -27,23 +27,19 @@ const toolCommand = (runner: Runner, tool: string, args: string[]) =>
 const spawnEnv = (options: SpawnOptions): ProcessEnv | undefined =>
   options.env === undefined ? undefined : { ...process.env, ...options.env };
 
-const readStream = async (stream: null | Readable): Promise<string> => {
-  if (stream === null) {
-    return ``;
-  }
-
-  const chunks: Buffer[] = [];
-
-  return new Promise((resolve, reject) => {
-    stream.on(`data`, (chunk: Buffer) => {
-      chunks.push(chunk);
-    });
-    stream.on(`end`, () => {
-      resolve(Buffer.concat(chunks).toString(`utf8`));
-    });
-    stream.on(`error`, reject);
-  });
-};
+const readStream = async (stream: null | Readable): Promise<string> =>
+  stream === null
+    ? ``
+    : new Promise((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        stream.on(`data`, (chunk: Buffer) => {
+          chunks.push(chunk);
+        });
+        stream.on(`end`, () => {
+          resolve(Buffer.concat(chunks).toString(`utf8`));
+        });
+        stream.on(`error`, reject);
+      });
 
 const waitExit = async (proc: ChildProcess): Promise<number> =>
   new Promise((resolve, reject) => {

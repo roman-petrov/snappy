@@ -70,11 +70,8 @@ export const ServerAppApi = ({
 
   const withJwtGuard = async <T>(fn: () => Promise<ApiError | T>): Promise<ApiError | T> => {
     const error = jwtUnavailable();
-    if (error !== undefined) {
-      return error;
-    }
 
-    return fn();
+    return error ?? fn();
   };
 
   const signToken = (userId: number) => Jwt.sign(userId, jwtSecret);

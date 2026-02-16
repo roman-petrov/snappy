@@ -13,22 +13,19 @@ const valid = (s: string) => requirementChecks.every(({ check }) => check(s));
 type Strength = `medium` | `strong` | `weak`;
 
 const strength = (s: string): Strength => {
-  if (s.length === 0) {
-    return `weak`;
-  }
+  const strongMinLength = 12;
   const hasLower = /[a-z]/u.test(s);
   const hasUpper = /[A-Z]/u.test(s);
   const hasSpecial = /[^\da-z]/iu.test(s);
   const variety = [hasLetter(s), hasDigit(s), hasLower, hasUpper, hasSpecial].filter(Boolean).length;
-  const strongMinLength = 12;
-  if (s.length >= strongMinLength && variety >= 4) {
-    return `strong`;
-  }
-  if (s.length >= minLength && variety >= 2) {
-    return `medium`;
-  }
 
-  return `weak`;
+  return s.length === 0
+    ? `weak`
+    : s.length >= strongMinLength && variety >= 4
+      ? `strong`
+      : s.length >= minLength && variety >= 2
+        ? `medium`
+        : `weak`;
 };
 
 const chars = `abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`;

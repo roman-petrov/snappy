@@ -48,11 +48,7 @@ const bind = (app: Express, { api, botApiKey, routes }: BindOptions) => {
     };
 
     const middlewares = route.auth === true ? [Middleware.requireUser(api, botApiKey)] : [];
-    if (route.method === `get`) {
-      app.get(route.path, ...middlewares, handler);
-    } else {
-      app.post(route.path, ...middlewares, handler);
-    }
+    (route.method === `get` ? app.get : app.post)(route.path, ...middlewares, handler);
   }
 };
 
