@@ -3,8 +3,8 @@ import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
 import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { Password, t } from "../core";
+import { form } from "./AuthForm.styles";
 import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
 
 export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
 
@@ -39,7 +39,7 @@ export const ResetPasswordView = ({
 
   return (
     <Panel title={t(`resetPage.title`)}>
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form className={form} onSubmit={onSubmit}>
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}

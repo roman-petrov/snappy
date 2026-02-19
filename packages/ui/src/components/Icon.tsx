@@ -1,11 +1,42 @@
 /* eslint-disable react/no-danger */
+import { cx, css, cva } from "../../styled-system/css";
 import { Icons } from "../assets";
-import styles from "./Icon.module.css";
 
 export type Icon = keyof typeof Icons;
 
-export type IconProps = { cn?: string; name: Icon };
+export type IconVariantProps = { size?: "default" | "button" };
 
-export const Icon = ({ cn = ``, name }: IconProps) => (
-  <span aria-hidden className={`${styles.root} ${cn}`.trim()} dangerouslySetInnerHTML={{ __html: Icons[name] }} />
+export type IconProps = IconVariantProps & { cn?: string; name: Icon };
+
+export const Icon = ({ cn = "", name, size = "default" }: IconProps) => (
+  <span
+    aria-hidden
+    className={cx(
+      css({
+        "& svg": { display: "block", height: "full", overflow: "visible", width: "full" },
+        alignItems: "center",
+        color: "inherit",
+        display: "inline-flex",
+        flexShrink: 0,
+        height: "em",
+        justifyContent: "center",
+        minHeight: "em",
+        minWidth: "em",
+        overflow: "visible",
+        verticalAlign: "middle",
+        width: "em",
+      }),
+      cva({
+        base: {},
+        variants: {
+          size: {
+            button: { height: "emButton", minHeight: "emButton", minWidth: "emButton", width: "emButton" },
+            default: {},
+          },
+        },
+      })({ size }),
+      cn,
+    )}
+    dangerouslySetInnerHTML={{ __html: Icons[name] }}
+  />
 );

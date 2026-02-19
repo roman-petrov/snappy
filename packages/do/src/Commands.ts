@@ -1,6 +1,16 @@
 import type { CmdDefinition } from "./CommandTypes";
 
 const defs: Record<string, CmdDefinition> = {
+  [`codegen:site`]: {
+    description: `Panda CSS: generate styled-system in snappy-site.`,
+    label: `🎨 Panda codegen (site)`,
+    run: { command: `bunx panda codegen`, cwd: `packages/snappy-site` },
+  },
+  [`codegen:ui`]: {
+    description: `Panda CSS: generate styled-system in ui.`,
+    label: `🎨 Panda codegen (ui)`,
+    run: { command: `bunx panda codegen`, cwd: `packages/ui` },
+  },
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
     label: `🐳 Database container`,
@@ -138,9 +148,14 @@ const defs: Record<string, CmdDefinition> = {
     run: { handler: `build` },
   },
   ci: {
-    children: [`test`, `lint`, `build`],
-    description: `Full CI pipeline: test + all linters + build.`,
+    children: [`codegen`, `test`, `lint`, `build`],
+    description: `Full CI pipeline: codegen + test + all linters + build.`,
     label: `🔄 CI pipeline`,
+  },
+  codegen: {
+    children: [`codegen:ui`, `codegen:site`],
+    description: `Panda CSS: generate styled-system in ui and snappy-site.`,
+    label: `🎨 Panda codegen`,
   },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
   lint: {

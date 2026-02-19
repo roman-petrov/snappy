@@ -7,6 +7,10 @@
     "knip": {
       "command": "bun",
       "args": ["x", "@knip/mcp"]
+    },
+    "git": {
+      "command": "bun",
+      "args": ["x", "@cyanheads/git-mcp-server@latest"]
     }
   }
 }

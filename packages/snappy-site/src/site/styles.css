@@ -1,1 +1,9 @@
-@import url("@snappy/ui/styles");
+@font-face {
+  font-display: swap;
+  font-family: "Inter Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  src: url("../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2") format("woff2");
+}
+
+@layer reset, base, tokens, recipes, utilities;

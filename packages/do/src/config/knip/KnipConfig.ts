@@ -1,13 +1,9 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-  ignore: [`packages/**/generated/**`],
+  ignore: [`packages/**/generated/**`, `**/styled-system/**`],
   ignoreExportsUsedInFile: true,
-  ignoreIssues: {
-    "**/*.module.css.d.ts": [`exports`],
-    "**/entry-server.tsx": [`exports`],
-    "packages/do/src/config/index.esm.js": [`exports`],
-  },
+  ignoreIssues: { "**/entry-server.tsx": [`exports`], "packages/do/src/config/index.esm.js": [`exports`] },
   ignoreUnresolved: [`tsx/esm`],
   workspaces: {
     ".": {

@@ -1,5 +1,5 @@
+import { css, cva } from "../../styled-system/css";
 import { Button } from "./Button";
-import styles from "./PasswordStrength.module.css";
 
 export type PasswordStrengthProps = {
   disabled?: boolean;
@@ -18,27 +18,56 @@ export const PasswordStrength = ({
   generateLabel,
   onGeneratePassword,
   password,
-  requirements,
+  requirements: reqs,
   strength,
   strengthBarWidth,
-  strengthLabel,
-  strengthText,
+  strengthLabel: strengthLabelText,
+  strengthText: strengthTextValue,
 }: PasswordStrengthProps) => (
   <>
-    <div className={styles.requirements}>
-      {requirements.map(({ check, label }) => (
-        <span className={check(password) ? styles.requirementMet : styles.requirement} key={label}>
+    <div
+      className={css({
+        color: `text.muted`,
+        display: `flex`,
+        flexDirection: `column`,
+        fontSize: `xs`,
+        gap: `1`,
+        marginBottom: `3`,
+        marginTop: `2`,
+      })}
+    >
+      {reqs.map(({ check, label }) => (
+        <span className={check(password) ? css({ color: `accent` }) : css({ color: `text.muted` })} key={label}>
           {check(password) ? `✓ ` : ``}
           {label}
         </span>
       ))}
     </div>
-    <div className={styles.strengthRow}>
-      <span className={styles.strengthLabel}>{strengthLabel}</span>
-      <div className={styles.strengthBar}>
-        <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
+    <div className={css({ alignItems: `center`, display: `flex`, gap: `2`, marginBottom: `3` })}>
+      <span className={css({ color: `text.muted`, fontSize: `sm`, whiteSpace: `nowrap` })}>{strengthLabelText}</span>
+      <div className={css({ bg: "border", borderRadius: "xs", flex: "1", height: "strengthBar", overflow: "hidden" })}>
+        <div
+          className={cva({
+            base: {
+              borderRadius: "xs",
+              height: "full",
+              transitionDuration: "fast",
+              transitionProperty: "width",
+              transitionTimingFunction: "default",
+            },
+            defaultVariants: { strength: `weak` },
+            variants: {
+              strength: {
+                medium: { bg: `status.warning` },
+                strong: { bg: `status.success` },
+                weak: { bg: `accentRed` },
+              },
+            },
+          })({ strength })}
+          style={{ width: strengthBarWidth }}
+        />
       </div>
-      <span className={styles.strengthText}>{strengthText}</span>
+      <span className={css({ color: `text.muted`, fontSize: `sm`, minWidth: `minText` })}>{strengthTextValue}</span>
     </div>
     <Button disabled={disabled} onClick={onGeneratePassword} type="button">
       {generateLabel}

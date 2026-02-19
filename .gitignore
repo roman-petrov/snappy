@@ -1,5 +1,6 @@
 .jscpd
 **/node_modules
+**/styled-system
 bun.lockb
 dist
 .env

@@ -1,4 +1,4 @@
-import styles from "./Input.module.css";
+import { cx, css } from "../../styled-system/css";
 
 export type InputProps = {
   autoComplete?: string;
@@ -9,7 +9,7 @@ export type InputProps = {
   minLength?: number;
   onChange: (value: string) => void;
   required?: boolean;
-  type?: `email` | `password` | `text`;
+  type?: "email" | "password" | "text";
   value: string;
 };
 
@@ -22,13 +22,34 @@ export const Input = ({
   minLength,
   onChange,
   required = false,
-  type = `text`,
+  type = "text",
   value,
 }: InputProps) => {
   const inputElement = (
     <input
       autoComplete={autoComplete}
-      className={inputClassName ?? styles.input}
+      className={cx(
+        css({
+          _focus: { borderColor: "accent", boxShadow: "focusRing", outline: "none" },
+          _placeholder: { color: "text.muted" },
+          bg: "bg",
+          border: "{borderWidths.thin} solid {colors.border}",
+          borderRadius: "sm",
+          boxSizing: "border-box",
+          color: "text.body",
+          fontFamily: "inherit",
+          fontSize: "base",
+          lineHeight: "relaxed",
+          minHeight: "10",
+          paddingBlock: "3",
+          paddingInline: "4",
+          transitionDuration: "fast",
+          transitionProperty: "border-color, box-shadow",
+          transitionTimingFunction: "default",
+          width: "full",
+        }),
+        inputClassName,
+      )}
       disabled={disabled}
       id={id}
       minLength={minLength}
@@ -44,8 +65,17 @@ export const Input = ({
   }
 
   return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
+    <div className={css({ marginBottom: "4" })}>
+      <label
+        className={css({
+          color: "text.muted",
+          display: "block",
+          fontSize: "sm",
+          fontWeight: "medium",
+          marginBottom: "2",
+        })}
+        htmlFor={id}
+      >
         {label}
       </label>
       {inputElement}

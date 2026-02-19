@@ -10,6 +10,7 @@
     "prisma": "^7.4.0"
   },
   "devDependencies": {
+    "@cyanheads/git-mcp-server": "^2.8.4",
     "@knip/mcp": "^0.0.18",
     "vitest": "^4.0.18"
   }

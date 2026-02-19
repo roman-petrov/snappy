@@ -1,6 +1,8 @@
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
 
+import "../site/styles.css";
+
 import { startApp } from "@snappy/ui";
 import { createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider } from "react-router-dom";
 

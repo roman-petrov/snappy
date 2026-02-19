@@ -63,19 +63,21 @@ const withMethod =
 
 const post = withMethod(`post`);
 const get = withMethod(`get`);
+const okStatus = () => ({ status: `ok` as const });
+const setAuthCookieOpt = { setAuthCookie: true };
 
 export const Routes = [
   post(
     Endpoints.auth.register,
     withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
-    () => ({ status: `ok` as const }),
-    { setAuthCookie: true },
+    okStatus,
+    setAuthCookieOpt,
   ),
   post(
     Endpoints.auth.login,
     withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
-    () => ({ status: `ok` as const }),
-    { setAuthCookie: true },
+    okStatus,
+    setAuthCookieOpt,
   ),
   post(
     Endpoints.auth.logout,

@@ -1,11 +1,13 @@
+import { css } from "../../../styled-system/css";
 import { t } from "../core";
 import { FeatureCard } from "./FeatureCard";
-import styles from "./Features.module.css";
 import { Section } from "./Section";
 
 export const Features = () => (
   <Section id="features" lead={t(`features.lead`)} title={t(`features.title`)}>
-    <div className={styles.grid}>
+    <div
+      className={css({ display: `grid`, gap: `1.5rem`, gridTemplateColumns: `repeat(auto-fill, minmax(300px, 1fr))` })}
+    >
       {[
         { descKey: `features.fixErrors.desc` as const, icon: `📝`, titleKey: `features.fixErrors.title` as const },
         { descKey: `features.shorten.desc` as const, icon: `✂️`, titleKey: `features.shorten.title` as const },

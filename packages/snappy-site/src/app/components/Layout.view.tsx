@@ -5,21 +5,22 @@ import { Outlet } from "react-router-dom";
 
 import type { useLayoutState } from "./Layout.state";
 
+import { css } from "../../../styled-system/css";
+import { stack } from "../../../styled-system/patterns";
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import styles from "./Layout.module.css";
 
 export type LayoutViewProps = ReturnType<typeof useLayoutState>;
 
 export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: LayoutViewProps) => (
-  <div className={styles.wrap}>
+  <div className={stack({ direction: "column", minHeight: "100vh" })}>
     <Header logoOnClick={logoOnClick} logoTitle={logoTitle} logoTo={logoTo}>
       {headerItems.map(item =>
-        item.type === `button` ? (
+        item.type === "button" ? (
           <Button onClick={item.onClick} type="button">
             {item.label}
           </Button>
-        ) : item.type === `link` ? (
+        ) : item.type === "link" ? (
           <Link muted to={item.to}>
             {item.label}
           </Link>
@@ -28,7 +29,16 @@ export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: Layo
         ),
       )}
     </Header>
-    <main className={styles.main}>
+    <main
+      className={css({
+        boxSizing: "border-box",
+        flex: 1,
+        margin: "0 auto",
+        maxWidth: "1100px",
+        padding: "1.5rem",
+        width: "100%",
+      })}
+    >
       <Outlet />
     </main>
   </div>

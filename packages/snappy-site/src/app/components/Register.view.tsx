@@ -3,8 +3,8 @@ import { Button, Input, Link, Panel, PasswordInput, PasswordStrength } from "@sn
 import type { useRegisterState } from "./Register.state";
 
 import { Password, t } from "../core";
+import { form, passwordBlock } from "./AuthForm.styles";
 import { FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
 
 export type RegisterViewProps = ReturnType<typeof useRegisterState>;
 
@@ -24,7 +24,7 @@ export const RegisterView = ({
   strengthText,
 }: RegisterViewProps) => (
   <Panel title={t(`registerPage.title`)}>
-    <form className={styles.form} onSubmit={onSubmit}>
+    <form className={form} onSubmit={onSubmit}>
       <Input
         autoComplete="email"
         id="reg-email"
@@ -34,7 +34,7 @@ export const RegisterView = ({
         type="email"
         value={email}
       />
-      <div className={styles.passwordBlock}>
+      <div className={passwordBlock}>
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}

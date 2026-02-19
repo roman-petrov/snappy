@@ -3,8 +3,8 @@ import { Button, Input, Link, Panel } from "@snappy/ui";
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../core";
+import { form } from "./AuthForm.styles";
 import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;
 
@@ -28,7 +28,7 @@ export const ForgotPasswordView = ({
 
   return (
     <Panel lead={t(`forgotPage.lead`)} title={t(`forgotPage.title`)}>
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form className={form} onSubmit={onSubmit}>
         <Input
           autoComplete="email"
           id="forgot-email"

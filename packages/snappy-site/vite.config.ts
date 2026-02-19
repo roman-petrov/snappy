@@ -1,18 +1,20 @@
-// cspell:word lightningcss
+import { execSync } from "node:child_process";
 import { join } from "node:path";
 import { defineConfig } from "vite";
-import typedCssModules from "vite-plugin-typed-css-modules";
 
-import { cssModulesCamelCasePlugin } from "./vite.css-modules";
+const siteRoot = import.meta.dirname;
+const uiRoot = join(siteRoot, `..`, `ui`);
 
-const root = join(import.meta.filename, `..`);
+const pandaCodegenPlugin = () => ({
+  buildStart() {
+    execSync(`bunx panda codegen`, { cwd: uiRoot, stdio: `inherit` });
+    execSync(`bunx panda codegen`, { cwd: siteRoot, stdio: `inherit` });
+  },
+  name: `panda-codegen`,
+});
 
 export default defineConfig({
   build: { outDir: `dist`, rollupOptions: { input: [`src/site/index.html`] } },
-  css: { lightningcss: { cssModules: true }, transformer: `lightningcss` },
-  plugins: [
-    typedCssModules({ include: [`**/*.module.css`, `../ui/src/**/*.module.css`] }),
-    cssModulesCamelCasePlugin(),
-  ],
-  resolve: { alias: { "/app": join(root, `src`, `app`) } },
+  plugins: [pandaCodegenPlugin()],
+  resolve: { alias: { "/app": join(siteRoot, `src`, `app`) } },
 });
