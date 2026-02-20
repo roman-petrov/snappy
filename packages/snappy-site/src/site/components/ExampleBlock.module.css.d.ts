@@ -5,6 +5,7 @@ declare const styles: {
   readonly "block": string;
   readonly "label": string;
   readonly "panel": string;
+  readonly "panelContent": string;
   readonly "panelTitle": string;
   readonly "row": string;
 };

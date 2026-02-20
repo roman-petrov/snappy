@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-import { Text } from "./Text";
 import styles from "./Error.module.css";
+import { Text } from "./Text";
 
 export type ErrorProps = { children: ReactNode };
 

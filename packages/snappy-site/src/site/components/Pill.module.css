@@ -13,8 +13,6 @@
 .pill-left {
   flex-shrink: 0;
   padding: var(--space-3) var(--space-4);
-  font-size: var(--text-md);
-  font-weight: var(--weight-semibold);
   color: var(--color-text-heading);
   background: rgb(var(--rgb-accent) / 12%);
 }
@@ -22,7 +20,6 @@
 .pill-right {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  font-size: var(--text-md);
   color: var(--color-text-muted);
   background: rgb(var(--rgb-accent) / 4%);
 }

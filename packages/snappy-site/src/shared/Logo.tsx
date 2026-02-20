@@ -1,6 +1,7 @@
 /* eslint-disable react/forbid-component-props */
 import type { MouseEvent } from "react";
 
+import { Text } from "@snappy/ui";
 import { Link } from "react-router-dom";
 
 import styles from "./Header.module.css";
@@ -9,7 +10,11 @@ export type LogoProps = { href?: string; onClick?: (event: MouseEvent) => void; 
 
 const logoContent = (
   <>
-    <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} /> Snappy
+    <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} />
+    {` `}
+    <Text as="span" cn={styles.logoText} variant="h3">
+      Snappy
+    </Text>
   </>
 );
 

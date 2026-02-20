@@ -25,6 +25,9 @@
   padding-block-start: 0.25rem;
   padding-inline-start: var(--space-5);
   margin: var(--space-4) 0;
+}
+
+.step-text {
   color: var(--color-text-body);
 }
 

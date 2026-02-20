@@ -1,4 +1,4 @@
-import { Link } from "@snappy/ui";
+import { Link, Text } from "@snappy/ui";
 
 import { t } from "../core";
 import styles from "./SiteFooter.module.css";
@@ -9,9 +9,13 @@ export const SiteFooter = () => (
       <span className={styles.logo}>
         <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} />
         {` `}
-        Snappy
+        <Text as="span" cn={styles.logoText} variant="h3">
+          Snappy
+        </Text>
       </span>
-      <p>{t(`footer.tagline`)}</p>
+      <Text as="p" cn={styles.tagline} variant="largeBody">
+        {t(`footer.tagline`)}
+      </Text>
       <Link href="https://t.me/sn4ppy_bot" rel="noopener" target="_blank">
         @sn4ppy_bot
       </Link>

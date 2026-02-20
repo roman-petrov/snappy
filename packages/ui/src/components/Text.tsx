@@ -5,23 +5,26 @@ import type React from "react";
 import styles from "./Text.module.css";
 
 export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children` | `className`> & {
-  as?: `dd` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
+  as?: `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
   children: ReactNode;
   cn?: string;
   htmlFor?: string;
   variant: TextVariant;
 };
 
-export type TextVariant = `caption` | `display` | `h1` | `h2` | `h3` | `large`;
-
-const variantTag: Record<TextVariant, `h1` | `h2` | `h3` | `label` | `p` | `span`> = {
+const variantTag = {
+  bodyLg: `p`,
   caption: `span`,
+  captionBold: `span`,
   display: `h1`,
   h1: `h1`,
   h2: `h2`,
   h3: `h3`,
   large: `p`,
-};
+  largeBody: `p`,
+} as const;
+
+export type TextVariant = keyof typeof variantTag;
 
 export const Text = ({ as, children, cn = ``, variant, ...rest }: TextProps) => {
   const Tag = as ?? variantTag[variant];

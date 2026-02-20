@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { Block, Button, Card, Error, Select, Textarea, Title } from "@snappy/ui";
+import { Block, Button, Card, Error, Select, Text, Textarea, Title } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
@@ -38,12 +38,15 @@ export const DashboardView = ({
       </Title>
       <Card>
         <div className={styles.balanceRow}>
-          <p className={styles.balance}>
+          <Text as="p" cn={styles.balance} variant="bodyLg">
             <span aria-hidden className={styles.balanceIcon}>
               🪙
             </span>
-            {t(`dashboard.freeRequests`)}: <span className={styles.balanceCount}>{remaining ?? `—`}</span>
-          </p>
+            {t(`dashboard.freeRequests`)}:{` `}
+            <Text as="span" cn={styles.balanceCount} variant="h2">
+              {remaining ?? `—`}
+            </Text>
+          </Text>
           <Button onClick={onPremiumClick} primary>
             {t(`dashboard.getPremium`)}
           </Button>
@@ -84,12 +87,18 @@ export const DashboardView = ({
           {result !== `` && (
             <div className={styles.resultWrap}>
               <div className={styles.resultHeader}>
-                <span className={styles.resultLabel}>{t(`dashboard.result`)}</span>
+                <Text as="span" cn={styles.resultLabel} variant="captionBold">
+                  {t(`dashboard.result`)}
+                </Text>
                 <button className={styles.copyBtn} onClick={onCopyResult} type="button">
-                  {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
+                  <Text as="span" variant="caption">
+                    {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
+                  </Text>
                 </button>
               </div>
-              <div className={styles.result}>{result}</div>
+              <Text as="div" cn={styles.result} variant="largeBody">
+                {result}
+              </Text>
             </div>
           )}
         </Card>

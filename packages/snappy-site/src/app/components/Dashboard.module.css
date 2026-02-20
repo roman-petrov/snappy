@@ -31,13 +31,10 @@
 }
 
 .balance {
-  font-size: var(--text-lg);
   color: var(--color-text-body);
 }
 
 .balance-count {
-  font-size: var(--text-2xl);
-  font-weight: var(--weight-extrabold);
   color: var(--color-accent);
 }
 
@@ -72,16 +69,12 @@
 }
 
 .result-label {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-semibold);
   color: var(--color-text-heading);
 }
 
 .copy-btn {
   padding: var(--space-1) var(--space-3);
   font-family: inherit;
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
   color: var(--color-accent);
   cursor: pointer;
   background: transparent;
@@ -105,8 +98,6 @@
 
 .result {
   padding: var(--space-4);
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
   color: var(--color-text-body);
   overflow-wrap: break-word;
   white-space: pre-wrap;

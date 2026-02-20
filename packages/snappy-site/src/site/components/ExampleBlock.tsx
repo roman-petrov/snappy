@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import { Text } from "@snappy/ui";
+
 import styles from "./ExampleBlock.module.css";
 
 export type ExampleBlockProps = {
@@ -12,18 +14,26 @@ export type ExampleBlockProps = {
 
 export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: ExampleBlockProps) => (
   <div className={styles.block}>
-    <p className={styles.label}>{label}</p>
+    <Text as="p" cn={styles.label} variant="captionBold">
+      {label}
+    </Text>
     <div className={styles.row}>
       <div className={`${styles.panel} ${styles.before}`}>
-        <span className={styles.panelTitle}>{beforeLabel}</span>
-        <p>{before}</p>
+        <Text as="span" cn={styles.panelTitle} variant="caption">
+          {beforeLabel}
+        </Text>
+        <Text as="p" variant="largeBody">
+          {before}
+        </Text>
       </div>
-      <span aria-hidden="true" className={styles.arrow}>
+      <Text aria-hidden="true" as="span" cn={styles.arrow} variant="h2">
         →
-      </span>
+      </Text>
       <div className={`${styles.panel} ${styles.after}`}>
-        <span className={styles.panelTitle}>{afterLabel}</span>
-        <p>{after}</p>
+        <Text as="span" cn={styles.panelTitle} variant="caption">
+          {afterLabel}
+        </Text>
+        <div className={styles.panelContent}>{after}</div>
       </div>
     </div>
   </div>

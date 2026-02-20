@@ -16,6 +16,9 @@
   gap: var(--space-2);
   align-items: center;
   margin-block-end: var(--space-3);
+}
+
+.logo-text {
   color: var(--color-accent);
 }
 
@@ -25,14 +28,12 @@
   vertical-align: -0.25em;
 }
 
-.inner p {
+.tagline {
   margin: 0 0 var(--space-2);
-  font-size: var(--text-md);
   color: var(--color-text-muted);
 }
 
 .inner a {
-  font-weight: var(--weight-medium);
   color: var(--color-accent);
 }
 

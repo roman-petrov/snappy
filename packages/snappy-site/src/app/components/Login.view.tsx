@@ -1,4 +1,4 @@
-import { Button, Input, Link, Panel, PasswordInput } from "@snappy/ui";
+import { Button, Input, Link, Panel, PasswordInput, Text } from "@snappy/ui";
 
 import type { useLoginState } from "./Login.state";
 
@@ -50,9 +50,9 @@ export const LoginView = ({
           onChange={event => onRememberChange((event.target as HTMLInputElement).checked)}
           type="checkbox"
         />
-        <label className={styles.rememberLabel} htmlFor="login-remember">
+        <Text as="label" cn={styles.rememberLabel} htmlFor="login-remember" variant="caption">
           {t(`loginPage.remember`)}
-        </label>
+        </Text>
       </div>
       <FormErrorAndActions error={error}>
         <Button disabled={loading} primary type="submit">
