@@ -9,7 +9,7 @@ export type PasswordInputViewProps = ReturnType<typeof usePasswordInputState>;
 
 export const PasswordInputView = ({
   ariaLabel,
-  autoComplete = "current-password",
+  autoComplete = `current-password`,
   disabled = false,
   id,
   inputType,
@@ -31,10 +31,10 @@ export const PasswordInputView = ({
     required={required}
     suffix={
       <button aria-label={ariaLabel} disabled={disabled} onClick={toggleVisible} title={ariaLabel} type="button">
-        <Icon cn={styles.icon} name={visible ? "eye-closed" : "eye-open"} />
+        <Icon cn={styles.icon} name={visible ? `eye-closed` : `eye-open`} />
       </button>
     }
-    type={inputType as "password" | "text"}
+    type={inputType as `password` | `text`}
     value={value}
   />
 );

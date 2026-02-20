@@ -13,7 +13,7 @@ export type InputProps = {
   onChange: (value: string) => void;
   required?: boolean;
   suffix?: ReactNode;
-  type?: "email" | "password" | "text";
+  type?: `email` | `password` | `text`;
   value: string;
 };
 
@@ -27,7 +27,7 @@ export const Input = ({
   onChange,
   required = false,
   suffix,
-  type = "text",
+  type = `text`,
   value,
 }: InputProps) => {
   const renderControl = ({
@@ -39,18 +39,18 @@ export const Input = ({
     inputInsideWrapClassName: string;
     wrapClassName: string;
   }) => {
-    const inputEl = (
+    const inputElement = (
       <input
         autoComplete={autoComplete}
         className={
-          suffix !== undefined
-            ? `${inputClassNameBase} ${inputInsideWrapClassName}`
-            : (inputClassName ?? inputClassNameBase)
+          suffix === undefined
+            ? (inputClassName ?? inputClassNameBase)
+            : `${inputClassNameBase} ${inputInsideWrapClassName}`
         }
         disabled={disabled}
         id={id}
         minLength={minLength}
-        onChange={ev => onChange(ev.target.value)}
+        onChange={event_ => onChange(event_.target.value)}
         required={required}
         type={type}
         value={value}
@@ -60,13 +60,13 @@ export const Input = ({
     if (suffix !== undefined) {
       return (
         <div className={wrapClassName}>
-          {inputEl}
+          {inputElement}
           <div className={styles.suffix}>{suffix}</div>
         </div>
       );
     }
 
-    return inputEl;
+    return inputElement;
   };
 
   return <Field id={id} label={label} renderControl={renderControl} />;
