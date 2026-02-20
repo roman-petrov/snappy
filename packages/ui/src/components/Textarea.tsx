@@ -19,7 +19,7 @@ export const Textarea = ({ disabled = false, id, label, onChange, placeholder, v
         className={`${cn} ${styles.input}`}
         disabled={disabled}
         id={id}
-        onChange={e => onChange(e.target.value)}
+        onChange={event_ => onChange(event_.target.value)}
         placeholder={placeholder}
         value={value}
       />

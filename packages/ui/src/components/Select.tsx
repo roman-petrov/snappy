@@ -21,7 +21,7 @@ export const Select = ({ disabled = false, id, label, onChange, options, value }
         className={`${cn} ${styles.input}`}
         disabled={disabled}
         id={id}
-        onChange={e => onChange(e.target.value)}
+        onChange={event_ => onChange(event_.target.value)}
         value={value}
       >
         {options.map(opt => (
