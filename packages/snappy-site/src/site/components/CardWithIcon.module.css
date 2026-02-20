@@ -1,4 +1,3 @@
-/* variant: feature */
 .feature {
   padding: var(--space-6);
   background: var(--color-bg-card-features);
@@ -26,49 +25,21 @@
   border-radius: var(--radius-sm);
 }
 
-.feature h3,
-.who h3 {
-  margin: 0 0 var(--space-2);
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
-  color: var(--color-text-heading);
-  letter-spacing: var(--tracking-tight);
-}
-
-.feature p,
-.who p {
-  margin: 0;
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
-  color: var(--color-text-muted);
-}
-
 @media (width <= 640px) {
   .feature {
     padding: var(--space-5);
   }
-
-  .feature h3 {
-    font-size: var(--text-md);
-  }
 }
 
-/* variant: who */
 .who {
-  position: relative;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: var(--space-5);
-  padding: var(--space-5) 0;
 }
 
-.who:not(:last-child)::after {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 1px;
-  content: "";
-  background: var(--color-divider);
+.who h3,
+.who p {
+  grid-column: 2;
 }
 
 .who-icon {
@@ -76,11 +47,6 @@
   grid-column: 1;
   font-size: 2rem;
   line-height: 1;
-}
-
-.who h3,
-.who p {
-  grid-column: 2;
 }
 
 @media (width <= 640px) {

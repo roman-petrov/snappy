@@ -1,0 +1,38 @@
+.title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text-heading);
+  letter-spacing: var(--tracking-tight);
+}
+
+.desc {
+  margin: 0;
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-muted);
+}
+
+.desc-divider {
+  position: relative;
+  padding: var(--space-5) 0;
+}
+
+.desc-divider::after {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 1px;
+  content: "";
+  background: var(--color-divider);
+}
+
+.list dd:last-child::after {
+  display: none;
+}
+
+@media (width <= 640px) {
+  .title {
+    font-size: var(--text-md);
+  }
+}

@@ -1,10 +1,7 @@
-import styles from "./FaqItem.module.css";
+import { Block } from "@snappy/ui";
 
 export type FaqItemProps = { answer: string; question: string };
 
 export const FaqItem = ({ answer, question }: FaqItemProps) => (
-  <div className={styles.item}>
-    <dt>{question}</dt>
-    <dd>{answer}</dd>
-  </div>
+  <Block as="dl" description={answer} title={question} withDivider />
 );

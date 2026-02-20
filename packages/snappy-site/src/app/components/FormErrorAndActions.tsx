@@ -1,12 +1,14 @@
 import type { ReactNode } from "react";
 
+import { Error } from "@snappy/ui";
+
 import styles from "./FormErrorAndActions.module.css";
 
 export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 
 export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProps) => (
   <>
-    {error !== `` && <p className={styles.error}>{error}</p>}
+    {error !== `` && <Error>{error}</Error>}
     <div className={styles.actions}>{children}</div>
   </>
 );

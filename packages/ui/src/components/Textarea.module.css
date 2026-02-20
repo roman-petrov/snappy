@@ -1,0 +1,6 @@
+.input {
+  min-height: 140px;
+  padding: var(--space-4);
+  line-height: var(--leading-relaxed);
+  resize: vertical;
+}

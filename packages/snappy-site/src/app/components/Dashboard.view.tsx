@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-/* eslint-disable functional/no-expression-statements */
+
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { Button, Card } from "@snappy/ui";
+import { Block, Button, Card, Error, Select, Textarea, Title } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
@@ -28,10 +28,14 @@ export const DashboardView = ({
   text,
 }: DashboardViewProps) => (
   <>
-    <h1 className={styles.pageTitle}>{t(`dashboard.title`)}</h1>
+    <Title cn={styles.pageTitle} level={2}>
+      {t(`dashboard.title`)}
+    </Title>
 
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>{t(`dashboard.balance`)}</h2>
+      <Title as="h2" level={2}>
+        {t(`dashboard.balance`)}
+      </Title>
       <Card>
         <div className={styles.balanceRow}>
           <p className={styles.balance}>
@@ -48,49 +52,35 @@ export const DashboardView = ({
     </section>
 
     <section className={styles.section}>
-      <h2 className={styles.sectionTitle}>{t(`dashboard.process`)}</h2>
-      <p className={styles.sectionDesc}>{t(`dashboard.processDesc`)}</p>
+      <div className={styles.sectionIntro}>
+        <Block description={t(`dashboard.processDesc`)} title={t(`dashboard.process`)} titleTag="h2" />
+      </div>
       <form onSubmit={onSubmit}>
         <Card>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="dashboard-text">
-              {t(`dashboard.text`)}
-            </label>
-            <textarea
-              className={styles.textarea}
+            <Textarea
               disabled={loading}
               id="dashboard-text"
-              onChange={event => {
-                onTextChange(event.target.value);
-              }}
+              label={t(`dashboard.text`)}
+              onChange={onTextChange}
               placeholder={t(`dashboard.textPlaceholder`)}
               value={text}
             />
           </div>
           <div className={styles.formGroup}>
-            <label className={styles.label} htmlFor="dashboard-feature">
-              {t(`dashboard.action`)}
-            </label>
-            <select
-              className={styles.select}
+            <Select
               disabled={loading}
               id="dashboard-feature"
-              onChange={event => {
-                onFeatureChange(event.target.value as FeatureType);
-              }}
+              label={t(`dashboard.action`)}
+              onChange={v => onFeatureChange(v as FeatureType)}
+              options={featureKeys.map(key => ({ label: `${featureEmoji[key]} ${t(`features.${key}`)}`, value: key }))}
               value={feature}
-            >
-              {featureKeys.map(key => (
-                <option key={key} value={key}>
-                  {featureEmoji[key]} {t(`features.${key}`)}
-                </option>
-              ))}
-            </select>
+            />
           </div>
           <Button cn={styles.submitRow} disabled={loading} primary type="submit">
             {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
           </Button>
-          {error !== `` && <p className={styles.error}>{error}</p>}
+          {error !== `` && <Error>{error}</Error>}
           {result !== `` && (
             <div className={styles.resultWrap}>
               <div className={styles.resultHeader}>

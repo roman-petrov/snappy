@@ -3,14 +3,13 @@ import type { usePasswordInputState } from "./PasswordInput.state";
 
 import { Icon } from "./Icon";
 import { Input } from "./Input";
-import inputStyles from "./Input.module.css";
 import styles from "./PasswordInput.module.css";
 
 export type PasswordInputViewProps = ReturnType<typeof usePasswordInputState>;
 
 export const PasswordInputView = ({
   ariaLabel,
-  autoComplete = `current-password`,
+  autoComplete = "current-password",
   disabled = false,
   id,
   inputType,
@@ -22,32 +21,20 @@ export const PasswordInputView = ({
   value,
   visible,
 }: PasswordInputViewProps) => (
-  <div className={inputStyles.field}>
-    <label className={inputStyles.label} htmlFor={id}>
-      {label}
-    </label>
-    <div className={styles.wrap}>
-      <Input
-        autoComplete={autoComplete}
-        disabled={disabled}
-        id={id}
-        inputClassName={styles.input}
-        minLength={minLength}
-        onChange={onChange}
-        required={required}
-        type={inputType as `password` | `text`}
-        value={value}
-      />
-      <button
-        aria-label={ariaLabel}
-        className={styles.toggle}
-        disabled={disabled}
-        onClick={toggleVisible}
-        title={ariaLabel}
-        type="button"
-      >
-        <Icon cn={styles.icon} name={visible ? `eye-closed` : `eye-open`} />
+  <Input
+    autoComplete={autoComplete}
+    disabled={disabled}
+    id={id}
+    label={label}
+    minLength={minLength}
+    onChange={onChange}
+    required={required}
+    suffix={
+      <button aria-label={ariaLabel} disabled={disabled} onClick={toggleVisible} title={ariaLabel} type="button">
+        <Icon cn={styles.icon} name={visible ? "eye-closed" : "eye-open"} />
       </button>
-    </div>
-  </div>
+    }
+    type={inputType as "password" | "text"}
+    value={value}
+  />
 );

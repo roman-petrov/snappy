@@ -1,3 +1,6 @@
+import type { ReactNode } from "react";
+
+import { Field } from "./Field";
 import styles from "./Input.module.css";
 
 export type InputProps = {
@@ -9,7 +12,8 @@ export type InputProps = {
   minLength?: number;
   onChange: (value: string) => void;
   required?: boolean;
-  type?: `email` | `password` | `text`;
+  suffix?: ReactNode;
+  type?: "email" | "password" | "text";
   value: string;
 };
 
@@ -22,33 +26,48 @@ export const Input = ({
   minLength,
   onChange,
   required = false,
-  type = `text`,
+  suffix,
+  type = "text",
   value,
 }: InputProps) => {
-  const inputElement = (
-    <input
-      autoComplete={autoComplete}
-      className={inputClassName ?? styles.input}
-      disabled={disabled}
-      id={id}
-      minLength={minLength}
-      onChange={event => onChange(event.target.value)}
-      required={required}
-      type={type}
-      value={value}
-    />
-  );
+  const renderControl = ({
+    inputClassName: inputClassNameBase,
+    inputInsideWrapClassName,
+    wrapClassName,
+  }: {
+    inputClassName: string;
+    inputInsideWrapClassName: string;
+    wrapClassName: string;
+  }) => {
+    const inputEl = (
+      <input
+        autoComplete={autoComplete}
+        className={
+          suffix !== undefined
+            ? `${inputClassNameBase} ${inputInsideWrapClassName}`
+            : (inputClassName ?? inputClassNameBase)
+        }
+        disabled={disabled}
+        id={id}
+        minLength={minLength}
+        onChange={ev => onChange(ev.target.value)}
+        required={required}
+        type={type}
+        value={value}
+      />
+    );
 
-  if (label === undefined) {
-    return inputElement;
-  }
+    if (suffix !== undefined) {
+      return (
+        <div className={wrapClassName}>
+          {inputEl}
+          <div className={styles.suffix}>{suffix}</div>
+        </div>
+      );
+    }
 
-  return (
-    <div className={styles.field}>
-      <label className={styles.label} htmlFor={id}>
-        {label}
-      </label>
-      {inputElement}
-    </div>
-  );
+    return inputEl;
+  };
+
+  return <Field id={id} label={label} renderControl={renderControl} />;
 };

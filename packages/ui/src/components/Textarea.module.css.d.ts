@@ -1,5 +1,5 @@
 declare const styles: {
-  readonly "suffix": string;
+  readonly "input": string;
 };
 export = styles;
 
