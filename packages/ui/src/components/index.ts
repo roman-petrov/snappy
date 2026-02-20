@@ -26,6 +26,8 @@ export * from "./PasswordStrength";
 
 export * from "./Select";
 
+export * from "./Text";
+
 export * from "./Textarea";
 
 export * from "./Title";

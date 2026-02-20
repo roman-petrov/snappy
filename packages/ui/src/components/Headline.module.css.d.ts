@@ -4,7 +4,6 @@ declare const styles: {
   readonly "lead": string;
   readonly "root": string;
   readonly "section": string;
-  readonly "title": string;
 };
 export = styles;
 

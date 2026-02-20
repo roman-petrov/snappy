@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import styles from "./Block.module.css";
+import { Text } from "./Text";
 
 export type BlockProps = {
   as?: `div` | `dl`;
@@ -10,7 +11,7 @@ export type BlockProps = {
   withDivider?: boolean;
 };
 
-export const Block = ({ as = `div`, description, title, titleTag: Tag = `h3`, withDivider = false }: BlockProps) =>
+export const Block = ({ as = `div`, description, title, titleTag = `h3`, withDivider = false }: BlockProps) =>
   as === `dl` ? (
     <>
       <dt className={styles.title}>{title}</dt>
@@ -18,7 +19,9 @@ export const Block = ({ as = `div`, description, title, titleTag: Tag = `h3`, wi
     </>
   ) : (
     <>
-      <Tag className={styles.title}>{title}</Tag>
+      <Text as={titleTag} variant="h3">
+        {title}
+      </Text>
       <p className={styles.desc}>{description}</p>
     </>
   );
