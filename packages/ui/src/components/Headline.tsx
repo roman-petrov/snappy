@@ -16,7 +16,9 @@ export const Headline = ({ as = `h2`, children, lead, title, variant = `section`
 
   return (
     <section className={`${styles.root} ${rootClass}`}>
-      <Text as={as} variant={variant === `hero` ? `display` : `h2`}>{title}</Text>
+      <Text as={as} variant={variant === `hero` ? `display` : `h2`}>
+        {title}
+      </Text>
       <Text cn={styles.lead} variant="large">
         {lead}
       </Text>

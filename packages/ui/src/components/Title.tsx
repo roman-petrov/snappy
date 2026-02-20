@@ -10,6 +10,10 @@ export const Title = ({ as = `h1`, children, cn = ``, lead, level = 2 }: TitlePr
     <Text as={as} cn={cn ? `${styles.root} ${cn}`.trim() : styles.root} variant={level === 1 ? `h1` : `h2`}>
       {children}
     </Text>
-    {lead !== undefined && <Text cn={styles.lead} variant="large">{lead}</Text>}
+    {lead !== undefined && (
+      <Text cn={styles.lead} variant="large">
+        {lead}
+      </Text>
+    )}
   </>
 );

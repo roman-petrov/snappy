@@ -17,11 +17,7 @@ export const Block = ({ as = `div`, description, title, titleTag = `h3`, withDiv
       <Text as="dt" cn={styles.title} variant="h3">
         {title}
       </Text>
-      <Text
-        as="dd"
-        cn={withDivider ? styles.descDivider : undefined}
-        variant="large"
-      >
+      <Text as="dd" cn={withDivider ? styles.descDivider : undefined} variant="large">
         {description}
       </Text>
     </>
