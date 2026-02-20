@@ -1,44 +1,65 @@
 import type { ReactNode } from "react";
 
+import type { FieldControlClasses } from "./Field";
+
 import { Field } from "./Field";
 import styles from "./Input.module.css";
 
-export type InputProps = {
-  autoComplete?: string;
-  disabled?: boolean;
-  id: string;
-  inputClassName?: string;
-  label?: string;
-  minLength?: number;
-  onChange: (value: string) => void;
-  required?: boolean;
-  suffix?: ReactNode;
-  type?: `email` | `password` | `text`;
-  value: string;
-};
+export type InputProps =
+  | {
+      autoComplete?: string;
+      children?: never;
+      disabled?: boolean;
+      id: string;
+      inputClassName?: string;
+      label?: string;
+      minLength?: number;
+      onChange: (value: string) => void;
+      required?: boolean;
+      suffix?: ReactNode;
+      type?: `email` | `password` | `text`;
+      value: string;
+    }
+  | {
+      children: (classes: FieldControlClasses) => ReactNode;
+      disabled?: boolean;
+      id: string;
+      label?: string;
+      suffix?: ReactNode;
+    };
 
-export const Input = ({
-  autoComplete,
-  disabled = false,
-  id,
-  inputClassName,
-  label,
-  minLength,
-  onChange,
-  required = false,
-  suffix,
-  type = `text`,
-  value,
-}: InputProps) => {
+export const Input = (props: InputProps) => {
+  const { id, label, suffix } = props;
+
   const renderControl = ({
     inputClassName: inputClassNameBase,
     inputInsideWrapClassName,
     wrapClassName,
-  }: {
-    inputClassName: string;
-    inputInsideWrapClassName: string;
-    wrapClassName: string;
-  }) => {
+  }: FieldControlClasses) => {
+    if (typeof props.children === `function`) {
+      return (
+        <div className={wrapClassName}>
+          {props.children({ inputClassName: inputClassNameBase, inputInsideWrapClassName, wrapClassName })}
+          {suffix === undefined ? undefined : (
+            <div className={styles.suffix}>
+              <div className={styles.suffixIcon}>{suffix}</div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const {
+      autoComplete,
+      disabled = false,
+      inputClassName,
+      minLength,
+      onChange,
+      required = false,
+      type = `text`,
+      value,
+    } = props;
+
     const inputElement = (
       <input
         autoComplete={autoComplete}
@@ -61,7 +82,9 @@ export const Input = ({
       return (
         <div className={wrapClassName}>
           {inputElement}
-          <div className={styles.suffix}>{suffix}</div>
+          <div className={styles.suffix}>
+            <div className={styles.suffixIcon}>{suffix}</div>
+          </div>
         </div>
       );
     }
