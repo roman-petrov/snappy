@@ -1,4 +1,4 @@
-import { Field, fieldControl } from "./Field";
+import { Field } from "./Field";
 import styles from "./Select.module.css";
 
 export type SelectOption = { label: string; value: string };
@@ -16,7 +16,7 @@ export const Select = ({ disabled = false, id, label, onChange, options, value }
   <Field
     id={id}
     label={label}
-    renderControl={fieldControl(cn => (
+    renderInput={cn => (
       <select
         className={`${cn} ${styles.input}`}
         disabled={disabled}
@@ -30,6 +30,6 @@ export const Select = ({ disabled = false, id, label, onChange, options, value }
           </option>
         ))}
       </select>
-    ))}
+    )}
   />
 );

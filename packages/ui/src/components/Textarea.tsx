@@ -1,4 +1,4 @@
-import { Field, fieldControl } from "./Field";
+import { Field } from "./Field";
 import styles from "./Textarea.module.css";
 
 export type TextareaProps = {
@@ -14,7 +14,7 @@ export const Textarea = ({ disabled = false, id, label, onChange, placeholder, v
   <Field
     id={id}
     label={label}
-    renderControl={fieldControl(cn => (
+    renderInput={cn => (
       <textarea
         className={`${cn} ${styles.input}`}
         disabled={disabled}
@@ -23,6 +23,6 @@ export const Textarea = ({ disabled = false, id, label, onChange, placeholder, v
         placeholder={placeholder}
         value={value}
       />
-    ))}
+    )}
   />
 );
