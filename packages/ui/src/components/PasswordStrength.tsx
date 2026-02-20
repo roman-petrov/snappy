@@ -1,5 +1,6 @@
 import { Button } from "./Button";
 import styles from "./PasswordStrength.module.css";
+import { Text } from "./Text";
 
 export type PasswordStrengthProps = {
   disabled?: boolean;
@@ -27,18 +28,22 @@ export const PasswordStrength = ({
   <>
     <div className={styles.requirements}>
       {requirements.map(({ check, label }) => (
-        <span className={check(password) ? styles.requirementMet : styles.requirement} key={label}>
+        <Text cn={check(password) ? styles.requirementMet : undefined} key={label} variant="caption">
           {check(password) ? `✓ ` : ``}
           {label}
-        </span>
+        </Text>
       ))}
     </div>
     <div className={styles.strengthRow}>
-      <span className={styles.strengthLabel}>{strengthLabel}</span>
+      <Text cn={styles.strengthLabel} variant="caption">
+        {strengthLabel}
+      </Text>
       <div className={styles.strengthBar}>
         <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
       </div>
-      <span className={styles.strengthText}>{strengthText}</span>
+      <Text cn={styles.strengthText} variant="caption">
+        {strengthText}
+      </Text>
     </div>
     <Button disabled={disabled} onClick={onGeneratePassword} type="button">
       {generateLabel}

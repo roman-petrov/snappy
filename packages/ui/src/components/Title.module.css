@@ -6,9 +6,6 @@
 
 .lead {
   margin: 0 0 var(--space-5);
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
-  color: var(--color-text-muted);
 }
 
 @media (width <= 640px) {

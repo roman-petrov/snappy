@@ -1,5 +1,4 @@
 .accent {
-  font-size: var(--text-sm);
   color: var(--color-accent);
   text-decoration: none;
 }
@@ -9,8 +8,6 @@
 }
 
 .muted {
-  font-size: var(--text-sm);
-  font-weight: var(--weight-medium);
   color: var(--color-text-muted);
   text-decoration: none;
 }

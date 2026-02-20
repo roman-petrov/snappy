@@ -1,6 +1,6 @@
-/* Typography scale: semantic variants */
+/* Typography scale: universal variants */
 
-.hero {
+.display {
   margin: 0;
   font-size: var(--text-hero);
   font-weight: var(--weight-extrabold);
@@ -36,14 +36,14 @@
   letter-spacing: var(--tracking-tight);
 }
 
-.lead {
+.large {
   margin: 0;
   font-size: var(--text-md);
   line-height: var(--leading-relaxed);
   color: var(--color-text-muted);
 }
 
-.muted {
+.caption {
   margin: 0;
   font-size: var(--text-sm);
   line-height: var(--leading-body);
@@ -51,7 +51,7 @@
 }
 
 @media (width <= 640px) {
-  .hero {
+  .display {
     font-size: clamp(1.875rem, 7vw, 2.75rem);
   }
 

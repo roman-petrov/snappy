@@ -1,16 +1,5 @@
 .title {
   margin: 0;
-  font-size: var(--text-lg);
-  font-weight: var(--weight-bold);
-  color: var(--color-text-heading);
-  letter-spacing: var(--tracking-tight);
-}
-
-.desc {
-  margin: 0;
-  font-size: var(--text-md);
-  line-height: var(--leading-relaxed);
-  color: var(--color-text-muted);
 }
 
 .desc-divider {
@@ -29,10 +18,4 @@
 
 .list dd:last-child::after {
   display: none;
-}
-
-@media (width <= 640px) {
-  .title {
-    font-size: var(--text-md);
-  }
 }

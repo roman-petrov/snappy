@@ -14,15 +14,23 @@ export type BlockProps = {
 export const Block = ({ as = `div`, description, title, titleTag = `h3`, withDivider = false }: BlockProps) =>
   as === `dl` ? (
     <>
-      <dt className={styles.title}>{title}</dt>
-      <dd className={withDivider ? `${styles.desc} ${styles.descDivider}` : styles.desc}>{description}</dd>
+      <Text as="dt" cn={styles.title} variant="h3">
+        {title}
+      </Text>
+      <Text
+        as="dd"
+        cn={withDivider ? styles.descDivider : undefined}
+        variant="large"
+      >
+        {description}
+      </Text>
     </>
   ) : (
     <>
       <Text as={titleTag} variant="h3">
         {title}
       </Text>
-      <p className={styles.desc}>{description}</p>
+      <Text variant="large">{description}</Text>
     </>
   );
 

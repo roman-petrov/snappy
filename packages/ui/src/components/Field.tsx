@@ -4,6 +4,7 @@
 import type { ReactNode } from "react";
 
 import styles from "./Field.module.css";
+import { Text } from "./Text";
 
 export type FieldControlClasses = { inputClassName: string; inputInsideWrapClassName: string; wrapClassName: string };
 
@@ -32,9 +33,9 @@ export const Field = (props: FieldProps) => {
 
   return (
     <div className={styles.root}>
-      <label className={styles.label} htmlFor={id}>
+      <Text as="label" cn={styles.label} htmlFor={id} variant="caption">
         {label}
-      </label>
+      </Text>
       {content}
     </div>
   );
