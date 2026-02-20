@@ -1,4 +1,5 @@
 import { Field } from "./Field";
+import { Icon } from "./Icon";
 import styles from "./Select.module.css";
 
 export type SelectOption = { label: string; value: string };
@@ -16,20 +17,25 @@ export const Select = ({ disabled = false, id, label, onChange, options, value }
   <Field
     id={id}
     label={label}
-    renderInput={cn => (
-      <select
-        className={`${cn} ${styles.input}`}
-        disabled={disabled}
-        id={id}
-        onChange={event_ => onChange(event_.target.value)}
-        value={value}
-      >
-        {options.map(opt => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
+    renderControl={({ inputClassName, inputInsideWrapClassName, wrapClassName }) => (
+      <div className={wrapClassName}>
+        <select
+          className={`${inputClassName} ${inputInsideWrapClassName} ${styles.input}`}
+          disabled={disabled}
+          id={id}
+          onChange={event_ => onChange(event_.target.value)}
+          value={value}
+        >
+          {options.map(opt => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <div className={styles.suffix}>
+          <Icon name="chevron-down" />
+        </div>
+      </div>
     )}
   />
 );
