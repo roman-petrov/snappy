@@ -3,16 +3,16 @@ import type { ReactNode } from "react";
 
 import styles from "./Field.module.css";
 
+export type FieldControlClasses = { inputClassName: string; inputInsideWrapClassName: string; wrapClassName: string };
+
+export const fieldControl =
+  (render: (inputClassName: string) => ReactNode) =>
+  (classes: FieldControlClasses): ReactNode =>
+    render(classes.inputClassName);
+
 export type FieldProps = (
   | { children: ReactNode; renderControl?: never }
-  | {
-      children?: never;
-      renderControl: (classes: {
-        inputClassName: string;
-        inputInsideWrapClassName: string;
-        wrapClassName: string;
-      }) => ReactNode;
-    }
+  | { children?: never; renderControl: (classes: FieldControlClasses) => ReactNode }
 ) & { id: string; label?: string };
 
 export const Field = (props: FieldProps) => {
@@ -21,9 +21,9 @@ export const Field = (props: FieldProps) => {
 
   const content = hasRenderControl
     ? props.renderControl({
-        inputClassName: styles.input,
+        inputClassName: `${styles.inputSurface} ${styles.input}`,
         inputInsideWrapClassName: styles.inputInsideWrap,
-        wrapClassName: styles.inputWrap,
+        wrapClassName: `${styles.inputSurface} ${styles.inputWrap}`,
       })
     : props.children;
 
