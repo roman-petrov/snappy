@@ -6,7 +6,7 @@ export * from "./Faq";
 
 export * from "./Features";
 
-export * from "./Header";
+export * from "./SiteHeader";
 
 export * from "./Hero";
 

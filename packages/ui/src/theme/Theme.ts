@@ -74,10 +74,4 @@ const restore = (): void => {
   apply(defaultTheme);
 };
 
-const onLogoClick = (after?: () => void) => (event: { preventDefault: () => void }) => {
-  event.preventDefault();
-  toggle();
-  void after?.();
-};
-
-export const Theme = { apply, onLogoClick, restore, toggle };
+export const Theme = { apply, restore, toggle };
