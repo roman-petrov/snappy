@@ -7,10 +7,10 @@
   "dependencies": {
     "@snappy/config": "workspace:*",
     "@snappy/do": "workspace:*",
-    "prisma": "^7.4.0"
+    "prisma": "^7.4.1"
   },
   "devDependencies": {
-    "@knip/mcp": "^0.0.18",
+    "@knip/mcp": "^0.0.19",
     "vitest": "^4.0.18"
   }
 }

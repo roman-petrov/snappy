@@ -5,11 +5,11 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.4.0",
-    "@prisma/client": "^7.4.0",
+    "@prisma/adapter-pg": "^7.4.1",
+    "@prisma/client": "^7.4.1",
     "@snappy/config": "workspace:*"
   },
   "devDependencies": {
-    "prisma": "^7.4.0"
+    "prisma": "^7.4.1"
   }
 }
