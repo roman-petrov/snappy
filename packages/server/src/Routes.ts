@@ -63,58 +63,43 @@ const withMethod =
 
 const post = withMethod(`post`);
 const get = withMethod(`get`);
+const ok = () => ({ status: `ok` as const });
+const id = <T>(r: T): T => r;
+
+const authBodyOk = (path: string, run: (api: ServerAppApi, b: ApiAuthBody) => Promise<unknown | { status: string }>) =>
+  post(path, withBody(run, body<ApiAuthBody>), ok, { setAuthCookie: true });
 
 export const Routes = [
-  post(
-    Endpoints.auth.register,
-    withBody(async (api, b) => api.auth.register(b), body<ApiAuthBody>),
-    () => ({ status: `ok` as const }),
-    { setAuthCookie: true },
-  ),
-  post(
-    Endpoints.auth.login,
-    withBody(async (api, b) => api.auth.login(b), body<ApiAuthBody>),
-    () => ({ status: `ok` as const }),
-    { setAuthCookie: true },
-  ),
-  post(
-    Endpoints.auth.logout,
-    async () => ({ status: `ok` as const }),
-    (r: { status: `ok` }) => r,
-    { clearAuthCookie: true },
-  ),
-  get(
-    Endpoints.auth.me,
-    async () => ({ status: `ok` as const }),
-    (r: { status: `ok` }) => r,
-    { auth: true },
-  ),
+  authBodyOk(Endpoints.auth.register, async (api, b) => api.auth.register(b)),
+  authBodyOk(Endpoints.auth.login, async (api, b) => api.auth.login(b)),
+  post(Endpoints.auth.logout, async () => ok(), id, { clearAuthCookie: true }),
+  get(Endpoints.auth.me, async () => ok(), id, { auth: true }),
   post(
     Endpoints.auth.forgotPassword,
     withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
-    (r: { resetToken?: string; status: `ok` }) => r,
+    id,
   ),
   post(
     Endpoints.auth.resetPassword,
     withBody(async (api, b) => api.auth.resetPassword(b), body<ApiResetPasswordBody>),
-    () => ({ status: `ok` as const }),
+    ok,
   ),
   get(
     Endpoints.user.remaining,
     withUserId(async (api, id) => api.user.remaining(id)),
-    (remaining: number) => ({ remaining, status: `ok` as const }),
+    remaining => ({ remaining, status: `ok` as const }),
     { auth: true },
   ),
   post(
     Endpoints.process,
     withUserIdAndBody(async (api, id, b) => api.process(id, b), body<ApiProcessBody>),
-    (r: { text: string }) => ({ status: `ok` as const, text: r.text }),
+    (r: { text: string }) => ({ ...ok(), text: r.text }),
     { auth: true },
   ),
   post(
     Endpoints.premium.paymentUrl,
     withUserId(async (api, id) => api.premium.paymentUrl(id)),
-    (r: { url: string }) => ({ status: `ok` as const, url: r.url }),
+    (r: { url: string }) => ({ ...ok(), url: r.url }),
     { auth: true },
   ),
 ] as Route[];
