@@ -13,7 +13,7 @@
   justify-content: center;
 }
 
-.suffixIcon {
+.suffix-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,7 +22,7 @@
   font-size: 20px;
 }
 
-.suffixIcon > * {
+.suffix-icon > * {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,21 +36,21 @@
   transition: color var(--ease);
 }
 
-.suffixIcon > *:hover {
+.suffix-icon > *:hover {
   color: var(--color-text-body);
 }
 
-.suffixIcon > *:focus {
+.suffix-icon > *:focus {
   outline: none;
 }
 
-.suffixIcon > *:focus-visible {
+.suffix-icon > *:focus-visible {
   color: var(--color-accent);
   outline: var(--focus-ring-outline);
   outline-offset: var(--focus-ring-outline-offset);
 }
 
-.suffixIcon > *:disabled {
+.suffix-icon > *:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
