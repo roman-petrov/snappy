@@ -1,8 +1,8 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable unicorn/consistent-destructuring */
 import type { ReactNode } from "react";
 
-import type { FieldControlClasses } from "./Field";
-
-import { Field } from "./Field";
+import { Field, type FieldControlClasses } from "./Field";
 import styles from "./Input.module.css";
 
 export type InputProps =
@@ -36,7 +36,7 @@ export const Input = (props: InputProps) => {
     inputInsideWrapClassName,
     wrapClassName,
   }: FieldControlClasses) => {
-    if (typeof props.children === `function`) {
+    if (props.children !== undefined) {
       return (
         <div className={wrapClassName}>
           {props.children({ inputClassName: inputClassNameBase, inputInsideWrapClassName, wrapClassName })}
