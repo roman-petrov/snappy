@@ -66,8 +66,10 @@ const get = withMethod(`get`);
 const ok = () => ({ status: `ok` as const });
 const id = <T>(r: T): T => r;
 
-const authBodyOk = (path: string, run: (api: ServerAppApi, b: ApiAuthBody) => Promise<unknown | { status: string }>) =>
-  post(path, withBody(run, body<ApiAuthBody>), ok, { setAuthCookie: true });
+const authBodyOk = (
+  path: string,
+  run: (api: ServerAppApi, b: ApiAuthBody) => Promise<Record<string, unknown> | { status: string }>,
+) => post(path, withBody(run, body<ApiAuthBody>), ok, { setAuthCookie: true });
 
 export const Routes = [
   authBodyOk(Endpoints.auth.register, async (api, b) => api.auth.register(b)),
@@ -86,19 +88,19 @@ export const Routes = [
   ),
   get(
     Endpoints.user.remaining,
-    withUserId(async (api, id) => api.user.remaining(id)),
+    withUserId(async (api, userId) => api.user.remaining(userId)),
     remaining => ({ remaining, status: `ok` as const }),
     { auth: true },
   ),
   post(
     Endpoints.process,
-    withUserIdAndBody(async (api, id, b) => api.process(id, b), body<ApiProcessBody>),
+    withUserIdAndBody(async (api, userId, b) => api.process(userId, b), body<ApiProcessBody>),
     (r: { text: string }) => ({ ...ok(), text: r.text }),
     { auth: true },
   ),
   post(
     Endpoints.premium.paymentUrl,
-    withUserId(async (api, id) => api.premium.paymentUrl(id)),
+    withUserId(async (api, userId) => api.premium.paymentUrl(userId)),
     (r: { url: string }) => ({ ...ok(), url: r.url }),
     { auth: true },
   ),
