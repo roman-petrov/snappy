@@ -10,8 +10,19 @@ export type TextProps = {
   variant: TextVariant;
 };
 
-export type TextVariant = `body` | `h1` | `h2` | `h3` | `hero` | `lead` | `muted`;
+export type TextVariant = `h1` | `h2` | `h3` | `hero` | `lead` | `muted`;
 
-export const Text = ({ as: Tag = `p`, children, cn = ``, variant }: TextProps) => (
-  <Tag className={`${styles[variant]} ${cn}`.trim()}>{children}</Tag>
-);
+const variantTag: Record<TextVariant, `h1` | `h2` | `h3` | `p` | `span`> = {
+  h1: `h1`,
+  h2: `h2`,
+  h3: `h3`,
+  hero: `h1`,
+  lead: `p`,
+  muted: `span`,
+};
+
+export const Text = ({ as, children, cn = ``, variant }: TextProps) => {
+  const Tag = as ?? variantTag[variant];
+
+  return <Tag className={`${styles[variant]} ${cn}`.trim()}>{children}</Tag>;
+};

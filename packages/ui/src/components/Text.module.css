@@ -43,13 +43,6 @@
   color: var(--color-text-muted);
 }
 
-.body {
-  margin: 0;
-  font-size: var(--text-base);
-  line-height: var(--leading-body);
-  color: var(--color-text-body);
-}
-
 .muted {
   margin: 0;
   font-size: var(--text-sm);

@@ -7,7 +7,7 @@ export type TitleProps = { as?: `h1` | `h2`; children: ReactNode; cn?: string; l
 
 export const Title = ({ as = `h1`, children, cn = ``, lead, level = 2 }: TitleProps) => (
   <>
-    <Text as={as} cn={cn ? `${styles.root} ${cn}`.trim() : styles.root} variant={level === 1 ? `h1` : `h2`}>
+    <Text cn={cn ? `${styles.root} ${cn}`.trim() : styles.root} variant={level === 1 ? `h1` : `h2`}>
       {children}
     </Text>
     {lead !== undefined && <p className={styles.lead}>{lead}</p>}
