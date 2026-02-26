@@ -1,62 +1,66 @@
 :root,
 [data-theme="dark"] {
-  --color-bg: #0a0a0c;
-  --color-bg-elevated: #111114;
-  --color-bg-card-border: rgb(255 255 255 / 12%);
-  --color-bg-icon: rgb(255 255 255 / 6%);
-  --color-bg-card-features: rgb(20 38 48 / 30%);
-  --color-bg-card-features-hover: rgb(25 45 58 / 75%);
-  --color-bg-header: rgb(10 10 12 / 90%);
-  --color-border: #35353a;
+  --color-bg: oklch(6.7% 0.002 286deg);
+  --color-bg-elevated: oklch(8.7% 0.002 286deg);
+  --color-bg-card-border: oklch(100% 0 0deg / 12%);
+  --color-bg-icon: oklch(100% 0 0deg / 6%);
+  --color-bg-card-features: oklch(28% 0.03 235deg / 30%);
+  --color-bg-card-features-hover: oklch(32% 0.04 235deg / 75%);
+  --color-bg-header: oklch(6.7% 0.002 286deg / 90%);
+  --color-border: oklch(24% 0.008 286deg);
   --color-divider: linear-gradient(
     to right,
     transparent 0%,
-    color-mix(in srgb, var(--color-accent) 60%, transparent) 30%,
-    color-mix(in srgb, var(--color-accent) 80%, transparent) 50%,
-    color-mix(in srgb, var(--color-accent) 60%, transparent) 70%,
+    color-mix(in oklch, var(--color-accent) 60%, transparent) 30%,
+    color-mix(in oklch, var(--color-accent) 80%, transparent) 50%,
+    color-mix(in oklch, var(--color-accent) 60%, transparent) 70%,
     transparent 100%
   );
-  --color-accent: #67e8f9;
-  --color-on-accent: #0a0a0c;
-  --color-error: #fca5a5;
-  --color-text-heading: #fff;
-  --color-text-body: #e4e4e7;
-  --color-text-muted: #a1a1aa;
-  --color-grid: rgb(255 255 255 / 2%);
-  --shadow-card: 0 1px 3px rgb(0 0 0 / 4%);
-  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 6%);
-  --shadow-btn: 0 0 20px color-mix(in srgb, var(--color-accent) 35%, transparent);
-  --shadow-btn-hover: 0 0 28px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  --color-accent: oklch(89.3% 0.117 195deg);
+  --color-on-accent: oklch(6.7% 0.002 286deg);
+  --color-error: oklch(82% 0.11 15deg);
+  --color-warning: oklch(82.3% 0.165 86deg);
+  --color-success: oklch(64.6% 0.194 150deg);
+  --color-text-heading: oklch(100% 0 0deg);
+  --color-text-body: oklch(90.5% 0.004 286deg);
+  --color-text-muted: oklch(68% 0.01 286deg);
+  --color-grid: oklch(100% 0 0deg / 2%);
+  --shadow-card: 0 1px 3px oklch(0% 0 0deg / 4%);
+  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / 6%);
+  --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
+  --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
 }
 
 [data-theme="light"] {
-  --color-bg: #f5f5f7;
-  --color-bg-elevated: #fff;
-  --color-bg-card-border: rgb(0 0 0 / 8%);
-  --color-bg-icon: rgb(0 0 0 / 4%);
-  --color-bg-card-features: rgb(205 228 245 / 30%);
-  --color-bg-card-features-hover: rgb(195 220 240 / 75%);
-  --color-bg-header: rgb(255 255 255 / 90%);
-  --color-border: #e4e4e7;
+  --color-bg: oklch(97% 0.002 286deg);
+  --color-bg-elevated: oklch(100% 0 0deg);
+  --color-bg-card-border: oklch(0% 0 0deg / 8%);
+  --color-bg-icon: oklch(0% 0 0deg / 4%);
+  --color-bg-card-features: oklch(88% 0.04 235deg / 30%);
+  --color-bg-card-features-hover: oklch(86% 0.05 235deg / 75%);
+  --color-bg-header: oklch(100% 0 0deg / 90%);
+  --color-border: oklch(91% 0.005 286deg);
   --color-divider: linear-gradient(
     to right,
     transparent 0%,
-    color-mix(in srgb, var(--color-accent) 50%, transparent) 30%,
-    color-mix(in srgb, var(--color-accent) 70%, transparent) 50%,
-    color-mix(in srgb, var(--color-accent) 50%, transparent) 70%,
+    color-mix(in oklch, var(--color-accent) 50%, transparent) 30%,
+    color-mix(in oklch, var(--color-accent) 70%, transparent) 50%,
+    color-mix(in oklch, var(--color-accent) 50%, transparent) 70%,
     transparent 100%
   );
-  --color-accent: #0891b2;
-  --color-on-accent: #fff;
-  --color-error: #dc2626;
-  --color-text-heading: #09090b;
-  --color-text-body: #27272a;
-  --color-text-muted: #71717a;
-  --color-grid: rgb(0 0 0 / 4%);
-  --shadow-card: 0 1px 3px rgb(0 0 0 / 3%);
-  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / 5%);
-  --shadow-btn: 0 2px 12px color-mix(in srgb, var(--color-accent) 30%, transparent);
-  --shadow-btn-hover: 0 4px 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --color-accent: oklch(55.3% 0.131 220deg);
+  --color-on-accent: oklch(100% 0 0deg);
+  --color-error: oklch(55.1% 0.218 27deg);
+  --color-warning: oklch(82.3% 0.165 86deg);
+  --color-success: oklch(64.6% 0.194 150deg);
+  --color-text-heading: oklch(13% 0 0deg);
+  --color-text-body: oklch(22% 0.01 286deg);
+  --color-text-muted: oklch(52% 0.02 286deg);
+  --color-grid: oklch(0% 0 0deg / 4%);
+  --shadow-card: 0 1px 3px oklch(0% 0 0deg / 3%);
+  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / 5%);
+  --shadow-btn: 0 2px 12px color-mix(in oklch, var(--color-accent) 30%, transparent);
+  --shadow-btn-hover: 0 4px 20px color-mix(in oklch, var(--color-accent) 40%, transparent);
 
   & #fog-bg {
     display: none;
@@ -67,7 +71,7 @@
 [data-theme="dark"],
 [data-theme="light"] {
   --color-focus-ring: var(--color-accent);
-  --focus-ring-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  --focus-ring-shadow: 0 0 0 4px color-mix(in oklch, var(--color-accent) 35%, transparent);
   --focus-ring-outline: 2px solid var(--color-focus-ring);
   --focus-ring-outline-offset: 2px;
 }
