@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { $, Block, Button, Card, Error, Select, Text, Textarea, Title } from "@snappy/ui";
+import { $, Alert, Block, Button, Card, Select, Text, Textarea, Title } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
@@ -77,7 +77,7 @@ export const DashboardView = ({
           <Button cn={styles.submitRow} disabled={loading} primary type="submit">
             {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
           </Button>
-          {error !== `` && <Error text={error} />}
+          {error !== `` && <Alert text={error} variant="error" />}
           {result !== `` && (
             <div className={styles.resultWrap}>
               <div className={styles.resultHeader}>

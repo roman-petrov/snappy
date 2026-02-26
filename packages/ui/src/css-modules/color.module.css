@@ -10,6 +10,18 @@
   color: var(--color-error);
 }
 
+.warning {
+  color: var(--color-warning);
+}
+
+.success {
+  color: var(--color-success);
+}
+
+.info {
+  color: var(--color-accent);
+}
+
 .heading {
   color: var(--color-text-heading);
 }

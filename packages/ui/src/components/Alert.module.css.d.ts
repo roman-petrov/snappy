@@ -1,12 +1,10 @@
 declare const styles: {
-  readonly "accent": string;
-  readonly "body": string;
   readonly "error": string;
-  readonly "heading": string;
+  readonly "icon": string;
   readonly "info": string;
-  readonly "muted": string;
-  readonly "onAccent": string;
+  readonly "root": string;
   readonly "success": string;
+  readonly "text": string;
   readonly "warning": string;
 };
 export = styles;

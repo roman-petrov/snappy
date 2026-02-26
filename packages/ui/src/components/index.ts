@@ -4,7 +4,7 @@ export * from "./Button";
 
 export * from "./Card";
 
-export * from "./Error";
+export * from "./Alert";
 
 export * from "./Field";
 

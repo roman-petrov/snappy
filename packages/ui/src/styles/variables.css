@@ -40,6 +40,9 @@
   --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
   --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
   --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
+  --color-warning-bg: color-mix(in oklch, var(--color-warning) 10%, transparent);
+  --color-success-bg: color-mix(in oklch, var(--color-success) 10%, transparent);
+  --color-info-bg: color-mix(in oklch, var(--color-accent) 10%, transparent);
   --color-accent-ghost: color-mix(in oklch, var(--color-accent) 4%, transparent);
   --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
   --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
