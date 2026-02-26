@@ -1,5 +1,7 @@
 @import url("@fontsource-variable/inter");
 @import url("./variables.css");
+@import url("./theme-dark.css");
+@import url("./theme-light.css");
 @import url("./base.css");
 
 /* View Transition API: cross-fade between routes */

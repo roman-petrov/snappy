@@ -1,0 +1,26 @@
+[data-theme="dark"] {
+  --l-bg: 7%;
+  --l-bg-elevated: 9%;
+  --l-border: 24%;
+  --l-muted: 68%;
+  --l-body: 91%;
+  --l-heading: 100%;
+  --l-overlay: 100%;
+  --l-accent: 89%;
+  --l-on-accent: 7%;
+  --l-error: 82%;
+  --l-warning: 82%;
+  --l-success: 65%;
+  --l-card-tint: 28%;
+  --l-card-tint-hover: 32%;
+  --chroma-accent: 0.12;
+  --chroma-semantic: 0.17;
+  --alpha-ghost: 2%;
+  --alpha-subtle: 6%;
+  --alpha-light: 12%;
+  --alpha-surface: 90%;
+  --alpha-card: 30%;
+  --alpha-card-hover: 75%;
+  --alpha-shadow: 4%;
+  --alpha-shadow-hover: 6%;
+}

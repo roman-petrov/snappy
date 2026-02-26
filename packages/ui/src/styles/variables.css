@@ -1,6 +1,6 @@
 /*
-  Base scale (--l-*, --alpha-*, etc.) is set in [data-theme="dark"] and [data-theme="light"].
-  All --color-*, --shadow-*, focus-ring defined once in :root from those base vars.
+  Base scale (--l-*, --alpha-*) is set in theme-dark.css and theme-light.css.
+  All --color-*, --shadow-*, focus-ring defined here from those base vars.
   Ensure html has data-theme="dark" or data-theme="light".
 */
 
@@ -92,62 +92,4 @@
   --transition-btn: transform var(--ease), box-shadow var(--ease), outline-color var(--ease);
   --content-width: 1100px;
   --content-narrow: 36rem;
-}
-
-/* ─── Dark theme: base scale only ─── */
-[data-theme="dark"] {
-  --l-bg: 7%;
-  --l-bg-elevated: 9%;
-  --l-border: 24%;
-  --l-muted: 68%;
-  --l-body: 91%;
-  --l-heading: 100%;
-  --l-overlay: 100%;
-  --l-accent: 89%;
-  --l-on-accent: 7%;
-  --l-error: 82%;
-  --l-warning: 82%;
-  --l-success: 65%;
-  --l-card-tint: 28%;
-  --l-card-tint-hover: 32%;
-  --alpha-ghost: 2%;
-  --alpha-subtle: 6%;
-  --alpha-light: 12%;
-  --alpha-surface: 90%;
-  --alpha-card: 30%;
-  --alpha-card-hover: 75%;
-  --alpha-shadow: 4%;
-  --alpha-shadow-hover: 6%;
-}
-
-/* ─── Light theme: base scale only ─── */
-[data-theme="light"] {
-  --l-bg: 97%;
-  --l-bg-elevated: 100%;
-  --l-border: 91%;
-  --l-muted: 52%;
-  --l-body: 22%;
-  --l-heading: 13%;
-  --l-overlay: 0%;
-  --l-accent: 55%;
-  --l-on-accent: 100%;
-  --l-error: 55%;
-  --l-warning: 82%;
-  --l-success: 65%;
-  --l-card-tint: 88%;
-  --l-card-tint-hover: 86%;
-  --chroma-accent: 0.13;
-  --chroma-semantic: 0.21;
-  --alpha-ghost: 4%;
-  --alpha-subtle: 4%;
-  --alpha-light: 8%;
-  --alpha-surface: 90%;
-  --alpha-card: 30%;
-  --alpha-card-hover: 75%;
-  --alpha-shadow: 3%;
-  --alpha-shadow-hover: 5%;
-
-  & #fog-bg {
-    display: none;
-  }
 }

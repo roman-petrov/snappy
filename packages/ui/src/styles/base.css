@@ -38,3 +38,7 @@ body {
   z-index: -3;
   pointer-events: none;
 }
+
+[data-theme="light"] #fog-bg {
+  display: none;
+}
