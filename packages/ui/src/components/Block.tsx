@@ -33,8 +33,6 @@ export const Block = ({ as = `div`, description, icon, title, titleTag = `h3`, w
     </>
   );
 
-export type DlProps = { children: ReactNode; cn?: string };
+export type DlProps = { children: ReactNode };
 
-export const Dl = ({ children, cn = `` }: DlProps) => (
-  <dl className={cn ? `${styles.list} ${cn}`.trim() : styles.list}>{children}</dl>
-);
+export const Dl = ({ children }: DlProps) => <dl className={styles.list}>{children}</dl>;
