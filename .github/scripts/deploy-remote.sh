@@ -34,7 +34,7 @@ export SSL_CERT_PEM="${SSL_CERT_B64}"
 export SSL_KEY_PEM="${SSL_KEY_B64}"
 
 cd "${REMOTE_PATH}"
-pm2 start dist/server.js --name snappy --node-args="--use-system-ca" --update-env
+pm2 start dist/server.js --name snappy --update-env
 
 pm2 save
 

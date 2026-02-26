@@ -13,9 +13,10 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const portHttp = 80;
 const portHttps = 443;
+const portInternal = 12_780;
 const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
 const port = useHttps ? portHttps : portHttp;
-const botBaseUrl = useHttps ? `https://localhost:${portHttps}` : `http://localhost:${portHttp}`;
+const botBaseUrl = useHttps ? `http://127.0.0.1:${portInternal}` : `http://localhost:${portHttp}`;
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
@@ -60,3 +61,9 @@ await ssr.prewarmSsr(root, cache, [`ru`, `en`]);
 httpServer.listen(port, () => {
   process.stdout.write(`🌐 Site server started on port ${port} (${useHttps ? `HTTPS` : `HTTP`})\n`);
 });
+if (useHttps) {
+  const internalServer = http.createServer(handler);
+  internalServer.listen(portInternal, `127.0.0.1`, () => {
+    process.stdout.write(`🔗 Internal API (bot) on http://127.0.0.1:${portInternal}\n`);
+  });
+}
