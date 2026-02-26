@@ -8,23 +8,23 @@
 }
 
 .root.error {
-  background: var(--color-error-bg);
   color: var(--color-error);
+  background: var(--color-error-bg);
 }
 
 .root.warning {
-  background: var(--color-warning-bg);
   color: var(--color-warning);
+  background: var(--color-warning-bg);
 }
 
 .root.success {
-  background: var(--color-success-bg);
   color: var(--color-success);
+  background: var(--color-success-bg);
 }
 
 .root.info {
-  background: var(--color-info-bg);
   color: var(--color-accent);
+  background: var(--color-info-bg);
 }
 
 .text {
