@@ -16,6 +16,8 @@ const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
 const botApiKey = env[`BOT_API_KEY`] ?? ``;
 const jwtSecret = env[`JWT_SECRET`] ?? ``;
 
+const siteUrl = `https://snappy-ai.ru`;
+
 export const Config = {
   botApiKey,
   botToken,
@@ -24,6 +26,7 @@ export const Config = {
   gigaChatAuthKey,
   jwtSecret,
   premiumPrice,
+  siteUrl,
   yooKassaSecretKey,
   yooKassaShopId,
 };

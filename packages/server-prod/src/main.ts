@@ -15,7 +15,7 @@ const portHttp = 80;
 const portHttps = 443;
 const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
 const port = useHttps ? portHttps : portHttp;
-const botBaseUrl = useHttps ? `https://localhost:${portHttps}` : `http://localhost:${portHttp}`;
+const botBaseUrl = useHttps ? Config.siteUrl : `http://localhost:${portHttp}`;
 const version = process.env[`SNAPPY_VERSION`];
 const root = join(import.meta.dirname, `www`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
