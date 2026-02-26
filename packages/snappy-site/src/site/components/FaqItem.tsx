@@ -1,4 +1,4 @@
-import { Block } from "@snappy/ui";
+import { Block } from "./Block";
 
 export type FaqItemProps = { answer: string; question: string };
 

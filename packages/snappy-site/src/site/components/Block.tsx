@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
 
+import { Text } from "@snappy/ui";
+
 import styles from "./Block.module.css";
-import { Text } from "./Text";
 
 export type BlockProps = {
   as?: `div` | `dl`;

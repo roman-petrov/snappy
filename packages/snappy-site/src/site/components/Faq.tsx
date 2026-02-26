@@ -1,6 +1,5 @@
-import { Dl } from "@snappy/ui";
-
 import { t } from "../core";
+import { Dl } from "./Block";
 import { FaqItem } from "./FaqItem";
 import { Section } from "./Section";
 

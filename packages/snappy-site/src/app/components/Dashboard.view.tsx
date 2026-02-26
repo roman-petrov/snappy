@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { $, Alert, Block, Button, Card, Select, Text, Textarea, Title } from "@snappy/ui";
+import { $, Alert, Button, Card, Select, Text, Textarea, Title } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
@@ -49,7 +49,8 @@ export const DashboardView = ({
 
     <section className={styles.section}>
       <div className={styles.sectionIntro}>
-        <Block description={t(`dashboard.processDesc`)} title={t(`dashboard.process`)} titleTag="h2" />
+        <Title as="h2" level={2} title={t(`dashboard.process`)} />
+        <Text color="muted" text={t(`dashboard.processDesc`)} typography="large" />
       </div>
       <form onSubmit={onSubmit}>
         <Card>

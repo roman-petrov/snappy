@@ -1,7 +1,7 @@
-import { CardWithIcon } from "./CardWithIcon";
+import { Block } from "./Block";
 
 export type WhoItemProps = { description: string; icon: string; title: string };
 
 export const WhoItem = ({ description, icon, title }: WhoItemProps) => (
-  <CardWithIcon description={description} icon={icon} title={title} variant="who" />
+  <Block as="dl" description={description} icon={icon} title={title} withDivider />
 );

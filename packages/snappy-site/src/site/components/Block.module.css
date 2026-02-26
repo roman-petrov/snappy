@@ -35,9 +35,9 @@
 .row-with-icon .icon {
   grid-row: 1;
   grid-column: 1;
+  align-self: center;
   font-size: 1.75rem;
   line-height: 1;
-  align-self: center;
 }
 
 .row-with-icon dt,
