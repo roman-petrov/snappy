@@ -38,7 +38,7 @@ export const DashboardView = ({
               🪙
             </span>
             {` ${t(`dashboard.freeRequests`)}: `}
-            <Text as="span" color="accent" text={remaining == undefined ? `—` : String(remaining)} typography="h2" />
+            <Text as="span" color="accent" text={remaining === undefined ? `—` : String(remaining)} typography="h2" />
           </p>
           <Button onClick={onPremiumClick} primary>
             {t(`dashboard.getPremium`)}
