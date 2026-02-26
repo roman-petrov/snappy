@@ -19,10 +19,10 @@ if [ -n "${NODE_BIN}" ]; then
   sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "${NODE_BIN}")" 2>/dev/null || true
 fi
 
+export PATH="${HOME}/.bun/bin:${PATH}"
 if ! command -v bun &>/dev/null; then
   echo "📦 Installing Bun..."
   curl -fsSL https://bun.sh/install | bash
-  export BUN_INSTALL="${HOME}/.bun" && export PATH="${BUN_INSTALL}/bin:${PATH}"
   echo "✅ Bun installed: $(bun --version)"
 else
   echo "✅ Bun already installed: $(bun --version)"
