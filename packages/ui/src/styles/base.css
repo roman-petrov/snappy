@@ -28,7 +28,7 @@ body {
     background:
       linear-gradient(var(--color-grid) 1px, transparent 1px),
       linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-    background-size: 64px 64px;
+    background-size: var(--space-16) var(--space-16);
   }
 }
 

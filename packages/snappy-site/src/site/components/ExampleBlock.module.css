@@ -22,9 +22,9 @@
 }
 
 .panel {
-  min-height: 6rem;
+  min-height: var(--space-24);
   padding: var(--space-5) var(--space-6);
-  border-inline-start: 3px solid;
+  border-inline-start: var(--space-1) solid;
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 

@@ -17,10 +17,10 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 3.5rem;
+  min-width: var(--space-12);
   padding: var(--space-3) var(--space-4);
   margin-block-end: var(--space-4);
-  font-size: 2rem;
+  font-size: var(--space-8);
   background: var(--color-bg-icon);
   border-radius: var(--radius-sm);
 }
