@@ -1,6 +1,6 @@
 [data-theme="light"] {
-  --hue-neutral: 286deg;
-  --hue-accent: 195deg;
+  --h-neutral: 286deg;
+  --h-accent: 195deg;
   --l-bg: 97%;
   --l-bg-elevated: 100%;
   --l-border: 91%;
@@ -15,15 +15,15 @@
   --l-success: 65%;
   --l-card-tint: 88%;
   --l-card-tint-hover: 86%;
-  --chroma-neutral: 0.002;
-  --chroma-neutral-strong: 0.008;
-  --chroma-accent: 0.13;
-  --chroma-semantic: 0.21;
-  --alpha-ghost: 4%;
-  --alpha-subtle: 4%;
-  --alpha-light: 8%;
-  --alpha-surface: 90%;
-  --alpha-card: 30%;
-  --alpha-card-hover: 75%;
-  --alpha-shadow: 3%;
+  --c-neutral: 0.002;
+  --c-neutral-strong: 0.008;
+  --c-accent: 0.13;
+  --c-semantic: 0.21;
+  --a-ghost: 4%;
+  --a-subtle: 4%;
+  --a-light: 8%;
+  --a-surface: 90%;
+  --a-card: 30%;
+  --a-card-hover: 75%;
+  --a-shadow: 3%;
 }

@@ -10,7 +10,7 @@
   display: inline-block;
   padding: var(--space-2) var(--space-3);
   margin: 0 0 var(--space-3);
-  border: 1px solid color-mix(in oklch, var(--color-accent) 20%, transparent);
+  border: 1px solid var(--color-accent-border);
   border-radius: var(--radius-sm);
 }
 
@@ -37,12 +37,12 @@
 }
 
 .before {
-  background: color-mix(in oklch, var(--color-error) 4%, transparent);
+  background: var(--color-error-ghost);
   border-color: var(--color-error);
 }
 
 .after {
-  background: color-mix(in oklch, var(--color-accent) 4%, transparent);
+  background: var(--color-accent-ghost);
   border-color: var(--color-accent);
 }
 

@@ -1,33 +1,44 @@
 /*
-  All base vars (hue, chroma, l-*, alpha-*) are set only in theme-dark.css and theme-light.css.
+  Base vars: h (hue), c (chroma), l (lightness), a (alpha) in theme-dark.css and theme-light.css.
   Here only generated --color-*, --shadow-*, focus-ring and spacing/typography.
   Ensure html has data-theme="dark" or data-theme="light".
 */
 
 :root {
   /* ─── Derived from theme base (semantic hues from accent; one shadow alpha) ─── */
-  --hue-error: calc(var(--hue-accent) - 168deg);
-  --hue-warning: calc(var(--hue-accent) - 109deg);
-  --hue-success: calc(var(--hue-accent) - 45deg);
+  --h-error: calc(var(--h-accent) - 168deg);
+  --h-warning: calc(var(--h-accent) - 109deg);
+  --h-success: calc(var(--h-accent) - 45deg);
 
   /* ─── Generated colors and shadows ─── */
-  --color-bg: oklch(var(--l-bg) var(--chroma-neutral) var(--hue-neutral));
-  --color-bg-elevated: oklch(var(--l-bg-elevated) var(--chroma-neutral) var(--hue-neutral));
-  --color-border: oklch(var(--l-border) var(--chroma-neutral-strong) var(--hue-neutral));
-  --color-text-muted: oklch(var(--l-muted) 0.01 var(--hue-neutral));
-  --color-text-body: oklch(var(--l-body) 0.004 var(--hue-neutral));
+  --color-bg: oklch(var(--l-bg) var(--c-neutral) var(--h-neutral));
+  --color-bg-elevated: oklch(var(--l-bg-elevated) var(--c-neutral) var(--h-neutral));
+  --color-border: oklch(var(--l-border) var(--c-neutral-strong) var(--h-neutral));
+  --color-text-muted: oklch(var(--l-muted) 0.01 var(--h-neutral));
+  --color-text-body: oklch(var(--l-body) 0.004 var(--h-neutral));
   --color-text-heading: oklch(var(--l-heading) 0 0deg);
-  --color-accent: oklch(var(--l-accent) var(--chroma-accent) var(--hue-accent));
-  --color-on-accent: oklch(var(--l-on-accent) var(--chroma-neutral) var(--hue-neutral));
-  --color-error: oklch(var(--l-semantic) var(--chroma-semantic) var(--hue-error));
-  --color-warning: oklch(var(--l-warning) var(--chroma-semantic) var(--hue-warning));
-  --color-success: oklch(var(--l-success) var(--chroma-semantic) var(--hue-success));
-  --color-bg-card-border: oklch(var(--l-overlay) 0 0deg / var(--alpha-light));
-  --color-bg-icon: oklch(var(--l-overlay) 0 0deg / var(--alpha-subtle));
-  --color-bg-card-features: oklch(var(--l-card-tint) 0.03 var(--hue-accent) / var(--alpha-card));
-  --color-bg-card-features-hover: oklch(var(--l-card-tint-hover) 0.03 var(--hue-accent) / var(--alpha-card-hover));
-  --color-bg-header: oklch(var(--l-bg) var(--chroma-neutral) var(--hue-neutral) / var(--alpha-surface));
-  --color-grid: oklch(var(--l-overlay) 0 0deg / var(--alpha-ghost));
+  --color-accent: oklch(var(--l-accent) var(--c-accent) var(--h-accent));
+  --color-on-accent: oklch(var(--l-on-accent) var(--c-neutral) var(--h-neutral));
+  --color-error: oklch(var(--l-semantic) var(--c-semantic) var(--h-error));
+  --color-warning: oklch(var(--l-warning) var(--c-semantic) var(--h-warning));
+  --color-success: oklch(var(--l-success) var(--c-semantic) var(--h-success));
+  --color-bg-card-border: oklch(var(--l-overlay) 0 0deg / var(--a-light));
+  --color-bg-icon: oklch(var(--l-overlay) 0 0deg / var(--a-subtle));
+  --color-bg-card-features: oklch(var(--l-card-tint) 0.03 var(--h-accent) / var(--a-card));
+  --color-bg-card-features-hover: oklch(var(--l-card-tint-hover) 0.03 var(--h-accent) / var(--a-card-hover));
+  --color-bg-header: oklch(var(--l-bg) var(--c-neutral) var(--h-neutral) / var(--a-surface));
+  --color-grid: oklch(var(--l-overlay) 0 0deg / var(--a-ghost));
+  --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
+  --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
+  --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
+  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 4%, transparent);
+  --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
+  --color-accent-border: color-mix(in oklch, var(--color-accent) 20%, transparent);
+  --color-accent-mid: color-mix(in oklch, var(--color-accent) 15%, transparent);
+  --color-accent-focus: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  --color-accent-strong: color-mix(in oklch, var(--color-accent) 40%, transparent);
+  --color-divider-line: color-mix(in oklch, var(--color-accent) 40%, transparent);
   --color-divider: linear-gradient(
     to right,
     transparent 0%,
@@ -36,8 +47,8 @@
     color-mix(in oklch, var(--color-accent) 60%, transparent) 70%,
     transparent 100%
   );
-  --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--alpha-shadow));
-  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--alpha-shadow));
+  --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--a-shadow));
+  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--a-shadow));
   --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
   --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
   --color-focus-ring: var(--color-accent);

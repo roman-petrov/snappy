@@ -1,25 +1,25 @@
 .pill {
   display: flex;
   overflow: hidden;
-  border: 1px solid color-mix(in oklch, var(--color-accent) 20%, transparent);
+  border: 1px solid var(--color-accent-border);
   border-radius: var(--radius);
   transition: var(--transition);
 }
 
 .pill:hover {
-  border-color: color-mix(in oklch, var(--color-accent) 40%, transparent);
+  border-color: var(--color-accent-strong);
 }
 
 .pill-left {
   flex-shrink: 0;
   padding: var(--space-3) var(--space-4);
-  background: color-mix(in oklch, var(--color-accent) 12%, transparent);
+  background: var(--color-accent-pill);
 }
 
 .pill-right {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  background: color-mix(in oklch, var(--color-accent) 4%, transparent);
+  background: var(--color-accent-ghost);
 }
 
 @media (width <= 640px) {

@@ -30,8 +30,8 @@
   background: linear-gradient(
     to right,
     transparent,
-    color-mix(in oklch, var(--color-accent) 40%, transparent) 20%,
-    color-mix(in oklch, var(--color-accent) 40%, transparent) 80%,
+    var(--color-divider-line) 20%,
+    var(--color-divider-line) 80%,
     transparent
   );
 }

@@ -1,6 +1,6 @@
 .root {
   padding: var(--space-3);
   margin-top: var(--space-2);
-  background: color-mix(in oklch, var(--color-error) 10%, transparent);
+  background: var(--color-error-bg);
   border-radius: var(--radius-sm);
 }
