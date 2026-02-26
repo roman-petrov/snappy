@@ -34,7 +34,7 @@ export const Button = ({
 
   const content = (
     <>
-      {icon ? <Icon cn={styles.icon} name={icon} /> : undefined}
+      {icon ? <Icon name={icon} /> : undefined}
       {children}
     </>
   );
