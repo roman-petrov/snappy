@@ -8,9 +8,7 @@ export type SectionProps = { children: ReactNode; id?: string; lead: string; tit
 
 export const Section = ({ children, id, lead, title }: SectionProps) => (
   <section className={styles.section} id={id}>
-    <Title as="h2" lead={lead} level={1}>
-      {title}
-    </Title>
+    <Title as="h2" lead={lead} level={1} title={title} />
     {children}
   </section>
 );

@@ -50,16 +50,21 @@ export const LoginView = ({
           onChange={event => onRememberChange((event.target as HTMLInputElement).checked)}
           type="checkbox"
         />
-        <Text as="label" cn={styles.rememberLabel} color="body" htmlFor="login-remember" variant="caption">
-          {t(`loginPage.remember`)}
-        </Text>
+        <Text
+          as="label"
+          cn={styles.rememberLabel}
+          color="body"
+          htmlFor="login-remember"
+          text={t(`loginPage.remember`)}
+          typography="caption"
+        />
       </div>
       <FormErrorAndActions error={error}>
         <Button disabled={loading} primary type="submit">
           {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
         </Button>
-        <Link to="/forgot-password">{t(`loginPage.forgotPassword`)}</Link>
-        <Link to="/register">{t(`loginPage.registerLink`)}</Link>
+        <Link text={t(`loginPage.forgotPassword`)} to="/forgot-password" />
+        <Link text={t(`loginPage.registerLink`)} to="/register" />
       </FormErrorAndActions>
     </form>
   </Panel>

@@ -63,7 +63,7 @@ export const RegisterView = ({
         <Button disabled={loading || !meetsMinLength} primary type="submit">
           {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         </Button>
-        <Link to="/login">{t(`registerPage.haveAccount`)}</Link>
+        <Link text={t(`registerPage.haveAccount`)} to="/login" />
       </FormErrorAndActions>
     </form>
   </Panel>

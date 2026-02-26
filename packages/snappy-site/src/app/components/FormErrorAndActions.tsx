@@ -8,7 +8,7 @@ export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 
 export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProps) => (
   <>
-    {error !== `` && <Error>{error}</Error>}
+    {error !== `` && <Error text={error} />}
     <div className={styles.actions}>{children}</div>
   </>
 );

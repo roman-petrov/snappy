@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/strict-void-return */
-import { Block, Button, Card, Error, Select, Text, Textarea, Title } from "@snappy/ui";
+import { $, Block, Button, Card, Error, Select, Text, Textarea, Title } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
@@ -28,25 +28,19 @@ export const DashboardView = ({
   text,
 }: DashboardViewProps) => (
   <>
-    <Title cn={styles.pageTitle} level={2}>
-      {t(`dashboard.title`)}
-    </Title>
+    <Title cn={styles.pageTitle} level={2} title={t(`dashboard.title`)} />
 
     <section className={styles.section}>
-      <Title as="h2" level={2}>
-        {t(`dashboard.balance`)}
-      </Title>
+      <Title as="h2" level={2} title={t(`dashboard.balance`)} />
       <Card>
         <div className={styles.balanceRow}>
-          <Text as="p" color="body" variant="bodyLg">
+          <p className={`${$.typography(`bodyLg`)} ${$.color(`body`)}`}>
             <span aria-hidden className={styles.balanceIcon}>
               🪙
             </span>
-            {t(`dashboard.freeRequests`)}:{` `}
-            <Text as="span" color="accent" variant="h2">
-              {remaining ?? `—`}
-            </Text>
-          </Text>
+            {` ${t(`dashboard.freeRequests`)}: `}
+            <Text as="span" color="accent" text={remaining != null ? String(remaining) : `—`} typography="h2" />
+          </p>
           <Button onClick={onPremiumClick} primary>
             {t(`dashboard.getPremium`)}
           </Button>
@@ -83,22 +77,21 @@ export const DashboardView = ({
           <Button cn={styles.submitRow} disabled={loading} primary type="submit">
             {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
           </Button>
-          {error !== `` && <Error>{error}</Error>}
+          {error !== `` && <Error text={error} />}
           {result !== `` && (
             <div className={styles.resultWrap}>
               <div className={styles.resultHeader}>
-                <Text as="span" color="heading" variant="captionBold">
-                  {t(`dashboard.result`)}
-                </Text>
+                <Text as="span" color="heading" text={t(`dashboard.result`)} typography="captionBold" />
                 <button className={styles.copyBtn} onClick={onCopyResult} type="button">
-                  <Text as="span" color="accent" variant="caption">
-                    {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
-                  </Text>
+                  <Text
+                    as="span"
+                    color="accent"
+                    text={copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
+                    typography="caption"
+                  />
                 </button>
               </div>
-              <Text as="div" cn={styles.result} color="body" variant="largeBody">
-                {result}
-              </Text>
+              <Text as="div" cn={styles.result} color="body" text={result} typography="largeBody" />
             </div>
           )}
         </Card>

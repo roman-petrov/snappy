@@ -1,22 +1,14 @@
 /* eslint-disable react/forbid-component-props */
-import type { ReactNode } from "react";
 import type React from "react";
 
 import type { Color, Typography } from "../$";
 
 import { $ } from "../$";
 
-export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children` | `className`> & {
-  as?: `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
-  children: ReactNode;
-  cn?: string;
-  color?: Color;
-  htmlFor?: string;
-  typography?: Typography;
-  variant: TextVariant;
-};
+type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
 
-const variantTag = {
+const typographyTag: Record<Typography, TextTag> = {
+  body: `p`,
   bodyLg: `p`,
   caption: `span`,
   captionBold: `span`,
@@ -26,19 +18,26 @@ const variantTag = {
   h3: `h3`,
   large: `p`,
   largeBody: `p`,
-} as const;
+};
 
-export type TextVariant = keyof typeof variantTag;
+export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children` | `className`> & {
+  as?: TextTag;
+  cn?: string;
+  color?: Color;
+  htmlFor?: string;
+  text: string;
+  typography: Typography;
+};
 
-export const Text = ({ as, children, cn = ``, color, typography, variant, ...rest }: TextProps) => {
-  const Tag = as ?? variantTag[variant];
-  const typographyClass = $.typography(typography ?? variant);
+export const Text = ({ as, cn = ``, color, text, typography, ...rest }: TextProps) => {
+  const Tag = as ?? typographyTag[typography];
+  const typographyClass = $.typography(typography);
   const colorClass = color ? $.color(color) : ``;
   const className = [typographyClass, colorClass, cn].filter(Boolean).join(` `).trim();
 
   return (
-    <Tag className={className} {...rest}>
-      {children}
+    <Tag className={className} {...(rest as React.HTMLAttributes<HTMLElement>)}>
+      {text}
     </Tag>
   );
 };

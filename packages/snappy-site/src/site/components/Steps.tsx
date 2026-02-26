@@ -7,11 +7,9 @@ export type StepsProps = { items: string[] };
 export const Steps = ({ items }: StepsProps) => (
   <div className={styles.timeline}>
     <ol className={styles.steps}>
-      {items.map(text => (
-        <li>
-          <Text as="span" color="body" variant="largeBody">
-            {text}
-          </Text>
+      {items.map(item => (
+        <li key={item}>
+          <Text as="span" color="body" text={item} typography="largeBody" />
         </li>
       ))}
     </ol>

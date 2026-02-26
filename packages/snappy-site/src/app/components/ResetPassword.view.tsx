@@ -21,7 +21,7 @@ export const ResetPasswordView = ({
     return (
       <Panel lead={t(`resetPage.invalidLinkLead`)} title={t(`resetPage.invalidLink`)}>
         <FormActions>
-          <Link to="/forgot-password">{t(`resetPage.requestAgain`)}</Link>
+          <Link text={t(`resetPage.requestAgain`)} to="/forgot-password" />
         </FormActions>
       </Panel>
     );
@@ -31,7 +31,7 @@ export const ResetPasswordView = ({
     return (
       <Panel lead={t(`resetPage.doneLead`)} title={t(`resetPage.done`)}>
         <FormActions>
-          <Link to="/login">{t(`resetPage.loginLink`)}</Link>
+          <Link text={t(`resetPage.loginLink`)} to="/login" />
         </FormActions>
       </Panel>
     );

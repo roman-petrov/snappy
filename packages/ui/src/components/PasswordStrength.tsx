@@ -28,22 +28,20 @@ export const PasswordStrength = ({
   <>
     <div className={styles.requirements}>
       {requirements.map(({ check, label }) => (
-        <Text color={check(password) ? `accent` : undefined} key={label} variant="caption">
-          {check(password) ? `✓ ` : ``}
-          {label}
-        </Text>
+        <Text
+          color={check(password) ? `accent` : undefined}
+          key={label}
+          text={`${check(password) ? `✓ ` : ``}${label}`}
+          typography="caption"
+        />
       ))}
     </div>
     <div className={styles.strengthRow}>
-      <Text cn={styles.strengthLabel} color="body" variant="caption">
-        {strengthLabel}
-      </Text>
+      <Text cn={styles.strengthLabel} color="body" text={strengthLabel} typography="caption" />
       <div className={styles.strengthBar}>
         <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
       </div>
-      <Text cn={styles.strengthText} color="body" variant="caption">
-        {strengthText}
-      </Text>
+      <Text cn={styles.strengthText} color="body" text={strengthText} typography="caption" />
     </div>
     <Button disabled={disabled} onClick={onGeneratePassword} type="button">
       {generateLabel}

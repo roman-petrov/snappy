@@ -20,9 +20,7 @@ export const LayoutView = ({ headerItems, logoOnClick, logoTitle, logoTo }: Layo
             {item.label}
           </Button>
         ) : item.type === `link` ? (
-          <Link muted to={item.to}>
-            {item.label}
-          </Link>
+          <Link muted text={item.label} to={item.to} />
         ) : (
           <LocaleSwitcher />
         ),

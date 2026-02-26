@@ -14,25 +14,15 @@ export type ExampleBlockProps = {
 
 export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: ExampleBlockProps) => (
   <div className={styles.block}>
-    <Text as="p" cn={styles.label} color="accent" variant="captionBold">
-      {label}
-    </Text>
+    <Text as="p" cn={styles.label} color="accent" text={label} typography="captionBold" />
     <div className={styles.row}>
       <div className={`${styles.panel} ${styles.before}`}>
-        <Text as="span" cn={styles.panelTitle} color="error" variant="caption">
-          {beforeLabel}
-        </Text>
-        <Text as="p" color="body" variant="largeBody">
-          {before}
-        </Text>
+        <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel} typography="caption" />
+        <Text as="p" color="body" text={before} typography="largeBody" />
       </div>
-      <Text aria-hidden="true" as="span" cn={styles.arrow} color="accent" variant="h2">
-        →
-      </Text>
+      <Text aria-hidden="true" as="span" cn={styles.arrow} color="accent" text="→" typography="h2" />
       <div className={`${styles.panel} ${styles.after}`}>
-        <Text as="span" cn={styles.panelTitle} color="accent" variant="caption">
-          {afterLabel}
-        </Text>
+        <Text as="span" cn={styles.panelTitle} color="accent" text={afterLabel} typography="caption" />
         <div className={styles.panelContent}>{after}</div>
       </div>
     </div>

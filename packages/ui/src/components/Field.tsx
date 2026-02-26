@@ -33,9 +33,7 @@ export const Field = (props: FieldProps) => {
 
   return (
     <div className={styles.root}>
-      <Text as="label" cn={styles.label} color="body" htmlFor={id} variant="caption">
-        {label}
-      </Text>
+      <Text as="label" cn={styles.label} color="body" htmlFor={id} text={label} typography="caption" />
       {content}
     </div>
   );

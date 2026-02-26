@@ -1,24 +1,17 @@
-import type { ReactNode } from "react";
-
 import { Text } from "./Text";
 import styles from "./Title.module.css";
 
-export type TitleProps = { as?: `h1` | `h2`; children: ReactNode; cn?: string; lead?: string; level?: 1 | 2 };
+export type TitleProps = { as?: `h1` | `h2`; cn?: string; lead?: string; level?: 1 | 2; title: string };
 
-export const Title = ({ as = `h1`, children, cn = ``, lead, level = 2 }: TitleProps) => (
+export const Title = ({ as = `h1`, cn = ``, lead, level = 2, title }: TitleProps) => (
   <>
     <Text
       as={as}
       cn={cn ? `${styles.root} ${cn}`.trim() : styles.root}
       color="heading"
-      variant={level === 1 ? `h1` : `h2`}
-    >
-      {children}
-    </Text>
-    {lead !== undefined && (
-      <Text cn={styles.lead} color="muted" variant="large">
-        {lead}
-      </Text>
-    )}
+      text={title}
+      typography={level === 1 ? `h1` : `h2`}
+    />
+    {lead !== undefined && <Text cn={styles.lead} color="muted" text={lead} typography="large" />}
   </>
 );

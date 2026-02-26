@@ -20,7 +20,7 @@ export const ForgotPasswordView = ({
     return (
       <Panel lead={t(`forgotPage.checkEmailLead`)} title={t(`forgotPage.checkEmail`)}>
         <FormActions>
-          <Link to="/login">{t(`forgotPage.backToLogin`)}</Link>
+          <Link text={t(`forgotPage.backToLogin`)} to="/login" />
         </FormActions>
       </Panel>
     );
@@ -42,7 +42,7 @@ export const ForgotPasswordView = ({
           <Button disabled={loading} primary type="submit">
             {loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
           </Button>
-          <Link to="/login">{t(`forgotPage.loginLink`)}</Link>
+          <Link text={t(`forgotPage.loginLink`)} to="/login" />
         </FormErrorAndActions>
       </form>
     </Panel>
