@@ -11,23 +11,23 @@ jobs:
       fail-fast: false
       matrix:
         task:
-          - name: 🏗️ Build
+          - name: 🏗️ build
             arg: build
-          - name: 🧪 Run Tests
+          - name: 🧪 test
             arg: test
-          - name: 📘 TypeScript Check
+          - name: 📘 lint:tsc
             arg: lint:tsc
-          - name: 📐 ESLint Check
+          - name: 📐 lint:eslint
             arg: lint:eslint
-          - name: 💅 Prettier Check
+          - name: 💅 lint:prettier
             arg: lint:prettier
-          - name: 📝 CSpell Check
+          - name: 📝 lint:cspell
             arg: lint:cspell
-          - name: 🔍 JSCPD Check
+          - name: 🔍 lint:jscpd
             arg: lint:jscpd
-          - name: 🔎 Knip Check
+          - name: 🔎 lint:knip
             arg: lint:knip
-          - name: 📄 Markdown Lint Check
+          - name: 📄 lint:markdown
             arg: lint:markdown
 
     steps:
