@@ -15,5 +15,4 @@ export default defineConfig({
     cssModulesCamelCasePlugin(),
   ],
   resolve: { alias: { "/app": join(root, `src`, `app`) } },
-  ssr: { noExternal: true },
 });

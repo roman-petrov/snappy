@@ -31,6 +31,5 @@ fi
 echo ""
 echo "📊 Installed versions:"
 echo "  - Node.js: $(node --version)"
-echo "  - npm: $(npm --version)"
 echo "  - PM2: $(pm2 --version)"
 echo ""
