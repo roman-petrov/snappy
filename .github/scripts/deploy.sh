@@ -14,8 +14,10 @@ SSL_KEY_B64=$(encode "${SSL_KEY_PEM}")
 echo "⚙️ Setting up server..."
 ssh ${SSH_OPTS} "${TARGET}" "bash -s" < .github/scripts/setup-remote.sh
 
+echo "🧹 Cleaning deployment directory..."
+ssh ${SSH_OPTS} "${TARGET}" "rm -rf ${REMOTE_PATH} && mkdir -p ${REMOTE_PATH}"
+
 echo "📤 Uploading artifact..."
-ssh ${SSH_OPTS} "${TARGET}" "mkdir -p ${REMOTE_PATH}"
 scp ${SCP_OPTS} "${DIST_ZIP}" "${TARGET}:${REMOTE_PATH}/snappy.zip"
 
 echo "🚀 Running deploy on server..."

@@ -2,11 +2,18 @@
 set -e
 
 REMOTE_PATH="$1"
+export PATH="${HOME}/.bun/bin:${PATH}"
 
 cd "${REMOTE_PATH}"
 echo "📦 Unpacking artifact..."
 unzip -o -q snappy.zip
 rm -f snappy.zip
+
+echo "📥 Installing production dependencies..."
+bun install --production --frozen-lockfile
+
+echo "🔗 Linking node_modules for SSR resolution (Node resolves from entry-server dir first)..."
+ln -sfn "${REMOTE_PATH}/node_modules" "${REMOTE_PATH}/dist/www/server/node_modules"
 
 echo "🔄 Restarting PM2..."
 pm2 delete snappy 2>/dev/null || true
