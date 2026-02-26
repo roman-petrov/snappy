@@ -10,6 +10,10 @@ body {
   position: relative;
   min-height: 100vh;
   margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--color-text-body);
   background: var(--color-bg);
   transition:
     color var(--ease),

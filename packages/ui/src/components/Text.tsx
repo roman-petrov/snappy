@@ -1,9 +1,7 @@
 /* eslint-disable react/forbid-component-props */
 import type React from "react";
 
-import type { Color, Typography } from "../$";
-
-import { $ } from "../$";
+import { $, type Color, type Typography } from "../$";
 
 type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
 
@@ -26,13 +24,13 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
   color?: Color;
   htmlFor?: string;
   text: string;
-  typography: Typography;
+  typography?: Typography;
 };
 
-export const Text = ({ as, cn = ``, color, text, typography, ...rest }: TextProps) => {
+export const Text = ({ as, cn = ``, color, text, typography = `body`, ...rest }: TextProps) => {
   const Tag = as ?? typographyTag[typography];
   const typographyClass = $.typography(typography);
-  const colorClass = color ? $.color(color) : ``;
+  const colorClass = $.color(color ?? `body`);
   const className = [typographyClass, colorClass, cn].filter(Boolean).join(` `).trim();
 
   return (
