@@ -27,10 +27,6 @@
   margin: var(--space-4) 0;
 }
 
-.step-text {
-  color: var(--color-text-body);
-}
-
 .steps li:first-child {
   margin-block-start: 0;
 }

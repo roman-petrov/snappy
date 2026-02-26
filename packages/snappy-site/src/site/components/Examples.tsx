@@ -1,4 +1,4 @@
-import { $ } from "@snappy/browser";
+import { $ } from "@snappy/ui";
 
 import { t } from "../core";
 import { ExampleBlock } from "./ExampleBlock";

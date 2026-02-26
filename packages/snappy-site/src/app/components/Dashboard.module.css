@@ -30,14 +30,6 @@
   margin-bottom: var(--space-4);
 }
 
-.balance {
-  color: var(--color-text-body);
-}
-
-.balance-count {
-  color: var(--color-accent);
-}
-
 .form-group {
   margin-bottom: var(--space-4);
 }
@@ -68,14 +60,9 @@
   border-block-end: 1px solid rgb(var(--rgb-accent) / 20%);
 }
 
-.result-label {
-  color: var(--color-text-heading);
-}
-
 .copy-btn {
   padding: var(--space-1) var(--space-3);
   font-family: inherit;
-  color: var(--color-accent);
   cursor: pointer;
   background: transparent;
   border: 1px solid rgb(var(--rgb-accent) / 40%);
@@ -98,7 +85,6 @@
 
 .result {
   padding: var(--space-4);
-  color: var(--color-text-body);
   overflow-wrap: break-word;
   white-space: pre-wrap;
 }

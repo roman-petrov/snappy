@@ -50,7 +50,7 @@ export const LoginView = ({
           onChange={event => onRememberChange((event.target as HTMLInputElement).checked)}
           type="checkbox"
         />
-        <Text as="label" cn={styles.rememberLabel} htmlFor="login-remember" variant="caption">
+        <Text as="label" cn={styles.rememberLabel} color="body" htmlFor="login-remember" variant="caption">
           {t(`loginPage.remember`)}
         </Text>
       </div>

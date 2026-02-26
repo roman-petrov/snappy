@@ -10,7 +10,6 @@
   display: inline-block;
   padding: var(--space-2) var(--space-3);
   margin: 0 0 var(--space-3);
-  color: var(--color-accent);
   border: 1px solid rgb(var(--rgb-accent) / 20%);
   border-radius: var(--radius-sm);
 }
@@ -35,12 +34,11 @@
 
 .panel p {
   margin: 0;
-  color: var(--color-text-body);
 }
 
 .before {
-  background: rgb(var(--rgb-accent-red) / 4%);
-  border-color: var(--color-accent-red);
+  background: rgb(var(--rgb-error) / 4%);
+  border-color: var(--color-error);
 }
 
 .after {
@@ -54,20 +52,11 @@
   text-transform: uppercase;
 }
 
-.before .panel-title {
-  color: var(--color-accent-red);
-}
-
-.after .panel-title {
-  color: var(--color-accent);
-}
-
 .arrow {
   display: flex;
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  color: var(--color-accent);
 }
 
 @media (width <= 640px) {

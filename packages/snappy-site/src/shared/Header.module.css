@@ -24,10 +24,6 @@
   text-decoration: none;
 }
 
-.logo-text {
-  color: var(--color-accent);
-}
-
 .logo:hover {
   text-decoration: none;
   opacity: 0.9;

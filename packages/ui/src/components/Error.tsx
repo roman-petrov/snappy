@@ -6,7 +6,9 @@ import { Text } from "./Text";
 export type ErrorProps = { children: ReactNode };
 
 export const Error = ({ children }: ErrorProps) => (
-  <Text as="p" cn={styles.root} variant="caption">
-    {children}
-  </Text>
+  <div className={styles.root}>
+    <Text as="p" color="error" variant="caption">
+      {children}
+    </Text>
+  </div>
 );

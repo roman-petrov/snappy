@@ -20,13 +20,13 @@ export const Link = ({ children, href, muted = false, rel, target, to }: LinkPro
 
   return to === undefined ? (
     <a className={linkClass} href={href ?? `#`} rel={rel} target={target}>
-      <Text cn={linkClass} variant="caption">
+      <Text color={muted ? `muted` : `accent`} variant="caption">
         {children}
       </Text>
     </a>
   ) : (
     <RouterLink className={linkClass} to={to} viewTransition>
-      <Text cn={linkClass} variant="caption">
+      <Text color={muted ? `muted` : `accent`} variant="caption">
         {children}
       </Text>
     </RouterLink>

@@ -28,20 +28,20 @@ export const PasswordStrength = ({
   <>
     <div className={styles.requirements}>
       {requirements.map(({ check, label }) => (
-        <Text cn={check(password) ? styles.requirementMet : undefined} key={label} variant="caption">
+        <Text color={check(password) ? `accent` : undefined} key={label} variant="caption">
           {check(password) ? `✓ ` : ``}
           {label}
         </Text>
       ))}
     </div>
     <div className={styles.strengthRow}>
-      <Text cn={styles.strengthLabel} variant="caption">
+      <Text cn={styles.strengthLabel} color="body" variant="caption">
         {strengthLabel}
       </Text>
       <div className={styles.strengthBar}>
         <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
       </div>
-      <Text cn={styles.strengthText} variant="caption">
+      <Text cn={styles.strengthText} color="body" variant="caption">
         {strengthText}
       </Text>
     </div>

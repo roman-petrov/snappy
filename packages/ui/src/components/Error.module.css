@@ -1,7 +1,6 @@
 .root {
   padding: var(--space-3);
   margin-top: var(--space-2);
-  color: var(--color-accent-red);
-  background: rgb(var(--rgb-accent-red) / 10%);
+  background: rgb(var(--rgb-error) / 10%);
   border-radius: var(--radius-sm);
 }

@@ -1,0 +1,23 @@
+.accent {
+  color: var(--color-accent);
+}
+
+.on-accent {
+  color: var(--color-on-accent);
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.heading {
+  color: var(--color-text-heading);
+}
+
+.body {
+  color: var(--color-text-body);
+}
+
+.muted {
+  color: var(--color-text-muted);
+}

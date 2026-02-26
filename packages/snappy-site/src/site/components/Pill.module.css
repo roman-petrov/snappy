@@ -13,14 +13,12 @@
 .pill-left {
   flex-shrink: 0;
   padding: var(--space-3) var(--space-4);
-  color: var(--color-text-heading);
   background: rgb(var(--rgb-accent) / 12%);
 }
 
 .pill-right {
   flex: 1;
   padding: var(--space-3) var(--space-4);
-  color: var(--color-text-muted);
   background: rgb(var(--rgb-accent) / 4%);
 }
 

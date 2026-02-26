@@ -38,12 +38,12 @@ export const DashboardView = ({
       </Title>
       <Card>
         <div className={styles.balanceRow}>
-          <Text as="p" cn={styles.balance} variant="bodyLg">
+          <Text as="p" color="body" variant="bodyLg">
             <span aria-hidden className={styles.balanceIcon}>
               🪙
             </span>
             {t(`dashboard.freeRequests`)}:{` `}
-            <Text as="span" cn={styles.balanceCount} variant="h2">
+            <Text as="span" color="accent" variant="h2">
               {remaining ?? `—`}
             </Text>
           </Text>
@@ -87,16 +87,16 @@ export const DashboardView = ({
           {result !== `` && (
             <div className={styles.resultWrap}>
               <div className={styles.resultHeader}>
-                <Text as="span" cn={styles.resultLabel} variant="captionBold">
+                <Text as="span" color="heading" variant="captionBold">
                   {t(`dashboard.result`)}
                 </Text>
                 <button className={styles.copyBtn} onClick={onCopyResult} type="button">
-                  <Text as="span" variant="caption">
+                  <Text as="span" color="accent" variant="caption">
                     {copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
                   </Text>
                 </button>
               </div>
-              <Text as="div" cn={styles.result} variant="largeBody">
+              <Text as="div" cn={styles.result} color="body" variant="largeBody">
                 {result}
               </Text>
             </div>

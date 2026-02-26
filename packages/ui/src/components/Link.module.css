@@ -1,5 +1,4 @@
 .accent {
-  color: var(--color-accent);
   text-decoration: none;
 }
 
@@ -8,13 +7,15 @@
 }
 
 .muted {
-  color: var(--color-text-muted);
   text-decoration: none;
 }
 
 .muted:hover {
   color: var(--color-text-body);
-  text-decoration: none;
+}
+
+.muted:hover * {
+  color: inherit;
 }
 
 .accent:focus-visible,

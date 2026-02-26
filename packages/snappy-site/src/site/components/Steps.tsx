@@ -9,7 +9,7 @@ export const Steps = ({ items }: StepsProps) => (
     <ol className={styles.steps}>
       {items.map(text => (
         <li>
-          <Text as="span" cn={styles.stepText} variant="largeBody">
+          <Text as="span" color="body" variant="largeBody">
             {text}
           </Text>
         </li>

@@ -1,6 +1,4 @@
 declare const styles: {
-  readonly "balance": string;
-  readonly "balanceCount": string;
   readonly "balanceIcon": string;
   readonly "balanceRow": string;
   readonly "copyBtn": string;
@@ -8,7 +6,6 @@ declare const styles: {
   readonly "pageTitle": string;
   readonly "result": string;
   readonly "resultHeader": string;
-  readonly "resultLabel": string;
   readonly "resultWrap": string;
   readonly "section": string;
   readonly "sectionIntro": string;

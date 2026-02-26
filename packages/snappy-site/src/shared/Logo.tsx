@@ -12,7 +12,7 @@ const logoContent = (
   <>
     <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} />
     {` `}
-    <Text as="span" cn={styles.logoText} variant="h3">
+    <Text as="span" color="accent" variant="h3">
       Snappy
     </Text>
   </>

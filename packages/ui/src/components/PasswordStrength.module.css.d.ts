@@ -1,5 +1,4 @@
 declare const styles: {
-  readonly "requirementMet": string;
   readonly "requirements": string;
   readonly "strengthBar": string;
   readonly "strengthFill": string;

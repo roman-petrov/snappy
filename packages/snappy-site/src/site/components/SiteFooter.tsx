@@ -9,11 +9,11 @@ export const SiteFooter = () => (
       <span className={styles.logo}>
         <img alt="" aria-hidden="true" className={styles.logoIcon} height={20} src="/favicon.svg" width={20} />
         {` `}
-        <Text as="span" cn={styles.logoText} variant="h3">
+        <Text as="span" color="accent" variant="h3">
           Snappy
         </Text>
       </span>
-      <Text as="p" cn={styles.tagline} variant="largeBody">
+      <Text as="p" cn={styles.tagline} color="muted" variant="largeBody">
         {t(`footer.tagline`)}
       </Text>
       <Link href="https://t.me/sn4ppy_bot" rel="noopener" target="_blank">
