@@ -27,8 +27,12 @@ const formatHtml = (html: string) => beautify.html(html, { end_with_newline: tru
 
 const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) => {
   const t = entry.getMeta === undefined ? template : injectMeta(template, entry.getMeta(locale));
-
-  return formatHtml(t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`));
+  const rootContent = entry.render(locale);
+  const [before, after] = t.split(rootPlaceholder);
+  if (before === undefined || after === undefined) {
+    return t.replace(rootPlaceholder, `<div id="root">${rootContent}</div>`);
+  }
+  return formatHtml(before) + `<div id="root">${rootContent}</div>` + formatHtml(after);
 };
 
 export const Ssr = {
