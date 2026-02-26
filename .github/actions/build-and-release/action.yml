@@ -25,7 +25,10 @@ runs:
 
     - name: 📦 Zip artifact
       shell: bash
-      run: zip -r dist.zip dist
+      run: |
+        mkdir -p browser
+        cp node_modules/jsdom/lib/jsdom/browser/default-stylesheet.css browser/
+        zip -r dist.zip dist browser
 
     - name: 📤 Create Release and upload artifact
       id: release

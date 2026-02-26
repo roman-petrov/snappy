@@ -8,6 +8,11 @@ echo "📦 Unpacking artifact..."
 unzip -o -q snappy.zip
 rm -f snappy.zip
 
+echo "📄 Placing jsdom default-stylesheet for SSR..."
+DEPLOY_BASE=$(dirname "${REMOTE_PATH}")
+mkdir -p "${DEPLOY_BASE}/browser"
+cp "${REMOTE_PATH}/browser/default-stylesheet.css" "${DEPLOY_BASE}/browser/"
+
 echo "🔄 Restarting PM2..."
 pm2 delete snappy 2>/dev/null || true
 
