@@ -63,6 +63,8 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          BOT_API_KEY: ${{ secrets.BOT_API_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
           GIGACHAT_AUTH_KEY: ${{ secrets.GIGACHAT_AUTH_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
