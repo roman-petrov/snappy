@@ -31,10 +31,6 @@
   box-sizing: border-box;
   width: 100%;
   padding: var(--space-3) var(--space-4);
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
-  line-height: var(--leading-body);
-  color: var(--color-text-body);
 }
 
 .input:focus {

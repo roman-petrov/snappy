@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 import type { ReactNode } from "react";
 
+import { $ } from "../$";
 import styles from "./Field.module.css";
 import { Text } from "./Text";
 
@@ -14,7 +15,7 @@ export type FieldProps = (
   | { children?: never; renderControl?: never; renderInput: (inputClassName: string) => ReactNode }
 ) & { id: string; label?: string };
 
-const inputClassName = `${styles.inputSurface} ${styles.input}`;
+const inputClassName = `${styles.inputSurface} ${styles.input} ${$.typography(`body`)}`;
 const wrapClassName = `${styles.inputSurface} ${styles.inputWrap}`;
 
 export const Field = (props: FieldProps) => {
