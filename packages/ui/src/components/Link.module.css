@@ -1,4 +1,5 @@
 .accent {
+  color: var(--color-accent);
   text-decoration: none;
 }
 
@@ -7,6 +8,7 @@
 }
 
 .muted {
+  color: var(--color-text-muted);
   text-decoration: none;
 }
 
