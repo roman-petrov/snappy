@@ -5,7 +5,12 @@
 */
 
 :root {
-  /* ─── Generated: all colors and shadows (from base in theme-dark/theme-light) ─── */
+  /* ─── Derived from theme base (semantic hues from accent; one shadow alpha) ─── */
+  --hue-error: calc(var(--hue-accent) - 168deg);
+  --hue-warning: calc(var(--hue-accent) - 109deg);
+  --hue-success: calc(var(--hue-accent) - 45deg);
+
+  /* ─── Generated colors and shadows ─── */
   --color-bg: oklch(var(--l-bg) var(--chroma-neutral) var(--hue-neutral));
   --color-bg-elevated: oklch(var(--l-bg-elevated) var(--chroma-neutral) var(--hue-neutral));
   --color-border: oklch(var(--l-border) var(--chroma-neutral-strong) var(--hue-neutral));
@@ -14,15 +19,13 @@
   --color-text-heading: oklch(var(--l-heading) 0 0deg);
   --color-accent: oklch(var(--l-accent) var(--chroma-accent) var(--hue-accent));
   --color-on-accent: oklch(var(--l-on-accent) var(--chroma-neutral) var(--hue-neutral));
-  --color-error: oklch(var(--l-error) var(--chroma-semantic) var(--hue-error));
+  --color-error: oklch(var(--l-semantic) var(--chroma-semantic) var(--hue-error));
   --color-warning: oklch(var(--l-warning) var(--chroma-semantic) var(--hue-warning));
   --color-success: oklch(var(--l-success) var(--chroma-semantic) var(--hue-success));
   --color-bg-card-border: oklch(var(--l-overlay) 0 0deg / var(--alpha-light));
   --color-bg-icon: oklch(var(--l-overlay) 0 0deg / var(--alpha-subtle));
-  --color-bg-card-features: oklch(var(--l-card-tint) var(--chroma-accent-tint) var(--hue-accent) / var(--alpha-card));
-  --color-bg-card-features-hover: oklch(
-    var(--l-card-tint-hover) var(--chroma-accent-tint) var(--hue-accent) / var(--alpha-card-hover)
-  );
+  --color-bg-card-features: oklch(var(--l-card-tint) 0.03 var(--hue-accent) / var(--alpha-card));
+  --color-bg-card-features-hover: oklch(var(--l-card-tint-hover) 0.03 var(--hue-accent) / var(--alpha-card-hover));
   --color-bg-header: oklch(var(--l-bg) var(--chroma-neutral) var(--hue-neutral) / var(--alpha-surface));
   --color-grid: oklch(var(--l-overlay) 0 0deg / var(--alpha-ghost));
   --color-divider: linear-gradient(
@@ -34,7 +37,7 @@
     transparent 100%
   );
   --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--alpha-shadow));
-  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--alpha-shadow-hover));
+  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--alpha-shadow));
   --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
   --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
   --color-focus-ring: var(--color-accent);
