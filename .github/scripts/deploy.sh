@@ -1,39 +1,61 @@
 #!/usr/bin/env bash
+# cspell:word setcap
 set -e
 
-REMOTE_PATH=/home/deploy/snappy
-SSH_OPTS="-p 22 -o StrictHostKeyChecking=no"
-SCP_OPTS="-P 22 -o StrictHostKeyChecking=no"
-TARGET="${SSH_USER}@${SSH_HOST}"
-
-encode() { echo -n "$1" | base64 -w 0; }
-
-SSL_CERT_B64=$(encode "${SSL_CERT_PEM}")
-SSL_KEY_B64=$(encode "${SSL_KEY_PEM}")
-
 echo "⚙️ Setting up server..."
-ssh ${SSH_OPTS} "${TARGET}" "bash -s" < .github/scripts/setup-remote.sh
+if ! command -v node &>/dev/null; then
+  echo "📦 Installing Node.js..."
+  sudo apt-get update -qq
+  sudo apt-get install -y -qq curl unzip
+  curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+  sudo apt-get install -y -qq nodejs
+  echo "✅ Node.js installed: $(node --version)"
+else
+  echo "✅ Node.js already installed: $(node --version)"
+fi
 
-echo "🧹 Cleaning deployment directory..."
-ssh ${SSH_OPTS} "${TARGET}" "rm -rf ${REMOTE_PATH} && mkdir -p ${REMOTE_PATH}"
+NODE_BIN=$(command -v node)
+if [ -n "${NODE_BIN}" ]; then
+  echo "🔓 Allowing Node to bind to port 80..."
+  sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "${NODE_BIN}")" 2>/dev/null || true
+fi
 
-echo "📤 Uploading artifact..."
-scp ${SCP_OPTS} "${DIST_ZIP}" "${TARGET}:${REMOTE_PATH}/snappy.zip"
+export PATH="${HOME}/.bun/bin:${PATH}"
+if ! command -v bun &>/dev/null; then
+  echo "📦 Installing Bun..."
+  curl -fsSL https://bun.sh/install | bash
+  echo "✅ Bun installed: $(bun --version)"
+else
+  echo "✅ Bun already installed: $(bun --version)"
+fi
 
-echo "🚀 Running deploy on server..."
-ssh ${SSH_OPTS} "${TARGET}" \
-  SNAPPY_VERSION="${SNAPPY_VERSION}" \
-  DB_HOST="${DB_HOST}" \
-  DB_PORT="${DB_PORT}" \
-  DB_USER="${DB_USER}" \
-  DB_PASSWORD="${DB_PASSWORD}" \
-  DB_NAME="${DB_NAME}" \
-  BOT_TOKEN="${BOT_TOKEN}" \
-  BOT_API_KEY="${BOT_API_KEY}" \
-  JWT_SECRET="${JWT_SECRET}" \
-  GIGACHAT_AUTH_KEY="${GIGACHAT_AUTH_KEY}" \
-  YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
-  YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \
-  SSL_CERT_B64="${SSL_CERT_B64}" \
-  SSL_KEY_B64="${SSL_KEY_B64}" \
-  "bash -s" -- "${REMOTE_PATH}" < .github/scripts/deploy-remote.sh
+if ! command -v pm2 &>/dev/null; then
+  echo "📦 Installing PM2..."
+  sudo npm install -g pm2
+  sudo pm2 startup systemd -u "${USER}" --hp "${HOME}" || true
+  echo "✅ PM2 installed: $(pm2 --version)"
+else
+  echo "✅ PM2 already installed: $(pm2 --version)"
+fi
+
+echo "🚀 Deploying app..."
+REMOTE_PATH="${REMOTE_PATH:-/home/deploy/snappy}"
+REPO_URL="https://x-access-token:${REPO_CLONE_TOKEN}@github.com/${GITHUB_REPO}.git"
+
+rm -rf "${REMOTE_PATH}"
+mkdir -p "$(dirname "${REMOTE_PATH}")"
+git clone --depth 1 "${REPO_URL}" "${REMOTE_PATH}"
+cd "${REMOTE_PATH}"
+git fetch --depth 1 origin "${DEPLOY_REF}"
+git checkout FETCH_HEAD
+
+bun install --frozen-lockfile
+
+pm2 delete snappy 2>/dev/null || true
+
+pm2 start "bun do run" --name snappy --update-env
+pm2 save
+
+echo "📊 PM2 status:"
+pm2 status
+echo "✅ Deploy completed."

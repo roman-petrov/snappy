@@ -1,5 +1,5 @@
+#!/usr/bin/env bun
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable unicorn/no-process-exit */
 import { Runner } from "./Runner";
 import { Scripts } from "./Scripts";
 

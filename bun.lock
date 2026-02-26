@@ -157,10 +157,6 @@
         "@snappy/server": "workspace:*",
         "@snappy/server-app": "workspace:*",
       },
-      "devDependencies": {
-        "tsx": "^4.21.0",
-        "vite": "8.0.0-beta.13",
-      },
     },
     "packages/snappy": {
       "name": "@snappy/snappy",
@@ -185,7 +181,6 @@
       "version": "0.0.0",
       "dependencies": {
         "@fontsource-variable/inter": "^5.2.8",
-        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/server-api": "workspace:*",
         "@snappy/store": "workspace:*",
@@ -225,6 +220,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@fontsource-variable/inter": "^5.2.8",
+        "@snappy/browser": "workspace:*",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-router-dom": "^7.13.1",

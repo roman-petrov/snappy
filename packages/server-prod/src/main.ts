@@ -38,7 +38,7 @@ const { botBaseUrl, startServers } = useHttps
       },
     };
 
-const root = join(import.meta.dirname, `www`);
+const root = join(import.meta.dirname, `..`, `..`, `..`, `dist`, `www`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
 const app = App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 

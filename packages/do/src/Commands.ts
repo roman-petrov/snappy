@@ -123,20 +123,20 @@ const defs: Record<string, CmdDefinition> = {
     label: `🖥️ Servers`,
   },
   [`server:prod`]: {
-    description: `Run prod server (node dist/server.js).`,
+    description: `Run prod server (tsx).`,
     label: `🖥️ Server`,
-    run: { command: `node dist/server.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
+    run: {
+      command: `bunx tsx packages/server-prod/src/main.ts`,
+      cwd: `.`,
+      shutdown: { command: `docker compose down` },
+    },
   },
   [`server:site:dev`]: {
     description: `Run snappy-site dev server.`,
     label: `🌐 Site dev`,
-    run: { background: true, command: `npm run dev`, cwd: `packages/snappy-site` },
+    run: { background: true, command: `node --import tsx/esm server.ts`, cwd: `packages/snappy-site` },
   },
-  build: {
-    description: `Build server into dist/server.js, static into dist/www.`,
-    label: `📦 Build`,
-    run: { handler: `build` },
-  },
+  build: { description: `Build site into dist/www.`, label: `📦 Build`, run: { handler: `build` } },
   ci: {
     children: [`test`, `lint`, `build`],
     description: `Full CI pipeline: test + all linters + build.`,
@@ -158,9 +158,12 @@ const defs: Record<string, CmdDefinition> = {
     label: `📋 All linters`,
   },
   run: {
-    children: [`build`, `db:dev`, `server:prod`],
-    description: `Build and run server (server-prod → node dist/server.js).`,
-    label: `▶️ Run prod`,
+    children:
+      process.env.NODE_ENV === `production`
+        ? ([`build`, `db:migrate:deploy`, `server:prod`] as const)
+        : ([`build`, `db:dev`, `server:prod`] as const),
+    description: `Build site, DB (dev: push+seed / prod: migrate), server. Same command locally and on prod (NODE_ENV).`,
+    label: `▶️ Run`,
   },
   test: { description: `Run tests via vitest.`, label: `🧪 Tests`, run: { args: [`run`], tool: `vitest` } },
 };

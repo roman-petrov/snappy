@@ -7,12 +7,6 @@
     ".": "./src/index.ts",
     "./Ssr": "./src/Ssr.ts"
   },
-  "scripts": {
-    "build": "vite build",
-    "build:client": "vite build",
-    "build:ssr": "vite build --ssr src/site/entry-server.tsx --outDir dist/server",
-    "dev": "node --import tsx/esm server.ts"
-  },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
     "@snappy/core": "workspace:*",

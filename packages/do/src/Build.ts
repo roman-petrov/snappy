@@ -9,8 +9,6 @@ import { join } from "node:path";
 const distDir = `dist`;
 const siteDir = (root: string) => join(root, `packages`, `snappy-site`);
 const siteDist = (root: string) => join(siteDir(root), distDir);
-const serverDir = (root: string) => join(root, `packages`, `server-prod`);
-const serverDist = (root: string) => join(serverDir(root), distDir);
 const wwwDir = (root: string) => join(root, distDir, `www`);
 
 const ensureDir = (dir: string) => {
@@ -80,9 +78,6 @@ const buildSite = async (root: string, capture: boolean): Promise<number | Spawn
   return 0;
 };
 
-const buildServer = async (root: string, capture: boolean): Promise<number | SpawnResult> =>
-  runSpawn(serverDir(root), Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
-
 const build = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
   const dist = join(root, distDir);
   fs.rmSync(dist, { force: true, recursive: true });
@@ -93,12 +88,7 @@ const build = async (root: string, options: { capture?: true } = {}): Promise<nu
     return siteResult;
   }
 
-  const serverResult = await buildServer(root, capture);
-  if (exitCode(serverResult) !== 0) {
-    return serverResult;
-  }
-
-  copyDir(serverDist(root), join(root, distDir));
+  ensureDir(wwwDir(root));
   copyDir(siteDist(root), wwwDir(root));
 
   return 0;

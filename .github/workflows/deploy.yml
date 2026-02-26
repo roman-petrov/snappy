@@ -3,46 +3,16 @@ name: 🚀 Deploy
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: "Release tag (commit SHA) from Releases. Empty = build and deploy from current commit."
-        required: false
-        type: string
-        default: ""
 
 jobs:
   deploy:
     name: 🚀 Deploy to production
     runs-on: ubuntu-latest
     environment: production
-    permissions:
-      contents: write
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
-
-      - name: 🏗️ Build and publish to Release
-        if: inputs.version == ''
-        id: build
-        uses: ./.github/actions/build-and-release
-
-      - name: 🗄️ Run database migrations
-        if: inputs.version == ''
-        env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-        run: bunx prisma migrate deploy
-
-      - name: 📥 Download release artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          VERSION="${{ inputs.version || steps.build.outputs.version }}"
-          gh release download "$VERSION" --repo ${{ github.repository }} --pattern '*.zip' -O dist.zip
 
       - name: 🔑 Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -56,7 +26,9 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
-          SNAPPY_VERSION: ${{ inputs.version || steps.build.outputs.version }}
+          GITHUB_REPO: ${{ github.repository }}
+          DEPLOY_REF: ${{ github.sha }}
+          REPO_CLONE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USER: ${{ secrets.DB_USER }}
@@ -70,5 +42,24 @@ jobs:
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
           SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
-          DIST_ZIP: dist.zip
-        run: bash .github/scripts/deploy.sh
+        run: |
+          ssh -p 22 -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
+            GITHUB_REPO="${GITHUB_REPO}" \
+            DEPLOY_REF="${DEPLOY_REF}" \
+            REPO_CLONE_TOKEN="${REPO_CLONE_TOKEN}" \
+            DB_HOST="${DB_HOST}" \
+            DB_PORT="${DB_PORT}" \
+            DB_USER="${DB_USER}" \
+            DB_PASSWORD="${DB_PASSWORD}" \
+            DB_NAME="${DB_NAME}" \
+            BOT_TOKEN="${BOT_TOKEN}" \
+            BOT_API_KEY="${BOT_API_KEY}" \
+            JWT_SECRET="${JWT_SECRET}" \
+            GIGACHAT_AUTH_KEY="${GIGACHAT_AUTH_KEY}" \
+            YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
+            YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \
+            NODE_ENV=production \
+            SNAPPY_VERSION="${DEPLOY_REF}" \
+            SSL_CERT_PEM="$(echo -n "$SSL_CERT_PEM" | base64 -w 0)" \
+            SSL_KEY_PEM="$(echo -n "$SSL_KEY_PEM" | base64 -w 0)" \
+            "bash -s" < .github/scripts/deploy.sh
