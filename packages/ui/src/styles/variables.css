@@ -1,14 +1,23 @@
 /*
-  Base vars: h (hue), c (chroma), l (lightness), a (alpha) in theme-dark.css and theme-light.css.
+  Base vars: h, c, l in theme-dark.css and theme-light.css; a (alpha) here (shared).
   Here only generated --color-*, --shadow-*, focus-ring and spacing/typography.
   Ensure html has data-theme="dark" or data-theme="light".
 */
 
 :root {
-  /* ─── Derived from theme base (semantic hues from accent; one shadow alpha) ─── */
+  /* ─── Derived from theme base (semantic hues from accent) ─── */
   --h-error: calc(var(--h-accent) - 168deg);
   --h-warning: calc(var(--h-accent) - 109deg);
   --h-success: calc(var(--h-accent) - 45deg);
+
+  /* ─── Alpha (shared by both themes) ─── */
+  --a-ghost: 3%;
+  --a-subtle: 5%;
+  --a-light: 10%;
+  --a-surface: 90%;
+  --a-card: 30%;
+  --a-card-hover: 70%;
+  --a-shadow: 4%;
 
   /* ─── Generated colors and shadows ─── */
   --color-bg: oklch(var(--l-bg) var(--c-neutral) var(--h-neutral));
