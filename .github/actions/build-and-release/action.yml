@@ -23,9 +23,18 @@ runs:
         bun install --frozen-lockfile
         bun run packages/do/src/main.cli.ts build
 
-    - name: 📦 Zip artifact
+    - name: 📦 Zip artifact (dist + package manifests only, no source)
       shell: bash
-      run: zip -r dist.zip dist
+      run: |
+        mkdir -p deploy-pkg/packages
+        cp -r dist package.json bun.lock deploy-pkg/
+        [ -f bunfig.toml ] && cp bunfig.toml deploy-pkg/
+        for d in packages/*/; do
+          name=$(basename "$d")
+          mkdir -p "deploy-pkg/packages/$name"
+          cp "packages/$name/package.json" "deploy-pkg/packages/$name/"
+        done
+        cd deploy-pkg && zip -r ../dist.zip . && cd ..
 
     - name: 📤 Create Release and upload artifact
       id: release
