@@ -1,9 +1,9 @@
-.desc-divider {
+.row {
   position: relative;
   padding: var(--space-5) 0;
 }
 
-.desc-divider::after {
+.row::after {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
@@ -12,6 +12,31 @@
   background: var(--color-divider);
 }
 
-.list dd:last-child::after {
+.list dd:last-child::after,
+.list > .row:last-child::after {
   display: none;
+}
+
+.row-with-icon {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--space-5);
+}
+
+.row-with-icon .icon {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.row-with-icon dt,
+.row-with-icon dd {
+  grid-column: 2;
+}
+
+@media (width <= 640px) {
+  .row-with-icon {
+    gap: var(--space-4);
+  }
 }

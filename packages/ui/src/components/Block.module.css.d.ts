@@ -1,6 +1,8 @@
 declare const styles: {
-  readonly "descDivider": string;
+  readonly "icon": string;
   readonly "list": string;
+  readonly "row": string;
+  readonly "rowWithIcon": string;
 };
 export = styles;
 

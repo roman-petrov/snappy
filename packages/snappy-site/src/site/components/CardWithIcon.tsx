@@ -1,4 +1,4 @@
-import { Block, ListItem } from "@snappy/ui";
+import { Block } from "@snappy/ui";
 
 import styles from "./CardWithIcon.module.css";
 
@@ -6,14 +6,7 @@ export type CardWithIconProps = { description: string; icon: string; title: stri
 
 export const CardWithIcon = ({ description, icon, title, variant }: CardWithIconProps) => {
   if (variant === `who`) {
-    return (
-      <ListItem>
-        <div className={styles.who}>
-          <span className={styles.whoIcon}>{icon}</span>
-          <Block description={description} title={title} />
-        </div>
-      </ListItem>
-    );
+    return <Block as="dl" description={description} icon={icon} title={title} withDivider />;
   }
 
   return (

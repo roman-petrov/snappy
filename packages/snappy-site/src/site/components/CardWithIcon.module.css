@@ -30,27 +30,3 @@
     padding: var(--space-5);
   }
 }
-
-.who {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: var(--space-5);
-}
-
-.who h3,
-.who p {
-  grid-column: 2;
-}
-
-.who-icon {
-  grid-row: 1 / -1;
-  grid-column: 1;
-  font-size: 2rem;
-  line-height: 1;
-}
-
-@media (width <= 640px) {
-  .who {
-    gap: var(--space-4);
-  }
-}
