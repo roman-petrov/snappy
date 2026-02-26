@@ -3,8 +3,9 @@ import { Button, Input, Link, Panel } from "@snappy/ui";
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../core";
-import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
+import { FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
+import { PanelWithLink } from "./PanelWithLink";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;
 
@@ -18,11 +19,12 @@ export const ForgotPasswordView = ({
 }: ForgotPasswordViewProps) => {
   if (sent) {
     return (
-      <Panel lead={t(`forgotPage.checkEmailLead`)} title={t(`forgotPage.checkEmail`)}>
-        <FormActions>
-          <Link text={t(`forgotPage.backToLogin`)} to="/login" />
-        </FormActions>
-      </Panel>
+      <PanelWithLink
+        lead={t(`forgotPage.checkEmailLead`)}
+        linkText={t(`forgotPage.backToLogin`)}
+        linkTo="/login"
+        title={t(`forgotPage.checkEmail`)}
+      />
     );
   }
 

@@ -1,10 +1,11 @@
-import { Button, Link, Panel, PasswordInput } from "@snappy/ui";
+import { Button, Panel, PasswordInput } from "@snappy/ui";
 
 import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { Password, t } from "../core";
-import { FormActions, FormErrorAndActions } from "./FormErrorAndActions";
+import { FormErrorAndActions } from "./FormErrorAndActions";
 import styles from "./Login.module.css";
+import { PanelWithLink } from "./PanelWithLink";
 
 export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
 
@@ -17,24 +18,24 @@ export const ResetPasswordView = ({
   password,
   token,
 }: ResetPasswordViewProps) => {
-  if (token === ``) {
-    return (
-      <Panel lead={t(`resetPage.invalidLinkLead`)} title={t(`resetPage.invalidLink`)}>
-        <FormActions>
-          <Link text={t(`resetPage.requestAgain`)} to="/forgot-password" />
-        </FormActions>
-      </Panel>
-    );
-  }
-
-  if (done) {
-    return (
-      <Panel lead={t(`resetPage.doneLead`)} title={t(`resetPage.done`)}>
-        <FormActions>
-          <Link text={t(`resetPage.loginLink`)} to="/login" />
-        </FormActions>
-      </Panel>
-    );
+  const resultPanel =
+    token === ``
+      ? {
+          lead: t(`resetPage.invalidLinkLead`),
+          linkText: t(`resetPage.requestAgain`),
+          linkTo: `/forgot-password`,
+          title: t(`resetPage.invalidLink`),
+        }
+      : done
+        ? {
+            lead: t(`resetPage.doneLead`),
+            linkText: t(`resetPage.loginLink`),
+            linkTo: `/login`,
+            title: t(`resetPage.done`),
+          }
+        : undefined;
+  if (resultPanel !== undefined) {
+    return <PanelWithLink {...resultPanel} />;
   }
 
   return (
