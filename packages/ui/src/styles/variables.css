@@ -1,23 +1,11 @@
 /*
-  Base scale (--l-*, --alpha-*) is set in theme-dark.css and theme-light.css.
-  All --color-*, --shadow-*, focus-ring defined here from those base vars.
+  All base vars (hue, chroma, l-*, alpha-*) are set only in theme-dark.css and theme-light.css.
+  Here only generated --color-*, --shadow-*, focus-ring and spacing/typography.
   Ensure html has data-theme="dark" or data-theme="light".
 */
 
 :root {
-  /* ─── Hues and chromas (shared; light can override chroma-accent, chroma-semantic) ─── */
-  --hue-neutral: 286deg;
-  --hue-accent: 195deg;
-  --hue-error: 27deg;
-  --hue-warning: 86deg;
-  --hue-success: 150deg;
-  --chroma-neutral: 0.002;
-  --chroma-neutral-strong: 0.008;
-  --chroma-accent: 0.12;
-  --chroma-accent-tint: 0.03;
-  --chroma-semantic: 0.17;
-
-  /* ─── Generated: all colors and shadows (from base in theme blocks) ─── */
+  /* ─── Generated: all colors and shadows (from base in theme-dark/theme-light) ─── */
   --color-bg: oklch(var(--l-bg) var(--chroma-neutral) var(--hue-neutral));
   --color-bg-elevated: oklch(var(--l-bg-elevated) var(--chroma-neutral) var(--hue-neutral));
   --color-border: oklch(var(--l-border) var(--chroma-neutral-strong) var(--hue-neutral));
