@@ -27,10 +27,10 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
   typography?: Typography;
 };
 
-export const Text = ({ as, cn = ``, color, text, typography = `body`, ...rest }: TextProps) => {
+export const Text = ({ as, cn = ``, color = `body`, text, typography = `body`, ...rest }: TextProps) => {
   const Tag = as ?? typographyTag[typography];
   const typographyClass = $.typography(typography);
-  const colorClass = $.color(color ?? `body`);
+  const colorClass = $.color(color);
   const className = [typographyClass, colorClass, cn].filter(Boolean).join(` `).trim();
 
   return (
