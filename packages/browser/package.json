@@ -8,6 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "isomorphic-dompurify": "^3.0.0-rc.3"
+    "isomorphic-dompurify": "^3.0.0"
   }
 }

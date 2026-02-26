@@ -6,7 +6,6 @@ import { defineConfig } from "eslint/config";
  * Need to revisit this configuration if https://github.com/microsoft/TypeScript/issues/42357 is shipped in TypeScript
  */
 export default defineConfig([
-  // @ts-expect-error - pluginFunctional.configs.all is not assignable to type 'InfiniteArray<ConfigWithExtends>'.
   pluginFunctional.configs.all,
   {
     rules: {
