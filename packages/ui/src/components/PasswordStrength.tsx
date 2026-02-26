@@ -37,11 +37,11 @@ export const PasswordStrength = ({
       ))}
     </div>
     <div className={styles.strengthRow}>
-      <Text cn={styles.strengthLabel} color="body" text={strengthLabel} typography="caption" />
+      <Text cn={styles.strengthLabel} text={strengthLabel} typography="caption" />
       <div className={styles.strengthBar}>
         <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
       </div>
-      <Text cn={styles.strengthText} color="body" text={strengthText} typography="caption" />
+      <Text cn={styles.strengthText} text={strengthText} typography="caption" />
     </div>
     <Button disabled={disabled} onClick={onGeneratePassword} type="button">
       {generateLabel}

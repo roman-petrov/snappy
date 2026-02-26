@@ -18,7 +18,7 @@ export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: 
     <div className={styles.row}>
       <div className={`${styles.panel} ${styles.before}`}>
         <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel} typography="caption" />
-        <Text as="p" color="body" text={before} typography="largeBody" />
+        <Text as="p" text={before} typography="largeBody" />
       </div>
       <Text aria-hidden="true" as="span" cn={styles.arrow} color="accent" text="→" typography="h2" />
       <div className={`${styles.panel} ${styles.after}`}>

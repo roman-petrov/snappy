@@ -53,7 +53,6 @@ export const LoginView = ({
         <Text
           as="label"
           cn={styles.rememberLabel}
-          color="body"
           htmlFor="login-remember"
           text={t(`loginPage.remember`)}
           typography="caption"
