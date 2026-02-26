@@ -1,6 +1,5 @@
 import { t } from "../core";
-import { Dl } from "./Block";
-import { FaqItem } from "./FaqItem";
+import { Block, Dl } from "./Block";
 import { Section } from "./Section";
 
 export const Faq = () => (
@@ -8,7 +7,7 @@ export const Faq = () => (
     <Dl>
       {([`faq.free`, `faq.registration`, `faq.languages`, `faq.privacy`, `faq.length`, `faq.difference`] as const).map(
         key => (
-          <FaqItem answer={t(`${key}.a`)} key={key} question={t(`${key}.q`)} />
+          <Block description={t(`${key}.a`)} key={key} title={t(`${key}.q`)} withDivider />
         ),
       )}
     </Dl>

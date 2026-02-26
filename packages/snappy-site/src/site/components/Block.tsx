@@ -4,17 +4,15 @@ import { Text } from "@snappy/ui";
 
 import styles from "./Block.module.css";
 
-export type BlockProps = {
-  as?: `div` | `dl`;
-  description: string;
-  icon?: string;
-  title: string;
-  titleTag?: `h2` | `h3`;
-  withDivider?: boolean;
-};
+export type BlockProps = { description: string; icon?: string; title: string; withDivider?: boolean };
 
-export const Block = ({ as = `div`, description, icon, title, titleTag = `h3`, withDivider = false }: BlockProps) =>
-  as === `dl` && icon !== undefined ? (
+export const Block = ({ description, icon, title, withDivider = false }: BlockProps) =>
+  icon === undefined ? (
+    <>
+      <Text as="dt" color="heading" text={title} typography="h3" />
+      <Text as="dd" cn={withDivider ? styles.row : undefined} color="muted" text={description} typography="large" />
+    </>
+  ) : (
     <div className={withDivider ? [styles.row, styles.rowWithIcon].join(` `) : styles.rowWithIcon}>
       <span aria-hidden className={styles.icon}>
         {icon}
@@ -22,16 +20,6 @@ export const Block = ({ as = `div`, description, icon, title, titleTag = `h3`, w
       <Text as="dt" color="heading" text={title} typography="h3" />
       <Text as="dd" color="muted" text={description} typography="large" />
     </div>
-  ) : as === `dl` ? (
-    <>
-      <Text as="dt" color="heading" text={title} typography="h3" />
-      <Text as="dd" cn={withDivider ? styles.row : undefined} color="muted" text={description} typography="large" />
-    </>
-  ) : (
-    <>
-      <Text as={titleTag} color="heading" text={title} typography="h3" />
-      <Text color="muted" text={description} typography="large" />
-    </>
   );
 
 export type DlProps = { children: ReactNode };
