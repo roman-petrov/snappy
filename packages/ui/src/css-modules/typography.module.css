@@ -1,5 +1,12 @@
 /* Typography scale: universal variants */
 
+.body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  color: var(--color-text-body);
+}
+
 .display {
   font-size: var(--text-hero);
   font-weight: var(--weight-extrabold);

@@ -1,4 +1,5 @@
 declare const styles: {
+  readonly "body": string;
   readonly "bodyLg": string;
   readonly "caption": string;
   readonly "captionBold": string;

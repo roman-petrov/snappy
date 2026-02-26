@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { createRoot } from "react-dom/client";
 
+import { $ } from "./$";
 import "./styles/index.css";
 import { Theme } from "./theme/Theme";
 
@@ -22,5 +23,6 @@ export const ensureFogContainer = () => {
 export const startApp = (container: HTMLElement, app: ReactNode) => {
   ensureFogContainer();
   Theme.restore();
+  container.classList.add($.typography(`body`));
   createRoot(container).render(app);
 };
