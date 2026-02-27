@@ -13,7 +13,7 @@ export default defineConfig([
       "import/no-extraneous-dependencies": [
         `error`,
         {
-          devDependencies: [`packages/*/*`, `**/*.test.ts`, `**/*.config.*`],
+          devDependencies: [`packages/**`, `**/*.test.ts`, `**/*.config.*`],
           includeInternal: true,
           includeTypes: true,
         },

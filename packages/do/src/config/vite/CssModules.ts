@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/filename-case */
 import type { Plugin } from "vite";
 
 import { _ } from "@snappy/core";

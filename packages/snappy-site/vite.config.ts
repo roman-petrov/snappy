@@ -1,18 +1,10 @@
-// cspell:word lightningcss
+import { ViteConfig } from "@snappy/do/config";
 import { join } from "node:path";
-import { defineConfig } from "vite";
-import typedCssModules from "vite-plugin-typed-css-modules";
-
-import { cssModulesCamelCasePlugin } from "./vite.css-modules";
 
 const root = join(import.meta.filename, `..`);
 
-export default defineConfig({
+export default ViteConfig({
   build: { outDir: `dist`, rollupOptions: { input: [`src/site/index.html`] } },
-  css: { lightningcss: { cssModules: true }, transformer: `lightningcss` },
-  plugins: [
-    typedCssModules({ include: [`**/*.module.css`, `../ui/src/**/*.module.css`] }),
-    cssModulesCamelCasePlugin(),
-  ],
   resolve: { alias: { "/app": join(root, `src`, `app`) } },
+  typedCssInclude: [`**/*.module.css`, `../ui/src/**/*.module.css`],
 });
