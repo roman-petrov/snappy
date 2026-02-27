@@ -51,6 +51,16 @@ const defs: Record<string, CmdDefinition> = {
     label: `🗄️ Prisma Studio`,
     run: { args: [`studio`], tool: `prisma` },
   },
+  [`deploy-prepare`]: {
+    children: [`build`, `db:migrate:deploy`],
+    description: `Build + apply migrations (for deploy or before run).`,
+    label: `📦 Deploy prepare`,
+  },
+  [`deploy-run`]: {
+    children: [`server:prod`],
+    description: `Run prod server only (after deploy-prepare).`,
+    label: `▶️ Deploy run`,
+  },
   [`fix:eslint`]: {
     description: `ESLint: auto-fix.`,
     label: `🔧 ESLint auto-fix`,
@@ -158,11 +168,8 @@ const defs: Record<string, CmdDefinition> = {
     label: `📋 All linters`,
   },
   run: {
-    children:
-      process.env.NODE_ENV === `production`
-        ? ([`build`, `db:migrate:deploy`, `server:prod`] as const)
-        : ([`build`, `db:dev`, `server:prod`] as const),
-    description: `Build site, DB (dev: push+seed / prod: migrate), server. Same command locally and on prod (NODE_ENV).`,
+    children: [`deploy-prepare`, `deploy-run`],
+    description: `Deploy prepare + deploy run. Use locally or under PM2.`,
     label: `▶️ Run`,
   },
   test: { description: `Run tests via vitest.`, label: `🧪 Tests`, run: { args: [`run`], tool: `vitest` } },

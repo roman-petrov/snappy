@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-printf '\n'
+echo '.'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "⚙️ Setting up server..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-printf '\n'
+echo '.'
 
 if ! command -v node &>/dev/null; then
   echo "📦 Installing Node.js..."
@@ -36,11 +36,11 @@ else
   echo "✅ PM2 already installed: $(pm2 --version)"
 fi
 
-printf '\n'
+echo '.'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "🚀 Deploying app..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-printf '\n'
+echo '.'
 
 DEPLOY_PATH="/home/deploy/snappy"
 REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
@@ -54,16 +54,16 @@ git checkout FETCH_HEAD
 
 bun install --frozen-lockfile
 
-export NODE_ENV=production
-export SNAPPY_VERSION="${GITHUB_REF}"
+bun do deploy-prepare
 
+export SNAPPY_VERSION="${GITHUB_REF}"
 pm2 delete snappy 2>/dev/null || true
-pm2 start "bun do run" --name snappy --update-env
+pm2 start "bun do deploy-run" --name snappy --update-env
 pm2 save
 pm2 status
 
-printf '\n'
+echo '.'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "✅ Deploy completed."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-printf '\n'
+echo '.'
