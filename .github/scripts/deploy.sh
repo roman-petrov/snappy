@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# cspell:word setcap
 set -e
 
 echo "⚙️ Setting up server..."
@@ -12,12 +11,6 @@ if ! command -v node &>/dev/null; then
   echo "✅ Node.js installed: $(node --version)"
 else
   echo "✅ Node.js already installed: $(node --version)"
-fi
-
-NODE_BIN=$(command -v node)
-if [ -n "${NODE_BIN}" ]; then
-  echo "🔓 Allowing Node to bind to port 80..."
-  sudo setcap 'cap_net_bind_service=+ep' "$(readlink -f "${NODE_BIN}")" 2>/dev/null || true
 fi
 
 export PATH="${HOME}/.bun/bin:${PATH}"
@@ -39,7 +32,7 @@ else
 fi
 
 echo "🚀 Deploying app..."
-REMOTE_PATH="${REMOTE_PATH:-/home/deploy/snappy}"
+REMOTE_PATH="/home/deploy/snappy"
 REPO_URL="https://x-access-token:${REPO_CLONE_TOKEN}@github.com/${GITHUB_REPO}.git"
 
 rm -rf "${REMOTE_PATH}"
@@ -52,10 +45,7 @@ git checkout FETCH_HEAD
 bun install --frozen-lockfile
 
 pm2 delete snappy 2>/dev/null || true
-
 pm2 start "bun do run" --name snappy --update-env
 pm2 save
-
-echo "📊 PM2 status:"
 pm2 status
 echo "✅ Deploy completed."
