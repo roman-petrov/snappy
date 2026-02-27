@@ -1,17 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
-frame() {
-  local msg="$1"
-  local n=$(( ${#msg} + 2 ))
-  local line
-  printf -v line '%*s' "$n" ''
-  echo "┌${line// /─}┐"
-  echo "│ ${msg} │"
-  echo "└${line// /─}┘"
-}
+echo "****************************"
+echo "* ⚙️ Setting up server... *"
+echo "****************************"
 
-frame "⚙️ Setting up server..."
 if ! command -v node &>/dev/null; then
   echo "📦 Installing Node.js..."
   apt-get update -qq
@@ -41,7 +34,10 @@ else
   echo "✅ PM2 already installed: $(pm2 --version)"
 fi
 
-frame "🚀 Deploying app..."
+echo "*************************"
+echo "* 🚀 Deploying app... *"
+echo "*************************"
+
 REMOTE_PATH="/home/deploy/snappy"
 REPO_URL="https://x-access-token:${REPO_CLONE_TOKEN}@github.com/${GITHUB_REPO}.git"
 
@@ -61,4 +57,7 @@ pm2 delete snappy 2>/dev/null || true
 pm2 start "bun do run" --name snappy --update-env
 pm2 save
 pm2 status
-frame "✅ Deploy completed."
+
+echo "**************************"
+echo "* ✅ Deploy completed. *"
+echo "**************************"
