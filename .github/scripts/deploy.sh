@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -e
 
-echo ""
+printf '\n'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "⚙️ Setting up server..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-echo ""
+printf '\n'
 
 if ! command -v node &>/dev/null; then
   echo "📦 Installing Node.js..."
@@ -36,11 +36,11 @@ else
   echo "✅ PM2 already installed: $(pm2 --version)"
 fi
 
-echo ""
+printf '\n'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "🚀 Deploying app..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-echo ""
+printf '\n'
 
 REMOTE_PATH="/home/deploy/snappy"
 REPO_URL="https://x-access-token:${REPO_CLONE_TOKEN}@github.com/${GITHUB_REPO}.git"
@@ -62,8 +62,8 @@ pm2 start "bun do run" --name snappy --update-env
 pm2 save
 pm2 status
 
-echo ""
+printf '\n'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "✅ Deploy completed."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
-echo ""
+printf '\n'
