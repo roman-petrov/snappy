@@ -1,6 +1,4 @@
 /* eslint-disable unicorn/prefer-export-from */
-import beautify from "js-beautify";
-
 import { LocaleCookie, type SiteLocaleKey } from "./site/core";
 
 export type { SiteLocaleKey };
@@ -23,19 +21,10 @@ const injectMeta = (template: string, meta: SiteMeta) =>
     .replaceAll(`{{keywords}}`, escapeAttribute(meta.keywords))
     .replaceAll(`{{htmlLang}}`, meta.htmlLang);
 
-const formatHtml = (html: string) => beautify.html(html, { end_with_newline: true, indent_size: 2 });
-
 const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) => {
   const t = entry.getMeta === undefined ? template : injectMeta(template, entry.getMeta(locale));
 
-  return formatHtml(t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`));
+  return t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`);
 };
 
-export const Ssr = {
-  buildHtml,
-  cookieName: LocaleCookie.cookieName,
-  formatHtml,
-  injectMeta,
-  localeFromCookie,
-  rootPlaceholder,
-};
+export const Ssr = { buildHtml, cookieName: LocaleCookie.cookieName, injectMeta, localeFromCookie, rootPlaceholder };
