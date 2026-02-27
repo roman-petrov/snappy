@@ -42,20 +42,20 @@ echo "🚀 Deploying app..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 printf '\n'
 
-REMOTE_PATH="/home/deploy/snappy"
-REPO_URL="https://x-access-token:${REPO_CLONE_TOKEN}@github.com/${GITHUB_REPO}.git"
+DEPLOY_PATH="/home/deploy/snappy"
+REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
 
-rm -rf "${REMOTE_PATH}"
-mkdir -p "${REMOTE_PATH}"
-git clone --depth 1 "${REPO_URL}" "${REMOTE_PATH}"
-cd "${REMOTE_PATH}"
-git fetch --depth 1 origin "${DEPLOY_REF}"
+rm -rf "${DEPLOY_PATH}"
+mkdir -p "${DEPLOY_PATH}"
+git clone --depth 1 "${REPO_URL}" "${DEPLOY_PATH}"
+cd "${DEPLOY_PATH}"
+git fetch --depth 1 origin "${GITHUB_REF}"
 git checkout FETCH_HEAD
 
 bun install --frozen-lockfile
 
 export NODE_ENV=production
-export SNAPPY_VERSION="${DEPLOY_REF}"
+export SNAPPY_VERSION="${GITHUB_REF}"
 
 pm2 delete snappy 2>/dev/null || true
 pm2 start "bun do run" --name snappy --update-env

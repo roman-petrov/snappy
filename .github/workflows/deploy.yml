@@ -21,11 +21,11 @@ jobs:
 
       - name: 🚀 Deploy to server
         env:
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_REF: ${{ github.sha }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
-          GITHUB_REPO: ${{ github.repository }}
-          DEPLOY_REF: ${{ github.sha }}
-          REPO_CLONE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USER: ${{ secrets.DB_USER }}
@@ -42,8 +42,8 @@ jobs:
         run: |
           ssh -p 22 -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
             GITHUB_REPO="${GITHUB_REPO}" \
-            DEPLOY_REF="${DEPLOY_REF}" \
-            REPO_CLONE_TOKEN="${REPO_CLONE_TOKEN}" \
+            GITHUB_REF="${GITHUB_REF}" \
+            GITHUB_TOKEN="${GITHUB_TOKEN}" \
             DB_HOST="${DB_HOST}" \
             DB_PORT="${DB_PORT}" \
             DB_USER="${DB_USER}" \
