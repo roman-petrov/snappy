@@ -1,5 +1,5 @@
 import { Button } from "./Button";
-import styles from "./PasswordStrength.module.css";
+import styles from "./PasswordStrength.module.scss";
 import { Text } from "./Text";
 
 export type PasswordStrengthProps = {

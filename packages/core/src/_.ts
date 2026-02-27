@@ -7,6 +7,13 @@ import type { Action } from "./Types";
 
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf-8`);
 const camelCase = (s: string) => s.replaceAll(/-(?<c>[a-z])/gu, (_, c: string) => c.toUpperCase());
+
+const pascalCase = (s: string) => {
+  const c = camelCase(s);
+
+  return c.length === 0 ? `` : (c[0] ?? ``).toUpperCase() + c.slice(1);
+};
+
 const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
 const isBoolean = (value: unknown): value is boolean => typeof value === `boolean`;
 const isFunction = (value: unknown): value is (...args: unknown[]) => unknown => typeof value === `function`;
@@ -46,5 +53,6 @@ export const _ = {
   isObject,
   isString,
   list,
+  pascalCase,
   singleAction,
 };

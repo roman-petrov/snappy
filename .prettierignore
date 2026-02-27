@@ -2,4 +2,4 @@ bun.lockb
 dist
 **/node_modules
 **/packages/*/src/generated
-**/*.module.css.d.ts
+**/*.module.scss.d.ts

@@ -6,7 +6,7 @@ import { $, Alert, Button, Card, Select, Text, Textarea, Title } from "@snappy/u
 import type { useDashboardState } from "./Dashboard.state";
 
 import { type FeatureType, t } from "../core";
-import styles from "./Dashboard.module.css";
+import styles from "./Dashboard.module.scss";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 

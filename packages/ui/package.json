@@ -6,7 +6,10 @@
   "main": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./styles": "./src/styles/index.css"
+    "./styles": {
+      "sass": "./src/styles/index.scss",
+      "default": "./src/styles/index.scss"
+    }
   },
   "peerDependencies": {
     "react": "^19.0.0",

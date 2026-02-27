@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import styles from "./Button.module.css";
+import styles from "./Button.module.scss";
 import { Icon } from "./Icon";
 
 export type ButtonProps = {

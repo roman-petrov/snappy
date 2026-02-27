@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Alert } from "@snappy/ui";
 
-import styles from "./FormErrorAndActions.module.css";
+import styles from "./FormErrorAndActions.module.scss";
 
 export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 

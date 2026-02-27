@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 import { Field, type FieldControlClasses } from "./Field";
-import styles from "./Input.module.css";
+import styles from "./Input.module.scss";
 
 export type InputProps =
   | {

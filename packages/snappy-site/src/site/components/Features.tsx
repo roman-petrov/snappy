@@ -1,6 +1,6 @@
 import { t } from "../core";
 import { FeatureCard } from "./FeatureCard";
-import styles from "./Features.module.css";
+import styles from "./Features.module.scss";
 import { Section } from "./Section";
 
 export const Features = () => (

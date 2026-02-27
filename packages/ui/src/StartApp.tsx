@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 
 import { createRoot } from "react-dom/client";
 
-import "./styles/index.css";
+import "./styles/index.scss";
 import { Theme } from "./theme/Theme";
 
 const fogId = `fog-bg`;

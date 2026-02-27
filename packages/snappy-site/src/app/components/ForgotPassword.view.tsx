@@ -4,7 +4,7 @@ import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../core";
 import { FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
+import styles from "./Login.module.scss";
 import { PanelWithLink } from "./PanelWithLink";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;

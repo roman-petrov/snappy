@@ -6,5 +6,4 @@ const root = join(import.meta.filename, `..`);
 export default ViteConfig({
   build: { outDir: `dist`, rollupOptions: { input: [`src/site/index.html`] } },
   resolve: { alias: { "/app": join(root, `src`, `app`) } },
-  typedCssInclude: [`**/*.module.css`, `../ui/src/**/*.module.css`],
 });

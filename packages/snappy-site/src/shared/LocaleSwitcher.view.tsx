@@ -2,7 +2,7 @@ import { Text } from "@snappy/ui";
 
 import type { useLocaleSwitcherState } from "./LocaleSwitcher.state";
 
-import styles from "./LocaleSwitcher.module.css";
+import styles from "./LocaleSwitcher.module.scss";
 
 export type LocaleSwitcherViewProps = ReturnType<typeof useLocaleSwitcherState>;
 

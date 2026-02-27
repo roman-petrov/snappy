@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { Card } from "./Card";
-import styles from "./Panel.module.css";
+import styles from "./Panel.module.scss";
 import { Title } from "./Title";
 
 export type PanelProps = { children: ReactNode; lead?: string; title: string };

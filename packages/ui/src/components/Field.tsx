@@ -4,7 +4,7 @@
 import type { ReactNode } from "react";
 
 import { $ } from "../$";
-import styles from "./Field.module.css";
+import styles from "./Field.module.scss";
 import { Text } from "./Text";
 
 export type FieldControlClasses = { inputClassName: string; inputInsideWrapClassName: string; wrapClassName: string };

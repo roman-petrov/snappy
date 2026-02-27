@@ -1,6 +1,6 @@
 import { Text } from "@snappy/ui";
 
-import styles from "./ExampleBlock.module.css";
+import styles from "./ExampleBlock.module.scss";
 
 export type ExampleBlockProps = {
   after: string;

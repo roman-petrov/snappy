@@ -1,6 +1,6 @@
 /* eslint-disable react/no-danger */
 import { Icons } from "../assets";
-import styles from "./Icon.module.css";
+import styles from "./Icon.module.scss";
 
 export type Icon = keyof typeof Icons;
 

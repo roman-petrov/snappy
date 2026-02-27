@@ -1,7 +1,7 @@
 /* eslint-disable react/forbid-component-props */
 import { Link as RouterLink } from "react-router-dom";
 
-import styles from "./Link.module.css";
+import styles from "./Link.module.scss";
 import { Text } from "./Text";
 
 export type LinkProps = { href?: string; muted?: boolean; rel?: string; target?: string; text: string; to?: string };

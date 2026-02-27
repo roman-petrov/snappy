@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import styles from "./Headline.module.css";
+import styles from "./Headline.module.scss";
 import { Text } from "./Text";
 
 export type HeadlineProps = {

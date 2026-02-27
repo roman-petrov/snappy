@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Title } from "@snappy/ui";
 
-import styles from "./Section.module.css";
+import styles from "./Section.module.scss";
 
 export type SectionProps = { children: ReactNode; id?: string; lead: string; title: string };
 

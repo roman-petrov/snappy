@@ -1,6 +1,6 @@
 import { Text } from "@snappy/ui";
 
-import styles from "./Steps.module.css";
+import styles from "./Steps.module.scss";
 
 export type StepsProps = { items: string[] };
 

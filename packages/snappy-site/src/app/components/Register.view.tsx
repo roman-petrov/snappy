@@ -4,7 +4,7 @@ import type { useRegisterState } from "./Register.state";
 
 import { Password, t } from "../core";
 import { FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
+import styles from "./Login.module.scss";
 
 export type RegisterViewProps = ReturnType<typeof useRegisterState>;
 

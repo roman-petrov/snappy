@@ -3,7 +3,7 @@ import { Examples } from "./Examples";
 import { Faq } from "./Faq";
 import { Features } from "./Features";
 import { Hero } from "./Hero";
-import styles from "./Landing.module.css";
+import styles from "./Landing.module.scss";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
 import { Start } from "./Start";

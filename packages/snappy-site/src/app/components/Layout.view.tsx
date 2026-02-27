@@ -7,7 +7,7 @@ import type { useLayoutState } from "./Layout.state";
 
 import { Header } from "../../shared/Header";
 import { LocaleSwitcher } from "../../shared/LocaleSwitcher";
-import styles from "./Layout.module.css";
+import styles from "./Layout.module.scss";
 
 export type LayoutViewProps = ReturnType<typeof useLayoutState>;
 

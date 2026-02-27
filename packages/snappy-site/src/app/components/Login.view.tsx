@@ -4,7 +4,7 @@ import type { useLoginState } from "./Login.state";
 
 import { t } from "../core";
 import { FormErrorAndActions } from "./FormErrorAndActions";
-import styles from "./Login.module.css";
+import styles from "./Login.module.scss";
 
 export type LoginViewProps = ReturnType<typeof useLoginState>;
 

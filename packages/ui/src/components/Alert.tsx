@@ -1,4 +1,4 @@
-import styles from "./Alert.module.css";
+import styles from "./Alert.module.scss";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
 

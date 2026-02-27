@@ -1,23 +1,27 @@
-// cspell:word lightningcss
-import { defineConfig, type UserConfig } from "vite";
-import typedCssModules from "vite-plugin-typed-css-modules";
+import { _ } from "@snappy/core";
+import pluginReact from "@vitejs/plugin-react";
+import { NodePackageImporter } from "sass-embedded";
+import { mergeConfig, type UserConfig } from "vite";
+import pluginSassDts from "vite-plugin-sass-dts";
 
-import { cssModulesCamelCasePlugin } from "./CssModules";
+import { pluginOptimizeCssModules } from "./plugins";
 
-export type ViteConfigOverride = UserConfig & { typedCssInclude?: string[] };
-
-export const ViteConfig = (override: ViteConfigOverride = {}): ReturnType<typeof defineConfig> => {
-  const { plugins: extraPlugins, typedCssInclude, ...rest } = override;
-
-  const plugins = [
-    typedCssInclude === undefined ? typedCssModules() : typedCssModules({ include: typedCssInclude }),
-    cssModulesCamelCasePlugin(),
-    ...(extraPlugins ?? []),
-  ];
-
-  return defineConfig({
-    css: { lightningcss: { cssModules: { pattern: `[hash]-[local]` } }, transformer: `lightningcss` },
-    ...rest,
-    plugins,
-  });
-};
+export const ViteConfig = (override: UserConfig = {}) =>
+  mergeConfig(
+    {
+      css: {
+        modules: { localsConvention: `camelCaseOnly` },
+        preprocessorOptions: { scss: { importers: [new NodePackageImporter()] } },
+      },
+      plugins: [
+        pluginReact(),
+        pluginOptimizeCssModules(),
+        pluginSassDts({
+          esmExport: true,
+          exportName: { replacement: fileName => `__${_.pascalCase(fileName.split(`.`)[0] ?? ``)}` },
+          legacyFileFormat: true,
+        }),
+      ],
+    },
+    override,
+  );

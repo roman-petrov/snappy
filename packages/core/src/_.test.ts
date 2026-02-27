@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import { _ } from "./_";
 import { noop } from "./Noop";
 
-const { base64decode, camelCase, list, singleAction } = _;
+const { base64decode, camelCase, list, pascalCase, singleAction } = _;
 
 describe(`base64decode`, () => {
   test(`decodes base64 to UTF-8 string`, () => {
@@ -35,6 +35,28 @@ describe(`camelCase`, () => {
 
   test(`empty input yields empty string`, () => {
     expect(camelCase(``)).toBe(``);
+  });
+});
+
+describe(`pascalCase`, () => {
+  test(`converts hyphenated string to PascalCase`, () => {
+    expect(pascalCase(`foo-bar-baz`)).toBe(`FooBarBaz`);
+  });
+
+  test(`capitalizes first letter of camelCase input`, () => {
+    expect(pascalCase(`fooBarBaz`)).toBe(`FooBarBaz`);
+  });
+
+  test(`single word: first letter uppercase`, () => {
+    expect(pascalCase(`word`)).toBe(`Word`);
+  });
+
+  test(`single hyphen: both parts capitalized`, () => {
+    expect(pascalCase(`first-name`)).toBe(`FirstName`);
+  });
+
+  test(`empty input yields empty string`, () => {
+    expect(pascalCase(``)).toBe(``);
   });
 });
 

@@ -2,7 +2,7 @@ import type { FieldControlClasses } from "./Field";
 
 import { Icon } from "./Icon";
 import { Input } from "./Input";
-import styles from "./Select.module.css";
+import styles from "./Select.module.scss";
 
 export type SelectOption = { label: string; value: string };
 

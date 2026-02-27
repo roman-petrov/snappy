@@ -1,0 +1,15 @@
+@use "./variables" as *;
+@use "./theme-dark" as *;
+@use "./theme-light" as *;
+@use "./base" as *;
+/* stylelint-disable-next-line import-notation */
+@import url("@fontsource-variable/inter");
+
+/* View Transition API: cross-fade between routes */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.2s;
+    animation-timing-function: ease-out;
+  }
+}

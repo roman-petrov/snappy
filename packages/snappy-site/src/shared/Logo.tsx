@@ -4,7 +4,7 @@ import type { MouseEvent } from "react";
 import { Text } from "@snappy/ui";
 import { Link } from "react-router-dom";
 
-import styles from "./Header.module.css";
+import styles from "./Header.module.scss";
 
 export type LogoProps = { href?: string; onClick?: (event: MouseEvent) => void; title?: string; to?: string };
 

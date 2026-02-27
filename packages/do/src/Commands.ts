@@ -74,7 +74,7 @@ const defs: Record<string, CmdDefinition> = {
   [`fix:stylelint`]: {
     description: `Stylelint: auto-fix.`,
     label: `🎨 Stylelint auto-fix`,
-    run: { args: [`--fix`, `--max-warnings=0`, `**/*.css`], tool: `stylelint` },
+    run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   [`lint:cspell`]: {
     description: `CSpell: spell-check.`,
@@ -109,7 +109,7 @@ const defs: Record<string, CmdDefinition> = {
   [`lint:stylelint`]: {
     description: `Stylelint: lint CSS/SCSS.`,
     label: `🎨 CSS lint`,
-    run: { args: [`--max-warnings=0`, `**/*.css`], tool: `stylelint` },
+    run: { args: [`--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   [`lint:tsc`]: {
     description: `TypeScript: type-check only.`,

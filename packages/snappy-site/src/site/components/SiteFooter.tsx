@@ -1,7 +1,7 @@
 import { Link, Text } from "@snappy/ui";
 
 import { t } from "../core";
-import styles from "./SiteFooter.module.css";
+import styles from "./SiteFooter.module.scss";
 
 export const SiteFooter = () => (
   <footer className={styles.footer}>

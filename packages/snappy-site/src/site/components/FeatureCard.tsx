@@ -1,6 +1,6 @@
 import { Text } from "@snappy/ui";
 
-import styles from "./FeatureCard.module.css";
+import styles from "./FeatureCard.module.scss";
 
 export type FeatureCardProps = { description: string; icon: string; title: string };
 

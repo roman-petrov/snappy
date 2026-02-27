@@ -1,5 +1,5 @@
 import { Field } from "./Field";
-import styles from "./Textarea.module.css";
+import styles from "./Textarea.module.scss";
 
 export type TextareaProps = {
   disabled?: boolean;

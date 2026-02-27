@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 import { Text } from "@snappy/ui";
 
-import styles from "./Block.module.css";
+import styles from "./Block.module.scss";
 
 export type BlockProps = { description: string; icon?: string; title: string; withDivider?: boolean };
 

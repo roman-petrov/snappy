@@ -1,5 +1,5 @@
 import { Text } from "./Text";
-import styles from "./Title.module.css";
+import styles from "./Title.module.scss";
 
 export type TitleProps = { as?: `h1` | `h2`; cn?: string; lead?: string; level?: 1 | 2; title: string };
 

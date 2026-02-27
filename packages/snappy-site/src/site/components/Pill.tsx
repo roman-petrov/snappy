@@ -1,6 +1,6 @@
 import { Text } from "@snappy/ui";
 
-import styles from "./Pill.module.css";
+import styles from "./Pill.module.scss";
 
 export type PillProps = { hint: string; name: string };
 

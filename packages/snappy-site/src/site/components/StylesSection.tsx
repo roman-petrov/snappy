@@ -1,7 +1,7 @@
 import { t } from "../core";
 import { Pill } from "./Pill";
 import { Section } from "./Section";
-import styles from "./StylesSection.module.css";
+import styles from "./StylesSection.module.scss";
 
 export const StylesSection = () => (
   <Section id="styles" lead={t(`styles.lead`)} title={t(`styles.title`)}>
