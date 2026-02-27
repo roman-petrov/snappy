@@ -19,3 +19,4 @@
 - ✅ `!check.bat`: Run all CI checks.
 - 🧹 `!cleanup.bat`: Clean up repository.
 - 📦 `!upgrade.bat`: Upgrade dependencies interactively.
+- 🔄 `!upgrade_actions.bat`: Upgrade GitHub Actions.
