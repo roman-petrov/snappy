@@ -55,6 +55,8 @@ export const ServerCache = () => {
     return contentTypesByExt[ext] ?? `application/octet-stream`;
   };
 
+  // Heuristic: content hash in filename (e.g. main.a1b2c3d4.js or inter-...-DO1Apj_S.woff2)
+  const hasHashInPath = (pathname: string) => /[-.]\w{8,}\./u.test(pathname.split(`/`).pop() ?? ``);
   const get = (key: string) => store.get(key);
 
   const set = (key: string, raw: Buffer, contentType = `application/octet-stream`): CachedEntry => {
@@ -91,9 +93,13 @@ export const ServerCache = () => {
     entry: CachedEntry,
     acceptEncoding: string | undefined,
     contentType: string,
+    pathname = ``,
   ) => {
     response.type(contentType);
     response.setHeader(`Vary`, `Accept-Encoding`);
+    if (pathname !== `` && hasHashInPath(pathname)) {
+      response.setHeader(`Cache-Control`, `public, max-age=31536000, immutable`);
+    }
     const enc = preferredEncoding(acceptEncoding);
     if (enc === `br` && entry.brotli !== undefined) {
       response.setHeader(`Content-Encoding`, `br`);
@@ -127,7 +133,7 @@ export const ServerCache = () => {
       const key = `static:${pathname}`;
       const cached = get(key);
       if (cached !== undefined) {
-        sendCached(response, cached, request.headers[`accept-encoding`], contentTypeFromPath(pathname));
+        sendCached(response, cached, request.headers[`accept-encoding`], contentTypeFromPath(pathname), pathname);
 
         return;
       }
@@ -145,7 +151,7 @@ export const ServerCache = () => {
       }
       const contentType = contentTypeFromPath(pathname);
       const entry = set(key, raw, contentType);
-      sendCached(response, entry, request.headers[`accept-encoding`], contentType);
+      sendCached(response, entry, request.headers[`accept-encoding`], contentType, pathname);
     };
   };
 
