@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
+import { AnimatedFavicon, api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
 
 const copyFeedbackMs = 2000;
 
@@ -29,17 +29,22 @@ export const useDashboardState = () => {
       return;
     }
     setLoading(true);
-    const processResult = await api.process(``, text.trim(), feature);
-    setLoading(false);
-    if (processResult.status !== `ok`) {
-      setError(t(`dashboard.errors.${processResult.status}`));
+    AnimatedFavicon.start();
+    try {
+      const processResult = await api.process(``, text.trim(), feature);
+      if (processResult.status !== `ok`) {
+        setError(t(`dashboard.errors.${processResult.status}`));
 
-      return;
-    }
-    setResult(processResult.text);
-    setCopied(false);
-    if (remaining !== undefined) {
-      setRemaining(remaining - 1);
+        return;
+      }
+      setResult(processResult.text);
+      setCopied(false);
+      if (remaining !== undefined) {
+        setRemaining(remaining - 1);
+      }
+    } finally {
+      AnimatedFavicon.stop();
+      setLoading(false);
     }
   };
 
