@@ -1,4 +1,4 @@
-name: ✅ CI
+name: 🔁 CI
 
 on:
   workflow_dispatch: # Только ручной запуск через GitHub UI
@@ -11,25 +11,25 @@ jobs:
       fail-fast: false
       matrix:
         task:
-          - name: 📦 build:site
+          - name: 🌐 build:site
             arg: build:site
-          - name: 📦 build:app
+          - name: 📱 build:app
             arg: build:app
-          - name: 📦 build:ssr
+          - name: ⚡ build:ssr
             arg: build:ssr
           - name: 🧪 test
             arg: test
           - name: 📘 lint:tsc
             arg: lint:tsc
-          - name: 📐 lint:eslint
+          - name: 🔍 lint:eslint
             arg: lint:eslint
-          - name: 💅 lint:prettier
+          - name: ✨ lint:prettier
             arg: lint:prettier
           - name: 📝 lint:cspell
             arg: lint:cspell
-          - name: 🔍 lint:jscpd
+          - name: 📋 lint:jscpd
             arg: lint:jscpd
-          - name: 🔎 lint:knip
+          - name: 🧹 lint:knip
             arg: lint:knip
           - name: 📄 lint:markdown
             arg: lint:markdown

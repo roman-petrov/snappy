@@ -1,9 +1,9 @@
 import type { CmdDefinition } from "./CommandTypes";
 
 const defs: Record<string, CmdDefinition> = {
-  [`build:app`]: { description: `Vite: build app bundle.`, label: `📦 App`, run: { handler: `build:app` } },
-  [`build:site`]: { description: `Vite: build site.`, label: `📦 Site`, run: { handler: `build:site` } },
-  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `📦 SSR`, run: { handler: `build:ssr` } },
+  [`build:app`]: { description: `Vite: build app bundle.`, label: `📱 App`, run: { handler: `build:app` } },
+  [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
+  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
     label: `🐳 Database container`,
@@ -16,48 +16,48 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`db:generate`]: {
     description: `Prisma: generate client.`,
-    label: `🗄️ Generate Prisma client`,
+    label: `📜 Generate Prisma client`,
     run: { args: [`generate`], tool: `prisma` },
   },
   [`db:migrate:deploy`]: {
     description: `Prisma: apply migrations.`,
-    label: `🗄️ Apply migrations`,
+    label: `📥 Apply migrations`,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
   },
   [`db:migrate:dev`]: {
     description: `Prisma: create migration.`,
-    label: `🗄️ Create migration`,
+    label: `➕ Create migration`,
     run: { args: [`migrate`, `dev`], tool: `prisma` },
   },
   [`db:migrate:reset`]: {
     description: `Prisma: reset DB.`,
-    label: `🗄️ Reset database`,
+    label: `♻️ Reset database`,
     run: { args: [`migrate`, `reset`], tool: `prisma` },
   },
   [`db:push:dev`]: {
     description: `Prisma: push schema (accept data loss, for dev/run).`,
-    label: `🗄️ Schema sync`,
+    label: `⬇️ Schema sync`,
     run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`db:push`]: {
     description: `Prisma: push schema.`,
-    label: `🗄️ Push schema`,
+    label: `📤 Push schema`,
     run: { args: [`db`, `push`], tool: `prisma` },
   },
   [`db:seed`]: {
     description: `Prisma: seed DB.`,
-    label: `🗄️ Seed database`,
+    label: `🌱 Seed database`,
     run: { args: [`db`, `seed`], tool: `prisma` },
   },
   [`db:studio`]: {
     description: `Prisma: Studio GUI.`,
-    label: `🗄️ Prisma Studio`,
+    label: `🖼️ Prisma Studio`,
     run: { args: [`studio`], tool: `prisma` },
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
     description: `Build + apply migrations (for deploy or before run).`,
-    label: `📦 Deploy prepare`,
+    label: `🔨 Deploy prepare`,
   },
   [`deploy-run`]: {
     children: [`server:prod`],
@@ -129,7 +129,7 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`server:prod`]: {
     description: `Run prod server (tsx).`,
-    label: `🖥️ Server`,
+    label: `🏭 Server`,
     run: {
       command: `bunx tsx packages/server-prod/src/main.ts`,
       cwd: `.`,
@@ -146,7 +146,7 @@ const defs: Record<string, CmdDefinition> = {
     description: `Build site into dist/www (site + app + ssr).`,
     label: `📦 Build`,
   },
-  ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔄 CI` },
+  ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
   lint: {
     children: [
@@ -160,12 +160,12 @@ const defs: Record<string, CmdDefinition> = {
       `lint:markdown`,
     ],
     description: `TypeScript, ESLint, Prettier, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
-    label: `📋 Lint`,
+    label: `🛡️  Lint`,
   },
   run: {
     children: [`deploy-prepare`, `deploy-run`],
     description: `Deploy prepare + deploy run. Use locally or under PM2.`,
-    label: `▶️ Run`,
+    label: `🏃 Run`,
   },
   test: { description: `Vitest: run tests.`, label: `🧪 Test`, run: { args: [`run`], tool: `vitest` } },
 };
