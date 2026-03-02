@@ -1,3 +1,4 @@
+.analyze
 .jscpd
 **/node_modules
 bun.lockb

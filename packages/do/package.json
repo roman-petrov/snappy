@@ -47,6 +47,7 @@
     "open": "^11.0.0",
     "prettier": "^3.2.4",
     "prettier-plugin-pkg": "^0.21.2",
+    "rollup-plugin-visualizer": "^7.0.0",
     "sass-embedded": "^1.97.0",
     "stylelint": "^17.4.0",
     "stylelint-config-recess-order": "^7.6.1",
