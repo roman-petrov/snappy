@@ -51,6 +51,9 @@ const defs: Record<string, CmdDefinition> = {
     label: `🗄️ Prisma Studio`,
     run: { args: [`studio`], tool: `prisma` },
   },
+  [`build:app`]: { description: `Vite: build app bundle.`, label: `📦 App`, run: { handler: `build:app` } },
+  [`build:site`]: { description: `Vite: build site.`, label: `📦 Site`, run: { handler: `build:site` } },
+  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `📦 SSR`, run: { handler: `build:ssr` } },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
     description: `Build + apply migrations (for deploy or before run).`,
@@ -146,7 +149,11 @@ const defs: Record<string, CmdDefinition> = {
     label: `🌐 Site dev`,
     run: { background: true, command: `node --import tsx/esm server.ts`, cwd: `packages/snappy-site` },
   },
-  build: { description: `Build site into dist/www.`, label: `📦 Build`, run: { handler: `build` } },
+  build: {
+    children: [`build:site`, `build:app`, `build:ssr`],
+    description: `Build site into dist/www (site + app + ssr).`,
+    label: `📦 Build`,
+  },
   ci: {
     children: [`test`, `lint`, `build`],
     description: `Full CI pipeline: test + all linters + build.`,

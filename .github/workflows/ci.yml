@@ -11,8 +11,12 @@ jobs:
       fail-fast: false
       matrix:
         task:
-          - name: 🏗️ build
-            arg: build
+          - name: 📦 build:site
+            arg: build:site
+          - name: 📦 build:app
+            arg: build:app
+          - name: 📦 build:ssr
+            arg: build:ssr
           - name: 🧪 test
             arg: test
           - name: 📘 lint:tsc

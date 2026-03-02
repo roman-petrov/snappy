@@ -14,4 +14,6 @@ export type CmdRunDef =
       shutdown?: { command: string };
     }
   | { command: string }
-  | { handler: `build` };
+  | { handler: `build:app` }
+  | { handler: `build:site` }
+  | { handler: `build:ssr` };

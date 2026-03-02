@@ -66,7 +66,11 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const capture = !verbose || mcp;
 
   const rawResult = await (`handler` in run
-    ? Build.build(root, capture ? { capture: true } : {})
+    ? run.handler === `build:site`
+      ? Build.buildSite(root, capture ? { capture: true } : {})
+      : run.handler === `build:app`
+        ? Build.buildApp(root, capture ? { capture: true } : {})
+        : Build.buildSsr(root, capture ? { capture: true } : {})
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run

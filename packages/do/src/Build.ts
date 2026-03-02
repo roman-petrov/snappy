@@ -38,29 +38,29 @@ const exitCode = (r: number | SpawnResult) => (typeof r === `object` ? r.exitCod
 const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number | SpawnResult> =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
-const buildSite = async (root: string, capture: boolean): Promise<number | SpawnResult> => {
+const buildSite = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
+  fs.rmSync(join(root, distDir), { force: true, recursive: true });
   const site = siteDir(root);
   const dist = siteDist(root);
-  const siteResult = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), capture);
-  if (exitCode(siteResult) !== 0) {
-    return siteResult;
+  const result = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), options.capture === true);
+  if (exitCode(result) !== 0) {
+    return result;
   }
-
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
+  return 0;
+};
 
-  const appResult = await runSpawn(
-    site,
+const buildApp = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> =>
+  runSpawn(
+    siteDir(root),
     Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]),
-    capture,
+    options.capture === true,
   );
 
-  if (exitCode(appResult) !== 0) {
-    return appResult;
-  }
-
-  const ssrResult = await runSpawn(
-    site,
+const buildSsr = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
+  const result = await runSpawn(
+    siteDir(root),
     Process.toolArgv(workflowRunner, `vite`, [
       `build`,
       `--ssr`,
@@ -68,30 +68,17 @@ const buildSite = async (root: string, capture: boolean): Promise<number | Spawn
       `--outDir`,
       `dist/server`,
     ]),
-    capture,
+    options.capture === true,
   );
-
-  if (exitCode(ssrResult) !== 0) {
-    return ssrResult;
+  if (exitCode(result) !== 0) {
+    return result;
   }
-
+  const dist = siteDist(root);
+  if (fs.existsSync(join(dist, `index.html`))) {
+    ensureDir(wwwDir(root));
+    copyDir(dist, wwwDir(root));
+  }
   return 0;
 };
 
-const build = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
-  const dist = join(root, distDir);
-  fs.rmSync(dist, { force: true, recursive: true });
-
-  const capture = options.capture === true;
-  const siteResult = await buildSite(root, capture);
-  if (exitCode(siteResult) !== 0) {
-    return siteResult;
-  }
-
-  ensureDir(wwwDir(root));
-  copyDir(siteDist(root), wwwDir(root));
-
-  return 0;
-};
-
-export const Build = { build };
+export const Build = { buildApp, buildSite, buildSsr };
