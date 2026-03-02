@@ -31,8 +31,8 @@ jobs:
             arg: jscpd
           - name: 🧹 knip
             arg: knip
-          - name: 📄 markdown
-            arg: markdown
+          - name: 📄 markdownlint
+            arg: markdownlint
 
     steps:
       - name: 📥 Checkout code
