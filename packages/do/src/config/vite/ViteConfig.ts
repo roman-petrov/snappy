@@ -13,6 +13,7 @@ export const ViteConfig = (override: UserConfig = {}) =>
         modules: { localsConvention: `camelCaseOnly` },
         preprocessorOptions: { scss: { importers: [new NodePackageImporter()] } },
       },
+      resolve: { dedupe: [`react`, `react-dom`, `react-router-dom`] },
       plugins: [
         pluginReact(),
         pluginOptimizeCssModules(),
