@@ -56,13 +56,13 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
   }
   const cached = cache.get(appIndexKey);
   if (cached !== undefined) {
-    cache.sendCached(response, cached, request.headers[`accept-encoding`], `text/html`);
+    cache.sendCached(response, cached, request.get(`accept-encoding`), `text/html`);
 
     return undefined;
   }
 
   const entry = cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`);
-  cache.sendCached(response, entry, request.headers[`accept-encoding`], `text/html`);
+  cache.sendCached(response, entry, request.get(`accept-encoding`), `text/html`);
 
   return undefined;
 });

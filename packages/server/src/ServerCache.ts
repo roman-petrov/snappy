@@ -131,7 +131,7 @@ export const ServerCache = () => {
       const key = `static:${pathname}`;
       const cached = get(key);
       if (cached !== undefined) {
-        sendCached(response, cached, request.headers[`accept-encoding`], contentTypeFromPath(pathname), pathname);
+        sendCached(response, cached, request.get(`accept-encoding`), contentTypeFromPath(pathname), pathname);
 
         return;
       }
@@ -149,7 +149,7 @@ export const ServerCache = () => {
       }
       const contentType = contentTypeFromPath(pathname);
       const entry = set(key, raw, contentType);
-      sendCached(response, entry, request.headers[`accept-encoding`], contentType, pathname);
+      sendCached(response, entry, request.get(`accept-encoding`), contentType, pathname);
     };
   };
 
