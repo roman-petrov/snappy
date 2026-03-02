@@ -66,57 +66,49 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`fix:eslint`]: {
     description: `ESLint: auto-fix.`,
-    label: `🔧 ESLint auto-fix`,
+    label: `🔧 ESLint`,
     run: { args: [`--fix`, `.`], tool: `eslint` },
   },
   [`fix:prettier`]: {
     description: `Prettier: format and write.`,
-    label: `✨ Prettier format`,
+    label: `✨ Prettier`,
     run: { args: [`--write`, `.`], tool: `prettier` },
   },
   [`fix:stylelint`]: {
     description: `Stylelint: auto-fix.`,
-    label: `🎨 Stylelint auto-fix`,
+    label: `🎨 Stylelint`,
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
-  [`lint:cspell`]: {
-    description: `CSpell: spell-check.`,
-    label: `📝 Spell-check`,
-    run: { args: [`.`], tool: `cspell` },
-  },
-  [`lint:eslint`]: {
-    description: `ESLint: lint source code.`,
-    label: `🔍 ESLint`,
-    run: { args: [`.`], tool: `eslint` },
-  },
+  [`lint:cspell`]: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
+  [`lint:eslint`]: { description: `ESLint: lint JS/TS.`, label: `🔍 ESLint`, run: { args: [`.`], tool: `eslint` } },
   [`lint:jscpd`]: {
-    description: `JSCPD: detect duplication.`,
-    label: `📋 Detect duplication`,
+    description: `JSCPD: copy-paste detection.`,
+    label: `📋 JSCPD`,
     run: { args: [`.`], tool: `jscpd` },
   },
   [`lint:knip`]: {
-    description: `Knip: unused files, deps, exports.`,
-    label: `🧹 Unused code`,
+    description: `Knip: unused code, deps, exports.`,
+    label: `🧹 Knip`,
     run: { args: [], tool: `knip` },
   },
   [`lint:markdown`]: {
     description: `Markdownlint: lint markdown.`,
-    label: `📄 Markdown lint`,
+    label: `📄 Markdown`,
     run: { args: [`.`], tool: `markdownlint` },
   },
   [`lint:prettier`]: {
     description: `Prettier: check formatting.`,
-    label: `✨ Check formatting`,
+    label: `✨ Prettier`,
     run: { args: [`--check`, `.`], tool: `prettier` },
   },
   [`lint:stylelint`]: {
     description: `Stylelint: lint CSS/SCSS.`,
-    label: `🎨 CSS lint`,
+    label: `🎨 Stylelint`,
     run: { args: [`--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   [`lint:tsc`]: {
-    description: `TypeScript: type-check only.`,
-    label: `📘 Type-check`,
+    description: `TypeScript: type-check.`,
+    label: `📘 TypeScript`,
     run: { args: [`--noEmit`], tool: `tsc` },
   },
   [`server:api:dev`]: {
@@ -154,11 +146,7 @@ const defs: Record<string, CmdDefinition> = {
     description: `Build site into dist/www (site + app + ssr).`,
     label: `📦 Build`,
   },
-  ci: {
-    children: [`test`, `lint`, `build`],
-    description: `Full CI pipeline: test + all linters + build.`,
-    label: `🔄 CI pipeline`,
-  },
+  ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔄 CI` },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
   lint: {
     children: [
@@ -171,15 +159,15 @@ const defs: Record<string, CmdDefinition> = {
       `lint:knip`,
       `lint:markdown`,
     ],
-    description: `All linters: tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdown.`,
-    label: `📋 All linters`,
+    description: `TypeScript, ESLint, Prettier, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
+    label: `📋 Lint`,
   },
   run: {
     children: [`deploy-prepare`, `deploy-run`],
     description: `Deploy prepare + deploy run. Use locally or under PM2.`,
     label: `▶️ Run`,
   },
-  test: { description: `Run tests via vitest.`, label: `🧪 Tests`, run: { args: [`run`], tool: `vitest` } },
+  test: { description: `Vitest: run tests.`, label: `🧪 Test`, run: { args: [`run`], tool: `vitest` } },
 };
 
 const byName = (name: string): CmdDefinition | undefined => defs[name];
