@@ -25,7 +25,6 @@ export const ViteConfig = (override: UserConfig, { analyzeFileName }: ViteConfig
               ? undefined
               : {
                   chunkFileNames: `assets/[name]-[hash].js`,
-                  // Rolldown (Vite 8 beta): manualChunks ignored, use codeSplitting
                   codeSplitting: { groups: [{ name: `vendor`, test: /node_modules|rolldown/u }] },
                 },
           },
