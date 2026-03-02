@@ -1,9 +1,7 @@
 import { type SyntheticEvent, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { Password } from "../core";
-import { api } from "../core/Api";
-import { t } from "../core/Locale";
+import { api, Password, t } from "../core";
 
 export const useResetPasswordState = () => {
   const [searchParameters] = useSearchParams();
