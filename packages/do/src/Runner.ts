@@ -205,6 +205,7 @@ const run = async (
   }
 
   const isMcp = options.mcp === true;
+  const start = _.now();
   if (!isMcp && !verbose) {
     process.stdout.write(`\n`);
     if (node.children.length > 0 && definition !== undefined) {
@@ -222,6 +223,11 @@ const run = async (
 
   if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
     process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
+  }
+
+  if (!isMcp && !verbose && result.exitCode === 0) {
+    const seconds = Math.round((_.now() - start) / _.second.milliseconds);
+    process.stdout.write(`\n✅ Done in ${green}${seconds}s${reset}\n`);
   }
 
   const message = result.exitCode === 0 && result.message === `` ? `${name} ok.` : result.message;
