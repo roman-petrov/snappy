@@ -32,7 +32,7 @@ export const YooKassa = (credentials: YooKassaCredentials) => {
       throw new Error(`YooKassa credentials not configured`);
     }
 
-    const idempotenceKey = `${userId}-${Date.now()}`;
+    const idempotenceKey = `${userId}-${_.now()}`;
 
     const requestBody: YooKassaPaymentRequest = {
       amount: { currency: `RUB`, value: amount.toFixed(2) },

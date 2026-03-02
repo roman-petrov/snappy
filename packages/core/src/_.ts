@@ -1,9 +1,14 @@
+/* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-void-return */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 import type { Action } from "./Types";
+
+import { DateTime } from "./DateTime";
+import { Time } from "./Time";
 
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf-8`);
 const camelCase = (s: string) => s.replaceAll(/-(?<c>[a-z])/gu, (_, c: string) => c.toUpperCase());
@@ -43,9 +48,15 @@ const singleAction =
     }
   };
 
+const noop = () => {};
+
 export const _ = {
+  ...DateTime,
+  ...Time.constants,
   base64decode,
   camelCase,
+  daysInWeek: Time.daysInWeek,
+  daysInYear: Time.daysInYear,
   isArray,
   isBoolean,
   isFunction,
@@ -53,6 +64,12 @@ export const _ = {
   isObject,
   isString,
   list,
+  noop,
   pascalCase,
   singleAction,
+  timeBuild: Time.build,
+  timeGet: Time.get,
+  timeMap: Time.map,
+  timeParts: Time.parts,
+  timeSet: Time.set,
 };

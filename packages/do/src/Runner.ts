@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable sonarjs/os-command */
+import { _ } from "@snappy/core";
 import { Process } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
@@ -72,7 +73,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     process.stdout.write(`${context.prefix}${context.connector}─ ${icon} ${cyan}${label}${reset} ${ellipsis}`);
   }
 
-  const start = Date.now();
+  const start = _.now();
 
   const rawResult = await (`handler` in run
     ? run.handler === `build:site`
@@ -129,7 +130,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
   if (!mcp && !verbose) {
-    const seconds = Math.round((Date.now() - start) / 1000);
+    const seconds = Math.round((_.now() - start) / _.second.milliseconds);
     process.stdout.write(` ${dim}${seconds}s${reset}\n`);
   }
 

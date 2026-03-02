@@ -1,8 +1,7 @@
-import { Time } from "@snappy/core";
+import { _ } from "@snappy/core";
 
 const name = `token`;
-const maxAgeDays = 7;
-const maxAgeMs = maxAgeDays * Time.dayInMs;
+const maxAgeMs = _.daysInWeek * _.day;
 
 const token = (header: string) => {
   const prefix = `${name}=`;

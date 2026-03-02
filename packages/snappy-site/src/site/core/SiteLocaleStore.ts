@@ -3,7 +3,11 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable init-declarations */
 /* eslint-disable unicorn/no-document-cookie */
+import { _ } from "@snappy/core";
+
 import { LocaleCookie, type SiteLocaleKey } from "./LocaleCookie";
+
+const maxAgeSeconds = _.day.seconds * _.daysInYear;
 
 export const SiteLocaleStore = (() => {
   let serverLocale: SiteLocaleKey | undefined;
@@ -27,7 +31,7 @@ export const SiteLocaleStore = (() => {
     if (typeof document === `undefined`) {
       return;
     }
-    document.cookie = `${LocaleCookie.cookieName}=${next}; path=/; max-age=31536000`;
+    document.cookie = `${LocaleCookie.cookieName}=${next}; path=/; max-age=${maxAgeSeconds}`;
     document.documentElement.lang = next;
     location.reload();
   };

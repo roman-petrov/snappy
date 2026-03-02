@@ -1,9 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
 
 import { _ } from "./_";
-import { noop } from "./Noop";
 
-const { base64decode, camelCase, list, pascalCase, singleAction } = _;
+const { base64decode, camelCase, list, noop, pascalCase, singleAction } = _;
 
 describe(`base64decode`, () => {
   test(`decodes base64 to UTF-8 string`, () => {

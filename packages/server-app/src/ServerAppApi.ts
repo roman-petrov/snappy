@@ -15,7 +15,7 @@ import type {
 } from "@snappy/server-api";
 import type { YooKassa } from "@snappy/yoo-kassa";
 
-import { _, Time } from "@snappy/core";
+import { _ } from "@snappy/core";
 import { type FeatureType, Prompts, type Snappy } from "@snappy/snappy";
 
 import { Jwt } from "./Jwt";
@@ -40,10 +40,10 @@ export const ServerAppApi = ({
 }: ServerAppApiContext) => {
   const resetTokenExpiresHours = 1;
   const passwordMinLength = 8;
-  const resetInterval = Time.dayInMs;
+  const resetInterval = _.day;
   const byUserId = (userId: number) => ({ where: { userId } }) as const;
   const resetData = () => ({ lastReset: new Date(), requestCount: 0 }) as const;
-  const needsReset = (lastReset: Date) => Date.now() - lastReset.getTime() > resetInterval;
+  const needsReset = (lastReset: Date) => _.now() - lastReset.getTime() > resetInterval;
   const passwordValid = (s: string) => s.length >= passwordMinLength && /[A-Za-z]/u.test(s) && /\d/u.test(s);
   const normalizeEmail = (email: string) => email.trim().toLowerCase();
   const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
@@ -128,7 +128,7 @@ export const ServerAppApi = ({
     }
 
     const resetToken = crypto.randomUUID();
-    const resetTokenExpires = new Date(Date.now() + resetTokenExpiresHours * Time.hourInMs);
+    const resetTokenExpires = new Date(_.now() + resetTokenExpiresHours * _.hour);
     const { id } = user;
     await db.user.update({ data: { resetToken, resetTokenExpires }, where: { id } });
 

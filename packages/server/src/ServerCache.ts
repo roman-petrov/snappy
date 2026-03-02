@@ -5,6 +5,7 @@
 /* eslint-disable functional/no-try-statements */
 import type { RequestHandler } from "express";
 
+import { _ } from "@snappy/core";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { brotliCompressSync, gzipSync } from "node:zlib";
@@ -98,7 +99,7 @@ export const ServerCache = () => {
     response.type(contentType);
     response.setHeader(`Vary`, `Accept-Encoding`);
     if (pathname !== `` && hasHashInPath(pathname)) {
-      response.setHeader(`Cache-Control`, `public, max-age=31536000, immutable`);
+      response.setHeader(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
     }
     const enc = preferredEncoding(acceptEncoding);
     if (enc === `br` && entry.brotli !== undefined) {

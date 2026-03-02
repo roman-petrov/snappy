@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/immutable-data */
-import { Time } from "@snappy/core";
+import { _ } from "@snappy/core";
 
 export const UserTexts = () => {
   const texts = new Map<number, string>();
@@ -22,7 +22,7 @@ export const UserTexts = () => {
     }
   };
 
-  setInterval(cleanup, Time.hourInMs);
+  setInterval(cleanup, _.hour);
 
   return { clear, get, set };
 };
