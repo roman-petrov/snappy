@@ -1,5 +1,3 @@
-export * from "./AnimatedFavicon";
-
 export * from "./Api";
 
 export * from "./Features";
