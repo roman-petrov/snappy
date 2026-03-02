@@ -64,52 +64,15 @@ const defs: Record<string, CmdDefinition> = {
     description: `Run prod server only (after deploy-prepare).`,
     label: `▶️ Deploy run`,
   },
-  [`fix:eslint`]: {
+  [`eslint-fix`]: {
     description: `ESLint: auto-fix.`,
     label: `🔧 ESLint`,
     run: { args: [`--fix`, `.`], tool: `eslint` },
   },
-  [`fix:prettier`]: {
+  [`prettier-fix`]: {
     description: `Prettier: format and write.`,
     label: `✨ Prettier`,
     run: { args: [`--write`, `.`], tool: `prettier` },
-  },
-  [`fix:stylelint`]: {
-    description: `Stylelint: auto-fix.`,
-    label: `🎨 Stylelint`,
-    run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
-  },
-  [`lint:cspell`]: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
-  [`lint:eslint`]: { description: `ESLint: lint JS/TS.`, label: `🔍 ESLint`, run: { args: [`.`], tool: `eslint` } },
-  [`lint:jscpd`]: {
-    description: `JSCPD: copy-paste detection.`,
-    label: `📋 JSCPD`,
-    run: { args: [`.`], tool: `jscpd` },
-  },
-  [`lint:knip`]: {
-    description: `Knip: unused code, deps, exports.`,
-    label: `🧹 Knip`,
-    run: { args: [], tool: `knip` },
-  },
-  [`lint:markdown`]: {
-    description: `Markdownlint: lint markdown.`,
-    label: `📄 Markdown`,
-    run: { args: [`.`], tool: `markdownlint` },
-  },
-  [`lint:prettier`]: {
-    description: `Prettier: check formatting.`,
-    label: `✨ Prettier`,
-    run: { args: [`--check`, `.`], tool: `prettier` },
-  },
-  [`lint:stylelint`]: {
-    description: `Stylelint: lint CSS/SCSS.`,
-    label: `🎨 Stylelint`,
-    run: { args: [`--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
-  },
-  [`lint:tsc`]: {
-    description: `TypeScript: type-check.`,
-    label: `📘 TypeScript`,
-    run: { args: [`--noEmit`], tool: `tsc` },
   },
   [`server:api:dev`]: {
     description: `Run server-dev (API).`,
@@ -141,33 +104,49 @@ const defs: Record<string, CmdDefinition> = {
     label: `🌐 Site dev`,
     run: { background: true, command: `node --import tsx/esm server.ts`, cwd: `packages/snappy-site` },
   },
+  [`stylelint-fix`]: {
+    description: `Stylelint: auto-fix.`,
+    label: `🎨 Stylelint`,
+    run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
+  },
   build: {
     children: [`build:site`, `build:app`, `build:ssr`],
     description: `Build site into dist/www (site + app + ssr).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
+  cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
+  eslint: { description: `ESLint: lint JS/TS.`, label: `🔍 ESLint`, run: { args: [`.`], tool: `eslint` } },
+  jscpd: { description: `JSCPD: copy-paste detection.`, label: `📋 JSCPD`, run: { args: [`.`], tool: `jscpd` } },
+  knip: { description: `Knip: unused code, deps, exports.`, label: `🧹 Knip`, run: { args: [], tool: `knip` } },
   lint: {
-    children: [
-      `lint:tsc`,
-      `lint:eslint`,
-      `lint:prettier`,
-      `lint:stylelint`,
-      `lint:cspell`,
-      `lint:jscpd`,
-      `lint:knip`,
-      `lint:markdown`,
-    ],
+    children: [`tsc`, `eslint`, `prettier`, `stylelint`, `cspell`, `jscpd`, `knip`, `markdown`],
     description: `TypeScript, ESLint, Prettier, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
     label: `🛡️  Lint`,
+  },
+  markdown: {
+    description: `Markdownlint: lint markdown.`,
+    label: `📄 Markdown`,
+    run: { args: [`.`], tool: `markdownlint` },
+  },
+  prettier: {
+    description: `Prettier: check formatting.`,
+    label: `✨ Prettier`,
+    run: { args: [`--check`, `.`], tool: `prettier` },
   },
   run: {
     children: [`deploy-prepare`, `deploy-run`],
     description: `Deploy prepare + deploy run. Use locally or under PM2.`,
     label: `🏃 Run`,
   },
+  stylelint: {
+    description: `Stylelint: lint CSS/SCSS.`,
+    label: `🎨 Stylelint`,
+    run: { args: [`--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
+  },
   test: { description: `Vitest: run tests.`, label: `🧪 Test`, run: { args: [`run`], tool: `vitest` } },
+  tsc: { description: `TypeScript: type-check.`, label: `📘 TypeScript`, run: { args: [`--noEmit`], tool: `tsc` } },
 };
 
 const byName = (name: string): CmdDefinition | undefined => defs[name];

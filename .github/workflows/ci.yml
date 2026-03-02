@@ -19,20 +19,20 @@ jobs:
             arg: build:ssr
           - name: 🧪 test
             arg: test
-          - name: 📘 lint:tsc
-            arg: lint:tsc
-          - name: 🔍 lint:eslint
-            arg: lint:eslint
-          - name: ✨ lint:prettier
-            arg: lint:prettier
-          - name: 📝 lint:cspell
-            arg: lint:cspell
-          - name: 📋 lint:jscpd
-            arg: lint:jscpd
-          - name: 🧹 lint:knip
-            arg: lint:knip
-          - name: 📄 lint:markdown
-            arg: lint:markdown
+          - name: 📘 tsc
+            arg: tsc
+          - name: 🔍 eslint
+            arg: eslint
+          - name: ✨ prettier
+            arg: prettier
+          - name: 📝 cspell
+            arg: cspell
+          - name: 📋 jscpd
+            arg: jscpd
+          - name: 🧹 knip
+            arg: knip
+          - name: 📄 markdown
+            arg: markdown
 
     steps:
       - name: 📥 Checkout code
