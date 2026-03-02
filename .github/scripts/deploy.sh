@@ -43,20 +43,15 @@ echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo '.'
 
 DEPLOY_PATH="/home/deploy/snappy"
-REPO_URL="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
+ARCHIVE="/tmp/snappy.tar.gz"
 
 rm -rf "${DEPLOY_PATH}"
 mkdir -p "${DEPLOY_PATH}"
-git clone --depth 1 "${REPO_URL}" "${DEPLOY_PATH}"
+tar -xzf "${ARCHIVE}" -C "${DEPLOY_PATH}"
 cd "${DEPLOY_PATH}"
-git fetch --depth 1 origin "${GITHUB_REF}"
-git checkout FETCH_HEAD
 
 bun install --frozen-lockfile
 
-bun do deploy-prepare
-
-export SNAPPY_VERSION="${GITHUB_REF}"
 pm2 delete snappy 2>/dev/null || true
 pm2 start "bun do deploy-run" --name snappy --update-env
 pm2 save
