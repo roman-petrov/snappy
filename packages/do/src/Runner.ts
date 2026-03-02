@@ -16,7 +16,6 @@ const reset = `\u001B[0m`;
 const green = `\u001B[32m`;
 const red = `\u001B[31m`;
 const cyan = `\u001B[36m`;
-const yellow = `\u001B[33m`;
 const dim = `\u001B[2m`;
 const ok = `✓`;
 const fail = `✗`;
@@ -171,13 +170,13 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
   }
 
   const childPrefix = context.prefix + (context.connector === end ? `   ` : `${bar}  `);
-
+  const childIndent = isRoot === true ? context.prefix : childPrefix;
   for (const [index, child] of children.entries()) {
     const childConnector = index === children.length - 1 ? end : br;
 
     const result = await runNode(root, child, {
       backgroundProcesses,
-      context: { connector: childConnector, prefix: childPrefix },
+      context: { connector: childConnector, prefix: childIndent },
       mcp,
       verbose,
     });
@@ -209,13 +208,13 @@ const run = async (
   if (!isMcp && !verbose) {
     process.stdout.write(`\n`);
     if (node.children.length > 0 && definition !== undefined) {
-      process.stdout.write(` ${yellow}${br}${reset}─ ${cyan}${definition.label}${reset}\n`);
+      process.stdout.write(`${cyan}${definition.label}${reset}\n`);
     }
   }
 
   const result = await runNode(root, name, {
     backgroundProcesses: [],
-    context: { connector: br, prefix: ` ` },
+    context: { connector: br, prefix: `` },
     isRoot: true,
     mcp: options.mcp,
     verbose,
