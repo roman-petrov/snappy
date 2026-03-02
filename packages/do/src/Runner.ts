@@ -53,10 +53,16 @@ const runShell = async (
   options: { capture?: true; silent?: true },
 ): Promise<ShellResult> => Process.spawnShell(root, command, options);
 
-type RunLeafOptions = { backgroundProcesses: ChildProcess[]; context: TreeContext; mcp: boolean; verbose: boolean };
+type RunLeafOptions = {
+  backgroundProcesses: ChildProcess[];
+  context: TreeContext;
+  mcp: boolean;
+  verbose: boolean;
+  withoutTree?: boolean;
+};
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
-  const { backgroundProcesses, context, mcp, verbose } = options;
+  const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
   const definition = Commands.byName(name);
   if (definition === undefined || !(`run` in definition)) {
     return { exitCode: 1, message: `Unknown: ${name}` };
@@ -66,7 +72,8 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const capture = !verbose || mcp;
 
   if (!mcp && !verbose) {
-    process.stdout.write(`${context.prefix}${context.connector}─ ${cyan}${label}${reset}${ellipsis} `);
+    const prefix = withoutTree === true ? `` : `${context.prefix}${context.connector}─ `;
+    process.stdout.write(`${prefix}${cyan}${label}${reset}${ellipsis} `);
   }
 
   const start = _.now();
@@ -160,7 +167,7 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
   }
 
   if (`run` in definition) {
-    return runLeaf(root, name, { backgroundProcesses, context, mcp, verbose });
+    return runLeaf(root, name, { backgroundProcesses, context, mcp, verbose, withoutTree: isRoot === true });
   }
 
   const { children, label } = definition;
@@ -206,9 +213,10 @@ const run = async (
 
   const isMcp = options.mcp === true;
   const start = _.now();
-  if (!isMcp && !verbose) {
+  const withTree = node.children.length > 0;
+  if (!isMcp && !verbose && withTree) {
     process.stdout.write(`\n`);
-    if (node.children.length > 0 && definition !== undefined) {
+    if (definition !== undefined) {
       process.stdout.write(`${cyan}${definition.label}${reset}\n`);
     }
   }
