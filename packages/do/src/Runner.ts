@@ -17,7 +17,6 @@ const green = `\u001B[32m`;
 const red = `\u001B[31m`;
 const cyan = `\u001B[36m`;
 const yellow = `\u001B[33m`;
-const magenta = `\u001B[35m`;
 const dim = `\u001B[2m`;
 const ok = `✓`;
 const fail = `✗`;
@@ -43,9 +42,8 @@ const tree = (name: string): TreeNode | undefined => {
 type TreeContext = { connector: string; prefix: string };
 
 const treeLine = (prefix: string, connector: string, label: string, status: `fail` | `node` | `ok`) => {
-  const icon =
-    status === `ok` ? `${green}${ok}${reset}` : status === `fail` ? `${red}${fail}${reset}` : `${magenta}▸${reset}`;
-  process.stdout.write(`${prefix}${connector}─ ${icon} ${cyan}${label}${reset}\n`);
+  const icon = status === `ok` ? `${green}${ok}${reset}` : status === `fail` ? `${red}${fail}${reset}` : ``;
+  process.stdout.write(`${prefix}${connector}─ ${icon ? `${icon} ` : ``}${cyan}${label}${reset}\n`);
 };
 
 type ShellResult = number | { exitCode: number; stderr: string; stdout: string };
@@ -69,8 +67,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const capture = !verbose || mcp;
 
   if (!mcp && !verbose) {
-    const icon = `${magenta}▸${reset}`;
-    process.stdout.write(`${context.prefix}${context.connector}─ ${icon} ${cyan}${label}${reset} ${ellipsis}`);
+    process.stdout.write(`${context.prefix}${context.connector}─ ${cyan}${label}${reset}${ellipsis} `);
   }
 
   const start = _.now();
@@ -131,7 +128,8 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
 
   if (!mcp && !verbose) {
     const seconds = Math.round((_.now() - start) / _.second.milliseconds);
-    process.stdout.write(` ${dim}${seconds}s${reset}\n`);
+    const statusIcon = exitCode === 0 ? `✅` : `❌`;
+    process.stdout.write(`${statusIcon} ${dim}${seconds}s${reset}\n`);
   }
 
   if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
