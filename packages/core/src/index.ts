@@ -1,5 +1,7 @@
 export * from "./_";
 
+export * from "./Cache";
+
 export * from "./DateTime";
 
 export * from "./HttpStatus";

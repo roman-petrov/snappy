@@ -5,7 +5,7 @@
 /* eslint-disable functional/no-try-statements */
 import type { RequestHandler } from "express";
 
-import { _ } from "@snappy/core";
+import { _, Cache } from "@snappy/core";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { brotliCompressSync, gzipSync } from "node:zlib";
@@ -19,7 +19,7 @@ type SendResponse = {
 };
 
 export const ServerCache = () => {
-  const store = new Map<string, CachedEntry>();
+  const store = Cache<CachedEntry>();
 
   const compressible = (contentType: string) => {
     const base = contentType.split(`;`)[0]?.trim().toLowerCase() ?? ``;
@@ -58,7 +58,7 @@ export const ServerCache = () => {
 
   // Heuristic: content hash in filename (e.g. main.a1b2c3d4.js or inter-...-DO1Apj_S.woff2)
   const hasHashInPath = (pathname: string) => /[-.]\w{8,}\./u.test(pathname.split(`/`).pop() ?? ``);
-  const get = (key: string) => store.get(key);
+  const { get, remove } = store;
 
   const set = (key: string, raw: Buffer, contentType = `application/octet-stream`): CachedEntry => {
     const entry: CachedEntry = { raw };
@@ -67,12 +67,9 @@ export const ServerCache = () => {
       entry.brotli = brotli;
       entry.gzip = gzip;
     }
-    store.set(key, entry);
 
-    return entry;
+    return store.set(key, entry);
   };
-
-  const deleteKey = (key: string) => store.delete(key);
 
   const preferredEncoding = (acceptEncoding: string | undefined) => {
     if (acceptEncoding === undefined) {
@@ -156,7 +153,7 @@ export const ServerCache = () => {
     };
   };
 
-  return { createStatic, delete: deleteKey, get, sendCached, set };
+  return { createStatic, get, remove, sendCached, set };
 };
 
 export type ServerCache = ReturnType<typeof ServerCache>;
