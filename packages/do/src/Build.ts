@@ -48,6 +48,7 @@ const buildSite = async (root: string, options: { capture?: true } = {}): Promis
   }
   fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
   fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
+
   return 0;
 };
 
@@ -78,6 +79,7 @@ const buildSsr = async (root: string, options: { capture?: true } = {}): Promise
     ensureDir(wwwDir(root));
     copyDir(dist, wwwDir(root));
   }
+
   return 0;
 };
 

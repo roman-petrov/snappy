@@ -1,6 +1,9 @@
 import type { CmdDefinition } from "./CommandTypes";
 
 const defs: Record<string, CmdDefinition> = {
+  [`build:app`]: { description: `Vite: build app bundle.`, label: `📦 App`, run: { handler: `build:app` } },
+  [`build:site`]: { description: `Vite: build site.`, label: `📦 Site`, run: { handler: `build:site` } },
+  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `📦 SSR`, run: { handler: `build:ssr` } },
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
     label: `🐳 Database container`,
@@ -51,9 +54,6 @@ const defs: Record<string, CmdDefinition> = {
     label: `🗄️ Prisma Studio`,
     run: { args: [`studio`], tool: `prisma` },
   },
-  [`build:app`]: { description: `Vite: build app bundle.`, label: `📦 App`, run: { handler: `build:app` } },
-  [`build:site`]: { description: `Vite: build site.`, label: `📦 Site`, run: { handler: `build:site` } },
-  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `📦 SSR`, run: { handler: `build:ssr` } },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
     description: `Build + apply migrations (for deploy or before run).`,

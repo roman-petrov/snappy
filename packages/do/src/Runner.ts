@@ -17,8 +17,10 @@ const red = `\u001B[31m`;
 const cyan = `\u001B[36m`;
 const yellow = `\u001B[33m`;
 const magenta = `\u001B[35m`;
+const dim = `\u001B[2m`;
 const ok = `✓`;
 const fail = `✗`;
+const ellipsis = `\u2026`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
@@ -64,6 +66,13 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
 
   const { label, run } = definition;
   const capture = !verbose || mcp;
+
+  if (!mcp && !verbose) {
+    const icon = `${magenta}▸${reset}`;
+    process.stdout.write(`${context.prefix}${context.connector}─ ${icon} ${cyan}${label}${reset} ${ellipsis}`);
+  }
+
+  const start = Date.now();
 
   const rawResult = await (`handler` in run
     ? run.handler === `build:site`
@@ -120,7 +129,8 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
   if (!mcp && !verbose) {
-    treeLine(context.prefix, context.connector, label, exitCode === 0 ? `ok` : `fail`);
+    const seconds = Math.round((Date.now() - start) / 1000);
+    process.stdout.write(` ${dim}${seconds}s${reset}\n`);
   }
 
   if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
