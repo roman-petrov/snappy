@@ -1,0 +1,106 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-try-statements */
+/* eslint-disable sonarjs/x-powered-by */
+import { Browser } from "@snappy/core";
+import { type SiteLocaleKey, type SiteMeta, Ssr } from "@snappy/site/Ssr";
+import express from "express";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
+import { createServer as createViteServer } from "vite";
+
+import { ViteConfig } from "./config/vite/ViteConfig";
+
+const doDir = import.meta.dirname;
+const projectRoot = join(doDir, `..`, `..`, `..`);
+const siteDir = join(projectRoot, `packages`, `site`);
+const appDesktopDir = join(projectRoot, `packages`, `app-desktop`);
+const appMobileDir = join(projectRoot, `packages`, `app-mobile`);
+const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
+const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
+const port = 5173;
+const devInput = [`site`, `app-desktop`, `app-mobile`].map(name => join(projectRoot, `packages`, name, `index.html`));
+
+const main = async () => {
+  const app = express();
+
+  const configBuilder = ViteConfig(
+    { build: { rollupOptions: { input: devInput } }, root: projectRoot },
+    { analyzeFileName: `dev` },
+  );
+
+  const resolved =
+    typeof configBuilder === `function` ? configBuilder({ command: `serve`, mode: `development` }) : configBuilder;
+
+  const config = await Promise.resolve(resolved);
+
+  const vite = await createViteServer({
+    configFile: false,
+    ...config,
+    appType: `custom`,
+    server: { ...config.server, middlewareMode: true },
+  });
+
+  app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
+  app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
+  app.get(`/app/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
+
+  const indexHtmlFromDir = async (dir: string) => {
+    const indexPath = join(dir, `index.html`);
+    const raw = readFileSync(indexPath, `utf8`);
+
+    return vite.transformIndexHtml(pathToFileURL(indexPath).href, raw);
+  };
+
+  const handleHtmlError = (error: unknown, next: express.NextFunction) => {
+    vite.ssrFixStacktrace(error as Error);
+    next(error);
+  };
+
+  app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
+    if (/\.\w+$/iu.test(request.path)) {
+      return next();
+    }
+    const appDir = Browser.mobile(request.get(`user-agent`) ?? ``) ? appMobileDir : appDesktopDir;
+    void indexHtmlFromDir(appDir)
+      .then(html => response.type(`html`).send(html))
+      .catch((error: unknown) => handleHtmlError(error, next));
+
+    return undefined;
+  });
+
+  app.get(`/`, async (request, response, next) => {
+    try {
+      const locale = Ssr.localeFromCookie(request.headers.cookie);
+      const template = await indexHtmlFromDir(siteDir);
+
+      const entry = (await vite.ssrLoadModule(pathToFileURL(siteEntryPath).href)) as {
+        getMeta: (locale: SiteLocaleKey) => SiteMeta;
+        render: (locale: SiteLocaleKey) => string;
+      };
+      response.type(`html`).send(Ssr.buildHtml(locale, template, entry));
+    } catch (error) {
+      handleHtmlError(error, next);
+    }
+  });
+
+  app.use((request, _response, next) => {
+    const { path } = request;
+    if (path.startsWith(`/src/`) && !path.startsWith(`/app`)) {
+      request.url = `/packages/site${path}`;
+    } else if (path.startsWith(`/app/`)) {
+      const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
+      request.url = `/packages/${mobile ? `app-mobile` : `app-desktop`}${path.slice(4)}`;
+    }
+    next();
+  });
+  app.use(vite.middlewares);
+
+  app.listen(port, () => {
+    process.stdout.write(`  Site (SSR) http://localhost:${port}\n`);
+  });
+};
+
+void main();

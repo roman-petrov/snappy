@@ -13,10 +13,12 @@ jobs:
         task:
           - name: 🌐 build:site
             arg: build:site
-          - name: 📱 build:app
-            arg: build:app
           - name: ⚡ build:ssr
             arg: build:ssr
+          - name: 🖥️ build:app-desktop
+            arg: build:app-desktop
+          - name: 📱 build:app-mobile
+            arg: build:app-mobile
           - name: 🧪 test
             arg: test
           - name: 📘 tsc

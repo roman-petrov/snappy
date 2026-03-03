@@ -1,0 +1,21 @@
+{
+  "name": "@snappy/app-desktop",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.tsx",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "dependencies": {
+    "@snappy/app": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.13.1"
+  },
+  "devDependencies": {
+    "@snappy/do": "workspace:*",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.0.0"
+  }
+}

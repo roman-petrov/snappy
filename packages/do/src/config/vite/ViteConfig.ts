@@ -12,8 +12,9 @@ export type ViteConfigOptions = { analyzeFileName: string };
 
 type EnvWithSsr = ConfigEnv & { ssrBuild?: boolean };
 
-export const ViteConfig = (override: UserConfig, { analyzeFileName }: ViteConfigOptions) =>
+export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
   defineConfig((env: ConfigEnv) => {
+    const { analyzeFileName } = options;
     const isSsr = (env as EnvWithSsr).ssrBuild === true;
     const analyzeFilePath = join(process.cwd(), `..`, `..`, `.analyze`, `${analyzeFileName}.html`);
 

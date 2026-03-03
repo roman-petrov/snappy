@@ -1,5 +1,5 @@
 import { Config } from "@snappy/config";
-import { _ } from "@snappy/core";
+import { _, Browser } from "@snappy/core";
 import { App, ServerCache, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { existsSync, readFileSync } from "node:fs";
@@ -38,7 +38,10 @@ const { botBaseUrl, startServers } = useHttps
       },
     };
 
-const root = join(import.meta.dirname, `..`, `..`, `..`, `dist`, `www`);
+const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
+const siteRoot = join(distDir, `site`);
+const appDesktopRoot = join(distDir, `app-desktop`);
+const appMobileRoot = join(distDir, `app-mobile`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
 const app = App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 
@@ -46,22 +49,38 @@ app.disable(`x-powered-by`);
 
 const cache = ServerCache();
 const ssr = Ssr();
-app.get(`/`, ssr.createCachedSsrHandler(root, cache));
-app.use(cache.createStatic(root));
-const appIndexPath = join(root, `app`, `index.html`);
-const appIndexKey = `app:index`;
-app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
-  if (!existsSync(appIndexPath)) {
+app.get(`/`, ssr.createCachedSsrHandler(siteRoot, cache));
+const staticAppDesktop = cache.createStaticWithPrefix(appDesktopRoot, `/app`);
+const staticAppMobile = cache.createStaticWithPrefix(appMobileRoot, `/app`);
+app.use((request, response, next) => {
+  const path = request.path || `/`;
+  if (!path.startsWith(`/app`)) {
     return next();
   }
-  const cached = cache.get(appIndexKey);
+  const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
+
+  return (mobile ? staticAppMobile : staticAppDesktop)(request, response, next);
+});
+
+app.use(cache.createStatic(siteRoot));
+const appIndexDesktopPath = join(appDesktopRoot, `index.html`);
+const appIndexMobilePath = join(appMobileRoot, `index.html`);
+const appIndexDesktopKey = `app:index:desktop`;
+const appIndexMobileKey = `app:index:mobile`;
+app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
+  const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
+  const indexPath = mobile ? appIndexMobilePath : appIndexDesktopPath;
+  const indexKey = mobile ? appIndexMobileKey : appIndexDesktopKey;
+  if (!existsSync(indexPath)) {
+    return next();
+  }
+  const cached = cache.get(indexKey);
   if (cached !== undefined) {
     cache.sendCached(response, cached, request.get(`accept-encoding`), `text/html`);
 
     return undefined;
   }
-
-  const entry = cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`);
+  const entry = cache.set(indexKey, Buffer.from(readFileSync(indexPath, `utf8`), `utf8`), `text/html`);
   cache.sendCached(response, entry, request.get(`accept-encoding`), `text/html`);
 
   return undefined;
@@ -73,6 +92,6 @@ const handler = (request: http.IncomingMessage, response: http.ServerResponse) =
 
 process.stdout.write(`🚀 Starting server…\n`);
 void appContext.start();
-await ssr.prewarmSsr(root, cache, [`ru`, `en`]);
+await ssr.prewarmSsr(siteRoot, cache, [`ru`, `en`]);
 
 startServers(handler);

@@ -1,7 +1,16 @@
 import type { CmdDefinition } from "./CommandTypes";
 
 const defs: Record<string, CmdDefinition> = {
-  [`build:app`]: { description: `Vite: build app bundle.`, label: `📱 App`, run: { handler: `build:app` } },
+  [`build:app-desktop`]: {
+    description: `Vite: build desktop app into dist/app-desktop.`,
+    label: `🖥️  Desktop app`,
+    run: { handler: `build:app-desktop` },
+  },
+  [`build:app-mobile`]: {
+    description: `Vite: build mobile app into dist/app-mobile.`,
+    label: `📱 Mobile app`,
+    run: { handler: `build:app-mobile` },
+  },
   [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
   [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
   [`db:container:up`]: {
@@ -62,7 +71,7 @@ const defs: Record<string, CmdDefinition> = {
   [`deploy-run`]: {
     children: [`server:prod`],
     description: `Run prod server only (after deploy-prepare).`,
-    label: `▶️ Deploy run`,
+    label: `▶️  Deploy run`,
   },
   [`eslint-fix`]: {
     description: `ESLint: auto-fix.`,
@@ -86,9 +95,14 @@ const defs: Record<string, CmdDefinition> = {
     },
   },
   [`server:dev`]: {
-    children: [`server:site:dev`, `server:api:dev`],
-    description: `Run dev servers (snappy-site + server-dev).`,
+    children: [`server:frontend:dev`, `server:api:dev`],
+    description: `Run dev servers (site + app + API).`,
     label: `🖥️ Servers`,
+  },
+  [`server:frontend:dev`]: {
+    description: `Run site + app dev server together (one port).`,
+    label: `🌐 Site + App`,
+    run: { background: true, command: `node --import tsx/esm src/main.dev-server.ts`, cwd: `packages/do` },
   },
   [`server:prod`]: {
     description: `Run prod server (tsx).`,
@@ -99,19 +113,14 @@ const defs: Record<string, CmdDefinition> = {
       shutdown: { command: `docker compose down` },
     },
   },
-  [`server:site:dev`]: {
-    description: `Run snappy-site dev server.`,
-    label: `🌐 Site dev`,
-    run: { background: true, command: `node --import tsx/esm server.ts`, cwd: `packages/snappy-site` },
-  },
   [`stylelint-fix`]: {
     description: `Stylelint: auto-fix.`,
     label: `🎨 Stylelint`,
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:app`, `build:ssr`],
-    description: `Build site into dist/www (site + app + ssr).`,
+    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`],
+    description: `Build site into dist (site + ssr + app-desktop + app-mobile).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },

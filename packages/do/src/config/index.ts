@@ -1,11 +1,11 @@
-export * from "./cspell";
+export * from "./cspell/index.js";
 
-export * from "./eslint";
+export * from "./eslint/index.js";
 
-export * from "./knip";
+export * from "./knip/index.js";
 
-export * from "./prettier";
+export * from "./prettier/index.js";
 
-export * from "./stylelint";
+export * from "./stylelint/index.js";
 
-export * from "./vite";
+export * from "./vite/index.js";

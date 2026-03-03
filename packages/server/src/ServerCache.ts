@@ -114,46 +114,68 @@ export const ServerCache = () => {
     response.send(entry.raw);
   };
 
-  const createStatic = (root: string): RequestHandler => {
+  const serveFromRoot = (
+    request: { get: (name: string) => string | undefined },
+    response: SendResponse,
+    next: () => void,
+    root: string,
+    pathname: string,
+  ) => {
     const rootResolved = resolve(root);
+    const relative = pathname.startsWith(`/`) ? pathname.slice(1) : pathname;
+    const filePath = resolve(root, relative);
 
-    return (request, response, next) => {
-      const pathname = request.path || `/`;
-      const relative = pathname.startsWith(`/`) ? pathname.slice(1) : pathname;
-      const filePath = resolve(root, relative);
+    if (!filePath.startsWith(rootResolved)) {
+      next();
 
-      if (!filePath.startsWith(rootResolved)) {
-        next();
+      return;
+    }
+    const key = `static:${pathname}`;
+    const cached = get(key);
+    if (cached !== undefined) {
+      sendCached(response, cached, request.get(`accept-encoding`), contentTypeFromPath(pathname), pathname);
 
-        return;
-      }
+      return;
+    }
+    let raw: Buffer | undefined;
+    try {
+      raw = readFileSync(filePath);
+    } catch {
+      raw = undefined;
+    }
+    if (raw === undefined) {
+      next();
 
-      const key = `static:${pathname}`;
-      const cached = get(key);
-      if (cached !== undefined) {
-        sendCached(response, cached, request.get(`accept-encoding`), contentTypeFromPath(pathname), pathname);
-
-        return;
-      }
-
-      let raw: Buffer | undefined;
-      try {
-        raw = readFileSync(filePath);
-      } catch {
-        raw = undefined;
-      }
-      if (raw === undefined) {
-        next();
-
-        return;
-      }
-      const contentType = contentTypeFromPath(pathname);
-      const entry = set(key, raw, contentType);
-      sendCached(response, entry, request.get(`accept-encoding`), contentType, pathname);
-    };
+      return;
+    }
+    const contentType = contentTypeFromPath(pathname);
+    const entry = set(key, raw, contentType);
+    sendCached(response, entry, request.get(`accept-encoding`), contentType, pathname);
   };
 
-  return { createStatic, get, remove, sendCached, set };
+  const createStatic =
+    (root: string): RequestHandler =>
+    (request, response, next) => {
+      const pathname = request.path || `/`;
+
+      serveFromRoot(request, response, next, root, pathname);
+    };
+
+  const createStaticWithPrefix =
+    (root: string, prefix: string): RequestHandler =>
+    (request, response, next) => {
+      const path = request.path || `/`;
+      if (!path.startsWith(prefix)) {
+        next();
+
+        return;
+      }
+      const pathname = path.slice(prefix.length) || `/`;
+
+      serveFromRoot(request, response, next, root, pathname);
+    };
+
+  return { createStatic, createStaticWithPrefix, get, remove, sendCached, set };
 };
 
 export type ServerCache = ReturnType<typeof ServerCache>;

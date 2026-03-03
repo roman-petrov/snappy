@@ -1,5 +1,4 @@
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-loop-statements */
 import { Process } from "@snappy/node";
 
 const workflowRunner = `bun`;
@@ -7,80 +6,54 @@ import fs from "node:fs";
 import { join } from "node:path";
 
 const distDir = `dist`;
-const siteDir = (root: string) => join(root, `packages`, `snappy-site`);
-const siteDist = (root: string) => join(siteDir(root), distDir);
-const wwwDir = (root: string) => join(root, distDir, `www`);
+const packageDir = (root: string, packageName: string) => join(root, `packages`, packageName);
+const outDir = (root: string, packageName: string) => join(root, distDir, packageName);
+const faviconPath = (root: string) => join(root, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 
-const ensureDir = (dir: string) => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-};
+const exitCode = (r: number | { exitCode: number; stderr: string; stdout: string }) =>
+  typeof r === `object` ? r.exitCode : r;
 
-const copyDir = (src: string, destination: string) => {
-  ensureDir(destination);
-  const entries = fs.readdirSync(src, { withFileTypes: true });
-  for (const entry of entries) {
-    const srcPath = join(src, entry.name);
-    const destinationPath = join(destination, entry.name);
-    if (entry.isDirectory()) {
-      copyDir(srcPath, destinationPath);
-    } else {
-      fs.copyFileSync(srcPath, destinationPath);
-    }
-  }
-};
-
-type SpawnResult = { exitCode: number; stderr: string; stdout: string };
-
-const exitCode = (r: number | SpawnResult) => (typeof r === `object` ? r.exitCode : r);
-
-const runSpawn = async (cwd: string, argv: string[], capture: boolean): Promise<number | SpawnResult> =>
+const runSpawn = async (cwd: string, argv: string[], capture: boolean) =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
-const buildSite = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
-  fs.rmSync(join(root, distDir), { force: true, recursive: true });
-  const site = siteDir(root);
-  const dist = siteDist(root);
-  const result = await runSpawn(site, Process.toolArgv(workflowRunner, `vite`, [`build`]), options.capture === true);
+const viteBuild = async (root: string, packageName: string, options: { capture?: true }) => {
+  const cwd = packageDir(root, packageName);
+  const out = outDir(root, packageName);
+  fs.rmSync(out, { force: true, recursive: true });
+  const result = await runSpawn(
+    cwd,
+    Process.toolArgv(workflowRunner, `vite`, [`build`, `--outDir`, out]),
+    options.capture === true,
+  );
   if (exitCode(result) !== 0) {
     return result;
   }
-  fs.copyFileSync(join(dist, `src`, `site`, `index.html`), join(dist, `index.html`));
-  fs.copyFileSync(join(site, `favicon.svg`), join(dist, `favicon.svg`));
+  const favicon = faviconPath(root);
+  if (fs.existsSync(favicon)) {
+    fs.copyFileSync(favicon, join(out, `favicon.svg`));
+  }
 
   return 0;
 };
 
-const buildApp = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> =>
-  runSpawn(
-    siteDir(root),
-    Process.toolArgv(workflowRunner, `vite`, [`build`, `--config`, `vite.app.config.js`]),
-    options.capture === true,
-  );
+const site = async (root: string, options: { capture?: true } = {}) => viteBuild(root, `site`, options);
+const appDesktop = async (root: string, options: { capture?: true } = {}) => viteBuild(root, `app-desktop`, options);
+const appMobile = async (root: string, options: { capture?: true } = {}) => viteBuild(root, `app-mobile`, options);
 
-const buildSsr = async (root: string, options: { capture?: true } = {}): Promise<number | SpawnResult> => {
+const ssr = async (root: string, options: { capture?: true } = {}) => {
   const result = await runSpawn(
-    siteDir(root),
+    packageDir(root, `site`),
     Process.toolArgv(workflowRunner, `vite`, [
       `build`,
       `--ssr`,
-      `src/site/entry-server.tsx`,
+      `src/entry-server.tsx`,
       `--outDir`,
-      `dist/server`,
+      join(outDir(root, `site`), `server`),
     ]),
     options.capture === true,
   );
-  if (exitCode(result) !== 0) {
-    return result;
-  }
-  const dist = siteDist(root);
-  if (fs.existsSync(join(dist, `index.html`))) {
-    ensureDir(wwwDir(root));
-    copyDir(dist, wwwDir(root));
-  }
 
-  return 0;
+  return exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { buildApp, buildSite, buildSsr };
+export const Build = { appDesktop, appMobile, site, ssr };

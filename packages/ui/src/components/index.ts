@@ -6,6 +6,8 @@ export * from "./Card";
 
 export * from "./Field";
 
+export * from "./Header";
+
 export * from "./Headline";
 
 export * from "./Icon";
@@ -13,6 +15,10 @@ export * from "./Icon";
 export * from "./Input";
 
 export * from "./Link";
+
+export * from "./LocaleSwitcher";
+
+export * from "./Logo";
 
 export * from "./Panel";
 
