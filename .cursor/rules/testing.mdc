@@ -1,0 +1,71 @@
+---
+description:
+  Test structure — destructure module under test, describe by function name, call without module prefix. Use when
+  writing or reviewing unit tests.
+globs: "**/*.test.{ts,tsx}"
+alwaysApply: false
+---
+
+# Testing
+
+Follow the **programming** rule. This rule adds test-structure conventions only.
+
+---
+
+## Structure
+
+1. **Destructure the module under test** at the top of the file. Import the module, then destructure the exported
+   functions (or the API you are testing) so that tests call them without the module prefix.
+
+2. **describe(tested function)** — use `describe` with the **name of the function** (or method) being tested as the
+   first argument. One top-level `describe` per function. Nest further `describe` only when grouping sub-behaviors of
+   the same function.
+
+3. **Call functions without module prefix** — inside tests, call the destructured functions directly (e.g. `fn(x)`), not
+   via the module (e.g. not `Module.fn(x)`).
+
+---
+
+## Examples
+
+**Object-of-functions module** (e.g. `Utils = { fn, other }`):
+
+```ts
+import { describe, expect, it } from "vitest";
+
+import { Utils } from "./Utils";
+
+const { fn } = Utils;
+
+describe(`fn`, () => {
+  it(`returns expected result for valid input`, () => {
+    expect(fn(`input`)).toBe(`result`);
+  });
+
+  it(`returns fallback for empty input`, () => {
+    expect(fn(``)).toBe(false);
+  });
+});
+```
+
+**Factory module** (returns an instance with methods): no destructure of the factory; create an instance and use
+`describe` with the **method name** when testing that method. Call methods on the instance (e.g. `cache.get(...)`).
+
+```ts
+import { Cache } from "./Cache";
+
+describe(`get`, () => {
+  it(`returns undefined for missing key`, () => {
+    const cache = Cache<string>();
+    expect(cache.get(`missing`)).toBeUndefined();
+  });
+});
+```
+
+---
+
+## Checklist
+
+- [ ] Module under test is destructured at the top when testing an object of functions
+- [ ] First argument of `describe` is the name of the tested function (or method)
+- [ ] Tests call the tested functions without the module prefix (e.g. `fn(...)` not `Module.fn(...)`)

@@ -12,7 +12,7 @@ const defs: Record<string, CmdDefinition> = {
   [`db:dev`]: {
     children: [`db:container:up`, `db:push:dev`, `db:seed`],
     description: `DB for dev/run: container up + schema push + seed.`,
-    label: `🗄️ Database`,
+    label: `🗄️  Database`,
   },
   [`db:generate`]: {
     description: `Prisma: generate client.`,
@@ -36,7 +36,7 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`db:push:dev`]: {
     description: `Prisma: push schema (accept data loss, for dev/run).`,
-    label: `⬇️ Schema sync`,
+    label: `⬇️  Schema sync`,
     run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`db:push`]: {
@@ -76,7 +76,7 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`server:api:dev`]: {
     description: `Run server-dev (API).`,
-    label: `⚙️ API dev`,
+    label: `⚙️  API dev`,
     run: {
       command: `node --watch --import tsx/esm packages/server-dev/src/main.ts`,
       cwd: `.`,
