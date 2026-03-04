@@ -15,7 +15,13 @@ export const pluginFontPreload = (): Plugin => ({
     }
     const chunks = Object.values(outputBundle);
     const placeholder = `<!-- FONT-PRELOAD-PLACEHOLDER -->`;
-    const preloadSubsets = [`inter-latin-wght-normal`, `inter-cyrillic-wght-normal`] as const;
+
+    const preloadSubsets = [
+      `inter-latin-wght-normal`,
+      `inter-latin-ext-wght-normal`,
+      `inter-cyrillic-wght-normal`,
+      `inter-cyrillic-ext-wght-normal`,
+    ] as const;
 
     const isWoff2Asset = (chunk: { fileName?: string; type: string }, subset: string) =>
       chunk.type === `asset` &&
