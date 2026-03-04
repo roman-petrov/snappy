@@ -3,7 +3,7 @@
 import { ensureFogContainer, Theme } from "@snappy/ui";
 import { hydrateRoot } from "react-dom/client";
 
-import { Landing } from "./components/Landing";
+import { Landing } from "./components";
 
 ensureFogContainer();
 Theme.restore();
