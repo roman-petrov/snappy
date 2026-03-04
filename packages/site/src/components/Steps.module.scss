@@ -17,7 +17,6 @@
   padding: 0;
   margin: 0;
   list-style: none;
-  counter-reset: step;
 }
 
 .steps li {
@@ -31,21 +30,14 @@
   margin-block-start: 0;
 }
 
-.steps li::before {
+.marker {
   position: absolute;
   inset-inline-start: calc(-1 * var(--space-4));
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: var(--space-8);
   height: var(--space-8);
-  font-size: var(--text-sm);
-  font-weight: var(--weight-bold);
-  line-height: 1;
-  color: var(--color-on-accent);
-  content: counter(step);
-  counter-increment: step;
   background: var(--color-accent);
   border-radius: 50%;
 }
