@@ -8,14 +8,15 @@ export type LinkProps = { href?: string; muted?: boolean; rel?: string; target?:
 
 export const Link = ({ href, muted = false, rel, target, text, to }: LinkProps) => {
   const linkClass = muted ? styles.muted : styles.accent;
+  const linkText = <Text color={muted ? `muted` : `accent`} text={text} typography="caption" />;
 
   return to === undefined ? (
     <a className={linkClass} href={href ?? `#`} rel={rel} target={target}>
-      <Text color={muted ? `muted` : `accent`} text={text} typography="caption" />
+      {linkText}
     </a>
   ) : (
     <RouterLink className={linkClass} to={to} viewTransition>
-      <Text color={muted ? `muted` : `accent`} text={text} typography="caption" />
+      {linkText}
     </RouterLink>
   );
 };
