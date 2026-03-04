@@ -6,7 +6,7 @@ import { NodePackageImporter } from "sass-embedded";
 import { type ConfigEnv, defineConfig, mergeConfig, type UserConfig } from "vite";
 import pluginSassDts from "vite-plugin-sass-dts";
 
-import { pluginOptimizeCssModules } from "./plugins";
+import { pluginFontPreload, pluginOptimizeCssModules } from "./plugins";
 
 export type ViteConfigOptions = { analyzeFileName: string };
 
@@ -36,6 +36,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
         },
         plugins: [
           pluginReact(),
+          pluginFontPreload(),
           pluginOptimizeCssModules(),
           pluginSassDts({
             esmExport: true,

@@ -15,19 +15,21 @@ export const startApp = (
   app: ReactNode,
   { disableTextSelection = false, server = false }: StartAppOptions = {},
 ) => {
-  const container = document.querySelector(selector);
-  if (!(container instanceof HTMLElement)) {
-    return;
-  }
   const fogId = `fog-bg`;
   const div = document.createElement(`div`);
   div.id = fogId;
   div.setAttribute(`aria-hidden`, `true`);
   document.body.prepend(div);
   Theme.restore();
+
+  const container = document.querySelector(selector);
+  if (!(container instanceof HTMLElement)) {
+    return;
+  }
   if (disableTextSelection) {
     container.classList.add(styles.disableTextSelection);
   }
+  history.scrollRestoration = `manual`;
   if (server) {
     hydrateRoot(container, app);
   } else {

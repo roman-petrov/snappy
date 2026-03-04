@@ -8,7 +8,6 @@ import pluginReact from "./React";
 import pluginReactHooks from "./ReactHooks";
 import pluginReactRefresh from "./ReactRefresh";
 import pluginRegExp from "./RegExp";
-import pluginSonarJs from "./SonarJs";
 import pluginStylistic from "./Stylistic";
 import pluginTypeScriptESLint from "./TypeScriptESLint";
 import pluginUnicorn from "./Unicorn";
@@ -26,7 +25,7 @@ export default [
   ...pluginUnusedImports,
   ...pluginPromise,
   ...pluginRegExp,
-  ...pluginSonarJs,
+
   ...pluginReact,
   ...pluginReactHooks,
   ...pluginReactRefresh,
