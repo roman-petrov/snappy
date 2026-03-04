@@ -4,10 +4,8 @@ export { faviconUrl } from "./assets";
 
 export * from "./components";
 
-export * from "./LocaleStore";
+export * from "./core";
 
 export * from "./StartApp";
 
 export * from "./theme";
-
-export * from "./Translate";

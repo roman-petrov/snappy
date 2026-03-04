@@ -1,13 +1,4 @@
-import type { MouseEvent } from "react";
-
-import { Theme } from "@snappy/ui";
-
 export const useSiteHeaderState = () => {
-  const logoOnClick = (event: MouseEvent) => {
-    event.preventDefault();
-    Theme.toggle();
-  };
-
   const navItems = [
     { href: `#features`, key: `nav.features` },
     { href: `#examples`, key: `nav.examples` },
@@ -17,5 +8,5 @@ export const useSiteHeaderState = () => {
     { href: `/app`, key: `nav.cabinet` },
   ];
 
-  return { logoOnClick, navItems };
+  return { navItems };
 };

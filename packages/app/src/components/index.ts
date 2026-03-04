@@ -1,17 +1,17 @@
 export * from "./Dashboard";
 
-export * from "./ForgotPassword";
+export * from "./ForgotPasswordForm";
 
 export * from "./FormErrorAndActions";
 
-export * from "./Layout";
+export * from "./HeaderContent";
 
-export * from "./Login";
+export * from "./LoginForm";
 
-export * from "./PanelWithLink";
+export * from "./MessageWithLink";
 
 export * from "./Protect";
 
-export * from "./Register";
+export * from "./RegisterForm";
 
-export * from "./ResetPassword";
+export * from "./ResetPasswordForm";

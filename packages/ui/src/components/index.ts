@@ -16,8 +16,6 @@ export * from "./Input";
 
 export * from "./Link";
 
-export * from "./LocaleSwitcher";
-
 export * from "./Logo";
 
 export * from "./Panel";
@@ -27,6 +25,12 @@ export * from "./PasswordInput";
 export * from "./PasswordStrength";
 
 export * from "./Select";
+
+export * from "./SwitchButton";
+
+export * from "./SwitchButtonLocale";
+
+export * from "./SwitchButtonTheme";
 
 export * from "./Text";
 

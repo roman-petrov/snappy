@@ -80,7 +80,6 @@ export const en = {
     lead: `Snappy is a smart Telegram bot with an AI assistant for text. Send a message, choose an action — the result is right in the chat.`,
     title: `✨ Text the way you need — in one tap`,
   },
-  localeSwitcher: `Switch to Russian`,
   meta: {
     description: `Fix errors, shorten and change the tone of text in seconds. Snappy is a smart Telegram bot for posts, emails and ads. Results right in the chat.`,
     keywords: `text editor, fix errors, shorten text, change text style, AI for text, Telegram bot, text editing`,
@@ -112,7 +111,6 @@ export const en = {
     selling: { hint: `benefits and calls to action`, name: `🎯 Selling` },
     title: `🎭 Ready text styles`,
   },
-  themeToggle: `Toggle theme`,
   who: {
     ads: {
       desc: `Text for classifieds, product cards: cut filler, add structure, adjust style.`,

@@ -51,7 +51,6 @@ export const en = {
     submitting: `Sending…`,
     title: `Forgot password`,
   },
-  localeSwitcher: `Switch to Russian`,
   login: `Log in`,
   loginPage: {
     email: `Email`,
@@ -111,5 +110,4 @@ export const en = {
     submitting: `Saving…`,
     title: `New password`,
   },
-  themeToggle: `Toggle theme`,
 };

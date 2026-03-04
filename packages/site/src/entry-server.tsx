@@ -1,14 +1,12 @@
 /* eslint-disable unicorn/filename-case */
 /* eslint-disable functional/no-expression-statements */
+import { $locale } from "@snappy/ui";
 import { renderToString } from "react-dom/server";
 
+import type { SiteLocaleKey } from "./core";
+
 import { Landing } from "./components/Landing";
-import { SiteLocaleStore } from "./core";
-import localeData from "./locales";
-
-export type SiteLocaleKey = `en` | `ru`;
-
-export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
+import { localeData } from "./locales";
 
 export const getMeta = (locale: SiteLocaleKey) => {
   const { meta } = localeData[locale];
@@ -17,7 +15,7 @@ export const getMeta = (locale: SiteLocaleKey) => {
 };
 
 export const render = (locale: SiteLocaleKey = `ru`) => {
-  SiteLocaleStore.setServerLocale(locale);
+  $locale.set(locale);
 
   return renderToString(<Landing />);
 };

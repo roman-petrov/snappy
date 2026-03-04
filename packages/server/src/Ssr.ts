@@ -15,6 +15,8 @@ import { pathToFileURL } from "node:url";
 
 import type { ServerCache } from "./ServerCache";
 
+import { LocaleCookie } from "../../site/src/core/LocaleCookie";
+
 type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
 
 export const Ssr = () => {
@@ -36,7 +38,7 @@ export const Ssr = () => {
     (clientRoot: string): RequestHandler =>
     async (request, response, next) => {
       try {
-        const locale = SiteSsr.localeFromCookie(request.headers.cookie);
+        const locale = LocaleCookie.parse(request.headers.cookie);
         const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
         response.type(`html`).send(SiteSsr.buildHtml(locale, template, entry));
@@ -56,7 +58,7 @@ export const Ssr = () => {
 
     return async (request, response, next) => {
       try {
-        const locale = SiteSsr.localeFromCookie(request.headers.cookie);
+        const locale = LocaleCookie.parse(request.headers.cookie);
         const key = `ssr:${locale}`;
         const cached = cache.get(key);
         if (cached !== undefined) {

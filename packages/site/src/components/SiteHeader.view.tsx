@@ -1,16 +1,17 @@
-import { Header, Link, LocaleSwitcher } from "@snappy/ui";
+import { Header, Link, SwitchButtonLocale, SwitchButtonTheme } from "@snappy/ui";
 
 import type { useSiteHeaderState } from "./SiteHeader.state";
 
-import { SiteLocale, t } from "../core";
+import { t } from "../core";
 
 export type SiteHeaderViewProps = ReturnType<typeof useSiteHeaderState>;
 
-export const SiteHeaderView = ({ logoOnClick, navItems }: SiteHeaderViewProps) => (
-  <Header logoHref="/" logoOnClick={logoOnClick} logoTitle={t(`themeToggle`)}>
+export const SiteHeaderView = ({ navItems }: SiteHeaderViewProps) => (
+  <Header>
     {navItems.map(({ href, key }) => (
       <Link href={href} key={key} muted text={t(key)} />
     ))}
-    <LocaleSwitcher getLocale={SiteLocale.getSiteLocale} setLocale={SiteLocale.setSiteLocale} t={SiteLocale.t} />
+    <SwitchButtonTheme />
+    <SwitchButtonLocale />
   </Header>
 );

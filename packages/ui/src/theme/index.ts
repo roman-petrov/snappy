@@ -1,3 +1,3 @@
-export * from "./Fog";
+export * from "../core/Fog";
 
-export * from "./Theme";
+export * from "../core/Theme";

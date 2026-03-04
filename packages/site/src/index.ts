@@ -1,5 +1,5 @@
-export { Landing } from "./components";
+export * from "./components";
 
 export * from "./core";
 
-export { getMeta, render } from "./entry-server";
+export * from "./entry-server";

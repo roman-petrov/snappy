@@ -3,13 +3,14 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import { Browser } from "@snappy/core";
-import { type SiteLocaleKey, type SiteMeta, Ssr } from "@snappy/site/Ssr";
+import { Ssr, type SsrEntry } from "@snappy/site/Ssr";
 import express from "express";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
 
+import { LocaleCookie } from "../../site/src/core/LocaleCookie";
 import { ViteConfig } from "./config/vite/ViteConfig";
 
 const doDir = import.meta.dirname;
@@ -72,13 +73,9 @@ const main = async () => {
 
   app.get(`/`, async (request, response, next) => {
     try {
-      const locale = Ssr.localeFromCookie(request.headers.cookie);
+      const locale = LocaleCookie.parse(request.headers.cookie);
       const template = await indexHtmlFromDir(siteDir);
-
-      const entry = (await vite.ssrLoadModule(pathToFileURL(siteEntryPath).href)) as {
-        getMeta: (locale: SiteLocaleKey) => SiteMeta;
-        render: (locale: SiteLocaleKey) => string;
-      };
+      const entry = (await vite.ssrLoadModule(pathToFileURL(siteEntryPath).href)) as SsrEntry;
       response.type(`html`).send(Ssr.buildHtml(locale, template, entry));
     } catch (error) {
       handleHtmlError(error, next);

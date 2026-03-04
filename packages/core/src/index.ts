@@ -14,4 +14,6 @@ export * from "./Store";
 
 export * from "./Time";
 
+export * from "./Translate";
+
 export type * from "./Types";

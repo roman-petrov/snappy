@@ -1,8 +1,8 @@
 export type SiteLocaleKey = `en` | `ru`;
 
-export const cookieName = `snappy-locale`;
+const name = `snappy-locale`;
 
-const parseLocaleFromCookie = (cookieString: string | undefined): SiteLocaleKey => {
+const parse = (cookieString: string | undefined): SiteLocaleKey => {
   if (cookieString === undefined) {
     return `ru`;
   }
@@ -10,11 +10,11 @@ const parseLocaleFromCookie = (cookieString: string | undefined): SiteLocaleKey 
   const match = cookieString
     .split(`;`)
     .map(s => s.trim())
-    .find(s => s.startsWith(`${cookieName}=`));
+    .find(s => s.startsWith(`${name}=`));
 
   const value = match?.split(`=`)[1];
 
   return value === `en` || value === `ru` ? value : `ru`;
 };
 
-export const LocaleCookie = { cookieName, parseLocaleFromCookie };
+export const LocaleCookie = { cookieName: name, parse };

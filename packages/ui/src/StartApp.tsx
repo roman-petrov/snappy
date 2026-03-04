@@ -1,38 +1,56 @@
+/* eslint-disable init-declarations */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
 import type { ReactNode } from "react";
 
-import { createRoot, hydrateRoot } from "react-dom/client";
+import { createRoot, hydrateRoot, type Root } from "react-dom/client";
 
-import styles from "./StartApp.module.scss";
+import { App } from "./App";
+import { $serverMode, Locale, Theme } from "./core";
 import "./styles/index.scss";
-import { Theme } from "./theme/Theme";
 
-export type StartAppOptions = { disableTextSelection?: boolean; server?: boolean };
+export type StartAppOptions = {
+  disableTextSelection?: boolean;
+  locale?: Locale;
+  onLocaleChange?: (locale: Locale) => void;
+  server?: boolean;
+  theme?: Theme;
+};
+
+let remount: (() => void) | undefined;
+let remountOnLocaleChange = false;
 
 export const startApp = (
   selector: string,
   app: ReactNode,
-  { disableTextSelection = false, server = false }: StartAppOptions = {},
+  { disableTextSelection = false, locale, onLocaleChange, server = false, theme }: StartAppOptions = {},
 ) => {
-  const fogId = `fog-bg`;
-  const div = document.createElement(`div`);
-  div.id = fogId;
-  div.setAttribute(`aria-hidden`, `true`);
-  document.body.prepend(div);
-  Theme.restore();
+  $serverMode.set(server);
+  const hasTheme = theme !== undefined;
+  const hasLocaleOptions = locale !== undefined || onLocaleChange !== undefined;
+  remountOnLocaleChange = onLocaleChange === undefined;
+  Theme.init(hasTheme ? { theme } : undefined);
+  Locale.init({
+    ...(hasLocaleOptions ? { locale, onLocaleChange } : {}),
+    ...(remountOnLocaleChange ? { onRemount: () => remount?.() } : {}),
+  });
 
   const container = document.querySelector(selector);
   if (!(container instanceof HTMLElement)) {
     return;
   }
-  if (disableTextSelection) {
-    container.classList.add(styles.disableTextSelection);
-  }
   history.scrollRestoration = `manual`;
+  const rootElement = <App disableTextSelection={disableTextSelection}>{app}</App>;
   if (server) {
-    hydrateRoot(container, app);
+    hydrateRoot(container, rootElement);
   } else {
-    createRoot(container).render(app);
+    let reactRoot: Root | undefined = createRoot(container);
+    reactRoot.render(rootElement);
+    remount = () => {
+      reactRoot?.unmount();
+      reactRoot = createRoot(container);
+      reactRoot.render(rootElement);
+    };
   }
 };

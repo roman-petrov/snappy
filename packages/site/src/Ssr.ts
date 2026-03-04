@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/prefer-export-from */
-import { LocaleCookie, type SiteLocaleKey } from "./core/LocaleCookie";
+import type { SiteLocaleKey } from "./core/LocaleCookie";
 
 export type { SiteLocaleKey };
 
@@ -7,12 +7,10 @@ const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
-type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
+export type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
 
 const escapeAttribute = (s: string) =>
   s.replaceAll(`&`, `&amp;`).replaceAll(`"`, `&quot;`).replaceAll(`<`, `&lt;`).replaceAll(`>`, `&gt;`);
-
-const localeFromCookie = (cookieHeader: string | undefined) => LocaleCookie.parseLocaleFromCookie(cookieHeader);
 
 const injectMeta = (template: string, meta: SiteMeta) =>
   template
@@ -27,4 +25,4 @@ const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) => 
   return t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`);
 };
 
-export const Ssr = { buildHtml, cookieName: LocaleCookie.cookieName, injectMeta, localeFromCookie, rootPlaceholder };
+export const Ssr = { buildHtml, injectMeta, rootPlaceholder };

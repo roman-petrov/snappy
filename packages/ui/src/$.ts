@@ -5,7 +5,7 @@ export type Color = keyof typeof colorStyles;
 
 export type Typography = keyof typeof typographyStyles;
 
-export const $ = {
-  color: (name: Color) => colorStyles[name],
-  typography: (name: Typography) => typographyStyles[name],
-};
+const color = (name: Color) => colorStyles[name];
+const typography = (name: Typography) => typographyStyles[name];
+
+export const $ = { color, typography };
