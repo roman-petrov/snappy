@@ -2,14 +2,15 @@
 /* eslint-disable functional/no-expression-statements */
 import type { ReactNode } from "react";
 
-import { createRoot } from "react-dom/client";
+import { createRoot, hydrateRoot } from "react-dom/client";
 
 import "./styles/index.scss";
 import { Theme } from "./theme/Theme";
 
-const fogId = `fog-bg`;
+export type StartAppOptions = { readonly server?: boolean };
 
-export const ensureFogContainer = () => {
+export const startApp = (container: HTMLElement, app: ReactNode, { server = false }: StartAppOptions = {}) => {
+  const fogId = `fog-bg`;
   if (document.querySelector(`#${fogId}`) !== null) {
     return;
   }
@@ -17,10 +18,10 @@ export const ensureFogContainer = () => {
   div.id = fogId;
   div.setAttribute(`aria-hidden`, `true`);
   document.body.prepend(div);
-};
-
-export const startApp = (container: HTMLElement, app: ReactNode) => {
-  ensureFogContainer();
   Theme.restore();
-  createRoot(container).render(app);
+  if (server) {
+    hydrateRoot(container, app);
+  } else {
+    createRoot(container).render(app);
+  }
 };
