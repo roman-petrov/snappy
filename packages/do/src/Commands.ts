@@ -1,5 +1,11 @@
 import type { CmdDefinition } from "./CommandTypes";
 
+/**
+ * ! Some emojis have incorrect width in VSCode terminal.
+ * ? See:
+ * ? - https://github.com/microsoft/vscode/issues/251102
+ * ? - https://github.com/xtermjs/xterm.js/issues/2668
+ */
 const defs: Record<string, CmdDefinition> = {
   [`build:app-desktop`]: {
     description: `Vite: build desktop app into dist/app-desktop.`,
