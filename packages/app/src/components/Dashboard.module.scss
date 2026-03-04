@@ -1,10 +1,13 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 /* cspell:word csvg cpath */
 .page-title {
-  margin-bottom: var(--space-8);
+  margin-bottom: space.x8();
 }
 
 .section {
-  margin-bottom: var(--space-10);
+  margin-bottom: space.x10();
 }
 
 .section:last-child {
@@ -12,11 +15,11 @@
 }
 
 .section-intro {
-  margin-bottom: var(--space-4);
+  margin-bottom: space.x4();
 }
 
 .balance-icon {
-  margin-inline-end: var(--space-2);
+  margin-inline-end: space.x2();
   font-size: 1.25em;
   vertical-align: -0.2em;
 }
@@ -24,14 +27,14 @@
 .balance-row {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-4);
+  gap: space.x4();
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--space-4);
+  margin-bottom: space.x4();
 }
 
 .form-group {
-  margin-bottom: var(--space-4);
+  margin-bottom: space.x4();
 }
 
 .form-group:last-of-type {
@@ -39,33 +42,33 @@
 }
 
 .submit-row {
-  margin-top: var(--space-5);
+  margin-top: space.x5();
 }
 
 .result-wrap {
-  margin-top: var(--space-5);
+  margin-top: space.x5();
   overflow: hidden;
-  background: var(--color-accent-ghost);
-  border: 1px solid var(--color-accent-border);
+  background: color.accent-ghost();
+  border: 1px solid color.accent-border();
   border-radius: var(--radius-sm);
 }
 
 .result-header {
   display: flex;
-  gap: var(--space-3);
+  gap: space.x3();
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-2) var(--space-4);
-  background: var(--color-accent-soft);
-  border-block-end: 1px solid var(--color-accent-border);
+  padding: space.x2() space.x4();
+  background: color.accent-soft();
+  border-block-end: 1px solid color.accent-border();
 }
 
 .copy-btn {
-  padding: var(--space-1) var(--space-3);
+  padding: space.x1() space.x3();
   font-family: inherit;
   cursor: pointer;
   background: transparent;
-  border: 1px solid var(--color-accent-strong);
+  border: 1px solid color.accent-strong();
   border-radius: var(--radius-sm);
   transition:
     background var(--ease),
@@ -74,17 +77,17 @@
 }
 
 .copy-btn:hover {
-  background: var(--color-accent-mid);
-  border-color: var(--color-accent);
+  background: color.accent-mid();
+  border-color: color.accent();
 }
 
 .copy-btn:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-accent-focus);
+  box-shadow: 0 0 0 2px color.accent-focus();
 }
 
 .result {
-  padding: var(--space-4);
+  padding: space.x4();
   overflow-wrap: break-word;
   white-space: pre-wrap;
 }

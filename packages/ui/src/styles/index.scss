@@ -1,9 +1,9 @@
-@use "./variables" as *;
-@use "./theme-dark" as *;
-@use "./theme-light" as *;
-@use "./typography-desktop" as *;
-@use "./typography-mobile" as *;
-@use "./base" as *;
+@use "pkg:@snappy/ui/styles/variables" as *;
+@use "pkg:@snappy/ui/styles/theme-dark" as *;
+@use "pkg:@snappy/ui/styles/theme-light" as *;
+@use "pkg:@snappy/ui/styles/typography-desktop" as *;
+@use "pkg:@snappy/ui/styles/typography-mobile" as *;
+@use "pkg:@snappy/ui/styles/base" as *;
 /* stylelint-disable-next-line import-notation */
 @import url("@fontsource-variable/inter");
 

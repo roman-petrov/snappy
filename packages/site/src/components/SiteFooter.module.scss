@@ -1,8 +1,11 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .footer {
-  padding: var(--space-10) var(--space-6);
-  margin-block-start: var(--space-12);
-  background: var(--color-bg-elevated);
-  border-block-start: 1px solid var(--color-border);
+  padding: space.x10() space.x6();
+  margin-block-start: space.x12();
+  background: color.bg-elevated();
+  border-block-start: 1px solid color.border();
 }
 
 .inner {
@@ -13,18 +16,18 @@
 
 .logo {
   display: inline-flex;
-  gap: var(--space-2);
+  gap: space.x2();
   align-items: center;
-  margin-block-end: var(--space-3);
+  margin-block-end: space.x3();
 }
 
 .tagline {
-  margin: 0 0 var(--space-2);
+  margin: 0 0 space.x2();
 }
 
 @media (width <= 640px) {
   .footer {
-    padding: var(--space-10) var(--space-4);
-    margin-block-start: var(--space-8);
+    padding: space.x10() space.x4();
+    margin-block-start: space.x8();
   }
 }

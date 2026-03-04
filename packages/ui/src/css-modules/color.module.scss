@@ -1,35 +1,37 @@
+@use "pkg:@snappy/ui/color";
+
 .accent {
-  color: var(--color-accent);
+  color: color.accent();
 }
 
 .on-accent {
-  color: var(--color-on-accent);
+  color: color.on-accent();
 }
 
 .error {
-  color: var(--color-error);
+  color: color.error();
 }
 
 .warning {
-  color: var(--color-warning);
+  color: color.warning();
 }
 
 .success {
-  color: var(--color-success);
+  color: color.success();
 }
 
 .info {
-  color: var(--color-accent);
+  color: color.accent();
 }
 
 .heading {
-  color: var(--color-text-heading);
+  color: color.text-heading();
 }
 
 .body {
-  color: var(--color-text-body);
+  color: color.text-body();
 }
 
 .muted {
-  color: var(--color-text-muted);
+  color: color.text-muted();
 }

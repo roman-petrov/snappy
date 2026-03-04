@@ -1,9 +1,11 @@
-@use "../scss/typography";
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/ui/typography";
 
 .input {
   @include typography.body;
-  color: var(--color-text-body);
+  color: color.text-body();
   min-height: 140px;
-  padding: var(--space-4);
+  padding: space.x4();
   resize: vertical;
 }

@@ -1,15 +1,18 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .root {
-  margin-bottom: var(--space-4);
+  margin-bottom: space.x4();
 }
 
 .label {
   display: block;
-  margin-bottom: var(--space-2);
+  margin-bottom: space.x2();
 }
 
 .input-surface {
-  background: var(--color-bg);
-  border: 1px solid var(--color-border);
+  background: color.bg();
+  border: 1px solid color.border();
   border-radius: var(--radius-sm);
   transition:
     border-color var(--ease),
@@ -23,29 +26,29 @@
 }
 
 .input-wrap:focus-within {
-  border-color: var(--color-accent);
+  border-color: color.accent();
   box-shadow: var(--focus-ring-shadow);
 }
 
 .input {
   box-sizing: border-box;
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: space.x3() space.x4();
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-accent);
+  border-color: color.accent();
   box-shadow: var(--focus-ring-shadow);
 }
 
 .input::placeholder {
-  color: var(--color-text-muted);
+  color: color.text-muted();
 }
 
 .input option {
-  color: var(--color-text-body);
-  background: var(--color-bg);
+  color: color.text-body();
+  background: color.bg();
 }
 
 .input-inside-wrap {

@@ -1,14 +1,17 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .feature {
-  padding: var(--space-6);
-  background: var(--color-bg-card-features);
-  border: 1px solid var(--color-bg-card-border);
+  padding: space.x6();
+  background: color.bg-card-features();
+  border: 1px solid color.bg-card-border();
   border-radius: var(--radius);
   box-shadow: var(--shadow-card);
   transition: var(--transition);
 }
 
 .feature:hover {
-  background: var(--color-bg-card-features-hover);
+  background: color.bg-card-features-hover();
   box-shadow: var(--shadow-card-hover);
   transform: scale(1.02);
 }
@@ -17,16 +20,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: var(--space-12);
-  padding: var(--space-3) var(--space-4);
-  margin-block-end: var(--space-4);
-  font-size: var(--space-8);
-  background: var(--color-bg-icon);
+  min-width: space.x12();
+  padding: space.x3() space.x4();
+  margin-block-end: space.x4();
+  font-size: space.x8();
+  background: color.bg-icon();
   border-radius: var(--radius-sm);
 }
 
 @media (width <= 640px) {
   .feature {
-    padding: var(--space-5);
+    padding: space.x5();
   }
 }

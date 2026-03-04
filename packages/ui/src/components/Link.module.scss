@@ -1,5 +1,7 @@
+@use "pkg:@snappy/ui/color";
+
 .accent {
-  color: var(--color-accent);
+  color: color.accent();
   text-decoration: none;
 }
 
@@ -8,12 +10,12 @@
 }
 
 .muted {
-  color: var(--color-text-muted);
+  color: color.text-muted();
   text-decoration: none;
 }
 
 .muted:hover {
-  color: var(--color-text-body);
+  color: color.text-body();
 }
 
 .muted:hover * {

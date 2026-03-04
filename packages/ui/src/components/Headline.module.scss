@@ -1,3 +1,6 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .root {
   position: relative;
   text-align: center;
@@ -5,20 +8,20 @@
 
 .lead {
   max-width: var(--content-narrow);
-  margin: 0 auto var(--space-10);
+  margin: 0 auto space.x10();
 }
 
 .hero {
-  padding-block: var(--space-24) var(--space-6);
+  padding-block: space.x24() space.x6();
 }
 
 .hero > :first-child {
-  margin-bottom: var(--space-5);
+  margin-bottom: space.x5();
 }
 
 .section {
-  padding: var(--space-16) var(--space-6);
-  margin-block-start: var(--space-12);
+  padding: space.x16() space.x6();
+  margin-block-start: space.x12();
 }
 
 .section::before {
@@ -27,22 +30,16 @@
   top: 0;
   height: 1px;
   content: "";
-  background: linear-gradient(
-    to right,
-    transparent,
-    var(--color-divider-line) 20%,
-    var(--color-divider-line) 80%,
-    transparent
-  );
+  background: linear-gradient(to right, transparent, color.divider-line() 20%, color.divider-line() 80%, transparent);
 }
 
 .section > :first-child {
-  margin-bottom: var(--space-3);
+  margin-bottom: space.x3();
 }
 
 .section .lead {
   max-width: 28rem;
-  margin: 0 auto var(--space-6);
+  margin: 0 auto space.x6();
 }
 
 .cta {
@@ -54,21 +51,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-4) var(--space-8);
+  padding: space.x4() space.x8();
 }
 
 @media (width <= 640px) {
   .hero {
-    padding-block: var(--space-16) var(--space-6);
+    padding-block: space.x16() space.x6();
   }
 
   .hero .lead {
-    margin-bottom: var(--space-8);
+    margin-bottom: space.x8();
   }
 
   .section {
-    padding: var(--space-12) var(--space-4);
-    margin-block-start: var(--space-10);
+    padding: space.x12() space.x4();
+    margin-block-start: space.x10();
   }
 
   .section::before {
@@ -81,6 +78,6 @@
 
   .cta > * {
     width: 100%;
-    padding: var(--space-3) var(--space-4);
+    padding: space.x3() space.x4();
   }
 }

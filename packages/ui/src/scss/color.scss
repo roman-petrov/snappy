@@ -1,0 +1,135 @@
+@function _color($name) {
+  @return var(--color-#{$name});
+}
+
+@function accent() {
+  @return _color("accent");
+}
+
+@function on-accent() {
+  @return _color("on-accent");
+}
+
+@function error() {
+  @return _color("error");
+}
+
+@function warning() {
+  @return _color("warning");
+}
+
+@function success() {
+  @return _color("success");
+}
+
+@function text-heading() {
+  @return _color("text-heading");
+}
+
+@function text-body() {
+  @return _color("text-body");
+}
+
+@function text-muted() {
+  @return _color("text-muted");
+}
+
+@function bg() {
+  @return _color("bg");
+}
+
+@function bg-elevated() {
+  @return _color("bg-elevated");
+}
+
+@function border() {
+  @return _color("border");
+}
+
+@function bg-header() {
+  @return _color("bg-header");
+}
+
+@function grid() {
+  @return _color("grid");
+}
+
+@function accent-ghost() {
+  @return _color("accent-ghost");
+}
+
+@function accent-border() {
+  @return _color("accent-border");
+}
+
+@function accent-soft() {
+  @return _color("accent-soft");
+}
+
+@function accent-strong() {
+  @return _color("accent-strong");
+}
+
+@function accent-mid() {
+  @return _color("accent-mid");
+}
+
+@function accent-focus() {
+  @return _color("accent-focus");
+}
+
+@function accent-pill() {
+  @return _color("accent-pill");
+}
+
+@function divider-line() {
+  @return _color("divider-line");
+}
+
+@function error-bg() {
+  @return _color("error-bg");
+}
+
+@function error-ghost() {
+  @return _color("error-ghost");
+}
+
+@function info-bg() {
+  @return _color("info-bg");
+}
+
+@function bg-card-features() {
+  @return _color("bg-card-features");
+}
+
+@function bg-card-border() {
+  @return _color("bg-card-border");
+}
+
+@function bg-card-features-hover() {
+  @return _color("bg-card-features-hover");
+}
+
+@function bg-icon() {
+  @return _color("bg-icon");
+}
+
+@function warning-bg() {
+  @return _color("warning-bg");
+}
+
+@function success-bg() {
+  @return _color("success-bg");
+}
+
+@function surface-card() {
+  @return _color("surface-card");
+}
+
+@function focus-ring() {
+  @return _color("focus-ring");
+}
+
+@function divider() {
+  @return _color("divider");
+}

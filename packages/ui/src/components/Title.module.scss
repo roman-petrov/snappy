@@ -1,15 +1,18 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .root {
-  padding-inline-start: var(--space-4);
-  margin: 0 0 var(--space-2);
-  border-inline-start: 3px solid var(--color-accent);
+  padding-inline-start: space.x4();
+  margin: 0 0 space.x2();
+  border-inline-start: 3px solid color.accent();
 }
 
 .lead {
-  margin: 0 0 var(--space-5);
+  margin: 0 0 space.x5();
 }
 
 @media (width <= 640px) {
   .root {
-    padding-inline-start: var(--space-3);
+    padding-inline-start: space.x3();
   }
 }

@@ -1,11 +1,13 @@
+@use "pkg:@snappy/ui/space";
+
 .main {
   max-width: var(--content-width);
-  padding: 0 var(--space-6) var(--space-8);
+  padding: 0 space.x6() space.x8();
   margin-inline: auto;
 }
 
 @media (width <= 640px) {
   .main {
-    padding-inline: var(--space-4);
+    padding-inline: space.x4();
   }
 }

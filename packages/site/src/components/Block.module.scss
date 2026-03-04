@@ -1,6 +1,9 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
 .list {
   display: grid;
-  gap: var(--space-3);
+  gap: space.x3();
   padding: 0;
   margin: 0;
   list-style: none;
@@ -8,7 +11,7 @@
 
 .row {
   position: relative;
-  padding: var(--space-3) 0;
+  padding: space.x3() 0;
 }
 
 .row::after {
@@ -17,7 +20,7 @@
   bottom: 0;
   height: 1px;
   content: "";
-  background: var(--color-divider);
+  background: color.divider();
 }
 
 .list dd:last-child::after,
@@ -28,7 +31,7 @@
 .row-with-icon {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: var(--space-3) var(--space-4);
+  gap: space.x3() space.x4();
   align-items: start;
 }
 
@@ -51,7 +54,7 @@
 
 @media (width <= 640px) {
   .row-with-icon {
-    gap: var(--space-2) var(--space-3);
+    gap: space.x2() space.x3();
   }
 
   .row-with-icon .icon {

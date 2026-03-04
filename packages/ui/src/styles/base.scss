@@ -1,4 +1,6 @@
-@use "../scss/typography";
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/ui/typography";
 
 html {
   scroll-behavior: smooth;
@@ -14,8 +16,8 @@ body {
   position: relative;
   min-height: 100vh;
   margin: 0;
-  color: var(--color-text-body);
-  background: var(--color-bg);
+  color: color.text-body();
+  background: color.bg();
   transition:
     color var(--ease),
     background-color var(--ease);
@@ -27,9 +29,8 @@ body {
     pointer-events: none;
     content: "";
     background:
-      linear-gradient(var(--color-grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-    background-size: var(--space-16) var(--space-16);
+      linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+    background-size: space.x16() space.x16();
   }
 }
 

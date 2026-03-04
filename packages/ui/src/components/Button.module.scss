@@ -1,12 +1,14 @@
-@use "../scss/typography";
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/ui/typography";
 
 .root {
   @include typography.button;
   display: inline-flex;
-  gap: var(--space-2);
+  gap: space.x2();
   align-items: center;
   justify-content: center;
-  padding: var(--space-3) var(--space-6);
+  padding: space.x3() space.x6();
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -20,8 +22,8 @@
 }
 
 .primary {
-  color: var(--color-on-accent);
-  background: var(--color-accent);
+  color: color.on-accent();
+  background: color.accent();
   box-shadow: var(--shadow-btn);
 }
 
@@ -33,7 +35,7 @@
 
 .large {
   @include typography.button-large;
-  padding: var(--space-4) var(--space-8);
+  padding: space.x4() space.x8();
 }
 
 .large.primary {
