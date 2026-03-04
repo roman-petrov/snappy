@@ -2,6 +2,7 @@
 
 @mixin _typography($name) {
   font: var(--typography-#{$name}-font);
+
   @if list.index((body display h1 h2 h3), $name) {
     letter-spacing: var(--typography-#{$name}-letter-spacing);
   }

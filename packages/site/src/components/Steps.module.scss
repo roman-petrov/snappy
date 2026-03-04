@@ -2,23 +2,23 @@
 @use "pkg:@snappy/ui/space";
 
 .steps {
-  padding: 0;
-  margin: 0;
-  list-style: none;
   display: flex;
   flex-direction: column;
   gap: space.x4();
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
 .steps li {
   display: flex;
-  align-items: center;
   gap: space.x3();
+  align-items: center;
 }
 
 .marker {
-  flex-shrink: 0;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: space.x8();

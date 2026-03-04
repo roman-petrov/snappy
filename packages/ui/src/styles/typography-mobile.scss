@@ -1,5 +1,3 @@
-/* Typography scale: mobile overrides. Load after typography-desktop.scss. */
-
 @media (width <= 640px) {
   :root {
     --typography-display-font: 800 clamp(1.875rem, 7vw, 2.75rem) / 1.1 var(--font-sans);

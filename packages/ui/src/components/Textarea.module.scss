@@ -4,8 +4,9 @@
 
 .input {
   @include typography.body;
-  color: color.text-body();
+
   min-height: 140px;
   padding: space.x4();
+  color: color.text-body();
   resize: vertical;
 }

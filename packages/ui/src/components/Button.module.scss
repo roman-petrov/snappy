@@ -4,6 +4,7 @@
 
 .root {
   @include typography.button;
+
   display: inline-flex;
   gap: space.x2();
   align-items: center;
@@ -35,6 +36,7 @@
 
 .large {
   @include typography.button-large;
+
   padding: space.x4() space.x8();
 }
 
