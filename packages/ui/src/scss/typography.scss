@@ -1,0 +1,42 @@
+/* Typography mixins: use --typography-*-font and --typography-*-letter-spacing. */
+
+@mixin body {
+  font: var(--typography-body-font);
+  letter-spacing: var(--typography-body-letter-spacing);
+}
+
+@mixin display {
+  font: var(--typography-display-font);
+  letter-spacing: var(--typography-display-letter-spacing);
+}
+
+@mixin h1 {
+  font: var(--typography-h1-font);
+  letter-spacing: var(--typography-h1-letter-spacing);
+}
+
+@mixin h2 {
+  font: var(--typography-h2-font);
+  letter-spacing: var(--typography-h2-letter-spacing);
+}
+
+@mixin h3 {
+  font: var(--typography-h3-font);
+  letter-spacing: var(--typography-h3-letter-spacing);
+}
+
+@mixin large {
+  font: var(--typography-large-font);
+}
+
+@mixin caption {
+  font: var(--typography-caption-font);
+}
+
+@mixin caption-bold {
+  font: var(--typography-caption-bold-font);
+}
+
+@mixin body-lg {
+  font: var(--typography-body-lg-font);
+}

@@ -5,8 +5,7 @@
   justify-content: center;
   padding: var(--space-3) var(--space-6);
   font-family: inherit;
-  font-size: var(--text-base);
-  font-weight: var(--weight-semibold);
+  font: var(--typography-button-font);
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -33,11 +32,11 @@
 
 .large {
   padding: var(--space-4) var(--space-8);
-  font-size: var(--text-md);
+  font: 600 var(--typography-large-font);
 }
 
 .large.primary {
-  font-size: var(--text-lg);
+  font: 600 var(--typography-body-lg-font);
 }
 
 .root:disabled {

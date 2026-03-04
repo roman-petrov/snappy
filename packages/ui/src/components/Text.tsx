@@ -17,7 +17,6 @@ const typographyTag: Record<Typography, TextTag> = {
   h2: `h2`,
   h3: `h3`,
   large: `p`,
-  largeBody: `p`,
 };
 
 export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children` | `className`> & {

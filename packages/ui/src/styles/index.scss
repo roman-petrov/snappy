@@ -1,6 +1,8 @@
 @use "./variables" as *;
 @use "./theme-dark" as *;
 @use "./theme-light" as *;
+@use "./typography-desktop" as *;
+@use "./typography-mobile" as *;
 @use "./base" as *;
 /* stylelint-disable-next-line import-notation */
 @import url("@fontsource-variable/inter");

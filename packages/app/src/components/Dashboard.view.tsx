@@ -91,7 +91,7 @@ export const DashboardView = ({
                   />
                 </button>
               </div>
-              <Text as="div" cn={styles.result} text={result} typography="largeBody" />
+              <Text as="div" cn={styles.result} text={result} typography="large" />
             </div>
           )}
         </Card>

@@ -16,12 +16,12 @@ export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: 
     <div className={styles.row}>
       <div className={`${styles.panel} ${styles.before}`}>
         <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel} typography="caption" />
-        <Text as="p" text={before} typography="largeBody" />
+        <Text as="p" text={before} typography="large" />
       </div>
       <Text aria-hidden="true" as="span" cn={styles.arrow} color="accent" text="→" typography="h2" />
       <div className={`${styles.panel} ${styles.after}`}>
         <Text as="span" cn={styles.panelTitle} color="accent" text={afterLabel} typography="caption" />
-        <Text as="span" cn={styles.panelContent} html text={after} typography="largeBody" />
+        <Text as="span" cn={styles.panelContent} html text={after} typography="large" />
       </div>
     </div>
   </div>

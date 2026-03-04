@@ -11,7 +11,7 @@ export const Steps = ({ items }: StepsProps) => (
         <span className={styles.marker}>
           <Text as="span" color="onAccent" text={String(i + 1)} typography="captionBold" />
         </span>
-        <Text as="span" text={item} typography="largeBody" />
+        <Text as="span" text={item} typography="large" />
       </li>
     ))}
   </ol>
