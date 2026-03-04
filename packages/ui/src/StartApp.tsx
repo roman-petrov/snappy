@@ -4,12 +4,17 @@ import type { ReactNode } from "react";
 
 import { createRoot, hydrateRoot } from "react-dom/client";
 
+import styles from "./StartApp.module.scss";
 import "./styles/index.scss";
 import { Theme } from "./theme/Theme";
 
-export type StartAppOptions = { readonly server?: boolean };
+export type StartAppOptions = { disableTextSelection?: boolean; server?: boolean };
 
-export const startApp = (container: HTMLElement, app: ReactNode, { server = false }: StartAppOptions = {}) => {
+export const startApp = (
+  container: HTMLElement,
+  app: ReactNode,
+  { disableTextSelection = false, server = false }: StartAppOptions = {},
+) => {
   const fogId = `fog-bg`;
   if (document.querySelector(`#${fogId}`) !== null) {
     return;
@@ -19,6 +24,9 @@ export const startApp = (container: HTMLElement, app: ReactNode, { server = fals
   div.setAttribute(`aria-hidden`, `true`);
   document.body.prepend(div);
   Theme.restore();
+  if (disableTextSelection) {
+    container.classList.add(styles.disableTextSelection);
+  }
   if (server) {
     hydrateRoot(container, app);
   } else {
