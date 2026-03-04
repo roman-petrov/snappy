@@ -1,4 +1,3 @@
-/* eslint-disable sonarjs/void-use */
 /* eslint-disable @typescript-eslint/strict-void-return */
 import { Config } from "@snappy/config";
 import { App } from "@snappy/server";

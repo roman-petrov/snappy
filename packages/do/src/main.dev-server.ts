@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
-/* eslint-disable sonarjs/x-powered-by */
 import { Browser } from "@snappy/core";
 import { type SiteLocaleKey, type SiteMeta, Ssr } from "@snappy/site/Ssr";
 import express from "express";

@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-promise-reject */
-/* eslint-disable sonarjs/os-command */
 import type { Readable } from "node:stream";
 
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";

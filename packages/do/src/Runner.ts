@@ -2,7 +2,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
-/* eslint-disable sonarjs/os-command */
 import { _ } from "@snappy/core";
 import { Process } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";

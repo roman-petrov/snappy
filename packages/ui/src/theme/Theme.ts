@@ -5,7 +5,6 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable init-declarations */
-/* eslint-disable sonarjs/void-use */
 import { Fog } from "./Fog";
 
 const storageKey = `snappy_theme`;
