@@ -5,16 +5,14 @@ import styles from "./Steps.module.scss";
 export type StepsProps = { items: string[] };
 
 export const Steps = ({ items }: StepsProps) => (
-  <div className={styles.timeline}>
-    <ol className={styles.steps}>
-      {items.map((item, index) => (
-        <li key={item}>
-          <span className={styles.marker}>
-            <Text as="span" color="onAccent" text={String(index + 1)} typography="captionBold" />
-          </span>
-          <Text as="span" text={item} typography="largeBody" />
-        </li>
-      ))}
-    </ol>
-  </div>
+  <ol className={styles.steps}>
+    {items.map((item, i) => (
+      <li key={item}>
+        <span className={styles.marker}>
+          <Text as="span" color="onAccent" text={String(i + 1)} typography="captionBold" />
+        </span>
+        <Text as="span" text={item} typography="largeBody" />
+      </li>
+    ))}
+  </ol>
 );

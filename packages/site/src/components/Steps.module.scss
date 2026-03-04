@@ -1,38 +1,20 @@
-.timeline {
-  position: relative;
-  padding-inline-start: var(--space-10);
-}
-
-.timeline::before {
-  position: absolute;
-  inset-block: var(--space-3);
-  inset-inline-start: var(--space-10);
-  width: 2px;
-  content: "";
-  background: var(--color-border);
-  border-radius: 1px;
-}
-
 .steps {
   padding: 0;
   margin: 0;
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
 }
 
 .steps li {
-  position: relative;
-  padding-block-start: var(--space-1);
-  padding-inline-start: var(--space-6);
-  margin: var(--space-4) 0;
-}
-
-.steps li:first-child {
-  margin-block-start: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .marker {
-  position: absolute;
-  inset-inline-start: calc(-1 * var(--space-4));
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
