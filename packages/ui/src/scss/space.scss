@@ -1,47 +1,47 @@
-@function _space($name) {
+@function -space($name) {
   @return var(--space-#{$name});
 }
 
 @function x1() {
-  @return _space(1);
+  @return -space(1);
 }
 
 @function x2() {
-  @return _space(2);
+  @return -space(2);
 }
 
 @function x3() {
-  @return _space(3);
+  @return -space(3);
 }
 
 @function x4() {
-  @return _space(4);
+  @return -space(4);
 }
 
 @function x5() {
-  @return _space(5);
+  @return -space(5);
 }
 
 @function x6() {
-  @return _space(6);
+  @return -space(6);
 }
 
 @function x8() {
-  @return _space(8);
+  @return -space(8);
 }
 
 @function x10() {
-  @return _space(10);
+  @return -space(10);
 }
 
 @function x12() {
-  @return _space(12);
+  @return -space(12);
 }
 
 @function x16() {
-  @return _space(16);
+  @return -space(16);
 }
 
 @function x24() {
-  @return _space(24);
+  @return -space(24);
 }

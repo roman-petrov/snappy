@@ -1,6 +1,6 @@
 @use "sass:list";
 
-@mixin _typography($name) {
+@mixin -typography($name) {
   font: var(--typography-#{$name}-font);
 
   @if list.index((body display h1 h2 h3), $name) {
@@ -9,45 +9,45 @@
 }
 
 @mixin body {
-  @include _typography(body);
+  @include -typography(body);
 }
 
 @mixin display {
-  @include _typography(display);
+  @include -typography(display);
 }
 
 @mixin h1 {
-  @include _typography(h1);
+  @include -typography(h1);
 }
 
 @mixin h2 {
-  @include _typography(h2);
+  @include -typography(h2);
 }
 
 @mixin h3 {
-  @include _typography(h3);
+  @include -typography(h3);
 }
 
 @mixin large {
-  @include _typography(large);
+  @include -typography(large);
 }
 
 @mixin caption {
-  @include _typography(caption);
+  @include -typography(caption);
 }
 
 @mixin caption-bold {
-  @include _typography(caption-bold);
+  @include -typography(caption-bold);
 }
 
 @mixin body-large {
-  @include _typography(body-large);
+  @include -typography(body-large);
 }
 
 @mixin button {
-  @include _typography(button);
+  @include -typography(button);
 }
 
 @mixin button-large {
-  @include _typography(button-large);
+  @include -typography(button-large);
 }

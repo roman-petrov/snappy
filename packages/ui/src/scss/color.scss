@@ -1,135 +1,135 @@
-@function _color($name) {
+@function -color($name) {
   @return var(--color-#{$name});
 }
 
 @function accent() {
-  @return _color("accent");
+  @return -color("accent");
 }
 
 @function on-accent() {
-  @return _color("on-accent");
+  @return -color("on-accent");
 }
 
 @function error() {
-  @return _color("error");
+  @return -color("error");
 }
 
 @function warning() {
-  @return _color("warning");
+  @return -color("warning");
 }
 
 @function success() {
-  @return _color("success");
+  @return -color("success");
 }
 
 @function text-heading() {
-  @return _color("text-heading");
+  @return -color("text-heading");
 }
 
 @function text-body() {
-  @return _color("text-body");
+  @return -color("text-body");
 }
 
 @function text-muted() {
-  @return _color("text-muted");
+  @return -color("text-muted");
 }
 
 @function bg() {
-  @return _color("bg");
+  @return -color("bg");
 }
 
 @function bg-elevated() {
-  @return _color("bg-elevated");
+  @return -color("bg-elevated");
 }
 
 @function border() {
-  @return _color("border");
+  @return -color("border");
 }
 
 @function bg-header() {
-  @return _color("bg-header");
+  @return -color("bg-header");
 }
 
 @function grid() {
-  @return _color("grid");
+  @return -color("grid");
 }
 
 @function accent-ghost() {
-  @return _color("accent-ghost");
+  @return -color("accent-ghost");
 }
 
 @function accent-border() {
-  @return _color("accent-border");
+  @return -color("accent-border");
 }
 
 @function accent-soft() {
-  @return _color("accent-soft");
+  @return -color("accent-soft");
 }
 
 @function accent-strong() {
-  @return _color("accent-strong");
+  @return -color("accent-strong");
 }
 
 @function accent-mid() {
-  @return _color("accent-mid");
+  @return -color("accent-mid");
 }
 
 @function accent-focus() {
-  @return _color("accent-focus");
+  @return -color("accent-focus");
 }
 
 @function accent-pill() {
-  @return _color("accent-pill");
+  @return -color("accent-pill");
 }
 
 @function divider-line() {
-  @return _color("divider-line");
+  @return -color("divider-line");
 }
 
 @function error-bg() {
-  @return _color("error-bg");
+  @return -color("error-bg");
 }
 
 @function error-ghost() {
-  @return _color("error-ghost");
+  @return -color("error-ghost");
 }
 
 @function info-bg() {
-  @return _color("info-bg");
+  @return -color("info-bg");
 }
 
 @function bg-card-features() {
-  @return _color("bg-card-features");
+  @return -color("bg-card-features");
 }
 
 @function bg-card-border() {
-  @return _color("bg-card-border");
+  @return -color("bg-card-border");
 }
 
 @function bg-card-features-hover() {
-  @return _color("bg-card-features-hover");
+  @return -color("bg-card-features-hover");
 }
 
 @function bg-icon() {
-  @return _color("bg-icon");
+  @return -color("bg-icon");
 }
 
 @function warning-bg() {
-  @return _color("warning-bg");
+  @return -color("warning-bg");
 }
 
 @function success-bg() {
-  @return _color("success-bg");
+  @return -color("success-bg");
 }
 
 @function surface-card() {
-  @return _color("surface-card");
+  @return -color("surface-card");
 }
 
 @function focus-ring() {
-  @return _color("focus-ring");
+  @return -color("focus-ring");
 }
 
 @function divider() {
-  @return _color("divider");
+  @return -color("divider");
 }
