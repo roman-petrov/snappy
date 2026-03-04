@@ -22,10 +22,6 @@
   margin: 0 0 var(--space-2);
 }
 
-.inner a {
-  color: var(--color-accent);
-}
-
 @media (width <= 640px) {
   .footer {
     padding: var(--space-10) var(--space-4);
