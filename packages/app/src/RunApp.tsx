@@ -14,8 +14,5 @@ export const runApp = async (component: ReactNode) => {
   } catch {
     $loggedIn.set(false);
   }
-  const root = document.querySelector(`#app-root`);
-  if (root instanceof HTMLElement) {
-    startApp(root, component, { disableTextSelection: true });
-  }
+  startApp(`#app-root`, component, { disableTextSelection: true });
 };

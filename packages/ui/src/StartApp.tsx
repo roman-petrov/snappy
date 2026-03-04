@@ -11,14 +11,15 @@ import { Theme } from "./theme/Theme";
 export type StartAppOptions = { disableTextSelection?: boolean; server?: boolean };
 
 export const startApp = (
-  container: HTMLElement,
+  selector: string,
   app: ReactNode,
   { disableTextSelection = false, server = false }: StartAppOptions = {},
 ) => {
-  const fogId = `fog-bg`;
-  if (document.querySelector(`#${fogId}`) !== null) {
+  const container = document.querySelector(selector);
+  if (!(container instanceof HTMLElement)) {
     return;
   }
+  const fogId = `fog-bg`;
   const div = document.createElement(`div`);
   div.id = fogId;
   div.setAttribute(`aria-hidden`, `true`);
