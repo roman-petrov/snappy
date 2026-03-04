@@ -11,14 +11,15 @@
     "Prisma.prisma",
     "ms-azuretools.vscode-docker",
     "vitest.explorer",
-    "webpro.vscode-knip",
+    "pflannery.vscode-versionlens",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "DavidAnson.vscode-markdownlint",
     "streetsidesoftware.code-spell-checker",
     "stylelint.vscode-stylelint",
-    // Misc
+    "webpro.vscode-knip",
+    // Markdown
     "yzhang.markdown-all-in-one",
     "shd101wyy.markdown-preview-enhanced"
   ]
