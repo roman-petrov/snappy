@@ -4,12 +4,12 @@ import { LocaleStore } from "../LocaleStore";
 
 const defaultT = (key: string) => key;
 
-export const useLocaleSwitcherState = (props: LocaleSwitcherProps = {}) => {
-  const get = props.getLocale ?? LocaleStore.getLocale;
-  const set = props.setLocale ?? LocaleStore.setLocale;
+export const useLocaleSwitcherState = ({ getLocale, setLocale, t: tProp }: LocaleSwitcherProps = {}) => {
+  const get = getLocale ?? LocaleStore.getLocale;
+  const set = setLocale ?? LocaleStore.setLocale;
   const locale = get();
   const next = locale === `en` ? `ru` : `en`;
-  const t = props.t ?? defaultT;
+  const t = tProp ?? defaultT;
 
   return { ariaLabel: t(`localeSwitcher`), label: locale === `en` ? `EN` : `RU`, onClick: () => set(next) };
 };

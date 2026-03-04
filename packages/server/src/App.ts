@@ -9,8 +9,7 @@ import { Routes } from "./Routes";
 
 export type CreateAppOptions = { allowCorsOrigin?: string; api: ServerAppApi; botApiKey: string };
 
-const createApp = (options: CreateAppOptions) => {
-  const { allowCorsOrigin, api, botApiKey } = options;
+const createApp = ({ allowCorsOrigin, api, botApiKey }: CreateAppOptions) => {
   const app = express();
   const corsOrigin = allowCorsOrigin ?? ``;
 

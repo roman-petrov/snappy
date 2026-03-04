@@ -8,26 +8,31 @@ import { YooKassa } from "@snappy/yoo-kassa";
 
 import { ServerAppApi } from "./ServerAppApi";
 
-export const ServerApp = (config: Config, options: { botBaseUrl: string; version?: string }) => {
-  const db = Database(config.dbUrl);
-  const snappy = Snappy({ gigaChatAuthKey: config.gigaChatAuthKey });
-  const yooKassa = YooKassa({ secretKey: config.yooKassaSecretKey, shopId: config.yooKassaShopId });
-
-  const api = ServerAppApi({
-    db,
-    freeRequestLimit: config.freeRequestLimit,
-    jwtSecret: config.jwtSecret,
-    premiumPrice: config.premiumPrice,
-    snappy,
-    yooKassa,
-  });
+export const ServerApp = (
+  {
+    botApiKey,
+    botToken,
+    dbUrl,
+    freeRequestLimit,
+    gigaChatAuthKey,
+    jwtSecret,
+    premiumPrice,
+    yooKassaSecretKey,
+    yooKassaShopId,
+  }: Config,
+  { botBaseUrl, version }: { botBaseUrl: string; version?: string },
+) => {
+  const db = Database(dbUrl);
+  const snappy = Snappy({ gigaChatAuthKey });
+  const yooKassa = YooKassa({ secretKey: yooKassaSecretKey, shopId: yooKassaShopId });
+  const api = ServerAppApi({ db, freeRequestLimit, jwtSecret, premiumPrice, snappy, yooKassa });
 
   const bot = SnappyBot({
-    apiKey: config.botApiKey,
-    apiUrl: options.botBaseUrl,
-    botToken: config.botToken,
-    premiumPrice: config.premiumPrice,
-    ...(options.version !== undefined && { version: options.version }),
+    apiKey: botApiKey,
+    apiUrl: botBaseUrl,
+    botToken,
+    premiumPrice,
+    ...(version !== undefined && { version }),
   });
 
   const start = async () => {

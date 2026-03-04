@@ -96,7 +96,30 @@ void main() {
 }
 `;
 
-export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
+const fogDefaults: Required<
+  Pick<FogOptions, `baseColor` | `blurFactor` | `highlightColor` | `lowlightColor` | `midtoneColor` | `speed` | `zoom`>
+> = {
+  baseColor: 0x0a_0a_0c,
+  blurFactor: 0.6,
+  highlightColor: 0x1a_3d_42,
+  lowlightColor: 0x0a_0a_0c,
+  midtoneColor: 0x0d_1f_22,
+  speed: 1,
+  zoom: 1.2,
+};
+
+export const Fog = (
+  element: HTMLElement,
+  {
+    baseColor = fogDefaults.baseColor,
+    blurFactor = fogDefaults.blurFactor,
+    highlightColor = fogDefaults.highlightColor,
+    lowlightColor = fogDefaults.lowlightColor,
+    midtoneColor = fogDefaults.midtoneColor,
+    speed = fogDefaults.speed,
+    zoom = fogDefaults.zoom,
+  }: FogOptions = {},
+) => {
   const byteMask = 0xff;
 
   const hexToRgb = (hex: number): [number, number, number] => [
@@ -105,22 +128,7 @@ export const Fog = (element: HTMLElement, options: FogOptions = {}) => {
     (hex & byteMask) / byteMask,
   ];
 
-  const defaultOptions: Required<
-    Pick<
-      FogOptions,
-      `baseColor` | `blurFactor` | `highlightColor` | `lowlightColor` | `midtoneColor` | `speed` | `zoom`
-    >
-  > = {
-    baseColor: 0x0a_0a_0c,
-    blurFactor: 0.6,
-    highlightColor: 0x1a_3d_42,
-    lowlightColor: 0x0a_0a_0c,
-    midtoneColor: 0x0d_1f_22,
-    speed: 1,
-    zoom: 1.2,
-  };
-
-  const config = { ...defaultOptions, ...options };
+  const config = { baseColor, blurFactor, highlightColor, lowlightColor, midtoneColor, speed, zoom };
 
   const createShader = (gl: WebGL2RenderingContext, type: number, source: string): undefined | WebGLShader => {
     const shader = gl.createShader(type);

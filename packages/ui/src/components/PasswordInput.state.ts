@@ -2,14 +2,14 @@ import { useState } from "react";
 
 import type { PasswordInputProps } from "./PasswordInput";
 
-export const usePasswordInputState = (props: PasswordInputProps) => {
+export const usePasswordInputState = ({ hidePasswordLabel, showPasswordLabel, ...rest }: PasswordInputProps) => {
   const [visible, setVisible] = useState(false);
   const toggleVisible = () => setVisible(v => !v);
-  const hideLabel = props.hidePasswordLabel ?? `Hide password`;
-  const showLabel = props.showPasswordLabel ?? `Show password`;
+  const hideLabel = hidePasswordLabel ?? `Hide password`;
+  const showLabel = showPasswordLabel ?? `Show password`;
 
   return {
-    ...props,
+    ...rest,
     ariaLabel: visible ? hideLabel : showLabel,
     inputType: visible ? `text` : `password`,
     toggleVisible,

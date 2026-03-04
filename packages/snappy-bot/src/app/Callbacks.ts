@@ -10,7 +10,7 @@ import { Locale, t } from "./Locale";
 
 export type CallbacksConfig = { api: ServerApi; userTexts: UserTexts };
 
-const register = (bot: Bot, config: CallbacksConfig) => {
+const register = (bot: Bot, { api, userTexts }: CallbacksConfig) => {
   bot.on(`callback_query`, async context => {
     const telegramId = context.from.id;
     const localeKey = Locale.userLanguage(context.from.languageCode);
@@ -24,7 +24,7 @@ const register = (bot: Bot, config: CallbacksConfig) => {
 
     if (data === `premium:buy`) {
       await context.answerCallbackQuery();
-      const premiumResult = await config.api.premiumUrl(telegramId);
+      const premiumResult = await api.premiumUrl(telegramId);
       await (premiumResult.status === `ok`
         ? context.send(`💳 ${premiumResult.url}`)
         : context.send(t(localeKey, `commands.premium.error`)));
@@ -36,14 +36,14 @@ const register = (bot: Bot, config: CallbacksConfig) => {
     if (feature !== undefined) {
       await context.answerCallbackQuery();
 
-      const remainingResult = await config.api.remaining(telegramId);
+      const remainingResult = await api.remaining(telegramId);
       if (remainingResult.remaining <= 0) {
         await context.send(t(localeKey, `features.limit`));
 
         return;
       }
 
-      const text = config.userTexts.get(telegramId);
+      const text = userTexts.get(telegramId);
       if (text === undefined || text === ``) {
         await context.send(t(localeKey, `features.error`));
 
@@ -52,10 +52,10 @@ const register = (bot: Bot, config: CallbacksConfig) => {
 
       await context.send(t(localeKey, `features.processing`));
 
-      const processResult = await config.api.process(telegramId, text, feature);
+      const processResult = await api.process(telegramId, text, feature);
       if (processResult.status === `ok`) {
         await context.send(t(localeKey, `features.result`, { text: processResult.text }));
-        config.userTexts.clear(telegramId);
+        userTexts.clear(telegramId);
       } else {
         await context.send(t(localeKey, `features.error`));
       }

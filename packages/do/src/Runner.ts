@@ -206,16 +206,16 @@ const resolve = (name: string): { error: string; ok: false } | { name: string; o
 const run = async (
   root: string,
   name: string,
-  options: { mcp?: boolean; verbose?: boolean } = {},
+  { mcp, verbose: verboseOpt }: { mcp?: boolean; verbose?: boolean } = {},
 ): Promise<RunResult> => {
   const definition = Commands.byName(name);
-  const verbose = options.verbose ?? (options.mcp === true || definition?.interactive === true);
+  const verbose = verboseOpt ?? (mcp === true || definition?.interactive === true);
   const node = tree(name);
   if (node === undefined) {
     return { exitCode: 1, message: `Unknown command: ${name}` };
   }
 
-  const isMcp = options.mcp === true;
+  const isMcp = mcp === true;
   const start = _.now();
   const withTree = node.children.length > 0;
   if (!isMcp && !verbose && withTree) {
@@ -229,7 +229,7 @@ const run = async (
     backgroundProcesses: [],
     context: { connector: br, prefix: `` },
     isRoot: true,
-    mcp: options.mcp,
+    mcp,
     verbose,
   });
 

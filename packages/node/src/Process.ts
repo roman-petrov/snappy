@@ -24,8 +24,8 @@ const toolArgv = (runner: Runner, tool: string, args: string[]) =>
 const toolCommand = (runner: Runner, tool: string, args: string[]) =>
   runner === `bun` ? `bun x ${tool} ${args.join(` `)}` : `npx ${tool} ${args.join(` `)}`;
 
-const spawnEnv = (options: SpawnOptions): ProcessEnv | undefined =>
-  options.env === undefined ? undefined : { ...process.env, ...options.env };
+const spawnEnv = ({ env }: SpawnOptions): ProcessEnv | undefined =>
+  env === undefined ? undefined : { ...process.env, ...env };
 
 const readStream = async (stream: null | Readable): Promise<string> =>
   stream === null
@@ -60,26 +60,34 @@ const waitOrCapture = async (proc: ChildProcess, capture: boolean): Promise<numb
   return waitExit(proc);
 };
 
-const spawn = async (cwd: string, argv: string[], options: SpawnOptions = {}): Promise<number | SpawnResult> => {
+const spawn = async (
+  cwd: string,
+  argv: string[],
+  { capture, env, silent, stdio: stdioOpt }: SpawnOptions = {},
+): Promise<number | SpawnResult> => {
   const [exe, ...args] = argv;
 
   const stdio: StdioTuple =
-    options.capture === true
+    capture === true
       ? stdioPipe
-      : options.silent === true
+      : silent === true
         ? stdioSilent
-        : [stdioInherit[0], options.stdio ?? `inherit`, options.stdio ?? `inherit`];
+        : [stdioInherit[0], stdioOpt ?? `inherit`, stdioOpt ?? `inherit`];
 
-  const proc = nodeSpawn(exe ?? ``, args, { cwd, env: spawnEnv(options), stdio });
+  const proc = nodeSpawn(exe ?? ``, args, { cwd, env: spawnEnv({ env }), stdio });
 
-  return waitOrCapture(proc, options.capture === true);
+  return waitOrCapture(proc, capture === true);
 };
 
-const spawnShell = async (cwd: string, command: string, options: SpawnOptions = {}): Promise<number | SpawnResult> => {
-  const stdio: StdioTuple = options.capture === true ? stdioPipe : options.silent === true ? stdioSilent : stdioInherit;
-  const proc = nodeSpawn(command, [], { cwd, env: spawnEnv(options), shell: true, stdio });
+const spawnShell = async (
+  cwd: string,
+  command: string,
+  { capture, env, silent }: SpawnOptions = {},
+): Promise<number | SpawnResult> => {
+  const stdio: StdioTuple = capture === true ? stdioPipe : silent === true ? stdioSilent : stdioInherit;
+  const proc = nodeSpawn(command, [], { cwd, env: spawnEnv({ env }), shell: true, stdio });
 
-  return waitOrCapture(proc, options.capture === true);
+  return waitOrCapture(proc, capture === true);
 };
 
 export const Process = { spawn, spawnShell, toolArgv, toolCommand };

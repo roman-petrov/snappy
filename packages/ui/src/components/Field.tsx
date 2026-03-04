@@ -1,5 +1,3 @@
-/* eslint-disable unicorn/consistent-destructuring */
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/promise-function-async */
 import type { ReactNode } from "react";
 
@@ -18,15 +16,13 @@ export type FieldProps = (
 const inputClassName = `${styles.inputSurface} ${styles.input} ${$.typography(`body`)}`;
 const wrapClassName = `${styles.inputSurface} ${styles.inputWrap}`;
 
-export const Field = (props: FieldProps) => {
-  const { id, label } = props;
-
+export const Field = ({ children, id, label, renderControl, renderInput }: FieldProps) => {
   const content: ReactNode =
-    props.renderInput === undefined
-      ? props.renderControl === undefined
-        ? props.children
-        : props.renderControl({ inputClassName, inputInsideWrapClassName: styles.inputInsideWrap, wrapClassName })
-      : props.renderInput(inputClassName);
+    renderInput === undefined
+      ? renderControl === undefined
+        ? children
+        : renderControl({ inputClassName, inputInsideWrapClassName: styles.inputInsideWrap, wrapClassName })
+      : renderInput(inputClassName);
 
   if (label === undefined || label === ``) {
     return content;
