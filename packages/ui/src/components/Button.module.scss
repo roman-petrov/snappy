@@ -1,11 +1,12 @@
+@use "../scss/typography";
+
 .root {
+  @include typography.button;
   display: inline-flex;
   gap: var(--space-2);
   align-items: center;
   justify-content: center;
   padding: var(--space-3) var(--space-6);
-  font-family: inherit;
-  font: var(--typography-button-font);
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -31,12 +32,12 @@
 }
 
 .large {
+  @include typography.button-large;
   padding: var(--space-4) var(--space-8);
-  font: 600 var(--typography-large-font);
 }
 
 .large.primary {
-  font: 600 var(--typography-body-lg-font);
+  @include typography.button-large;
 }
 
 .root:disabled {

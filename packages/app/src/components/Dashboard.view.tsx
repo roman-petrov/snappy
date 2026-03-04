@@ -33,7 +33,7 @@ export const DashboardView = ({
       <Title as="h2" level={2} title={t(`dashboard.balance`)} />
       <Card>
         <div className={styles.balanceRow}>
-          <p className={`${$.typography(`bodyLg`)} ${$.color(`body`)}`}>
+          <p className={`${$.typography(`bodyLarge`)} ${$.color(`body`)}`}>
             <span aria-hidden className={styles.balanceIcon}>
               🪙
             </span>

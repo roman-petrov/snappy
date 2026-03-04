@@ -1,37 +1,45 @@
-@use "../scss/typography" as *;
+@use "../scss/typography";
 
 .body {
-  @include body;
+  @include typography.body;
 }
 
 .display {
-  @include display;
+  @include typography.display;
 }
 
 .h1 {
-  @include h1;
+  @include typography.h1;
 }
 
 .h2 {
-  @include h2;
+  @include typography.h2;
 }
 
 .h3 {
-  @include h3;
+  @include typography.h3;
 }
 
 .large {
-  @include large;
+  @include typography.large;
 }
 
 .caption {
-  @include caption;
+  @include typography.caption;
 }
 
 .caption-bold {
-  @include caption-bold;
+  @include typography.caption-bold;
 }
 
-.body-lg {
-  @include body-lg;
+.body-large {
+  @include typography.body-large;
+}
+
+.button {
+  @include typography.button;
+}
+
+.button-large {
+  @include typography.button-large;
 }

@@ -1,42 +1,52 @@
-/* Typography mixins: use --typography-*-font and --typography-*-letter-spacing. */
+@use "sass:list";
+
+@mixin _typography($name) {
+  font: var(--typography-#{$name}-font);
+  @if list.index((body display h1 h2 h3), $name) {
+    letter-spacing: var(--typography-#{$name}-letter-spacing);
+  }
+}
 
 @mixin body {
-  font: var(--typography-body-font);
-  letter-spacing: var(--typography-body-letter-spacing);
+  @include _typography(body);
 }
 
 @mixin display {
-  font: var(--typography-display-font);
-  letter-spacing: var(--typography-display-letter-spacing);
+  @include _typography(display);
 }
 
 @mixin h1 {
-  font: var(--typography-h1-font);
-  letter-spacing: var(--typography-h1-letter-spacing);
+  @include _typography(h1);
 }
 
 @mixin h2 {
-  font: var(--typography-h2-font);
-  letter-spacing: var(--typography-h2-letter-spacing);
+  @include _typography(h2);
 }
 
 @mixin h3 {
-  font: var(--typography-h3-font);
-  letter-spacing: var(--typography-h3-letter-spacing);
+  @include _typography(h3);
 }
 
 @mixin large {
-  font: var(--typography-large-font);
+  @include _typography(large);
 }
 
 @mixin caption {
-  font: var(--typography-caption-font);
+  @include _typography(caption);
 }
 
 @mixin caption-bold {
-  font: var(--typography-caption-bold-font);
+  @include _typography(caption-bold);
 }
 
-@mixin body-lg {
-  font: var(--typography-body-lg-font);
+@mixin body-large {
+  @include _typography(body-large);
+}
+
+@mixin button {
+  @include _typography(button);
+}
+
+@mixin button-large {
+  @include _typography(button-large);
 }

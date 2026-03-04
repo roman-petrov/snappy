@@ -1,3 +1,5 @@
+@use "../scss/typography";
+
 html {
   scroll-behavior: smooth;
 }
@@ -7,11 +9,11 @@ html {
 }
 
 body {
+  @include typography.body;
+
   position: relative;
   min-height: 100vh;
   margin: 0;
-  font: var(--typography-body-font);
-  letter-spacing: var(--typography-body-letter-spacing);
   color: var(--color-text-body);
   background: var(--color-bg);
   transition:

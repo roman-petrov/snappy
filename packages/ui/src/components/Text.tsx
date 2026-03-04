@@ -9,7 +9,9 @@ type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`
 
 const typographyTag: Record<Typography, TextTag> = {
   body: `p`,
-  bodyLg: `p`,
+  bodyLarge: `p`,
+  button: `span`,
+  buttonLarge: `span`,
   caption: `span`,
   captionBold: `span`,
   display: `h1`,

@@ -1,6 +1,9 @@
+@use "../scss/typography";
+
 .input {
+  @include typography.body;
+  color: var(--color-text-body);
   min-height: 140px;
   padding: var(--space-4);
-  font: var(--typography-large-font);
   resize: vertical;
 }

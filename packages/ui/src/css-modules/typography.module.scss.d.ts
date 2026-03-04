@@ -7,6 +7,8 @@ declare const __Typography: {
   readonly large: "large";
   readonly caption: "caption";
   readonly captionBold: "captionBold";
-  readonly bodyLg: "bodyLg";
+  readonly bodyLarge: "bodyLarge";
+  readonly button: "button";
+  readonly buttonLarge: "buttonLarge";
 };
 export default __Typography;
