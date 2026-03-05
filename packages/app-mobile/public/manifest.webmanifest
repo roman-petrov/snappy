@@ -1,0 +1,21 @@
+{
+  "name": "Snappy",
+  "short_name": "Snappy",
+  "description": "Snappy",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "portrait-primary",
+  "theme_color": "#f6f6f7",
+  "background_color": "#f6f6f7",
+  "categories": ["productivity"],
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

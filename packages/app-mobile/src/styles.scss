@@ -1,0 +1,6 @@
+@use "pkg:@snappy/ui/color";
+
+body {
+  color: color.text-body();
+  background: color.surface-card();
+}

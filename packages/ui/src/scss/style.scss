@@ -1,0 +1,18 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
+
+@mixin body {
+  color: color.text-body();
+  background: color.bg();
+
+  &::before {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+    background-size: space.x16() space.x16();
+  }
+}

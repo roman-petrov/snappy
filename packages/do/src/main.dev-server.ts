@@ -92,6 +92,7 @@ const main = async () => {
     }
     next();
   });
+  app.use(`/packages/app-mobile`, express.static(join(appMobileDir, `public`)));
   app.use(vite.middlewares);
 
   app.listen(port, () => {
