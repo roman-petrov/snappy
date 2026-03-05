@@ -24,7 +24,7 @@ const get = (): SiteLocaleKey => {
 
 const set = (next: SiteLocaleKey) => {
   $locale.set(next);
-  document.cookie = `${LocaleCookie.cookieName}=${next}; path=/; max-age=${maxAgeSeconds}`;
+  document.cookie = `${LocaleCookie.name}=${next}; path=/; max-age=${maxAgeSeconds}`;
   document.documentElement.lang = next;
   location.reload();
 };
@@ -33,14 +33,6 @@ const localeKeys = Object.keys(localeData) as SiteLocaleKey[];
 
 export const t = makeT(get as () => SiteLocaleKey);
 
-export const Locale = {
-  cookieName: LocaleCookie.cookieName,
-  get,
-  localeKeys,
-  locales: localeData,
-  parse: LocaleCookie.parse,
-  set,
-  t,
-};
+export const Locale = { get, localeKeys, locales: localeData, set };
 
 export type { SiteLocaleKey } from "./LocaleCookie";

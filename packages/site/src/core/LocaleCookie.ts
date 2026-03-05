@@ -17,4 +17,4 @@ const parse = (cookieString: string | undefined): SiteLocaleKey => {
   return value === `en` || value === `ru` ? value : `ru`;
 };
 
-export const LocaleCookie = { cookieName: name, parse };
+export const LocaleCookie = { name, parse };
