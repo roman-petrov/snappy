@@ -7,7 +7,7 @@ const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
-export type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
+export type SsrEntry = { getMeta: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
 
 const escapeAttribute = (s: string) =>
   s.replaceAll(`&`, `&amp;`).replaceAll(`"`, `&quot;`).replaceAll(`<`, `&lt;`).replaceAll(`>`, `&gt;`);
@@ -19,10 +19,7 @@ const injectMeta = (template: string, meta: SiteMeta) =>
     .replaceAll(`{{keywords}}`, escapeAttribute(meta.keywords))
     .replaceAll(`{{htmlLang}}`, meta.htmlLang);
 
-const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) => {
-  const t = entry.getMeta === undefined ? template : injectMeta(template, entry.getMeta(locale));
-
-  return t.replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`);
-};
+const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) =>
+  injectMeta(template, entry.getMeta(locale)).replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`);
 
 export const Ssr = { buildHtml, injectMeta, rootPlaceholder };
