@@ -22,4 +22,4 @@ const injectMeta = (template: string, meta: SiteMeta) =>
 const buildHtml = (locale: SiteLocaleKey, template: string, entry: SsrEntry) =>
   injectMeta(template, entry.getMeta(locale)).replace(rootPlaceholder, `<div id="root">${entry.render(locale)}</div>`);
 
-export const Ssr = { buildHtml, injectMeta, rootPlaceholder };
+export const Ssr = { buildHtml };

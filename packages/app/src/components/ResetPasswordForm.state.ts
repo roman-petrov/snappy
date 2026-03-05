@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 
 import { api, Password, t } from "../core";
 
+export type ResetPasswordFormScreen = `done` | `form` | `invalid`;
+
 export const useResetPasswordFormState = () => {
   const [searchParameters] = useSearchParams();
   const token = searchParameters.get(`token`) ?? ``;
@@ -30,15 +32,37 @@ export const useResetPasswordFormState = () => {
     setDone(true);
   };
 
-  return {
-    done,
-    error,
-    loading,
-    onPasswordChange: setPassword,
-    onSubmit: (event: SyntheticEvent<HTMLFormElement>) => {
-      void submit(event);
-    },
-    password,
-    token,
-  };
+  const screen: ResetPasswordFormScreen = token === `` ? `invalid` : done ? `done` : `form`;
+
+  const formProps =
+    screen === `form`
+      ? {
+          error,
+          loading,
+          onPasswordChange: setPassword,
+          onSubmit: (event: SyntheticEvent<HTMLFormElement>) => {
+            void submit(event);
+          },
+          password,
+        }
+      : undefined;
+
+  const messageProps =
+    screen === `invalid`
+      ? {
+          lead: t(`resetPage.invalidLinkLead`),
+          linkText: t(`resetPage.requestAgain`),
+          linkTo: `/forgot-password` as const,
+          title: t(`resetPage.invalidLink`),
+        }
+      : screen === `done`
+        ? {
+            lead: t(`resetPage.doneLead`),
+            linkText: t(`resetPage.loginLink`),
+            linkTo: `/login` as const,
+            title: t(`resetPage.done`),
+          }
+        : undefined;
+
+  return { formProps, messageProps, screen };
 };

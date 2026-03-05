@@ -3,6 +3,8 @@ import { type SyntheticEvent, useState } from "react";
 import { api, t } from "../core";
 import { useAsyncSubmit } from "../hooks";
 
+export type ForgotPasswordFormScreen = `form` | `sent`;
+
 export const useForgotPasswordFormState = () => {
   const [email, setEmail] = useState(``);
   const [sent, setSent] = useState(false);
@@ -21,5 +23,18 @@ export const useForgotPasswordFormState = () => {
     });
   };
 
-  return { email, error, loading, onEmailChange: setEmail, onSubmit, sent };
+  const screen: ForgotPasswordFormScreen = sent ? `sent` : `form`;
+  const formProps = screen === `form` ? { email, error, loading, onEmailChange: setEmail, onSubmit } : undefined;
+
+  const messageProps =
+    screen === `sent`
+      ? {
+          lead: t(`forgotPage.checkEmailLead`),
+          linkText: t(`forgotPage.backToLogin`),
+          linkTo: `/login` as const,
+          title: t(`forgotPage.checkEmail`),
+        }
+      : undefined;
+
+  return { formProps, messageProps, screen };
 };

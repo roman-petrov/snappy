@@ -6,20 +6,20 @@ export type PasswordStrengthProps = {
   disabled?: boolean;
   generateLabel: string;
   onGeneratePassword: () => void;
-  password: string;
-  requirements: readonly { check: (s: string) => boolean; label: string }[];
+  requirementResults: readonly PasswordStrengthRequirementResult[];
   strength: `medium` | `strong` | `weak`;
   strengthBarWidth: string;
   strengthLabel: string;
   strengthText: string;
 };
 
+export type PasswordStrengthRequirementResult = { label: string; met: boolean };
+
 export const PasswordStrength = ({
   disabled = false,
   generateLabel,
   onGeneratePassword,
-  password,
-  requirements,
+  requirementResults,
   strength,
   strengthBarWidth,
   strengthLabel,
@@ -27,13 +27,8 @@ export const PasswordStrength = ({
 }: PasswordStrengthProps) => (
   <>
     <div className={styles.requirements}>
-      {requirements.map(({ check, label }) => (
-        <Text
-          color={check(password) ? `accent` : undefined}
-          key={label}
-          text={`${check(password) ? `✓ ` : ``}${label}`}
-          typography="caption"
-        />
+      {requirementResults.map(({ label, met }) => (
+        <Text color={met ? `accent` : undefined} key={label} text={`${met ? `✓ ` : ``}${label}`} typography="caption" />
       ))}
     </div>
     <div className={styles.strengthRow}>

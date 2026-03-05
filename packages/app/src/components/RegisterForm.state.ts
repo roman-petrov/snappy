@@ -18,6 +18,8 @@ export const useRegisterFormState = () => {
     { check: Password.requirementChecks[1]?.check ?? (() => false), label: t(`registerPage.requirementLetters`) },
   ];
 
+  const requirementResults = requirements.map(r => ({ label: r.label, met: r.check(password) }));
+
   const strengthBarWidth =
     password.length === 0 ? `0%` : strengthValue === `weak` ? `33%` : strengthValue === `medium` ? `66%` : `100%`;
 
@@ -52,7 +54,7 @@ export const useRegisterFormState = () => {
     onPasswordChange: setPassword,
     onSubmit,
     password,
-    requirements,
+    requirementResults,
     strength: strengthValue,
     strengthBarWidth,
     strengthText,

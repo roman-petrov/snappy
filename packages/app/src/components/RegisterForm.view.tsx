@@ -18,7 +18,7 @@ export const RegisterFormView = ({
   onPasswordChange,
   onSubmit,
   password,
-  requirements,
+  requirementResults,
   strength,
   strengthBarWidth,
   strengthText,
@@ -50,8 +50,7 @@ export const RegisterFormView = ({
         disabled={loading}
         generateLabel={t(`registerPage.generatePassword`)}
         onGeneratePassword={onGeneratePassword}
-        password={password}
-        requirements={requirements}
+        requirementResults={requirementResults}
         strength={strength}
         strengthBarWidth={strengthBarWidth}
         strengthLabel={`${t(`registerPage.strength`)}:`}

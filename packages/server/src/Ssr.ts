@@ -8,7 +8,7 @@
 import type { RequestHandler } from "express";
 
 import { _ } from "@snappy/core";
-import { type SiteLocaleKey, type SiteMeta, Ssr as SiteSsr } from "@snappy/site/Ssr";
+import { type SiteLocaleKey, Ssr as SiteSsr, type SsrEntry } from "@snappy/site/Ssr";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -16,8 +16,6 @@ import { pathToFileURL } from "node:url";
 import type { ServerCache } from "./ServerCache";
 
 import { LocaleCookie } from "../../site/src/core/LocaleCookie";
-
-type SsrEntry = { getMeta?: (locale: SiteLocaleKey) => SiteMeta; render: (locale: SiteLocaleKey) => string };
 
 export const Ssr = () => {
   const loadTemplateAndEntry = async (clientRoot: string): Promise<{ entry: SsrEntry; template: string }> => {
