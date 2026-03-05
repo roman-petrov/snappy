@@ -1,8 +1,5 @@
-import type { FieldControlClasses } from "./Field";
-
-import { Icon } from "./Icon";
-import { Input } from "./Input";
-import styles from "./Select.module.scss";
+import { useSelectState } from "./Select.state";
+import { SelectView } from "./Select.view";
 
 export type SelectOption = { label: string; value: string };
 
@@ -15,22 +12,4 @@ export type SelectProps = {
   value: string;
 };
 
-export const Select = ({ disabled = false, id, label, onChange, options, value }: SelectProps) => (
-  <Input id={id} label={label} suffix={<Icon name="chevron-down" />}>
-    {({ inputClassName, inputInsideWrapClassName }: FieldControlClasses) => (
-      <select
-        className={`${inputClassName} ${inputInsideWrapClassName} ${styles.input}`}
-        disabled={disabled}
-        id={id}
-        onChange={event_ => onChange(event_.target.value)}
-        value={value}
-      >
-        {options.map(opt => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-    )}
-  </Input>
-);
+export const Select = (props: SelectProps) => <SelectView {...useSelectState(props)} />;

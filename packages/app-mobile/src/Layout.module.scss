@@ -12,11 +12,17 @@
   display: flex;
   flex-shrink: 0;
   flex-direction: row;
-  gap: space.x4();
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   padding: calc(space.x3() + env(safe-area-inset-top, 0)) calc(space.x4() + env(safe-area-inset-right, 0)) space.x3()
     calc(space.x4() + env(safe-area-inset-left, 0));
+}
+
+.cornerRight {
+  display: flex;
+  flex-direction: row;
+  gap: space.x4();
+  align-items: center;
 }
 
 .main {
@@ -26,7 +32,7 @@
   flex-direction: column;
   width: 100%;
   min-height: 0;
-  padding: space.x4() calc(space.x4() + env(safe-area-inset-right, 0)) calc(space.x4() + env(safe-area-inset-bottom, 0))
+  padding: space.x2() calc(space.x4() + env(safe-area-inset-right, 0)) calc(space.x4() + env(safe-area-inset-bottom, 0))
     calc(space.x4() + env(safe-area-inset-left, 0));
   margin: 0;
   overflow: auto;

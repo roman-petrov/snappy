@@ -5,27 +5,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
-  min-height: 100%;
-  padding: space.x6() space.x4();
-}
-
-.logo {
-  flex-shrink: 0;
-  margin-bottom: space.x6();
+  padding: space.x3() space.x4();
 }
 
 .title {
   flex-shrink: 0;
   width: 100%;
-  margin-bottom: space.x4();
+  margin-bottom: space.x3();
   text-align: start;
 }
 
 .content {
   display: flex;
-  flex-shrink: 1;
   flex-direction: column;
   width: 100%;
-  min-height: 0;
 }
