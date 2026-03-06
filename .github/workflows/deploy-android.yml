@@ -1,0 +1,41 @@
+# cspell:words webfactory
+name: 🤖 Deploy Android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: 📱 Build and deploy APK
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: 🐰 Setup Bun
+        uses: oven-sh/setup-bun@ecf28ddc73e819eb6fa29df6b34ef8921c743461 # v2.1.3
+        with:
+          bun-version: latest
+
+      - name: 📦 Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: 🤖 Setup Android
+        uses: ./.github/actions/setup-android
+
+      - name: 🔨 Build APK
+        run: bun do build:app-android
+
+      - name: 🔑 Setup SSH
+        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: 📤 Copy APK to server
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run:
+          scp -o StrictHostKeyChecking=no dist/snappy.apk "${SSH_USER}@${SSH_HOST}:/home/deploy/snappy/dist/snappy.apk"
