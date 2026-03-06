@@ -54,9 +54,5 @@ jobs:
         if: matrix.task.arg == 'build:app-android'
         uses: ./.github/actions/setup-android
 
-      - name: 📱 Build Android App
-        if: matrix.task.arg == 'build:app-android'
-        run: bun do build:app-mobile
-
       - name: ▶️ Run ${{ matrix.task.name }}
         run: bun do ${{ matrix.task.arg }}
