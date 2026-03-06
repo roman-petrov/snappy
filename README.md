@@ -2,15 +2,16 @@
 
 ## Prerequisites
 
-- [Cursor](https://cursor.com/)
+- ⌨️ [Cursor](https://cursor.com/)
+  - 🔌 Install recommended workspace `VSCode` extensions.
 - 📥 [Node.js 24](https://nodejs.org/en/download).
 - 📥 [Bun](https://bun.com/)
 - 📝 Fonts:
   - [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)
   - [Cascadia Code](https://fonts.google.com/specimen/Cascadia+Code)
-- 🔌 Install recommended workspace `VSCode` extensions.
-- [Docker](https://www.docker.com/products/docker-desktop/)
-- [pgAdmin](https://www.pgadmin.org/download/)
+- 🐳 [Docker](https://www.docker.com/products/docker-desktop/)
+- 🐘 [pgAdmin](https://www.pgadmin.org/download/)
+- 📱 [Android SDK](https://developer.android.com/tools/releases/platform-tools)
 
 ## Workflow
 

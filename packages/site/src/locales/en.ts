@@ -76,6 +76,7 @@ export const en = {
   },
   footer: { tagline: `Smart text processing in Telegram with AI.` },
   hero: {
+    androidApp: `Download Android app`,
     cta: `Open Snappy in Telegram`,
     lead: `Snappy is a smart Telegram bot with an AI assistant for text. Send a message, choose an action — the result is right in the chat.`,
     title: `✨ Text the way you need — in one tap`,

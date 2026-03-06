@@ -12,6 +12,12 @@ export * from "./Headline";
 
 export * from "./Icon";
 
+export * from "./IconButton";
+
+export * from "./IconButtonLocale";
+
+export * from "./IconButtonTheme";
+
 export * from "./Input";
 
 export * from "./Link";
@@ -26,11 +32,7 @@ export * from "./PasswordStrength";
 
 export * from "./Select";
 
-export * from "./SwitchButton";
-
-export * from "./SwitchButtonLocale";
-
-export * from "./SwitchButtonTheme";
+export * from "./SystemButtons";
 
 export * from "./Text";
 

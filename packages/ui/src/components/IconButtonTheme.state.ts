@@ -3,8 +3,8 @@ import { useStoreValue } from "@snappy/store";
 import { $theme, Theme } from "../core";
 import { t } from "../locales";
 
-export const useSwitchButtonThemeState = () => ({
+export const useIconButtonThemeState = () => ({
   ariaLabel: t(`themeToggle`),
-  label: useStoreValue($theme) === `dark` ? `🌙` : `☀️`,
+  icon: useStoreValue($theme) === `dark` ? `🌙` : `☀️`,
   onClick: () => Theme.toggle(),
 });

@@ -12,6 +12,7 @@ export const ESLintConfig = defineConfig([
     `**/dist/**`,
     `**/*.{scss,html,module.scss.d.ts}`,
     `**/packages/*/src/generated/**`,
+    `**/packages/app-android/**`,
   ]),
   {
     languageOptions: {

@@ -1,0 +1,7 @@
+@use "pkg:@snappy/ui/space";
+
+.root {
+  display: flex;
+  gap: space.x1();
+  align-items: center;
+}

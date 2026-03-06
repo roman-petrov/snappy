@@ -50,6 +50,17 @@ app.disable(`x-powered-by`);
 const cache = ServerCache();
 const ssr = Ssr();
 app.get(`/`, ssr.createCachedSsrHandler(siteRoot, cache));
+const apkPath = join(distDir, `snappy.apk`);
+app.get(`/download/snappy.apk`, (_request, response, next) => {
+  if (!existsSync(apkPath)) {
+    return next();
+  }
+  response.setHeader(`Content-Disposition`, `attachment; filename="snappy.apk"`);
+  response.type(`application/vnd.android.package-archive`);
+  response.sendFile(apkPath);
+
+  return undefined;
+});
 const staticAppDesktop = cache.createStaticWithPrefix(appDesktopRoot, `/app`);
 const staticAppMobile = cache.createStaticWithPrefix(appMobileRoot, `/app`);
 app.use((request, response, next) => {
@@ -80,7 +91,8 @@ app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
 
     return undefined;
   }
-  const entry = cache.set(indexKey, Buffer.from(readFileSync(indexPath, `utf8`), `utf8`), `text/html`);
+  const raw = readFileSync(indexPath, `utf8`);
+  const entry = cache.set(indexKey, Buffer.from(raw, `utf8`), `text/html`);
   cache.sendCached(response, entry, request.get(`accept-encoding`), `text/html`);
 
   return undefined;

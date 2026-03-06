@@ -1,4 +1,4 @@
-import { Button, Headline } from "@snappy/ui";
+import { Button, Headline, Link } from "@snappy/ui";
 
 import { t } from "../core";
 
@@ -7,5 +7,6 @@ export const Hero = () => (
     <Button href="https://t.me/sn4ppy_bot" icon="telegram" large primary>
       {t(`hero.cta`)}
     </Button>
+    <Link href="/download/snappy.apk" text={t(`hero.androidApp`)} />
   </Headline>
 );

@@ -76,6 +76,11 @@
     width: 100%;
   }
 
+  .hero .cta {
+    flex-direction: column;
+    gap: space.x4();
+  }
+
   .cta > * {
     width: 100%;
     padding: space.x3() space.x4();

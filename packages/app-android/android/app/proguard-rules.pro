@@ -1,0 +1,2 @@
+-keep class com.snappy.app.BuildConfig { *; }
+-keep class com.snappy.app.MainActivity { *; }

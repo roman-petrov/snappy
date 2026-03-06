@@ -1,4 +1,4 @@
-import { Header, Link, SwitchButtonLocale, SwitchButtonTheme } from "@snappy/ui";
+import { Header, Link, SystemButtons } from "@snappy/ui";
 
 import type { useSiteHeaderState } from "./SiteHeader.state";
 
@@ -11,7 +11,6 @@ export const SiteHeaderView = ({ navItems }: SiteHeaderViewProps) => (
     {navItems.map(({ href, key }) => (
       <Link href={href} key={key} muted text={t(key)} />
     ))}
-    <SwitchButtonTheme />
-    <SwitchButtonLocale />
+    <SystemButtons />
   </Header>
 );

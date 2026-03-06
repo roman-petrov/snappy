@@ -7,3 +7,6 @@ sonarjs
 bunx
 modelcontextprotocol
 autoincrement
+gradlew
+androidx
+proguard

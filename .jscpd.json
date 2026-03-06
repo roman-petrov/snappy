@@ -4,6 +4,7 @@
     ".github",
     ".jscpd",
     "**/dist/**",
+    "**/build/**",
     "**/*.html",
     "**/*.test.ts",
     "**/package.json",

@@ -14,6 +14,8 @@ export type CmdRunDef =
       shutdown?: { command: string };
     }
   | { command: string }
+  | { handler: `build:app-android-debug` }
+  | { handler: `build:app-android` }
   | { handler: `build:app-desktop` }
   | { handler: `build:app-mobile` }
   | { handler: `build:site` }

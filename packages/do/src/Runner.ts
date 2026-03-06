@@ -79,6 +79,8 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const buildOptions = capture ? { capture: true as const } : {};
 
   const buildHandlers = {
+    "build:app-android": Build.appAndroid,
+    "build:app-android-debug": Build.appAndroidDebug,
     "build:app-desktop": Build.appDesktop,
     "build:app-mobile": Build.appMobile,
     "build:site": Build.site,

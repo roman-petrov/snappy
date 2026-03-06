@@ -7,6 +7,16 @@ import type { CmdDefinition } from "./CommandTypes";
  * ? - https://github.com/xtermjs/xterm.js/issues/2668
  */
 const defs: Record<string, CmdDefinition> = {
+  [`build:app-android-debug`]: {
+    description: `Gradle: build Android debug APK (dev URL). Manual only, not part of build/ci.`,
+    label: `🤖 Android debug`,
+    run: { handler: `build:app-android-debug` },
+  },
+  [`build:app-android`]: {
+    description: `Gradle: build Android release APK (prod URL) into dist/snappy.apk.`,
+    label: `🤖 Android app`,
+    run: { handler: `build:app-android` },
+  },
   [`build:app-desktop`]: {
     description: `Vite: build desktop app into dist/app-desktop.`,
     label: `🖥️ Desktop app`,
@@ -125,8 +135,8 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`],
-    description: `Build site into dist (site + ssr + app-desktop + app-mobile).`,
+    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`, `build:app-android`],
+    description: `Build site into dist (site + ssr + app-desktop + app-mobile + android APK).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },

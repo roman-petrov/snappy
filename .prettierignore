@@ -1,6 +1,7 @@
 .analyze
 bun.lockb
 dist
+**/build
 **/node_modules
 **/packages/*/src/generated
 **/*.module.scss.d.ts
