@@ -22,6 +22,9 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: 🤖 Setup Android
+        uses: ./.github/actions/setup-android
+
       - name: 🔨 Build
         run: bun do build
 
