@@ -1,85 +1,21 @@
 /*
-  Base vars: h, c, l in theme-dark.css and theme-light.css; a (alpha) here (shared).
-  Here only generated --color-*, --shadow-*, focus-ring and spacing/typography.
-  Ensure html has data-theme="dark" or data-theme="light".
+  Color vars in theme-dark.scss and theme-light.scss.
+  Here: spacing, typography, focus offset, layout.
 */
 
 :root {
-  /* ─── Derived from theme base (semantic hues from accent) ─── */
-  --h-error: calc(var(--h-accent) - 168deg);
-  --h-warning: calc(var(--h-accent) - 109deg);
-  --h-success: calc(var(--h-accent) - 45deg);
-
-  /* ─── Alpha (shared by both themes) ─── */
-  --a-ghost: 3%;
-  --a-subtle: 5%;
-  --a-light: 10%;
-  --a-surface: 90%;
-  --a-card: 30%;
-  --a-card-hover: 70%;
-  --a-shadow: 4%;
-
-  /* ─── Generated colors and shadows ─── */
-  --color-bg: oklch(var(--l-bg) var(--c-neutral) var(--h-neutral));
-  --color-bg-elevated: oklch(var(--l-bg-elevated) var(--c-neutral) var(--h-neutral));
-  --color-border: oklch(var(--l-border) var(--c-neutral-strong) var(--h-neutral));
-  --color-text-muted: oklch(var(--l-muted) 0.01 var(--h-neutral));
-  --color-text-body: oklch(var(--l-body) 0.004 var(--h-neutral));
-  --color-text-heading: oklch(var(--l-heading) 0 0deg);
-  --color-accent: oklch(var(--l-accent) var(--c-accent) var(--h-accent));
-  --color-on-accent: oklch(var(--l-on-accent) var(--c-neutral) var(--h-neutral));
-  --color-error: oklch(var(--l-semantic) var(--c-semantic) var(--h-error));
-  --color-warning: oklch(var(--l-warning) var(--c-semantic) var(--h-warning));
-  --color-success: oklch(var(--l-success) var(--c-semantic) var(--h-success));
-  --color-bg-card-border: oklch(var(--l-overlay) 0 0deg / var(--a-light));
-  --color-bg-icon: oklch(var(--l-overlay) 0 0deg / var(--a-subtle));
-  --color-bg-card-features: oklch(var(--l-card-tint) 0.03 var(--h-accent) / var(--a-card));
-  --color-bg-card-features-hover: oklch(var(--l-card-tint-hover) 0.03 var(--h-accent) / var(--a-card-hover));
-  --color-bg-header: oklch(var(--l-bg) var(--c-neutral) var(--h-neutral) / var(--a-surface));
-  --color-grid: oklch(var(--l-overlay) 0 0deg / var(--a-ghost));
-  --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
-  --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
-  --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
-  --color-warning-bg: color-mix(in oklch, var(--color-warning) 10%, transparent);
-  --color-success-bg: color-mix(in oklch, var(--color-success) 10%, transparent);
-  --color-info-bg: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 4%, transparent);
-  --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
-  --color-accent-border: color-mix(in oklch, var(--color-accent) 20%, transparent);
-  --color-accent-mid: color-mix(in oklch, var(--color-accent) 15%, transparent);
-  --color-accent-focus: color-mix(in oklch, var(--color-accent) 30%, transparent);
-  --color-accent-strong: color-mix(in oklch, var(--color-accent) 40%, transparent);
-  --color-divider-line: color-mix(in oklch, var(--color-accent) 40%, transparent);
-  --color-divider: linear-gradient(
-    to right,
-    transparent 0%,
-    color-mix(in oklch, var(--color-accent) 60%, transparent) 30%,
-    color-mix(in oklch, var(--color-accent) 80%, transparent) 50%,
-    color-mix(in oklch, var(--color-accent) 60%, transparent) 70%,
-    transparent 100%
-  );
-  --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--a-shadow));
-  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--a-shadow));
-  --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
-  --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
-  --color-focus-ring: var(--color-accent);
-  --focus-ring-shadow: 0 0 0 4px color-mix(in oklch, var(--color-accent) 35%, transparent);
-  --focus-ring-outline: 2px solid var(--color-focus-ring);
   --focus-ring-outline-offset: 2px;
-
-  /* ─── Spacing grid (4px base). Use only --space-* for margin, padding, gap ─── */
-  --space-1: 0.25rem; /* 4px */
-  --space-2: 0.5rem; /* 8px */
-  --space-3: 0.75rem; /* 12px */
-  --space-4: 1rem; /* 16px */
-  --space-5: 1.25rem; /* 20px */
-  --space-6: 1.5rem; /* 24px */
-  --space-8: 2rem; /* 32px */
-  --space-10: 2.5rem; /* 40px */
-  --space-12: 3rem; /* 48px */
-  --space-16: 4rem; /* 64px */
-  --space-24: 6rem; /* 96px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
   --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
   --radius-sm: 8px;
   --radius: 12px;

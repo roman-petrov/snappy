@@ -1,22 +1,49 @@
 [data-theme="dark"] {
-  --h-neutral: 286deg;
-  --h-accent: 195deg;
-  --l-bg: 7%;
-  --l-bg-elevated: 9%;
-  --l-border: 32%;
-  --l-muted: 68%;
-  --l-body: 91%;
-  --l-heading: 100%;
-  --l-overlay: 100%;
-  --l-accent: 89%;
-  --l-on-accent: 7%;
-  --l-semantic: 82%;
-  --l-warning: 82%;
-  --l-success: 65%;
-  --l-card-tint: 28%;
-  --l-card-tint-hover: 32%;
-  --c-neutral: 0.002;
-  --c-neutral-strong: 0.012;
-  --c-accent: 0.12;
-  --c-semantic: 0.17;
+  --color-bg: oklch(7% 0.002 286deg);
+  --color-bg-elevated: oklch(9% 0.002 286deg);
+  --color-border: oklch(32% 0.012 286deg);
+  --color-text-muted: oklch(68% 0.01 286deg);
+  --color-text-body: oklch(91% 0.004 286deg);
+  --color-text-heading: oklch(100% 0 0deg);
+  --color-accent: oklch(89% 0.12 195deg);
+  --color-on-accent: oklch(7% 0.002 286deg);
+  --color-error: oklch(82% 0.17 27deg);
+  --color-warning: oklch(82% 0.17 86deg);
+  --color-success: oklch(65% 0.17 150deg);
+  --color-bg-card-border: oklch(100% 0 0deg / 10%);
+  --color-bg-icon: oklch(100% 0 0deg / 5%);
+  --color-bg-card-features: oklch(28% 0.03 195deg / 30%);
+  --color-bg-card-features-hover: oklch(32% 0.03 195deg / 70%);
+  --color-bg-header: oklch(7% 0.002 286deg / 90%);
+  --color-grid: oklch(100% 0 0deg / 3%);
+  --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
+  --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
+  --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
+  --color-warning-bg: color-mix(in oklch, var(--color-warning) 10%, transparent);
+  --color-success-bg: color-mix(in oklch, var(--color-success) 10%, transparent);
+  --color-info-bg: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 4%, transparent);
+  --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
+  --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
+  --color-accent-border: color-mix(in oklch, var(--color-accent) 20%, transparent);
+  --color-accent-mid: color-mix(in oklch, var(--color-accent) 15%, transparent);
+  --color-accent-focus: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  --color-accent-strong: color-mix(in oklch, var(--color-accent) 40%, transparent);
+  --color-divider-line: color-mix(in oklch, var(--color-accent) 40%, transparent);
+  --color-divider: linear-gradient(
+    to right,
+    transparent 0%,
+    color-mix(in oklch, var(--color-accent) 60%, transparent) 30%,
+    color-mix(in oklch, var(--color-accent) 80%, transparent) 50%,
+    color-mix(in oklch, var(--color-accent) 60%, transparent) 70%,
+    transparent 100%
+  );
+  --a-shadow: 4%;
+  --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--a-shadow));
+  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--a-shadow));
+  --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
+  --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
+  --color-focus-ring: var(--color-accent);
+  --focus-ring-shadow: 0 0 0 4px color-mix(in oklch, var(--color-accent) 35%, transparent);
+  --focus-ring-outline: 2px solid var(--color-focus-ring);
 }
