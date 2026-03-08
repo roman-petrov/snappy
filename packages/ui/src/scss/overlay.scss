@@ -20,8 +20,11 @@
     color-mix(in oklch, color.overlay() 25%, transparent) calc(100% - 4px),
     transparent 100%
   );
-  border-block-end: if($y > 0, 1px solid color.border(), none);
-  border-block-start: if($y < 0, 1px solid color.border(), none);
+  @if $y > 0 {
+    border-block-end: 1px solid color.border();
+  } @else if $y < 0 {
+    border-block-start: 1px solid color.border();
+  }
   box-shadow: 0 ($y * 2px) 8px oklch(0% 0 0deg / 3%);
   backdrop-filter: blur(8px);
 }
