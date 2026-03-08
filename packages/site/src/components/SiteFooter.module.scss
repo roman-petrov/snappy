@@ -1,11 +1,11 @@
-@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/overlay";
 @use "pkg:@snappy/ui/space";
 
 .footer {
+  @include overlay.bottom(false);
+
   padding: space.x10() space.x6();
   margin-block-start: space.x12();
-  background: color.bg-elevated();
-  border-block-start: 1px solid color.border();
 }
 
 .inner {
