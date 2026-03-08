@@ -1,7 +1,7 @@
 name: 🔁 CI
 
 on:
-  workflow_dispatch: # Только ручной запуск через GitHub UI
+  workflow_dispatch:
 
 jobs:
   ci:
@@ -50,7 +50,7 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: 🤖 Setup Android
+      - name: 🔧 Setup Android
         if: matrix.task.arg == 'build:app-android'
         uses: ./.github/actions/setup-android
 

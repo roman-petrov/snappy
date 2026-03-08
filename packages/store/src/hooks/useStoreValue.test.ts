@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { Store } from "@snappy/core";
-import { act, renderHook } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/preact-hooks";
 import { describe, expect, it } from "vitest";
 
 import { useStoreValue } from "./useStoreValue";

@@ -1,5 +1,5 @@
+import pluginPreact from "@preact/preset-vite";
 import { _ } from "@snappy/core";
-import pluginReact from "@vitejs/plugin-react";
 import { join } from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
 import { NodePackageImporter } from "sass-embedded";
@@ -35,7 +35,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
           preprocessorOptions: { scss: { importers: [new NodePackageImporter()] } },
         },
         plugins: [
-          pluginReact(),
+          pluginPreact(),
           pluginFontPreload(),
           pluginOptimizeCssModules(),
           pluginSassDts({

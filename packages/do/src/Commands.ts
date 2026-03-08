@@ -135,8 +135,8 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`],
-    description: `Build site into dist (site + ssr + app-desktop + app-mobile). Android APK via build:app-android.`,
+    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`, `build:app-android`],
+    description: `Build site into dist (site + ssr + app-desktop + app-mobile + Android APK).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },

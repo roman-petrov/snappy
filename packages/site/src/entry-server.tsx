@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 /* eslint-disable functional/no-expression-statements */
 import { $locale } from "@snappy/ui";
-import { renderToString } from "react-dom/server";
+import renderToString from "preact-render-to-string/jsx";
 
 import type { SiteLocaleKey } from "./core";
 
@@ -17,5 +17,5 @@ export const getMeta = (locale: SiteLocaleKey) => {
 export const render = (locale: SiteLocaleKey = `ru`) => {
   $locale.set(locale);
 
-  return renderToString(<Landing />);
+  return renderToString(<Landing />, {}, { pretty: true });
 };

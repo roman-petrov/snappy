@@ -10,18 +10,12 @@
     "./styles/*": "./src/styles/*.scss",
     "./*": "./src/scss/*.scss"
   },
-  "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-router-dom": "^7.13.1"
-  },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/store": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "preact": "^10.28.0",
     "react-router-dom": "^7.13.1"
   },
   "devDependencies": {

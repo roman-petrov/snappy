@@ -11,8 +11,8 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "preact": "^10.28.0",
+    "preact-render-to-string": "^6.6.6"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",

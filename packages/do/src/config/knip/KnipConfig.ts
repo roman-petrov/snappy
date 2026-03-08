@@ -14,9 +14,9 @@ const config: KnipConfig = {
       entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`],
     },
-    "packages/app": { ignoreDependencies: [`@snappy/do`] },
-    "packages/app-desktop": { entry: [`index.html`] },
-    "packages/app-mobile": { entry: [`index.html`] },
+    "packages/app": { ignoreDependencies: [`@snappy/do`, `preact`] },
+    "packages/app-desktop": { entry: [`index.html`], ignoreDependencies: [`preact`] },
+    "packages/app-mobile": { entry: [`index.html`], ignoreDependencies: [`preact`] },
     "packages/db": { entry: [`src/Seed.ts`] },
     "packages/do": {
       entry: [`src/main.*.ts`],
@@ -33,8 +33,8 @@ const config: KnipConfig = {
         `vitest`,
       ],
     },
-    "packages/site": { entry: [`index.html`, `src/entry-server.tsx`] },
-    "packages/ui": { ignoreDependencies: [`@fontsource-variable/inter`] },
+    "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@types/react-dom`] },
+    "packages/ui": { ignoreDependencies: [`@fontsource-variable/inter`, `preact`] },
   },
 };
 
