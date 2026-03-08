@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 
 import { $loggedIn } from "../Store";
 
@@ -10,7 +10,7 @@ export const useRunAfterAuth = (
   tFn: (key: string) => string,
   errorsKeyPrefix: string,
 ): RunAfterAuthFn => {
-  const navigate = useNavigate();
+  const [, navigate] = useLocation();
 
   return (submit: () => Promise<{ status: string }>) => {
     void wrapSubmit(async () => {
@@ -21,7 +21,7 @@ export const useRunAfterAuth = (
         return;
       }
       $loggedIn.set(true);
-      void navigate(`/`, { replace: true, viewTransition: true });
+      navigate(`/`, { replace: true });
     });
   };
 };

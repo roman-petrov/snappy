@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "wouter";
 
 import { api, Password, t } from "../core";
 

@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-component-props */
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "wouter";
 
 import styles from "./Link.module.scss";
 import { Text } from "./Text";
@@ -15,7 +15,7 @@ export const Link = ({ href, muted = false, rel, target, text, to }: LinkProps) 
       {linkText}
     </a>
   ) : (
-    <RouterLink className={linkClass} to={to} viewTransition>
+    <RouterLink className={linkClass} href={to} transition>
       {linkText}
     </RouterLink>
   );

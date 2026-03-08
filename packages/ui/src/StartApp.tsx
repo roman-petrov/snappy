@@ -5,12 +5,22 @@
 import type { ReactNode } from "react";
 
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
+import { Router } from "wouter";
 
 import { App } from "./App";
 import { $serverMode, Locale, Theme } from "./core";
 import "./styles/index.scss";
 
+const aroundNav = (
+  navigate: (to: string, options?: { replace?: boolean }) => void,
+  to: string,
+  options?: { replace?: boolean },
+) => {
+  document.startViewTransition(() => navigate(to, options));
+};
+
 export type StartAppOptions = {
+  base?: string;
   disableTextSelection?: boolean;
   locale?: Locale;
   onLocaleChange?: (locale: Locale) => void;
@@ -24,7 +34,7 @@ let remountOnLocaleChange = false;
 export const startApp = (
   selector: string,
   app: ReactNode,
-  { disableTextSelection = false, locale, onLocaleChange, server = false, theme }: StartAppOptions = {},
+  { base, disableTextSelection = false, locale, onLocaleChange, server = false, theme }: StartAppOptions = {},
 ) => {
   $serverMode.set(server);
   const hasTheme = theme !== undefined;
@@ -41,7 +51,13 @@ export const startApp = (
     return;
   }
   history.scrollRestoration = `manual`;
-  const rootElement = <App disableTextSelection={disableTextSelection}>{app}</App>;
+
+  const rootElement = (
+    <App
+      children={base === undefined ? app : <Router aroundNav={aroundNav} base={base} children={app} />}
+      disableTextSelection={disableTextSelection}
+    />
+  );
   if (server) {
     hydrateRoot(container, rootElement);
   } else {

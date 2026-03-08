@@ -10,3 +10,4 @@ autoincrement
 gradlew
 androidx
 proguard
+wouter

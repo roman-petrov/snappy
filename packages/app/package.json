@@ -13,11 +13,10 @@
     "@snappy/store": "workspace:*",
     "@snappy/ui": "workspace:*",
     "preact": "^10.28.0",
-    "react-router-dom": "^7.13.1"
+    "wouter": "^3.9.0"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.0.0"
+    "@types/react": "^19.2.14"
   }
 }

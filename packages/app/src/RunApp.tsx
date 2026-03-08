@@ -14,5 +14,5 @@ export const runApp = async (component: ReactNode) => {
   } catch {
     $loggedIn.set(false);
   }
-  startApp(`#app-root`, component, { disableTextSelection: true });
+  startApp(`#app-root`, component, { base: `/app`, disableTextSelection: true });
 };

@@ -1,5 +1,5 @@
 import { useStoreValue } from "@snappy/store";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 
 import { api, t } from "../core";
 import { $loggedIn } from "../Store";
@@ -7,7 +7,7 @@ import { $loggedIn } from "../Store";
 export type LogoutItem = { label: string; onClick: () => Promise<void> };
 
 export const useHeaderContentState = () => {
-  const navigate = useNavigate();
+  const [, navigate] = useLocation();
   const loggedIn = useStoreValue($loggedIn);
 
   const logout: LogoutItem | undefined = loggedIn
@@ -16,7 +16,7 @@ export const useHeaderContentState = () => {
         onClick: async () => {
           await api.logout();
           $loggedIn.set(false);
-          await navigate(`/login`, { replace: true, viewTransition: true });
+          navigate(`/login`, { replace: true });
         },
       }
     : undefined;
