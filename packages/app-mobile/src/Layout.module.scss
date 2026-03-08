@@ -1,11 +1,40 @@
+@use "pkg:@snappy/ui/color";
 @use "pkg:@snappy/ui/space";
 
+@mixin -overlay($side) {
+  position: fixed;
+  inset-inline: 0;
+  z-index: 2;
+  background: color-mix(in oklch, var(--color-bg) 70%, transparent);
+  backdrop-filter: blur(12px);
+
+  @if $side == 1 {
+    inset-block-start: 0;
+    border-block-end: 1px solid var(--color-border);
+    box-shadow: 0 space.x1() space.x3() oklch(0% 0 0deg / var(--a-shadow));
+  } @else {
+    inset-block-end: 0;
+    border-block-start: 1px solid var(--color-border);
+    box-shadow: 0 calc(-1 * space.x1()) space.x3() oklch(0% 0 0deg / var(--a-shadow));
+  }
+}
+
 .wrap {
-  display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  position: relative;
+  flex: 1;
   height: 100%;
   min-height: 0;
   overflow: hidden;
+}
+
+.overlay-top {
+  @include -overlay(1);
+}
+
+.overlay-bottom {
+  @include -overlay(-1);
+
+  min-height: env(safe-area-inset-bottom, 0);
 }
 
 .corner {
@@ -25,15 +54,19 @@
 }
 
 .scroll {
-  min-height: 0;
-  overflow: hidden auto;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
   -webkit-overflow-scrolling: touch;
 }
 
 .main {
   box-sizing: border-box;
-  padding: space.x2() calc(space.x4() + env(safe-area-inset-right, 0px)) space.x4()
-    calc(space.x4() + env(safe-area-inset-left, 0px));
+  padding: calc(3.5rem + env(safe-area-inset-top, 0px) + space.x3()) calc(space.x4() + env(safe-area-inset-right, 0px))
+    env(safe-area-inset-bottom, 0) calc(space.x4() + env(safe-area-inset-left, 0px));
   margin: 0;
 }
 

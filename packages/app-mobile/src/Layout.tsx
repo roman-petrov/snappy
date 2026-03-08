@@ -12,10 +12,12 @@ import { ResetPassword } from "./ResetPassword";
 
 export const Layout = () => (
   <div className={styles.wrap}>
-    <header className={styles.corner}>
-      <Logo />
-      <div className={styles.cornerRight}>
-        <HeaderContent />
+    <header className={styles.overlayTop}>
+      <div className={styles.corner}>
+        <Logo />
+        <div className={styles.cornerRight}>
+          <HeaderContent />
+        </div>
       </div>
     </header>
     <div className={styles.scroll}>
@@ -32,7 +34,9 @@ export const Layout = () => (
         </Switch>
       </main>
     </div>
-    <div aria-hidden className={styles.safeBottom} />
+    <footer className={styles.overlayBottom}>
+      <div aria-hidden className={styles.safeBottom} />
+    </footer>
   </div>
 );
 /* jscpd:ignore-end */
