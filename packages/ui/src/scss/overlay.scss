@@ -15,16 +15,15 @@
 
   background: linear-gradient(
     $dir,
-    color.overlay() 0%,
-    color.overlay() calc(100% - 20px),
-    color-mix(in oklch, color.overlay() 85%, transparent) calc(100% - 12px),
-    color-mix(in oklch, color.overlay() 40%, transparent) calc(100% - 4px),
+    color-mix(in oklch, color.overlay() 70%, transparent) 0%,
+    color-mix(in oklch, color.overlay() 50%, transparent) calc(100% - 12px),
+    color-mix(in oklch, color.overlay() 25%, transparent) calc(100% - 4px),
     transparent 100%
   );
-  box-shadow:
-    0 ($y * 4px) 10px oklch(0% 0 0deg / 5%),
-    0 ($y * 10px) 24px oklch(0% 0 0deg / 12%);
-  backdrop-filter: blur(12px);
+  border-block-end: if($y > 0, 1px solid color.border(), none);
+  border-block-start: if($y < 0, 1px solid color.border(), none);
+  box-shadow: 0 ($y * 2px) 8px oklch(0% 0 0deg / 3%);
+  backdrop-filter: blur(8px);
 }
 
 @mixin top($fixed: true) {
