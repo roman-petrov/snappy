@@ -50,6 +50,10 @@
   @return -color("bg-header");
 }
 
+@function overlay() {
+  @return -color("overlay");
+}
+
 @function grid() {
   @return -color("grid");
 }
