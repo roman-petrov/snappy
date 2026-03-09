@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "com.snappy.app"
+    namespace = "com.snappy.app"
     compileSdk rootProject.ext.compileSdkVersion
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -27,14 +27,14 @@ android {
         release {
             buildConfigField "String", "APP_URL", "\"https://snappy-ai.ru/app\""
             minifyEnabled true
-            shrinkResources true
+            shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
     }
 }
 
 dependencies {
     implementation "androidx.activity:activity:$androidxActivityVersion"
-    implementation "androidx.core:core:1.15.0"
+    implementation "androidx.core:core:1.17.0"
 }
