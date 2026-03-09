@@ -7,6 +7,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.SystemBarStyle;
 
 public class MainActivity extends ComponentActivity {
@@ -28,5 +29,17 @@ public class MainActivity extends ComponentActivity {
         webView.addJavascriptInterface(new BarStyleBridge(this), "SnappyAndroid");
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(BuildConfig.APP_URL);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                } else {
+                    setEnabled(false);
+                    getOnBackPressedDispatcher().onBackPressed();
+                }
+            }
+        });
     }
 }
