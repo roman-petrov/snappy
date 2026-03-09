@@ -2,6 +2,8 @@
 /* eslint-disable functional/no-expression-statements */
 import { Process } from "@snappy/node";
 
+import { Drawable } from "./Drawable";
+
 const workflowRunner = `bun`;
 import fs from "node:fs";
 import { join } from "node:path";
@@ -66,6 +68,7 @@ const buildAndroidApk = async (
   distName: string,
   capture: boolean,
 ): Promise<number | SpawnResult> => {
+  await Drawable.generate(root);
   const result = await runSpawn(androidDir(root), [gradlew(root), task], capture);
   if (exitCode(result) !== 0) {
     return result;
