@@ -11,3 +11,4 @@ gradlew
 androidx
 proguard
 wouter
+vectordrawable
