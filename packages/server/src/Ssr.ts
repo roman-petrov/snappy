@@ -4,8 +4,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-promise-reject */
-/* eslint-disable functional/no-try-statements */
-import type { RequestHandler } from "express";
+
+import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";
 import { type SiteLocaleKey, Ssr as SiteSsr, type SsrEntry } from "@snappy/site/Ssr";
@@ -33,19 +33,15 @@ export const Ssr = () => {
   };
 
   const createSsrHandler =
-    (clientRoot: string): RequestHandler =>
-    async (request, response, next) => {
-      try {
-        const locale = LocaleCookie.parse(request.headers.cookie);
-        const { entry, template } = await loadTemplateAndEntry(clientRoot);
+    (clientRoot: string) =>
+    async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+      const locale = LocaleCookie.parse(request.headers.cookie);
+      const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
-        response.type(`html`).send(SiteSsr.buildHtml(locale, template, entry));
-      } catch (error) {
-        next(error);
-      }
+      await reply.type(`text/html`).send(SiteSsr.buildHtml(locale, template, entry));
     };
 
-  const createCachedSsrHandler = (clientRoot: string, cache: ServerCache): RequestHandler => {
+  const createCachedSsrHandler = (clientRoot: string, cache: ServerCache) => {
     const loadedRef: { promise?: Promise<{ entry: SsrEntry; template: string }> } = {};
 
     const ensureLoaded = async (): Promise<{ entry: SsrEntry; template: string }> => {
@@ -54,23 +50,23 @@ export const Ssr = () => {
       return loadedRef.promise;
     };
 
-    return async (request, response, next) => {
-      try {
-        const locale = LocaleCookie.parse(request.headers.cookie);
-        const key = `ssr:${locale}`;
-        const cached = cache.get(key);
-        if (cached !== undefined) {
-          cache.sendCached(response, cached, request.get(`accept-encoding`), `text/html`);
+    return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+      const locale = LocaleCookie.parse(request.headers.cookie);
+      const key = `ssr:${locale}`;
+      const acceptEncoding = request.headers[`accept-encoding`];
+      const cached = cache.get(key);
+      if (cached !== undefined) {
+        cache.sendCached(reply, cached, acceptEncoding, `text/html`);
 
-          return;
-        }
-        const { entry: ssrEntry, template } = await ensureLoaded();
-        const html = SiteSsr.buildHtml(locale, template, ssrEntry);
-        const entry = cache.set(key, Buffer.from(html, `utf8`), `text/html`);
-        cache.sendCached(response, entry, request.get(`accept-encoding`), `text/html`);
-      } catch (error) {
-        next(error);
+        return;
       }
+      const { entry: ssrEntry, template } = await ensureLoaded();
+      cache.sendCached(
+        reply,
+        cache.set(key, Buffer.from(SiteSsr.buildHtml(locale, template, ssrEntry), `utf8`), `text/html`),
+        acceptEncoding,
+        `text/html`,
+      );
     };
   };
 

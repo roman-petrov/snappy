@@ -1,9 +1,12 @@
+/* eslint-disable functional/immutable-data */
+import type { FastifyReply, FastifyRequest } from "fastify";
+
 import { Config } from "@snappy/config";
 import { _, Browser } from "@snappy/core";
 import { App, ServerCache, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
-import { existsSync, readFileSync } from "node:fs";
-import http from "node:http";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
+import http, { type Server } from "node:http";
 import https from "node:https";
 import { join } from "node:path";
 
@@ -43,67 +46,104 @@ const siteRoot = join(distDir, `site`);
 const appDesktopRoot = join(distDir, `app-desktop`);
 const appMobileRoot = join(distDir, `app-mobile`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
-const app = App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
 
-app.disable(`x-powered-by`);
+const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
+  current: undefined,
+};
 
+const serverFactory = (handler: (request: http.IncomingMessage, response: http.ServerResponse) => void): Server => {
+  handlerRef.current = handler;
+
+  return http.createServer(handler);
+};
+
+const app = await App.createApp({ api: appContext.api, botApiKey: Config.botApiKey, serverFactory });
 const cache = ServerCache();
 const ssr = Ssr();
 app.get(`/`, ssr.createCachedSsrHandler(siteRoot, cache));
-const apkPath = join(distDir, `snappy.apk`);
-app.get(`/download/snappy.apk`, (_request, response, next) => {
-  if (!existsSync(apkPath)) {
-    return next();
-  }
-  response.setHeader(`Content-Disposition`, `attachment; filename="snappy.apk"`);
-  response.type(`application/vnd.android.package-archive`);
-  response.sendFile(apkPath);
 
-  return undefined;
+const apkPath = join(distDir, `snappy.apk`);
+app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyReply) => {
+  if (!existsSync(apkPath)) {
+    reply.callNotFound();
+
+    return;
+  }
+  reply.header(`Content-Disposition`, `attachment; filename="snappy.apk"`);
+  reply.type(`application/vnd.android.package-archive`);
+  await reply.send(createReadStream(apkPath));
 });
+
 const staticAppDesktop = cache.createStaticWithPrefix(appDesktopRoot, `/app`);
 const staticAppMobile = cache.createStaticWithPrefix(appMobileRoot, `/app`);
-app.use((request, response, next) => {
-  const path = request.path || `/`;
-  if (!path.startsWith(`/app`)) {
-    return next();
-  }
-  const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
+const staticSite = cache.createStatic(siteRoot);
+const appIndexPaths = [join(appDesktopRoot, `index.html`), join(appMobileRoot, `index.html`)] as const;
+const appIndexKeys = [`app:index:desktop`, `app:index:mobile`] as const;
 
-  return (mobile ? staticAppMobile : staticAppDesktop)(request, response, next);
+app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
+  const pathname = cache.pathnameFromRequest(request);
+  const userAgent = request.headers[`user-agent`];
+  const mobile = Browser.mobile(_.isString(userAgent) ? userAgent : _.isArray(userAgent) ? userAgent[0] : ``);
+  const acceptEncoding = request.headers[`accept-encoding`];
+
+  const runChain = (step: number) => {
+    if (step === 0) {
+      if (!pathname.startsWith(`/app`) || pathname === `/app` || pathname === `/app/`) {
+        runChain(1);
+
+        return;
+      }
+      (mobile ? staticAppMobile : staticAppDesktop)(request, reply, () => runChain(1));
+
+      return;
+    }
+
+    if (step === 1) {
+      staticSite(request, reply, () => runChain(2));
+
+      return;
+    }
+
+    if (step === 2) {
+      if (!/^\/app(?:\/.*)?$/u.test(pathname)) {
+        reply.callNotFound();
+
+        return;
+      }
+      const appVariant = mobile ? 1 : 0;
+      const indexPath = appIndexPaths[appVariant];
+      const indexKey = appIndexKeys[appVariant];
+      if (!existsSync(indexPath)) {
+        reply.callNotFound();
+
+        return;
+      }
+      const cached = cache.get(indexKey);
+      if (cached !== undefined) {
+        cache.sendCached(reply, cached, acceptEncoding, `text/html`);
+
+        return;
+      }
+      cache.sendCached(
+        reply,
+        cache.set(indexKey, Buffer.from(readFileSync(indexPath, `utf8`), `utf8`), `text/html`),
+        acceptEncoding,
+        `text/html`,
+      );
+    }
+  };
+
+  runChain(0);
 });
 
-app.use(cache.createStatic(siteRoot));
-const appIndexDesktopPath = join(appDesktopRoot, `index.html`);
-const appIndexMobilePath = join(appMobileRoot, `index.html`);
-const appIndexDesktopKey = `app:index:desktop`;
-const appIndexMobileKey = `app:index:mobile`;
-app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
-  const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
-  const indexPath = mobile ? appIndexMobilePath : appIndexDesktopPath;
-  const indexKey = mobile ? appIndexMobileKey : appIndexDesktopKey;
-  if (!existsSync(indexPath)) {
-    return next();
-  }
-  const cached = cache.get(indexKey);
-  if (cached !== undefined) {
-    cache.sendCached(response, cached, request.get(`accept-encoding`), `text/html`);
-
-    return undefined;
-  }
-  const raw = readFileSync(indexPath, `utf8`);
-  const entry = cache.set(indexKey, Buffer.from(raw, `utf8`), `text/html`);
-  cache.sendCached(response, entry, request.get(`accept-encoding`), `text/html`);
-
-  return undefined;
-});
-
-const handler = (request: http.IncomingMessage, response: http.ServerResponse) => {
-  app(request, response);
-};
+await app.ready();
 
 process.stdout.write(`🚀 Starting server…\n`);
 void appContext.start();
 await ssr.prewarmSsr(siteRoot, cache, [`ru`, `en`]);
 
-startServers(handler);
+if (handlerRef.current === undefined) {
+  throw new Error(`serverFactory was not called`);
+}
+
+startServers(handlerRef.current);

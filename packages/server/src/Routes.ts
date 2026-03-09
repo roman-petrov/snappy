@@ -2,7 +2,7 @@
 /* eslint-disable functional/prefer-tacit */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { ServerAppApi } from "@snappy/server-app";
-import type { Request } from "express";
+import type { FastifyRequest } from "fastify";
 
 import {
   type ApiAuthBody,
@@ -14,23 +14,23 @@ import {
 
 import type { Route } from "./Router";
 
-type RequestWithUserId = Request & { userId?: number };
+type RequestWithUserId = FastifyRequest & { userId?: number };
 
-const getUserId = (request: Request): number | undefined => (request as RequestWithUserId).userId;
+const getUserId = (request: FastifyRequest): number | undefined => (request as RequestWithUserId).userId;
 
 const withBody =
   <TBody, TSuccess>(
     run: (api: ServerAppApi, body: TBody) => Promise<TSuccess | { status: string }>,
-    bodyFromRequest: (request: Request) => TBody,
+    bodyFromRequest: (request: FastifyRequest) => TBody,
   ) =>
-  async (api: ServerAppApi, request: Request) =>
+  async (api: ServerAppApi, request: FastifyRequest) =>
     run(api, bodyFromRequest(request));
 
 const withUserIdRequired =
   <TSuccess>(
-    runWithId: (api: ServerAppApi, userId: number, request: Request) => Promise<TSuccess | { status: string }>,
+    runWithId: (api: ServerAppApi, userId: number, request: FastifyRequest) => Promise<TSuccess | { status: string }>,
   ) =>
-  async (api: ServerAppApi, request: Request): Promise<TSuccess | { status: string }> =>
+  async (api: ServerAppApi, request: FastifyRequest): Promise<TSuccess | { status: string }> =>
     runWithId(api, getUserId(request) ?? 0, request);
 
 const withUserId = <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { status: string }>) =>
@@ -38,10 +38,10 @@ const withUserId = <TSuccess>(run: (api: ServerAppApi, userId: number) => Promis
 
 const withUserIdAndBody = <TBody, TSuccess>(
   run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { status: string }>,
-  bodyFromRequest: (request: Request) => TBody,
+  bodyFromRequest: (request: FastifyRequest) => TBody,
 ) => withUserIdRequired(async (api, id, request) => run(api, id, bodyFromRequest(request)));
 
-const body = <T>(request: Request): T => (request.body ?? {}) as T;
+const body = <T>(request: FastifyRequest): T => (request.body ?? {}) as T;
 
 const route = <T = unknown>(
   method: `get` | `post`,

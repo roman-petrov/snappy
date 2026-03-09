@@ -3,14 +3,19 @@
 /* eslint-disable functional/no-expression-statements */
 import type { ApiBotBody } from "@snappy/server-api";
 import type { ServerAppApi } from "@snappy/server-app";
-import type { Request, Response } from "express";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _, HttpStatus } from "@snappy/core";
 
 import { AuthCookie } from "./AuthCookie";
 
+type RequestWithTelegramId = FastifyRequest & { telegramId?: number };
+
+type RequestWithUserId = FastifyRequest & { userId?: number };
+
 const requireUser =
-  (api: ServerAppApi, botApiKey: string) => async (request: Request, response: Response, next: () => void) => {
+  (api: ServerAppApi, botApiKey: string) =>
+  async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const tryJwt = () => {
       const token = AuthCookie.token(request.headers.cookie ?? ``);
 
@@ -23,7 +28,7 @@ const requireUser =
         return false;
       }
 
-      (request as Request & { userId: number }).userId = payload.userId;
+      (request as RequestWithUserId).userId = payload.userId;
 
       return true;
     };
@@ -36,34 +41,40 @@ const requireUser =
       }
 
       const body = request.body as ApiBotBody | undefined;
-      const raw = _.isNumber(body?.telegramId) ? body.telegramId : request.query[`telegramId`];
+
+      const raw = _.isNumber(body?.telegramId)
+        ? body.telegramId
+        : (request.query as { telegramId?: unknown }).telegramId;
+
       const numberValue = _.isString(raw) ? Number(raw) : _.isNumber(raw) ? raw : Number.NaN;
       const telegramId = Number.isNaN(numberValue) ? undefined : numberValue;
       if (telegramId === undefined) {
         return false;
       }
 
-      (request as Request & { telegramId: number }).telegramId = telegramId;
+      (request as RequestWithTelegramId).telegramId = telegramId;
 
       return true;
     };
 
     if (tryJwt()) {
-      next();
-
       return;
     }
 
     if (!tryBot()) {
-      response.status(HttpStatus.unauthorized).json({ status: `unauthorized` });
+      await reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
 
       return;
     }
 
-    const { telegramId } = request as Request & { telegramId: number };
+    const { telegramId } = request as RequestWithTelegramId;
+    if (telegramId === undefined) {
+      await reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
+
+      return;
+    }
     const user = await api.ensureUserByTelegramId(telegramId);
-    (request as Request & { userId: number }).userId = user.id;
-    next();
+    (request as RequestWithUserId).userId = user.id;
   };
 
 export const Middleware = { requireUser };

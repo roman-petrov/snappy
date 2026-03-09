@@ -3,7 +3,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
-import type { RequestHandler } from "express";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _, Cache } from "@snappy/core";
 import { readFileSync } from "node:fs";
@@ -12,10 +12,10 @@ import { brotliCompressSync, gzipSync } from "node:zlib";
 
 export type CachedEntry = { brotli?: Buffer; gzip?: Buffer; raw: Buffer };
 
-type SendResponse = {
-  send: (body: Buffer | string) => void;
-  setHeader: (name: string, value: string) => SendResponse;
-  type: (t: string) => SendResponse;
+type SendTarget = {
+  header: (name: string, value: string) => SendTarget;
+  send: (body: Buffer | string) => SendTarget;
+  type: (t: string) => SendTarget;
 };
 
 export const ServerCache = () => {
@@ -56,7 +56,6 @@ export const ServerCache = () => {
     return contentTypesByExt[ext] ?? `application/octet-stream`;
   };
 
-  // Heuristic: content hash in filename (e.g. main.a1b2c3d4.js or inter-...-DO1Apj_S.woff2)
   const hasHashInPath = (pathname: string) => /[-.]\w{8,}\./u.test(pathname.split(`/`).pop() ?? ``);
   const { get, remove } = store;
 
@@ -71,52 +70,53 @@ export const ServerCache = () => {
     return store.set(key, entry);
   };
 
-  const preferredEncoding = (acceptEncoding: string | undefined) => {
-    if (acceptEncoding === undefined) {
-      return undefined;
-    }
-    const s = acceptEncoding.toLowerCase();
-    if (s.includes(`br`)) {
-      return `br`;
-    }
-    if (s.includes(`gzip`)) {
-      return `gzip`;
-    }
-
-    return undefined;
-  };
+  const preferredEncoding = (acceptEncoding: string | undefined) =>
+    acceptEncoding === undefined
+      ? undefined
+      : acceptEncoding.toLowerCase().includes(`br`)
+        ? `br`
+        : acceptEncoding.toLowerCase().includes(`gzip`)
+          ? `gzip`
+          : undefined;
 
   const sendCached = (
-    response: SendResponse,
+    target: SendTarget,
     entry: CachedEntry,
     acceptEncoding: string | undefined,
     contentType: string,
     pathname = ``,
   ) => {
-    response.type(contentType);
-    response.setHeader(`Vary`, `Accept-Encoding`);
+    target.type(contentType);
+    target.header(`Vary`, `Accept-Encoding`);
     if (pathname !== `` && hasHashInPath(pathname)) {
-      response.setHeader(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
+      target.header(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
     }
     const enc = preferredEncoding(acceptEncoding);
     if (enc === `br` && entry.brotli !== undefined) {
-      response.setHeader(`Content-Encoding`, `br`);
-      response.send(entry.brotli);
+      target.header(`Content-Encoding`, `br`);
+      target.send(entry.brotli);
 
       return;
     }
     if (enc === `gzip` && entry.gzip !== undefined) {
-      response.setHeader(`Content-Encoding`, `gzip`);
-      response.send(entry.gzip);
+      target.header(`Content-Encoding`, `gzip`);
+      target.send(entry.gzip);
 
       return;
     }
-    response.send(entry.raw);
+    target.send(entry.raw);
+  };
+
+  const pathnameFromRequest = (request: FastifyRequest) => {
+    const { url } = request;
+    const path = url.includes(`?`) ? url.slice(0, url.indexOf(`?`)) : url;
+
+    return path.startsWith(`/`) ? path : `/${path}`;
   };
 
   const serveFromRoot = (
-    request: { get: (name: string) => string | undefined },
-    response: SendResponse,
+    request: FastifyRequest,
+    reply: FastifyReply,
     next: () => void,
     root: string,
     pathname: string,
@@ -133,7 +133,7 @@ export const ServerCache = () => {
     const key = `static:${pathname}`;
     const cached = get(key);
     if (cached !== undefined) {
-      sendCached(response, cached, request.get(`accept-encoding`), contentTypeFromPath(pathname), pathname);
+      sendCached(reply, cached, request.headers[`accept-encoding`], contentTypeFromPath(pathname), pathname);
 
       return;
     }
@@ -150,21 +150,18 @@ export const ServerCache = () => {
     }
     const contentType = contentTypeFromPath(pathname);
     const entry = set(key, raw, contentType);
-    sendCached(response, entry, request.get(`accept-encoding`), contentType, pathname);
+    sendCached(reply, entry, request.headers[`accept-encoding`], contentType, pathname);
   };
 
   const createStatic =
-    (root: string): RequestHandler =>
-    (request, response, next) => {
-      const pathname = request.path || `/`;
-
-      serveFromRoot(request, response, next, root, pathname);
-    };
+    (root: string) =>
+    (request: FastifyRequest, reply: FastifyReply, next: () => void): void =>
+      serveFromRoot(request, reply, next, root, pathnameFromRequest(request));
 
   const createStaticWithPrefix =
-    (root: string, prefix: string): RequestHandler =>
-    (request, response, next) => {
-      const path = request.path || `/`;
+    (root: string, prefix: string) =>
+    (request: FastifyRequest, reply: FastifyReply, next: () => void): void => {
+      const path = pathnameFromRequest(request);
       if (!path.startsWith(prefix)) {
         next();
 
@@ -172,10 +169,10 @@ export const ServerCache = () => {
       }
       const pathname = path.slice(prefix.length) || `/`;
 
-      serveFromRoot(request, response, next, root, pathname);
+      serveFromRoot(request, reply, next, root, pathname);
     };
 
-  return { createStatic, createStaticWithPrefix, get, remove, sendCached, set };
+  return { createStatic, createStaticWithPrefix, get, pathnameFromRequest, remove, sendCached, set };
 };
 
 export type ServerCache = ReturnType<typeof ServerCache>;
