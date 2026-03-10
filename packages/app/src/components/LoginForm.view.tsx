@@ -58,7 +58,12 @@ export const LoginFormView = ({
       />
     </div>
     <FormErrorAndActions error={error}>
-      <Button disabled={loading} text={loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)} type="primary" />
+      <Button
+        disabled={loading}
+        submit
+        text={loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
+        type="primary"
+      />
       <Button text={t(`loginPage.forgotPassword`)} to="/forgot-password" type="link" />
       <Button text={t(`loginPage.registerLink`)} to="/register" type="link" />
     </FormErrorAndActions>

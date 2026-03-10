@@ -30,6 +30,7 @@ export const ForgotPasswordFormView = ({ formProps, messageProps, screen }: Forg
         <FormErrorAndActions error={formProps.error}>
           <Button
             disabled={formProps.loading}
+            submit
             text={formProps.loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             type="primary"
           />

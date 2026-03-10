@@ -60,6 +60,7 @@ export const RegisterFormView = ({
     <FormErrorAndActions error={error}>
       <Button
         disabled={loading || !meetsMinLength}
+        submit
         text={loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         type="primary"
       />

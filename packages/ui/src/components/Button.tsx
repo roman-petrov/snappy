@@ -11,6 +11,7 @@ export type ButtonProps = {
   icon?: IconType;
   large?: boolean;
   onClick?: () => void;
+  submit?: boolean;
   text: string;
   to?: string;
   type?: `default` | `link` | `primary`;
@@ -23,6 +24,7 @@ export const Button = ({
   icon,
   large = false,
   onClick,
+  submit = false,
   text,
   to = ``,
   type = `default`,
@@ -67,7 +69,7 @@ export const Button = ({
             {content}
           </a>
         ) : (
-          <button {...common} disabled={disabled} onClick={onClick} type="button">
+          <button {...common} disabled={disabled} onClick={onClick} type={submit ? `submit` : `button`}>
             {content}
           </button>
         )}

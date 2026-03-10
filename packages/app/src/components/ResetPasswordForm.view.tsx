@@ -33,6 +33,7 @@ export const ResetPasswordFormView = ({ formProps, messageProps, screen }: Reset
         <FormErrorAndActions error={formProps.error}>
           <Button
             disabled={formProps.loading}
+            submit
             text={formProps.loading ? t(`resetPage.submitting`) : t(`resetPage.submit`)}
             type="primary"
           />
