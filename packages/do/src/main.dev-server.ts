@@ -27,7 +27,11 @@ const main = async () => {
   const app = express();
 
   const configBuilder = ViteConfig(
-    { build: { rollupOptions: { input: devInput } }, root: projectRoot },
+    {
+      build: { rollupOptions: { input: devInput } },
+      resolve: { alias: { "/app-desktop": appDesktopDir, "/app-mobile": appMobileDir, "/src": join(siteDir, `src`) } },
+      root: projectRoot,
+    },
     { analyzeFileName: `dev` },
   );
 
@@ -47,11 +51,12 @@ const main = async () => {
   app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
   app.get(`/app/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
-  const indexHtmlFromDir = async (dir: string) => {
+  const indexHtmlFromDir = async (dir: string, documentUrl?: string) => {
     const indexPath = join(dir, `index.html`);
     const raw = readFileSync(indexPath, `utf8`);
+    const url = documentUrl ?? pathToFileURL(indexPath).href;
 
-    return vite.transformIndexHtml(pathToFileURL(indexPath).href, raw);
+    return vite.transformIndexHtml(url, raw);
   };
 
   const handleHtmlError = (error: unknown, next: express.NextFunction) => {
@@ -63,9 +68,11 @@ const main = async () => {
     if (/\.\w+$/iu.test(request.path)) {
       return next();
     }
-    const appDir = Browser.mobile(request.get(`user-agent`) ?? ``) ? appMobileDir : appDesktopDir;
-    void indexHtmlFromDir(appDir)
-      .then(html => response.type(`html`).send(html))
+    const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
+    const appDir = mobile ? appMobileDir : appDesktopDir;
+    const appDocumentUrl = mobile ? `/app-mobile/index.html` : `/app-desktop/index.html`;
+    void indexHtmlFromDir(appDir, appDocumentUrl)
+      .then(html => response.type(`html`).send(html.replaceAll(/\/app-(?:desktop|mobile)\//gu, `/app/`)))
       .catch((error: unknown) => handleHtmlError(error, next));
 
     return undefined;
