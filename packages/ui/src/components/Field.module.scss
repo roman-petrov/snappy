@@ -34,6 +34,8 @@
   box-sizing: border-box;
   width: 100%;
   padding: space.x3() space.x4();
+  color: color.text-body();
+  background: color.bg();
 }
 
 .input:focus {
@@ -55,6 +57,7 @@
   flex: 1 1 0;
   width: 0;
   min-width: 0;
+  color: color.text-body();
   background: transparent;
   border: none;
 }
