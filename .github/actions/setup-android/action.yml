@@ -1,6 +1,5 @@
-# cspell:word temurin
 name: Setup Android
-description: Fix gradlew permissions, setup Java and Android SDK for building the app
+description: Fix gradlew permissions and select Java 21 for Android build
 runs:
   using: composite
   steps:
@@ -8,13 +7,6 @@ runs:
       shell: bash
       run: chmod +x packages/app-android/android/gradlew
 
-    - name: ☕ Setup Java
-      uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654 # v5.2.0
-      with:
-        distribution: temurin
-        java-version: "21"
-
-    - name: 🔧 Setup Android SDK
-      uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3.2.2
-      with:
-        packages: "platforms;android-36 build-tools;36.0.0"
+    - name: ☕ Use Java 21
+      shell: bash
+      run: echo "JAVA_HOME=$JAVA_HOME_21_X64" >> $GITHUB_ENV
