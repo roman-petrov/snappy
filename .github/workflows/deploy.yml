@@ -3,6 +3,12 @@ name: 🚀 Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      disable-cache:
+        description: "🧹 Disable Gradle cache"
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -34,8 +40,17 @@ jobs:
       - name: 📱 Build mobile app
         run: bun do build:app-mobile
 
+      - name: 🔧 Setup Gradle (cache)
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        with:
+          cache-disabled: ${{ inputs.disable-cache }}
+
       - name: 🔧 Setup Android
         uses: ./.github/actions/setup-android
+
+      - name: 🧹 Clean Android (full rebuild)
+        if: ${{ inputs.disable-cache }}
+        run: cd packages/app-android/android && ./gradlew clean
 
       - name: 🤖 Build Android app
         run: bun do build:app-android
