@@ -21,6 +21,11 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
+a {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
 #fog-bg {
   z-index: 0;
 }
