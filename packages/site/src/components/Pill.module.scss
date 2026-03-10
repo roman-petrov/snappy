@@ -1,4 +1,5 @@
 @use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
 @use "pkg:@snappy/ui/space";
 
 .pill {
@@ -9,7 +10,7 @@
   transition: var(--transition);
 }
 
-.pill:hover {
+@include hover(".pill") {
   border-color: color.accent-strong();
 }
 

@@ -1,0 +1,13 @@
+@mixin media-hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin hover($selector) {
+  @include media-hover {
+    #{$selector}:hover {
+      @content;
+    }
+  }
+}

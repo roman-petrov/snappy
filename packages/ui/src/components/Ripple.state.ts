@@ -6,7 +6,7 @@ const rippleSpeedPxPerS = 1000;
 
 type RippleItem = { id: number; style: CSSProperties };
 
-export const useRippleState = ({ children, disabled = false, speedFactor = 1 }: RippleProps) => {
+export const useRippleState = ({ center = false, children, disabled = false, speedFactor = 1 }: RippleProps) => {
   const wrapperRef = useRef<HTMLSpanElement | null>(null);
   const [ripples, setRipples] = useState<RippleItem[]>([]);
   const nextId = useRef(0);
@@ -23,8 +23,8 @@ export const useRippleState = ({ children, disabled = false, speedFactor = 1 }: 
       }
       const rect = element.getBoundingClientRect();
       const size = 2 * Math.max(rect.width, rect.height);
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+      const x = center ? rect.width / 2 : event.clientX - rect.left;
+      const y = center ? rect.height / 2 : event.clientY - rect.top;
       const id = nextId.current++;
       const duration = (size / rippleSpeedPxPerS) * speedFactor;
       setRipples(previous => [
@@ -32,7 +32,7 @@ export const useRippleState = ({ children, disabled = false, speedFactor = 1 }: 
         { id, style: { [`--ripple-duration` as string]: `${duration}s`, height: size, left: x, top: y, width: size } },
       ]);
     },
-    [speedFactor],
+    [center, speedFactor],
   );
 
   const remove = useCallback((id: number) => {

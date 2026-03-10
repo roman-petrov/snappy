@@ -1,4 +1,5 @@
 @use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
 @use "pkg:@snappy/ui/space";
 
 .feature {
@@ -10,7 +11,7 @@
   transition: var(--transition);
 }
 
-.feature:hover {
+@include hover(".feature") {
   background: color.bg-card-features-hover();
   box-shadow: var(--shadow-card-hover);
   transform: scale(1.02);

@@ -52,6 +52,18 @@ export const startApp = (
   }
   history.scrollRestoration = `manual`;
 
+  // Clear sticky :hover on touch (browsers keep :hover after tap)
+  document.addEventListener(
+    `touchend`,
+    () => {
+      document.body.style.pointerEvents = `none`;
+      requestAnimationFrame(() => {
+        document.body.style.pointerEvents = ``;
+      });
+    },
+    { passive: true },
+  );
+
   const rootElement = (
     <App
       children={base === undefined ? app : <Router aroundNav={aroundNav} base={base} children={app} />}

@@ -1,4 +1,5 @@
 @use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
 @use "pkg:@snappy/ui/space";
 
 .root {
@@ -13,7 +14,7 @@
   transition: box-shadow var(--ease);
 }
 
-.root:hover {
+@include hover(".root") {
   box-shadow: var(--shadow-card-hover);
 }
 

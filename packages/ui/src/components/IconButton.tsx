@@ -7,7 +7,7 @@ export type IconButtonProps = { ariaLabel: string; icon: ReactNode; onClick: () 
 
 export const IconButton = ({ ariaLabel, icon, onClick }: IconButtonProps) => (
   <span className={styles.wrapper}>
-    <Ripple speedFactor={3}>
+    <Ripple center speedFactor={4}>
       <button aria-label={ariaLabel} className={styles.root} onClick={onClick} title={ariaLabel} type="button">
         {icon}
       </button>

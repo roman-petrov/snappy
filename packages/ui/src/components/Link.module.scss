@@ -1,11 +1,12 @@
 @use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
 
 .accent {
   color: color.accent();
   text-decoration: none;
 }
 
-.accent:hover {
+@include hover(".accent") {
   text-decoration: underline;
 }
 
@@ -14,12 +15,12 @@
   text-decoration: none;
 }
 
-.muted:hover {
+@include hover(".muted") {
   color: color.text-body();
-}
 
-.muted:hover * {
-  color: inherit;
+  * {
+    color: inherit;
+  }
 }
 
 .accent:focus-visible,
