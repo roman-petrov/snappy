@@ -8,12 +8,10 @@ import styles from "./SiteHeader.module.scss";
 export type SiteHeaderViewProps = ReturnType<typeof useSiteHeaderState>;
 
 export const SiteHeaderView = ({ navItems }: SiteHeaderViewProps) => (
-  <div className={styles.root}>
-    <Header>
-      {navItems.map(({ href, key }) => (
-        <Link href={href} key={key} muted text={t(key)} />
-      ))}
-      <SystemButtons />
-    </Header>
-  </div>
+  <Header cn={styles.siteHeader}>
+    {navItems.map(({ href, key }) => (
+      <Link href={href} key={key} muted text={t(key)} />
+    ))}
+    <SystemButtons />
+  </Header>
 );

@@ -1,4 +1,4 @@
 declare const __SiteHeader: {
-  readonly root: "root";
+  readonly siteHeader: "siteHeader";
 };
 export default __SiteHeader;
