@@ -52,8 +52,7 @@
 }
 
 .root:focus-visible {
-  outline: var(--focus-ring-outline);
-  outline-offset: var(--focus-ring-outline-offset);
+  @include focus;
 }
 
 .root:not(.primary, .link) {

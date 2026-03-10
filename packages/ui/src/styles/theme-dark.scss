@@ -2,6 +2,8 @@
   --ripple-default: var(--ripple-on-dark);
   --ripple-primary: var(--ripple-on-light);
   --shadow-btn-lift: 0 6px 14px -2px oklch(100% 0 0deg / 22%);
+  --logo-text-shadow:
+    0 1px 0 oklch(100% 0 0deg / 38%), 0 2px 0 oklch(100% 0 0deg / 24%), 0 4px 10px oklch(0% 0 0deg / 55%);
   --color-bg: oklch(7% 0.002 286deg);
   --color-bg-elevated: oklch(9% 0.002 286deg);
   --color-border: oklch(32% 0.012 286deg);

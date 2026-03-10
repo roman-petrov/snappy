@@ -49,9 +49,9 @@
 }
 
 .suffix-icon > *:focus-visible {
+  @include focus;
+
   color: color.accent();
-  outline: var(--focus-ring-outline);
-  outline-offset: var(--focus-ring-outline-offset);
 }
 
 .suffix-icon > *:disabled {
