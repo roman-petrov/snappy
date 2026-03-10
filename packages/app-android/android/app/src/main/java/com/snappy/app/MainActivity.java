@@ -36,7 +36,7 @@ public class MainActivity extends ComponentActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        webView.addJavascriptInterface(new BarStyleBridge(this), "SnappyAndroid");
+        webView.addJavascriptInterface(new Bridge(this), "AndroidBridge");
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(BuildConfig.APP_URL);
 

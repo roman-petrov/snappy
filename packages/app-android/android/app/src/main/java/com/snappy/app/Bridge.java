@@ -1,14 +1,15 @@
 package com.snappy.app;
 
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-public class BarStyleBridge {
+public class Bridge {
 
     private final MainActivity activity;
 
-    public BarStyleBridge(MainActivity activity) {
+    public Bridge(MainActivity activity) {
         this.activity = activity;
     }
 
@@ -22,6 +23,14 @@ public class BarStyleBridge {
             boolean lightBars = "light".equals(theme);
             controller.setAppearanceLightStatusBars(lightBars);
             controller.setAppearanceLightNavigationBars(lightBars);
+        });
+    }
+
+    @JavascriptInterface
+    public void hapticImpact(int constant) {
+        activity.runOnUiThread(() -> {
+            View view = activity.getWindow().getDecorView();
+            view.performHapticFeedback(constant);
         });
     }
 }
