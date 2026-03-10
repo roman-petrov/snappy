@@ -1,13 +1,30 @@
 @use "pkg:@snappy/ui/color";
 @use "pkg:@snappy/ui/space";
 
+.wrapper {
+  --ripple-color: var(--ripple-default);
+
+  position: relative;
+  display: inline-flex;
+  width: fit-content;
+  overflow: hidden;
+  color: color.text-muted();
+  outline: none;
+  border: none;
+  border-radius: 50%;
+}
+
+.wrapper:hover {
+  color: color.text-body();
+}
+
 .root {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: space.x8();
-  height: space.x8();
+  width: space.x10();
+  height: space.x10();
   padding: 0;
   font-size: space.x5();
   line-height: 1;
@@ -22,8 +39,8 @@
 .root::before {
   position: absolute;
   inset: 50%;
-  width: space.x10();
-  height: space.x10();
+  width: space.x12();
+  height: space.x12();
   pointer-events: none;
   content: "";
   background: transparent;
@@ -34,6 +51,10 @@
 
 .root:hover {
   color: color.text-body();
+}
+
+.root:hover {
+  outline: none;
 }
 
 .root:hover::before {

@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 
 import styles from "./Button.module.scss";
-import { Icon } from "./Icon";
+import { Icon, type Icon as IconType } from "./Icon";
+import { Ripple } from "./Ripple";
 
 export type ButtonProps = {
   children: ReactNode;
   cn?: string;
   disabled?: boolean;
   href?: string;
-  icon?: Icon;
+  icon?: IconType;
   large?: boolean;
   onClick?: () => void;
   primary?: boolean;
@@ -19,7 +20,7 @@ export const Button = ({
   children,
   cn = ``,
   disabled = false,
-  href,
+  href = ``,
   icon,
   large = false,
   onClick,
@@ -30,7 +31,8 @@ export const Button = ({
     .filter(Boolean)
     .join(` `);
 
-  const isLink = href !== undefined;
+  const isLink = href !== ``;
+  const common = { className: classNames };
 
   const content = (
     <>
@@ -39,19 +41,25 @@ export const Button = ({
     </>
   );
 
-  return isLink ? (
-    <a
-      className={classNames}
-      href={href}
-      onClick={onClick}
-      rel={href.startsWith(`http`) ? `noopener` : undefined}
-      target={href.startsWith(`http`) ? `_blank` : undefined}
-    >
-      {content}
-    </a>
-  ) : (
-    <button className={classNames} disabled={disabled} onClick={onClick} type={type}>
-      {content}
-    </button>
+  return (
+    <span className={styles.wrapper}>
+      <Ripple disabled={disabled}>
+        {isLink ? (
+          <a
+            {...common}
+            href={href}
+            onClick={onClick}
+            rel={href.startsWith(`http`) ? `noopener` : undefined}
+            target={href.startsWith(`http`) ? `_blank` : undefined}
+          >
+            {content}
+          </a>
+        ) : (
+          <button {...common} disabled={disabled} onClick={onClick} type={type}>
+            {content}
+          </button>
+        )}
+      </Ripple>
+    </span>
   );
 };

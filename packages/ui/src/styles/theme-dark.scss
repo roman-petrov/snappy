@@ -1,4 +1,7 @@
 [data-theme="dark"] {
+  --ripple-default: var(--ripple-on-dark);
+  --ripple-primary: var(--ripple-on-light);
+  --shadow-btn-lift: 0 6px 14px -2px oklch(100% 0 0deg / 22%);
   --color-bg: oklch(7% 0.002 286deg);
   --color-bg-elevated: oklch(9% 0.002 286deg);
   --color-border: oklch(32% 0.012 286deg);

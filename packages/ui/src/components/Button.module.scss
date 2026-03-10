@@ -2,14 +2,42 @@
 @use "pkg:@snappy/ui/space";
 @use "pkg:@snappy/ui/typography";
 
+@mixin button-skin($bg, $text-color) {
+  color: $text-color;
+  background: $bg;
+}
+
+.wrapper {
+  --ripple-color: var(--ripple-default);
+
+  position: relative;
+  display: inline-flex;
+  overflow: visible;
+  outline: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-btn);
+}
+
+.wrapper:has(.primary) {
+  --ripple-color: var(--ripple-primary);
+}
+
+.wrapper:has(.root:hover:not(:disabled)) {
+  transform: translateY(-2px);
+}
+
 .root {
   @include typography.button;
 
+  position: relative;
   display: inline-flex;
   gap: space.x2();
   align-items: center;
   justify-content: center;
+  width: 100%;
   padding: space.x3() space.x6();
+  overflow: hidden;
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -17,21 +45,23 @@
   transition: var(--transition-btn);
 }
 
+.root:hover {
+  text-decoration: none;
+  outline: none;
+  box-shadow: var(--shadow-btn-lift);
+}
+
 .root:focus-visible {
   outline: var(--focus-ring-outline);
   outline-offset: var(--focus-ring-outline-offset);
 }
 
-.primary {
-  color: color.on-accent();
-  background: color.accent();
-  box-shadow: var(--shadow-btn);
+.root:not(.primary) {
+  @include button-skin(color.button-default(), color.text-body());
 }
 
-.primary:hover {
-  text-decoration: none;
-  box-shadow: var(--shadow-btn-hover);
-  transform: translateY(-2px);
+.primary {
+  @include button-skin(color.accent(), color.on-accent());
 }
 
 .large {

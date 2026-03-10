@@ -30,6 +30,8 @@ export * from "./PasswordInput";
 
 export * from "./PasswordStrength";
 
+export * from "./Ripple";
+
 export * from "./Select";
 
 export * from "./SystemButtons";

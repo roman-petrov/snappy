@@ -46,6 +46,10 @@
   @return -color("border");
 }
 
+@function button-default() {
+  @return -color("button-default");
+}
+
 @function bg-header() {
   @return -color("bg-header");
 }
