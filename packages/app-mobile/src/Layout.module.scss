@@ -46,7 +46,7 @@
 
 .main {
   box-sizing: border-box;
-  padding: calc(3.5rem + env(safe-area-inset-top, 0px) + space.x3()) calc(space.x4() + env(safe-area-inset-right, 0px))
+  padding: calc(3.5rem + env(safe-area-inset-top, 0px) + space.x6()) calc(space.x4() + env(safe-area-inset-right, 0px))
     env(safe-area-inset-bottom, 0) calc(space.x4() + env(safe-area-inset-left, 0px));
   margin: 0;
 }
