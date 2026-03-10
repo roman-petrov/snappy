@@ -33,6 +33,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: var(--field-height);
   padding: space.x3() space.x6();
   overflow: hidden;
   white-space: nowrap;
@@ -66,7 +67,7 @@
 .link {
   color: color.accent();
   background: transparent;
-  border: 1px dotted currentcolor;
+  border: 2px dotted currentcolor;
 }
 
 @include hover(".root:not(.primary):not(.link)") {

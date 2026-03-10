@@ -33,9 +33,14 @@
 .input {
   box-sizing: border-box;
   width: 100%;
+  height: var(--field-height);
   padding: space.x3() space.x4();
   color: color.text-body();
   background: color.bg();
+}
+
+textarea.input {
+  height: unset;
 }
 
 .input:focus {
