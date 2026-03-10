@@ -1,9 +1,9 @@
-import { useState } from "react";
-
 import type { PasswordInputProps } from "./PasswordInput";
 
+import { useSignalState } from "../hooks";
+
 export const usePasswordInputState = ({ hidePasswordLabel, showPasswordLabel, ...rest }: PasswordInputProps) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useSignalState(false);
   const toggleVisible = () => setVisible(v => !v);
   const hideLabel = hidePasswordLabel ?? `Hide password`;
   const showLabel = showPasswordLabel ?? `Show password`;

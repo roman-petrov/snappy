@@ -20,7 +20,7 @@ export const useRunAfterAuth = (
 
         return;
       }
-      $loggedIn.set(true);
+      $loggedIn.value = true;
       navigate(`/`, { replace: true });
     });
   };

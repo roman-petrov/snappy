@@ -13,17 +13,17 @@ const maxAgeSeconds = _.day.seconds * _.daysInYear;
 const get = (): SiteLocaleKey => {
   if (typeof window !== `undefined`) {
     const locale = LocaleCookie.parse(document.cookie);
-    $locale.set(locale);
+    $locale.value = locale;
     document.documentElement.lang = locale;
 
     return locale;
   }
 
-  return $locale();
+  return $locale.value;
 };
 
 const set = (next: SiteLocaleKey) => {
-  $locale.set(next);
+  $locale.value = next;
   document.cookie = `${LocaleCookie.name}=${next}; path=/; max-age=${maxAgeSeconds}`;
   document.documentElement.lang = next;
   location.reload();

@@ -3,6 +3,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable init-declarations */
+import { effect } from "@preact/signals";
+
 import { $serverMode, $theme } from "../Store";
 import { Fog } from "./Fog";
 
@@ -46,13 +48,15 @@ const init = (options?: { theme?: Theme }) => {
     };
   }
 
-  $theme.subscribe(() => apply($theme()));
-  if ($serverMode() && options?.theme !== undefined) {
-    $theme.set(options.theme);
+  effect(() => apply($theme.value));
+  if ($serverMode.value && options?.theme !== undefined) {
+    $theme.value = options.theme;
   }
-  apply($theme());
+  apply($theme.value);
 };
 
-const toggle = () => $theme.set($theme() === `dark` ? `light` : `dark`);
+const toggle = () => {
+  $theme.value = $theme.value === `dark` ? `light` : `dark`;
+};
 
 export const Theme = { init, toggle };

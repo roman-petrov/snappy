@@ -8,9 +8,9 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@preact/signals": "^2.0.3",
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
-    "@snappy/store": "workspace:*",
     "@snappy/ui": "workspace:*",
     "preact": "^10.28.0",
     "wouter": "^3.9.0"

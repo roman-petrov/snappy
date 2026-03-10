@@ -6,7 +6,6 @@ const preactPackages = [
   `**/packages/app-desktop/**`,
   `**/packages/app-mobile/**`,
   `**/packages/site/**`,
-  `**/packages/store/**`,
   `**/packages/ui/**`,
 ];
 

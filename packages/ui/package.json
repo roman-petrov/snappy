@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
+    "@preact/signals": "^2.0.3",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/store": "workspace:*",
     "preact": "^10.28.0",
     "wouter": "^3.9.0"
   },

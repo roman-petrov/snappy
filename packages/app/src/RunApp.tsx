@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { ReactNode } from "react";
@@ -10,9 +11,9 @@ import { $loggedIn } from "./Store";
 export const runApp = async (component: ReactNode) => {
   try {
     await api.checkAuth();
-    $loggedIn.set(true);
+    $loggedIn.value = true;
   } catch {
-    $loggedIn.set(false);
+    $loggedIn.value = false;
   }
   startApp(`#app-root`, component, { base: `/app`, disableTextSelection: true });
 };

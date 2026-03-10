@@ -1,4 +1,6 @@
-import { type SyntheticEvent, useState } from "react";
+import type { SyntheticEvent } from "react";
+
+import { useSignalState } from "@snappy/ui";
 
 import { api, t } from "../core";
 import { useAsyncSubmit } from "../hooks";
@@ -6,8 +8,8 @@ import { useAsyncSubmit } from "../hooks";
 export type ForgotPasswordFormScreen = `form` | `sent`;
 
 export const useForgotPasswordFormState = () => {
-  const [email, setEmail] = useState(``);
-  const [sent, setSent] = useState(false);
+  const [email, setEmail] = useSignalState(``);
+  const [sent, setSent] = useSignalState(false);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
   const onSubmit = (event: SyntheticEvent<HTMLFormElement>) => {

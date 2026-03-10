@@ -1,9 +1,9 @@
-import { Store } from "@snappy/core";
+import { signal } from "@preact/signals";
 
 import type { Locale, Theme } from "./core";
 
-export const $serverMode = Store(false);
+export const $serverMode = signal(false);
 
-export const $theme = Store<Theme>(`light`);
+export const $theme = signal<Theme>(`light`);
 
-export const $locale = Store<Locale>(`ru`);
+export const $locale = signal<Locale>(`ru`);

@@ -36,7 +36,7 @@ export const startApp = (
   app: ReactNode,
   { base, disableTextSelection = false, locale, onLocaleChange, server = false, theme }: StartAppOptions = {},
 ) => {
-  $serverMode.set(server);
+  $serverMode.value = server;
   const hasTheme = theme !== undefined;
   const hasLocaleOptions = locale !== undefined || onLocaleChange !== undefined;
   remountOnLocaleChange = onLocaleChange === undefined;

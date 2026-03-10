@@ -1,3 +1,3 @@
-import { Store } from "@snappy/core";
+import { signal } from "@preact/signals";
 
-export const $loggedIn = Store(false);
+export const $loggedIn = signal(false);

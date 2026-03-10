@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
+import { useSignalState } from "@snappy/ui";
+import { useEffect } from "preact/hooks";
 
 import { api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
 
 const copyFeedbackMs = 2000;
 
 export const useDashboardState = () => {
-  const [remaining, setRemaining] = useState<number | undefined>(undefined);
-  const [text, setText] = useState(``);
-  const [feature, setFeature] = useState<FeatureType>(defaultFeature);
-  const [result, setResult] = useState(``);
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [remaining, setRemaining] = useSignalState<number | undefined>(undefined);
+  const [text, setText] = useSignalState(``);
+  const [feature, setFeature] = useSignalState<FeatureType>(defaultFeature);
+  const [result, setResult] = useSignalState(``);
+  const [error, setError] = useSignalState(``);
+  const [loading, setLoading] = useSignalState(false);
+  const [copied, setCopied] = useSignalState(false);
 
   useEffect(() => {
     void (async () => {
@@ -19,6 +20,7 @@ export const useDashboardState = () => {
 
       setRemaining(response.remaining);
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const processText = async (event: { preventDefault: () => void }) => {

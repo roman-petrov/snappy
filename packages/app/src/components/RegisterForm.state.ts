@@ -1,11 +1,13 @@
-import { type SyntheticEvent, useState } from "react";
+import type { SyntheticEvent } from "react";
+
+import { useSignalState } from "@snappy/ui";
 
 import { api, Password, t } from "../core";
 import { useAsyncSubmit, useRunAfterAuth } from "../hooks";
 
 export const useRegisterFormState = () => {
-  const [email, setEmail] = useState(``);
-  const [password, setPassword] = useState(``);
+  const [email, setEmail] = useSignalState(``);
+  const [password, setPassword] = useSignalState(``);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
   const runAfterAuth = useRunAfterAuth(wrapSubmit, setError, t, `registerPage`);
   const strengthValue = Password.strength(password);

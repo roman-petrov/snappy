@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useSignalState } from "@snappy/ui";
 
 export const useAsyncSubmit = () => {
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
+  const [error, setError] = useSignalState(``);
+  const [loading, setLoading] = useSignalState(false);
 
   const wrapSubmit = async (fn: () => Promise<void>) => {
     setError(``);

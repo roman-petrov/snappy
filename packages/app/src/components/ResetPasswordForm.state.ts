@@ -1,4 +1,6 @@
-import { type SyntheticEvent, useState } from "react";
+import type { SyntheticEvent } from "react";
+
+import { useSignalState } from "@snappy/ui";
 import { useSearchParams } from "wouter";
 
 import { api, Password, t } from "../core";
@@ -8,10 +10,10 @@ export type ResetPasswordFormScreen = `done` | `form` | `invalid`;
 export const useResetPasswordFormState = () => {
   const [searchParameters] = useSearchParams();
   const token = searchParameters.get(`token`) ?? ``;
-  const [password, setPassword] = useState(``);
-  const [done, setDone] = useState(false);
-  const [error, setError] = useState(``);
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useSignalState(``);
+  const [done, setDone] = useSignalState(false);
+  const [error, setError] = useSignalState(``);
+  const [loading, setLoading] = useSignalState(false);
 
   const submit = async (event: SyntheticEvent<HTMLFormElement>) => {
     event.preventDefault();
