@@ -61,7 +61,7 @@ export const LoginFormView = ({
       <Button
         disabled={loading}
         submit
-        text={loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
+        text={loading ? t(`loginPage.submitting`) : t(`loginPage.logIn`)}
         type="primary"
       />
       <Button text={t(`loginPage.forgotPassword`)} to="/forgot-password" type="link" />

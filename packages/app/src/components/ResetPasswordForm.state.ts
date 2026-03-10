@@ -60,7 +60,7 @@ export const useResetPasswordFormState = () => {
       : screen === `done`
         ? {
             lead: t(`resetPage.doneLead`),
-            linkText: t(`resetPage.loginLink`),
+            linkText: t(`loginPage.login`),
             linkTo: `/login` as const,
             title: t(`resetPage.done`),
           }

@@ -64,7 +64,7 @@ export const RegisterFormView = ({
         text={loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         type="primary"
       />
-      <Button text={t(`registerPage.haveAccount`)} to="/login" type="link" />
+      <Button text={t(`loginPage.login`)} to="/login" type="link" />
     </FormErrorAndActions>
   </form>
 );

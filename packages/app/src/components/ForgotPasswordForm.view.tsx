@@ -34,7 +34,7 @@ export const ForgotPasswordFormView = ({ formProps, messageProps, screen }: Forg
             text={formProps.loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             type="primary"
           />
-          <Button text={t(`forgotPage.loginLink`)} to="/login" type="link" />
+          <Button text={t(`loginPage.login`)} to="/login" type="link" />
         </FormErrorAndActions>
       </form>
     );
