@@ -34,6 +34,12 @@ jobs:
       - name: 📱 Build mobile app
         run: bun do build:app-mobile
 
+      - name: 🔧 Setup Android
+        uses: ./.github/actions/setup-android
+
+      - name: 🤖 Build Android app
+        run: bun do build:app-android
+
       - name: 📥 Apply migrations
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
