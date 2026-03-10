@@ -92,7 +92,7 @@ const defs: Record<string, CmdDefinition> = {
   [`eslint-fix`]: {
     description: `ESLint: auto-fix.`,
     label: `🔧 ESLint`,
-    run: { args: [`--fix`, `.`], tool: `eslint` },
+    run: { args: [`--fix`, `--max-warnings=0`, `.`], tool: `eslint` },
   },
   [`prettier-fix`]: {
     description: `Prettier: format and write.`,
@@ -142,7 +142,11 @@ const defs: Record<string, CmdDefinition> = {
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
   dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
-  eslint: { description: `ESLint: lint JS/TS.`, label: `🔍 ESLint`, run: { args: [`.`], tool: `eslint` } },
+  eslint: {
+    description: `ESLint: lint JS/TS.`,
+    label: `🔍 ESLint`,
+    run: { args: [`--max-warnings=0`, `.`], tool: `eslint` },
+  },
   jscpd: { description: `JSCPD: copy-paste detection.`, label: `📋 JSCPD`, run: { args: [`.`], tool: `jscpd` } },
   knip: { description: `Knip: unused code, deps, exports.`, label: `🧹 Knip`, run: { args: [], tool: `knip` } },
   lint: {

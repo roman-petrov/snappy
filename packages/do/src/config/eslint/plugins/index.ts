@@ -12,11 +12,13 @@ import pluginStylistic from "./Stylistic";
 import pluginTypeScriptESLint from "./TypeScriptESLint";
 import pluginUnicorn from "./Unicorn";
 import pluginUnusedImports from "./UnusedImports";
+import pluginVitest from "./ViTest";
 
 export default [
   ...pluginStylistic,
   ...pluginPerfectionist,
   ...pluginTypeScriptESLint,
+  ...pluginVitest,
   ...pluginCore,
   ...pluginUnicorn,
   ...pluginFunctional,
@@ -25,7 +27,6 @@ export default [
   ...pluginUnusedImports,
   ...pluginPromise,
   ...pluginRegExp,
-
   ...pluginReact,
   ...pluginReactHooks,
   ...pluginReactRefresh,

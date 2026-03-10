@@ -23,7 +23,7 @@ describe(`get`, () => {
     const entry: Entry = { id: 1, name: `foo` };
     cache.set(`e`, entry);
 
-    expect(cache.get(`e`)).toEqual(entry);
+    expect(cache.get(`e`)).toStrictEqual(entry);
   });
 
   it(`isolates instances`, () => {

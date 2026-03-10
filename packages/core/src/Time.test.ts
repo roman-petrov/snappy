@@ -1,11 +1,11 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { Time } from "./Time";
 
 const { build, constants, get, map, parts, set } = Time;
 
 describe(`constants`, () => {
-  test(`has correct constants`, () => {
+  it(`has correct constants`, () => {
     expect(constants).toMatchObject({
       day: {
         days: 1,
@@ -75,7 +75,7 @@ describe(`constants`, () => {
 });
 
 describe(`parse`, () => {
-  test(`parses time`, () => {
+  it(`parses time`, () => {
     expect(parts(constants.nanosecond)).toStrictEqual({
       days: 0,
       hours: 0,
@@ -150,7 +150,7 @@ describe(`parse`, () => {
     });
   });
 
-  test(`removes sign for negative values`, () => {
+  it(`removes sign for negative values`, () => {
     expect(parts(-1 * constants.day * Math.PI)).toStrictEqual({
       days: 3,
       hours: 3,
@@ -164,7 +164,7 @@ describe(`parse`, () => {
 });
 
 describe(`get`, () => {
-  test(`gets time parts`, () => {
+  it(`gets time parts`, () => {
     expect(get(constants.nanosecond, `nanoseconds`)).toBe(1);
     expect(get(constants.microsecond, `microseconds`)).toBe(1);
     expect(get(constants.millisecond, `milliseconds`)).toBe(1);
@@ -179,7 +179,7 @@ describe(`get`, () => {
 });
 
 describe(`set`, () => {
-  test(`sets time parts`, () => {
+  it(`sets time parts`, () => {
     expect(set(constants.nanosecond, `nanoseconds`, 0)).toBe(0);
     expect(set(constants.second, `seconds`, 10)).toBe(10_000);
     expect(set(10 * constants.second, `minutes`, 10)).toBe(610_000);
@@ -203,11 +203,11 @@ describe(`set`, () => {
 });
 
 describe(`build`, () => {
-  test(`returns zero for empty object`, () => {
+  it(`returns zero for empty object`, () => {
     expect(build({})).toBe(0);
   });
 
-  test(`builds time from parts`, () => {
+  it(`builds time from parts`, () => {
     expect(build({ milliseconds: 42 })).toBe(42);
     expect(build({ milliseconds: 42, seconds: 10 })).toBe(10_042);
     expect(build({ days: 1, hours: 1, microseconds: 1, milliseconds: 1, minutes: 1, nanoseconds: 1, seconds: 1 })).toBe(
@@ -220,7 +220,7 @@ describe(`build`, () => {
 });
 
 describe(`map`, () => {
-  test(`maps time parts`, () => {
+  it(`maps time parts`, () => {
     expect(map(42 * constants.millisecond, `milliseconds`, value => value + 1)).toBe(43);
     expect(map(3 * constants.second + 42 * constants.millisecond, `seconds`, value => value - 1)).toBe(2042);
   });
