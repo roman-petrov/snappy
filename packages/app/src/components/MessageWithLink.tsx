@@ -1,4 +1,4 @@
-import { Link, Title } from "@snappy/ui";
+import { Button, Title } from "@snappy/ui";
 
 import { FormActions } from "./FormErrorAndActions";
 
@@ -8,7 +8,7 @@ export const MessageWithLink = ({ lead, linkText, linkTo, title }: MessageWithLi
   <>
     <Title as="h1" lead={lead} level={2} title={title} />
     <FormActions>
-      <Link text={linkText} to={linkTo} />
+      <Button text={linkText} to={linkTo} type="link" />
     </FormActions>
   </>
 );

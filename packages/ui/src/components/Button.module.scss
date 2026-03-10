@@ -24,12 +24,6 @@
   --ripple-color: var(--ripple-primary);
 }
 
-@include media-hover {
-  .wrapper:has(.root:hover:not(:disabled)) {
-    transform: translateY(-2px);
-  }
-}
-
 .root {
   @include typography.button;
 
@@ -45,13 +39,14 @@
   cursor: pointer;
   border: none;
   border-radius: var(--radius-sm);
-  transition: var(--transition-btn);
+  transition:
+    var(--transition-btn),
+    background-color var(--ease);
 }
 
 @include hover(".root") {
   text-decoration: none;
   outline: none;
-  box-shadow: var(--shadow-btn-lift);
 }
 
 .root:focus-visible {
@@ -59,12 +54,30 @@
   outline-offset: var(--focus-ring-outline-offset);
 }
 
-.root:not(.primary) {
+.root:not(.primary, .link) {
   @include button-skin(color.button-default(), color.text-body());
 }
 
 .primary {
   @include button-skin(color.accent(), color.on-accent());
+}
+
+.link {
+  color: color.accent();
+  background: transparent;
+  border: 1px dotted currentcolor;
+}
+
+@include hover(".root:not(.primary):not(.link)") {
+  background: color.button-default-hover();
+}
+
+@include hover(".root.primary") {
+  background: color.accent-hover();
+}
+
+@include hover(".root.link") {
+  background: color.accent-ghost();
 }
 
 .large {

@@ -27,6 +27,8 @@
 
   /* Shared color formulas (depend on theme --color-* set in theme-light/theme-dark) */
   --color-button-default: color-mix(in oklch, var(--color-border) 60%, var(--color-bg));
+  --color-button-default-hover: color-mix(in oklch, var(--color-border) 75%, var(--color-bg));
+  --color-accent-hover: color-mix(in oklch, var(--color-accent) 88%, black);
   --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
   --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
   --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);

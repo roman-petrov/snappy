@@ -1,50 +1,62 @@
-import type { ReactNode } from "react";
+import { Link as RouterLink } from "wouter";
 
 import styles from "./Button.module.scss";
 import { Icon, type Icon as IconType } from "./Icon";
 import { Ripple } from "./Ripple";
 
 export type ButtonProps = {
-  children: ReactNode;
   cn?: string;
   disabled?: boolean;
   href?: string;
   icon?: IconType;
   large?: boolean;
   onClick?: () => void;
-  primary?: boolean;
-  type?: `button` | `submit`;
+  text: string;
+  to?: string;
+  type?: `default` | `link` | `primary`;
 };
 
 export const Button = ({
-  children,
   cn = ``,
   disabled = false,
   href = ``,
   icon,
   large = false,
   onClick,
-  primary = false,
-  type = `button`,
+  text,
+  to = ``,
+  type = `default`,
 }: ButtonProps) => {
-  const classNames = [styles.root, primary ? styles.primary : ``, large ? styles.large : ``, cn]
+  const classNames = [
+    styles.root,
+    type === `primary` ? styles.primary : ``,
+    type === `link` ? styles.link : ``,
+    large ? styles.large : ``,
+    cn,
+  ]
     .filter(Boolean)
     .join(` `);
 
-  const isLink = href !== ``;
   const common = { className: classNames };
 
   const content = (
     <>
       {icon ? <Icon name={icon} /> : undefined}
-      {children}
+      {text}
     </>
   );
+
+  const hasTo = to !== ``;
+  const hasHref = href !== ``;
 
   return (
     <span className={styles.wrapper}>
       <Ripple disabled={disabled}>
-        {isLink ? (
+        {hasTo ? (
+          <RouterLink {...common} href={to} onClick={onClick} transition>
+            {content}
+          </RouterLink>
+        ) : hasHref ? (
           <a
             {...common}
             href={href}
@@ -55,7 +67,7 @@ export const Button = ({
             {content}
           </a>
         ) : (
-          <button {...common} disabled={disabled} onClick={onClick} type={type}>
+          <button {...common} disabled={disabled} onClick={onClick} type="button">
             {content}
           </button>
         )}

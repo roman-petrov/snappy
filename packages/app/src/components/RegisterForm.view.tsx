@@ -1,4 +1,4 @@
-import { Button, Input, Link, PasswordInput, PasswordStrength } from "@snappy/ui";
+import { Button, Input, PasswordInput, PasswordStrength } from "@snappy/ui";
 
 import type { useRegisterFormState } from "./RegisterForm.state";
 
@@ -58,10 +58,12 @@ export const RegisterFormView = ({
       />
     </div>
     <FormErrorAndActions error={error}>
-      <Button disabled={loading || !meetsMinLength} primary type="submit">
-        {loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
-      </Button>
-      <Link text={t(`registerPage.haveAccount`)} to="/login" />
+      <Button
+        disabled={loading || !meetsMinLength}
+        text={loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
+        type="primary"
+      />
+      <Button text={t(`registerPage.haveAccount`)} to="/login" type="link" />
     </FormErrorAndActions>
   </form>
 );

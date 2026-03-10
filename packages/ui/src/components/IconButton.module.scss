@@ -15,10 +15,6 @@
   border-radius: 50%;
 }
 
-@include hover(".wrapper") {
-  color: color.text-body();
-}
-
 .root {
   position: relative;
   display: inline-flex;
@@ -34,29 +30,14 @@
   background: transparent;
   border: none;
   border-radius: 50%;
-  transition: color var(--ease);
-}
-
-.root::before {
-  position: absolute;
-  inset: 50%;
-  width: space.x12();
-  height: space.x12();
-  pointer-events: none;
-  content: "";
-  background: transparent;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: background-color var(--ease);
+  transition:
+    color var(--ease),
+    background-color var(--ease);
 }
 
 @include hover(".root") {
-  color: color.text-body();
   outline: none;
-
-  &::before {
-    background: color.accent-ghost();
-  }
+  background: color.accent-ghost();
 }
 
 .root:focus-visible {

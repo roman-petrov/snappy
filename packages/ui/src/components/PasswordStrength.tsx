@@ -38,8 +38,6 @@ export const PasswordStrength = ({
       </div>
       <Text cn={styles.strengthText} text={strengthText} typography="caption" />
     </div>
-    <Button disabled={disabled} onClick={onGeneratePassword} type="button">
-      {generateLabel}
-    </Button>
+    <Button disabled={disabled} onClick={onGeneratePassword} text={generateLabel} />
   </>
 );

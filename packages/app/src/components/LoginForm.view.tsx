@@ -1,4 +1,4 @@
-import { Button, Input, Link, PasswordInput, Text } from "@snappy/ui";
+import { Button, Input, PasswordInput, Text } from "@snappy/ui";
 
 import type { useLoginFormState } from "./LoginForm.state";
 
@@ -58,11 +58,9 @@ export const LoginFormView = ({
       />
     </div>
     <FormErrorAndActions error={error}>
-      <Button disabled={loading} primary type="submit">
-        {loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)}
-      </Button>
-      <Link text={t(`loginPage.forgotPassword`)} to="/forgot-password" />
-      <Link text={t(`loginPage.registerLink`)} to="/register" />
+      <Button disabled={loading} text={loading ? t(`loginPage.submitting`) : t(`loginPage.submit`)} type="primary" />
+      <Button text={t(`loginPage.forgotPassword`)} to="/forgot-password" type="link" />
+      <Button text={t(`loginPage.registerLink`)} to="/register" type="link" />
     </FormErrorAndActions>
   </form>
 );

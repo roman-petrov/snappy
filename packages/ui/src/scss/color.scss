@@ -50,6 +50,14 @@
   @return -color("button-default");
 }
 
+@function button-default-hover() {
+  @return -color("button-default-hover");
+}
+
+@function accent-hover() {
+  @return -color("accent-hover");
+}
+
 @function bg-header() {
   @return -color("bg-header");
 }

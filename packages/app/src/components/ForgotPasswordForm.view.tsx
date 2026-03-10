@@ -1,5 +1,5 @@
 /* jscpd:ignore-start */
-import { Button, Input, Link } from "@snappy/ui";
+import { Button, Input } from "@snappy/ui";
 
 import type { useForgotPasswordFormState } from "./ForgotPasswordForm.state";
 
@@ -28,10 +28,12 @@ export const ForgotPasswordFormView = ({ formProps, messageProps, screen }: Forg
           value={formProps.email}
         />
         <FormErrorAndActions error={formProps.error}>
-          <Button disabled={formProps.loading} primary type="submit">
-            {formProps.loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
-          </Button>
-          <Link text={t(`forgotPage.loginLink`)} to="/login" />
+          <Button
+            disabled={formProps.loading}
+            text={formProps.loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
+            type="primary"
+          />
+          <Button text={t(`forgotPage.loginLink`)} to="/login" type="link" />
         </FormErrorAndActions>
       </form>
     );

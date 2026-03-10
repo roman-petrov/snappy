@@ -40,9 +40,7 @@ export const DashboardView = ({
             {` ${t(`dashboard.freeRequests`)}: `}
             <Text as="span" color="accent" text={remaining === undefined ? `—` : String(remaining)} typography="h2" />
           </p>
-          <Button onClick={onPremiumClick} primary>
-            {t(`dashboard.getPremium`)}
-          </Button>
+          <Button onClick={onPremiumClick} text={t(`dashboard.getPremium`)} type="primary" />
         </div>
       </Card>
     </section>
@@ -74,9 +72,12 @@ export const DashboardView = ({
               value={feature}
             />
           </div>
-          <Button cn={styles.submitRow} disabled={loading} primary type="submit">
-            {loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
-          </Button>
+          <Button
+            cn={styles.submitRow}
+            disabled={loading}
+            text={loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
+            type="primary"
+          />
           {error !== `` && <Alert text={error} variant="error" />}
           {result !== `` && (
             <div className={styles.resultWrap}>
