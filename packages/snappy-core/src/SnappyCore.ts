@@ -136,6 +136,5 @@ const systemPrompts = {
 } as const satisfies Record<FeatureType, string>;
 
 const systemPrompt = (feature: FeatureType) => systemPrompts[feature];
-const [defaultFeature] = featureKeys;
 
-export const SnappyCore = { defaultFeature, featureKeys, systemPrompt, systemPrompts };
+export const SnappyCore = { featureKeys, systemPrompt, systemPrompts };

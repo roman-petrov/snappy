@@ -2,12 +2,12 @@ import { _ } from "@snappy/core";
 import { useSignalState } from "@snappy/ui";
 import { useEffect } from "preact/hooks";
 
-import { api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
+import { api, featureEmoji, featureKeys, type FeatureType, t } from "../core";
 
 export const useDashboardState = () => {
   const [remaining, setRemaining] = useSignalState<number | undefined>(undefined);
   const [text, setText] = useSignalState(``);
-  const [feature, setFeature] = useSignalState<FeatureType>(defaultFeature);
+  const [feature, setFeature] = useSignalState<FeatureType>(`addEmoji`);
   const [result, setResult] = useSignalState(``);
   const [error, setError] = useSignalState(``);
   const [loading, setLoading] = useSignalState(false);

@@ -13,6 +13,6 @@ export const featureEmoji: Record<FeatureType, string> = {
   styleSelling: `🛒`,
 };
 
-export { defaultFeature, featureKeys } from "@snappy/server-api";
+export { featureKeys } from "@snappy/server-api";
 
 export type { FeatureType } from "@snappy/server-api";
