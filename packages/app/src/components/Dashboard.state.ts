@@ -1,9 +1,8 @@
+import { _ } from "@snappy/core";
 import { useSignalState } from "@snappy/ui";
 import { useEffect } from "preact/hooks";
 
 import { api, defaultFeature, featureEmoji, featureKeys, type FeatureType, t } from "../core";
-
-const copyFeedbackMs = 2000;
 
 export const useDashboardState = () => {
   const [remaining, setRemaining] = useSignalState<number | undefined>(undefined);
@@ -57,7 +56,7 @@ export const useDashboardState = () => {
       setCopied(true);
       setTimeout(() => {
         setCopied(false);
-      }, copyFeedbackMs);
+      }, _.second * 2);
 
       return undefined;
     });
