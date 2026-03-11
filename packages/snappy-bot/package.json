@@ -8,6 +8,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
     "@snappy/snappy": "workspace:*",
+    "@snappy/snappy-core": "workspace:*",
     "gramio": "^0.7.0"
   }
 }

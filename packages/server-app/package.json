@@ -11,6 +11,7 @@
     "@snappy/server-api": "workspace:*",
     "@snappy/snappy": "workspace:*",
     "@snappy/snappy-bot": "workspace:*",
+    "@snappy/snappy-core": "workspace:*",
     "@snappy/yoo-kassa": "workspace:*",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.2"

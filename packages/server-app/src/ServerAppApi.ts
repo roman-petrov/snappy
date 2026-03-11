@@ -13,10 +13,11 @@ import type {
   ApiResetPasswordBody,
   ApiResetPasswordResult,
 } from "@snappy/server-api";
+import type { Snappy } from "@snappy/snappy";
 import type { YooKassa } from "@snappy/yoo-kassa";
 
 import { _ } from "@snappy/core";
-import { type FeatureType, Prompts, type Snappy } from "@snappy/snappy";
+import { SnappyCore } from "@snappy/snappy-core";
 
 import { Jwt } from "./Jwt";
 import { Password } from "./Password";
@@ -46,7 +47,6 @@ export const ServerAppApi = ({
   const needsReset = (lastReset: Date) => _.now() - lastReset.getTime() > resetInterval;
   const passwordValid = (s: string) => s.length >= passwordMinLength && /[A-Za-z]/u.test(s) && /\d/u.test(s);
   const normalizeEmail = (email: string) => email.trim().toLowerCase();
-  const isFeatureType = (key: string): key is FeatureType => key in Prompts.systemPrompts;
 
   const ensureUserByTelegramId = async (telegramId: number, telegramUsername?: string) =>
     db.user.upsert({
@@ -155,7 +155,7 @@ export const ServerAppApi = ({
 
   const process = async (userId: number, body: { feature?: string; text?: string }): Promise<ApiProcessResultUnion> => {
     const { feature, text } = body;
-    if (!_.isString(text) || text.trim() === `` || !_.isString(feature) || !isFeatureType(feature)) {
+    if (!_.isString(text) || text.trim() === `` || !_.isString(feature) || !SnappyCore.isFeature(feature)) {
       return { status: `textAndFeatureRequired` };
     }
 

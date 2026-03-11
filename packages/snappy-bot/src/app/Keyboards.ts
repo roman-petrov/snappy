@@ -1,4 +1,4 @@
-import { type FeatureType, Prompts } from "@snappy/snappy";
+import { type FeatureType, SnappyCore } from "@snappy/snappy-core";
 import { InlineKeyboard } from "gramio";
 
 import { type Locale, t } from "./Locale";
@@ -32,9 +32,8 @@ const parseFeatureCallback = (data: string) => {
   }
 
   const key = data.slice(featurePrefix.length);
-  const isFeature = (keyString: string): keyString is FeatureType => keyString in Prompts.systemPrompts;
 
-  return isFeature(key) ? key : undefined;
+  return SnappyCore.isFeature(key) ? key : undefined;
 };
 
 export const Keyboards = { featuresKeyboard, parseFeatureCallback, premiumKeyboard };

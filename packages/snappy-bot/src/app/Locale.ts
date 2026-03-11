@@ -1,4 +1,3 @@
- 
 import { _ } from "@snappy/core";
 
 import { localeData, makeT } from "./locales";

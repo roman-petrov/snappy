@@ -15,7 +15,7 @@
     "@preact/signals": "^2.0.3",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "preact": "^10.28.0",
+    "preact": "^10.29.0",
     "wouter": "^3.9.0"
   },
   "devDependencies": {

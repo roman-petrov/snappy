@@ -1,4 +1,3 @@
- 
 import { _ } from "@snappy/core";
 import { $locale } from "@snappy/ui";
 
