@@ -1,4 +1,5 @@
 /* eslint-disable no-empty-function */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-void-return */
@@ -48,6 +49,9 @@ const singleAction =
     }
   };
 
+const keys = <TKey extends keyof TObject, TObject extends Record<TKey, unknown>>(object: TObject) =>
+  Object.keys(object) as TKey[];
+
 const noop = () => {};
 
 export const _ = {
@@ -63,6 +67,7 @@ export const _ = {
   isNumber,
   isObject,
   isString,
+  keys,
   list,
   noop,
   pascalCase,

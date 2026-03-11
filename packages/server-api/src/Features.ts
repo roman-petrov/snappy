@@ -1,20 +1,7 @@
-const featureKeys = [
-  `addEmoji`,
-  `expand`,
-  `fixErrors`,
-  `improveReadability`,
-  `shorten`,
-  `styleBusiness`,
-  `styleFriendly`,
-  `styleHumorous`,
-  `styleNeutral`,
-  `styleSelling`,
-] as const;
+import { SnappyCore } from "@snappy/snappy-core";
 
-export type FeatureType = (typeof featureKeys)[number];
+export type { FeatureType } from "@snappy/snappy-core";
 
-export { featureKeys };
+export const { defaultFeature } = SnappyCore;
 
-const [defaultFeature] = featureKeys;
-
-export { defaultFeature };
+export const { featureKeys } = SnappyCore;

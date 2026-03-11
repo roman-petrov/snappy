@@ -182,6 +182,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
+        "@snappy/snappy-core": "workspace:*",
       },
     },
     "packages/server-app": {
@@ -242,6 +243,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/server-api": "workspace:*",
+        "@snappy/snappy-core": "workspace:*",
         "gigachat": "^0.0.18",
       },
     },
@@ -254,6 +256,10 @@
         "@snappy/snappy": "workspace:*",
         "gramio": "^0.7.0",
       },
+    },
+    "packages/snappy-core": {
+      "name": "@snappy/snappy-core",
+      "version": "0.0.0",
     },
     "packages/ui": {
       "name": "@snappy/ui",
@@ -913,6 +919,8 @@
     "@snappy/snappy": ["@snappy/snappy@workspace:packages/snappy"],
 
     "@snappy/snappy-bot": ["@snappy/snappy-bot@workspace:packages/snappy-bot"],
+
+    "@snappy/snappy-core": ["@snappy/snappy-core@workspace:packages/snappy-core"],
 
     "@snappy/ui": ["@snappy/ui@workspace:packages/ui"],
 

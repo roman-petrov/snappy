@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable unicorn/no-document-cookie */
@@ -29,7 +28,7 @@ const set = (next: SiteLocaleKey) => {
   location.reload();
 };
 
-const localeKeys = Object.keys(localeData) as SiteLocaleKey[];
+const localeKeys = _.keys(localeData);
 
 export const t = makeT(get as () => SiteLocaleKey);
 

@@ -1,9 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+ 
+import { _ } from "@snappy/core";
+
 import { localeData, makeT } from "./locales";
 
 export type Locale = keyof typeof localeData;
 
-const localeKeys = Object.keys(localeData) as Locale[];
+const localeKeys = _.keys(localeData);
 const locale = (localeKey: Locale) => localeData[localeKey];
 
 export const t = (localeKey: Locale, key: string, parameters?: Record<string, number | string>) =>
