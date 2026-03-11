@@ -60,6 +60,4 @@
   --color-focus-ring: var(--color-accent);
   --focus-ring-shadow: 0 0 0 4px color-mix(in oklch, var(--color-accent) 35%, transparent);
   --focus-ring-outline: 2px solid var(--color-focus-ring);
-  --ripple-on-light: color-mix(in srgb, black 12%, transparent);
-  --ripple-on-dark: color-mix(in srgb, white 30%, transparent);
 }
