@@ -243,7 +243,6 @@
       "name": "@snappy/snappy",
       "version": "0.0.0",
       "dependencies": {
-        "@snappy/server-api": "workspace:*",
         "@snappy/snappy-core": "workspace:*",
         "gigachat": "^0.0.18",
       },
@@ -254,7 +253,6 @@
       "dependencies": {
         "@snappy/core": "workspace:*",
         "@snappy/server-api": "workspace:*",
-        "@snappy/snappy": "workspace:*",
         "@snappy/snappy-core": "workspace:*",
         "gramio": "^0.7.0",
       },

@@ -1,6 +1,6 @@
 export * from "../Store";
 
-export * from "./Fog";
+export * from "../web-gl";
 
 export * from "./Locale";
 

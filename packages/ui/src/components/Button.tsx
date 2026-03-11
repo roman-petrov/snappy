@@ -2,7 +2,8 @@ import { Link as RouterLink } from "wouter";
 
 import styles from "./Button.module.scss";
 import { Icon, type Icon as IconType } from "./Icon";
-import { Ripple } from "./Ripple";
+import { Splash } from "./Splash";
+import { SplashPalette } from "./SplashPalette";
 
 export type ButtonProps = {
   cn?: string;
@@ -29,17 +30,11 @@ export const Button = ({
   to = ``,
   type = `default`,
 }: ButtonProps) => {
-  const classNames = [
-    styles.root,
-    type === `primary` ? styles.primary : ``,
-    type === `link` ? styles.link : ``,
-    large ? styles.large : ``,
-    cn,
-  ]
-    .filter(Boolean)
-    .join(` `);
-
+  const typeClass = styles[type];
+  const classNames = [styles.root, typeClass, large ? styles.large : ``, cn].filter(Boolean).join(` `);
   const common = { className: classNames };
+  const bgClass = [styles.rootBg, typeClass].filter(Boolean).join(` `);
+  const canvasLayerClass = type === `link` ? styles.canvasLayerBorder : undefined;
 
   const content = (
     <>
@@ -50,10 +45,16 @@ export const Button = ({
 
   const hasTo = to !== ``;
   const hasHref = href !== ``;
+  const palette = SplashPalette[type];
 
   return (
     <span className={styles.wrapper}>
-      <Ripple disabled={disabled}>
+      <Splash
+        backgroundClassName={bgClass}
+        canvasLayerClassName={canvasLayerClass}
+        disabled={disabled}
+        palette={palette}
+      >
         {hasTo ? (
           <RouterLink {...common} href={to} onClick={onClick} transition>
             {content}
@@ -73,7 +74,7 @@ export const Button = ({
             {content}
           </button>
         )}
-      </Ripple>
+      </Splash>
     </span>
   );
 };

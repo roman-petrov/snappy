@@ -26,17 +26,22 @@
   --content-width: 1100px;
   --content-narrow: 36rem;
 
-  /* Shared color formulas (depend on theme --color-* set in theme-light/theme-dark) */
+  /* Button colors: --color-button-{type} (default | primary | link), --color-button-{type}-hover */
   --color-button-default: color-mix(in oklch, var(--color-border) 60%, var(--color-bg));
-  --color-button-default-hover: color-mix(in oklch, var(--color-border) 75%, var(--color-bg));
-  --color-accent-hover: color-mix(in oklch, var(--color-accent) 88%, black);
+  --color-button-default-hover: var(--color-button-default-hover-theme);
+  --color-button-primary: var(--color-accent);
+  --color-button-primary-hover: color-mix(in oklch, var(--color-accent) 78%, black);
+  --color-button-link: var(--color-accent);
+  --color-button-link-hover: var(--color-accent-ghost);
+
+  /* Shared color formulas (depend on theme --color-* set in theme-light/theme-dark) */
   --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
   --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
   --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
   --color-warning-bg: color-mix(in oklch, var(--color-warning) 10%, transparent);
   --color-success-bg: color-mix(in oklch, var(--color-success) 10%, transparent);
   --color-info-bg: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 4%, transparent);
+  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 22%, transparent);
   --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
   --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
   --color-accent-border: color-mix(in oklch, var(--color-accent) 20%, transparent);

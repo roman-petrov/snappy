@@ -54,8 +54,20 @@
   @return -color("button-default-hover");
 }
 
-@function accent-hover() {
-  @return -color("accent-hover");
+@function button-primary() {
+  @return -color("button-primary");
+}
+
+@function button-primary-hover() {
+  @return -color("button-primary-hover");
+}
+
+@function button-link() {
+  @return -color("button-link");
+}
+
+@function button-link-hover() {
+  @return -color("button-link-hover");
 }
 
 @function bg-header() {

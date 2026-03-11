@@ -9,6 +9,7 @@
 import type { Action } from "./Types";
 
 import { DateTime } from "./DateTime";
+import { ObjectValue } from "./ObjectValue";
 import { Time } from "./Time";
 
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf-8`);
@@ -49,6 +50,9 @@ const singleAction =
     }
   };
 
+const entries = <TObject extends object>(value: TObject) =>
+  Object.entries(value) as { [Key in keyof TObject]: [Key, TObject[Key]] }[keyof TObject][];
+
 const keys = <TKey extends keyof TObject, TObject extends Record<TKey, unknown>>(object: TObject) =>
   Object.keys(object) as TKey[];
 
@@ -61,6 +65,8 @@ export const _ = {
   camelCase,
   daysInWeek: Time.daysInWeek,
   daysInYear: Time.daysInYear,
+  entries,
+  fromEntries: ObjectValue.fromEntries,
   isArray,
   isBoolean,
   isFunction,

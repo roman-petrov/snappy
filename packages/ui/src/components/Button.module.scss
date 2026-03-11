@@ -3,28 +3,17 @@
 @use "pkg:@snappy/ui/space";
 @use "pkg:@snappy/ui/typography";
 
-@mixin button-skin($bg, $text-color) {
-  color: $text-color;
-  background: $bg;
-}
-
-.wrapper {
-  --ripple-color: var(--ripple-default);
-
-  position: relative;
-  display: inline-flex;
-  overflow: visible;
-  outline: none;
-  border: none;
+@mixin button-bg-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   border-radius: var(--radius-sm);
-  transition: var(--transition-btn);
+  transition:
+    background-color var(--ease),
+    border-color var(--ease);
 }
 
-.wrapper:has(.primary) {
-  --ripple-color: var(--ripple-primary);
-}
-
-.root {
+@mixin button-root-base {
   @include typography.button;
 
   position: relative;
@@ -39,60 +28,110 @@
   white-space: nowrap;
   text-decoration: none;
   cursor: pointer;
+  background: transparent;
   border: none;
   border-radius: var(--radius-sm);
   transition:
     var(--transition-btn),
-    background-color var(--ease);
+    color var(--ease),
+    text-shadow var(--ease);
 }
 
-@include hover(".root") {
-  text-decoration: none;
-  outline: none;
+@mixin button-bg-fill($bg) {
+  background: $bg;
 }
 
-.root:focus-visible {
-  @include focus;
+@mixin button-bg-fill-hover($bg-hover) {
+  background: $bg-hover;
 }
 
-.root:not(.primary, .link) {
-  @include button-skin(color.button-default(), color.text-body());
-}
-
-.primary {
-  @include button-skin(color.accent(), color.on-accent());
-}
-
-.link {
-  color: color.accent();
+@mixin button-bg-link($border-color) {
   background: transparent;
-  border: 2px dotted currentcolor;
+  border: 2px dotted $border-color;
 }
 
-@include hover(".root:not(.primary):not(.link)") {
-  background: color.button-default-hover();
+@mixin button-root-color($color) {
+  color: var(--splash-text-color, #{$color});
+  text-shadow: var(--splash-text-shadow, none);
 }
 
-@include hover(".root.primary") {
-  background: color.accent-hover();
-}
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  overflow: visible;
+  outline: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  transition: var(--transition-btn);
 
-@include hover(".root.link") {
-  background: color.accent-ghost();
-}
+  .root-bg {
+    @include button-bg-layer;
 
-.large {
-  @include typography.button-large;
+    &.default {
+      @include button-bg-fill(color.button-default());
+    }
 
-  padding: space.x4() space.x8();
-}
+    &.primary {
+      @include button-bg-fill(color.button-primary());
+    }
 
-.large.primary {
-  @include typography.button-large;
-}
+    &.link {
+      @include button-bg-link(color.button-link());
+    }
+  }
 
-.root:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-  transform: none;
+  @include hover("&:not(:has(button:disabled))") {
+    .root-bg.default {
+      @include button-bg-fill-hover(color.button-default-hover());
+    }
+
+    .root-bg.primary {
+      @include button-bg-fill-hover(color.button-primary-hover());
+    }
+
+    .root-bg.link {
+      @include button-bg-fill-hover(color.button-link-hover());
+    }
+  }
+
+  .canvas-layer-border {
+    border: 2px solid transparent;
+  }
+
+  .root {
+    @include button-root-base;
+
+    @include hover("&") {
+      text-decoration: none;
+      outline: none;
+    }
+
+    &:focus-visible {
+      @include focus;
+    }
+
+    &.default {
+      @include button-root-color(color.text-body());
+    }
+
+    &.primary {
+      @include button-root-color(color.on-accent());
+    }
+
+    &.link {
+      @include button-root-color(color.button-link());
+    }
+
+    &.large {
+      @include typography.button-large;
+
+      padding: space.x4() space.x8();
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      transform: none;
+    }
+  }
 }

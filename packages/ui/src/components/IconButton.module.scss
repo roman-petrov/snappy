@@ -2,19 +2,6 @@
 @use "pkg:@snappy/ui/core" as *;
 @use "pkg:@snappy/ui/space";
 
-.wrapper {
-  --ripple-color: var(--ripple-default);
-
-  position: relative;
-  display: inline-flex;
-  width: fit-content;
-  overflow: hidden;
-  color: color.text-muted();
-  outline: none;
-  border: none;
-  border-radius: 50%;
-}
-
 .root {
   position: relative;
   display: inline-flex;
@@ -23,10 +10,12 @@
   width: space.x10();
   height: space.x10();
   padding: 0;
+  overflow: hidden;
   font-size: space.x5();
   line-height: 1;
   color: color.text-muted();
   cursor: pointer;
+  outline: none;
   background: transparent;
   border: none;
   border-radius: 50%;

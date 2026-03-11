@@ -6,7 +6,7 @@
 import { effect } from "@preact/signals";
 
 import { $serverMode, $theme } from "../Store";
-import { Fog } from "./Fog";
+import { Fog } from "../web-gl";
 
 export const themes = [`light`, `dark`] as const;
 

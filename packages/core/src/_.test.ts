@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { _ } from "./_";
 
-const { base64decode, camelCase, keys, list, noop, pascalCase, singleAction } = _;
+const { base64decode, camelCase, entries, keys, list, noop, pascalCase, singleAction } = _;
 
 describe(`base64decode`, () => {
   it(`decodes base64 to UTF-8 string`, () => {
@@ -56,6 +56,20 @@ describe(`pascalCase`, () => {
 
   it(`empty input yields empty string`, () => {
     expect(pascalCase(``)).toBe(``);
+  });
+});
+
+describe(`entries`, () => {
+  it(`converts an empty object to an empty array`, () => {
+    expect(entries({})).toStrictEqual([]);
+  });
+
+  it(`converts an object to an array with its keys and values`, () => {
+    expect(entries({ a: 2, b: 42, c: 1 })).toStrictEqual([
+      [`a`, 2],
+      [`b`, 42],
+      [`c`, 1],
+    ]);
   });
 });
 
