@@ -57,7 +57,7 @@ export const Sparkle = (
     const now = performance.now();
     const elapsed = now - burst.startTime;
     const rawExpand = Math.min(elapsed / expandDurationMs, 1);
-    const expand = Easing.easeOutExpo(rawExpand);
+    const expand = Easing.easeInAccel(rawExpand);
 
     webgl.bindQuad(`a_uv`);
     gl.enable(gl.BLEND);
