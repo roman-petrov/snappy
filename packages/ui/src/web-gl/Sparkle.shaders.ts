@@ -16,6 +16,7 @@ uniform vec3 u_color;
 uniform float u_expand;
 uniform float u_opacity;
 uniform float u_time;
+uniform float u_grainScale;
 
 out vec4 outColor;
 
@@ -59,11 +60,10 @@ void main() {
 
   if (mask < 0.001) { discard; }
 
-  // Sample heightfield at pixel-level steps for normal derivation
-  float sc = 0.28;
-  float h  = height(px * sc);
-  float hR = height((px + vec2(1.0, 0.0)) * sc);
-  float hU = height((px + vec2(0.0, 1.0)) * sc);
+  // Sample heightfield; scale so grain size is constant in CSS px (independent of DPR/button size)
+  float h  = height(px * u_grainScale);
+  float hR = height((px + vec2(1.0, 0.0)) * u_grainScale);
+  float hU = height((px + vec2(0.0, 1.0)) * u_grainScale);
 
   // Tangent-space normal from gradient
   vec3 N = normalize(vec3(-(hR - h) * 5.5, -(hU - h) * 5.5, 1.0));

@@ -25,6 +25,7 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity:
   const uniforms = WebGl.uniforms(gl, program, {
     color: { name: `u_color`, type: `3fv` },
     expand: { name: `u_expand`, type: `1f` },
+    grainScale: { name: `u_grainScale`, type: `1f` },
     opacity: { name: `u_opacity`, type: `1f` },
     origin: { name: `u_origin`, type: `2f` },
     resolution: { name: `u_resolution`, type: `2f` },
@@ -60,8 +61,11 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity:
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
+    const grainSizeCss = 4;
+    const grainScale = 1 / (grainSizeCss * window.devicePixelRatio);
     uniforms.resolution(canvas.width, canvas.height);
     uniforms.origin(burst.x / width, 1 - burst.y / height);
+    uniforms.grainScale(grainScale);
     uniforms.color(color);
     uniforms.expand(expand);
     uniforms.opacity(opacity);
