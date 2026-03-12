@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "isomorphic-dompurify": "^3.0.0"
+    "isomorphic-dompurify": "^3.3.0"
   },
   "devDependencies": {}
 }
