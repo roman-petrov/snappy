@@ -12,6 +12,8 @@ export * from "./HttpStatus";
 
 export * from "./I18n";
 
+export * from "./Rgb";
+
 export * from "./Time";
 
 export * from "./Translate";

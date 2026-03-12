@@ -5,6 +5,7 @@ declare const __Button: {
   readonly primary: "primary";
   readonly link: "link";
   readonly root: "root";
+  readonly splashContainer: "splashContainer";
   readonly canvasLayerBorder: "canvasLayerBorder";
   readonly large: "large";
 };

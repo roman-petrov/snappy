@@ -14,6 +14,7 @@ uniform vec2 u_resolution;
 uniform vec2 u_origin;
 uniform vec3 u_color;
 uniform float u_expand;
+uniform float u_opacity;
 uniform float u_time;
 
 out vec4 outColor;
@@ -45,13 +46,16 @@ void main() {
   float uvx = px.x / res.x;
   float uvy = px.y / res.y;
 
-  float originX = u_origin.x;
-  float left  = originX - u_expand * (originX + 0.02);
-  float right = originX + u_expand * (1.0 - originX + 0.02);
-
-  float edge = 0.025 * (1.0 - u_expand);
-  float band = smoothstep(left, left + edge + 0.001, uvx) * smoothstep(right, right - edge - 0.001, uvx);
-  float mask = band;
+  vec2 originPx = u_origin * res;
+  float dist = length(px - originPx);
+  float d00 = length(originPx);
+  float d10 = length(originPx - vec2(res.x, 0.0));
+  float d01 = length(originPx - vec2(0.0, res.y));
+  float d11 = length(originPx - vec2(res.x, res.y));
+  float maxRadius = max(max(d00, d10), max(d01, d11)) + 1.0;
+  float radius = u_expand * maxRadius;
+  float edge = 2.0;
+  float mask = 1.0 - smoothstep(radius - edge, radius, dist);
 
   if (mask < 0.001) { discard; }
 
@@ -79,7 +83,7 @@ void main() {
 
   vec3 rgb = u_color * (0.52 + 0.40 * diff + 0.06 * conv) + vec3(0.16) * specl;
 
-  outColor = vec4(rgb, mask);
+  outColor = vec4(rgb, mask * u_opacity);
 }
 `;
 

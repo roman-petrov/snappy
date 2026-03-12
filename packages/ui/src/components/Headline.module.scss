@@ -44,6 +44,8 @@
 
 .cta {
   display: flex;
+  flex-wrap: wrap;
+  gap: space.x4();
   justify-content: center;
 }
 
@@ -51,7 +53,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: space.x4() space.x8();
 }
 
 @media (width <= 640px) {
@@ -83,6 +84,5 @@
 
   .cta > * {
     width: 100%;
-    padding: space.x3() space.x4();
   }
 }

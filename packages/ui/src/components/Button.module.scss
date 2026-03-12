@@ -94,6 +94,14 @@
     }
   }
 
+  .splash-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
   .canvas-layer-border {
     border: 2px solid transparent;
   }

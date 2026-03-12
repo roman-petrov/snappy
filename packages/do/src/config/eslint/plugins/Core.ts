@@ -11,7 +11,7 @@ export default defineConfig([
       "complexity": `off`,
       "curly": [`error`, `all`],
       "dot-notation": `off`,
-      "id-length": [`error`, { exceptions: [`_`, `$`, `a`, `b`, `c`, `x`, `y`, `z`, `r`, `h`, `s`, `v`, `t`] }],
+      "id-length": [`error`, { exceptions: [`_`, `$`, `a`, `b`, `c`, `x`, `y`, `z`, `r`, `g`, `h`, `s`, `v`, `t`] }],
       "max-lines": `off`,
       "max-lines-per-function": `off`,
       "max-params": [`error`, { max: 10 }],

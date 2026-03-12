@@ -7,11 +7,11 @@ import { SparkleShaders } from "./Sparkle.shaders";
 
 const expandDurationMs = 300;
 
-export type SparkleBurst = { id: number; releaseTime?: number; startTime: number; x: number };
+export type SparkleBurst = { id: number; releaseTime?: number; startTime: number; x: number; y: number };
 
 export type SparkleColor = [number, number, number];
 
-export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor) => {
+export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity: number) => {
   const initResult = WebGl.init(canvas, SparkleShaders.vertex, SparkleShaders.fragment, {
     alpha: true,
     premultipliedAlpha: false,
@@ -25,6 +25,7 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor) => {
   const uniforms = WebGl.uniforms(gl, program, {
     color: { name: `u_color`, type: `3fv` },
     expand: { name: `u_expand`, type: `1f` },
+    opacity: { name: `u_opacity`, type: `1f` },
     origin: { name: `u_origin`, type: `2f` },
     resolution: { name: `u_resolution`, type: `2f` },
     time: { name: `u_time`, type: `1f` },
@@ -45,7 +46,7 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor) => {
     gl.viewport(0, 0, viewportWidth, viewportHeight);
   };
 
-  const drawBurst = (burst: SparkleBurst, width: number) => {
+  const drawBurst = (burst: SparkleBurst, width: number, height: number) => {
     if (burst.releaseTime !== undefined) {
       return burst.id;
     }
@@ -60,9 +61,10 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor) => {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     uniforms.resolution(canvas.width, canvas.height);
-    uniforms.origin(burst.x / width, 0);
+    uniforms.origin(burst.x / width, 1 - burst.y / height);
     uniforms.color(color);
     uniforms.expand(expand);
+    uniforms.opacity(opacity);
     uniforms.time(elapsed / _.second);
 
     WebGl.drawQuad(gl);
