@@ -15,9 +15,9 @@
 
   background: linear-gradient(
     $dir,
-    color-mix(in oklch, color.overlay() 70%, transparent) 0%,
-    color-mix(in oklch, color.overlay() 50%, transparent) calc(100% - 12px),
-    color-mix(in oklch, color.overlay() 25%, transparent) calc(100% - 4px),
+    color-mix(in srgb, color.overlay() 70%, transparent) 0%,
+    color-mix(in srgb, color.overlay() 50%, transparent) calc(100% - 12px),
+    color-mix(in srgb, color.overlay() 25%, transparent) calc(100% - 4px),
     transparent 100%
   );
 
@@ -27,7 +27,7 @@
     border-block-start: 1px solid color.border();
   }
 
-  box-shadow: 0 ($y * 2px) 8px oklch(0% 0 0deg / 3%);
+  box-shadow: 0 ($y * 2px) 8px #00000008;
   backdrop-filter: blur(8px);
 }
 

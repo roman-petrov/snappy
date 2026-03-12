@@ -27,42 +27,42 @@
   --content-narrow: 36rem;
 
   /* Button colors: --color-button-{type} (default | primary | link), --color-button-{type}-hover */
-  --color-button-default: color-mix(in oklch, var(--color-border) 60%, var(--color-bg));
+  --color-button-default: color-mix(in srgb, var(--color-border) 60%, var(--color-bg));
   --color-button-default-hover: var(--color-button-default-hover-theme);
   --color-button-primary: var(--color-accent);
-  --color-button-primary-hover: color-mix(in oklch, var(--color-accent) 78%, black);
+  --color-button-primary-hover: color-mix(in srgb, var(--color-accent) 78%, black);
   --color-button-link: var(--color-accent);
   --color-button-link-hover: var(--color-accent-ghost);
 
   /* Shared color formulas (depend on theme --color-* set in theme-light/theme-dark) */
-  --color-surface-card: color-mix(in oklch, var(--color-bg-elevated) 88%, transparent);
-  --color-error-bg: color-mix(in oklch, var(--color-error) 10%, transparent);
-  --color-error-ghost: color-mix(in oklch, var(--color-error) 4%, transparent);
-  --color-warning-bg: color-mix(in oklch, var(--color-warning) 10%, transparent);
-  --color-success-bg: color-mix(in oklch, var(--color-success) 10%, transparent);
-  --color-info-bg: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  --color-accent-ghost: color-mix(in oklch, var(--color-accent) 22%, transparent);
-  --color-accent-soft: color-mix(in oklch, var(--color-accent) 10%, transparent);
-  --color-accent-pill: color-mix(in oklch, var(--color-accent) 12%, transparent);
-  --color-accent-border: color-mix(in oklch, var(--color-accent) 20%, transparent);
-  --color-accent-mid: color-mix(in oklch, var(--color-accent) 15%, transparent);
-  --color-accent-focus: color-mix(in oklch, var(--color-accent) 30%, transparent);
-  --color-accent-strong: color-mix(in oklch, var(--color-accent) 40%, transparent);
-  --color-divider-line: color-mix(in oklch, var(--color-accent) 40%, transparent);
+  --color-surface-card: color-mix(in srgb, var(--color-bg-elevated) 88%, transparent);
+  --color-error-bg: color-mix(in srgb, var(--color-error) 10%, transparent);
+  --color-error-ghost: color-mix(in srgb, var(--color-error) 4%, transparent);
+  --color-warning-bg: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  --color-success-bg: color-mix(in srgb, var(--color-success) 10%, transparent);
+  --color-info-bg: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  --color-accent-ghost: color-mix(in srgb, var(--color-accent) 22%, transparent);
+  --color-accent-soft: color-mix(in srgb, var(--color-accent) 10%, transparent);
+  --color-accent-pill: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  --color-accent-border: color-mix(in srgb, var(--color-accent) 20%, transparent);
+  --color-accent-mid: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  --color-accent-focus: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  --color-accent-strong: color-mix(in srgb, var(--color-accent) 40%, transparent);
+  --color-divider-line: color-mix(in srgb, var(--color-accent) 40%, transparent);
   --color-divider: linear-gradient(
     to right,
     transparent 0%,
-    color-mix(in oklch, var(--color-accent) 60%, transparent) 30%,
-    color-mix(in oklch, var(--color-accent) 80%, transparent) 50%,
-    color-mix(in oklch, var(--color-accent) 60%, transparent) 70%,
+    color-mix(in srgb, var(--color-accent) 60%, transparent) 30%,
+    color-mix(in srgb, var(--color-accent) 80%, transparent) 50%,
+    color-mix(in srgb, var(--color-accent) 60%, transparent) 70%,
     transparent 100%
   );
   --a-shadow: 4%;
-  --shadow-card: 0 1px 3px oklch(0% 0 0deg / var(--a-shadow));
-  --shadow-card-hover: 0 4px 12px oklch(0% 0 0deg / var(--a-shadow));
-  --shadow-btn: 0 0 20px color-mix(in oklch, var(--color-accent) 35%, transparent);
-  --shadow-btn-hover: 0 0 28px color-mix(in oklch, var(--color-accent) 50%, transparent);
+  --shadow-card: 0 1px 3px rgb(0 0 0 / var(--a-shadow));
+  --shadow-card-hover: 0 4px 12px rgb(0 0 0 / var(--a-shadow));
+  --shadow-btn: 0 0 20px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  --shadow-btn-hover: 0 0 28px color-mix(in srgb, var(--color-accent) 50%, transparent);
   --color-focus-ring: var(--color-accent);
-  --focus-ring-shadow: 0 0 0 4px color-mix(in oklch, var(--color-accent) 35%, transparent);
+  --focus-ring-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
   --focus-ring-outline: 2px solid var(--color-focus-ring);
 }

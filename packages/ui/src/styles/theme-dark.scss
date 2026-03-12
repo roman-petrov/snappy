@@ -1,24 +1,23 @@
 [data-theme="dark"] {
-  --shadow-btn-lift: 0 6px 14px -2px oklch(100% 0 0deg / 22%);
-  --logo-text-shadow:
-    0 1px 0 oklch(100% 0 0deg / 38%), 0 2px 0 oklch(100% 0 0deg / 24%), 0 4px 10px oklch(0% 0 0deg / 55%);
-  --color-bg: oklch(7% 0.002 286deg);
-  --color-bg-elevated: oklch(9% 0.002 286deg);
-  --color-border: oklch(32% 0.012 286deg);
-  --color-button-default-hover-theme: oklch(48% 0.015 286deg);
-  --color-text-muted: oklch(68% 0.01 286deg);
-  --color-text-body: oklch(91% 0.004 286deg);
-  --color-text-heading: oklch(100% 0 0deg);
-  --color-accent: oklch(89% 0.12 195deg);
-  --color-on-accent: oklch(7% 0.002 286deg);
-  --color-error: oklch(82% 0.17 27deg);
-  --color-warning: oklch(82% 0.17 86deg);
-  --color-success: oklch(65% 0.17 150deg);
-  --color-bg-card-border: oklch(100% 0 0deg / 10%);
-  --color-bg-icon: oklch(100% 0 0deg / 5%);
-  --color-bg-card-features: oklch(28% 0.03 195deg / 30%);
-  --color-bg-card-features-hover: oklch(32% 0.03 195deg / 70%);
-  --color-bg-header: oklch(7% 0.002 286deg / 90%);
-  --color-grid: oklch(100% 0 0deg / 3%);
-  --color-overlay: oklch(26% 0.006 286deg / 92%);
+  --shadow-btn-lift: 0 6px 14px -2px #ffffff38;
+  --logo-text-shadow: 0 1px 0 #ffffff61, 0 2px 0 #ffffff3d, 0 4px 10px #0000008c;
+  --color-bg: #010101;
+  --color-bg-elevated: #020203;
+  --color-border: #323239;
+  --color-button-default-hover-theme: #5d5d66;
+  --color-text-muted: #97979e;
+  --color-text-body: #e1e1e4;
+  --color-text-heading: #fff;
+  --color-accent: #69f4f3;
+  --color-on-accent: #010101;
+  --color-error: #ff9487;
+  --color-warning: #f5ba00;
+  --color-success: #1eab53;
+  --color-bg-card-border: #ffffff1a;
+  --color-bg-icon: #ffffff0d;
+  --color-bg-card-features: #162e2d4d;
+  --color-bg-card-features-hover: #203838b3;
+  --color-bg-header: #010101e6;
+  --color-grid: #ffffff08;
+  --color-overlay: #242427eb;
 }
