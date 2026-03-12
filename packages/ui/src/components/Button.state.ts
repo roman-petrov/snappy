@@ -56,7 +56,7 @@ export const useButtonState = ({
 
   const splashColors = {
     default: { dark: 0xe0_e0_e6_73, light: 0x59_61_62_80 },
-    link: { dark: 0x9e_e8_e0_73, light: 0x1a_9e_8c_60 },
+    link: { dark: 0x9e_e8_e0_73, light: 0x1a_9e_8c_99 },
     primary: { dark: 0x69_f4_f3_ff, light: 0x00_88_89_ff },
   };
 
