@@ -138,7 +138,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
   if (!mcp && !verbose) {
-    const seconds = Math.round((_.now() - start) / _.second.milliseconds);
+    const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
     process.stdout.write(`${statusIcon} ${dim}${seconds}s${reset}\n`);
   }
@@ -239,7 +239,7 @@ const run = async (
   }
 
   if (!isMcp && !verbose && result.exitCode === 0) {
-    const seconds = Math.round((_.now() - start) / _.second.milliseconds);
+    const seconds = Math.round((_.now() - start) / _.second);
     process.stdout.write(`\n✅ Done in ${green}${seconds}s${reset}\n`);
   }
 

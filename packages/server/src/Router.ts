@@ -39,7 +39,7 @@ const bind = (app: FastifyInstance, { api, botApiKey, routes }: BindOptions) => 
       if (route.setAuthCookie === true && _.isString(token)) {
         reply.setCookie(AuthCookie.name, token, {
           httpOnly: true,
-          maxAge: AuthCookie.maxAgeMs / _.second.milliseconds,
+          maxAge: AuthCookie.maxAgeMs / _.second,
           path: `/`,
           sameSite: `lax`,
         });
