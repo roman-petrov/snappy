@@ -1,28 +1,25 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-import { WebGl } from "@snappy/browser";
-import { _, Easing } from "@snappy/core";
+import type { WebGlInterface } from "@snappy/browser";
 
-import { SparkleShaders } from "./Sparkle.shaders";
+import { _, Easing } from "@snappy/core";
 
 const expandDurationMs = 300;
 
-export type SparkleBurst = { id: number; releaseTime?: number; startTime: number; x: number; y: number };
-
 export type SparkleColor = [number, number, number];
 
-export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity: number) => {
-  const initResult = WebGl.init(canvas, SparkleShaders.vertex, SparkleShaders.fragment, {
-    alpha: true,
-    premultipliedAlpha: false,
-  });
-  if (initResult === undefined) {
-    return undefined;
-  }
-  const { gl, program } = initResult;
-  const quadBuffer = WebGl.quadBuffer(gl, `ndc`);
+export type SparkleOrigin = { x: number; y: number };
 
-  const uniforms = WebGl.uniforms(gl, program, {
+export const Sparkle = (
+  canvas: HTMLCanvasElement,
+  color: SparkleColor,
+  opacity: number,
+  origin: SparkleOrigin,
+  webgl: WebGlInterface,
+): void => {
+  const { gl } = webgl;
+
+  const uniforms = webgl.uniforms({
     color: { name: `u_color`, type: `3fv` },
     expand: { name: `u_expand`, type: `1f` },
     grainScale: { name: `u_grainScale`, type: `1f` },
@@ -32,7 +29,7 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity:
     time: { name: `u_time`, type: `1f` },
   });
 
-  const destroy = () => WebGl.release(gl, program, quadBuffer);
+  const burst = { startTime: performance.now(), x: origin.x, y: origin.y };
 
   const resize = (width: number, height: number) => {
     const dpr = window.devicePixelRatio;
@@ -47,17 +44,22 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity:
     gl.viewport(0, 0, viewportWidth, viewportHeight);
   };
 
-  const drawBurst = (burst: SparkleBurst, width: number, height: number) => {
-    if (burst.releaseTime !== undefined) {
-      return burst.id;
+  const tick = () => {
+    const { height, width } = canvas.getBoundingClientRect();
+    if (width <= 0 || height <= 0) {
+      return;
     }
+
+    resize(width, height);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+
     const now = performance.now();
     const elapsed = now - burst.startTime;
-    const expandDuration = expandDurationMs;
-    const rawExpand = Math.min(elapsed / expandDuration, 1);
+    const rawExpand = Math.min(elapsed / expandDurationMs, 1);
     const expand = Easing.easeOutExpo(rawExpand);
 
-    WebGl.bindQuad(gl, program, quadBuffer, `a_position`);
+    webgl.bindQuad(`a_uv`);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
@@ -71,12 +73,10 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor, opacity:
     uniforms.opacity(opacity);
     uniforms.time(elapsed / _.second);
 
-    WebGl.drawQuad(gl);
-
-    return undefined;
+    webgl.drawQuad();
   };
 
-  return { destroy, drawBurst, resize };
+  webgl.tick = tick;
 };
 
-export type Sparkle = ReturnType<typeof Sparkle>;
+export { default as SparkleShader } from "./Sparkle.shader.glsl?raw";

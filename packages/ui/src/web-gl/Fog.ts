@@ -3,13 +3,11 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 
+import type { WebGlInterface } from "@snappy/browser";
+
 /**
  * ? Fog effect from Vanta.js: https://www.vantajs.com/?effect=fog
  */
-import { WebGl } from "@snappy/browser";
-
-import { FogShaders } from "./Fog.shaders";
-
 export type FogOptions = {
   baseColor?: number;
   blurFactor?: number;
@@ -40,102 +38,72 @@ const hexToRgb = (hex: number): [number, number, number] => [
   (hex & byteMask) / byteMask,
 ];
 
-export const Fog = (
-  element: HTMLElement,
-  {
-    baseColor = fogDefaults.baseColor,
-    blurFactor = fogDefaults.blurFactor,
-    highlightColor = fogDefaults.highlightColor,
-    lowlightColor = fogDefaults.lowlightColor,
-    midtoneColor = fogDefaults.midtoneColor,
-    speed = fogDefaults.speed,
-    zoom = fogDefaults.zoom,
-  }: FogOptions = {},
-) => {
-  const config = { baseColor, blurFactor, highlightColor, lowlightColor, midtoneColor, speed, zoom };
-  const effectRef = { current: undefined as undefined | { destroy: () => void } };
-
-  const start = () => {
-    const canvas = document.createElement(`canvas`);
-    canvas.setAttribute(`aria-hidden`, `true`);
-
-    const initResult = WebGl.init(canvas, FogShaders.vertex, FogShaders.fragment, { alpha: false, antialias: false });
-    if (initResult === undefined) {
-      return;
-    }
-    const { gl, program } = initResult;
-    element.append(canvas);
-
-    const quadBuffer = WebGl.quadBuffer(gl, `uv`);
-
-    const uniforms = WebGl.uniforms(gl, program, {
-      baseColor: { name: `u_baseColor`, type: `3fv` },
-      blurFactor: { name: `u_blurFactor`, type: `1f` },
-      highlightColor: { name: `u_highlightColor`, type: `3fv` },
-      lowlightColor: { name: `u_lowlightColor`, type: `3fv` },
-      midtoneColor: { name: `u_midtoneColor`, type: `3fv` },
-      resolution: { name: `u_resolution`, type: `2f` },
-      time: { name: `u_time`, type: `1f` },
-      zoom: { name: `u_zoom`, type: `1f` },
-    });
-
-    const baseRgb = hexToRgb(config.baseColor);
-    const lowlightRgb = hexToRgb(config.lowlightColor);
-    const midtoneRgb = hexToRgb(config.midtoneColor);
-    const highlightRgb = hexToRgb(config.highlightColor);
-
-    const resize = () => {
-      const dpr = Math.min(devicePixelRatio, 2);
-      const width = element.clientWidth;
-      const height = element.clientHeight;
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-
-    const state = { rafId: 0, time: 0 };
-    const timeStep = 0.01;
-
-    const tick = () => {
-      state.time += timeStep * config.speed;
-      WebGl.bindQuad(gl, program, quadBuffer, `a_uv`);
-      uniforms.resolution(canvas.width, canvas.height);
-      uniforms.time(state.time);
-      uniforms.blurFactor(config.blurFactor);
-      uniforms.zoom(config.zoom);
-      uniforms.baseColor(baseRgb);
-      uniforms.lowlightColor(lowlightRgb);
-      uniforms.midtoneColor(midtoneRgb);
-      uniforms.highlightColor(highlightRgb);
-      WebGl.drawQuad(gl);
-      state.rafId = requestAnimationFrame(tick);
-    };
-
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(element);
-    state.rafId = requestAnimationFrame(tick);
-
-    const destroy = () => {
-      cancelAnimationFrame(state.rafId);
-      ro.disconnect();
-      WebGl.release(gl, program, quadBuffer);
-      canvas.remove();
-    };
-
-    effectRef.current = { destroy };
+export const Fog = (element: HTMLElement, options: FogOptions, webgl: WebGlInterface): void => {
+  const config = {
+    baseColor: options.baseColor ?? fogDefaults.baseColor,
+    blurFactor: options.blurFactor ?? fogDefaults.blurFactor,
+    highlightColor: options.highlightColor ?? fogDefaults.highlightColor,
+    lowlightColor: options.lowlightColor ?? fogDefaults.lowlightColor,
+    midtoneColor: options.midtoneColor ?? fogDefaults.midtoneColor,
+    speed: options.speed ?? fogDefaults.speed,
+    zoom: options.zoom ?? fogDefaults.zoom,
   };
 
-  const stop = () => {
-    if (effectRef.current !== undefined) {
-      effectRef.current.destroy();
-      effectRef.current = undefined;
-    }
+  element.append(webgl.canvas);
+
+  const uniforms = webgl.uniforms({
+    baseColor: { name: `u_baseColor`, type: `3fv` },
+    blurFactor: { name: `u_blurFactor`, type: `1f` },
+    highlightColor: { name: `u_highlightColor`, type: `3fv` },
+    lowlightColor: { name: `u_lowlightColor`, type: `3fv` },
+    midtoneColor: { name: `u_midtoneColor`, type: `3fv` },
+    resolution: { name: `u_resolution`, type: `2f` },
+    time: { name: `u_time`, type: `1f` },
+    zoom: { name: `u_zoom`, type: `1f` },
+  });
+
+  const baseRgb = hexToRgb(config.baseColor);
+  const lowlightRgb = hexToRgb(config.lowlightColor);
+  const midtoneRgb = hexToRgb(config.midtoneColor);
+  const highlightRgb = hexToRgb(config.highlightColor);
+
+  const resize = () => {
+    const dpr = Math.min(devicePixelRatio, 2);
+    const width = element.clientWidth;
+    const height = element.clientHeight;
+    webgl.canvas.width = Math.round(width * dpr);
+    webgl.canvas.height = Math.round(height * dpr);
+    webgl.canvas.style.width = `${width}px`;
+    webgl.canvas.style.height = `${height}px`;
+    webgl.gl.viewport(0, 0, webgl.canvas.width, webgl.canvas.height);
   };
 
-  return { start, stop };
+  const state = { time: 0 };
+  const timeStep = 0.01;
+
+  const tick = () => {
+    state.time += timeStep * config.speed;
+    webgl.bindQuad(`a_uv`);
+    uniforms.resolution(webgl.canvas.width, webgl.canvas.height);
+    uniforms.time(state.time);
+    uniforms.blurFactor(config.blurFactor);
+    uniforms.zoom(config.zoom);
+    uniforms.baseColor(baseRgb);
+    uniforms.lowlightColor(lowlightRgb);
+    uniforms.midtoneColor(midtoneRgb);
+    uniforms.highlightColor(highlightRgb);
+    webgl.drawQuad();
+  };
+
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(element);
+
+  webgl.tick = tick;
+  webgl.cleanup = () => {
+    ro.disconnect();
+    webgl.canvas.remove();
+  };
 };
 
-export type Fog = ReturnType<typeof Fog>;
+export { default as FogShader } from "./Fog.shader.glsl?raw";

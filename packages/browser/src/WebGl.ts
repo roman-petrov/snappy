@@ -7,9 +7,17 @@ import { _ } from "@snappy/core";
 
 const quadVertexCount = 6;
 const quadUv = new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]);
-const quadNdc = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
 
-const shader = (gl: WebGL2RenderingContext, type: number, source: string): undefined | WebGLShader => {
+const vertexShaderSource = `#version 300 es
+in vec2 a_uv;
+out vec2 v_uv;
+void main() {
+  v_uv = a_uv;
+  gl_Position = vec4(2.0 * a_uv - 1.0, 0.0, 1.0);
+}
+`;
+
+const compileShader = (gl: WebGL2RenderingContext, type: number, source: string): undefined | WebGLShader => {
   const s = gl.createShader(type);
   if (s === null) {
     return undefined;
@@ -25,18 +33,18 @@ const shader = (gl: WebGL2RenderingContext, type: number, source: string): undef
   return s;
 };
 
+const defaultContextOptions: WebGLContextAttributes = { alpha: true, premultipliedAlpha: true };
+
 const init = (
   canvas: HTMLCanvasElement,
-  vertex: string,
-  fragment: string,
-  contextOptions?: WebGLContextAttributes,
+  shader: string,
 ): undefined | { gl: WebGL2RenderingContext; program: WebGLProgram } => {
-  const gl = canvas.getContext(`webgl2`, contextOptions ?? undefined);
+  const gl = canvas.getContext(`webgl2`, defaultContextOptions);
   if (gl === null) {
     return undefined;
   }
-  const vs = shader(gl, gl.VERTEX_SHADER, vertex);
-  const fs = shader(gl, gl.FRAGMENT_SHADER, fragment);
+  const vs = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+  const fs = compileShader(gl, gl.FRAGMENT_SHADER, shader);
   if (vs === undefined || fs === undefined) {
     if (vs !== undefined) {
       gl.deleteShader(vs);
@@ -57,10 +65,10 @@ const init = (
   return { gl, program };
 };
 
-const quadBuffer = (gl: WebGL2RenderingContext, layout: `ndc` | `uv`): WebGLBuffer => {
+const quadBuffer = (gl: WebGL2RenderingContext): WebGLBuffer => {
   const buffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, layout === `uv` ? quadUv : quadNdc, gl.STATIC_DRAW);
+  gl.bufferData(gl.ARRAY_BUFFER, quadUv, gl.STATIC_DRAW);
 
   return buffer;
 };
@@ -139,4 +147,78 @@ const uniforms = <S extends UniformSchema>(
   ) as UniformsApi<S>;
 };
 
-export const WebGl = { bindQuad, drawQuad, init, quadBuffer, release, uniforms };
+export type WebGlInterface = {
+  bindQuad: (attribName: string) => void;
+  canvas: HTMLCanvasElement;
+  cleanup?: () => void;
+  drawQuad: () => void;
+  gl: WebGL2RenderingContext;
+  release: () => void;
+  tick?: () => void;
+  uniforms: <S extends UniformSchema>(schema: S) => UniformsApi<S>;
+};
+
+export type WebGlRunLoopParameters = { canvas: HTMLCanvasElement; shader: string };
+
+const createInterface = (
+  initResult: { gl: WebGL2RenderingContext; program: WebGLProgram },
+  canvas: HTMLCanvasElement,
+): WebGlInterface => {
+  const { gl, program } = initResult;
+  const buffer = quadBuffer(gl);
+
+  return {
+    bindQuad: (attribName: string) => bindQuad(gl, program, buffer, attribName),
+    canvas,
+    drawQuad: () => drawQuad(gl),
+    gl,
+    release: () => release(gl, program, buffer),
+    uniforms: <S extends UniformSchema>(schema: S) => uniforms(gl, program, schema),
+  };
+};
+
+/** Starts an animation loop; returns a function to stop it and cancel the current frame. */
+const startLoop = (tick: () => void): (() => void) => {
+  const state = { rafId: 0, stopped: false };
+
+  const wrapped = () => {
+    if (state.stopped) {
+      return;
+    }
+    tick();
+    state.rafId = requestAnimationFrame(wrapped);
+  };
+
+  state.rafId = requestAnimationFrame(wrapped);
+
+  return () => {
+    state.stopped = true;
+    cancelAnimationFrame(state.rafId);
+  };
+};
+
+const runLoop = (
+  parameters: WebGlRunLoopParameters,
+  create: (webgl: WebGlInterface) => void,
+): (() => void) | undefined => {
+  const initResult = init(parameters.canvas, parameters.shader);
+  if (initResult === undefined) {
+    return undefined;
+  }
+
+  const webgl = createInterface(initResult, parameters.canvas);
+  create(webgl);
+  if (webgl.tick === undefined) {
+    return undefined;
+  }
+
+  const stop = startLoop(webgl.tick);
+
+  return () => {
+    stop();
+    webgl.cleanup?.();
+    webgl.release();
+  };
+};
+
+export const WebGl = { bindQuad, drawQuad, init, quadBuffer, release, runLoop, uniforms };

@@ -2,6 +2,8 @@
 // cspell:words highp fract smoothstep specl conv
 precision highp float;
 
+in vec2 v_uv;
+
 uniform vec2 u_resolution;
 uniform vec2 u_origin;
 uniform vec3 u_color;

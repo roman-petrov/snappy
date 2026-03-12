@@ -4,9 +4,10 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable init-declarations */
 import { effect } from "@preact/signals";
+import { WebGl } from "@snappy/browser";
 
 import { $serverMode, $theme } from "../Store";
-import { Fog } from "../web-gl";
+import { Fog, FogShader } from "../web-gl";
 
 export const themes = [`light`, `dark`] as const;
 
@@ -15,20 +16,22 @@ export type Theme = (typeof themes)[number];
 const fogContainerId = `fog-bg`;
 const fogOptions = { blurFactor: 0.5, speed: 2, zoom: 2 };
 let afterChange: (() => void) | undefined;
-const fogRef: { current: Fog | undefined } = { current: undefined };
+const stopFogRef: { current: (() => void) | undefined } = { current: undefined };
 
 const syncFog = () => {
-  if (fogRef.current !== undefined) {
-    fogRef.current.stop();
-    fogRef.current = undefined;
-  }
+  stopFogRef.current?.();
+  stopFogRef.current = undefined;
   if (document.documentElement.dataset[`theme`] === `light`) {
     return;
   }
   const element = document.querySelector(`#${fogContainerId}`);
   if (element instanceof HTMLElement) {
-    fogRef.current = Fog(element, fogOptions);
-    fogRef.current.start();
+    const canvas = document.createElement(`canvas`);
+    canvas.setAttribute(`aria-hidden`, `true`);
+    const stop = WebGl.runLoop({ canvas, shader: FogShader }, webgl => Fog(element, fogOptions, webgl));
+    if (stop !== undefined) {
+      stopFogRef.current = stop;
+    }
   }
 };
 
