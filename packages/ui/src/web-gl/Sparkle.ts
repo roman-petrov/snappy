@@ -63,7 +63,7 @@ export const Sparkle = (canvas: HTMLCanvasElement, color: SparkleColor) => {
     uniforms.origin(burst.x / width, 0);
     uniforms.color(color);
     uniforms.expand(expand);
-    uniforms.time(elapsed / _.second.microseconds);
+    uniforms.time(elapsed / _.second);
 
     WebGl.drawQuad(gl);
 
