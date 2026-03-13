@@ -30,15 +30,15 @@ const defs: Record<string, CmdDefinition> = {
     description: `DB for dev: container up + schema push.`,
     label: `🗄️ Database`,
   },
-  [`db:push:dev`]: {
-    description: `Prisma: push schema (accept data loss, for dev).`,
-    label: `⬇️ Schema sync`,
-    run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
-  },
   [`db:migrate:deploy`]: {
     description: `Prisma: apply migrations.`,
     label: `📥 Apply migrations`,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
+  },
+  [`db:push:dev`]: {
+    description: `Prisma: push schema (accept data loss, for dev).`,
+    label: `⬇️ Schema sync`,
+    run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
