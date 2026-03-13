@@ -26,55 +26,19 @@ const defs: Record<string, CmdDefinition> = {
     run: { command: `docker compose up -d` },
   },
   [`db:dev`]: {
-    children: [`db:container:up`, `db:push:dev`, `db:seed`],
-    description: `DB for dev/run: container up + schema push + seed.`,
+    children: [`db:container:up`, `db:push:dev`],
+    description: `DB for dev: container up + schema push.`,
     label: `🗄️ Database`,
   },
-  [`db:generate`]: {
-    description: `Prisma: generate client.`,
-    label: `📜 Generate Prisma client`,
-    run: { args: [`generate`], tool: `prisma` },
-  },
-  [`db:migrate:create`]: {
-    description: `Prisma: create migration from schema diff (no apply). Use before merging feature branch.`,
-    interactive: true,
-    label: `📝 Create migration`,
-    run: { args: [`migrate`, `dev`, `--create-only`], tool: `prisma` },
+  [`db:push:dev`]: {
+    description: `Prisma: push schema (accept data loss, for dev).`,
+    label: `⬇️ Schema sync`,
+    run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`db:migrate:deploy`]: {
     description: `Prisma: apply migrations.`,
     label: `📥 Apply migrations`,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
-  },
-  [`db:migrate:dev`]: {
-    description: `Prisma: create and apply migration.`,
-    label: `➕ Create migration`,
-    run: { args: [`migrate`, `dev`], tool: `prisma` },
-  },
-  [`db:migrate:reset`]: {
-    description: `Prisma: reset DB.`,
-    label: `♻️ Reset database`,
-    run: { args: [`migrate`, `reset`], tool: `prisma` },
-  },
-  [`db:push:dev`]: {
-    description: `Prisma: push schema (accept data loss, for dev/run).`,
-    label: `⬇️ Schema sync`,
-    run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
-  },
-  [`db:push`]: {
-    description: `Prisma: push schema.`,
-    label: `📤 Push schema`,
-    run: { args: [`db`, `push`], tool: `prisma` },
-  },
-  [`db:seed`]: {
-    description: `Prisma: seed DB.`,
-    label: `🌱 Seed database`,
-    run: { args: [`db`, `seed`], tool: `prisma` },
-  },
-  [`db:studio`]: {
-    description: `Prisma: Studio GUI.`,
-    label: `🖼️ Prisma Studio`,
-    run: { args: [`studio`], tool: `prisma` },
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],

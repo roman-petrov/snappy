@@ -15,7 +15,7 @@ const config: KnipConfig = {
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`],
     },
     "packages/app": { entry: [`index.html`] },
-    "packages/db": { entry: [`src/Seed.ts`] },
+    "packages/db": { entry: [`src/index.ts`] },
     "packages/do": {
       entry: [`src/main.*.ts`],
       ignoreDependencies: [
