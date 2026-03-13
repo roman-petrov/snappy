@@ -3,14 +3,13 @@
   "version": "0.0.0",
   "type": "module",
   "private": true,
-  "main": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts"
-  },
+  "main": "./src/main.tsx",
   "dependencies": {
     "@preact/signals": "^2.0.3",
+    "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
+    "@snappy/snappy-core": "workspace:*",
     "@snappy/ui": "workspace:*",
     "preact": "^10.29.0",
     "wouter": "^3.9.0"

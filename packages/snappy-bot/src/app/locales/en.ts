@@ -33,8 +33,6 @@ export const en = {
     choose: `🎯 Choose improvement feature:`,
     error: `❌ An error occurred. Please try again.`,
     expand: `📈 Expand text`,
-    fixErrors: `✅ Fix errors`,
-
     improveReadability: `🎯 Improve readability`,
     limit: `⚠️ Free requests limit reached.\n\n💎 Buy premium for unlimited usage: /premium`,
     processing: `⏳ Processing your text...`,
@@ -46,4 +44,12 @@ export const en = {
     styleNeutral: `📝 Neutral style`,
     styleSelling: `💰 Selling style`,
   },
+  keyboard: {
+    copy: `📋 Copy`,
+    enterNew: `📝 Enter new text`,
+    new: `✨ New`,
+    process: `✨ Process`,
+    retry: `🔄 Regenerate`,
+  },
+  options: { emoji: `😊 Emoji`, format: `📐 Format` },
 };

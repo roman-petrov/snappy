@@ -1,18 +1,10 @@
 import type { ReactNode } from "react";
 
-import { Alert } from "@snappy/ui";
-
-import styles from "./FormErrorAndActions.module.scss";
+import { useFormErrorAndActionsState } from "./FormErrorAndActions.state";
+import { FormErrorAndActionsView } from "./FormErrorAndActions.view";
 
 export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 
-export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProps) => (
-  <>
-    {error !== `` && <Alert text={error} variant="error" />}
-    <div className={styles.actions}>{children}</div>
-  </>
+export const FormErrorAndActions = (props: FormErrorAndActionsProps) => (
+  <FormErrorAndActionsView {...useFormErrorAndActionsState(props)} />
 );
-
-export type FormActionsProps = { children: ReactNode };
-
-export const FormActions = ({ children }: FormActionsProps) => <div className={styles.actions}>{children}</div>;

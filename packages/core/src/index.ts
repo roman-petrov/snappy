@@ -6,8 +6,6 @@ export * from "./Cache";
 
 export * from "./DateTime";
 
-export * from "./Easing";
-
 export * from "./HttpStatus";
 
 export * from "./I18n";

@@ -1,5 +1,4 @@
 [data-theme="dark"] {
-  --shadow-btn-lift: 0 6px 14px -2px #ffffff38;
   --logo-text-shadow: 0 1px 0 #ffffff61, 0 2px 0 #ffffff3d, 0 4px 10px #0000008c;
   --color-bg: #010101;
   --color-bg-elevated: #020203;
@@ -10,6 +9,8 @@
   --color-text-heading: #fff;
   --color-accent: #69f4f3;
   --color-on-accent: #010101;
+  --color-accent-secondary: #a78bfa;
+  --color-on-accent-secondary: #1a0a2e;
   --color-error: #ff9487;
   --color-warning: #f5ba00;
   --color-success: #1eab53;
@@ -17,7 +18,6 @@
   --color-bg-icon: #ffffff0d;
   --color-bg-card-features: #162e2d4d;
   --color-bg-card-features-hover: #203838b3;
-  --color-bg-header: #010101e6;
   --color-grid: #ffffff08;
   --color-overlay: #242427eb;
 }

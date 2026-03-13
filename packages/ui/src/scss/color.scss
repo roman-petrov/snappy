@@ -10,6 +10,14 @@
   @return -color("on-accent");
 }
 
+@function accent-secondary() {
+  @return -color("accent-secondary");
+}
+
+@function on-accent-secondary() {
+  @return -color("on-accent-secondary");
+}
+
 @function error() {
   @return -color("error");
 }
@@ -70,10 +78,6 @@
   @return -color("button-link-hover");
 }
 
-@function bg-header() {
-  @return -color("bg-header");
-}
-
 @function overlay() {
   @return -color("overlay");
 }
@@ -90,16 +94,8 @@
   @return -color("accent-border");
 }
 
-@function accent-soft() {
-  @return -color("accent-soft");
-}
-
 @function accent-strong() {
   @return -color("accent-strong");
-}
-
-@function accent-mid() {
-  @return -color("accent-mid");
 }
 
 @function accent-focus() {
@@ -152,10 +148,6 @@
 
 @function surface-card() {
   @return -color("surface-card");
-}
-
-@function focus-ring() {
-  @return -color("focus-ring");
 }
 
 @function divider() {

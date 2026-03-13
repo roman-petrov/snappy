@@ -1,17 +1,13 @@
-export * from "./Dashboard";
-
-export * from "./ForgotPasswordForm";
-
 export * from "./FormErrorAndActions";
 
 export * from "./HeaderContent";
 
-export * from "./LoginForm";
-
 export * from "./MessageWithLink";
+
+export * from "./ProcessButton";
 
 export * from "./Protect";
 
-export * from "./RegisterForm";
+export * from "./SmallButton";
 
-export * from "./ResetPasswordForm";
+export * from "./TextCard";

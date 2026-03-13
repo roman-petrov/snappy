@@ -1,6 +1,5 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { type FeatureType, SnappyCore } from "@snappy/snappy-core";
 // cspell:words PERS
 import GigaChat from "gigachat";
 import { Agent } from "node:https";
@@ -16,12 +15,10 @@ export const Snappy = ({ gigaChatAuthKey }: SnappyOptions) => {
     timeout: 600,
   });
 
-  const processText = async (text: string, feature: FeatureType) => {
-    const prompt = SnappyCore.systemPrompt(feature);
-
+  const processText = async (text: string, systemPrompt: string) => {
     const { choices } = await client.chat({
       messages: [
-        { content: prompt, role: `system` },
+        { content: systemPrompt, role: `system` },
         { content: text, role: `user` },
       ],
       repetitionPenalty: 1,

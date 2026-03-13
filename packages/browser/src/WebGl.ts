@@ -151,14 +151,30 @@ export type WebGlInterface = {
   bindQuad: (attribName: string) => void;
   canvas: HTMLCanvasElement;
   cleanup?: () => void;
+  createTimeDriver: (timeStep: number) => (speed: number) => number;
   drawQuad: () => void;
+  drawQuadFrame: (applyUniforms: () => void) => void;
   gl: WebGL2RenderingContext;
+  observeResize: (element: HTMLElement, resize: () => void, tick: () => void) => void;
   release: () => void;
+  resizeCanvas: (width: number, height: number, setStyle?: boolean) => void;
   tick?: () => void;
   uniforms: <S extends UniformSchema>(schema: S) => UniformsApi<S>;
 };
 
 export type WebGlRunLoopParameters = { canvas: HTMLCanvasElement; shader: string };
+
+const dpr = () => Math.min(devicePixelRatio, 2);
+
+const createTimeDriver = (timeStep: number) => {
+  const state = { time: 0 };
+
+  return (speed: number) => {
+    state.time += timeStep * speed;
+
+    return state.time;
+  };
+};
 
 const createInterface = (
   initResult: { gl: WebGL2RenderingContext; program: WebGLProgram },
@@ -167,14 +183,42 @@ const createInterface = (
   const { gl, program } = initResult;
   const buffer = quadBuffer(gl);
 
-  return {
+  const iface: WebGlInterface = {
     bindQuad: (attribName: string) => bindQuad(gl, program, buffer, attribName),
     canvas,
+    createTimeDriver,
     drawQuad: () => drawQuad(gl),
+    drawQuadFrame: (applyUniforms: () => void) => {
+      iface.bindQuad(`a_uv`);
+      applyUniforms();
+      iface.drawQuad();
+    },
     gl,
+    observeResize: (element: HTMLElement, resize: () => void, tick: () => void) => {
+      resize();
+      const ro = new ResizeObserver(resize);
+      ro.observe(element);
+      iface.tick = tick;
+      iface.cleanup = () => {
+        ro.disconnect();
+        iface.canvas.remove();
+      };
+    },
     release: () => release(gl, program, buffer),
+    resizeCanvas: (width: number, height: number, setStyle?: boolean) => {
+      const scale = dpr();
+      iface.canvas.width = Math.round(width * scale);
+      iface.canvas.height = Math.round(height * scale);
+      if (setStyle === true) {
+        iface.canvas.style.width = `${width}px`;
+        iface.canvas.style.height = `${height}px`;
+      }
+      iface.gl.viewport(0, 0, iface.canvas.width, iface.canvas.height);
+    },
     uniforms: <S extends UniformSchema>(schema: S) => uniforms(gl, program, schema),
   };
+
+  return iface;
 };
 
 /** Starts an animation loop; returns a function to stop it and cancel the current frame. */
@@ -221,4 +265,4 @@ const runLoop = (
   };
 };
 
-export const WebGl = { bindQuad, drawQuad, init, quadBuffer, release, runLoop, uniforms };
+export const WebGl = { runLoop };

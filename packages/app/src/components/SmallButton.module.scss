@@ -1,0 +1,90 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
+@use "pkg:@snappy/ui/space";
+
+$c-copy: #2563eb;
+
+.btn {
+  display: inline-flex;
+  gap: space.x1();
+  align-items: center;
+  justify-content: center;
+  padding: space.x2() space.x3();
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid;
+  border-radius: 10px;
+  transition:
+    background var(--ease),
+    border-color var(--ease),
+    color var(--ease),
+    transform var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn-neutral {
+  color: color.text-muted();
+  background: color-mix(in srgb, var(--color-text-body) 6%, transparent);
+  border-color: color-mix(in srgb, var(--color-text-body) 12%, transparent);
+}
+
+.btn-neutral:hover:not(:disabled) {
+  color: color.text-body();
+  background: color-mix(in srgb, var(--color-text-body) 10%, transparent);
+  border-color: color-mix(in srgb, var(--color-text-body) 18%, transparent);
+}
+
+.btn-copy {
+  color: $c-copy;
+  background: color.surface-card();
+  border-color: color-mix(in srgb, $c-copy 50%, transparent);
+}
+
+.btn-copy:hover:not(:disabled) {
+  background: color-mix(in srgb, $c-copy 12%, transparent);
+  border-color: $c-copy;
+}
+
+.btn-compact {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.btn-full.btn-copy {
+  color: $c-copy;
+  background: color.surface-card();
+  border-color: color-mix(in srgb, $c-copy 50%, transparent);
+}
+
+.btn-full.btn-copy:hover:not(:disabled) {
+  background: color-mix(in srgb, $c-copy 12%, transparent);
+  border-color: $c-copy;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color.accent-focus();
+}
+
+.btn-copy:focus {
+  box-shadow: 0 0 0 2px color-mix(in srgb, $c-copy 50%, transparent);
+}
+
+.icon {
+  font-size: 1.125rem;
+  line-height: 1;
+}

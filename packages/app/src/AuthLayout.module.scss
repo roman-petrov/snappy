@@ -1,0 +1,22 @@
+@use "pkg:@snappy/ui/space";
+
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: space.x3() space.x4();
+}
+
+.title {
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: space.x5();
+  text-align: start;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

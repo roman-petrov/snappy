@@ -1,13 +1,7 @@
 import pluginImport from "eslint-plugin-import";
 import { defineConfig } from "eslint/config";
 
-const preactPackages = [
-  `**/packages/app/**`,
-  `**/packages/app-desktop/**`,
-  `**/packages/app-mobile/**`,
-  `**/packages/site/**`,
-  `**/packages/ui/**`,
-];
+const preactPackages = [`**/packages/app/**`, `**/packages/site/**`, `**/packages/ui/**`];
 
 export default defineConfig([
   {

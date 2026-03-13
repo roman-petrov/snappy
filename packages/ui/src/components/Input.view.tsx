@@ -12,6 +12,7 @@ export const InputView = (props: InputViewProps) => {
   const { id, label, onFocus, suffix } = props;
 
   const renderControl = ({
+    innerWrapClassName,
     inputClassName: inputClassNameBase,
     inputInsideWrapClassName,
     wrapClassName,
@@ -19,7 +20,12 @@ export const InputView = (props: InputViewProps) => {
     if (props.children !== undefined) {
       return (
         <div className={wrapClassName}>
-          {props.children({ inputClassName: inputClassNameBase, inputInsideWrapClassName, wrapClassName })}
+          {props.children({
+            innerWrapClassName,
+            inputClassName: inputClassNameBase,
+            inputInsideWrapClassName,
+            wrapClassName,
+          })}
           {suffix === undefined ? undefined : (
             <div className={styles.suffix}>
               <div className={styles.suffixIcon}>{suffix}</div>
@@ -73,5 +79,5 @@ export const InputView = (props: InputViewProps) => {
     return inputElement;
   };
 
-  return <Field id={id} label={label} renderControl={renderControl} />;
+  return <Field id={id} label={label} renderControl={renderControl} value={props.value} />;
 };

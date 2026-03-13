@@ -17,16 +17,7 @@ const defs: Record<string, CmdDefinition> = {
     label: `🤖 Android app`,
     run: { handler: `build:app-android` },
   },
-  [`build:app-desktop`]: {
-    description: `Vite: build desktop app into dist/app-desktop.`,
-    label: `🖥️ Desktop app`,
-    run: { handler: `build:app-desktop` },
-  },
-  [`build:app-mobile`]: {
-    description: `Vite: build mobile app into dist/app-mobile.`,
-    label: `📱 Mobile app`,
-    run: { handler: `build:app-mobile` },
-  },
+  [`build:app`]: { description: `Vite: build app into dist/app.`, label: `💻 App`, run: { handler: `build:app` } },
   [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
   [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
   [`db:container:up`]: {
@@ -44,13 +35,19 @@ const defs: Record<string, CmdDefinition> = {
     label: `📜 Generate Prisma client`,
     run: { args: [`generate`], tool: `prisma` },
   },
+  [`db:migrate:create`]: {
+    description: `Prisma: create migration from schema diff (no apply). Use before merging feature branch.`,
+    interactive: true,
+    label: `📝 Create migration`,
+    run: { args: [`migrate`, `dev`, `--create-only`], tool: `prisma` },
+  },
   [`db:migrate:deploy`]: {
     description: `Prisma: apply migrations.`,
     label: `📥 Apply migrations`,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
   },
   [`db:migrate:dev`]: {
-    description: `Prisma: create migration.`,
+    description: `Prisma: create and apply migration.`,
     label: `➕ Create migration`,
     run: { args: [`migrate`, `dev`], tool: `prisma` },
   },
@@ -135,8 +132,8 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app-desktop`, `build:app-mobile`, `build:app-android`],
-    description: `Build site into dist (site + ssr + app-desktop + app-mobile + Android APK).`,
+    children: [`build:site`, `build:ssr`, `build:app`, `build:app-android`],
+    description: `Build site into dist (site + ssr + app + Android APK).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },

@@ -1,37 +1,13 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
 import type { ReactNode } from "react";
 
-import { $ } from "../$";
-import styles from "./Field.module.scss";
-import { Text } from "./Text";
+import { type FieldControlClasses, useFieldState } from "./Field.state";
+import { FieldView } from "./Field.view";
 
-export type FieldControlClasses = { inputClassName: string; inputInsideWrapClassName: string; wrapClassName: string };
+export type { FieldControlClasses } from "./Field.state";
 
 export type FieldProps = (
-  | { children: ReactNode; renderControl?: never; renderInput?: never }
-  | { children?: never; renderControl: (classes: FieldControlClasses) => ReactNode; renderInput?: never }
-  | { children?: never; renderControl?: never; renderInput: (inputClassName: string) => ReactNode }
-) & { id: string; label?: string };
+  | { children: ReactNode; renderControl?: never }
+  | { children?: never; renderControl: (classes: FieldControlClasses) => ReactNode }
+) & { id: string; label?: string; value?: string };
 
-const inputClassName = `${styles.inputSurface} ${styles.input} ${$.typography(`body`)}`;
-const wrapClassName = `${styles.inputSurface} ${styles.inputWrap}`;
-
-export const Field = ({ children, id, label, renderControl, renderInput }: FieldProps) => {
-  const content: ReactNode =
-    renderInput === undefined
-      ? renderControl === undefined
-        ? children
-        : renderControl({ inputClassName, inputInsideWrapClassName: styles.inputInsideWrap, wrapClassName })
-      : renderInput(inputClassName);
-
-  if (label === undefined || label === ``) {
-    return content;
-  }
-
-  return (
-    <div className={styles.root}>
-      <Text as="label" cn={styles.label} htmlFor={id} text={label} typography="caption" />
-      {content}
-    </div>
-  );
-};
+export const Field = (props: FieldProps) => <FieldView {...useFieldState(props)} />;

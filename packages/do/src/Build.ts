@@ -1,13 +1,12 @@
 // cspell:word gradlew
 /* eslint-disable functional/no-expression-statements */
 import { Process } from "@snappy/node";
+import fs from "node:fs";
+import { join } from "node:path";
 
 import { Drawable } from "./Drawable";
 
 const workflowRunner = `bun`;
-import fs from "node:fs";
-import { join } from "node:path";
-
 const distDir = `dist`;
 const packageDir = (root: string, packageName: string) => join(root, `packages`, packageName);
 const outDir = (root: string, packageName: string) => join(root, distDir, packageName);
@@ -42,8 +41,7 @@ const viteBuild = async (root: string, packageName: string, { capture }: BuildOp
 };
 
 const site = async (root: string, options: BuildOptions = {}) => viteBuild(root, `site`, options);
-const appDesktop = async (root: string, options: BuildOptions = {}) => viteBuild(root, `app-desktop`, options);
-const appMobile = async (root: string, options: BuildOptions = {}) => viteBuild(root, `app-mobile`, options);
+const app = async (root: string, options: BuildOptions = {}) => viteBuild(root, `app`, options);
 const androidAppDir = (root: string) => packageDir(root, `app-android`);
 const androidDir = (root: string) => join(androidAppDir(root), `android`);
 
@@ -105,4 +103,4 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
   return exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { appAndroid, appAndroidDebug, appDesktop, appMobile, site, ssr };
+export const Build = { app, appAndroid, appAndroidDebug, site, ssr };

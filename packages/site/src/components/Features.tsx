@@ -7,7 +7,6 @@ export const Features = () => (
   <Section id="features" lead={t(`features.lead`)} title={t(`features.title`)}>
     <div className={styles.grid}>
       {[
-        { descKey: `features.fixErrors.desc` as const, icon: `📝`, titleKey: `features.fixErrors.title` as const },
         { descKey: `features.shorten.desc` as const, icon: `✂️`, titleKey: `features.shorten.title` as const },
         { descKey: `features.expand.desc` as const, icon: `📖`, titleKey: `features.expand.title` as const },
         { descKey: `features.readability.desc` as const, icon: `👁️`, titleKey: `features.readability.title` as const },

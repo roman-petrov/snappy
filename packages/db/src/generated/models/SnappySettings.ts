@@ -40,18 +40,30 @@ export type SnappySettingsMinAggregateOutputType = {
   userId: number | null
   requestCount: number | null
   lastReset: Date | null
+  addEmoji: boolean | null
+  addFormatting: boolean | null
+  length: string | null
+  style: string | null
 }
 
 export type SnappySettingsMaxAggregateOutputType = {
   userId: number | null
   requestCount: number | null
   lastReset: Date | null
+  addEmoji: boolean | null
+  addFormatting: boolean | null
+  length: string | null
+  style: string | null
 }
 
 export type SnappySettingsCountAggregateOutputType = {
   userId: number
   requestCount: number
   lastReset: number
+  addEmoji: number
+  addFormatting: number
+  length: number
+  style: number
   _all: number
 }
 
@@ -70,18 +82,30 @@ export type SnappySettingsMinAggregateInputType = {
   userId?: true
   requestCount?: true
   lastReset?: true
+  addEmoji?: true
+  addFormatting?: true
+  length?: true
+  style?: true
 }
 
 export type SnappySettingsMaxAggregateInputType = {
   userId?: true
   requestCount?: true
   lastReset?: true
+  addEmoji?: true
+  addFormatting?: true
+  length?: true
+  style?: true
 }
 
 export type SnappySettingsCountAggregateInputType = {
   userId?: true
   requestCount?: true
   lastReset?: true
+  addEmoji?: true
+  addFormatting?: true
+  length?: true
+  style?: true
   _all?: true
 }
 
@@ -175,6 +199,10 @@ export type SnappySettingsGroupByOutputType = {
   userId: number
   requestCount: number
   lastReset: Date
+  addEmoji: boolean
+  addFormatting: boolean
+  length: string
+  style: string
   _count: SnappySettingsCountAggregateOutputType | null
   _avg: SnappySettingsAvgAggregateOutputType | null
   _sum: SnappySettingsSumAggregateOutputType | null
@@ -204,6 +232,10 @@ export type SnappySettingsWhereInput = {
   userId?: Prisma.IntFilter<"SnappySettings"> | number
   requestCount?: Prisma.IntFilter<"SnappySettings"> | number
   lastReset?: Prisma.DateTimeFilter<"SnappySettings"> | Date | string
+  addEmoji?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  addFormatting?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  length?: Prisma.StringFilter<"SnappySettings"> | string
+  style?: Prisma.StringFilter<"SnappySettings"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -211,6 +243,10 @@ export type SnappySettingsOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   requestCount?: Prisma.SortOrder
   lastReset?: Prisma.SortOrder
+  addEmoji?: Prisma.SortOrder
+  addFormatting?: Prisma.SortOrder
+  length?: Prisma.SortOrder
+  style?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
@@ -221,6 +257,10 @@ export type SnappySettingsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.SnappySettingsWhereInput | Prisma.SnappySettingsWhereInput[]
   requestCount?: Prisma.IntFilter<"SnappySettings"> | number
   lastReset?: Prisma.DateTimeFilter<"SnappySettings"> | Date | string
+  addEmoji?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  addFormatting?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  length?: Prisma.StringFilter<"SnappySettings"> | string
+  style?: Prisma.StringFilter<"SnappySettings"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "userId">
 
@@ -228,6 +268,10 @@ export type SnappySettingsOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   requestCount?: Prisma.SortOrder
   lastReset?: Prisma.SortOrder
+  addEmoji?: Prisma.SortOrder
+  addFormatting?: Prisma.SortOrder
+  length?: Prisma.SortOrder
+  style?: Prisma.SortOrder
   _count?: Prisma.SnappySettingsCountOrderByAggregateInput
   _avg?: Prisma.SnappySettingsAvgOrderByAggregateInput
   _max?: Prisma.SnappySettingsMaxOrderByAggregateInput
@@ -242,11 +286,19 @@ export type SnappySettingsScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"SnappySettings"> | number
   requestCount?: Prisma.IntWithAggregatesFilter<"SnappySettings"> | number
   lastReset?: Prisma.DateTimeWithAggregatesFilter<"SnappySettings"> | Date | string
+  addEmoji?: Prisma.BoolWithAggregatesFilter<"SnappySettings"> | boolean
+  addFormatting?: Prisma.BoolWithAggregatesFilter<"SnappySettings"> | boolean
+  length?: Prisma.StringWithAggregatesFilter<"SnappySettings"> | string
+  style?: Prisma.StringWithAggregatesFilter<"SnappySettings"> | string
 }
 
 export type SnappySettingsCreateInput = {
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
   user: Prisma.UserCreateNestedOneWithoutSnappySettingsInput
 }
 
@@ -254,11 +306,19 @@ export type SnappySettingsUncheckedCreateInput = {
   userId: number
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
 }
 
 export type SnappySettingsUpdateInput = {
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneRequiredWithoutSnappySettingsNestedInput
 }
 
@@ -266,23 +326,39 @@ export type SnappySettingsUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SnappySettingsCreateManyInput = {
   userId: number
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
 }
 
 export type SnappySettingsUpdateManyMutationInput = {
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SnappySettingsUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SnappySettingsListRelationFilter = {
@@ -299,6 +375,10 @@ export type SnappySettingsCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   requestCount?: Prisma.SortOrder
   lastReset?: Prisma.SortOrder
+  addEmoji?: Prisma.SortOrder
+  addFormatting?: Prisma.SortOrder
+  length?: Prisma.SortOrder
+  style?: Prisma.SortOrder
 }
 
 export type SnappySettingsAvgOrderByAggregateInput = {
@@ -310,12 +390,20 @@ export type SnappySettingsMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   requestCount?: Prisma.SortOrder
   lastReset?: Prisma.SortOrder
+  addEmoji?: Prisma.SortOrder
+  addFormatting?: Prisma.SortOrder
+  length?: Prisma.SortOrder
+  style?: Prisma.SortOrder
 }
 
 export type SnappySettingsMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   requestCount?: Prisma.SortOrder
   lastReset?: Prisma.SortOrder
+  addEmoji?: Prisma.SortOrder
+  addFormatting?: Prisma.SortOrder
+  length?: Prisma.SortOrder
+  style?: Prisma.SortOrder
 }
 
 export type SnappySettingsSumOrderByAggregateInput = {
@@ -365,14 +453,30 @@ export type SnappySettingsUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SnappySettingsScalarWhereInput | Prisma.SnappySettingsScalarWhereInput[]
 }
 
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
+}
+
 export type SnappySettingsCreateWithoutUserInput = {
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
 }
 
 export type SnappySettingsUncheckedCreateWithoutUserInput = {
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
 }
 
 export type SnappySettingsCreateOrConnectWithoutUserInput = {
@@ -408,26 +512,46 @@ export type SnappySettingsScalarWhereInput = {
   userId?: Prisma.IntFilter<"SnappySettings"> | number
   requestCount?: Prisma.IntFilter<"SnappySettings"> | number
   lastReset?: Prisma.DateTimeFilter<"SnappySettings"> | Date | string
+  addEmoji?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  addFormatting?: Prisma.BoolFilter<"SnappySettings"> | boolean
+  length?: Prisma.StringFilter<"SnappySettings"> | string
+  style?: Prisma.StringFilter<"SnappySettings"> | string
 }
 
 export type SnappySettingsCreateManyUserInput = {
   requestCount?: number
   lastReset?: Date | string
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: string
+  style?: string
 }
 
 export type SnappySettingsUpdateWithoutUserInput = {
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SnappySettingsUncheckedUpdateWithoutUserInput = {
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SnappySettingsUncheckedUpdateManyWithoutUserInput = {
   requestCount?: Prisma.IntFieldUpdateOperationsInput | number
   lastReset?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  addEmoji?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  addFormatting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  length?: Prisma.StringFieldUpdateOperationsInput | string
+  style?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -436,6 +560,10 @@ export type SnappySettingsSelect<ExtArgs extends runtime.Types.Extensions.Intern
   userId?: boolean
   requestCount?: boolean
   lastReset?: boolean
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: boolean
+  style?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["snappySettings"]>
 
@@ -443,6 +571,10 @@ export type SnappySettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   userId?: boolean
   requestCount?: boolean
   lastReset?: boolean
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: boolean
+  style?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["snappySettings"]>
 
@@ -450,6 +582,10 @@ export type SnappySettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   userId?: boolean
   requestCount?: boolean
   lastReset?: boolean
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: boolean
+  style?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["snappySettings"]>
 
@@ -457,9 +593,13 @@ export type SnappySettingsSelectScalar = {
   userId?: boolean
   requestCount?: boolean
   lastReset?: boolean
+  addEmoji?: boolean
+  addFormatting?: boolean
+  length?: boolean
+  style?: boolean
 }
 
-export type SnappySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "requestCount" | "lastReset", ExtArgs["result"]["snappySettings"]>
+export type SnappySettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "requestCount" | "lastReset" | "addEmoji" | "addFormatting" | "length" | "style", ExtArgs["result"]["snappySettings"]>
 export type SnappySettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -479,6 +619,10 @@ export type $SnappySettingsPayload<ExtArgs extends runtime.Types.Extensions.Inte
     userId: number
     requestCount: number
     lastReset: Date
+    addEmoji: boolean
+    addFormatting: boolean
+    length: string
+    style: string
   }, ExtArgs["result"]["snappySettings"]>
   composites: {}
 }
@@ -906,6 +1050,10 @@ export interface SnappySettingsFieldRefs {
   readonly userId: Prisma.FieldRef<"SnappySettings", 'Int'>
   readonly requestCount: Prisma.FieldRef<"SnappySettings", 'Int'>
   readonly lastReset: Prisma.FieldRef<"SnappySettings", 'DateTime'>
+  readonly addEmoji: Prisma.FieldRef<"SnappySettings", 'Boolean'>
+  readonly addFormatting: Prisma.FieldRef<"SnappySettings", 'Boolean'>
+  readonly length: Prisma.FieldRef<"SnappySettings", 'String'>
+  readonly style: Prisma.FieldRef<"SnappySettings", 'String'>
 }
     
 
@@ -1102,6 +1250,11 @@ export type SnappySettingsFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` SnappySettings.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SnappySettings.
+   */
   distinct?: Prisma.SnappySettingsScalarFieldEnum | Prisma.SnappySettingsScalarFieldEnum[]
 }
 

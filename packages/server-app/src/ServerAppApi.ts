@@ -17,7 +17,7 @@ import type { Snappy } from "@snappy/snappy";
 import type { YooKassa } from "@snappy/yoo-kassa";
 
 import { _ } from "@snappy/core";
-import { SnappyCore } from "@snappy/snappy-core";
+import { SnappyCore, type SnappyCoreOptions } from "@snappy/snappy-core";
 
 import { Jwt } from "./Jwt";
 import { Password } from "./Password";
@@ -44,6 +44,29 @@ export const ServerAppApi = ({
   const resetInterval = _.day;
   const byUserId = (userId: number) => ({ where: { userId } }) as const;
   const resetData = () => ({ lastReset: new Date(), requestCount: 0 }) as const;
+
+  const settingsToOptions = (s: {
+    addEmoji: boolean;
+    addFormatting: boolean;
+
+    length: string;
+    style: string;
+  }): SnappyCoreOptions => {
+    const length: SnappyCoreOptions[`length`] =
+      s.length === `keep` || s.length === `extend` || s.length === `shorten` ? s.length : `keep`;
+
+    const style: SnappyCoreOptions[`style`] =
+      s.style === `neutral` ||
+      s.style === `business` ||
+      s.style === `friendly` ||
+      s.style === `humorous` ||
+      s.style === `selling`
+        ? s.style
+        : `neutral`;
+
+    return { addEmoji: s.addEmoji, addFormatting: s.addFormatting, length, style };
+  };
+
   const needsReset = (lastReset: Date) => _.now() - lastReset.getTime() > resetInterval;
   const passwordValid = (s: string) => s.length >= passwordMinLength && /[A-Za-z]/u.test(s) && /\d/u.test(s);
   const normalizeEmail = (email: string) => email.trim().toLowerCase();
@@ -55,14 +78,19 @@ export const ServerAppApi = ({
       where: { telegramId },
     });
 
-  const remainingByUserId = async (userId: number): Promise<number> => {
+  const remainingByUserId = async (userId: number): Promise<{ options: SnappyCoreOptions; remaining: number }> => {
     const settings = await db.snappySettings.findUnique(byUserId(userId));
 
-    return settings === null
-      ? freeRequestLimit
-      : needsReset(settings.lastReset)
+    const remaining =
+      settings === null
         ? freeRequestLimit
-        : Math.max(0, freeRequestLimit - settings.requestCount);
+        : needsReset(settings.lastReset)
+          ? freeRequestLimit
+          : Math.max(0, freeRequestLimit - settings.requestCount);
+
+    const options = settings === null ? SnappyCore.defaultOptions : settingsToOptions(settings);
+
+    return { options, remaining };
   };
 
   const jwtUnavailable = (): undefined | { status: `jwtUnavailable` } =>
@@ -153,11 +181,16 @@ export const ServerAppApi = ({
     return { status: `ok` };
   };
 
-  const process = async (userId: number, body: { feature?: string; text?: string }): Promise<ApiProcessResultUnion> => {
-    const { feature, text } = body;
-    if (!_.isString(text) || text.trim() === `` || !_.isString(feature) || !SnappyCore.isFeature(feature)) {
-      return { status: `textAndFeatureRequired` };
+  const process = async (
+    userId: number,
+    body: { options?: SnappyCoreOptions; text?: string },
+  ): Promise<ApiProcessResultUnion> => {
+    const { options: rawOptions, text } = body;
+    if (!_.isString(text) || text.trim() === `` || rawOptions === undefined) {
+      return { status: `textAndOptionsRequired` };
     }
+
+    const options = { ...SnappyCore.defaultOptions, ...rawOptions };
 
     const settings = await db.snappySettings.upsert({
       create: { ...resetData(), userId },
@@ -174,10 +207,25 @@ export const ServerAppApi = ({
     }
 
     try {
-      const value = await snappy.processText(text.trim(), feature);
+      const systemPrompt = SnappyCore.generateSystemPrompt(options);
+      const value = await snappy.processText(text.trim(), systemPrompt);
       await db.snappySettings.upsert({
-        create: { ...resetData(), requestCount: 1, userId },
-        update: { requestCount: { increment: 1 } },
+        create: {
+          ...resetData(),
+          addEmoji: options.addEmoji,
+          addFormatting: options.addFormatting,
+          length: options.length,
+          requestCount: 1,
+          style: options.style,
+          userId,
+        },
+        update: {
+          addEmoji: options.addEmoji,
+          addFormatting: options.addFormatting,
+          length: options.length,
+          requestCount: { increment: 1 },
+          style: options.style,
+        },
         ...byUserId(userId),
       });
 

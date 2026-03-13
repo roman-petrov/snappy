@@ -1,0 +1,80 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/core" as *;
+@use "pkg:@snappy/ui/space";
+
+$gap: 4px;
+$pad: 4px;
+
+.root {
+  position: relative;
+  display: flex;
+  gap: $gap;
+  padding: $pad;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--color-text-body) 8%, transparent);
+  border: 1px solid color.bg-card-border();
+  border-radius: 14px;
+}
+
+.indicator-track {
+  position: absolute;
+  inset: $pad;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.indicator {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--tab-index) * ((100% - #{$gap} * (var(--tab-count) - 1)) / var(--tab-count) + #{$gap}));
+  width: calc((100% - #{$gap} * (var(--tab-count) - 1)) / var(--tab-count));
+  background: color.accent-secondary();
+  border: 2px solid color-mix(in srgb, var(--color-accent-secondary) 50%, transparent);
+  border-radius: 10px;
+  box-shadow:
+    0 4px 10px color-mix(in srgb, var(--color-accent-secondary) 50%, transparent),
+    0 2px 4px rgb(0 0 0 / 15%),
+    inset 0 1px 0 color-mix(in srgb, white 30%, transparent);
+  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  padding: space.x2();
+  font-family: inherit;
+  font-size: 1.125rem;
+  color: color.text-muted();
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  transition:
+    color var(--ease),
+    transform var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab[aria-pressed="true"] {
+  color: color.on-accent-secondary();
+}
+
+.tab:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-accent-secondary) 35%, transparent);
+}

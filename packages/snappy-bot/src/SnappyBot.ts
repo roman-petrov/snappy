@@ -4,7 +4,7 @@
 import { ServerApi } from "@snappy/server-api";
 import { Bot } from "gramio";
 
-import { Callbacks, Commands, Locale, Messages, t, UserTexts } from "./app";
+import { Callbacks, Commands, Locale, Messages, t, UserSessions } from "./app";
 
 export type SnappyBotConfig = {
   apiKey: string;
@@ -17,7 +17,7 @@ export type SnappyBotConfig = {
 export const SnappyBot = ({ apiKey, apiUrl, botToken, premiumPrice, version }: SnappyBotConfig) => {
   const bot = new Bot(botToken);
   const api = ServerApi({ auth: { apiKey, type: `bot` }, baseUrl: apiUrl });
-  const userTexts = UserTexts();
+  const userSessions = UserSessions();
   const commandKeys = [`start`, `help`, `balance`, `premium`] as const;
 
   const setLocalizedCommands = async () => {
@@ -36,8 +36,8 @@ export const SnappyBot = ({ apiKey, apiUrl, botToken, premiumPrice, version }: S
   };
 
   Commands.register(bot, premiumPrice, version, api);
-  Messages.register(bot, userTexts);
-  Callbacks.register(bot, { api, userTexts });
+  Messages.register(bot, { api, userSessions });
+  Callbacks.register(bot, { api, userSessions });
   bot.onStart(setLocalizedCommands);
 
   const start = async () => bot.start();

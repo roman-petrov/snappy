@@ -1,6 +1,6 @@
 import { Button, Title } from "@snappy/ui";
 
-import { FormActions } from "./FormErrorAndActions";
+import { FormActions } from "./FormActions";
 
 export type MessageWithLinkProps = { lead?: string; linkText: string; linkTo: string; title: string };
 

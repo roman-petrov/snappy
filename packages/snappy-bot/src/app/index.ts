@@ -6,4 +6,4 @@ export * from "./Locale";
 
 export * from "./Messages";
 
-export * from "./UserTexts";
+export * from "./UserSessions";

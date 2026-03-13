@@ -14,9 +14,7 @@ const config: KnipConfig = {
       entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`],
     },
-    "packages/app": { ignoreDependencies: [`@snappy/do`] },
-    "packages/app-desktop": { entry: [`index.html`], ignoreDependencies: [`preact`] },
-    "packages/app-mobile": { entry: [`index.html`] },
+    "packages/app": { entry: [`index.html`] },
     "packages/db": { entry: [`src/Seed.ts`] },
     "packages/do": {
       entry: [`src/main.*.ts`],

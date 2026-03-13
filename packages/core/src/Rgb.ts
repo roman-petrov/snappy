@@ -1,13 +1,19 @@
 /* eslint-disable no-bitwise */
-export type Rgba = { a: number; b: number; g: number; r: number };
+export type RgbaVec = [number, number, number, number];
 
+const r = 0;
+const g = 1;
+const b = 2;
+const a = 3;
 const mask = 0xff;
 
-const rgba = (value: number) => ({
-  a: (value & mask) / mask,
-  b: ((value >>> 8) & mask) / mask,
-  g: ((value >>> 16) & mask) / mask,
-  r: (value >>> 24) / mask,
-});
+const rgba = (value: number): RgbaVec => [
+  (value >>> 24) / mask,
+  ((value >>> 16) & mask) / mask,
+  ((value >>> 8) & mask) / mask,
+  (value & mask) / mask,
+];
 
-export const Rgb = { rgba };
+const vec3 = (v: RgbaVec): [number, number, number] => [v[r], v[g], v[b]];
+
+export const Rgb = { a, b, g, r, rgba, vec3 } as const;

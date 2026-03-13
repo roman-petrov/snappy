@@ -2,7 +2,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Browser } from "@snappy/core";
 import { Ssr, type SsrEntry } from "@snappy/site/Ssr";
 import express from "express";
 import { readFileSync } from "node:fs";
@@ -16,12 +15,11 @@ import { ViteConfig } from "./config/vite/ViteConfig";
 const doDir = import.meta.dirname;
 const projectRoot = join(doDir, `..`, `..`, `..`);
 const siteDir = join(projectRoot, `packages`, `site`);
-const appDesktopDir = join(projectRoot, `packages`, `app-desktop`);
-const appMobileDir = join(projectRoot, `packages`, `app-mobile`);
+const appDir = join(projectRoot, `packages`, `app`);
 const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
 const port = 5173;
-const devInput = [`site`, `app-desktop`, `app-mobile`].map(name => join(projectRoot, `packages`, name, `index.html`));
+const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
 
 export const DevServer = () => {
   const start = async () => {
@@ -30,9 +28,7 @@ export const DevServer = () => {
     const configBuilder = ViteConfig(
       {
         build: { rollupOptions: { input: devInput } },
-        resolve: {
-          alias: { "/app-desktop": appDesktopDir, "/app-mobile": appMobileDir, "/src": join(siteDir, `src`) },
-        },
+        resolve: { alias: { "/app": appDir, "/src": join(siteDir, `src`) } },
         root: projectRoot,
       },
       { analyzeFileName: `dev` },
@@ -71,11 +67,8 @@ export const DevServer = () => {
       if (/\.\w+$/iu.test(request.path)) {
         return next();
       }
-      const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
-      const appDir = mobile ? appMobileDir : appDesktopDir;
-      const appDocumentUrl = mobile ? `/app-mobile/index.html` : `/app-desktop/index.html`;
-      void indexHtmlFromDir(appDir, appDocumentUrl)
-        .then(html => response.type(`html`).send(html.replaceAll(/\/app-(?:desktop|mobile)\//gu, `/app/`)))
+      void indexHtmlFromDir(appDir, `/app/index.html`)
+        .then(html => response.type(`html`).send(html))
         .catch((error: unknown) => handleHtmlError(error, next));
 
       return undefined;
@@ -97,12 +90,11 @@ export const DevServer = () => {
       if (path.startsWith(`/src/`) && !path.startsWith(`/app`)) {
         request.url = `/packages/site${path}`;
       } else if (path.startsWith(`/app/`)) {
-        const mobile = Browser.mobile(request.get(`user-agent`) ?? ``);
-        request.url = `/packages/${mobile ? `app-mobile` : `app-desktop`}${path.slice(4)}`;
+        request.url = `/packages/app${path.slice(4)}`;
       }
       next();
     });
-    app.use(`/packages/app-mobile`, express.static(join(appMobileDir, `public`)));
+    app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
     app.listen(port, () => {

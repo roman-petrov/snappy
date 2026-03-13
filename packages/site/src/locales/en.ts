@@ -9,9 +9,6 @@ export const en = {
   examples: {
     after: `After`,
     before: `Before`,
-    fixErrors: `Fix errors`,
-    fixErrorsAfter: `Hey! Wrote you yesterday about the meeting — not sure if you got to read it. Let's have a call on Wednesday?`,
-    fixErrorsBefore: `hey wrote you yesterday about the meeting not sure if you got to read it lets have a call on wednesday`,
     friendlyStyle: `Friendly style + emoji`,
     friendlyStyleAfter: `Hey everyone! 👋 We're moving the seminar to <strong>3 PM</strong> — giving a heads-up so you can make it. See you there! ✨`,
     friendlyStyleBefore: `Seminar rescheduled to 3 PM. Notifying all participants.`,
@@ -57,10 +54,6 @@ export const en = {
     expand: {
       desc: `Add detail, examples and explanations. Turn a draft into a full text without losing style.`,
       title: `Expand`,
-    },
-    fixErrors: {
-      desc: `Spelling, punctuation, grammar and style. Meaning and structure stay — only clean edits.`,
-      title: `Fix errors`,
     },
     lead: `One bot for edits, shortening, expanding and changing tone. Ideal for posts, emails, ads and any text where accuracy and tone matter.`,
     readability: {

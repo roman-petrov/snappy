@@ -1,3 +1,5 @@
+@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/ui/space";
 @use "pkg:@snappy/ui/typography";
 
 html {
@@ -14,9 +16,22 @@ body {
   position: relative;
   min-height: 100vh;
   margin: 0;
+  color: color.text-body();
+  background: color.bg();
   transition:
     color var(--ease),
     background-color var(--ease);
+
+  &::before {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+    background-size: space.x16() space.x16();
+  }
 }
 
 #fog-bg {

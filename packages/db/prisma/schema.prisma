@@ -23,9 +23,13 @@ model User {
 }
 
 model SnappySettings {
-  userId       Int      @id
-  requestCount Int      @default(0)
-  lastReset    DateTime @default(now())
+  userId        Int      @id
+  requestCount  Int      @default(0)
+  lastReset     DateTime @default(now())
+  addEmoji      Boolean  @default(false)
+  addFormatting Boolean  @default(false)
+  length        String   @default("keep")
+  style         String   @default("neutral")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

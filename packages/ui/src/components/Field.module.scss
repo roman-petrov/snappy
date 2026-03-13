@@ -5,29 +5,93 @@
   margin-bottom: space.x4();
 }
 
-.label {
-  display: block;
-  margin-bottom: space.x2();
+.input-slot {
+  display: flex;
+  flex: 1 1 0;
+  flex-flow: row nowrap;
+  align-items: center;
+  min-width: 0;
+
+  & > .input-wrap {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+.floating-label {
+  position: absolute;
+  top: 50%;
+  left: space.x4();
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: color.text-muted();
+  pointer-events: none;
+  background: transparent;
+  border-radius: 0;
+  transform: translateY(-50%);
+  transition:
+    top var(--ease),
+    transform var(--ease),
+    color var(--ease),
+    font-size var(--ease),
+    padding var(--ease),
+    background var(--ease),
+    border-radius var(--ease);
 }
 
 .input-surface {
+  position: relative;
   background: color.bg();
   border: 1px solid color.border();
   border-radius: var(--radius-sm);
   transition:
     border-color var(--ease),
     box-shadow var(--ease);
+
+  &.has-floating-label .input-slot {
+    .input,
+    .input-inside-wrap {
+      padding-top: 1.5em;
+    }
+  }
+
+  &:focus-within {
+    border-color: color.accent();
+    box-shadow: var(--focus-ring-shadow);
+  }
+
+  &:focus-within,
+  &.has-value {
+    .floating-label {
+      top: 0;
+      padding: 0 0.25em;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      transform: translateY(calc(-50% - 1px));
+    }
+
+    .input-slot .input,
+    .input-slot .input-inside-wrap {
+      padding-top: space.x3();
+    }
+  }
+
+  &.has-value:not(:focus-within) .floating-label {
+    color: color.text-body();
+    background: color.bg-elevated();
+  }
+
+  &:focus-within .floating-label {
+    color: color.on-accent-secondary();
+    background: color.accent-secondary();
+  }
 }
 
 .input-wrap {
   display: flex;
   flex-flow: row nowrap;
-  align-items: stretch;
-}
-
-.input-wrap:focus-within {
-  border-color: color.accent();
-  box-shadow: var(--focus-ring-shadow);
+  align-items: center;
 }
 
 .input {
@@ -51,11 +115,6 @@ textarea.input {
 
 .input::placeholder {
   color: color.text-muted();
-}
-
-.input option {
-  color: color.text-body();
-  background: color.bg();
 }
 
 .input-inside-wrap {

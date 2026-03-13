@@ -10,7 +10,7 @@ export const Panel = ({ children, lead, title }: PanelProps) => (
   <div className={styles.page}>
     <Card>
       <Title as="h1" lead={lead} level={2} title={title} />
-      {children}
+      <div className={styles.content}>{children}</div>
     </Card>
   </div>
 );

@@ -88,7 +88,11 @@ export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof User
 export const SnappySettingsScalarFieldEnum = {
   userId: 'userId',
   requestCount: 'requestCount',
-  lastReset: 'lastReset'
+  lastReset: 'lastReset',
+  addEmoji: 'addEmoji',
+  addFormatting: 'addFormatting',
+  length: 'length',
+  style: 'style'
 } as const
 
 export type SnappySettingsScalarFieldEnum = (typeof SnappySettingsScalarFieldEnum)[keyof typeof SnappySettingsScalarFieldEnum]

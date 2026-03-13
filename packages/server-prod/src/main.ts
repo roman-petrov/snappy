@@ -2,7 +2,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { Config } from "@snappy/config";
-import { _, Browser } from "@snappy/core";
+import { _ } from "@snappy/core";
 import { App, ServerCache, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
@@ -43,8 +43,7 @@ const { botBaseUrl, startServers } = useHttps
 
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
-const appDesktopRoot = join(distDir, `app-desktop`);
-const appMobileRoot = join(distDir, `app-mobile`);
+const appRoot = join(distDir, `app`);
 const appContext = ServerApp(Config, { botBaseUrl, version });
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
@@ -74,16 +73,13 @@ app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyR
   await reply.send(createReadStream(apkPath));
 });
 
-const staticAppDesktop = cache.createStaticWithPrefix(appDesktopRoot, `/app`);
-const staticAppMobile = cache.createStaticWithPrefix(appMobileRoot, `/app`);
+const staticApp = cache.createStaticWithPrefix(appRoot, `/app`);
 const staticSite = cache.createStatic(siteRoot);
-const appIndexPaths = [join(appDesktopRoot, `index.html`), join(appMobileRoot, `index.html`)] as const;
-const appIndexKeys = [`app:index:desktop`, `app:index:mobile`] as const;
+const appIndexPath = join(appRoot, `index.html`);
+const appIndexKey = `app:index`;
 
 app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
   const pathname = cache.pathnameFromRequest(request);
-  const userAgent = request.headers[`user-agent`];
-  const mobile = Browser.mobile(_.isString(userAgent) ? userAgent : _.isArray(userAgent) ? userAgent[0] : ``);
   const acceptEncoding = request.headers[`accept-encoding`];
 
   const runChain = (step: number) => {
@@ -93,7 +89,7 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
 
         return;
       }
-      (mobile ? staticAppMobile : staticAppDesktop)(request, reply, () => runChain(1));
+      staticApp(request, reply, () => runChain(1));
 
       return;
     }
@@ -110,15 +106,12 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
 
         return;
       }
-      const appVariant = mobile ? 1 : 0;
-      const indexPath = appIndexPaths[appVariant];
-      const indexKey = appIndexKeys[appVariant];
-      if (!existsSync(indexPath)) {
+      if (!existsSync(appIndexPath)) {
         reply.callNotFound();
 
         return;
       }
-      const cached = cache.get(indexKey);
+      const cached = cache.get(appIndexKey);
       if (cached !== undefined) {
         cache.sendCached(reply, cached, acceptEncoding, `text/html`);
 
@@ -126,7 +119,7 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
       }
       cache.sendCached(
         reply,
-        cache.set(indexKey, Buffer.from(readFileSync(indexPath, `utf8`), `utf8`), `text/html`),
+        cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`),
         acceptEncoding,
         `text/html`,
       );

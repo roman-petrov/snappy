@@ -30,11 +30,13 @@ export type ApiPaymentUrlErrorCode = `paymentError`;
 
 export type ApiPaymentUrlResult = { status: ApiStatusOk; url: string };
 
+import type { SnappyCoreOptions } from "@snappy/snappy-core";
+
 export type ApiPaymentUrlResultUnion = ApiPaymentUrlResult | { status: ApiPaymentUrlErrorCode };
 
-export type ApiProcessBody = { feature?: string; text?: string };
+export type ApiProcessBody = { options?: SnappyCoreOptions; text?: string };
 
-export type ApiProcessErrorCode = `processingFailed` | `requestLimitReached` | `textAndFeatureRequired`;
+export type ApiProcessErrorCode = `processingFailed` | `requestLimitReached` | `textAndOptionsRequired`;
 
 export type ApiProcessResult = { status: ApiStatusOk; text: string };
 
@@ -52,7 +54,7 @@ export type ApiRegisterErrorCode =
 
 export type ApiRegisterResult = ApiAuthSuccessInternal | { status: ApiRegisterErrorCode };
 
-export type ApiRemainingResult = { remaining: number; status: ApiStatusOk };
+export type ApiRemainingResult = { options: SnappyCoreOptions; remaining: number; status: ApiStatusOk };
 
 export type ApiResetPasswordBody = { newPassword?: string; token?: string };
 

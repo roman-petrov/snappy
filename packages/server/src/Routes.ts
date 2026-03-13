@@ -89,7 +89,7 @@ export const Routes = [
   get(
     Endpoints.user.remaining,
     withUserId(async (api, userId) => api.user.remaining(userId)),
-    remaining => ({ remaining, status: `ok` as const }),
+    r => ({ ...r, status: `ok` as const }),
     { auth: true },
   ),
   post(

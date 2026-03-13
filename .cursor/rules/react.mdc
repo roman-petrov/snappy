@@ -23,6 +23,8 @@ Follow the **programming** and **typescript** rules. This rule adds React-specif
 - **Hooks in `hooks` directory** — all hook modules (files that export React hooks) must live in a directory named
   `hooks` (e.g. `hooks/useFormState.ts`, `app/core/hooks/useFormState.ts`). Hook file names use camelCase (see
   TypeScript rule).
+- **Always use `useSignalState` for local component state** — use `useSignalState` from `@snappy/ui` instead of
+  `useState`. Never use `useState`; `useSignalState` is the only allowed state hook.
 
 ---
 

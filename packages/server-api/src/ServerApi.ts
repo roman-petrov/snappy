@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
+import type { SnappyCoreOptions } from "@snappy/snappy-core";
+
 import { _, HttpStatus } from "@snappy/core";
 
-import type { FeatureType } from "./Features";
 import type {
   ApiForgotPasswordErrorCode,
   ApiForgotPasswordResult,
@@ -88,10 +89,16 @@ export const ServerApi = (config: Config) => {
     text: _.isString(data[`text`]) ? data[`text`] : ``,
   });
 
-  const parseRemaining = (data: Record<string, unknown>): ApiRemainingResult => ({
-    remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0,
-    status: `ok`,
-  });
+  const parseRemaining = (data: Record<string, unknown>): ApiRemainingResult => {
+    const options = data[`options`];
+
+    const parsedOptions =
+      options !== null && typeof options === `object` && !Array.isArray(options)
+        ? (options as SnappyCoreOptions)
+        : ({} as SnappyCoreOptions);
+
+    return { options: parsedOptions, remaining: _.isNumber(data[`remaining`]) ? data[`remaining`] : 0, status: `ok` };
+  };
 
   const forgotPassword = async (email: string): Promise<ApiForgotPasswordResult> =>
     postJson<ApiOkResult, ApiForgotPasswordErrorCode>(`${base}${Endpoints.auth.forgotPassword}`, { email }, parseOk);
@@ -132,18 +139,18 @@ export const ServerApi = (config: Config) => {
   const process = async (
     authParameter: number | string,
     text: string,
-    feature: FeatureType,
+    options: SnappyCoreOptions,
   ): Promise<ApiProcessResultUnion> =>
     auth.type === `jwt`
       ? request<ApiProcessResult, ApiProcessErrorCode>(
           `${base}${Endpoints.process}`,
-          { body: JSON.stringify({ feature, text }), headers: jsonHeaders, method: `POST` },
+          { body: JSON.stringify({ options, text }), headers: jsonHeaders, method: `POST` },
           parseText,
         )
       : request<ApiProcessResult, ApiProcessErrorCode>(
           `${base}${Endpoints.process}`,
           {
-            body: JSON.stringify({ feature, telegramId: authParameter, text }),
+            body: JSON.stringify({ options, telegramId: authParameter, text }),
             headers: botHeader(auth.apiKey),
             method: `POST`,
           },

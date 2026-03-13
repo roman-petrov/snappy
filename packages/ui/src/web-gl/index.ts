@@ -1,3 +1,3 @@
 export * from "./Fog";
 
-export * from "./Sparkle";
+export * from "./TextOverlay";

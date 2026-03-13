@@ -30,14 +30,12 @@ export * from "./PasswordInput";
 
 export * from "./PasswordStrength";
 
-export * from "./Select";
-
-export * from "./Splash";
-
 export * from "./SystemButtons";
+
+export * from "./Tabs";
 
 export * from "./Text";
 
-export * from "./Textarea";
+export * from "./TextOverlayEffect";
 
 export * from "./Title";

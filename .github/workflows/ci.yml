@@ -15,10 +15,8 @@ jobs:
             arg: build:site
           - name: ⚡ build:ssr
             arg: build:ssr
-          - name: 🖥️ build:app-desktop
-            arg: build:app-desktop
-          - name: 📱 build:app-mobile
-            arg: build:app-mobile
+          - name: 💻 build:app
+            arg: build:app
           - name: 🤖 build:app-android
             arg: build:app-android
           - name: 🧪 test

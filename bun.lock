@@ -19,6 +19,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@preact/signals": "^2.0.3",
+        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/server-api": "workspace:*",
         "@snappy/ui": "workspace:*",
@@ -33,35 +34,6 @@
     "packages/app-android": {
       "name": "@snappy/app-android",
       "version": "0.0.0",
-    },
-    "packages/app-desktop": {
-      "name": "@snappy/app-desktop",
-      "version": "0.0.0",
-      "dependencies": {
-        "@snappy/app": "workspace:*",
-        "@snappy/ui": "workspace:*",
-        "preact": "^10.29.0",
-        "wouter": "^3.9.0",
-      },
-      "devDependencies": {
-        "@snappy/do": "workspace:*",
-        "@types/react": "^19.2.14",
-      },
-    },
-    "packages/app-mobile": {
-      "name": "@snappy/app-mobile",
-      "version": "0.0.0",
-      "dependencies": {
-        "@preact/signals": "^2.0.3",
-        "@snappy/app": "workspace:*",
-        "@snappy/ui": "workspace:*",
-        "preact": "^10.29.0",
-        "wouter": "^3.9.0",
-      },
-      "devDependencies": {
-        "@snappy/do": "workspace:*",
-        "@types/react": "^19.2.14",
-      },
     },
     "packages/browser": {
       "name": "@snappy/browser",
@@ -838,10 +810,6 @@
     "@snappy/app": ["@snappy/app@workspace:packages/app"],
 
     "@snappy/app-android": ["@snappy/app-android@workspace:packages/app-android"],
-
-    "@snappy/app-desktop": ["@snappy/app-desktop@workspace:packages/app-desktop"],
-
-    "@snappy/app-mobile": ["@snappy/app-mobile@workspace:packages/app-mobile"],
 
     "@snappy/browser": ["@snappy/browser@workspace:packages/browser"],
 

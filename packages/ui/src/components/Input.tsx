@@ -26,6 +26,7 @@ export type InputProps =
       id: string;
       label?: string;
       suffix?: ReactNode;
+      value?: string;
     };
 
 export const Input = (props: InputProps) => <InputView {...useInputState(props)} />;

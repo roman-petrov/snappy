@@ -4,7 +4,7 @@ import { Section } from "./Section";
 
 export const Examples = () => (
   <Section id="examples" lead={t(`examples.lead`)} title={t(`examples.title`)}>
-    {([`examples.fixErrors`, `examples.friendlyStyle`, `examples.readability`] as const).map(key => (
+    {([`examples.friendlyStyle`, `examples.readability`] as const).map(key => (
       <ExampleBlock
         after={t(`${key}After`)}
         afterLabel={t(`examples.after`)}

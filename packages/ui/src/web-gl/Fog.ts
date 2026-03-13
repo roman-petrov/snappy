@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 // cspell:words vanta lowlight midtone
-/* eslint-disable no-bitwise */
-/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-
 import type { WebGlInterface } from "@snappy/browser";
+
+import { Rgb } from "@snappy/core";
 
 /**
  * ? Fog effect from Vanta.js: https://www.vantajs.com/?effect=fog
@@ -21,22 +21,14 @@ export type FogOptions = {
 const fogDefaults: Required<
   Pick<FogOptions, `baseColor` | `blurFactor` | `highlightColor` | `lowlightColor` | `midtoneColor` | `speed` | `zoom`>
 > = {
-  baseColor: 0x0a_0a_0c,
+  baseColor: 0x0a_0a_0c_ff,
   blurFactor: 0.6,
-  highlightColor: 0x1a_3d_42,
-  lowlightColor: 0x0a_0a_0c,
-  midtoneColor: 0x0d_1f_22,
+  highlightColor: 0x1a_3d_42_ff,
+  lowlightColor: 0x0a_0a_0c_ff,
+  midtoneColor: 0x0d_1f_22_ff,
   speed: 1,
   zoom: 1.2,
 };
-
-const byteMask = 0xff;
-
-const hexToRgb = (hex: number): [number, number, number] => [
-  ((hex >> 16) & byteMask) / byteMask,
-  ((hex >> 8) & byteMask) / byteMask,
-  (hex & byteMask) / byteMask,
-];
 
 export const Fog = (element: HTMLElement, options: FogOptions, webgl: WebGlInterface): void => {
   const config = {
@@ -62,48 +54,26 @@ export const Fog = (element: HTMLElement, options: FogOptions, webgl: WebGlInter
     zoom: { name: `u_zoom`, type: `1f` },
   });
 
-  const baseRgb = hexToRgb(config.baseColor);
-  const lowlightRgb = hexToRgb(config.lowlightColor);
-  const midtoneRgb = hexToRgb(config.midtoneColor);
-  const highlightRgb = hexToRgb(config.highlightColor);
+  const baseRgb = Rgb.vec3(Rgb.rgba(config.baseColor));
+  const lowlightRgb = Rgb.vec3(Rgb.rgba(config.lowlightColor));
+  const midtoneRgb = Rgb.vec3(Rgb.rgba(config.midtoneColor));
+  const highlightRgb = Rgb.vec3(Rgb.rgba(config.highlightColor));
+  const resize = () => webgl.resizeCanvas(element.clientWidth, element.clientHeight, true);
+  const advanceTime = webgl.createTimeDriver(0.01);
 
-  const resize = () => {
-    const dpr = Math.min(devicePixelRatio, 2);
-    const width = element.clientWidth;
-    const height = element.clientHeight;
-    webgl.canvas.width = Math.round(width * dpr);
-    webgl.canvas.height = Math.round(height * dpr);
-    webgl.canvas.style.width = `${width}px`;
-    webgl.canvas.style.height = `${height}px`;
-    webgl.gl.viewport(0, 0, webgl.canvas.width, webgl.canvas.height);
-  };
+  const tick = () =>
+    webgl.drawQuadFrame(() => {
+      uniforms.resolution(webgl.canvas.width, webgl.canvas.height);
+      uniforms.time(advanceTime(config.speed));
+      uniforms.blurFactor(config.blurFactor);
+      uniforms.zoom(config.zoom);
+      uniforms.baseColor(baseRgb);
+      uniforms.lowlightColor(lowlightRgb);
+      uniforms.midtoneColor(midtoneRgb);
+      uniforms.highlightColor(highlightRgb);
+    });
 
-  const state = { time: 0 };
-  const timeStep = 0.01;
-
-  const tick = () => {
-    state.time += timeStep * config.speed;
-    webgl.bindQuad(`a_uv`);
-    uniforms.resolution(webgl.canvas.width, webgl.canvas.height);
-    uniforms.time(state.time);
-    uniforms.blurFactor(config.blurFactor);
-    uniforms.zoom(config.zoom);
-    uniforms.baseColor(baseRgb);
-    uniforms.lowlightColor(lowlightRgb);
-    uniforms.midtoneColor(midtoneRgb);
-    uniforms.highlightColor(highlightRgb);
-    webgl.drawQuad();
-  };
-
-  resize();
-  const ro = new ResizeObserver(resize);
-  ro.observe(element);
-
-  webgl.tick = tick;
-  webgl.cleanup = () => {
-    ro.disconnect();
-    webgl.canvas.remove();
-  };
+  webgl.observeResize(element, resize, tick);
 };
 
 export { default as FogShader } from "./Fog.shader.glsl?raw";

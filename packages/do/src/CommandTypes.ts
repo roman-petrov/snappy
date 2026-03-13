@@ -16,7 +16,6 @@ export type CmdRunDef =
   | { command: string }
   | { handler: `build:app-android-debug` }
   | { handler: `build:app-android` }
-  | { handler: `build:app-desktop` }
-  | { handler: `build:app-mobile` }
+  | { handler: `build:app` }
   | { handler: `build:site` }
   | { handler: `build:ssr` };

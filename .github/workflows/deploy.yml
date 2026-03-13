@@ -46,11 +46,8 @@ jobs:
       - name: ⚡ Build SSR
         run: bun do build:ssr
 
-      - name: 🖥️ Build desktop app
-        run: bun do build:app-desktop
-
-      - name: 📱 Build mobile app
-        run: bun do build:app-mobile
+      - name: 💻 Build app
+        run: bun do build:app
 
       - name: 🤖 Build Android app
         run: bun do build:app-android
