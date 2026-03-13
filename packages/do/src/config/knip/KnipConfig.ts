@@ -8,14 +8,12 @@ const config: KnipConfig = {
     "**/entry-server.tsx": [`exports`],
     "packages/do/src/config/index.esm.js": [`exports`],
   },
-  ignoreUnresolved: [`tsx/esm`],
   workspaces: {
     ".": {
       entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`],
     },
     "packages/app": { entry: [`index.html`] },
-    "packages/db": { entry: [`src/index.ts`] },
     "packages/do": {
       entry: [`src/main.*.ts`],
       ignoreDependencies: [
