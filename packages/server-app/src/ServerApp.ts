@@ -20,7 +20,7 @@ export const ServerApp = (
     yooKassaSecretKey,
     yooKassaShopId,
   }: Config,
-  { botBaseUrl, version }: { botBaseUrl: string; version?: string },
+  { apiBaseUrl, version }: { apiBaseUrl: string; version?: string },
 ) => {
   const db = Database(dbUrl);
   const snappy = Snappy({ gigaChatAuthKey });
@@ -29,7 +29,7 @@ export const ServerApp = (
 
   const bot = SnappyBot({
     apiKey: botApiKey,
-    apiUrl: botBaseUrl,
+    apiUrl: apiBaseUrl,
     botToken,
     premiumPrice,
     ...(version !== undefined && { version }),

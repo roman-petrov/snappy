@@ -15,8 +15,8 @@
 
 ## Android Debug
 
-The Android Debug build loads `http://home.local:5173/app`. The dev machine must be named **home** (computer/hostname)
-so it is reachable at **home.local**.
+The Android Debug build loads `http://home.local/app`. The dev machine must be named **home** (computer/hostname) so it
+is reachable at **home.local**.
 
 ## Workflow
 

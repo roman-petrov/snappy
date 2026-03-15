@@ -2,9 +2,14 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { Config } from "@snappy/config";
+import { HttpStatus } from "@snappy/core";
+import { App } from "@snappy/server";
+import { ServerApp } from "@snappy/server-app";
 import { Ssr, type SsrEntry } from "@snappy/site/Ssr";
 import express from "express";
 import { readFileSync } from "node:fs";
+import * as http from "node:http";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
@@ -12,17 +17,41 @@ import { createServer as createViteServer } from "vite";
 import { LocaleCookie } from "../../site/src/core/LocaleCookie";
 import { ViteConfig } from "./config/vite/ViteConfig";
 
+const apiProxy = (port: number) => (path: string, request: http.IncomingMessage, response: http.ServerResponse) => {
+  const options = {
+    headers: { ...request.headers, host: `127.0.0.1:${port}` },
+    hostname: `127.0.0.1`,
+    method: request.method,
+    path,
+    port,
+  };
+
+  const proxyRequest = http.request(options, proxyResponse => {
+    response.writeHead(proxyResponse.statusCode ?? HttpStatus.internalServerError, proxyResponse.headers);
+    proxyResponse.pipe(response);
+  });
+  proxyRequest.on(`error`, () => {
+    response.statusCode = HttpStatus.badGateway;
+    response.end(`API proxy error`);
+  });
+  request.pipe(proxyRequest);
+};
+
 const doDir = import.meta.dirname;
 const projectRoot = join(doDir, `..`, `..`, `..`);
 const siteDir = join(projectRoot, `packages`, `site`);
 const appDir = join(projectRoot, `packages`, `app`);
 const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
-const port = 5173;
+const port = 80;
 const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
 
 export const DevServer = () => {
   const start = async () => {
+    const appContext = ServerApp(Config, { apiBaseUrl: `http://127.0.0.1` });
+    const apiApp = await App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
+    const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
+    const apiPort = Number(new URL(apiAddr).port);
     const app = express();
 
     const configBuilder = ViteConfig(
@@ -42,13 +71,11 @@ export const DevServer = () => {
     const vite = await createViteServer({
       appType: `custom`,
       configFile: false,
-      server: {
-        ...config.server,
-        allowedHosts: [`home`, `.local`],
-        middlewareMode: true,
-      },
+      server: { ...config.server, allowedHosts: true, middlewareMode: true },
       ...config,
     });
+
+    app.use(`/api`, (request, response) => apiProxy(apiPort)(request.originalUrl, request, response));
 
     const indexHtmlFromDir = async (dir: string, documentUrl?: string) => {
       const indexPath = join(dir, `index.html`);
@@ -102,7 +129,8 @@ export const DevServer = () => {
     app.use(vite.middlewares);
 
     app.listen(port, () => {
-      process.stdout.write(`  Site (SSR) http://localhost:${port}\n`);
+      process.stdout.write(`  Site (API) http://localhost\n`);
+      void appContext.start();
     });
   };
 

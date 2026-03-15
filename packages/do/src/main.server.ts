@@ -27,7 +27,7 @@ server.registerTool(
     inputSchema,
   },
   async ({ script }: WorkflowRunInput) => {
-    const resolved = Runner.resolve(script);
+    const resolved = Runner.resolveCommand(script);
     if (!resolved.ok) {
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }

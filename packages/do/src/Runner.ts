@@ -200,7 +200,7 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
   return { exitCode: 0, message: `` };
 };
 
-const resolve = (name: string): { error: string; ok: false } | { name: string; ok: true } =>
+const resolveCommand = (name: string): { error: string; ok: false } | { name: string; ok: true } =>
   Commands.byName(name) === undefined ? { error: `Unknown command: ${name}`, ok: false } : { name, ok: true };
 
 const run = async (
@@ -225,13 +225,28 @@ const run = async (
     }
   }
 
+  const backgroundProcesses: ChildProcess[] = [];
+
   const result = await runNode(root, name, {
-    backgroundProcesses: [],
+    backgroundProcesses,
     context: { connector: br, prefix: `` },
     isRoot: true,
     mcp,
     verbose,
   });
+
+  if (result.exitCode === 0 && backgroundProcesses.length > 0) {
+    await new Promise<void>(resolve => {
+      const cleanup = () => {
+        for (const proc of backgroundProcesses) {
+          proc.kill(`SIGTERM`);
+        }
+        resolve();
+      };
+      process.on(`SIGINT`, cleanup);
+      process.on(`SIGTERM`, cleanup);
+    });
+  }
 
   if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
     process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
@@ -252,4 +267,4 @@ const formatCommandsHelp = () =>
     .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
     .join(`\n`);
 
-export const Runner = { formatCommandsHelp, resolve, run };
+export const Runner = { formatCommandsHelp, resolveCommand, run };

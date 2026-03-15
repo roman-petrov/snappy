@@ -72,14 +72,14 @@ const defs: Record<string, CmdDefinition> = {
       command: `node --watch --import tsx/esm packages/server-dev/src/main.ts`,
       cwd: `.`,
       env: { NODE_ENV: `development` },
-      openUrl: `http://localhost:5173`,
+      openUrl: `http://localhost`,
       shutdown: { command: `docker compose down` },
     },
   },
   [`server:dev`]: {
-    children: [`server:frontend:dev`, `server:api:dev`],
-    description: `Run dev servers (site + app + API).`,
-    label: `🖥️ Servers`,
+    children: [`server:frontend:dev`],
+    description: `Run dev server (site + app + API + bot on port 80).`,
+    label: `🖥️ Server`,
   },
   [`server:frontend:dev`]: {
     description: `Run site + app dev server together (one port).`,

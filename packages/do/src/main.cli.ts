@@ -11,7 +11,7 @@ if (name === undefined || name === `` || name === `--help` || name === `-h`) {
 }
 
 const root = Scripts.rootDir();
-const resolved = Runner.resolve(name);
+const resolved = Runner.resolveCommand(name);
 
 if (!resolved.ok) {
   process.stderr.write(`${resolved.error}\n`);
