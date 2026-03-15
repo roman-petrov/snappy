@@ -3,12 +3,12 @@
 import { AndroidBridge } from "./AndroidBridge";
 
 /**
- * Mirrors Android HapticFeedbackConstants.
- * @see https://developer.android.com/reference/android/view/HapticFeedbackConstants
+ * ? https://developer.android.com/reference/android/view/HapticFeedbackConstants
+ * ? https://source.android.com/docs/core/interaction/haptics/haptics-ux-foundation
  */
 const fallbackPatterns = {
   clockTick: [],
-  confirm: [20],
+  confirm: [8],
   contextClick: [],
   dragStart: [],
   gestureEnd: [],
@@ -21,7 +21,7 @@ const fallbackPatterns = {
   noHaptics: [],
   reject: [],
   segmentFrequentTick: [],
-  segmentTick: [10],
+  segmentTick: [3],
   textHandleMove: [],
   toggleOff: [],
   toggleOn: [],
