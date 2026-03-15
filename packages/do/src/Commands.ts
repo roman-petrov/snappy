@@ -90,7 +90,7 @@ const defs: Record<string, CmdDefinition> = {
     description: `Run prod server (tsx).`,
     label: `🏭 Server`,
     run: {
-      command: `bunx tsx packages/server-prod/src/main.ts`,
+      command: `bun tsx packages/server-prod/src/main.ts`,
       cwd: `.`,
       shutdown: { command: `docker compose down` },
     },

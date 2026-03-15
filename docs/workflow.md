@@ -13,8 +13,8 @@ Single clean migration at merge. Schema: `packages/db/prisma/schema.prisma`.
 ### ✅ Before merge
 
 1. Rebase on `main`
-2. Run `bunx prisma migrate dev --create-only` — creates migration from diff (Prisma prompts for name)
-3. Run `bunx prisma generate` — ensure schema and client are in sync
+2. Run `bun prisma migrate dev --create-only` — creates migration from diff (Prisma prompts for name)
+3. Run `bun prisma generate` — ensure schema and client are in sync
 4. Review SQL in `packages/db/prisma/migrations/`
-5. Run `bunx prisma migrate dev` to apply (or `bunx prisma migrate reset` if DB is messy)
+5. Run `bun prisma migrate dev` to apply (or `bun prisma migrate reset` if DB is messy)
 6. Commit migration, merge
