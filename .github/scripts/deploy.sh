@@ -53,7 +53,7 @@ cd "${DEPLOY_PATH}"
 bun install --frozen-lockfile
 
 pm2 delete snappy 2>/dev/null || true
-pm2 start "bun do deploy-run" --name snappy --update-env
+NODE_OPTIONS="--use-system-ca" pm2 start "bun do deploy-run" --name snappy --update-env
 pm2 save
 pm2 status
 

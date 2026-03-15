@@ -21,7 +21,7 @@ const version = process.env[`SNAPPY_VERSION`];
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
-const appContext = ServerApp(Config, { apiBaseUrl: useHttps ? `https://127.0.0.1` : `http://127.0.0.1`, version });
+const appContext = ServerApp(Config, { apiBaseUrl: `http://127.0.0.1`, version });
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,
@@ -120,10 +120,13 @@ process.stdout.write(`🚀 Starting server…\n`);
 void appContext.start();
 if (useHttps) {
   https.createServer({ cert: sslCertPem, key: sslKeyPem }, handlerRef.current).listen(portHttps, () => {
-    process.stdout.write(`🌐 Site (API) on port ${portHttps} (HTTPS)\n`);
+    process.stdout.write(`🌐 Site + API on port https://localhost\n`);
+  });
+  http.createServer(handlerRef.current).listen(portHttp, `127.0.0.1`, () => {
+    process.stdout.write(`🌐 API (bot) at http://127.0.0.1\n`);
   });
 } else {
   http.createServer(handlerRef.current).listen(portHttp, () => {
-    process.stdout.write(`🌐 Site (API) at http://home.local\n`);
+    process.stdout.write(`🌐 Site + API at http://localhost\n`);
   });
 }
