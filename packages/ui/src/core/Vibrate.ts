@@ -1,46 +1,40 @@
-/* eslint-disable @typescript-eslint/no-magic-numbers */
+/* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable functional/no-expression-statements */
 import { AndroidBridge } from "./AndroidBridge";
 
 /**
- * ? https://developer.android.com/reference/android/view/HapticFeedbackConstants
- * ? https://source.android.com/docs/core/interaction/haptics/haptics-ux-foundation
+ * @see https://developer.android.com/reference/android/view/HapticFeedbackConstants
  */
-const fallbackPatterns = {
-  clockTick: [],
-  confirm: [8],
-  contextClick: [],
-  dragStart: [],
-  gestureEnd: [],
-  gestureStart: [],
-  gestureThresholdActivate: [],
-  gestureThresholdDeactivate: [],
-  keyboardRelease: [],
-  keyboardTap: [],
-  longPress: [],
-  noHaptics: [],
-  reject: [],
-  segmentFrequentTick: [],
-  segmentTick: [3],
-  textHandleMove: [],
-  toggleOff: [],
-  toggleOn: [],
-  virtualKey: [],
-  virtualKeyRelease: [],
-} as const;
+const types = [
+  `clockTick`,
+  `confirm`,
+  `contextClick`,
+  `dragStart`,
+  `gestureEnd`,
+  `gestureStart`,
+  `gestureThresholdActivate`,
+  `gestureThresholdDeactivate`,
+  `keyboardRelease`,
+  `keyboardTap`,
+  `longPress`,
+  `noHaptics`,
+  `reject`,
+  `segmentFrequentTick`,
+  `segmentTick`,
+  `textHandleMove`,
+  `toggleOff`,
+  `toggleOn`,
+  `virtualKey`,
+  `virtualKeyRelease`,
+] as const;
 
-export type Vibrate = keyof typeof fallbackPatterns;
+export type Vibrate = (typeof types)[number];
 
 const trigger = (type: Vibrate) => () => {
-  if (AndroidBridge.available) {
-    AndroidBridge.hapticImpact(type);
-  } else {
-    const pattern = fallbackPatterns[type];
-
-    if (pattern.length > 0 && typeof navigator !== `undefined`) {
-      navigator.vibrate(pattern);
-    }
+  if (!AndroidBridge.available) {
+    return;
   }
+  AndroidBridge.hapticImpact(type);
 };
 
 const confirm = trigger(`confirm`);
