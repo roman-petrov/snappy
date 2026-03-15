@@ -50,6 +50,11 @@ const defs: Record<string, CmdDefinition> = {
     description: `Run prod server only (after deploy-prepare).`,
     label: `▶️ Deploy run`,
   },
+  [`docker:start`]: {
+    description: `Start Docker Desktop (daemon) so containers can run.`,
+    label: `🐳 Docker`,
+    run: { command: `docker desktop start` },
+  },
   [`eslint-fix`]: {
     description: `ESLint: auto-fix.`,
     label: `🔧 ESLint`,
@@ -102,7 +107,11 @@ const defs: Record<string, CmdDefinition> = {
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
-  dev: { children: [`db:dev`, `server:dev`], description: `Run server in watch (server-dev).`, label: `🚀 Dev server` },
+  dev: {
+    children: [`docker:start`, `db:dev`, `server:dev`],
+    description: `Start Docker + DB + run server in watch (server-dev).`,
+    label: `🚀 Dev server`,
+  },
   eslint: {
     description: `ESLint: lint JS/TS.`,
     label: `🔍 ESLint`,
