@@ -1,6 +1,6 @@
 import type { TabOption, TabsProps } from "./Tabs";
 
-import { AndroidBridge } from "../AndroidBridge";
+import { Vibrate } from "..";
 
 export const useTabsState = <T extends string = string>({
   ariaLabel,
@@ -16,7 +16,7 @@ export const useTabsState = <T extends string = string>({
   );
 
   const onTabClick = (tabValue: T) => {
-    AndroidBridge.hapticImpact(`segmentTick`);
+    Vibrate.segmentTick();
     onChange(tabValue);
   };
 

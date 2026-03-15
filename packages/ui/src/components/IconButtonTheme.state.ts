@@ -1,10 +1,10 @@
-import { $theme, AndroidBridge, t, Theme } from "..";
+import { $theme, t, Theme, Vibrate } from "..";
 
 export const useIconButtonThemeState = () => ({
   ariaLabel: t(`themeToggle`),
   icon: $theme.value === `dark` ? `🌙` : `☀️`,
   onClick: () => {
-    AndroidBridge.hapticImpact(`confirm`);
+    Vibrate.confirm();
     Theme.toggle();
   },
 });

@@ -1,10 +1,10 @@
-import { $locale, AndroidBridge, Locale, t } from "..";
+import { $locale, Locale, t, Vibrate } from "..";
 
 export const useIconButtonLocaleState = () => ({
   ariaLabel: t(`localeSwitcher`),
   icon: $locale.value === `ru` ? `🇷🇺` : `🇺🇸`,
   onClick: () => {
-    AndroidBridge.hapticImpact(`confirm`);
+    Vibrate.confirm();
     Locale.toggle();
   },
 });
