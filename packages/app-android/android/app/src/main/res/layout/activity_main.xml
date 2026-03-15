@@ -7,4 +7,18 @@
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+    <FrameLayout
+        android:id="@+id/splash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:colorBackground"
+        android:clickable="true"
+        android:focusable="true">
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_launcher" />
+    </FrameLayout>
 </FrameLayout>

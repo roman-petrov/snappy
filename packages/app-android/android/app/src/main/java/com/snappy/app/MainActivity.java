@@ -2,6 +2,7 @@ package com.snappy.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -25,7 +26,8 @@ public class MainActivity extends ComponentActivity {
         );
         setContentView(R.layout.activity_main);
 
-        android.view.View container = findViewById(R.id.webview_container);
+        View container = findViewById(R.id.webview_container);
+        View splash = findViewById(R.id.splash);
         WebView webView = findViewById(R.id.webview);
         ViewCompat.setOnApplyWindowInsetsListener(container, (v, windowInsets) -> {
             Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
@@ -37,7 +39,12 @@ public class MainActivity extends ComponentActivity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         webView.addJavascriptInterface(new Bridge(this), "AndroidBridge");
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                splash.setVisibility(View.GONE);
+            }
+        });
         webView.loadUrl(BuildConfig.APP_URL);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
