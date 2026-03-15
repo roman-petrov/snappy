@@ -42,7 +42,11 @@ export const DevServer = () => {
     const vite = await createViteServer({
       appType: `custom`,
       configFile: false,
-      server: { ...config.server, middlewareMode: true },
+      server: {
+        ...config.server,
+        allowedHosts: [`home`, `.local`],
+        middlewareMode: true,
+      },
       ...config,
     });
 

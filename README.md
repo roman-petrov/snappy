@@ -13,6 +13,11 @@
 - 🐘 [pgAdmin](https://www.pgadmin.org/download/)
 - 📱 [Android SDK](https://developer.android.com/tools/releases/platform-tools)
 
+## Android Debug
+
+The Android Debug build loads `http://home.local:5173/app`. The dev machine must be named **home** (computer/hostname)
+so it is reachable at **home.local**.
+
 ## Workflow
 
 - 📦 `!install.bat`: Install global tools.
