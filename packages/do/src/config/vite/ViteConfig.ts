@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import pluginPreact from "@preact/preset-vite";
 import { _ } from "@snappy/core";
 import { join } from "node:path";
