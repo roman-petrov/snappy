@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import pluginPreact from "@preact/preset-vite";
 import { _ } from "@snappy/core";
+import react from "@vitejs/plugin-react";
 import { join } from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
 import { NodePackageImporter } from "sass-embedded";
@@ -36,7 +36,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
           preprocessorOptions: { scss: { importers: [new NodePackageImporter()] } },
         },
         plugins: [
-          pluginPreact(),
+          react(),
           pluginFontPreload(),
           pluginOptimizeCssModules(),
           pluginSassDts({
@@ -46,7 +46,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
           }),
           ...(isSsr ? [] : [visualizer({ filename: analyzeFilePath, gzipSize: true })]),
         ],
-        resolve: { dedupe: [`react`, `react-dom`, `wouter`] },
+        resolve: { dedupe: [`react`, `react-dom`, `react-router-dom`] },
       },
       override,
     );

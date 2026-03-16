@@ -1,0 +1,5 @@
+@use "pkg:@snappy/theme/space";
+
+.password-block {
+  margin-bottom: space.md();
+}

@@ -1,33 +1,35 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
 
 .root {
-  display: flex;
-  gap: space.x3();
-  align-items: center;
-  padding: space.x2() space.x4();
-  margin-top: space.x1();
-  border-radius: var(--radius-sm);
+  @include primitives.stack-row;
+
+  gap: space.sm();
+  padding: space.sm() space.md();
+  margin-top: space.xs();
+  border-radius: radius.sm();
 }
 
 .root.error {
   color: color.error();
-  background: color.error-bg();
+  background: color.error-ghost();
 }
 
 .root.warning {
   color: color.warning();
-  background: color.warning-bg();
+  background: color.warning-ghost();
 }
 
 .root.success {
   color: color.success();
-  background: color.success-bg();
+  background: color.success-ghost();
 }
 
 .root.info {
-  color: color.accent();
-  background: color.info-bg();
+  color: color.primary();
+  background: color.primary-ghost();
 }
 
 .text {

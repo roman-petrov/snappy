@@ -1,18 +1,20 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .root {
-  padding-inline-start: space.x4();
-  margin: 0 0 space.x2();
-  border-inline-start: 3px solid color.accent();
+  padding-inline-start: space.md();
+  margin: 0 0 space.sm();
+  border-inline-start: #{tokens.accent-edge()} solid color.primary();
 }
 
 .lead {
-  margin: 0 0 space.x5();
+  margin: 0 0 space.md();
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .root {
-    padding-inline-start: space.x3();
+    padding-inline-start: space.sm();
   }
 }

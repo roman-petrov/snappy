@@ -1,0 +1,56 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: space.sm();
+  align-items: center;
+  width: 100%;
+  min-height: tokens.field-height();
+  padding: 0 space.md();
+  font: inherit;
+  color: color.text();
+  text-align: left;
+  transition: background-color tokens.ease();
+
+  @include typography.body;
+  @include core.focus;
+}
+
+.row:hover {
+  background: color.surface-active();
+  box-shadow: inset #{tokens.accent-edge()} 0 0 0 color.primary();
+}
+
+.row[aria-pressed="true"] {
+  font-weight: 600;
+}
+
+.row-icon {
+  font-size: tokens.icon-size();
+}
+
+.row-label {
+  font-weight: 500;
+}
+
+.row-value {
+  @include typography.body-sm;
+
+  color: color.text-muted();
+}
+
+@include core.mobile {
+  .row {
+    min-height: calc(#{tokens.field-height()} + #{space.xs()});
+  }
+
+  .row:hover {
+    background: color.surface-active();
+    box-shadow: inset #{tokens.accent-edge()} 0 0 0 color.primary();
+  }
+}

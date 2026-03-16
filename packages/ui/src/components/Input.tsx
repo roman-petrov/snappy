@@ -1,32 +1,18 @@
-import type { ReactNode } from "react";
-
-import type { FieldControlClasses } from "./Field";
+import type { HTMLInputAutoCompleteAttribute, ReactNode } from "react";
 
 import { useInputState } from "./Input.state";
 import { InputView } from "./Input.view";
 
-export type InputProps =
-  | {
-      autoComplete?: string;
-      children?: never;
-      disabled?: boolean;
-      id: string;
-      inputClassName?: string;
-      label?: string;
-      minLength?: number;
-      onChange: (value: string) => void;
-      required?: boolean;
-      suffix?: ReactNode;
-      type?: `email` | `password` | `text`;
-      value: string;
-    }
-  | {
-      children: (classes: FieldControlClasses) => ReactNode;
-      disabled?: boolean;
-      id: string;
-      label?: string;
-      suffix?: ReactNode;
-      value?: string;
-    };
+export type InputProps = {
+  autoComplete?: HTMLInputAutoCompleteAttribute;
+  disabled?: boolean;
+  label: string;
+  minLength?: number;
+  onChange: (value: string) => void;
+  required?: boolean;
+  suffix?: ReactNode;
+  type?: `email` | `password` | `text`;
+  value: string;
+};
 
 export const Input = (props: InputProps) => <InputView {...useInputState(props)} />;

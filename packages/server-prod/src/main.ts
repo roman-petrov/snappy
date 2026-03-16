@@ -3,7 +3,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { App, ServerCache, Ssr } from "@snappy/server";
+import { App, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import http from "node:http";
@@ -56,11 +56,13 @@ app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyR
 const staticApp = cache.createStaticWithPrefix(appRoot, `/app`);
 const staticSite = cache.createStatic(siteRoot);
 const appIndexPath = join(appRoot, `index.html`);
-const appIndexKey = `app:index`;
+const getAppIndexKey = (locale: string, theme: string) => `app:index:${locale}:${theme}`;
 
 app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
   const pathname = cache.pathnameFromRequest(request);
   const acceptEncoding = request.headers[`accept-encoding`];
+  const { locale, theme } = Cookie(request.headers.cookie);
+  const themeKey = theme ?? `system`;
 
   const runChain = (step: number) => {
     if (step === 0) {
@@ -91,15 +93,18 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
 
         return;
       }
+      const appIndexKey = getAppIndexKey(locale, themeKey);
       const cached = cache.get(appIndexKey);
       if (cached !== undefined) {
         cache.sendCached(reply, cached, acceptEncoding, `text/html`);
 
         return;
       }
+      const raw = readFileSync(appIndexPath, `utf8`);
+      const html = SiteSsr.prepareAppIndex(raw, locale, theme);
       cache.sendCached(
         reply,
-        cache.set(appIndexKey, Buffer.from(readFileSync(appIndexPath, `utf8`), `utf8`), `text/html`),
+        cache.set(appIndexKey, Buffer.from(html, `utf8`), `text/html`),
         acceptEncoding,
         `text/html`,
       );

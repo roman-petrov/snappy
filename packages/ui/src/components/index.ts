@@ -4,8 +4,6 @@ export * from "./Button";
 
 export * from "./Card";
 
-export * from "./Field";
-
 export * from "./Header";
 
 export * from "./Headline";
@@ -24,15 +22,19 @@ export * from "./Link";
 
 export * from "./Logo";
 
-export * from "./Panel";
-
 export * from "./PasswordInput";
 
 export * from "./PasswordStrength";
 
+export * from "./Switch";
+
+export * from "./SwitchDisplay";
+
 export * from "./SystemButtons";
 
 export * from "./Tabs";
+
+export * from "./Tap";
 
 export * from "./Text";
 

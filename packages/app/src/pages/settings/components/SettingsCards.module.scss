@@ -1,0 +1,18 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/core" as core;
+
+.cards {
+  display: grid;
+  gap: space.sm();
+  max-width: tokens.layout-column();
+}
+
+@include core.mobile {
+  .cards {
+    width: calc(100% + 2 * space.md() + env(safe-area-inset-left, 0px) + env(safe-area-inset-right, 0px));
+    max-width: none;
+    margin-right: calc(-1 * (space.md() + env(safe-area-inset-right, 0px)));
+    margin-left: calc(-1 * (space.md() + env(safe-area-inset-left, 0px)));
+  }
+}

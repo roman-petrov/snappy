@@ -1,9 +1,11 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
 
 .list {
   display: grid;
-  gap: space.x3();
+  gap: space.sm();
   padding: 0;
   margin: 0;
   list-style: none;
@@ -11,7 +13,7 @@
 
 .row {
   position: relative;
-  padding: space.x3() 0;
+  padding: space.sm() 0;
 }
 
 .row::after {
@@ -31,15 +33,17 @@
 .row-with-icon {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: space.x3() space.x4();
+  gap: space.sm() space.md();
   align-items: start;
 }
 
 .row-with-icon .icon {
+  @include typography.h1;
+
   grid-row: 1;
   grid-column: 1;
   align-self: center;
-  font-size: 1.75rem;
+  font-weight: 400;
   line-height: 1;
 }
 
@@ -52,12 +56,14 @@
   margin: 0;
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .row-with-icon {
-    gap: space.x2() space.x3();
+    gap: space.sm() space.sm();
   }
 
   .row-with-icon .icon {
-    font-size: 1.5rem;
+    @include typography.h2;
+
+    font-weight: 400;
   }
 }

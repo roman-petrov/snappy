@@ -5,14 +5,16 @@
   "private": true,
   "main": "./src/main.tsx",
   "dependencies": {
-    "@preact/signals": "^2.0.3",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
+    "@snappy/domain": "workspace:*",
+    "@snappy/intl": "workspace:*",
     "@snappy/server-api": "workspace:*",
-    "@snappy/snappy-core": "workspace:*",
+    "@snappy/store": "workspace:*",
+    "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "preact": "^10.29.0",
-    "wouter": "^3.9.0"
+    "react": "^19.0.0",
+    "react-router-dom": "^7.13.2"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",

@@ -4,6 +4,7 @@
  */
 import type { Plugin } from "vite";
 
+import { _ } from "@snappy/core";
 import { createHash } from "node:crypto";
 
 export const pluginOptimizeCssModules = (): Plugin => ({
@@ -20,7 +21,7 @@ export const pluginOptimizeCssModules = (): Plugin => ({
               .update(fileName + name)
               .digest(`hex`);
 
-            const seed = Number.parseInt(hex.slice(0, 8), 16) % dict.length ** dictSizePow;
+            const seed = (_.hex(hex.slice(0, 8)) ?? 0) % dict.length ** dictSizePow;
             const index0 = seed % dict.length;
             const index1 = Math.trunc(seed / dict.length) % dict.length;
             const index2 = Math.trunc(seed / dict.length ** 2) % dict.length;

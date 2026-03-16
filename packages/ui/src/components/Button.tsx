@@ -1,19 +1,20 @@
-import type { Icon } from "./Icon";
+import { _ } from "@snappy/core";
 
-import { useButtonState } from "./Button.state";
-import { ButtonView } from "./Button.view";
+import styles from "./Button.module.scss";
+import { Icon, type Icon as IconName } from "./Icon";
+import { Tap, type TapProps } from "./Tap";
 
-export type ButtonProps = {
+export type ButtonProps = Omit<TapProps, `children` | `cn`> & {
   cn?: string;
-  disabled?: boolean;
-  href?: string;
-  icon?: Icon;
+  icon?: IconName;
   large?: boolean;
-  onClick?: () => void;
-  submit?: boolean;
   text: string;
-  to?: string;
-  type?: `default` | `link` | `primary`;
+  type?: `default` | `primary`;
 };
 
-export const Button = (props: ButtonProps) => <ButtonView {...useButtonState(props)} />;
+export const Button = ({ cn = ``, icon, large = false, text, type = `default`, ...tapProps }: ButtonProps) => (
+  <Tap {...tapProps} cn={_.cn(styles.root, styles[type], large && styles.large, cn)}>
+    {icon === undefined ? undefined : <Icon name={icon} />}
+    {text}
+  </Tap>
+);

@@ -1,12 +1,36 @@
-import { useProcessButtonState } from "./ProcessButton.state";
-import { ProcessButtonView } from "./ProcessButton.view";
+import { _ } from "@snappy/core";
+import { Tap, type TapProps } from "@snappy/ui";
 
-export type ProcessButtonProps = {
+import styles from "./ProcessButton.module.scss";
+
+export type ProcessButtonProps = Omit<TapProps, `children` | `cn`> & {
   compact?: boolean;
-  disabled?: boolean;
   disabledEmpty?: boolean;
   loading?: boolean;
   text: string;
 };
 
-export const ProcessButton = (props: ProcessButtonProps) => <ProcessButtonView {...useProcessButtonState(props)} />;
+export const ProcessButton = ({
+  compact = false,
+  disabledEmpty = false,
+  loading = false,
+  text,
+  ...tapProps
+}: ProcessButtonProps) => (
+  <Tap
+    {...tapProps}
+    ariaBusy={loading}
+    ariaLabel={text}
+    cn={_.cn(
+      styles.btn,
+      compact && styles.btnCompact,
+      loading && styles.btnLoading,
+      disabledEmpty && styles.btnDisabledEmpty,
+    )}
+  >
+    <span aria-hidden className={styles.icon}>
+      {loading ? `⋯` : `✨`}
+    </span>
+    {compact ? undefined : text}
+  </Tap>
+);

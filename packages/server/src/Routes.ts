@@ -9,6 +9,8 @@ import {
   type ApiForgotPasswordBody,
   type ApiProcessBody,
   type ApiResetPasswordBody,
+  type ApiSubscriptionAutoRenewBody,
+  type ApiSubscriptionDeleteBody,
   Endpoints,
 } from "@snappy/server-api";
 
@@ -65,6 +67,7 @@ const post = withMethod(`post`);
 const get = withMethod(`get`);
 const ok = () => ({ status: `ok` as const });
 const id = <T>(r: T): T => r;
+const withOkStatus = <T extends object>(r: T) => ({ ...r, status: `ok` as const });
 
 const authBodyOk = (
   path: string,
@@ -88,20 +91,55 @@ export const Routes = [
   ),
   get(
     Endpoints.user.remaining,
-    withUserId(async (api, userId) => api.user.remaining(userId)),
-    r => ({ ...r, status: `ok` as const }),
+    withUserId(async (api, userId) => api.process.remaining(userId)),
+    withOkStatus,
     { auth: true },
   ),
   post(
     Endpoints.process,
-    withUserIdAndBody(async (api, userId, b) => api.process(userId, b), body<ApiProcessBody>),
+    withUserIdAndBody(async (api, userId, b) => api.process.process(userId, b), body<ApiProcessBody>),
     (r: { text: string }) => ({ ...ok(), text: r.text }),
     { auth: true },
   ),
   post(
     Endpoints.premium.paymentUrl,
-    withUserId(async (api, userId) => api.premium.paymentUrl(userId)),
+    withUserId(async (api, userId) => api.subscription.paymentUrl(userId)),
     (r: { url: string }) => ({ ...ok(), url: r.url }),
     { auth: true },
+  ),
+  get(
+    Endpoints.subscription.get,
+    withUserId(async (api, userId) => api.subscription.get(userId)),
+    withOkStatus,
+    { auth: true },
+  ),
+  post(
+    Endpoints.subscription.autoRenew,
+    withUserIdAndBody(
+      async (api, userId, b) => api.subscription.setAutoRenew(userId, b.enabled),
+      body<ApiSubscriptionAutoRenewBody>,
+    ),
+    ok,
+    { auth: true },
+  ),
+  post(
+    Endpoints.subscription.delete,
+    withUserIdAndBody(
+      async (api, userId, b) => api.subscription.delete(userId, b.confirmLoseTime === true),
+      body<ApiSubscriptionDeleteBody>,
+    ),
+    ok,
+    { auth: true },
+  ),
+  post(
+    Endpoints.subscription.renew,
+    withUserId(async (api, userId) => api.subscription.renew(userId)),
+    ok,
+    { auth: true },
+  ),
+  post(
+    Endpoints.webhooks.yookassa,
+    withBody(async (api, b) => api.subscription.webhook(b), body),
+    ok,
   ),
 ] as Route[];

@@ -1,7 +1,7 @@
 import pluginImport from "eslint-plugin-import";
 import { defineConfig } from "eslint/config";
 
-const preactPackages = [`**/packages/app/**`, `**/packages/site/**`, `**/packages/ui/**`];
+const reactPackages = [`**/packages/app/**`, `**/packages/site/**`, `**/packages/ui/**`];
 
 export default defineConfig([
   {
@@ -27,5 +27,5 @@ export default defineConfig([
     },
     settings: { "import/resolver": { node: true, typescript: true } },
   },
-  { files: preactPackages, settings: { "import/core-modules": [`react`, `react-dom`, `react-dom/client`] } },
+  { files: reactPackages, settings: { "import/core-modules": [`react`, `react-dom`, `react-dom/client`] } },
 ]);

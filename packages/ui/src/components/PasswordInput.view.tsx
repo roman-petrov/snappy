@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { usePasswordInputState } from "./PasswordInput.state";
 
+import { t } from "../locales";
 import { Icon } from "./Icon";
+import { IconButton } from "./IconButton";
 import { Input } from "./Input";
 
 export type PasswordInputViewProps = ReturnType<typeof usePasswordInputState>;
 
 export const PasswordInputView = ({
-  ariaLabel,
   autoComplete = `current-password`,
   disabled = false,
-  id,
-  inputType,
   label,
   minLength,
   onChange,
@@ -23,17 +21,19 @@ export const PasswordInputView = ({
   <Input
     autoComplete={autoComplete}
     disabled={disabled}
-    id={id}
     label={label}
     minLength={minLength}
     onChange={onChange}
     required={required}
     suffix={
-      <button aria-label={ariaLabel} disabled={disabled} onClick={toggleVisible} title={ariaLabel} type="button">
-        <Icon name={visible ? `eye-closed` : `eye-open`} />
-      </button>
+      <IconButton
+        ariaLabel={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
+        disabled={disabled}
+        icon={<Icon name={visible ? `eye-closed` : `eye-open`} />}
+        onClick={toggleVisible}
+      />
     }
-    type={inputType as `password` | `text`}
+    type={visible ? `text` : `password`}
     value={value}
   />
 );

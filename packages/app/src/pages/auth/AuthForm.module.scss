@@ -1,0 +1,45 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/core" as core;
+
+.panel-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: space.xl() space.md();
+}
+
+.panel-card {
+  padding: space.xl();
+}
+
+.panel-form {
+  width: 100%;
+  margin-top: space.md();
+  margin-bottom: 0;
+}
+
+.wrap {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: space.sm() space.md();
+}
+
+.title {
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: space.md();
+  text-align: start;
+}
+
+.mobile-form {
+  width: 100%;
+  margin: 0;
+}
+
+@include core.mobile {
+  .panel-card {
+    padding: space.md();
+  }
+}

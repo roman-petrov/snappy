@@ -9,5 +9,12 @@ export const Endpoints = {
   },
   premium: { paymentUrl: `/api/premium/payment-url` },
   process: `/api/process`,
+  subscription: {
+    autoRenew: `/api/subscription/auto-renew`,
+    delete: `/api/subscription/delete`,
+    get: `/api/subscription`,
+    renew: `/api/subscription/renew`,
+  },
   user: { remaining: `/api/user/remaining` },
+  webhooks: { yookassa: `/api/webhooks/yookassa` },
 } as const;

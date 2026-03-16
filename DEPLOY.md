@@ -68,7 +68,7 @@ If both `SSL_CERT_PEM` and `SSL_KEY_PEM` are set, the site runs on port 443 (HTT
 ## Monitoring and logs
 
 ```bash
-pm2 logs snappy-bot
+pm2 logs snappy
 pm2 monit
 pm2 status
 ```

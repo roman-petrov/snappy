@@ -1,7 +1,7 @@
 /* jscpd:ignore-start */
 import { Translate } from "@snappy/core";
 
-import { $locale } from "../Store";
+import { Locale } from "../core";
 import { en } from "./en";
 import { ru } from "./ru";
 
@@ -13,5 +13,5 @@ export { localeData };
 
 export const makeT = (getLocale: () => LocaleKey) => Translate.makeT(localeData, getLocale);
 
-export const t = makeT(() => $locale.value);
+export const t = makeT(() => Locale.effective());
 /* jscpd:ignore-end */

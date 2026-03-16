@@ -11,14 +11,10 @@ export type HeadlineProps = {
   variant?: `hero` | `section`;
 };
 
-export const Headline = ({ as = `h2`, children, lead, title, variant = `section` }: HeadlineProps) => {
-  const rootClass = variant === `hero` ? styles.hero : styles.section;
-
-  return (
-    <section className={`${styles.root} ${rootClass}`}>
-      <Text as={as} color="heading" text={title} typography={variant === `hero` ? `display` : `h2`} />
-      <Text cn={styles.lead} color="muted" text={lead} typography="large" />
-      <div className={styles.cta}>{children}</div>
-    </section>
-  );
-};
+export const Headline = ({ as = `h2`, children, lead, title, variant = `section` }: HeadlineProps) => (
+  <section className={`${styles.root} ${variant === `hero` ? styles.hero : styles.section}`}>
+    <Text as={as} color="heading" text={title} typography={variant === `hero` ? `display` : `h2`} />
+    <Text cn={styles.lead} color="muted" text={lead} typography="large" />
+    <div className={styles.cta}>{children}</div>
+  </section>
+);

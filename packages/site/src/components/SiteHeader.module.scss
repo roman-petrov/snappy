@@ -1,5 +1,7 @@
+@use "pkg:@snappy/theme/core" as core;
+
 .site-header {
-  @media (width <= 640px) {
+  @include core.mobile {
     nav a {
       display: none;
     }

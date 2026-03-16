@@ -1,0 +1,8 @@
+@mixin layers($properties...) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    transform-origin: 50% 50%;
+    animation-fill-mode: both;
+    will-change: $properties;
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "@snappy/theme",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    "./styles": "./src/styles/index.scss",
+    "./styles/*": "./src/styles/*.scss",
+    "./color": "./src/tokens/color.scss",
+    "./space": "./src/tokens/space.scss",
+    "./radius": "./src/tokens/radius.scss",
+    "./backdrop": "./src/tokens/backdrop.scss",
+    "./shadow": "./src/tokens/shadow.scss",
+    "./tokens": "./src/tokens/tokens.scss",
+    "./typography": "./src/tokens/typography.scss",
+    "./core": "./src/core.scss",
+    "./primitives": "./src/primitives.scss",
+    "./overlay": "./src/overlay.scss"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "^5.2.8"
+  }
+}

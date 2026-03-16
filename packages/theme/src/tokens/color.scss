@@ -1,0 +1,123 @@
+@function -color($name) {
+  @return var(--color-#{$name});
+}
+
+@function primary() {
+  @return -color("primary");
+}
+
+@function on-primary() {
+  @return -color("on-primary");
+}
+
+@function error() {
+  @return -color("error");
+}
+
+@function warning() {
+  @return -color("warning");
+}
+
+@function success() {
+  @return -color("success");
+}
+
+@function text() {
+  @return -color("text");
+}
+
+@function text-muted() {
+  @return -color("text-muted");
+}
+
+@function bg() {
+  @return -color("bg");
+}
+
+@function surface() {
+  @return -color("surface");
+}
+
+@function input() {
+  @return -color("input");
+}
+
+@function input-focus() {
+  @return -color("input-focus");
+}
+
+@function border() {
+  @return -color("border");
+}
+
+@function overlay() {
+  @return -color("overlay");
+}
+
+@function grid() {
+  @return -color("grid");
+}
+
+@function primary-ghost() {
+  @return -color("primary-ghost");
+}
+
+@function primary-border() {
+  @return -color("primary-border");
+}
+
+@function accent-soft() {
+  @return -color("accent-soft");
+}
+
+@function surface-hover() {
+  @return -color("surface-hover");
+}
+
+@function surface-active() {
+  @return -color("surface-active");
+}
+
+@function surface-elevated() {
+  @return -color("surface-elevated");
+}
+
+@function surface-glass() {
+  @return -color("surface-glass");
+}
+
+@function primary-hover() {
+  @return -color("primary-hover");
+}
+
+@function text-dimmed() {
+  @return -color("text-dimmed");
+}
+
+@function text-subtle() {
+  @return -color("text-subtle");
+}
+
+@function error-ghost() {
+  @return -color("error-ghost");
+}
+
+@function error-soft() {
+  @return -color("error-soft");
+}
+
+@function warning-ghost() {
+  @return -color("warning-ghost");
+}
+
+@function success-ghost() {
+  @return -color("success-ghost");
+}
+
+@function divider() {
+  @return -color("divider");
+}
+
+@function divider-line() {
+  @return -color("divider-line");
+}

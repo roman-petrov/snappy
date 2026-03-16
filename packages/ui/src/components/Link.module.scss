@@ -1,31 +1,27 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/radius";
 
 .accent {
-  color: color.accent();
-  text-decoration: none;
-}
+  color: color.primary();
 
-@include hover(".accent") {
-  text-decoration: underline;
+  @include focus($radius: radius.xs());
+
+  @include hover {
+    text-decoration: underline;
+  }
 }
 
 .muted {
   color: color.text-muted();
-  text-decoration: none;
-}
 
-@include hover(".muted") {
-  color: color.text-body();
+  @include focus($radius: radius.xs());
 
-  * {
-    color: inherit;
+  @include hover {
+    color: color.text();
+
+    * {
+      color: inherit;
+    }
   }
-}
-
-.accent:focus-visible,
-.muted:focus-visible {
-  @include focus;
-
-  border-radius: 4px;
 }

@@ -1,0 +1,19 @@
+@function -shadow($name) {
+  @return var(--shadow-#{$name});
+}
+
+@function sm() {
+  @return -shadow("sm");
+}
+
+@function md() {
+  @return -shadow("md");
+}
+
+@function accent() {
+  @return -shadow("accent");
+}
+
+@function focus() {
+  @return -shadow("focus");
+}

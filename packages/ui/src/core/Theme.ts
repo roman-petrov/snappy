@@ -1,65 +1,47 @@
-/* eslint-disable @typescript-eslint/no-meaningless-void-operator */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-let */
-/* eslint-disable init-declarations */
-import { effect } from "@preact/signals";
-import { WebGl } from "@snappy/browser";
+import { MediaQuery } from "@snappy/browser";
 
-import { $serverMode, $theme } from "../Store";
-import { Fog, FogShader } from "../web-gl";
+import { $theme } from "../Store";
+import { AndroidBridge } from "./AndroidBridge";
+import { ThemeFog } from "./ThemeFog";
+import { ThemeTransition } from "./ThemeTransition";
 
-export const themes = [`light`, `dark`] as const;
+const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
+const themes = [`dark`, `light`, `system`] as const;
+const key = `snappy-theme`;
+
+export type ResolvedTheme = `dark` | `light`;
 
 export type Theme = (typeof themes)[number];
 
-const fogContainerId = `fog-bg`;
-const fogOptions = { blurFactor: 0.5, speed: 2, zoom: 2 };
-let afterChange: (() => void) | undefined;
-const stopFogRef: { current: (() => void) | undefined } = { current: undefined };
+const effective = (value = $theme()): ResolvedTheme =>
+  value === `system` ? (MediaQuery.matches(prefersDarkQuery) ? `dark` : `light`) : value;
 
-const syncFog = () => {
-  stopFogRef.current?.();
-  stopFogRef.current = undefined;
-  if (document.documentElement.dataset[`theme`] === `light`) {
-    return;
-  }
-  const element = document.querySelector(`#${fogContainerId}`);
-  if (element instanceof HTMLElement) {
-    const canvas = document.createElement(`canvas`);
-    canvas.setAttribute(`aria-hidden`, `true`);
-    const stop = WebGl.runLoop({ canvas, shader: FogShader }, webgl => Fog(element, fogOptions, webgl));
-    if (stop !== undefined) {
-      stopFogRef.current = stop;
-    }
-  }
+const fog = ThemeFog(effective);
+
+const resolve = (value: Theme | undefined) =>
+  value === `dark` || value === `light` || value === `system` ? value : undefined;
+
+const applyEffective = () => {
+  const next = effective();
+  document.documentElement.dataset[`theme`] = next;
+  AndroidBridge.setBarStyle(next === `dark` ? `dark` : `light`);
+  fog.sync();
 };
 
-const apply = (theme: Theme) => {
-  document.documentElement.dataset[`theme`] = theme;
-  void afterChange?.();
+const transitionDirection = (next: ResolvedTheme) => (next === `dark` ? `in` : `out`);
+
+const init = () => {
+  MediaQuery.subscribe(prefersDarkQuery, applyEffective);
+  $theme.subscribe(applyEffective);
+  ThemeTransition.init();
+  applyEffective();
 };
 
-const init = (options?: { theme?: Theme }) => {
-  const div = document.createElement(`div`);
-  div.id = fogContainerId;
-  div.setAttribute(`aria-hidden`, `true`);
-  document.body.prepend(div);
-  if (document.querySelector(`#${fogContainerId}`) instanceof HTMLElement) {
-    afterChange = () => {
-      void requestAnimationFrame(syncFog);
-    };
-  }
+const set = (value: Theme) =>
+  ThemeTransition.start({ direction: transitionDirection(effective(value)), onChange: () => $theme.set(value) });
 
-  effect(() => apply($theme.value));
-  if ($serverMode.value && options?.theme !== undefined) {
-    $theme.value = options.theme;
-  }
-  apply($theme.value);
-};
+const toggle = () => set(effective() === `dark` ? `light` : `dark`);
 
-const toggle = () => {
-  $theme.value = $theme.value === `dark` ? `light` : `dark`;
-};
-
-export const Theme = { init, toggle };
+export const Theme = { effective, init, key, resolve, toggle, values: themes };

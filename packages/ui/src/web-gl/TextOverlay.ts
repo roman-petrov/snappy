@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable functional/no-expression-statements */
 import type { WebGlInterface } from "@snappy/browser";
 
@@ -17,7 +18,7 @@ export const TextOverlay = (element: HTMLElement, options: TextOverlayOptions, w
   });
 
   const resize = () => webgl.resizeCanvas(Math.max(1, element.clientWidth), Math.max(1, element.clientHeight));
-  const advanceTime = webgl.createTimeDriver(0.016); // eslint-disable-line @typescript-eslint/no-magic-numbers
+  const advanceTime = webgl.createTimeDriver(0.016);
 
   const tick = () => {
     webgl.gl.clearColor(0, 0, 0, 0);

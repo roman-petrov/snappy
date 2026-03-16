@@ -5,17 +5,18 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-promise-reject */
 
+import type { ResolvedLocale, Theme } from "@snappy/ui";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";
-import { type SiteLocaleKey, Ssr as SiteSsr, type SsrEntry } from "@snappy/site/Ssr";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import type { ServerCache } from "./ServerCache";
 
-import { LocaleCookie } from "../../site/src/core/LocaleCookie";
+import { Cookie } from "./core/Cookie";
+import { SiteSsr, type SsrEntry } from "./SiteSsr";
 
 export const Ssr = () => {
   const loadTemplateAndEntry = async (clientRoot: string): Promise<{ entry: SsrEntry; template: string }> => {
@@ -35,10 +36,10 @@ export const Ssr = () => {
   const createSsrHandler =
     (clientRoot: string) =>
     async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      const locale = LocaleCookie.parse(request.headers.cookie);
+      const { locale, theme } = Cookie(request.headers.cookie, request.headers[`accept-language`]);
       const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
-      await reply.type(`text/html`).send(SiteSsr.buildHtml(locale, template, entry));
+      await reply.type(`text/html`).send(SiteSsr.build(locale, theme, template, entry));
     };
 
   const createCachedSsrHandler = (clientRoot: string, cache: ServerCache) => {
@@ -51,8 +52,8 @@ export const Ssr = () => {
     };
 
     return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      const locale = LocaleCookie.parse(request.headers.cookie);
-      const key = `ssr:${locale}`;
+      const { locale, theme } = Cookie(request.headers.cookie, request.headers[`accept-language`]);
+      const key = `ssr:${locale}:${theme ?? `system`}`;
       const acceptEncoding = request.headers[`accept-encoding`];
       const cached = cache.get(key);
       if (cached !== undefined) {
@@ -63,22 +64,26 @@ export const Ssr = () => {
       const { entry: ssrEntry, template } = await ensureLoaded();
       cache.sendCached(
         reply,
-        cache.set(key, Buffer.from(SiteSsr.buildHtml(locale, template, ssrEntry), `utf8`), `text/html`),
+        cache.set(key, Buffer.from(SiteSsr.build(locale, theme, template, ssrEntry), `utf8`), `text/html`),
         acceptEncoding,
         `text/html`,
       );
     };
   };
 
+  const themes: (Theme | undefined)[] = [`dark`, `light`, undefined];
+
   const prewarmSsr = async (
     clientRoot: string,
     cache: ServerCache,
-    locales: readonly [SiteLocaleKey, ...SiteLocaleKey[]],
+    locales: readonly [ResolvedLocale, ...ResolvedLocale[]],
   ): Promise<void> => {
     const { entry, template } = await loadTemplateAndEntry(clientRoot);
     for (const locale of locales) {
-      const html = SiteSsr.buildHtml(locale, template, entry);
-      cache.set(`ssr:${locale}`, Buffer.from(html, `utf8`), `text/html`);
+      for (const theme of themes) {
+        const html = SiteSsr.build(locale, theme, template, entry);
+        cache.set(`ssr:${locale}:${theme ?? `system`}`, Buffer.from(html, `utf8`), `text/html`);
+      }
     }
   };
 

@@ -10,10 +10,10 @@
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
     "@snappy/server-app": "workspace:*",
-    "@snappy/site": "workspace:*",
-    "fastify": "^5.1.0"
+    "@snappy/ui": "workspace:*",
+    "fastify": "^5.8.4"
   },
   "devDependencies": {
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.1"
   }
 }

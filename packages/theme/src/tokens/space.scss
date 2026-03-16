@@ -1,0 +1,31 @@
+@function -space($name) {
+  @return var(--space-#{$name});
+}
+
+@function xs() {
+  @return -space("xs");
+}
+
+@function sm() {
+  @return -space("sm");
+}
+
+@function md() {
+  @return -space("md");
+}
+
+@function lg() {
+  @return -space("lg");
+}
+
+@function xl() {
+  @return -space("xl");
+}
+
+@function x2xl() {
+  @return -space("2xl");
+}
+
+@function x3xl() {
+  @return -space("3xl");
+}

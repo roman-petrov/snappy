@@ -1,143 +1,120 @@
-/* eslint-disable functional/no-expression-statements */
+import { Snappy } from "@snappy/domain";
 import { Alert, Tabs } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
-import { ProcessButton, Protect, SmallButton, TextCard } from "./components";
+import { ProcessButton, SmallButton, TextCard, ToggleButton } from "./components";
+import { t } from "./core";
 import styles from "./Dashboard.module.scss";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 
 export const DashboardView = ({
-  actionEditLabel,
-  actionNewLabel,
-  addEmojiBtnClassKeys,
-  addEmojiLabel,
-  addFormattingBtnClassKeys,
-  addFormattingLabel,
-  errorText,
-  lengthLabel,
-  lengthOptions,
+  clear,
+  copied,
+  copyResult,
+  error,
   loading,
   mobile,
-  onClear,
-  onCopyResult,
-  onLengthChange,
-  onOptionChange,
-  onStyleChange,
-  onSubmit,
-  onSwitchToEdit,
-  onTextChange,
   options,
-  processButtonDisabled,
-  processButtonDisabledEmpty,
+  processText,
   result,
-  sectionClassKey,
-  showError,
+  setOption,
+  setText,
   showResult,
-  styleLabel,
-  styleOptions,
-  submitButtonText,
+  switchToEdit,
   text,
-  toolbarButtonCopyTitle,
-  toolbarButtonFull,
-  toolbarButtonIcon,
-  toolbarButtonLabel,
 }: DashboardViewProps) => (
-  <Protect>
-    <section className={`${styles.section} ${styles[sectionClassKey]}`} data-mobile={mobile}>
-      <TextCard
-        compact={mobile}
-        loading={loading}
-        onTextChange={onTextChange}
-        result={result}
-        showResult={showResult}
-        text={text}
-      />
-      <div className={styles.controls}>
-        <div className={styles.toggleRow} role="group">
-          <button
-            aria-pressed={options.addEmoji}
-            className={[styles.toggleBtn, ...addEmojiBtnClassKeys.map(key => styles[key])].join(` `)}
-            disabled={loading}
-            onClick={() => onOptionChange(`addEmoji`, options.addEmoji !== true)}
-            type="button"
-          >
-            {addEmojiLabel}
-          </button>
-          <button
-            aria-pressed={options.addFormatting}
-            className={[styles.toggleBtn, ...addFormattingBtnClassKeys.map(key => styles[key])].join(` `)}
-            disabled={loading}
-            onClick={() => onOptionChange(`addFormatting`, options.addFormatting !== true)}
-            type="button"
-          >
-            {addFormattingLabel}
-          </button>
-        </div>
-        <Tabs
-          ariaLabel={lengthLabel}
-          cn={styles.tabsLength}
+  <section className={`${styles.section} ${styles[mobile ? `sectionMobile` : `sectionDesktop`]}`} data-mobile={mobile}>
+    <TextCard
+      compact={mobile}
+      loading={loading}
+      onTextChange={setText}
+      result={result}
+      showResult={showResult}
+      text={text}
+    />
+    <div className={styles.controls}>
+      <div className={styles.toggleRow} role="group">
+        <ToggleButton
+          compact={mobile}
           disabled={loading}
-          onChange={onLengthChange}
-          options={lengthOptions}
-          value={options.length ?? `keep`}
+          onClick={() => setOption(`addEmoji`, !options.addEmoji)}
+          pressed={options.addEmoji}
+          text={t(`options.addEmoji`)}
+          variant="emoji"
         />
-        <Tabs
-          ariaLabel={styleLabel}
-          cn={styles.tabsStyle}
+        <ToggleButton
+          compact={mobile}
           disabled={loading}
-          onChange={onStyleChange}
-          options={styleOptions}
-          value={options.style ?? `neutral`}
+          onClick={() => setOption(`addFormatting`, !options.addFormatting)}
+          pressed={options.addFormatting}
+          text={t(`options.addFormatting`)}
+          variant="format"
         />
-        <div className={styles.submitRow}>
-          <form
-            className={styles.submitForm}
-            onSubmit={event => {
-              void onSubmit(event);
-            }}
-          >
-            <ProcessButton
-              compact={mobile}
-              disabled={processButtonDisabled}
-              disabledEmpty={processButtonDisabledEmpty}
-              loading={loading}
-              text={submitButtonText}
-            />
-          </form>
-          {showResult ? (
-            <>
-              <SmallButton
-                compact={mobile}
-                icon="✨"
-                label={mobile ? undefined : actionNewLabel}
-                onClick={onClear}
-                title={actionNewLabel}
-                variant="neutral"
-              />
-              <SmallButton
-                compact={mobile}
-                icon="✎"
-                label={mobile ? undefined : actionEditLabel}
-                onClick={onSwitchToEdit}
-                title={actionEditLabel}
-                variant="neutral"
-              />
-              <SmallButton
-                compact={mobile}
-                full={toolbarButtonFull}
-                icon={toolbarButtonIcon}
-                label={toolbarButtonLabel}
-                onClick={onCopyResult}
-                title={toolbarButtonCopyTitle}
-                variant="copy"
-              />
-            </>
-          ) : undefined}
-        </div>
-        {showError ? <Alert text={errorText} variant="error" /> : undefined}
       </div>
-    </section>
-  </Protect>
+      <Tabs
+        ariaLabel={t(`options.length.label`)}
+        cn={styles.tabsLength}
+        disabled={loading}
+        onChange={value => setOption(`length`, value)}
+        options={Snappy.lengths.map(key => ({
+          label: `${Snappy.lengthEmojis[key]}${mobile ? `` : ` ${t(`options.length.${key}`)}`}`,
+          value: key,
+        }))}
+        value={options.length}
+      />
+      <Tabs
+        ariaLabel={t(`options.style.label`)}
+        cn={styles.tabsStyle}
+        disabled={loading}
+        onChange={value => setOption(`style`, value)}
+        options={Snappy.styles.map(key => ({
+          label: `${Snappy.styleEmojis[key]}${mobile ? `` : ` ${t(`options.style.${key}`)}`}`,
+          value: key,
+        }))}
+        value={options.style}
+      />
+      <div className={styles.submitRow}>
+        <ProcessButton
+          compact={mobile}
+          disabled={loading || text.trim() === ``}
+          disabledEmpty={!loading && text.trim() === ``}
+          loading={loading}
+          onClick={processText}
+          text={loading ? t(`dashboard.submitting`) : t(`dashboard.submit`)}
+        />
+        {showResult ? (
+          <>
+            <SmallButton
+              compact={mobile}
+              hideText={mobile}
+              icon="✨"
+              onClick={clear}
+              text={t(`dashboard.actionNew`)}
+              variant="neutral"
+            />
+            <SmallButton
+              compact={mobile}
+              hideText={mobile}
+              icon="✎"
+              onClick={switchToEdit}
+              text={t(`dashboard.actionEdit`)}
+              variant="neutral"
+            />
+            <SmallButton
+              compact={mobile}
+              full={!mobile}
+              hideText={mobile}
+              icon={copied ? `✓` : `📋`}
+              onClick={copyResult}
+              text={copied ? t(`dashboard.copied`) : t(`dashboard.copy`)}
+              variant="copy"
+            />
+          </>
+        ) : undefined}
+      </div>
+      {error === `` ? undefined : <Alert text={t(`dashboard.errors.${error}`)} variant="error" />}
+    </div>
+  </section>
 );

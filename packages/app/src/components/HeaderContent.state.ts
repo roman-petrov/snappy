@@ -1,24 +1,20 @@
-import { useLocation } from "wouter";
+import { useStoreValue } from "@snappy/store";
+import { useGo } from "@snappy/ui";
 
-import { api, t } from "../core";
+import { api } from "../core";
 import { $loggedIn } from "../Store";
 
-export type LogoutItem = { label: string; onClick: () => Promise<void> };
-
 export const useHeaderContentState = () => {
-  const [, navigate] = useLocation();
-  const loggedIn = $loggedIn.value;
+  const go = useGo();
+  const loggedIn = useStoreValue($loggedIn);
 
-  const logout: LogoutItem | undefined = loggedIn
-    ? {
-        label: t(`logout`),
-        onClick: async () => {
-          await api.logout();
-          $loggedIn.value = false;
-          navigate(`/login`, { replace: true });
-        },
+  const logoutOnClick = loggedIn
+    ? async () => {
+        await api.logout();
+        $loggedIn.set(false);
+        void go(`/login`, { replace: true });
       }
     : undefined;
 
-  return { logout };
+  return { logoutOnClick };
 };

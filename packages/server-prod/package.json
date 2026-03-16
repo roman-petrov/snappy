@@ -9,6 +9,6 @@
     "@snappy/core": "workspace:*",
     "@snappy/server": "workspace:*",
     "@snappy/server-app": "workspace:*",
-    "fastify": "^5.1.0"
+    "fastify": "^5.8.4"
   }
 }

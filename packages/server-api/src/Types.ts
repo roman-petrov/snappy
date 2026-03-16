@@ -30,13 +30,13 @@ export type ApiPaymentUrlErrorCode = `paymentError`;
 
 export type ApiPaymentUrlResult = { status: ApiStatusOk; url: string };
 
-import type { SnappyCoreOptions } from "@snappy/snappy-core";
+import type { SnappyOptions } from "@snappy/domain";
 
 export type ApiPaymentUrlResultUnion = ApiPaymentUrlResult | { status: ApiPaymentUrlErrorCode };
 
-export type ApiProcessBody = { options?: SnappyCoreOptions; text?: string };
+export type ApiProcessBody = { options: SnappyOptions; text: string };
 
-export type ApiProcessErrorCode = `processingFailed` | `requestLimitReached` | `textAndOptionsRequired`;
+export type ApiProcessErrorCode = `processingFailed` | `requestLimitReached`;
 
 export type ApiProcessResult = { status: ApiStatusOk; text: string };
 
@@ -54,7 +54,19 @@ export type ApiRegisterErrorCode =
 
 export type ApiRegisterResult = ApiAuthSuccessInternal | { status: ApiRegisterErrorCode };
 
-export type ApiRemainingResult = { options: SnappyCoreOptions; remaining: number; status: ApiStatusOk };
+export type ApiRemainingResult = {
+  autoRenew?: boolean;
+  freeRequestLimit: number;
+  isPremium?: boolean;
+  nextBillingAt?: number;
+  nextResetAt?: number;
+  options: SnappyOptions;
+  premiumPeriodDays: number;
+  premiumPrice: number;
+  premiumUntil?: number;
+  remaining: number;
+  status: ApiStatusOk;
+};
 
 export type ApiResetPasswordBody = { newPassword?: string; token?: string };
 
@@ -63,3 +75,29 @@ export type ApiResetPasswordErrorCode = `invalidOrExpiredToken` | `tokenAndPassw
 export type ApiResetPasswordResult = ApiOkResult | { status: ApiResetPasswordErrorCode };
 
 export type ApiStatusOk = `ok`;
+
+export type ApiSubscriptionAutoRenewBody = { enabled: boolean };
+
+export type ApiSubscriptionAutoRenewErrorCode = `subscriptionNotFound`;
+
+export type ApiSubscriptionAutoRenewResult = ApiOkResult | { status: ApiSubscriptionAutoRenewErrorCode };
+
+export type ApiSubscriptionDeleteBody = { confirmLoseTime?: boolean };
+
+export type ApiSubscriptionDeleteErrorCode = `confirmRequired` | `subscriptionNotFound`;
+
+export type ApiSubscriptionDeleteResult = ApiOkResult | { status: ApiSubscriptionDeleteErrorCode };
+
+export type ApiSubscriptionRenewErrorCode = `subscriptionNotFound`;
+
+export type ApiSubscriptionRenewResult = ApiOkResult | { status: ApiSubscriptionRenewErrorCode };
+
+export type ApiSubscriptionResult = {
+  autoRenew?: boolean;
+  freeRequestLimit: number;
+  nextBillingAt?: number;
+  premiumPeriodDays: number;
+  premiumPrice: number;
+  premiumUntil?: number;
+  status: ApiStatusOk;
+};

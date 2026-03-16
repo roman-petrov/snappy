@@ -1,36 +1,31 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
 
 .feature {
-  padding: space.x6();
-  background: color.bg-card-features();
-  border: 1px solid color.bg-card-border();
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  transition: var(--transition);
-}
-
-@include hover(".feature") {
-  background: color.bg-card-features-hover();
-  box-shadow: var(--shadow-card-hover);
-  transform: scale(1.02);
+  padding: space.lg();
+  transition: tokens.transition();
 }
 
 .feature-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: space.x12();
-  padding: space.x3() space.x4();
-  margin-block-end: space.x4();
-  font-size: space.x8();
-  background: color.bg-icon();
-  border-radius: var(--radius-sm);
+  @include typography.h1;
+  @include primitives.inline-row-center;
+
+  min-width: space.x2xl();
+  padding: space.sm() space.md();
+  margin-block-end: space.md();
+  font-weight: 400;
+  line-height: 1;
+  background: color.accent-soft();
+  border-radius: radius.sm();
 }
 
-@media (width <= 640px) {
+@include mobile {
   .feature {
-    padding: space.x5();
+    padding: space.md();
   }
 }

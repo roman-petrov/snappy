@@ -1,16 +1,16 @@
-/* eslint-disable @typescript-eslint/strict-void-return */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { IconButton, SystemButtons } from "@snappy/ui";
 
 import type { useHeaderContentState } from "./HeaderContent.state";
 
+import { t } from "../core";
 import styles from "./HeaderContent.module.scss";
 
 export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 
-export const HeaderContentView = ({ logout }: HeaderContentViewProps) => (
+export const HeaderContentView = ({ logoutOnClick }: HeaderContentViewProps) => (
   <div className={styles.root}>
     <SystemButtons />
-    {logout === undefined ? undefined : <IconButton ariaLabel={logout.label} icon="➜]" onClick={logout.onClick} />}
+    {logoutOnClick === undefined ? undefined : <IconButton ariaLabel={t(`settings.title`)} icon="⚙" link="/settings" />}
+    {logoutOnClick === undefined ? undefined : <IconButton ariaLabel={t(`logout`)} icon="➜" onClick={logoutOnClick} />}
   </div>
 );

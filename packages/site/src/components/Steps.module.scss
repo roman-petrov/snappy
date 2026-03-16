@@ -1,28 +1,28 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
 
 .steps {
-  display: flex;
-  flex-direction: column;
-  gap: space.x4();
+  display: grid;
+  gap: space.md();
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
 .steps li {
-  display: flex;
-  gap: space.x3();
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: space.sm();
   align-items: center;
 }
 
 .marker {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: space.x8();
-  height: space.x8();
-  background: color.accent();
-  border-radius: 50%;
+  @include primitives.grid-center;
+  @include primitives.square(space.xl());
+
+  color: color.on-primary();
+  background: color.primary();
+  border-radius: radius.full();
 }

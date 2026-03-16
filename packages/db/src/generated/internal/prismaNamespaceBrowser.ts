@@ -52,6 +52,8 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Subscription: 'Subscription',
+  PaymentLog: 'PaymentLog',
   SnappySettings: 'SnappySettings'
 } as const
 
@@ -83,6 +85,34 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  userId: 'userId',
+  premiumUntil: 'premiumUntil',
+  nextBillingAt: 'nextBillingAt',
+  autoRenew: 'autoRenew',
+  yooKassaPaymentMethodId: 'yooKassaPaymentMethodId'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const PaymentLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  type: 'type',
+  userId: 'userId',
+  yooKassaPaymentId: 'yooKassaPaymentId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  idempotenceKey: 'idempotenceKey',
+  errorMessage: 'errorMessage',
+  paymentMethodId: 'paymentMethodId'
+} as const
+
+export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof typeof PaymentLogScalarFieldEnum]
 
 
 export const SnappySettingsScalarFieldEnum = {

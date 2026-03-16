@@ -9,8 +9,8 @@ export type SiteHeaderViewProps = ReturnType<typeof useSiteHeaderState>;
 
 export const SiteHeaderView = ({ navItems }: SiteHeaderViewProps) => (
   <Header cn={styles.siteHeader}>
-    {navItems.map(({ href, key }) => (
-      <Link href={href} key={key} muted text={t(key)} />
+    {navItems.map(({ key, link }) => (
+      <Link key={key} link={link} muted text={t(key)} />
     ))}
     <SystemButtons />
   </Header>

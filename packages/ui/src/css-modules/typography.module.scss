@@ -1,4 +1,4 @@
-@use "pkg:@snappy/ui/typography";
+@use "pkg:@snappy/theme/typography";
 
 .body {
   @include typography.body;
@@ -30,10 +30,6 @@
 
 .caption-bold {
   @include typography.caption-bold;
-}
-
-.body-large {
-  @include typography.body-large;
 }
 
 .button {

@@ -9,5 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Subscription'
+export type * from './models/PaymentLog'
 export type * from './models/SnappySettings'
 export type * from './commonInputTypes'

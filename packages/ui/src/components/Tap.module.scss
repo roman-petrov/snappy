@@ -1,0 +1,15 @@
+.root {
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+  background: none;
+  border: none;
+  -webkit-tap-highlight-color: transparent;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}

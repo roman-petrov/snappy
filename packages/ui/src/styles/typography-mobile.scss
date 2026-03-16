@@ -1,8 +1,0 @@
-@media (width <= 640px) {
-  :root {
-    --typography-display-font: 800 clamp(1.875rem, 7vw, 2.75rem) / 1.1 var(--font-sans);
-    --typography-h1-font: 800 1.5rem / 1.1 var(--font-sans);
-    --typography-h2-font: 800 1.25rem / 1.1 var(--font-sans);
-    --typography-h3-font: 700 1.0625rem / 1.1 var(--font-sans);
-  }
-}

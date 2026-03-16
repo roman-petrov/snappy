@@ -1,12 +1,13 @@
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
 
 .section {
-  padding-block: space.x8();
-  scroll-margin-top: space.x16();
+  padding-block: space.xl();
+  scroll-margin-top: space.x2xl();
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .section {
-    padding-block: space.x6();
+    padding-block: space.lg();
   }
 }

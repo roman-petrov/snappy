@@ -1,0 +1,39 @@
+@use "pkg:@snappy/theme/tokens";
+
+$breakpoint-mobile: 768px;
+
+@mixin media-hover {
+  @media (hover: hover) and (pointer: fine) {
+    @content;
+  }
+}
+
+@mixin hover {
+  @include media-hover {
+    &:hover:not(:disabled) {
+      @content;
+    }
+  }
+}
+
+@mixin focus($ring-color: null, $radius: null) {
+  &:focus-visible {
+    @if $radius {
+      border-radius: $radius;
+    }
+
+    @if $ring-color {
+      outline: 2px solid $ring-color;
+    } @else {
+      outline: tokens.focus-ring();
+    }
+
+    outline-offset: tokens.focus-offset();
+  }
+}
+
+@mixin mobile {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}

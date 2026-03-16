@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "@snappy/snappy-core": "workspace:*"
+    "@snappy/domain": "workspace:*"
   }
 }

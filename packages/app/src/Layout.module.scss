@@ -1,5 +1,7 @@
-@use "pkg:@snappy/ui/overlay";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/overlay";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "./scss/layout";
 
 .wrap {
   flex: 1;
@@ -23,24 +25,23 @@
 }
 
 .corner {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  justify-content: space-between;
-  padding: calc(space.x3() + env(safe-area-inset-top, 0px)) calc(space.x4() + env(safe-area-inset-right, 0px))
-    space.x3() calc(space.x4() + env(safe-area-inset-left, 0px));
+  padding: calc(space.sm() + env(safe-area-inset-top, 0px)) calc(space.md() + env(safe-area-inset-right, 0px))
+    space.sm() calc(space.md() + env(safe-area-inset-left, 0px));
 }
 
 .corner-right {
   display: flex;
-  flex-direction: row;
-  gap: space.x4();
+  gap: space.md();
   align-items: center;
+  justify-self: end;
 }
 
 .scroll {
   position: absolute;
   inset: 0;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -55,8 +56,8 @@
   flex: 1;
   flex-direction: column;
   min-height: 0;
-  padding: calc(3.5rem + env(safe-area-inset-top, 0px) + space.x6()) calc(space.x4() + env(safe-area-inset-right, 0px))
-    env(safe-area-inset-bottom, 0) calc(space.x4() + env(safe-area-inset-left, 0px));
+  padding: layout.$main-padding-block-start calc(space.md() + env(safe-area-inset-right, 0px))
+    env(safe-area-inset-bottom, 0) calc(space.md() + env(safe-area-inset-left, 0px));
   margin: 0;
   overflow: auto;
 }
@@ -76,13 +77,13 @@
 
   .main {
     width: 100%;
-    max-width: var(--content-width);
-    padding: space.x6();
-    padding-bottom: space.x12();
+    max-width: tokens.content-width();
+    padding: space.lg();
+    padding-bottom: space.x2xl();
     margin: 0 auto;
   }
 
   .main.main-dashboard {
-    padding-bottom: space.x24();
+    padding-bottom: space.x3xl();
   }
 }

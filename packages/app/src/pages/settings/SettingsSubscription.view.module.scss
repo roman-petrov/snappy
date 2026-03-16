@@ -1,0 +1,22 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+
+.actions {
+  display: grid;
+  gap: space.sm();
+}
+
+.row {
+  display: flex;
+  gap: space.sm();
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  @include typography.caption;
+
+  margin: 0;
+  color: color.text-muted();
+}

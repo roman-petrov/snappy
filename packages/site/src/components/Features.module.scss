@@ -1,7 +1,8 @@
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/space";
+@use "../scss/layout";
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: space.x6();
+  grid-template-columns: repeat(auto-fill, minmax(layout.$feature-grid-min-track, 1fr));
+  gap: space.lg();
 }

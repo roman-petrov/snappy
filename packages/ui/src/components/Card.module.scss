@@ -1,25 +1,15 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/backdrop";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/tokens";
 
 .root {
   width: 100%;
-  max-width: var(--content-narrow);
-  padding: space.x8();
-  background: color.surface-card();
-  border: 1px solid color.bg-card-border();
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-card);
-  backdrop-filter: blur(12px);
-  transition: box-shadow var(--ease);
-}
-
-@include hover(".root") {
-  box-shadow: var(--shadow-card-hover);
-}
-
-@media (width <= 640px) {
-  .root {
-    padding: space.x4();
-  }
+  max-width: tokens.content-narrow();
+  background: color.surface-glass();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  box-shadow: shadow.sm();
+  backdrop-filter: blur(backdrop.lg());
 }

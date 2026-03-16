@@ -5,18 +5,16 @@
   "private": true,
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./Ssr": "./src/Ssr.ts"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "@snappy/core": "workspace:*",
+    "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "preact": "^10.29.0",
-    "preact-render-to-string": "^6.6.6"
+    "react": "^19.0.0"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.0.0"
+    "@types/react": "^19.2.14"
   }
 }

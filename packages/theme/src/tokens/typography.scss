@@ -1,0 +1,61 @@
+@use "sass:list";
+
+@mixin -typography($name) {
+  font: var(--typography-#{$name}-font);
+
+  @if list.index((body display h1 h2 h3), $name) {
+    letter-spacing: var(--typography-#{$name}-letter-spacing);
+  }
+}
+
+@mixin body {
+  @include -typography(body);
+}
+
+@mixin body-sm {
+  @include -typography(body-sm);
+}
+
+@mixin body-bold {
+  @include -typography(body-bold);
+}
+
+@mixin display {
+  @include -typography(display);
+}
+
+@mixin h1 {
+  @include -typography(h1);
+}
+
+@mixin h2 {
+  @include -typography(h2);
+}
+
+@mixin h3 {
+  @include -typography(h3);
+}
+
+@mixin large {
+  @include -typography(large);
+}
+
+@mixin caption {
+  @include -typography(caption);
+}
+
+@mixin caption-bold {
+  @include -typography(caption-bold);
+}
+
+@mixin caption-sm {
+  @include -typography(caption-sm);
+}
+
+@mixin button {
+  @include -typography(button);
+}
+
+@mixin button-large {
+  @include -typography(button-large);
+}

@@ -6,7 +6,7 @@
     "**/dist/**",
     "**/build/**",
     "**/*.html",
-    "**/*.test.ts",
+    "**/*.test.{ts,tsx}",
     "**/package.json",
     "**/node_modules",
     "**/packages/*/src/generated"

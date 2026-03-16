@@ -1,13 +1,15 @@
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .main {
-  max-width: var(--content-width);
-  padding: 0 space.x6() space.x8();
+  max-width: tokens.content-width();
+  padding: 0 space.lg() space.xl();
   margin-inline: auto;
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .main {
-    padding-inline: space.x4();
+    padding-inline: space.md();
   }
 }

@@ -6,13 +6,13 @@ globs: "**/*.test.{ts,tsx}"
 alwaysApply: false
 ---
 
-# Testing
+# 🧪 Testing
 
 Follow the **programming** rule. This rule adds test-structure conventions only.
 
 ---
 
-## Structure
+## 📋 Structure
 
 1. **Destructure the module under test** at the top of the file. Import the module, then destructure the exported
    functions (or the API you are testing) so that tests call them without the module prefix.
@@ -26,7 +26,7 @@ Follow the **programming** rule. This rule adds test-structure conventions only.
 
 ---
 
-## Examples
+## 📝 Examples
 
 **Object-of-functions module** (e.g. `Utils = { fn, other }`):
 
@@ -64,7 +64,7 @@ describe(`get`, () => {
 
 ---
 
-## Checklist
+## ✅ Checklist
 
 - [ ] Module under test is destructured at the top when testing an object of functions
 - [ ] First argument of `describe` is the name of the tested function (or method)

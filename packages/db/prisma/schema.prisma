@@ -18,8 +18,37 @@ model User {
   createdAt          DateTime  @default(now())
 
   snappySettings SnappySettings[]
+  subscription       Subscription?
 
   @@map("users")
+}
+
+model Subscription {
+  userId                   Int       @id
+  premiumUntil             DateTime
+  nextBillingAt            DateTime
+  autoRenew                Boolean   @default(true)
+  yooKassaPaymentMethodId  String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("subscriptions")
+}
+
+model PaymentLog {
+  id                  String   @id @default(uuid())
+  createdAt           DateTime @default(now())
+  type                String
+  userId              Int?
+  yooKassaPaymentId   String?
+  amount              Decimal? @db.Decimal(12, 2)
+  currency            String?
+  status              String
+  idempotenceKey      String?
+  errorMessage        String?
+  paymentMethodId     String?
+
+  @@map("payment_logs")
 }
 
 model SnappySettings {

@@ -1,11 +1,11 @@
-@use "pkg:@snappy/ui/color";
+@use "pkg:@snappy/theme/color";
 
 .accent {
-  color: color.accent();
+  color: color.primary();
 }
 
 .on-accent {
-  color: color.on-accent();
+  color: color.on-primary();
 }
 
 .error {
@@ -21,15 +21,15 @@
 }
 
 .info {
-  color: color.accent();
+  color: color.primary();
 }
 
 .heading {
-  color: color.text-heading();
+  color: color.text();
 }
 
 .body {
-  color: color.text-body();
+  color: color.text();
 }
 
 .muted {

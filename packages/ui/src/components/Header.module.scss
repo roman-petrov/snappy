@@ -1,36 +1,39 @@
-@use "pkg:@snappy/ui/overlay";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/overlay";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .header {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1;
 
   @include overlay.top(false);
 }
 
 .inner {
-  display: flex;
-  gap: space.x4();
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: space.md();
   align-items: center;
-  justify-content: space-between;
-  max-width: var(--content-width);
-  padding: space.x4() space.x6();
+  max-width: tokens.content-width();
+  padding: space.md() space.lg();
   margin-inline: auto;
 }
 
 .nav {
   display: flex;
-  gap: space.x6();
+  gap: space.lg();
   align-items: center;
+  justify-self: end;
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .inner {
-    padding-inline: space.x4();
+    padding-inline: space.md();
   }
 
   .nav {
-    gap: space.x4();
+    gap: space.md();
   }
 }

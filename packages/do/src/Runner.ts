@@ -6,7 +6,6 @@ import { _ } from "@snappy/core";
 import { Process } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
-import open from "open";
 
 import { Build } from "./Build";
 import { Commands } from "./Commands";
@@ -105,10 +104,6 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
                 backgroundProcesses.push(proc);
 
                 return 0;
-              }
-
-              if (run.openUrl !== undefined) {
-                open(run.openUrl).catch(() => undefined);
               }
 
               const code = await new Promise<number>(resolve => {

@@ -1,0 +1,31 @@
+@use "pkg:@snappy/theme/core" as core;
+
+:root {
+  --typography-body-font: 400 1rem / 1.65 var(--font-sans);
+  --typography-body-letter-spacing: normal;
+  --typography-body-sm-font: 0.9375rem / 1.5 var(--font-sans);
+  --typography-body-bold-font: 600 1rem / 1.5 var(--font-sans);
+  --typography-display-font: 800 clamp(2.5rem, 6vw, 4rem) / 1.1 var(--font-sans);
+  --typography-display-letter-spacing: -0.03em;
+  --typography-h1-font: 800 1.875rem / 1.1 var(--font-sans);
+  --typography-h1-letter-spacing: -0.03em;
+  --typography-h2-font: 800 1.5rem / 1.1 var(--font-sans);
+  --typography-h2-letter-spacing: -0.03em;
+  --typography-h3-font: 700 1.125rem / 1.1 var(--font-sans);
+  --typography-h3-letter-spacing: -0.03em;
+  --typography-large-font: 1.0625rem / 1.6 var(--font-sans);
+  --typography-caption-font: 0.875rem / 1.65 var(--font-sans);
+  --typography-caption-bold-font: 600 0.875rem / 1.65 var(--font-sans);
+  --typography-caption-sm-font: 0.8125rem / 1.5 var(--font-sans);
+  --typography-button-font: 600 1rem / 1.65 var(--font-sans);
+  --typography-button-large-font: 600 1.0625rem / 1.6 var(--font-sans);
+}
+
+@include core.mobile {
+  :root {
+    --typography-display-font: 800 clamp(1.875rem, 7vw, 2.75rem) / 1.1 var(--font-sans);
+    --typography-h1-font: 800 1.5rem / 1.1 var(--font-sans);
+    --typography-h2-font: 800 1.25rem / 1.1 var(--font-sans);
+    --typography-h3-font: 700 1.0625rem / 1.1 var(--font-sans);
+  }
+}

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { _ } from "@snappy/core";
 import { Text } from "@snappy/ui";
 
 import styles from "./Block.module.scss";
@@ -13,7 +14,7 @@ export const Block = ({ description, icon, title, withDivider = false }: BlockPr
       <Text as="dd" cn={withDivider ? styles.row : undefined} color="muted" text={description} typography="large" />
     </>
   ) : (
-    <div className={withDivider ? [styles.row, styles.rowWithIcon].join(` `) : styles.rowWithIcon}>
+    <div className={_.cn(withDivider && styles.row, styles.rowWithIcon)}>
       <span aria-hidden className={styles.icon}>
         {icon}
       </span>

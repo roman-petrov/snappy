@@ -1,12 +1,18 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Config } from "@snappy/config";
 
-import { Database } from "@snappy/db";
+import { SnappyBot } from "@snappy/bot";
+import { Db } from "@snappy/db";
+import { Cron } from "@snappy/node";
+import { Payment } from "@snappy/payment";
 import { Snappy } from "@snappy/snappy";
-import { SnappyBot } from "@snappy/snappy-bot";
-import { YooKassa } from "@snappy/yoo-kassa";
 
-import { ServerAppApi } from "./ServerAppApi";
+import { Auth } from "./Auth";
+import { SubscriptionRenewalCronJob } from "./cron-jobs";
+import { PaymentLog } from "./PaymentLog";
+import { Process } from "./Process";
+import { Subscription } from "./Subscription";
+import { User } from "./User";
 
 export const ServerApp = (
   {
@@ -16,24 +22,43 @@ export const ServerApp = (
     freeRequestLimit,
     gigaChatAuthKey,
     jwtSecret,
+    premiumPeriodDays,
     premiumPrice,
     yooKassaSecretKey,
     yooKassaShopId,
   }: Config,
   { apiBaseUrl, version }: { apiBaseUrl: string; version?: string },
 ) => {
-  const db = Database(dbUrl);
+  const db = Db(dbUrl);
   const snappy = Snappy({ gigaChatAuthKey });
-  const yooKassa = YooKassa({ secretKey: yooKassaSecretKey, shopId: yooKassaShopId });
-  const api = ServerAppApi({ db, freeRequestLimit, jwtSecret, premiumPrice, snappy, yooKassa });
+  const payment = Payment({ credentials: { secretKey: yooKassaSecretKey, shopId: yooKassaShopId }, type: `yoo-kassa` });
+  const auth = Auth({ jwtSecret, user: db.user });
+  const paymentLog = PaymentLog(db.paymentLog);
 
-  const bot = SnappyBot({
-    apiKey: botApiKey,
-    apiUrl: apiBaseUrl,
-    botToken,
+  const subscription = Subscription({
+    freeRequestLimit,
+    payment,
+    paymentLog,
+    premiumPeriodDays,
     premiumPrice,
-    ...(version !== undefined && { version }),
+    subscription: db.subscription,
   });
+
+  const processModule = Process({
+    freeRequestLimit,
+    hasActiveSubscription: subscription.hasActiveSubscription,
+    premiumPeriodDays,
+    premiumPrice,
+    snappy,
+    snappySettings: db.snappySettings,
+    subscription: db.subscription,
+  });
+
+  const user = User({ user: db.user });
+  const api = { auth, process: processModule, subscription, user };
+  const cron = Cron();
+  cron.addJob(SubscriptionRenewalCronJob(subscription));
+  const bot = SnappyBot({ apiKey: botApiKey, apiUrl: apiBaseUrl, botToken, ...(version !== undefined && { version }) });
 
   const start = async () => {
     await bot.start();
@@ -49,3 +74,5 @@ export const ServerApp = (
 };
 
 export type ServerApp = ReturnType<typeof ServerApp>;
+
+export type ServerAppApi = ReturnType<typeof ServerApp>[`api`];

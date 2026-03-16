@@ -1,5 +1,8 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .root {
   position: relative;
@@ -7,21 +10,21 @@
 }
 
 .lead {
-  max-width: var(--content-narrow);
-  margin: 0 auto space.x10();
+  max-width: tokens.content-narrow();
+  margin: 0 auto space.xl();
 }
 
 .hero {
-  padding-block: space.x24() space.x6();
+  padding-block: space.x3xl() space.lg();
 }
 
 .hero > :first-child {
-  margin-bottom: space.x5();
+  margin-bottom: space.md();
 }
 
 .section {
-  padding: space.x16() space.x6();
-  margin-block-start: space.x12();
+  padding: space.x2xl() space.lg();
+  margin-block-start: space.x2xl();
 }
 
 .section::before {
@@ -30,43 +33,47 @@
   top: 0;
   height: 1px;
   content: "";
-  background: linear-gradient(to right, transparent, color.divider-line() 20%, color.divider-line() 80%, transparent);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    color.divider-line() 25%,
+    color.divider-line() 75%,
+    transparent 100%
+  );
 }
 
 .section > :first-child {
-  margin-bottom: space.x3();
+  margin-bottom: space.sm();
 }
 
 .section .lead {
-  max-width: 28rem;
-  margin: 0 auto space.x6();
+  max-width: tokens.layout-column();
+  margin: 0 auto space.lg();
 }
 
 .cta {
   display: flex;
   flex-wrap: wrap;
-  gap: space.x4();
+  gap: space.md();
   justify-content: center;
 }
 
 .cta > * {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  @include primitives.inline-row-center;
 }
 
-@media (width <= 640px) {
+@include core.mobile {
   .hero {
-    padding-block: space.x16() space.x6();
+    padding-block: space.x2xl() space.lg();
   }
 
   .hero .lead {
-    margin-bottom: space.x8();
+    margin-bottom: space.xl();
   }
 
   .section {
-    padding: space.x12() space.x4();
-    margin-block-start: space.x10();
+    padding: space.x2xl() space.md();
+    margin-block-start: space.xl();
   }
 
   .section::before {
@@ -79,7 +86,7 @@
 
   .hero .cta {
     flex-direction: column;
-    gap: space.x4();
+    gap: space.md();
   }
 
   .cta > * {

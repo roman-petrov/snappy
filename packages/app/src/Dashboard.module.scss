@@ -1,9 +1,6 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/space";
-@use "pkg:@snappy/ui/core" as *;
-
-$c-chip-emoji: #ec4899;
-$c-chip-format: #06b6d4;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/core" as *;
 
 .section {
   display: flex;
@@ -13,7 +10,7 @@ $c-chip-format: #06b6d4;
 }
 
 .section-desktop {
-  gap: space.x6();
+  gap: space.lg();
 }
 
 .controls {
@@ -21,107 +18,47 @@ $c-chip-format: #06b6d4;
 }
 
 .section-mobile .controls {
-  padding-top: space.x3();
-  padding-bottom: space.x2();
+  padding-top: space.sm();
+  padding-bottom: space.sm();
 }
 
 .section-desktop .controls {
   display: flex;
   flex-direction: column;
-  gap: space.x4();
+  gap: space.md();
 }
 
 .toggle-row {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: space.x2();
+  gap: space.sm();
 }
 
 .section-mobile .toggle-row {
-  margin-bottom: space.x3();
+  margin-bottom: space.sm();
 }
 
 .section-desktop .toggle-row {
-  max-width: 32rem;
-}
-
-.toggle-btn {
-  min-height: 44px;
-  padding: space.x2() space.x3();
-  font-family: inherit;
-  font-weight: 500;
-  color: color.text-body();
-  text-align: center;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-  background: color-mix(in srgb, var(--color-text-body) 6%, transparent);
-  border: 1px solid color.bg-card-border();
-  border-radius: 12px;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
-  transition:
-    background var(--ease),
-    border-color var(--ease),
-    color var(--ease),
-    transform var(--ease);
-}
-
-.section-mobile .toggle-btn {
-  font-size: 0.8125rem;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.section-desktop .toggle-btn {
-  font-size: 0.875rem;
-}
-
-.toggle-btn-emoji {
-  color: #fff;
-  background: $c-chip-emoji;
-  border-color: $c-chip-emoji;
-  box-shadow: 0 2px 6px color-mix(in srgb, $c-chip-emoji 40%, transparent);
-}
-
-.toggle-btn-format {
-  color: #fff;
-  background: $c-chip-format;
-  border-color: $c-chip-format;
-  box-shadow: 0 2px 6px color-mix(in srgb, $c-chip-format 40%, transparent);
-}
-
-.toggle-btn:active:not(:disabled) {
-  transform: scale(0.98);
-}
-
-.toggle-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.toggle-btn:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px color.accent-focus();
+  max-width: tokens.layout-column-wide();
 }
 
 .tabs-length {
-  margin-bottom: space.x2();
+  margin-bottom: space.sm();
 }
 
 .tabs-style {
-  margin-bottom: space.x2();
+  margin-bottom: space.sm();
 }
 
 .submit-row {
-  display: flex;
-  gap: space.x3();
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: space.sm();
   align-items: center;
-  margin-top: space.x4();
+  margin-top: space.md();
 }
 
 .section-desktop .submit-row {
-  margin-top: space.x2();
-}
-
-.submit-form {
-  flex-shrink: 0;
+  margin-top: space.sm();
 }

@@ -10,12 +10,12 @@ const config: KnipConfig = {
   },
   workspaces: {
     ".": {
-      entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`, `knip.config.ts`],
+      entry: [`cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`],
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`],
     },
-    "packages/app": { entry: [`index.html`] },
+    "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/do": {
-      entry: [`src/main.*.ts`],
+      entry: [`src/main.*.ts`, `src/NodeLoader.js`],
       ignoreDependencies: [
         `@cspell/dict-ru_ru`,
         `@typescript-eslint/parser`,
@@ -28,8 +28,8 @@ const config: KnipConfig = {
         `stylelint-config-standard-scss`,
       ],
     },
-    "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@types/react-dom`] },
-    "packages/ui": { ignoreDependencies: [`@fontsource-variable/inter`] },
+    "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
+    "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`] },
   },
 };
 

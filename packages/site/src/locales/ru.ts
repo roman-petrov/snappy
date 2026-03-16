@@ -87,7 +87,6 @@ export const ru = {
     examples: `Примеры`,
     faq: `Вопросы`,
     features: `Возможности`,
-    openTelegram: `Открыть в Telegram`,
     start: `Как начать`,
     who: `Для кого`,
   },

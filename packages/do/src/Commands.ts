@@ -1,5 +1,7 @@
 import type { CmdDefinition } from "./CommandTypes";
 
+const nodeLoaderPath = `src/NodeLoader.js`;
+
 /**
  * ! Some emojis have incorrect width in VSCode terminal.
  * ? See:
@@ -69,10 +71,9 @@ const defs: Record<string, CmdDefinition> = {
     description: `Run server-dev (API).`,
     label: `⚙️ API dev`,
     run: {
-      command: `node --watch --import tsx/esm packages/server-dev/src/main.ts`,
+      command: `node --watch --import ./packages/do/${nodeLoaderPath} --import tsx/esm packages/server-dev/src/main.ts`,
       cwd: `.`,
       env: { NODE_ENV: `development` },
-      openUrl: `http://localhost`,
       shutdown: { command: `docker compose down` },
     },
   },
@@ -84,13 +85,17 @@ const defs: Record<string, CmdDefinition> = {
   [`server:frontend:dev`]: {
     description: `Run site + app dev server together (one port).`,
     label: `🌐 Site + App`,
-    run: { background: true, command: `node --import tsx/esm src/main.dev-server.ts`, cwd: `packages/do` },
+    run: {
+      background: true,
+      command: `node --import ./${nodeLoaderPath} --import tsx/esm src/main.dev-server.ts`,
+      cwd: `packages/do`,
+    },
   },
   [`server:prod`]: {
     description: `Run prod server (tsx).`,
     label: `🏭 Server`,
     run: {
-      command: `bun tsx packages/server-prod/src/main.ts`,
+      command: `node --import ./packages/do/${nodeLoaderPath} --import tsx/esm packages/server-prod/src/main.ts`,
       cwd: `.`,
       shutdown: { command: `docker compose down` },
     },
@@ -139,6 +144,11 @@ const defs: Record<string, CmdDefinition> = {
     description: `Deploy prepare + deploy run. Use locally or under PM2.`,
     label: `🏃 Run`,
   },
+  shot: {
+    description: `Vitest: run tests and update snapshots.`,
+    label: `📸 Shot`,
+    run: { args: [`run`, `--update`], tool: `vitest` },
+  },
   stylelint: {
     description: `Stylelint: lint CSS/SCSS.`,
     label: `🎨 Stylelint`,
@@ -148,9 +158,7 @@ const defs: Record<string, CmdDefinition> = {
   tsc: { description: `TypeScript: type-check.`, label: `📘 TypeScript`, run: { args: [`--noEmit`], tool: `tsc` } },
 };
 
-const byName = (name: string): CmdDefinition | undefined => defs[name];
-
-const list = (): { description: string; name: string }[] =>
-  Object.entries(defs).map(([name, definition]) => ({ description: definition.description, name }));
+const byName = (name: string) => defs[name];
+const list = () => Object.entries(defs).map(([name, definition]) => ({ description: definition.description, name }));
 
 export const Commands = { byName, list };

@@ -1,18 +1,9 @@
 import type { PasswordInputProps } from "./PasswordInput";
 
-import { useSignalState } from "../hooks";
+import { useToggle } from "../hooks";
 
-export const usePasswordInputState = ({ hidePasswordLabel, showPasswordLabel, ...rest }: PasswordInputProps) => {
-  const [visible, setVisible] = useSignalState(false);
-  const toggleVisible = () => setVisible(v => !v);
-  const hideLabel = hidePasswordLabel ?? `Hide password`;
-  const showLabel = showPasswordLabel ?? `Show password`;
+export const usePasswordInputState = (props: PasswordInputProps) => {
+  const [visible, toggleVisible] = useToggle(false);
 
-  return {
-    ...rest,
-    ariaLabel: visible ? hideLabel : showLabel,
-    inputType: visible ? `text` : `password`,
-    toggleVisible,
-    visible,
-  };
+  return { ...props, toggleVisible, visible };
 };

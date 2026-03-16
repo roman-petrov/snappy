@@ -4,9 +4,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
-import { App } from "@snappy/server";
+import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
-import { Ssr, type SsrEntry } from "@snappy/site/Ssr";
 import express from "express";
 import { readFileSync } from "node:fs";
 import * as http from "node:http";
@@ -14,7 +13,6 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
 
-import { LocaleCookie } from "../../site/src/core/LocaleCookie";
 import { ViteConfig } from "./config/vite/ViteConfig";
 
 const apiProxy = (port: number) => (path: string, request: http.IncomingMessage, response: http.ServerResponse) => {
@@ -91,7 +89,6 @@ export const DevServer = () => {
     };
 
     app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
-    app.get(`/favicon.ico`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
     app.get(`/app/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
     app.get(/^\/app(?:\/.*)?$/u, (request, response, next) => {
@@ -99,7 +96,11 @@ export const DevServer = () => {
         return next();
       }
       void indexHtmlFromDir(appDir, `/app/index.html`)
-        .then(html => response.type(`html`).send(html))
+        .then(html => {
+          const { locale, theme } = Cookie(request.headers.cookie);
+
+          return response.type(`html`).send(SiteSsr.prepareAppIndex(html, locale, theme));
+        })
         .catch((error: unknown) => handleHtmlError(error, next));
 
       return undefined;
@@ -107,10 +108,10 @@ export const DevServer = () => {
 
     app.get(`/`, async (request, response, next) => {
       try {
-        const locale = LocaleCookie.parse(request.headers.cookie);
+        const { locale, theme } = Cookie(request.headers.cookie);
         const template = await indexHtmlFromDir(siteDir);
         const entry = (await vite.ssrLoadModule(pathToFileURL(siteEntryPath).href)) as SsrEntry;
-        response.type(`html`).send(Ssr.buildHtml(locale, template, entry));
+        response.type(`html`).send(SiteSsr.build(locale, theme, template, entry));
       } catch (error) {
         handleHtmlError(error, next);
       }

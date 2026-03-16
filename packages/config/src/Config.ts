@@ -10,7 +10,8 @@ const botToken = env[`BOT_TOKEN`] ?? ``;
 const dbUrl = `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
 const freeRequestLimit = 10;
 const gigaChatAuthKey = env[`GIGACHAT_AUTH_KEY`] ?? ``;
-const premiumPrice = 299;
+const premiumPeriodDays = 30;
+const premiumPrice = 199;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
 const botApiKey = env[`BOT_API_KEY`] ?? ``;
@@ -23,6 +24,7 @@ export const Config = {
   freeRequestLimit,
   gigaChatAuthKey,
   jwtSecret,
+  premiumPeriodDays,
   premiumPrice,
   yooKassaSecretKey,
   yooKassaShopId,

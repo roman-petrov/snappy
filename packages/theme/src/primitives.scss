@@ -1,0 +1,42 @@
+@mixin stack-row {
+  display: flex;
+  align-items: center;
+}
+
+@mixin row-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin inline-row {
+  display: inline-flex;
+  align-items: center;
+}
+
+@mixin inline-row-center {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin grid-center {
+  display: grid;
+  place-items: center;
+}
+
+@mixin circle($size) {
+  width: $size;
+  height: $size;
+  border-radius: 50%;
+}
+
+@mixin square($size, $min: false) {
+  width: $size;
+  height: $size;
+
+  @if $min {
+    min-width: $size;
+    min-height: $size;
+  }
+}

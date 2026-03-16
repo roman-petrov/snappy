@@ -72,7 +72,7 @@ export const en = {
     androidApp: `Download Android app`,
     cta: `Open Snappy in Telegram`,
     lead: `Snappy is a smart Telegram bot with an AI assistant for text. Send a message, choose an action — the result is right in the chat.`,
-    title: `✨ Text the way you need — in one tap`,
+    title: `✨ Text as you need — one tap`,
   },
   meta: {
     description: `Fix errors, shorten and change the tone of text in seconds. Snappy is a smart Telegram bot for posts, emails and ads. Results right in the chat.`,
@@ -84,7 +84,6 @@ export const en = {
     examples: `Examples`,
     faq: `FAQ`,
     features: `Features`,
-    openTelegram: `Open in Telegram`,
     start: `How to start`,
     who: `For whom`,
   },

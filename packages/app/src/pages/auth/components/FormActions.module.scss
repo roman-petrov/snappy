@@ -1,0 +1,7 @@
+@use "pkg:@snappy/theme/space";
+
+.actions {
+  display: grid;
+  gap: space.sm();
+  margin-top: space.lg();
+}

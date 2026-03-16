@@ -453,14 +453,6 @@ export type SnappySettingsUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.SnappySettingsScalarWhereInput | Prisma.SnappySettingsScalarWhereInput[]
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type SnappySettingsCreateWithoutUserInput = {
   requestCount?: number
   lastReset?: Date | string

@@ -1,9 +1,11 @@
+import { useStoreValue } from "@snappy/store";
+
 import type { AppProps } from "./App";
 
-import { $locale } from "./core";
+import { $locale } from "./Store";
 
 export const useAppState = ({ children, disableTextSelection = false }: AppProps) => {
-  void $locale.value;
+  const locale = useStoreValue($locale);
 
-  return { children, disableTextSelection };
+  return { children, disableTextSelection, locale };
 };

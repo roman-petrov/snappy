@@ -6,94 +6,29 @@ globs: "**/*.tsx"
 alwaysApply: false
 ---
 
-# React
+# ⚛️ React
 
 Follow the **programming** and **typescript** rules. This rule adds React-specific conventions only.
 
 ---
 
-## General principles
+## 📋 General principles
 
 - **One component per file** — each component lives in its own file; do not put multiple component definitions in one
   file.
-- **Always export the props type** — the type of a component’s props must be exported so it can be reused (e.g. by state
+- **Always export the props type** — the type of a component's props must be exported so it can be reused (e.g. by state
   hooks or parents).
-- **Props type naming** — always name the component’s props type `<ComponentName>Props` (e.g. `ButtonProps` for
+- **Props type naming** — always name the component's props type `<ComponentName>Props` (e.g. `ButtonProps` for
   `Button`, `InputViewProps` for `InputView`).
+- **Wrappers: inherit the child’s props, don’t copy them by hand** — when your component mostly passes props through to
+  another component (same DOM or child UI):
+  - **Do:** build your props type from the child’s exported props (`InnerProps`), drop only what you replace yourself
+    (often `children`, layout/class names), add your own fields, then pass the rest to the child:
+    `type WrapperProps = Omit<InnerProps, 'children' | 'className'> & { label: string }` and
+    `<Child {...innerProps} />`.
+  - **Don’t:** list the same props again (`disabled`, `onClick`, …) on the wrapper — they drift from the child and every
+    new child prop needs manual updates everywhere.
+  - **Why:** the child API grows (new optional props) and wrappers keep working without edits.
 - **Hooks in `hooks` directory** — all hook modules (files that export React hooks) must live in a directory named
   `hooks` (e.g. `hooks/useFormState.ts`, `app/core/hooks/useFormState.ts`). Hook file names use camelCase (see
   TypeScript rule).
-- **Always use `useSignalState` for local component state** — use `useSignalState` from `@snappy/ui` instead of
-  `useState`. Never use `useState`; `useSignalState` is the only allowed state hook.
-
----
-
-## View/State pattern
-
-Apply this pattern to components that have **logic or state** (hooks, derived values, event handlers, conditionals). If
-a component has no logic/state or it is very simple (e.g. purely presentational, a single expression), the View/State
-split is not required — keep it as a single component file. **Do not use View/State when the state hook would not use
-the component’s props** (e.g. it only returns static or globally derived data); keep such components in a single file.
-
-When the pattern applies, split the component into **entry**, **state**, and **view** so that logic and UI are separated
-and the view stays presentational.
-
-- **Entry** (`ComponentName.tsx`): Public API. Declares props, imports the state hook and the view; renders
-  `<ComponentView {...useComponentState(props)} />`. No JSX layout here.
-- **State** (`ComponentName.state.ts` or `.tsx`): Hook `useComponentState(props)` that takes component props and returns
-  the props for the view. Holds all hooks (`useState`, `useEffect`, etc.), derived values, and event handlers. Can be
-  stateless: then it only maps/derives view props from input props.
-- **View** (`ComponentName.view.tsx`): Presentational component `ComponentView`. Receives
-  `ViewProps = ReturnType<typeof useComponentState>`. No hooks; only props and JSX. Export view props type as
-  `ReturnType<typeof useComponentState>` for single source of truth.
-
-Rules:
-
-- Entry file does not contain layout JSX; it only composes state and view. **No logic** (no conditionals, no derived
-  values, no hooks).
-- View never uses hooks; it only receives props and renders. **No logic** — no conditionals, no computed values, no
-  class-name building; only JSX that uses the props as given by state.
-- **All logic lives only in the State file**: conditionals, derived values, event handlers, hooks, and any decision of
-  "what to pass" or "how to compute" must be in the state hook. The entry and view files must be logic-free.
-- **State file must not contain JSX** — the state hook only returns data (props for the view); all markup lives in the
-  view file.
-- **CSS module styles** — import styles from CSS modules (e.g. `ComponentName.module.css`) only in the **View** file;
-  the state and entry files must not import CSS modules.
-- View props type is always `ReturnType<typeof useComponentState>`, not a hand-written duplicate.
-- State hook returns a single object that is spread into the view (`<View {...useState(props)} />`).
-
-Example (abstract component):
-
-```tsx
-// ComponentName.tsx — entry
-import { useComponentNameState } from "./ComponentName.state";
-import { ComponentNameView } from "./ComponentName.view";
-
-export type ComponentNameProps = { label: string; value: number; onChange: (n: number) => void };
-
-export const ComponentName = (props: ComponentNameProps) => <ComponentNameView {...useComponentNameState(props)} />;
-```
-
-```ts
-// ComponentName.state.ts — state (can be stateless: no useState/useEffect)
-import type { ComponentNameProps } from "./ComponentName";
-
-export const useComponentNameState = ({ label, value, onChange }: ComponentNameProps) => {
-  const handleChange = (n: number) => onChange(n);
-  return { label, value, onChange: handleChange };
-};
-```
-
-```tsx
-// ComponentName.view.tsx — view
-import type { useComponentNameState } from "./ComponentName.state";
-
-export type ComponentNameViewProps = ReturnType<typeof useComponentNameState>;
-
-export const ComponentNameView = ({ label, value, onChange }: ComponentNameViewProps) => (
-  <div>
-    <span>{label}</span>
-    <input type="number" value={value} onChange={e => onChange(Number(e.target.value))} />
-  </div>
-);
-```

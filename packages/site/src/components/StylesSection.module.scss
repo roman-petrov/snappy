@@ -1,7 +1,6 @@
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/space";
 
 .pills {
-  display: flex;
-  flex-direction: column;
-  gap: space.x2();
+  display: grid;
+  gap: space.sm();
 }

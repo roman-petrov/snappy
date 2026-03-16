@@ -1,0 +1,57 @@
+---
+description:
+  SCSS/CSS styling rules (design tokens, theme functions, units, naming). Use when writing or reviewing SCSS/CSS files.
+globs: "**/*.{scss,module.scss}"
+alwaysApply: false
+---
+
+# 🎨 CSS
+
+---
+
+## 🎯 Theme package
+
+All design tokens live in `@snappy/theme`. Before writing or reviewing SCSS, **read the source files** in
+`packages/theme/src/` to learn the available modules, functions, and mixins. Import modules via
+`@use "pkg:@snappy/theme/<module>"`.
+
+---
+
+## 📋 Rules
+
+### No hardcoded values
+
+Never write raw colors, font sizes, spacing, radii, shadows, or transitions in component styles. **Always** use the
+corresponding SCSS function or mixin from `@snappy/theme`.
+
+### No raw `var(--...)`
+
+Never read CSS custom properties with `var()` in component styles. Use the theme function instead.
+
+### Extend the theme, don't bypass it
+
+If the current token set doesn't cover a value you need, add a new token to `@snappy/theme` rather than hardcoding.
+
+### Units
+
+All sizes in **rem**. Exception: borders may use **px** (e.g. `1px solid`).
+
+### Class names
+
+Always **kebab-case** (e.g. `.card-header`, `.nav-item`, `.btn-primary`).
+
+### Avoid `z-index`
+
+Do not use `z-index` unless it is strictly necessary for layering behavior that cannot be achieved by DOM order,
+positioning, or natural stacking. If needed, use the smallest possible value and keep layer levels minimal.
+
+---
+
+## ✅ Checklist
+
+- [ ] No hardcoded colors, font sizes, spacing, radii, shadows, or transitions
+- [ ] No raw `var(--...)` — theme functions only
+- [ ] Sizes in rem; borders in px are ok
+- [ ] Class names in kebab-case
+- [ ] No `z-index` unless strictly necessary; minimal values only
+- [ ] Missing values added to theme, not hardcoded in components

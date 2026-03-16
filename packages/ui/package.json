@@ -5,21 +5,23 @@
   "private": true,
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./styles": "./src/styles/index.scss",
-    "./styles/*": "./src/styles/*.scss",
-    "./*": "./src/scss/*.scss"
+    ".": "./src/index.ts"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "^5.2.8",
-    "@preact/signals": "^2.0.3",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "preact": "^10.29.0",
-    "wouter": "^3.9.0"
+    "@snappy/intl": "workspace:*",
+    "@snappy/store": "workspace:*",
+    "@snappy/theme": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.13.2"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.0",
     "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "vitest": "^4.1.1"
   }
 }

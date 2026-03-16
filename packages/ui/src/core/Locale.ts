@@ -1,35 +1,49 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
-import { effect } from "@preact/signals";
+import { i } from "@snappy/intl";
 
 import { $locale } from "../Store";
 
-export const locales = [`en`, `ru`] as const;
+const locales = [`en`, `ru`, `system`] as const;
+const key = `snappy-locale`;
 
 export type Locale = (typeof locales)[number];
 
-const apply = (locale: Locale) => (document.documentElement.lang = locale);
+export type ResolvedLocale = `en` | `ru`;
 
-const init = (options?: { locale?: Locale; onLocaleChange?: (locale: Locale) => void; onRemount?: () => void }) => {
-  if (options?.locale !== undefined) {
-    $locale.value = options.locale;
-  }
-  let previous = $locale.value;
-  effect(() => {
-    const current = $locale.value;
-    apply(current);
+const resolvedFromSystem = () =>
+  typeof navigator !== `undefined` && navigator.language.startsWith(`ru`) ? `ru` : `en`;
+
+const effective = (): ResolvedLocale => {
+  const v = $locale();
+
+  return v === `system` ? resolvedFromSystem() : v;
+};
+
+const resolve = (value: Locale | undefined) => (value === `en` || value === `ru` ? value : `ru`);
+
+const apply = () => {
+  document.documentElement.lang = effective();
+};
+
+const init = (options?: { onRemount?: () => void }) => {
+  let previous: ResolvedLocale = effective();
+  $locale.subscribe(() => {
+    const current = effective();
+    i.setLocale(current);
+    apply();
     if (current !== previous) {
-      options?.onLocaleChange?.(current);
       options?.onRemount?.();
       previous = current;
     }
   });
-  apply($locale.value);
+  i.setLocale(effective());
+  apply();
 };
 
 const toggle = () => {
-  $locale.value = $locale.value === `ru` ? `en` : `ru`;
+  $locale.set(effective() === `ru` ? `en` : `ru`);
 };
 
-export const Locale = { init, toggle };
+export const Locale = { effective, init, key, resolve, toggle, values: locales };

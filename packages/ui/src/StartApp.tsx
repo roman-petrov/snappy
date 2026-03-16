@@ -4,47 +4,32 @@
 /* eslint-disable functional/no-let */
 import type { ReactNode } from "react";
 
+import { _ } from "@snappy/core";
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
-import { Router } from "wouter";
+import { renderToString } from "react-dom/server";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, StaticRouter } from "react-router-dom";
 
 import { App } from "./App";
-import { $serverMode, Locale, Theme } from "./core";
-import "./styles/index.scss";
+import { Locale, Theme } from "./core";
+import "@snappy/theme/styles";
 
-const aroundNav = (
-  navigate: (to: string, options?: { replace?: boolean }) => void,
-  to: string,
-  options?: { replace?: boolean },
-) => {
-  document.startViewTransition(() => navigate(to, options));
-};
+export type CreateRouter = (basename: string) => ReturnType<typeof createBrowserRouter>;
 
-export type StartAppOptions = {
-  base?: string;
-  disableTextSelection?: boolean;
-  locale?: Locale;
-  onLocaleChange?: (locale: Locale) => void;
-  server?: boolean;
-  theme?: Theme;
-};
+export type RenderAppOptions = { base?: string; disableTextSelection?: boolean; location?: string };
+
+export type StartAppContent = CreateRouter | ReactNode;
+
+export type StartAppOptions = { base?: string; disableTextSelection?: boolean };
 
 let remount: (() => void) | undefined;
-let remountOnLocaleChange = false;
 
-export const startApp = (
+export const startApp = async (
   selector: string,
-  app: ReactNode,
-  { base, disableTextSelection = false, locale, onLocaleChange, server = false, theme }: StartAppOptions = {},
+  content: StartAppContent,
+  { base = ``, disableTextSelection = false }: StartAppOptions = {},
 ) => {
-  $serverMode.value = server;
-  const hasTheme = theme !== undefined;
-  const hasLocaleOptions = locale !== undefined || onLocaleChange !== undefined;
-  remountOnLocaleChange = onLocaleChange === undefined;
-  Theme.init(hasTheme ? { theme } : undefined);
-  Locale.init({
-    ...(hasLocaleOptions ? { locale, onLocaleChange } : {}),
-    ...(remountOnLocaleChange ? { onRemount: () => remount?.() } : {}),
-  });
+  Theme.init();
+  Locale.init({ onRemount: () => remount?.() });
 
   const container = document.querySelector(selector);
   if (!(container instanceof HTMLElement)) {
@@ -54,11 +39,21 @@ export const startApp = (
 
   const rootElement = (
     <App
-      children={base === undefined ? app : <Router aroundNav={aroundNav} base={base} children={app} />}
+      children={
+        <RouterProvider
+          router={
+            _.isFunction(content)
+              ? content(base)
+              : createBrowserRouter(createRoutesFromElements(<Route element={content} path="*" />), { basename: base })
+          }
+        />
+      }
       disableTextSelection={disableTextSelection}
     />
   );
-  if (server) {
+
+  const isSsr = container.hasChildNodes();
+  if (isSsr) {
     hydrateRoot(container, rootElement);
   } else {
     let reactRoot: Root | undefined = createRoot(container);
@@ -70,3 +65,15 @@ export const startApp = (
     };
   }
 };
+
+export const renderApp = (
+  app: ReactNode,
+  { base = ``, disableTextSelection = false, location = `/` }: RenderAppOptions = {},
+) =>
+  renderToString(
+    <App disableTextSelection={disableTextSelection}>
+      <StaticRouter basename={base} location={location}>
+        {app}
+      </StaticRouter>
+    </App>,
+  );

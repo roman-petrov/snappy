@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 /* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/strict-void-return */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
@@ -23,7 +22,10 @@ const pascalCase = (s: string) => {
 
 const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
 const isBoolean = (value: unknown): value is boolean => typeof value === `boolean`;
-const isFunction = (value: unknown): value is (...args: unknown[]) => unknown => typeof value === `function`;
+
+type AnyFunction = (...args: never[]) => unknown;
+
+const isFunction = <T extends AnyFunction = AnyFunction>(value: unknown): value is T => typeof value === `function`;
 const isNumber = (value: unknown): value is number => typeof value === `number`;
 const isObject = (value: unknown): value is object => typeof value === `object`;
 const isString = (value: unknown): value is string => typeof value === `string`;
@@ -50,30 +52,35 @@ const singleAction =
     }
   };
 
-const entries = <TObject extends object>(value: TObject) =>
-  Object.entries(value) as { [Key in keyof TObject]: [Key, TObject[Key]] }[keyof TObject][];
+const cn = (...parts: readonly (false | string | undefined)[]) => parts.filter(Boolean).join(` `).trim();
 
-const keys = <TKey extends keyof TObject, TObject extends Record<TKey, unknown>>(object: TObject) =>
-  Object.keys(object) as TKey[];
+const int = (s: string, radix: 10 | 16) => {
+  const parsed = Number.parseInt(s, radix);
 
+  return Number.isNaN(parsed) ? undefined : parsed;
+};
+
+const dec = (s: string) => int(s, 10);
+const hex = (s: string) => int(s, 16);
 const noop = () => {};
 
 export const _ = {
   ...DateTime,
+  ...ObjectValue,
   ...Time.constants,
   base64decode,
   camelCase,
+  cn,
   daysInWeek: Time.daysInWeek,
   daysInYear: Time.daysInYear,
-  entries,
-  fromEntries: ObjectValue.fromEntries,
+  dec,
+  hex,
   isArray,
   isBoolean,
   isFunction,
   isNumber,
   isObject,
   isString,
-  keys,
   list,
   noop,
   pascalCase,

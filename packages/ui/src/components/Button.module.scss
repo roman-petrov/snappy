@@ -1,109 +1,61 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
-@use "pkg:@snappy/ui/space";
-@use "pkg:@snappy/ui/typography";
-
-@mixin button-root-base {
-  @include typography.button;
-
-  display: inline-flex;
-  gap: space.x2();
-  align-items: center;
-  justify-content: center;
-  height: var(--field-height);
-  padding: space.x3() space.x6();
-  white-space: nowrap;
-  text-decoration: none;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  border-radius: var(--radius-sm);
-  transition:
-    var(--transition-btn),
-    background-color var(--ease),
-    border-color var(--ease),
-    color var(--ease),
-    text-shadow var(--ease);
-}
-
-@mixin button-bg-fill($bg) {
-  background: $bg;
-}
-
-@mixin button-bg-fill-hover($bg-hover) {
-  background: $bg-hover;
-}
-
-@mixin button-bg-link($border-color) {
-  background: transparent;
-  border: 2px dotted $border-color;
-}
-
-@mixin button-root-color($color) {
-  color: var(--splash-text-color, #{$color});
-  text-shadow: var(--splash-text-shadow, none);
-}
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
 
 .root {
-  @include button-root-base;
+  @include typography.button;
+  @include primitives.inline-row-center;
 
-  outline: none;
-  border: none;
-  border-radius: var(--radius-sm);
+  gap: space.sm();
+  height: tokens.field-height();
+  padding: space.sm() space.lg();
+  white-space: nowrap;
+  text-decoration: none;
+  border-radius: radius.md();
+  transition:
+    tokens.transition(),
+    background-color tokens.ease(),
+    border-color tokens.ease(),
+    color tokens.ease();
 
   &.default {
-    @include button-bg-fill(color.button-default());
+    color: color.primary();
+    background: transparent;
+    border: 2px dotted color.primary();
+
+    @include hover {
+      background: color.accent-soft();
+      border-color: color.primary();
+      border-style: solid;
+    }
   }
 
   &.primary {
-    @include button-bg-fill(color.button-primary());
+    color: color.on-primary();
+    background: color.primary();
+
+    @include hover {
+      background: color.primary-hover();
+      box-shadow:
+        shadow.accent(),
+        0 0 0 1px color.primary-border();
+    }
   }
 
-  &.link {
-    @include button-bg-link(color.button-link());
-  }
-
-  &.default:hover:not(:disabled) {
-    @include button-bg-fill-hover(color.button-default-hover());
-  }
-
-  &.primary:hover:not(:disabled) {
-    @include button-bg-fill-hover(color.button-primary-hover());
-  }
-
-  &.link:hover:not(:disabled) {
-    @include button-bg-fill-hover(color.button-link-hover());
-  }
-
-  @include hover("&") {
-    text-decoration: none;
-    outline: none;
-  }
-
-  &:focus-visible {
-    @include focus;
-  }
-
-  &.default {
-    @include button-root-color(color.text-body());
-  }
-
-  &.primary {
-    @include button-root-color(color.on-accent());
-  }
-
-  &.link {
-    @include button-root-color(color.button-link());
-  }
+  @include focus;
 
   &.large {
     @include typography.button-large;
 
-    padding: space.x4() space.x8();
+    padding: space.md() space.xl();
   }
 
   &:disabled {
-    cursor: not-allowed;
     opacity: 0.6;
     transform: none;
   }

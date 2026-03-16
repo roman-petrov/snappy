@@ -1,34 +1,29 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .root {
+  @include primitives.inline-row-center;
+  @include primitives.circle(space.xl());
+
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: space.x10();
-  height: space.x10();
   padding: 0;
   overflow: hidden;
-  font-size: space.x5();
+  font-size: tokens.icon-size();
   line-height: 1;
   color: color.text-muted();
-  cursor: pointer;
-  outline: none;
-  background: transparent;
-  border: none;
-  border-radius: 50%;
   transition:
-    color var(--ease),
-    background-color var(--ease);
-}
+    color tokens.ease(),
+    background-color tokens.ease();
 
-@include hover(".root") {
-  outline: none;
-  background: color.accent-ghost();
-}
+  &:focus-visible {
+    background: color.accent-soft();
+  }
 
-.root:focus-visible {
-  @include focus;
+  @include hover {
+    color: color.primary();
+    background: color.accent-soft();
+  }
 }

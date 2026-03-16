@@ -1,0 +1,75 @@
+@use "pkg:@snappy/theme/core" as core;
+
+:root {
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 6rem;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  /* Backdrop (glass surfaces; values are blur radii for backdrop-filter) */
+  --backdrop-xs: 8px;
+  --backdrop-sm: 12px;
+  --backdrop-md: 16px;
+  --backdrop-lg: 24px;
+
+  /* Typography */
+  --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
+
+  /* Layout */
+  --icon-size: 1.25rem;
+  --field-height: 3rem;
+  --content-width: 1100px;
+  --content-narrow: 36rem;
+  --layout-column: 28rem;
+  --layout-column-wide: 32rem;
+  --touch-target-min: 44px;
+  --accent-edge: 3px;
+  --breakpoint-mobile: #{core.$breakpoint-mobile};
+
+  /* Transition */
+  --ease: 0.2s ease;
+  --transition: transform var(--ease), box-shadow var(--ease), border-color var(--ease), background-color var(--ease);
+
+  /* Focus */
+  --focus-offset: 2px;
+
+  /* Derived colors */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 85%, #000);
+  --color-primary-ghost: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --color-primary-border: color-mix(in srgb, var(--color-primary) 24%, transparent);
+  --color-accent-soft: color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --color-surface-glass: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  --color-text-subtle: color-mix(in srgb, var(--color-text) 16%, transparent);
+  --color-error-ghost: color-mix(in srgb, var(--color-error) 10%, transparent);
+  --color-error-soft: color-mix(in srgb, var(--color-error) 18%, transparent);
+  --color-warning-ghost: color-mix(in srgb, var(--color-warning) 10%, transparent);
+  --color-success-ghost: color-mix(in srgb, var(--color-success) 10%, transparent);
+  --color-grid: color-mix(in srgb, var(--color-text) 4%, transparent);
+  --color-divider: linear-gradient(
+    to right,
+    transparent 0%,
+    color-mix(in srgb, var(--color-text) 10%, transparent) 20%,
+    color-mix(in srgb, var(--color-text) 12%, transparent) 50%,
+    color-mix(in srgb, var(--color-text) 10%, transparent) 80%,
+    transparent 100%
+  );
+  --color-divider-line: color-mix(in srgb, var(--color-text) 10%, transparent);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 4px rgb(0 0 0 / var(--a-shadow));
+  --shadow-md: 0 4px 20px rgb(0 0 0 / var(--a-shadow-md));
+  --shadow-accent: 0 6px 24px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --shadow-focus: 0 0 0 3px color-mix(in srgb, var(--color-primary) 28%, transparent);
+  --focus-ring: 2px solid var(--color-primary);
+}

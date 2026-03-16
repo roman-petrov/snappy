@@ -1,7 +1,7 @@
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/space";
 
 .root {
   display: flex;
-  gap: space.x2();
+  gap: space.sm();
   align-items: center;
 }

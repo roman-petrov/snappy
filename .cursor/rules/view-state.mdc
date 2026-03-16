@@ -1,0 +1,111 @@
+---
+description: View/State pattern (entry, state hook, view), where logic vs presentation live, translations and styles.
+globs: "**/*.tsx" "**/*.state.ts" "**/*.view.tsx"
+alwaysApply: false
+---
+
+# 🧩 View/State pattern
+
+Split a component into **entry**, **state**, and **view** so that logic and UI are separated and the view stays
+presentational.
+
+---
+
+## ✅ 1. When to use
+
+- Component has **logic or state**: hooks, derived values, event handlers, conditionals.
+- State hook **uses** the component's props (maps or derives view props from them).
+
+---
+
+## ❌ 2. When not to use
+
+- No logic/state, or component is very simple (e.g. purely presentational, a single expression).
+- State hook would **not** use the component's props (e.g. only returns static or globally derived data).  
+  → Keep such components in a single file.
+
+---
+
+## 📁 3. File roles
+
+- **Entry** (`ComponentName.tsx`): Public API. Props type, state hook call, view render. No JSX layout, no logic.
+- **State** (`ComponentName.state.ts` or `.tsx`): All logic. Hook `useComponentState(props)` returns one object (view
+  props). Hooks, derived values, event handlers. No JSX.
+- **View** (`ComponentName.view.tsx`): Presentation only. Receives props, renders JSX. No hooks, no logic. Translations
+  and CSS modules only here.
+
+**Contract**
+
+- View props type: `ReturnType<typeof useComponentState>` (single source of truth, not hand-written).
+- Entry renders: `<ComponentView {...useComponentState(props)} />`.
+
+---
+
+## 📐 4. Rules by file
+
+### 📄 Entry
+
+- No layout JSX. No logic (no conditionals, no derived values, no hooks).
+- Only: declare props, call state hook, render view.
+
+### ⚙️ State
+
+- All logic lives here: conditionals, derived values, event handlers, hooks, and any “what to pass” / “how to compute”.
+- No JSX. Returns a single object (props for the view).
+- **Return must stay simple**: do not declare functions (or complex expressions) inside the return. Define handlers and
+  derived values as local variables above; in the return only list names or spread objects (e.g. `processText`,
+  `setText`, `...rest`).
+- **Actions as imperatives**: name handlers in state as imperatives (e.g. `setText`, `processText`, `setLength`,
+  `setOption`, `clear`). Return them from the hook without an "on" prefix. The view wires them to DOM/React:
+  `onChange={setText}`, `onSubmit={processText}`, `onClick={clear}`. Do not rename in the return (no
+  `onSubmit: processText`); use the same name in state and in the return.
+- Props that are only passed through unchanged: destructure into `...rest` and return `{ ...rest, /* computed */ }`.
+- No CSS module imports. No translation calls; pass raw data (keys, options, flags).
+
+### 🎨 View
+
+- No hooks. No logic (no conditionals, no computed values, no class-name building).
+- Only: receive props, render JSX.
+- **Translations and styles**: when it does not overly complicate the code, call `t(...)` and import CSS modules (e.g.
+  `*.module.scss`) **only in the view**. View turns raw data into localized labels, messages, and styling.
+
+---
+
+## 💡 5. Example
+
+```tsx
+// ComponentName.tsx — entry
+import { useComponentNameState } from "./ComponentName.state";
+import { ComponentNameView } from "./ComponentName.view";
+
+export type ComponentNameProps = { label: string; value: number; onChange: (n: number) => void };
+
+export const ComponentName = (props: ComponentNameProps) => <ComponentNameView {...useComponentNameState(props)} />;
+```
+
+```ts
+// ComponentName.state.ts — state
+import type { ChangeEventHandler } from "react";
+
+import type { ComponentNameProps } from "./ComponentName";
+
+export const useComponentNameState = ({ onChange, ...rest }: ComponentNameProps) => {
+  const onInputChange: ChangeEventHandler<HTMLInputElement> = e => onChange(Number(e.target.value));
+
+  return { ...rest, onInputChange };
+};
+```
+
+```tsx
+// ComponentName.view.tsx — view
+import type { useComponentNameState } from "./ComponentName.state";
+
+export type ComponentNameViewProps = ReturnType<typeof useComponentNameState>;
+
+export const ComponentNameView = ({ label, value, onInputChange }: ComponentNameViewProps) => (
+  <div>
+    <span>{label}</span>
+    <input type="number" value={value} onChange={onInputChange} />
+  </div>
+);
+```

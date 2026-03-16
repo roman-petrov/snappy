@@ -1,0 +1,35 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+html {
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  @include typography.body;
+
+  position: relative;
+  min-height: 100vh;
+  margin: 0;
+  color: color.text();
+  background: color.bg();
+  transition:
+    color tokens.ease(),
+    background-color tokens.ease();
+
+  &::before {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    background:
+      linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+    background-size: space.x3xl() space.x3xl();
+  }
+}

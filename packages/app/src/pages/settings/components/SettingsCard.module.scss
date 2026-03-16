@@ -1,0 +1,42 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+.block {
+  display: grid;
+  gap: space.sm();
+  max-width: tokens.layout-column();
+  padding: space.md();
+}
+
+.block-title {
+  @include typography.body-bold;
+
+  margin: 0;
+  color: color.text();
+}
+
+.block-lead {
+  @include typography.body-sm;
+
+  margin: 0;
+  color: color.text-muted();
+}
+
+.error {
+  @include typography.caption;
+
+  margin: 0;
+  color: color.error();
+}
+
+@include core.mobile {
+  .block {
+    max-width: none;
+    margin: 0 space.md();
+    box-shadow: shadow.sm();
+  }
+}

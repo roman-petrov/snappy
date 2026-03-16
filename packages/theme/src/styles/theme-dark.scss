@@ -1,0 +1,35 @@
+@mixin variables {
+  /* Accent */
+  --color-primary: #7ea0ff;
+  --color-on-primary: #000;
+
+  /* Surface */
+  --color-bg: #0a0e18;
+  --color-surface: color-mix(in srgb, #141e32 58%, transparent);
+  --color-surface-hover: color-mix(in srgb, #1c2841 65%, transparent);
+  --color-surface-active: color-mix(in srgb, #23304b 72%, transparent);
+  --color-surface-elevated: color-mix(in srgb, #18243a 62%, transparent);
+  --color-overlay: color-mix(in srgb, #0a0e18 78%, transparent);
+
+  /* Text */
+  --color-text: #e8e8ec;
+  --color-text-muted: #8a9bb2;
+  --color-text-dimmed: color-mix(in srgb, #e8e8ec 7%, transparent);
+
+  /* Controls */
+  --color-input: color-mix(in srgb, #fff 6%, transparent);
+  --color-input-focus: color-mix(in srgb, #fff 12%, transparent);
+  --color-border: color-mix(in srgb, #fff 12%, transparent);
+
+  /* Status */
+  --color-error: #fb7185;
+  --color-warning: #fbbf24;
+  --color-success: #4ade80;
+
+  /* Effects */
+  --logo-text-shadow:
+    0 0 12px color-mix(in srgb, var(--color-primary) 55%, transparent),
+    0 0 32px color-mix(in srgb, var(--color-primary) 16%, transparent);
+  --a-shadow: 40%;
+  --a-shadow-md: 55%;
+}

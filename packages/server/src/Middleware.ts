@@ -23,7 +23,7 @@ const requireUser =
         return false;
       }
 
-      const payload = api.jwt.verify(token);
+      const payload = api.auth.verify(token);
       if (payload === undefined) {
         return false;
       }
@@ -73,7 +73,7 @@ const requireUser =
 
       return;
     }
-    const user = await api.ensureUserByTelegramId(telegramId);
+    const user = await api.user.ensureUserByTelegramId(telegramId);
     (request as RequestWithUserId).userId = user.id;
   };
 

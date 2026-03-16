@@ -1,0 +1,36 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+
+.root {
+  position: relative;
+  width: tokens.touch-min();
+  height: space.lg();
+  background: color.text-dimmed();
+  border-radius: radius.full();
+  transition: background-color tokens.ease();
+}
+
+.root.checked {
+  background: color.primary();
+}
+
+.thumb {
+  @include primitives.circle(1.125rem);
+
+  position: absolute;
+  top: tokens.accent-edge();
+  left: tokens.accent-edge();
+  background: color.on-primary();
+  transition: transform tokens.ease();
+}
+
+.root.checked .thumb {
+  transform: translateX(calc(#{tokens.touch-min()} - 2 * #{tokens.accent-edge()} - 1.125rem));
+}
+
+.root[data-disabled] {
+  opacity: 0.5;
+}

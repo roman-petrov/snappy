@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 
 import styles from "./IconButton.module.scss";
+import { Tap, type TapProps } from "./Tap";
 
-export type IconButtonProps = { ariaLabel: string; icon: ReactNode; onClick: () => void };
+export type IconButtonProps = Omit<TapProps, `children` | `cn`> & { ariaLabel: string; icon: ReactNode };
 
-export const IconButton = ({ ariaLabel, icon, onClick }: IconButtonProps) => (
-  <button aria-label={ariaLabel} className={styles.root} onClick={onClick} title={ariaLabel} type="button">
+export const IconButton = ({ ariaLabel, icon, ...tapProps }: IconButtonProps) => (
+  <Tap {...tapProps} ariaLabel={ariaLabel} cn={styles.root} title={ariaLabel}>
     {icon}
-  </button>
+  </Tap>
 );

@@ -1,37 +1,5 @@
-/* eslint-disable functional/immutable-data */
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable unicorn/no-document-cookie */
-import { _ } from "@snappy/core";
-import { $locale } from "@snappy/ui";
+import { Locale } from "@snappy/ui";
 
-import { localeData, makeT } from "../locales";
-import { LocaleCookie, type SiteLocaleKey } from "./LocaleCookie";
+import { makeT } from "../locales";
 
-const maxAgeSeconds = _.day.seconds * _.daysInYear;
-
-const get = (): SiteLocaleKey => {
-  if (typeof window !== `undefined`) {
-    const locale = LocaleCookie.parse(document.cookie);
-    $locale.value = locale;
-    document.documentElement.lang = locale;
-
-    return locale;
-  }
-
-  return $locale.value;
-};
-
-const set = (next: SiteLocaleKey) => {
-  $locale.value = next;
-  document.cookie = `${LocaleCookie.name}=${next}; path=/; max-age=${maxAgeSeconds}`;
-  document.documentElement.lang = next;
-  location.reload();
-};
-
-const localeKeys = _.keys(localeData);
-
-export const t = makeT(get as () => SiteLocaleKey);
-
-export const Locale = { get, localeKeys, locales: localeData, set };
-
-export type { SiteLocaleKey } from "./LocaleCookie";
+export const t = makeT(() => Locale.effective());

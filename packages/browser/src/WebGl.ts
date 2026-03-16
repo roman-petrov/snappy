@@ -241,10 +241,7 @@ const startLoop = (tick: () => void): (() => void) => {
   };
 };
 
-const runLoop = (
-  parameters: WebGlRunLoopParameters,
-  create: (webgl: WebGlInterface) => void,
-): (() => void) | undefined => {
+const runLoop = (parameters: WebGlRunLoopParameters, create: (webgl: WebGlInterface) => void) => {
   const initResult = init(parameters.canvas, parameters.shader);
   if (initResult === undefined) {
     return undefined;

@@ -1,0 +1,18 @@
+@use "pkg:@snappy/theme/styles/tokens" as *;
+@use "pkg:@snappy/theme/styles/theme-light" as light;
+@use "pkg:@snappy/theme/styles/theme-dark" as dark;
+@use "pkg:@snappy/theme/styles/typography" as *;
+@use "pkg:@snappy/theme/styles/base" as *;
+@use "../transitions/route";
+@use "../transitions/theme";
+/* stylelint-disable-next-line import-notation */
+@import url("@fontsource-variable/inter");
+
+:root,
+[data-theme="light"] {
+  @include light.variables;
+}
+
+[data-theme="dark"] {
+  @include dark.variables;
+}

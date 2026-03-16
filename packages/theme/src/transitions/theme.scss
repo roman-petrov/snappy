@@ -1,0 +1,84 @@
+@use "./transition";
+
+$duration-fade: 0.56s;
+$duration-circle: 0.62s;
+$ease-fade: cubic-bezier(0.24, 0.94, 0.32, 1);
+$ease-circle: cubic-bezier(0.2, 0.9, 0.2, 1);
+
+@keyframes view-transition-fade-old {
+  from {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.16;
+    filter: blur(4px) brightness(0.97);
+    transform: scale(0.996);
+  }
+}
+
+@keyframes view-transition-fade-new {
+  from {
+    opacity: 0.08;
+    filter: blur(4px) brightness(1.04);
+    transform: scale(1.006);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0) brightness(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes view-transition-circle-expand {
+  from {
+    clip-path: circle(0 at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%));
+  }
+
+  to {
+    clip-path: circle(
+      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
+    );
+  }
+}
+
+@keyframes view-transition-circle-collapse {
+  from {
+    clip-path: circle(
+      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
+    );
+  }
+
+  to {
+    clip-path: circle(0 at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%));
+  }
+}
+
+@include transition.layers(opacity, transform, filter, clip-path);
+
+:root[data-theme-transition-dir="in"]::view-transition-old(root) {
+  z-index: 1;
+  animation: view-transition-fade-old $duration-fade $ease-fade;
+}
+
+:root[data-theme-transition-dir="in"]::view-transition-new(root) {
+  z-index: 2;
+  animation:
+    view-transition-circle-expand $duration-circle $ease-circle,
+    view-transition-fade-new $duration-fade $ease-fade;
+}
+
+:root[data-theme-transition-dir="out"]::view-transition-old(root) {
+  z-index: 2;
+  animation:
+    view-transition-circle-collapse $duration-circle $ease-circle,
+    view-transition-fade-old $duration-fade $ease-fade;
+}
+
+:root[data-theme-transition-dir="out"]::view-transition-new(root) {
+  z-index: 1;
+  animation: view-transition-fade-new $duration-fade $ease-fade;
+}

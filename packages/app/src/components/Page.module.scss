@@ -1,0 +1,49 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+.section {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: space.md();
+  min-height: 0;
+  padding: space.md();
+}
+
+.back {
+  @include typography.body-sm;
+
+  align-self: flex-start;
+  font: inherit;
+  color: color.text-muted();
+  transition: color tokens.ease();
+
+  @include core.focus($radius: 4);
+}
+
+.back:hover {
+  color: color.text();
+}
+
+.title {
+  margin: 0;
+}
+
+.section-bleed .title {
+  padding: 0 space.md();
+}
+
+@include core.mobile {
+  .section-bleed {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .section-bleed .title {
+    padding-right: space.md();
+    padding-left: space.md();
+  }
+}

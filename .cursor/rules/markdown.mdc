@@ -8,9 +8,13 @@ alwaysApply: false
 
 # 📝 Markdown
 
+---
+
 ## 🌐 Language
 
 - **Always write in English** — body, headings, lists. Do _not_ switch unless the user asks.
+
+---
 
 ## ✍️ Emphasis
 
@@ -18,6 +22,8 @@ alwaysApply: false
 - _Italic_ — nuance, _optional_ items.
 - `Code` — file names, commands, keys, technical identifiers (e.g. `README.md`, `H1`).
 - ~~Strikethrough~~ — deprecated.
+
+---
 
 ## 😀 Emoji in Headers
 

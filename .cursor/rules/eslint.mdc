@@ -6,7 +6,9 @@ alwaysApply: false
 
 # 📘 ESLint
 
-## Exceptions at the top of the file
+---
+
+## 📋 Exceptions at the top of the file
 
 When you need to disable ESLint rules for a file, **always place exceptions at the beginning of the file**:
 

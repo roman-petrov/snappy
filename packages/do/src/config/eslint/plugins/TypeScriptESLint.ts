@@ -40,6 +40,7 @@ export default defineConfig([
       ],
       "@typescript-eslint/no-confusing-void-expression": `off`,
       "@typescript-eslint/no-magic-numbers": [`error`, { ignore: [-1, 0, 1, 2, 4, 8, 16, 24, 32] }],
+      "@typescript-eslint/no-misused-promises": `off`,
       "@typescript-eslint/no-redeclare": `off`,
       "@typescript-eslint/no-restricted-types": [
         `error`,
@@ -59,6 +60,7 @@ export default defineConfig([
         `error`,
         { allowNullableEnum: false, allowNullableObject: false },
       ],
+      "@typescript-eslint/strict-void-return": `off`,
     },
   },
   { files: [`**/*.js`], rules: pluginTypescriptESLint.configs.disableTypeChecked.rules },

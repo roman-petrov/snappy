@@ -1,31 +1,29 @@
-@use "pkg:@snappy/ui/color";
-@use "pkg:@snappy/ui/core" as *;
-@use "pkg:@snappy/ui/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
 
 .logo {
-  display: inline-flex;
-  gap: space.x2();
-  align-items: center;
+  @include primitives.inline-row;
+
+  gap: space.sm();
   text-decoration: none;
-}
+  outline: none;
 
-.logo:focus-visible {
-  @include focus;
-
-  border-radius: 4px;
+  @include focus($radius: radius.xs());
 }
 
 .logo-icon {
-  width: 1.25em;
-  height: 1.25em;
-  vertical-align: -0.25em;
+  @include primitives.square(tokens.icon-size());
 }
 
 .logo-text {
-  font-size: 1.25rem;
+  font-size: tokens.icon-size();
   font-weight: normal;
   line-height: 1;
-  color: color.accent();
-  letter-spacing: -0.05rem;
-  text-shadow: var(--logo-text-shadow);
+  color: color.primary();
+  letter-spacing: -0.03em;
+  text-shadow: tokens.logo-text-shadow();
 }

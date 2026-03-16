@@ -1,0 +1,75 @@
+@use "pkg:@snappy/theme/backdrop";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+.btn {
+  min-height: tokens.touch-min();
+  padding: space.sm() space.sm();
+
+  @include typography.caption;
+
+  color: color.text();
+  text-align: center;
+  white-space: nowrap;
+  background: color.text-dimmed();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  box-shadow: shadow.sm();
+  backdrop-filter: blur(backdrop.xs());
+  transition:
+    background tokens.ease(),
+    border-color tokens.ease(),
+    color tokens.ease(),
+    box-shadow tokens.ease(),
+    transform tokens.ease();
+
+  @include focus;
+
+  @include hover {
+    background: color.surface-hover();
+    border-color: color.text-subtle();
+  }
+}
+
+.btn-compact {
+  @include typography.caption-sm;
+}
+
+.btn-emoji {
+  color: color.primary();
+  background: color.accent-soft();
+  border-color: color.primary-border();
+  box-shadow: shadow.accent();
+
+  @include hover {
+    background: color.primary-border();
+    border-color: color.primary();
+  }
+}
+
+.btn-format {
+  color: color.on-primary();
+  background: color.primary();
+  border-color: color.primary();
+  box-shadow: shadow.accent();
+
+  @include hover {
+    background: color.primary-hover();
+    box-shadow:
+      shadow.accent(),
+      0 0 0 1px color.primary-border();
+  }
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+}
