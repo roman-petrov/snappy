@@ -1,11 +1,10 @@
-@use "pkg:@snappy/theme/backdrop";
 @use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/typography";
 @use "../scss/layout";
 
@@ -13,7 +12,6 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: space.sm();
   min-height: 0;
 }
 
@@ -21,24 +19,16 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  width: 100%;
   overflow: hidden;
+  background: color.surface-elevated();
+  border: 1px solid color.primary-border();
   border-radius: radius.md();
-  backdrop-filter: blur(backdrop.md());
+  box-shadow: shadow.md();
+  backdrop-filter: blur(16px);
   transition:
     box-shadow tokens.ease(),
     background tokens.ease();
-}
-
-.card-input {
-  background: color.surface();
-  border: 1px solid color.border();
-  box-shadow: shadow.sm();
-}
-
-.card-result {
-  background: color.surface-elevated();
-  border: 1px solid color.primary-border();
-  box-shadow: shadow.md();
 }
 
 .card-compact {
@@ -51,75 +41,16 @@
   min-height: layout.$text-card-full-min;
 }
 
-.content-area {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.card-full .content-area {
-  min-height: layout.$text-card-block-min;
-}
-
 .content-area-scroll {
   flex: 1;
   min-height: 0;
   overflow: hidden auto;
   -webkit-overflow-scrolling: touch;
-}
-
-.card-result .content-area-scroll {
   box-shadow: 0 1px 0 0 color.primary-ghost() inset;
 }
 
 .card-full .content-area-scroll {
   min-height: layout.$text-card-block-min;
-}
-
-.textarea {
-  @include typography.body;
-
-  box-sizing: border-box;
-  flex: 1;
-  width: 100%;
-  min-height: 0;
-  padding: space.md();
-  padding-block-end: space.md();
-  overflow-y: auto;
-  font-family: inherit;
-  color: color.text();
-  resize: none;
-  background: transparent;
-  border: none;
-  border-block-start: 1px solid transparent;
-  transition:
-    border-color tokens.ease(),
-    box-shadow tokens.ease();
-  -webkit-overflow-scrolling: touch;
-}
-
-.card-full .textarea {
-  min-height: layout.$text-card-block-min;
-  padding: space.md();
-  padding-block-end: space.lg();
-  font-family: inherit;
-}
-
-.textarea::placeholder {
-  color: color.text-muted();
-}
-
-.textarea:focus {
-  outline: none;
-  border-block-start-color: color.primary-border();
-  box-shadow: inset 0 1px 0 0 color.primary-ghost();
-}
-
-.card-full .textarea:focus {
-  border-block-start-color: transparent;
-  box-shadow: none;
 }
 
 .result {
@@ -137,6 +68,20 @@
   padding-block-end: space.lg();
 }
 
+@include mobile {
+  .card-full {
+    min-height: 0;
+  }
+
+  .card-full .content-area-scroll {
+    min-height: 0;
+  }
+
+  .card-full .result {
+    padding-block-end: space.md();
+  }
+}
+
 .loading-overlay {
   @include primitives.grid-center;
 
@@ -144,5 +89,5 @@
   inset: 0;
   background: color.surface();
   border-radius: inherit;
-  backdrop-filter: blur(backdrop.xs());
+  backdrop-filter: blur(8px);
 }

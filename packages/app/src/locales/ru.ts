@@ -2,6 +2,7 @@
 // cspell:word автопродление автопродления автосписание
 export const ru = {
   dashboard: {
+    actionClearInput: `Очистить`,
     actionEdit: `Изменить`,
     actionNew: `Новый`,
     copied: `Скопировано ✓`,
@@ -13,6 +14,7 @@ export const ru = {
     },
     submit: `Обработать`,
     submitting: `Обработка…`,
+    tapToEditPrompt: `Изменить запрос`,
     textPlaceholder: `Введите текст для обработки...`,
   },
   forgotPage: {
@@ -47,7 +49,8 @@ export const ru = {
   logout: `Выйти`,
   options: {
     addEmoji: `Эмодзи`,
-    addFormatting: `Форматирование`,
+    addFormatting: `Разметка`,
+    formatLabel: `Формат`,
     length: { extend: `Расширить`, keep: `Без изменений`, label: `Длина`, shorten: `Сократить` },
     style: {
       business: `Деловой`,

@@ -1,12 +1,9 @@
 import { useStoreValue } from "@snappy/store";
 
-import { $locale, Locale, t, Vibrate } from "..";
+import { $locale, Locale, t } from "..";
 
 export const useIconButtonLocaleState = () => ({
   ariaLabel: t(`localeSwitcher`),
   icon: useStoreValue($locale) === `ru` ? `🇷🇺` : `🇺🇸`,
-  onClick: () => {
-    Vibrate.confirm();
-    Locale.toggle();
-  },
+  onClick: Locale.toggle,
 });

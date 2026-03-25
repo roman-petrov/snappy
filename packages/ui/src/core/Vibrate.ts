@@ -30,14 +30,11 @@ const types = [
 
 export type Vibrate = (typeof types)[number];
 
-const trigger = (type: Vibrate) => () => {
+const trigger = (type: Vibrate) => {
   if (!AndroidBridge.available) {
     return;
   }
   AndroidBridge.hapticImpact(type);
 };
 
-const confirm = trigger(`confirm`);
-const segmentTick = trigger(`segmentTick`);
-
-export const Vibrate = { confirm, segmentTick };
+export const Vibrate = { trigger };

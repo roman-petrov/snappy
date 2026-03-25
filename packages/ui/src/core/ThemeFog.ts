@@ -11,15 +11,14 @@ import type { ResolvedTheme } from "./Theme";
 
 import { $fog } from "../Store";
 import { Fog, FogShader } from "../web-gl";
+import styles from "./ThemeFog.module.scss";
 
 export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
   let fogHost: HTMLElement | undefined;
   let stopFog: Action | undefined;
-
-  const detachFogHost = () => {
-    fogHost?.remove();
-    fogHost = undefined;
-  };
+  const hostClass = styles.host;
+  const fogClass = styles.fog;
+  const gridClass = styles.grid;
 
   const attachFogHost = () => {
     if (fogHost?.isConnected === true) {
@@ -28,7 +27,7 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
 
     const element = document.createElement(`div`);
     element.setAttribute(`aria-hidden`, `true`);
-    Object.assign(element.style, { inset: `0`, pointerEvents: `none`, position: `fixed`, zIndex: `-1` });
+    element.className = hostClass;
     document.body.prepend(element);
     fogHost = element;
 
@@ -40,13 +39,14 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
     stopFog = undefined;
     stop?.();
 
-    if (!$fog()) {
-      detachFogHost();
+    const element = attachFogHost();
+    element.className = `${hostClass} ${$fog() ? fogClass : gridClass}`;
+    element.replaceChildren();
 
+    if (!$fog()) {
       return;
     }
 
-    const element = attachFogHost();
     const canvas = document.createElement(`canvas`);
     canvas.setAttribute(`aria-hidden`, `true`);
     const motion = { blurFactor: 0.5, speed: 2, zoom: 2 };

@@ -1,12 +1,9 @@
 import { useStoreValue } from "@snappy/store";
 
-import { $theme, t, Theme, Vibrate } from "..";
+import { $theme, t, Theme } from "..";
 
 export const useIconButtonThemeState = () => ({
   ariaLabel: t(`themeToggle`),
   icon: useStoreValue($theme) === `dark` ? `🌙` : `☀️`,
-  onClick: () => {
-    Vibrate.confirm();
-    Theme.toggle();
-  },
+  onClick: Theme.toggle,
 });

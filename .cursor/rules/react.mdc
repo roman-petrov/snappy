@@ -32,3 +32,5 @@ Follow the **programming** and **typescript** rules. This rule adds React-specif
 - **Hooks in `hooks` directory** — all hook modules (files that export React hooks) must live in a directory named
   `hooks` (e.g. `hooks/useFormState.ts`, `app/core/hooks/useFormState.ts`). Hook file names use camelCase (see
   TypeScript rule).
+- **`cn` instead of `className` in props** — for component props use the name `cn` (not `className`), and compose class
+  names via `_.cn(...)` instead of template strings or manual concatenation.

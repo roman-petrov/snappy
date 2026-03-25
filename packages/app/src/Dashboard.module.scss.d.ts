@@ -1,11 +1,10 @@
 declare const __Dashboard: {
   readonly section: "section";
-  readonly sectionDesktop: "sectionDesktop";
+  readonly main: "main";
+  readonly controlsSlot: "controlsSlot";
+  readonly resultSlot: "resultSlot";
+  readonly scroll: "scroll";
   readonly controls: "controls";
-  readonly sectionMobile: "sectionMobile";
-  readonly toggleRow: "toggleRow";
-  readonly tabsLength: "tabsLength";
-  readonly tabsStyle: "tabsStyle";
-  readonly submitRow: "submitRow";
+  readonly inputOptions: "inputOptions";
 };
 export default __Dashboard;

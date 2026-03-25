@@ -1,5 +1,4 @@
 @use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/typography";
 
@@ -22,14 +21,4 @@ body {
   transition:
     color tokens.ease(),
     background-color tokens.ease();
-
-  &::before {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    content: "";
-    background:
-      linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
-    background-size: space.x3xl() space.x3xl();
-  }
 }

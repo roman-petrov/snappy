@@ -1,0 +1,69 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+.wrap {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  padding: space.sm();
+  overflow: hidden;
+  background: color.surface();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  box-shadow: shadow.sm();
+}
+
+.blur-tap {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+  background: color-mix(in srgb, color.primary() 18%, color.surface());
+  backdrop-filter: blur(2px) saturate(1.02);
+  transition:
+    background-color tokens.ease(),
+    backdrop-filter tokens.ease();
+
+  @include hover {
+    background: transparent;
+    backdrop-filter: none;
+  }
+}
+
+.textarea {
+  @include typography.body;
+
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 10rem;
+  padding-inline: space.sm() calc(#{space.xl()} * 2.1);
+  padding-top: calc(#{space.md()} + 2px);
+  padding-bottom: calc(#{space.md()} - 2px);
+  overflow-y: auto;
+  font-family: inherit;
+  color: color.text();
+  resize: none;
+  background: transparent;
+  border: none;
+  -webkit-overflow-scrolling: touch;
+  field-sizing: content;
+}
+
+.process {
+  position: absolute;
+  top: 50%;
+  right: space.sm();
+  transform: translateY(-50%);
+}
+
+.textarea::placeholder {
+  color: color.text-muted();
+}
+
+.textarea:focus {
+  outline: none;
+}

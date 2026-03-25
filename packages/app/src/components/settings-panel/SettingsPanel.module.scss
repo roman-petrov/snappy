@@ -1,0 +1,9 @@
+@use "pkg:@snappy/theme/space";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding-block: space.sm();
+  padding-inline: 0;
+}

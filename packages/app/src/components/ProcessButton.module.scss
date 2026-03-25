@@ -1,7 +1,6 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
@@ -25,30 +24,29 @@
 @keyframes icon-pulse {
   0%,
   100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: scale(0.6);
   }
 
   50% {
-    opacity: 0.75;
-    transform: scale(0.92);
+    transform: scale(1);
   }
 }
 
 .btn {
   @include typography.button;
   @include primitives.row-center;
+  @include primitives.circle(calc(#{tokens.field-height()} + #{space.sm()}));
 
-  gap: space.sm();
-  min-width: calc(#{tokens.field-height()} + #{space.lg()} + #{space.xs()});
-  height: calc(#{tokens.field-height()} + #{space.sm()});
-  padding: 0 space.lg();
+  min-width: calc(#{tokens.field-height()} + #{space.sm()});
+  padding: 0;
   margin: 0 auto;
   font-weight: 500;
   color: color.on-primary();
   background: linear-gradient(145deg, color.primary() 0%, color.primary-hover() 100%);
-  border-radius: radius.lg();
-  box-shadow: shadow.accent();
+  box-shadow:
+    0 3px 5px -1px color-mix(in srgb, #000 28%, transparent),
+    0 6px 10px 0 color-mix(in srgb, #000 20%, transparent),
+    0 1px 18px 0 color-mix(in srgb, #000 16%, transparent);
   transition:
     transform tokens.ease(),
     box-shadow tokens.ease();
@@ -58,23 +56,24 @@
   @include hover {
     background: linear-gradient(145deg, color.primary-hover() 0%, color.primary() 100%);
     box-shadow:
-      shadow.accent(),
+      0 5px 5px -3px color-mix(in srgb, #000 30%, transparent),
+      0 8px 10px 1px color-mix(in srgb, #000 22%, transparent),
+      0 3px 14px 2px color-mix(in srgb, #000 18%, transparent),
       0 0 0 #{tokens.focus-offset()} color.primary-border();
     filter: brightness(1.12);
     transform: scale(1.05);
   }
 }
 
-.btn-compact {
-  min-width: calc(#{tokens.field-height()} + #{space.sm()});
-  padding: 0;
-}
-
 .btn:active:not(:disabled) {
+  box-shadow:
+    0 2px 4px -1px color-mix(in srgb, #000 30%, transparent),
+    0 4px 6px 0 color-mix(in srgb, #000 20%, transparent),
+    0 1px 10px 0 color-mix(in srgb, #000 16%, transparent);
   transform: scale(0.95);
 }
 
-.btn-disabled-empty:disabled {
+.btn:disabled {
   opacity: 0.5;
 }
 
@@ -83,12 +82,13 @@
 }
 
 .btn-loading .icon {
-  animation: icon-pulse 0.8s ease-in-out infinite;
+  animation: icon-pulse 1.5s ease-in-out infinite;
 }
 
 .icon {
   @include typography.h1;
+  @include primitives.row-center;
 
-  font-weight: 500;
-  line-height: 1;
+  width: 1em;
+  height: 1em;
 }

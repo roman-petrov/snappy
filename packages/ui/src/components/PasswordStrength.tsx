@@ -1,3 +1,5 @@
+import { _ } from "@snappy/core";
+
 import { Button } from "./Button";
 import styles from "./PasswordStrength.module.scss";
 import { Text } from "./Text";
@@ -34,7 +36,7 @@ export const PasswordStrength = ({
     <div className={styles.strengthRow}>
       <Text cn={styles.strengthLabel} text={strengthLabel} typography="caption" />
       <div className={styles.strengthBar}>
-        <div className={styles.strengthFill} data-strength={strength} style={{ width: strengthBarWidth }} />
+        <div className={_.cn(styles.strengthFill, styles[strength])} style={{ width: strengthBarWidth }} />
       </div>
       <Text cn={styles.strengthText} text={strengthText} typography="caption" />
     </div>

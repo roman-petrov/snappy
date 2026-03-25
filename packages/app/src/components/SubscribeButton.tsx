@@ -1,9 +1,9 @@
 import { i } from "@snappy/intl";
+import { Button, type ButtonProps } from "@snappy/ui";
 
 import { t } from "../core";
-import { SmallButton, type SmallButtonProps } from "./SmallButton";
 
-export type SubscribeButtonProps = Omit<SmallButtonProps, `full` | `icon` | `text` | `variant`> & {
+export type SubscribeButtonProps = Omit<ButtonProps, `icon` | `text` | `type`> & {
   loading?: boolean;
   premiumPrice: number;
   text?: string;
@@ -16,12 +16,10 @@ export const SubscribeButton = ({
   text,
   ...rest
 }: SubscribeButtonProps) => (
-  <SmallButton
+  <Button
     {...rest}
     disabled={disabled || loading}
-    full
-    icon={loading ? `⋯` : `💎`}
+    icon={{ emoji: loading ? `⋯` : `💎` }}
     text={text ?? t(`subscribeButton`, { premiumPrice: i.price(premiumPrice) })}
-    variant="neutral"
   />
 );

@@ -1,36 +1,12 @@
 import { _ } from "@snappy/core";
-import { Tap, type TapProps } from "@snappy/ui";
+import { faviconUrl, Tap, type TapProps } from "@snappy/ui";
 
 import styles from "./ProcessButton.module.scss";
 
-export type ProcessButtonProps = Omit<TapProps, `children` | `cn`> & {
-  compact?: boolean;
-  disabledEmpty?: boolean;
-  loading?: boolean;
-  text: string;
-};
+export type ProcessButtonProps = Omit<TapProps, `children` | `cn`> & { loading?: boolean };
 
-export const ProcessButton = ({
-  compact = false,
-  disabledEmpty = false,
-  loading = false,
-  text,
-  ...tapProps
-}: ProcessButtonProps) => (
-  <Tap
-    {...tapProps}
-    ariaBusy={loading}
-    ariaLabel={text}
-    cn={_.cn(
-      styles.btn,
-      compact && styles.btnCompact,
-      loading && styles.btnLoading,
-      disabledEmpty && styles.btnDisabledEmpty,
-    )}
-  >
-    <span aria-hidden className={styles.icon}>
-      {loading ? `⋯` : `✨`}
-    </span>
-    {compact ? undefined : text}
+export const ProcessButton = ({ loading = false, ...tapProps }: ProcessButtonProps) => (
+  <Tap {...tapProps} ariaBusy={loading} cn={_.cn(styles.btn, loading && styles.btnLoading)}>
+    <img alt="" aria-hidden className={styles.icon} src={faviconUrl} />
   </Tap>
 );

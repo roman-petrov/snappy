@@ -11,6 +11,11 @@
   color: inherit;
 }
 
+.root-emoji {
+  font-size: tokens.icon-size();
+  line-height: 1;
+}
+
 .root svg {
   display: block;
   width: 100%;

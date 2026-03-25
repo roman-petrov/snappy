@@ -1,9 +1,9 @@
 import { i } from "@snappy/intl";
-import { Alert, Switch } from "@snappy/ui";
+import { Alert, Button, Switch } from "@snappy/ui";
 
 import type { useSettingsSubscriptionState } from "./SettingsSubscription.state";
 
-import { Page, SmallButton, SubscribeButton } from "../../components";
+import { Page, SubscribeButton } from "../../components";
 import { t } from "../../core";
 import { SettingsCard } from "./components";
 import styles from "./SettingsSubscription.view.module.scss";
@@ -65,12 +65,11 @@ export const SettingsSubscriptionView = ({
             />
           )}
           <Alert text={t(`settingsSubscription.deleteWarning`)} variant="error" />
-          <SmallButton
+          <Button
             disabled={deleteLoading}
-            icon="🗑️"
+            icon={{ emoji: `🗑️` }}
             onClick={deleteSubscription}
             text={t(`settingsSubscription.delete`)}
-            variant="danger"
           />
         </div>
       )}

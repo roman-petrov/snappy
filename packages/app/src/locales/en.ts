@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 export const en = {
   dashboard: {
+    actionClearInput: `Clear`,
     actionEdit: `Edit`,
     actionNew: `New`,
     copied: `Copied ✓`,
@@ -12,6 +13,7 @@ export const en = {
     },
     submit: `Process`,
     submitting: `Processing…`,
+    tapToEditPrompt: `Edit prompt`,
     textPlaceholder: `Enter text to process...`,
   },
   forgotPage: {
@@ -46,7 +48,8 @@ export const en = {
   logout: `Log out`,
   options: {
     addEmoji: `Emoji`,
-    addFormatting: `Formatting`,
+    addFormatting: `Markup`,
+    formatLabel: `Format`,
     length: { extend: `Extend`, keep: `Keep`, label: `Length`, shorten: `Shorten` },
     style: {
       business: `Business`,

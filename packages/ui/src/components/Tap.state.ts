@@ -3,6 +3,7 @@ import { useHref } from "react-router-dom";
 
 import type { TapProps } from "./Tap";
 
+import { Vibrate } from "../core/Vibrate";
 import { useGo } from "../hooks/useGo";
 import { useIsMobile } from "../hooks/useIsMobile";
 
@@ -17,6 +18,7 @@ export const useTapState = ({
   onClick,
   submit = false,
   title,
+  vibrate,
 }: TapProps) => {
   const go = useGo();
   const isMobile = useIsMobile();
@@ -30,6 +32,9 @@ export const useTapState = ({
     if (disabled) {
       return;
     }
+    if (vibrate !== undefined) {
+      Vibrate.trigger(vibrate);
+    }
     if (spaPath !== undefined) {
       void go(spaPath);
     }
@@ -37,7 +42,19 @@ export const useTapState = ({
   };
 
   const renderAsLink = link !== undefined && !isMobile;
-  const buttonOnClick = link === undefined ? onClick : handleLinkClick;
+
+  const buttonOnClick =
+    link === undefined
+      ? onClick === undefined
+        ? undefined
+        : () => {
+            if (vibrate !== undefined) {
+              Vibrate.trigger(vibrate);
+            }
+            onClick();
+          }
+      : handleLinkClick;
+
   const linkHref = link === undefined ? undefined : isHash ? link : isExternal ? link.href : spaHref;
   const linkRelationship = isExternal ? link.rel : undefined;
   const linkTarget = isExternal ? link.target : undefined;

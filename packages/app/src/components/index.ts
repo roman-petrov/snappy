@@ -4,10 +4,10 @@ export * from "./Page";
 
 export * from "./ProcessButton";
 
-export * from "./SmallButton";
+export * from "./settings-panel";
 
 export * from "./SubscribeButton";
 
 export * from "./TextCard";
 
-export * from "./ToggleButton";
+export * from "./TextComposer";

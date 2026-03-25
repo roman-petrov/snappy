@@ -57,6 +57,11 @@ const defs: Record<string, CmdDefinition> = {
     label: `🐳 Docker`,
     run: { command: `docker desktop start` },
   },
+  [`env:dev`]: {
+    children: [`docker:start`, `db:dev`],
+    description: `Prepare Docker + DB for dev and run.`,
+    label: `🧰 Dev env`,
+  },
   [`eslint-fix`]: {
     description: `ESLint: auto-fix.`,
     label: `🔧 ESLint`,
@@ -113,7 +118,7 @@ const defs: Record<string, CmdDefinition> = {
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
   dev: {
-    children: [`docker:start`, `db:dev`, `server:dev`],
+    children: [`env:dev`, `server:dev`],
     description: `Start Docker + DB + run server in watch (server-dev).`,
     label: `🚀 Dev server`,
   },
@@ -140,8 +145,8 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--check`, `.`], tool: `prettier` },
   },
   run: {
-    children: [`deploy-prepare`, `deploy-run`],
-    description: `Deploy prepare + deploy run. Use locally or under PM2.`,
+    children: [`env:dev`, `build`, `deploy-run`],
+    description: `Build + deploy run (without DB migrations). Use locally or under PM2.`,
     label: `🏃 Run`,
   },
   shot: {

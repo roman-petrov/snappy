@@ -107,6 +107,28 @@ export const ServerCache = () => {
     target.send(entry.raw);
   };
 
+  const replyCached = async (
+    target: SendTarget,
+    key: string,
+    acceptEncoding: string | undefined,
+    contentType: string,
+    load: () => Buffer | Promise<Buffer | string> | string,
+  ) => {
+    const cached = get(key);
+    if (cached !== undefined) {
+      sendCached(target, cached, acceptEncoding, contentType);
+
+      return;
+    }
+    const body = await load();
+    sendCached(
+      target,
+      set(key, Buffer.isBuffer(body) ? body : Buffer.from(body, `utf8`), contentType),
+      acceptEncoding,
+      contentType,
+    );
+  };
+
   const pathnameFromRequest = (request: FastifyRequest) => {
     const { url } = request;
     const path = url.includes(`?`) ? url.slice(0, url.indexOf(`?`)) : url;
@@ -172,7 +194,7 @@ export const ServerCache = () => {
       serveFromRoot(request, reply, next, root, pathname);
     };
 
-  return { createStatic, createStaticWithPrefix, get, pathnameFromRequest, remove, sendCached, set };
+  return { createStatic, createStaticWithPrefix, get, pathnameFromRequest, remove, replyCached, sendCached, set };
 };
 
 export type ServerCache = ReturnType<typeof ServerCache>;

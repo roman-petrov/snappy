@@ -28,6 +28,15 @@ corresponding SCSS function or mixin from `@snappy/theme`.
 
 Never read CSS custom properties with `var()` in component styles. Use the theme function instead.
 
+### No new CSS custom properties in components
+
+Do not introduce new CSS custom properties (e.g. `--foo`) in component styles. Prefer SCSS variables and theme tokens.
+If you need a shared value across components, add a token/mixin to `@snappy/theme` instead.
+
+### Private SCSS variables
+
+If an SCSS variable is used only within a single file, name it as a private variable with a dash prefix: `$-name`.
+
 ### Extend the theme, don't bypass it
 
 If the current token set doesn't cover a value you need, add a new token to `@snappy/theme` rather than hardcoding.

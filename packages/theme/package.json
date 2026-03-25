@@ -4,12 +4,12 @@
   "type": "module",
   "private": true,
   "exports": {
+    "./*": "./src/*.scss",
     "./styles": "./src/styles/index.scss",
     "./styles/*": "./src/styles/*.scss",
     "./color": "./src/tokens/color.scss",
     "./space": "./src/tokens/space.scss",
     "./radius": "./src/tokens/radius.scss",
-    "./backdrop": "./src/tokens/backdrop.scss",
     "./shadow": "./src/tokens/shadow.scss",
     "./tokens": "./src/tokens/tokens.scss",
     "./typography": "./src/tokens/typography.scss",

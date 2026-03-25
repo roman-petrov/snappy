@@ -11,17 +11,10 @@
   --space-3xl: 6rem;
 
   /* Radius */
-  --radius-xs: 4px;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-full: 999px;
-
-  /* Backdrop (glass surfaces; values are blur radii for backdrop-filter) */
-  --backdrop-xs: 8px;
-  --backdrop-sm: 12px;
-  --backdrop-md: 16px;
-  --backdrop-lg: 24px;
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
 
   /* Typography */
   --font-sans: "Inter Variable", "Inter", system-ui, sans-serif;
@@ -49,13 +42,14 @@
   --color-primary-ghost: color-mix(in srgb, var(--color-primary) 10%, transparent);
   --color-primary-border: color-mix(in srgb, var(--color-primary) 24%, transparent);
   --color-accent-soft: color-mix(in srgb, var(--color-primary) 16%, transparent);
-  --color-surface-glass: color-mix(in srgb, var(--color-surface) 80%, transparent);
+  --color-surface-glass: color-mix(in srgb, var(--color-surface) 60%, transparent);
   --color-text-subtle: color-mix(in srgb, var(--color-text) 16%, transparent);
   --color-error-ghost: color-mix(in srgb, var(--color-error) 10%, transparent);
   --color-error-soft: color-mix(in srgb, var(--color-error) 18%, transparent);
   --color-warning-ghost: color-mix(in srgb, var(--color-warning) 10%, transparent);
   --color-success-ghost: color-mix(in srgb, var(--color-success) 10%, transparent);
   --color-grid: color-mix(in srgb, var(--color-text) 4%, transparent);
+  --color-a-shadow: rgb(0 0 0 / var(--a-shadow));
   --color-divider: linear-gradient(
     to right,
     transparent 0%,

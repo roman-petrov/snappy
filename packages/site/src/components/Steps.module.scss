@@ -1,6 +1,5 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/space";
 
 .steps {
@@ -20,9 +19,8 @@
 
 .marker {
   @include primitives.grid-center;
-  @include primitives.square(space.xl());
+  @include primitives.circle(space.xl());
 
   color: color.on-primary();
   background: color.primary();
-  border-radius: radius.full();
 }

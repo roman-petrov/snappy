@@ -55,19 +55,11 @@ export const Ssr = () => {
       const { locale, theme } = Cookie(request.headers.cookie, request.headers[`accept-language`]);
       const key = `ssr:${locale}:${theme ?? `system`}`;
       const acceptEncoding = request.headers[`accept-encoding`];
-      const cached = cache.get(key);
-      if (cached !== undefined) {
-        cache.sendCached(reply, cached, acceptEncoding, `text/html`);
+      await cache.replyCached(reply, key, acceptEncoding, `text/html`, async () => {
+        const { entry: ssrEntry, template } = await ensureLoaded();
 
-        return;
-      }
-      const { entry: ssrEntry, template } = await ensureLoaded();
-      cache.sendCached(
-        reply,
-        cache.set(key, Buffer.from(SiteSsr.build(locale, theme, template, ssrEntry), `utf8`), `text/html`),
-        acceptEncoding,
-        `text/html`,
-      );
+        return SiteSsr.build(locale, theme, template, ssrEntry);
+      });
     };
   };
 

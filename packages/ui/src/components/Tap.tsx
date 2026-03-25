@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import type { Vibrate } from "../core/Vibrate";
+
 import { useTapState } from "./Tap.state";
 import { TapView } from "./Tap.view";
 
@@ -16,6 +18,7 @@ export type TapProps = {
   onClick?: () => void;
   submit?: boolean;
   title?: string;
+  vibrate?: Vibrate;
 };
 
 export const Tap = (props: TapProps) => <TapView {...useTapState(props)} />;

@@ -1,7 +1,7 @@
-@use "pkg:@snappy/theme/backdrop";
+@use "pkg:@snappy/theme/glass";
 @use "pkg:@snappy/theme/color";
 
-@mixin -fixed($dir, $y, $fixed: true) {
+@mixin -fixed($y, $fixed: true) {
   @if $fixed {
     position: fixed;
     inset-inline: 0;
@@ -14,13 +14,7 @@
     }
   }
 
-  background: linear-gradient(
-    $dir,
-    color-mix(in srgb, color.overlay() 88%, transparent) 0%,
-    color-mix(in srgb, color.overlay() 55%, transparent) 50%,
-    color-mix(in srgb, color.overlay() 25%, transparent) calc(100% - 8px),
-    transparent 100%
-  );
+  @include glass.card;
 
   @if $y > 0 {
     border-block-end: 1px solid color.border();
@@ -29,13 +23,12 @@
   }
 
   box-shadow: 0 ($y * 2px) 8px rgb(0 0 0 / var(--a-shadow));
-  backdrop-filter: blur(backdrop.md());
 }
 
 @mixin top($fixed: true) {
-  @include -fixed(180deg, 1, $fixed);
+  @include -fixed(1, $fixed);
 }
 
 @mixin bottom($fixed: true) {
-  @include -fixed(0deg, -1, $fixed);
+  @include -fixed(-1, $fixed);
 }

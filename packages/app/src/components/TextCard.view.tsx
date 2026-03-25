@@ -1,40 +1,17 @@
-import { Text, TextOverlayEffect } from "@snappy/ui";
+import { Html } from "@snappy/browser";
+import { TextOverlayEffect } from "@snappy/ui";
 
-import type { useTextCardState } from "./TextCard.state";
+import type { TextCardProps } from "./TextCard";
 
 import styles from "./TextCard.module.scss";
 
-export type TextCardViewProps = ReturnType<typeof useTextCardState>;
-
-export const TextCardView = ({
-  cardSizeKey,
-  cardVariantKey,
-  contentAreaKey,
-  contentVariant,
-  loading,
-  onTextChange,
-  placeholder,
-  result,
-  showOverlay,
-  text,
-  wrapperVariant,
-}: TextCardViewProps) => (
-  <div className={styles.wrapper} data-variant={wrapperVariant}>
-    <div className={`${styles.card} ${styles[cardSizeKey]} ${styles[cardVariantKey]}`}>
-      <div className={styles[contentAreaKey]}>
-        {contentVariant === `result` ? (
-          <Text as="div" cn={styles.result} text={result} typography="large" />
-        ) : (
-          <textarea
-            className={styles.textarea}
-            disabled={loading}
-            onChange={event => onTextChange(event.currentTarget.value)}
-            placeholder={placeholder}
-            value={text}
-          />
-        )}
+export const TextCardView = ({ compact = false, loading, result }: TextCardProps) => (
+  <div className={styles.wrapper}>
+    <div className={`${styles.card} ${compact ? styles.cardCompact : styles.cardFull}`}>
+      <div className={styles.contentAreaScroll}>
+        <div className={styles.result} {...Html.text(result)} />
       </div>
-      {showOverlay ? (
+      {loading ? (
         <div aria-hidden className={styles.loadingOverlay}>
           <TextOverlayEffect />
         </div>

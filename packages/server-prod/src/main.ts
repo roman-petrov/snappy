@@ -64,20 +64,24 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
   const { locale, theme } = Cookie(request.headers.cookie);
   const themeKey = theme ?? `system`;
 
-  const runChain = (step: number) => {
+  const runChain = async (step: number) => {
     if (step === 0) {
       if (!pathname.startsWith(`/app`) || pathname === `/app` || pathname === `/app/`) {
-        runChain(1);
+        await runChain(1);
 
         return;
       }
-      staticApp(request, reply, () => runChain(1));
+      staticApp(request, reply, () => {
+        void runChain(1);
+      });
 
       return;
     }
 
     if (step === 1) {
-      staticSite(request, reply, () => runChain(2));
+      staticSite(request, reply, () => {
+        void runChain(2);
+      });
 
       return;
     }
@@ -94,24 +98,13 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
         return;
       }
       const appIndexKey = getAppIndexKey(locale, themeKey);
-      const cached = cache.get(appIndexKey);
-      if (cached !== undefined) {
-        cache.sendCached(reply, cached, acceptEncoding, `text/html`);
-
-        return;
-      }
-      const raw = readFileSync(appIndexPath, `utf8`);
-      const html = SiteSsr.prepareAppIndex(raw, locale, theme);
-      cache.sendCached(
-        reply,
-        cache.set(appIndexKey, Buffer.from(html, `utf8`), `text/html`),
-        acceptEncoding,
-        `text/html`,
+      await cache.replyCached(reply, appIndexKey, acceptEncoding, `text/html`, () =>
+        SiteSsr.prepareAppIndex(readFileSync(appIndexPath, `utf8`), locale, theme),
       );
     }
   };
 
-  runChain(0);
+  await runChain(0);
 });
 
 await app.ready();

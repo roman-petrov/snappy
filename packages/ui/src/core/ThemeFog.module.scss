@@ -1,0 +1,25 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+
+.host {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.host::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+}
+
+.grid::before {
+  background:
+    linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+  background-size: space.x3xl() space.x3xl();
+}
+
+.fog::before {
+  background: none;
+}

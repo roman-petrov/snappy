@@ -1,6 +1,5 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
 
@@ -9,7 +8,7 @@
   width: tokens.touch-min();
   height: space.lg();
   background: color.text-dimmed();
-  border-radius: radius.full();
+  border-radius: calc(#{space.lg()} / 2);
   transition: background-color tokens.ease();
 }
 
