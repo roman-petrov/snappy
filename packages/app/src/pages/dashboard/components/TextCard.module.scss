@@ -6,7 +6,7 @@
 @use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/typography";
-@use "../scss/layout";
+@use "../../../scss/layout";
 
 .wrapper {
   display: flex;

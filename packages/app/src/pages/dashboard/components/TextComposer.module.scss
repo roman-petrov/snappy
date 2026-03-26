@@ -1,0 +1,55 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  width: 100%;
+  min-width: 0;
+}
+
+.input-wrap {
+  display: flex;
+  column-gap: space.xs();
+  align-items: center;
+  order: 1;
+  padding: space.xs() space.xs() space.xs() space.md();
+  background: color.input();
+  border: 1px solid color.border();
+  border-radius: calc((#{tokens.field-height()} + #{space.sm()} + #{space.xs()} * 2) / 2);
+  box-shadow: shadow.sm();
+  transition: background-color tokens.ease-slow();
+
+  &:focus-within {
+    background: color.surface();
+  }
+}
+
+.text-area-wrap {
+  box-sizing: border-box;
+  display: block;
+  flex: 1;
+  align-self: stretch;
+  min-width: 0;
+  padding-top: space.md();
+  padding-bottom: space.md();
+}
+
+.settings {
+  order: 2;
+}
+
+@include mobile {
+  .input-wrap {
+    order: 2;
+  }
+
+  .settings {
+    order: 1;
+  }
+}

@@ -8,11 +8,8 @@ export type TextComposerProps = {
   onSubmit: () => void;
   onTextChange: (value: string) => void;
   options: SnappyOptions;
-  placeholder: string;
   setOptions: (value: SnappyOptions) => void;
   showResult: boolean;
-  submitAriaLabel: string;
-  submitBusyAriaLabel: string;
   text: string;
 };
 

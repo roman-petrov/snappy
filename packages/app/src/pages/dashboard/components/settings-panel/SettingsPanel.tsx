@@ -1,6 +1,6 @@
 import { Snappy, type SnappyOptions } from "@snappy/domain";
 
-import { t } from "../../core";
+import { t } from "../../../../core";
 import styles from "./SettingsPanel.module.scss";
 import { SettingsPanelRow } from "./SettingsPanelRow";
 import { SettingsPanelTabs } from "./SettingsPanelTabs";

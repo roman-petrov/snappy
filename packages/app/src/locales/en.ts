@@ -118,4 +118,11 @@ export const en = {
   },
   settingsTheme: { dark: `Dark`, light: `Light`, system: `System` },
   subscribeButton: `Subscribe — {premiumPrice}/month`,
+  textComposer: {
+    settingsHide: `Hide settings`,
+    settingsShow: `Show settings`,
+    submit: `Process`,
+    submitting: `Processing…`,
+    textPlaceholder: `Enter text...`,
+  },
 };

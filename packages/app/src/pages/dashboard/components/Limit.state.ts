@@ -3,7 +3,7 @@ import { i } from "@snappy/intl";
 import { useAsyncEffectOnce } from "@snappy/ui";
 import { useEffect, useState } from "react";
 
-import { api, t } from "./core";
+import { api, t } from "../../../core";
 
 export const useLimitState = () => {
   const [nextResetAt, setNextResetAt] = useState<number | undefined>(undefined);

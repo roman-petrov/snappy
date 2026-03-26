@@ -2,7 +2,7 @@ import { Snappy } from "@snappy/domain";
 import { useAsyncEffectOnce } from "@snappy/ui";
 import { useState } from "react";
 
-import { api } from "./core";
+import { api } from "../../core";
 
 export const useDashboardState = () => {
   const [options, setOptions] = useState(Snappy.defaultOptions);

@@ -125,4 +125,11 @@ export const ru = {
   },
   settingsTheme: { dark: `Тёмная`, light: `Светлая`, system: `Системная` },
   subscribeButton: `Оформить подписку — {premiumPrice}/мес`,
+  textComposer: {
+    settingsHide: `Скрыть настройки`,
+    settingsShow: `Показать настройки`,
+    submit: `Обработать`,
+    submitting: `Обработка…`,
+    textPlaceholder: `Введите текст...`,
+  },
 };

@@ -3,8 +3,8 @@ import { Card } from "@snappy/ui";
 
 import type { useLimitState } from "./Limit.state";
 
-import { Page, SubscribeButton } from "./components";
-import { t } from "./core";
+import { Page, SubscribeButton } from "../../../components";
+import { t } from "../../../core";
 import styles from "./Limit.module.scss";
 
 export type LimitViewProps = ReturnType<typeof useLimitState>;

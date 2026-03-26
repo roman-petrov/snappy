@@ -15,6 +15,7 @@ export type TapProps = {
   disabled?: boolean;
   link?: string | TapLinkExternal;
   onClick?: () => void;
+  onMouseDown?: (event: { preventDefault: () => void }) => void;
   submit?: boolean;
   tip?: string;
   vibrate?: Vibrate;

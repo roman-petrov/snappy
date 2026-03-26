@@ -1,8 +1,8 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import { Dashboard } from "./Dashboard";
 import { Layout } from "./Layout";
 import { ForgotPassword, Login, Register, ResetPassword } from "./pages/auth";
+import { Dashboard } from "./pages/dashboard";
 import { Settings, SettingsLanguage, SettingsSubscription, SettingsTheme } from "./pages/settings";
 
 export const Router = (basename: string) =>

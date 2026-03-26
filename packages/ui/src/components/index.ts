@@ -36,6 +36,8 @@ export * from "./Tap";
 
 export * from "./Text";
 
+export * from "./TextArea";
+
 export * from "./TextOverlayEffect";
 
 export * from "./Title";

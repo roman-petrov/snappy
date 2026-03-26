@@ -18,6 +18,7 @@ export const TapView = ({
   linkRelationship,
   linkTarget,
   onLinkClick,
+  onMouseDown,
   renderAsLink,
   submit,
   title,
@@ -29,6 +30,7 @@ export const TapView = ({
     "aria-label": ariaLabel,
     "aria-pressed": ariaPressed,
     "className": classNames,
+    onMouseDown,
     title,
   };
 

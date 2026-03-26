@@ -10,5 +10,6 @@
   background: color.accent-soft();
   border: 1px solid color.primary-border();
   backdrop-filter: blur(8px);
+
   @include shadow;
 }
