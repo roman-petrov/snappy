@@ -4,6 +4,7 @@ import type { TextComposerProps } from "./TextComposer";
 
 export const useTextComposerState = ({ loading, showResult, text, ...rest }: TextComposerProps) => {
   const [editing, setEditing] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const wasLoading = useRef(false);
 
@@ -36,6 +37,7 @@ export const useTextComposerState = ({ loading, showResult, text, ...rest }: Tex
   const hasDraft = text.trim() !== ``;
   const showBlur = showResult && !editing;
   const expand = () => setEditing(true);
+  const toggleSettings = () => setShowSettings(value => !value);
 
-  return { ...rest, expand, hasDraft, loading, showBlur, showResult, text, textareaRef };
+  return { ...rest, expand, hasDraft, loading, showBlur, showResult, showSettings, text, textareaRef, toggleSettings };
 };

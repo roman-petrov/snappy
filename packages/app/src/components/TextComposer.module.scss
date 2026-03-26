@@ -7,9 +7,16 @@
 @use "pkg:@snappy/theme/typography";
 
 .wrap {
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
   width: 100%;
   min-width: 0;
+}
+
+.input-wrap {
+  position: relative;
+  order: 1;
   padding: space.sm();
   overflow: hidden;
   background: color.surface();
@@ -40,9 +47,9 @@
   box-sizing: border-box;
   width: 100%;
   max-height: 10rem;
-  padding-inline: space.sm() calc(#{space.xl()} * 2.1);
-  padding-top: calc(#{space.md()} + 2px);
-  padding-bottom: calc(#{space.md()} - 2px);
+  padding-inline: calc(#{space.xl()} * 1.4) calc(#{space.xl()} * 2.1);
+  padding-top: calc(#{space.md()} + 4px);
+  padding-bottom: calc(#{space.md()} - 4px);
   overflow-y: auto;
   font-family: inherit;
   color: color.text();
@@ -51,19 +58,46 @@
   border: none;
   -webkit-overflow-scrolling: touch;
   field-sizing: content;
+
+  &::placeholder {
+    color: color.text-muted();
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.settings {
+  order: 2;
 }
 
 .process {
   position: absolute;
   top: 50%;
   right: space.sm();
+  left: space.sm();
+  display: flex;
+  align-items: center;
+  pointer-events: none;
   transform: translateY(-50%);
+
+  > * {
+    pointer-events: auto;
+  }
+
+  > :last-child {
+    margin-right: 0;
+    margin-left: auto;
+  }
 }
 
-.textarea::placeholder {
-  color: color.text-muted();
-}
+@include mobile {
+  .input-wrap {
+    order: 2;
+  }
 
-.textarea:focus {
-  outline: none;
+  .settings {
+    order: 1;
+  }
 }

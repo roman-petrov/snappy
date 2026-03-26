@@ -22,6 +22,7 @@ export default defineConfig([
       "react/jsx-max-props-per-line": `off`,
       "react/jsx-newline": `off`,
       "react/jsx-no-bind": [`error`, { allowArrowFunctions: true }],
+      "react/jsx-no-leaked-render": `off`,
       "react/jsx-no-literals": `off`,
       "react/jsx-one-expression-per-line": `off`,
       "react/jsx-props-no-spreading": `off`,

@@ -2,7 +2,7 @@ import { Alert } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
-import { SettingsPanel, TextCard, TextComposer } from "./components";
+import { TextCard, TextComposer } from "./components";
 import { t } from "./core";
 import styles from "./Dashboard.module.scss";
 import { Limit } from "./Limit";
@@ -29,14 +29,13 @@ export const DashboardView = ({
       <div className={styles.main}>
         <div className={styles.controlsSlot}>
           <div className={styles.controls}>
-            <div className={styles.inputOptions}>
-              <SettingsPanel disabled={loading} onChange={setOptions} value={options} />
-            </div>
             <TextComposer
               loading={loading}
               onSubmit={processText}
               onTextChange={setText}
+              options={options}
               placeholder={t(`dashboard.textPlaceholder`)}
+              setOptions={setOptions}
               showResult={showResult}
               submitAriaLabel={t(`dashboard.submit`)}
               submitBusyAriaLabel={t(`dashboard.submitting`)}
