@@ -1,5 +1,4 @@
 @use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
 
 @mixin shadow {
   box-shadow:
@@ -10,7 +9,6 @@
 @mixin active-surface {
   background: color.accent-soft();
   border: 1px solid color.primary-border();
-  border-radius: radius.sm();
   backdrop-filter: blur(8px);
   @include shadow;
 }

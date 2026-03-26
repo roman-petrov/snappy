@@ -1,4 +1,5 @@
 @use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/tokens";
 @use "./scss/button" as button;
 
@@ -25,6 +26,7 @@
   top: 0;
   bottom: 0;
   min-width: 0;
+  border-radius: radius.sm();
   transition:
     left tokens.ease(),
     width tokens.ease();

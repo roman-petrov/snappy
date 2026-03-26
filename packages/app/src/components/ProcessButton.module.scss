@@ -37,11 +37,6 @@
   @include primitives.row-center;
   @include primitives.circle(calc(#{tokens.field-height()} + #{space.sm()}));
 
-  min-width: calc(#{tokens.field-height()} + #{space.sm()});
-  padding: 0;
-  margin: 0 auto;
-  font-weight: 500;
-  color: color.on-primary();
   background: linear-gradient(145deg, color.primary() 0%, color.primary-hover() 100%);
   box-shadow:
     0 3px 5px -1px color-mix(in srgb, #000 28%, transparent),
