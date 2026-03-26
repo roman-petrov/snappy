@@ -35,6 +35,8 @@
   padding-top: calc(#{space.xs()});
   padding-bottom: calc(#{space.xs()});
   overflow-y: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: none;
   font-family: inherit;
   color: color.text();
   resize: none;
@@ -42,6 +44,13 @@
   border: none;
   -webkit-overflow-scrolling: touch;
   field-sizing: content;
+  transition:
+    max-height tokens.ease(),
+    padding tokens.ease();
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &::placeholder {
     color: color.text-muted();
@@ -54,7 +63,6 @@
 
 .textarea-collapsed {
   max-height: calc(1lh + (#{space.xs()} * 2));
-  overflow-y: hidden;
 }
 
 .settings {
