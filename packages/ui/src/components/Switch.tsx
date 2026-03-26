@@ -14,7 +14,6 @@ export const Switch = ({ checked = false, label, onChange, ...tapProps }: Switch
   return (
     <Tap
       {...tapProps}
-      ariaLabel={label}
       ariaPressed={checked}
       onClick={() => {
         if (onClick !== undefined) {
@@ -24,6 +23,7 @@ export const Switch = ({ checked = false, label, onChange, ...tapProps }: Switch
           onChange(!checked);
         }
       }}
+      tip={label}
     >
       <SwitchDisplay checked={checked} disabled={disabled} />
     </Tap>

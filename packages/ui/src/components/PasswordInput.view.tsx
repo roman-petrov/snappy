@@ -27,10 +27,10 @@ export const PasswordInputView = ({
     required={required}
     suffix={
       <IconButton
-        ariaLabel={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
         disabled={disabled}
         icon={<Icon name={visible ? `eye-closed` : `eye-open`} />}
         onClick={toggleVisible}
+        tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
       />
     }
     type={visible ? `text` : `password`}

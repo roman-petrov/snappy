@@ -9,7 +9,6 @@ export type TapLinkExternal = { href: string; rel?: string; target?: string };
 
 export type TapProps = {
   ariaBusy?: boolean;
-  ariaLabel?: string;
   ariaPressed?: boolean;
   children: ReactNode;
   cn?: string;
@@ -17,7 +16,7 @@ export type TapProps = {
   link?: string | TapLinkExternal;
   onClick?: () => void;
   submit?: boolean;
-  title?: string;
+  tip?: string;
   vibrate?: Vibrate;
 };
 

@@ -1,4 +1,8 @@
-import { useIconButtonThemeState } from "./IconButtonTheme.state";
-import { IconButtonThemeView } from "./IconButtonTheme.view";
+import { useStoreValue } from "@snappy/store";
 
-export const IconButtonTheme = () => <IconButtonThemeView {...useIconButtonThemeState()} />;
+import { $theme, t, Theme } from "..";
+import { IconButton } from "./IconButton";
+
+export const IconButtonTheme = () => (
+  <IconButton icon={useStoreValue($theme) === `dark` ? `🌙` : `☀️`} onClick={Theme.toggle} tip={t(`themeToggle`)} />
+);

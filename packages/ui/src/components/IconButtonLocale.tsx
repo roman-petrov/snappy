@@ -1,4 +1,8 @@
-import { useIconButtonLocaleState } from "./IconButtonLocale.state";
-import { IconButtonLocaleView } from "./IconButtonLocale.view";
+import { useStoreValue } from "@snappy/store";
 
-export const IconButtonLocale = () => <IconButtonLocaleView {...useIconButtonLocaleState()} />;
+import { $locale, Locale, t } from "..";
+import { IconButton } from "./IconButton";
+
+export const IconButtonLocale = () => (
+  <IconButton icon={useStoreValue($locale) === `ru` ? `🇷🇺` : `🇺🇸`} onClick={Locale.toggle} tip={t(`localeSwitcher`)} />
+);

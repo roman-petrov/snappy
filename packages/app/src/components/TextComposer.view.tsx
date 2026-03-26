@@ -26,10 +26,10 @@ export const TextComposerView = ({
   <div className={styles.wrap}>
     <div className={styles.inputWrap}>
       <IconButton
-        ariaLabel={showSettings ? t(`dashboard.settingsHide`) : t(`dashboard.settingsShow`)}
         disabled={loading}
         icon={showSettings ? `⬆️` : `⬇️`}
         onClick={toggleSettings}
+        tip={showSettings ? t(`dashboard.settingsHide`) : t(`dashboard.settingsShow`)}
       />
       <textarea
         className={styles.textarea}
@@ -40,10 +40,10 @@ export const TextComposerView = ({
         value={text}
       />
       <ProcessButton
-        ariaLabel={loading ? submitBusyAriaLabel : submitAriaLabel}
         disabled={loading || !hasDraft}
         loading={loading}
         onClick={onSubmit}
+        tip={loading ? submitBusyAriaLabel : submitAriaLabel}
       />
     </div>
     {showSettings && (

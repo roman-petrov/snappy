@@ -31,7 +31,7 @@ export const SettingsPanelTabsView = <T extends string>({
         key={option.value}
         onClick={() => onChange(option.value)}
         text={option.label}
-        title={option.title}
+        tip={option.title}
       />
     ))}
   </div>

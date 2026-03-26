@@ -9,7 +9,6 @@ import { useIsMobile } from "../hooks/useIsMobile";
 
 export const useTapState = ({
   ariaBusy,
-  ariaLabel,
   ariaPressed,
   children,
   cn = ``,
@@ -17,7 +16,7 @@ export const useTapState = ({
   link,
   onClick,
   submit = false,
-  title,
+  tip,
   vibrate,
 }: TapProps) => {
   const go = useGo();
@@ -62,7 +61,7 @@ export const useTapState = ({
 
   return {
     ariaBusy,
-    ariaLabel,
+    ariaLabel: tip,
     ariaPressed,
     buttonOnClick,
     children,
@@ -74,6 +73,6 @@ export const useTapState = ({
     onLinkClick,
     renderAsLink,
     submit,
-    title,
+    title: tip,
   };
 };

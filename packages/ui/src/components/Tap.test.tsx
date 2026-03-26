@@ -236,9 +236,9 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`passes aria and title through`, () => {
+  it(`passes tip to aria and title`, () => {
     const { container } = renderTap(
-      <Tap ariaLabel="Close" ariaPressed title="Close dialog">
+      <Tap ariaPressed tip="Close dialog">
         X
       </Tap>,
     );
@@ -246,10 +246,25 @@ describe(`tap`, () => {
     expect(container).toMatchInlineSnapshot(`
       <div>
         <button
-          aria-label="Close"
+          aria-label="Close dialog"
           aria-pressed="true"
           class="_root_fa81c3"
           title="Close dialog"
+          type="button"
+        >
+          X
+        </button>
+      </div>
+    `);
+  });
+
+  it(`omits aria-label and title when tip is not set`, () => {
+    const { container } = renderTap(<Tap>X</Tap>);
+
+    expect(container).toMatchInlineSnapshot(`
+      <div>
+        <button
+          class="_root_fa81c3"
           type="button"
         >
           X
