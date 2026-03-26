@@ -59,16 +59,7 @@ export const ServerApp = (
   const cron = Cron();
   cron.addJob(SubscriptionRenewalCronJob(subscription));
   const bot = SnappyBot({ apiKey: botApiKey, apiUrl: apiBaseUrl, botToken, ...(version !== undefined && { version }) });
-
-  const start = async () => {
-    await bot.start();
-    process.stdout.write(`🤖 Bot started\n`);
-  };
-
-  const stop = async () => {
-    await bot.stop();
-    process.stdout.write(`🤖 Bot stopped\n`);
-  };
+  const { start, stop } = bot;
 
   return { api, start, stop };
 };

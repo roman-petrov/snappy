@@ -114,7 +114,6 @@ if (handlerRef.current === undefined) {
   throw new Error(`serverFactory was not called`);
 }
 
-process.stdout.write(`🚀 Starting server…\n`);
 void appContext.start();
 if (useHttps) {
   https.createServer({ cert: sslCertPem, key: sslKeyPem }, handlerRef.current).listen(portHttps, () => {

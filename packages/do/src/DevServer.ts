@@ -130,7 +130,7 @@ export const DevServer = () => {
     app.use(vite.middlewares);
 
     app.listen(port, () => {
-      process.stdout.write(`  Site (API) http://localhost\n`);
+      process.stdout.write(`🌐 Site (API) http://localhost\n`);
       void appContext.start();
     });
   };
