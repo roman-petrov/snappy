@@ -15,7 +15,7 @@ export const en = {
     settingsShow: `Show settings`,
     submit: `Process`,
     submitting: `Processing…`,
-    textPlaceholder: `Enter text to process...`,
+    textPlaceholder: `Enter text...`,
   },
   forgotPage: {
     backToLogin: `Back to login`,

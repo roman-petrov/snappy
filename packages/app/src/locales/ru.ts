@@ -16,7 +16,7 @@ export const ru = {
     settingsShow: `Показать настройки`,
     submit: `Обработать`,
     submitting: `Обработка…`,
-    textPlaceholder: `Введите текст для обработки...`,
+    textPlaceholder: `Введите текст...`,
   },
   forgotPage: {
     backToLogin: `Вернуться ко входу`,
