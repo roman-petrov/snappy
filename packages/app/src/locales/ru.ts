@@ -12,9 +12,10 @@ export const ru = {
       processingFailed: `Ошибка обработки. Попробуйте ещё раз`,
       requestLimitReached: `Лимит запросов исчерпан`,
     },
+    settingsHide: `Скрыть настройки`,
+    settingsShow: `Показать настройки`,
     submit: `Обработать`,
     submitting: `Обработка…`,
-    tapToEditPrompt: `Изменить запрос`,
     textPlaceholder: `Введите текст для обработки...`,
   },
   forgotPage: {

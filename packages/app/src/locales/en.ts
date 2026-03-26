@@ -11,9 +11,10 @@ export const en = {
       processingFailed: `Processing failed. Try again`,
       requestLimitReached: `Request limit reached`,
     },
+    settingsHide: `Hide settings`,
+    settingsShow: `Show settings`,
     submit: `Process`,
     submitting: `Processing…`,
-    tapToEditPrompt: `Edit prompt`,
     textPlaceholder: `Enter text to process...`,
   },
   forgotPage: {

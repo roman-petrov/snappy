@@ -3,7 +3,6 @@
 @use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/typography";
 
 .wrap {
@@ -15,41 +14,26 @@
 }
 
 .input-wrap {
-  position: relative;
+  display: flex;
+  gap: space.sm();
+  align-items: center;
   order: 1;
   padding: space.sm();
-  overflow: hidden;
   background: color.surface();
   border: 1px solid color.border();
   border-radius: radius.md();
   box-shadow: shadow.sm();
 }
 
-.blur-tap {
-  position: absolute;
-  inset: 0;
-  cursor: pointer;
-  background: color-mix(in srgb, color.primary() 18%, color.surface());
-  backdrop-filter: blur(2px) saturate(1.02);
-  transition:
-    background-color tokens.ease(),
-    backdrop-filter tokens.ease();
-
-  @include hover {
-    background: transparent;
-    backdrop-filter: none;
-  }
-}
-
 .textarea {
   @include typography.body;
 
   box-sizing: border-box;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   max-height: 10rem;
-  padding-inline: calc(#{space.xl()} * 1.4) calc(#{space.xl()} * 2.1);
-  padding-top: calc(#{space.md()} + 4px);
-  padding-bottom: calc(#{space.md()} - 4px);
+  padding-top: calc(#{space.sm()});
+  padding-bottom: calc(#{space.sm()});
   overflow-y: auto;
   font-family: inherit;
   color: color.text();
@@ -70,26 +54,6 @@
 
 .settings {
   order: 2;
-}
-
-.process {
-  position: absolute;
-  top: 50%;
-  right: space.sm();
-  left: space.sm();
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-  transform: translateY(-50%);
-
-  > * {
-    pointer-events: auto;
-  }
-
-  > :last-child {
-    margin-right: 0;
-    margin-left: auto;
-  }
 }
 
 @include mobile {
