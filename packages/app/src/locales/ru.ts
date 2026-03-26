@@ -50,13 +50,11 @@ export const ru = {
   options: {
     addEmoji: `Эмодзи`,
     addFormatting: `Разметка`,
-    formatLabel: `Формат`,
-    length: { extend: `Расширить`, keep: `Без изменений`, label: `Длина`, shorten: `Сократить` },
+    length: { extend: `Расширить`, keep: `Без изменений`, shorten: `Сократить` },
     style: {
       business: `Деловой`,
       friendly: `Дружеский`,
       humorous: `Юмор`,
-      label: `Стиль`,
       neutral: `Нейтральный`,
       selling: `Продающий`,
     },

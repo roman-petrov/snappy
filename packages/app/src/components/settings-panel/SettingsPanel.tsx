@@ -12,7 +12,7 @@ export const SettingsPanel = ({ disabled = false, onChange, value }: SettingsPan
 
   return (
     <div className={styles.root}>
-      <SettingsPanelRow label={t(`options.formatLabel`)}>
+      <SettingsPanelRow>
         <SettingsPanelTabs
           disabled={disabled}
           isActive={key => value[key]}
@@ -25,7 +25,7 @@ export const SettingsPanel = ({ disabled = false, onChange, value }: SettingsPan
           value="addEmoji"
         />
       </SettingsPanelRow>
-      <SettingsPanelRow label={t(`options.length.label`)}>
+      <SettingsPanelRow>
         <SettingsPanelTabs
           disabled={disabled}
           onChange={next => change(`length`, next)}
@@ -37,7 +37,7 @@ export const SettingsPanel = ({ disabled = false, onChange, value }: SettingsPan
           value={value.length}
         />
       </SettingsPanelRow>
-      <SettingsPanelRow label={t(`options.style.label`)}>
+      <SettingsPanelRow>
         <SettingsPanelTabs
           disabled={disabled}
           onChange={next => change(`style`, next)}

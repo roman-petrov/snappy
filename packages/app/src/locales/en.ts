@@ -49,16 +49,8 @@ export const en = {
   options: {
     addEmoji: `Emoji`,
     addFormatting: `Markup`,
-    formatLabel: `Format`,
-    length: { extend: `Extend`, keep: `Keep`, label: `Length`, shorten: `Shorten` },
-    style: {
-      business: `Business`,
-      friendly: `Friendly`,
-      humorous: `Humorous`,
-      label: `Style`,
-      neutral: `Neutral`,
-      selling: `Selling`,
-    },
+    length: { extend: `Extend`, keep: `Keep`, shorten: `Shorten` },
+    style: { business: `Business`, friendly: `Friendly`, humorous: `Humorous`, neutral: `Neutral`, selling: `Selling` },
   },
   registerPage: {
     email: `Email`,

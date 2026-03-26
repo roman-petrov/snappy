@@ -1,39 +1,14 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/typography";
-@use "./scss/common" as common;
 
-$-label-w: 5.5rem;
 $-control-h: 2rem;
 $-row-gap-y: space.xs();
 
 .row {
-  display: grid;
-  grid-template-columns: $-label-w 1fr;
-  gap: space.sm();
-  align-items: center;
+  min-width: 0;
 }
 
 .row + .row {
   padding-top: $-row-gap-y;
-}
-
-.label {
-  @include typography.caption;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  height: $-control-h;
-  padding: 0 space.sm();
-  color: color.primary();
-  text-align: right;
-  white-space: nowrap;
-  background: color.surface-glass();
-  border: 1px solid color.primary-border();
-  border-radius: radius.sm() 0 0 radius.sm();
-  box-shadow: common.$float-shadow;
 }
 
 .scroller {
