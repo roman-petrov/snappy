@@ -52,6 +52,11 @@
   }
 }
 
+.textarea-collapsed {
+  max-height: calc(1lh + (#{space.xs()} * 2));
+  overflow-y: hidden;
+}
+
 .settings {
   order: 2;
 }

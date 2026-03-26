@@ -1,3 +1,4 @@
+import { _ } from "@snappy/core";
 import { IconButton } from "@snappy/ui";
 
 import type { useTextComposerState } from "./TextComposer.state";
@@ -10,6 +11,9 @@ import styles from "./TextComposer.module.scss";
 export type TextComposerViewProps = ReturnType<typeof useTextComposerState>;
 
 export const TextComposerView = ({
+  blur,
+  focus,
+  focused,
   hasDraft,
   loading,
   onSubmit,
@@ -32,9 +36,11 @@ export const TextComposerView = ({
         tip={showSettings ? t(`dashboard.settingsHide`) : t(`dashboard.settingsShow`)}
       />
       <textarea
-        className={styles.textarea}
+        className={focused ? styles.textarea : _.cn(styles.textarea, styles.textareaCollapsed)}
         disabled={loading}
+        onBlur={blur}
         onChange={event => onTextChange(event.currentTarget.value)}
+        onFocus={focus}
         placeholder={placeholder}
         rows={1}
         value={text}
