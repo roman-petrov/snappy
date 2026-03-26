@@ -1,4 +1,3 @@
-import { _ } from "@snappy/core";
 import { Tap } from "@snappy/ui";
 
 import type { useSettingsPanelButtonState } from "./SettingsPanelButton.state";
@@ -7,8 +6,13 @@ import styles from "./SettingsPanelButton.module.scss";
 
 export type SettingsPanelButtonViewProps = ReturnType<typeof useSettingsPanelButtonState>;
 
-export const SettingsPanelButtonView = ({ active, cn, onPress, text, ...rest }: SettingsPanelButtonViewProps) => (
-  <Tap ariaPressed={active} cn={_.cn(styles.button, cn)} onClick={onPress} {...rest}>
+export const SettingsPanelButtonView = ({ active, onPress, text, toggle, ...rest }: SettingsPanelButtonViewProps) => (
+  <Tap
+    ariaPressed={active}
+    cn={toggle === true ? `${styles.button} ${styles.toggle}` : styles.button}
+    onClick={onPress}
+    {...rest}
+  >
     {text}
   </Tap>
 );

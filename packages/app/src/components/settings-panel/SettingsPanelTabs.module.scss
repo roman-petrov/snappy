@@ -1,36 +1,15 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
-@use "./scss/common" as common;
+@use "./scss/button" as button;
 
 .segmented {
   position: relative;
   display: flex;
+  gap: space.xs();
+  padding: 0;
   width: max-content;
   min-width: fit-content;
   overflow: visible;
-}
-
-.segmented-tabs,
-.segmented-toggle {
-  gap: space.xs();
-  padding: 0;
-}
-
-.button-tab,
-.button-toggle {
-  flex: 0 0 auto;
-  width: 9rem;
-  min-width: 9rem;
-  height: 2rem;
-}
-
-.button-tab[aria-pressed="true"] {
-  background: transparent;
-  border-color: color.primary-border();
-  box-shadow: common.$float-shadow;
 }
 
 .indicator-track {
@@ -40,15 +19,12 @@
 }
 
 .indicator {
+  @include button.active-surface;
+
   position: absolute;
   top: 0;
   bottom: 0;
   min-width: 0;
-  background: color.accent-soft();
-  border: #{tokens.focus-offset()} solid color.primary-border();
-  border-radius: radius.sm();
-  box-shadow: none;
-  backdrop-filter: blur(8px);
   transition:
     left tokens.ease(),
     width tokens.ease();

@@ -2,53 +2,54 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/typography";
-@use "./scss/common" as common;
+@use "./scss/button" as button;
 
 .button {
   @include typography.caption;
   @include primitives.inline-row-center;
+  @include button.shadow;
+  @include focus;
 
   position: relative;
   box-sizing: border-box;
-  height: 100%;
+  flex: 0 0 auto;
+  width: 9rem;
+  min-width: 9rem;
+  height: 2rem;
   padding: 0 space.md();
   color: color.text();
   white-space: nowrap;
   background: color.surface-glass();
   border: 1px solid color.border();
   border-radius: radius.sm();
-  box-shadow: common.$float-shadow;
-  backdrop-filter: blur(8px);
   transition:
     background tokens.ease(),
     border-color tokens.ease(),
     box-shadow tokens.ease(),
     color tokens.ease(),
     transform tokens.ease();
-
-  @include focus;
 }
 
 .button[aria-pressed="true"] {
   color: color.primary();
-  background: color.accent-soft();
-  border-color: color.primary-border();
-  box-shadow: common.$float-shadow;
+}
+
+.toggle[aria-pressed="true"] {
+  @include button.active-surface;
+}
+
+.button[aria-pressed="true"]:not(.toggle) {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .button:not([aria-pressed="true"]) {
-  border-color: color.border();
-  box-shadow: common.$float-shadow;
-
   @include hover {
     color: color.primary();
-    background: color.surface-glass();
-    border-color: color.primary-border();
-    box-shadow: common.$float-shadow;
   }
 }
 

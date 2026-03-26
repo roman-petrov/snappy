@@ -1,5 +1,3 @@
-import { _ } from "@snappy/core";
-
 import type { useSettingsPanelTabsState } from "./SettingsPanelTabs.state";
 
 import { SettingsPanelButton } from "./SettingsPanelButton";
@@ -17,7 +15,7 @@ export const SettingsPanelTabsView = <T extends string>({
   tabs,
   value,
 }: SettingsPanelTabsViewProps<T>) => (
-  <div className={_.cn(styles.segmented, tabs ? styles.segmentedTabs : styles.segmentedToggle)} ref={segmentedRef}>
+  <div className={styles.segmented} ref={segmentedRef}>
     {tabs ? (
       <div className={styles.indicatorTrack}>
         <div className={styles.indicator} style={indicatorStyle} />
@@ -26,12 +24,12 @@ export const SettingsPanelTabsView = <T extends string>({
     {options.map(option => (
       <SettingsPanelButton
         active={isActive?.(option.value) ?? option.value === value}
-        cn={tabs ? styles.buttonTab : styles.buttonToggle}
         disabled={disabled}
         key={option.value}
         onClick={() => onChange(option.value)}
         text={option.label}
         tip={option.title}
+        toggle={!tabs}
       />
     ))}
   </div>

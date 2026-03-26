@@ -5,8 +5,8 @@ import { SettingsPanelButtonView } from "./SettingsPanelButton.view";
 
 export type SettingsPanelButtonProps = Omit<TapProps, `ariaPressed` | `children` | `cn`> & {
   active?: boolean;
-  cn?: string;
   text: string;
+  toggle?: boolean;
 };
 
 export const SettingsPanelButton = (props: SettingsPanelButtonProps) => (
