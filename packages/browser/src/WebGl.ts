@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-let */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-loop-statements */
@@ -164,7 +165,7 @@ export type WebGlInterface = {
 
 export type WebGlRunLoopParameters = { canvas: HTMLCanvasElement; shader: string };
 
-const dpr = () => Math.min(devicePixelRatio, 2);
+const dpr = () => Math.min(Math.max(devicePixelRatio || 1, 1), 2);
 
 const createTimeDriver = (timeStep: number) => {
   const state = { time: 0 };
@@ -195,23 +196,55 @@ const createInterface = (
     },
     gl,
     observeResize: (element: HTMLElement, resize: () => void, tick: () => void) => {
+      let rafId = 0;
+
+      const apply = () => {
+        rafId = 0;
+        resize();
+        tick();
+      };
+
+      const schedule = () => {
+        if (rafId !== 0) {
+          return;
+        }
+        rafId = requestAnimationFrame(apply);
+      };
+
       resize();
-      const ro = new ResizeObserver(resize);
+      const ro = new ResizeObserver(schedule);
       ro.observe(element);
       iface.tick = tick;
       iface.cleanup = () => {
         ro.disconnect();
+        if (rafId !== 0) {
+          cancelAnimationFrame(rafId);
+        }
         iface.canvas.remove();
       };
     },
     release: () => release(gl, program, buffer),
     resizeCanvas: (width: number, height: number, setStyle?: boolean) => {
+      const cssWidth = Math.max(1, Math.round(width));
+      const cssHeight = Math.max(1, Math.round(height));
       const scale = dpr();
-      iface.canvas.width = Math.round(width * scale);
-      iface.canvas.height = Math.round(height * scale);
+      const pixelWidth = Math.max(1, Math.round(cssWidth * scale));
+      const pixelHeight = Math.max(1, Math.round(cssHeight * scale));
+      if (iface.canvas.width !== pixelWidth) {
+        iface.canvas.width = pixelWidth;
+      }
+      if (iface.canvas.height !== pixelHeight) {
+        iface.canvas.height = pixelHeight;
+      }
       if (setStyle === true) {
-        iface.canvas.style.width = `${width}px`;
-        iface.canvas.style.height = `${height}px`;
+        const nextWidth = `${cssWidth}px`;
+        const nextHeight = `${cssHeight}px`;
+        if (iface.canvas.style.width !== nextWidth) {
+          iface.canvas.style.width = nextWidth;
+        }
+        if (iface.canvas.style.height !== nextHeight) {
+          iface.canvas.style.height = nextHeight;
+        }
       }
       iface.gl.viewport(0, 0, iface.canvas.width, iface.canvas.height);
     },
