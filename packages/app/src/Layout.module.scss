@@ -40,9 +40,9 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-height: 0;
   width: 100%;
   max-width: tokens.content-width();
+  min-height: 0;
   padding: space.lg();
   padding-bottom: space.x2xl();
   margin: 0 auto;
@@ -57,6 +57,7 @@
 
   .mobile-header {
     display: block;
+
     @include overlay.top;
   }
 

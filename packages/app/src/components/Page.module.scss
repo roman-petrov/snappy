@@ -1,4 +1,5 @@
 @use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/core" as core;
 
 .section {
   display: flex;
@@ -17,4 +18,10 @@
 .title {
   min-width: 0;
   margin: 0;
+}
+
+@include core.mobile {
+  .section {
+    padding-top: space.sm();
+  }
 }

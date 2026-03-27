@@ -24,6 +24,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  max-width: tokens.content-narrow();
 }
 
 .title {
@@ -39,6 +41,10 @@
 }
 
 @include core.mobile {
+  .wrap {
+    padding: space.x2xl() space.md() 0;
+  }
+
   .panel-card {
     padding: space.md();
   }
