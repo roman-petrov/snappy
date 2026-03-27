@@ -15,12 +15,14 @@ const green = `\u001B[32m`;
 const red = `\u001B[31m`;
 const cyan = `\u001B[36m`;
 const dim = `\u001B[2m`;
+const yellow = `\u001B[33m`;
 const ok = `✓`;
 const fail = `✗`;
 const ellipsis = `\u2026`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
+const blue = `\u001B[34m`;
 
 type RunResult = { exitCode: number; message: string };
 
@@ -58,6 +60,8 @@ type RunLeafOptions = {
   verbose: boolean;
   withoutTree?: boolean;
 };
+
+const startupMessage = `\n🌐 ${yellow}Site running at ${blue}https://localhost${reset}\n`;
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
@@ -99,6 +103,9 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
                 shell: true,
                 stdio: `inherit`,
               });
+              if (name === `server:prod`) {
+                process.stdout.write(`\n${startupMessage}`);
+              }
 
               if (run.background === true) {
                 backgroundProcesses.push(proc);
@@ -135,6 +142,9 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
     process.stdout.write(`${statusIcon} ${dim}${seconds}s${reset}\n`);
+    if (exitCode === 0 && name === `server:frontend:dev`) {
+      process.stdout.write(startupMessage);
+    }
   }
 
   if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {

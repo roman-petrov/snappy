@@ -22,7 +22,7 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "APP_URL", "\"http://home.local/app\""
+            buildConfigField "String", "APP_URL", "\"https://home.local/app\""
         }
         release {
             buildConfigField "String", "APP_URL", "\"https://snappy-ai.ru/app\""

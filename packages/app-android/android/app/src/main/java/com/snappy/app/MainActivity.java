@@ -1,8 +1,10 @@
 package com.snappy.app;
 
 import android.graphics.Color;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,6 +42,15 @@ public class MainActivity extends ComponentActivity {
         settings.setDomStorageEnabled(true);
         webView.addJavascriptInterface(new Bridge(this), "AndroidBridge");
         webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                if (BuildConfig.DEBUG) {
+                    handler.proceed();
+                    return;
+                }
+                handler.cancel();
+            }
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 splash.setVisibility(View.GONE);

@@ -12,3 +12,4 @@ androidx
 proguard
 wouter
 vectordrawable
+selfsigned

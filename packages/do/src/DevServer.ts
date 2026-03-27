@@ -4,11 +4,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
+import { Cert } from "@snappy/node";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import express from "express";
 import { readFileSync } from "node:fs";
 import * as http from "node:http";
+import https from "node:https";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
@@ -41,7 +43,7 @@ const siteDir = join(projectRoot, `packages`, `site`);
 const appDir = join(projectRoot, `packages`, `app`);
 const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
-const port = 80;
+const portHttps = 443;
 const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
 
 export const DevServer = () => {
@@ -129,10 +131,7 @@ export const DevServer = () => {
     app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
-    app.listen(port, () => {
-      process.stdout.write(`🌐 Site (API) http://localhost\n`);
-      void appContext.start();
-    });
+    https.createServer(await Cert.generate(), app).listen(portHttps, `0.0.0.0`, appContext.start);
   };
 
   return { start };

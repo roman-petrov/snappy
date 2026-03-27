@@ -3,6 +3,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
+import { Cert } from "@snappy/node";
 import { App, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
@@ -16,7 +17,6 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const portHttp = 80;
 const portHttps = 443;
-const useHttps = sslCertPem !== undefined && sslKeyPem !== undefined;
 const version = process.env[`SNAPPY_VERSION`];
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
@@ -115,15 +115,10 @@ if (handlerRef.current === undefined) {
 }
 
 void appContext.start();
-if (useHttps) {
-  https.createServer({ cert: sslCertPem, key: sslKeyPem }, handlerRef.current).listen(portHttps, () => {
-    process.stdout.write(`🌐 Site + API on port https://localhost\n`);
-  });
-  http.createServer(handlerRef.current).listen(portHttp, `127.0.0.1`, () => {
-    process.stdout.write(`🌐 API (bot) at http://127.0.0.1\n`);
-  });
-} else {
-  http.createServer(handlerRef.current).listen(portHttp, () => {
-    process.stdout.write(`🌐 Site + API at http://localhost\n`);
-  });
-}
+https
+  .createServer(
+    sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : await Cert.generate(),
+    handlerRef.current,
+  )
+  .listen(portHttps, `0.0.0.0`);
+http.createServer(handlerRef.current).listen(portHttp, `127.0.0.1`);
