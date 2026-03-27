@@ -2,7 +2,6 @@
 @use "pkg:@snappy/theme/core" as core;
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
-@use "./scss/layout";
 
 .wrap {
   display: flex;
@@ -27,6 +26,13 @@
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+}
+
+.main-safe {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .main {
@@ -58,8 +64,7 @@
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-    padding: calc(space.sm() + env(safe-area-inset-top, 0px)) calc(space.md() + env(safe-area-inset-right, 0px))
-      space.sm() calc(space.md() + env(safe-area-inset-left, 0px));
+    padding: space.sm() space.md();
   }
 
   .corner-right {
@@ -82,7 +87,6 @@
 
   .main {
     max-width: none;
-    padding: layout.$main-padding-block-start calc(space.sm() + env(safe-area-inset-right, 0px))
-      calc(space.md() + env(safe-area-inset-bottom, 0px)) calc(space.sm() + env(safe-area-inset-left, 0px));
+    padding: calc(#{tokens.field-height()} + #{space.sm()} + #{space.lg()}) space.sm() space.md();
   }
 }

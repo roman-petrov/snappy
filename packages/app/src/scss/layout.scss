@@ -1,8 +1,0 @@
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
-
-$main-padding-block-start: calc(
-  #{tokens.field-height()} + #{space.sm()} + env(safe-area-inset-top, 0px) + #{space.lg()}
-);
-$text-card-full-min: 20rem;
-$text-card-block-min: 12.5rem;

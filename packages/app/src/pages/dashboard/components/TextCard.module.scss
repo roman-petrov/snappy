@@ -6,7 +6,6 @@
 @use "pkg:@snappy/theme/shadow";
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/typography";
-@use "../../../scss/layout";
 
 .wrapper {
   display: flex;
@@ -38,7 +37,7 @@
 
 .card-full {
   flex: 1;
-  min-height: layout.$text-card-full-min;
+  min-height: 20rem;
 }
 
 .content-area-scroll {
@@ -50,7 +49,7 @@
 }
 
 .card-full .content-area-scroll {
-  min-height: layout.$text-card-block-min;
+  min-height: 12.5rem;
 }
 
 .result {

@@ -26,6 +26,8 @@ export * from "./PasswordInput";
 
 export * from "./PasswordStrength";
 
+export * from "./SafeArea";
+
 export * from "./Switch";
 
 export * from "./SwitchDisplay";
