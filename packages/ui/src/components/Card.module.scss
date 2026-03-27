@@ -2,13 +2,11 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/shadow";
-@use "pkg:@snappy/theme/tokens";
 
 .root {
   @include glass.card;
 
   width: 100%;
-  max-width: tokens.content-narrow();
   border: 1px solid color.border();
   border-radius: radius.md();
   box-shadow: shadow.md();

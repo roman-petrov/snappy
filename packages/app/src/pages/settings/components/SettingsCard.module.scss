@@ -2,13 +2,11 @@
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/core" as core;
 @use "pkg:@snappy/theme/shadow";
-@use "pkg:@snappy/theme/tokens";
 @use "pkg:@snappy/theme/typography";
 
 .block {
   display: grid;
   gap: space.sm();
-  max-width: tokens.layout-column();
   padding: space.md();
 }
 
@@ -35,8 +33,6 @@
 
 @include core.mobile {
   .block {
-    max-width: none;
-    margin: 0 space.md();
     box-shadow: shadow.sm();
   }
 }

@@ -1,5 +1,6 @@
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/tokens";
 
 .panel-page {
   display: flex;
@@ -8,6 +9,7 @@
 }
 
 .panel-card {
+  max-width: tokens.content-narrow();
   padding: space.xl();
 }
 

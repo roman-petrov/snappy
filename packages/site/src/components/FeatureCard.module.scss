@@ -7,6 +7,7 @@
 @use "pkg:@snappy/theme/typography";
 
 .feature {
+  max-width: tokens.content-narrow();
   padding: space.lg();
   transition: tokens.transition();
 }
