@@ -10,7 +10,6 @@
   flex-direction: column;
   gap: space.md();
   min-height: 0;
-  padding: space.md();
 }
 
 .back {
@@ -30,20 +29,4 @@
 
 .title {
   margin: 0;
-}
-
-.section-bleed .title {
-  padding: 0 space.md();
-}
-
-@include core.mobile {
-  .section-bleed {
-    padding-right: 0;
-    padding-left: 0;
-  }
-
-  .section-bleed .title {
-    padding-right: space.md();
-    padding-left: space.md();
-  }
 }

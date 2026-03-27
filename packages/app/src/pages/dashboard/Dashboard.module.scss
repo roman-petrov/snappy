@@ -7,7 +7,6 @@
   flex: 1;
   flex-direction: column;
   min-height: 0;
-  padding-bottom: space.xl();
   overflow: hidden;
 }
 
@@ -17,8 +16,6 @@
   flex-direction: column;
   gap: space.md();
   min-height: 0;
-  padding-block: space.md();
-  padding-inline: space.sm();
 }
 
 .controls-slot {
@@ -41,7 +38,6 @@
 
 @include mobile {
   .section {
-    padding-bottom: 0;
     overflow: visible;
   }
 

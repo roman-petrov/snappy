@@ -25,7 +25,7 @@ export const SettingsSubscriptionView = ({
   subscribeLoading,
   toggleLoading,
 }: SettingsSubscriptionViewProps) => (
-  <Page backLabel={t(`settingsSubscription.back`)} backLink="/settings" bleed title={t(`settings.subscription`)}>
+  <Page backLabel={t(`settingsSubscription.back`)} backLink="/settings" title={t(`settings.subscription`)}>
     <SettingsCard
       error={error === `` ? `` : t(error)}
       lead={

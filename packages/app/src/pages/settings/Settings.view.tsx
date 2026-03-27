@@ -10,7 +10,7 @@ import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } f
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
 export const SettingsView = ({ fog, locale, subscription, theme, toggleFog }: SettingsViewProps) => (
-  <Page bleed title={t(`settings.title`)}>
+  <Page title={t(`settings.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.systemGroup`)}>
         <SettingsCardRow

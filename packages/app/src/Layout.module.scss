@@ -87,6 +87,6 @@
 
   .main {
     max-width: none;
-    padding: calc(#{tokens.field-height()} + #{space.sm()} + #{space.lg()}) space.sm() space.md();
+    padding: calc(#{tokens.field-height()} + #{space.sm()}) space.sm() space.sm();
   }
 }
