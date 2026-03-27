@@ -49,6 +49,9 @@
 }
 
 @include core.mobile {
+  $mobile-inline-padding-right: calc(space.sm() + env(safe-area-inset-right, 0px));
+  $mobile-inline-padding-left: calc(space.sm() + env(safe-area-inset-left, 0px));
+
   .wrap {
     position: relative;
     height: 100%;
@@ -63,8 +66,8 @@
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
-    padding: calc(space.sm() + env(safe-area-inset-top, 0px)) calc(space.md() + env(safe-area-inset-right, 0px))
-      space.sm() calc(space.md() + env(safe-area-inset-left, 0px));
+    padding: calc(space.sm() + env(safe-area-inset-top, 0px)) $mobile-inline-padding-right space.sm()
+      $mobile-inline-padding-left;
   }
 
   .corner-right {
@@ -87,8 +90,8 @@
 
   .main {
     max-width: none;
-    padding: layout.$main-padding-block-start calc(space.md() + env(safe-area-inset-right, 0px))
-      env(safe-area-inset-bottom, 0) calc(space.md() + env(safe-area-inset-left, 0px));
+    padding: layout.$main-padding-block-start $mobile-inline-padding-right env(safe-area-inset-bottom, 0)
+      $mobile-inline-padding-left;
   }
 
   .main-dashboard {
