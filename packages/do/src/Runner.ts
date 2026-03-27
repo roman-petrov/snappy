@@ -3,26 +3,19 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
 import { _ } from "@snappy/core";
-import { Process } from "@snappy/node";
+import { Console, Process, Terminal } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
 import { Build } from "./Build";
 import { Commands } from "./Commands";
 
-const reset = `\u001B[0m`;
-const green = `\u001B[32m`;
-const red = `\u001B[31m`;
-const cyan = `\u001B[36m`;
-const dim = `\u001B[2m`;
-const yellow = `\u001B[33m`;
 const ok = `✓`;
 const fail = `✗`;
 const ellipsis = `\u2026`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
-const blue = `\u001B[34m`;
 
 type RunResult = { exitCode: number; message: string };
 
@@ -41,8 +34,8 @@ const tree = (name: string): TreeNode | undefined => {
 type TreeContext = { connector: string; prefix: string };
 
 const treeLine = (prefix: string, connector: string, label: string, status: `fail` | `node` | `ok`) => {
-  const icon = status === `ok` ? `${green}${ok}${reset}` : status === `fail` ? `${red}${fail}${reset}` : ``;
-  process.stdout.write(`${prefix}${connector}─ ${icon ? `${icon} ` : ``}${cyan}${label}${reset}\n`);
+  const icon = status === `ok` ? Terminal.green(ok) : status === `fail` ? Terminal.red(fail) : ``;
+  Console.logLine(`${prefix}${connector}─ ${icon ? `${icon} ` : ``}${Terminal.cyan(label)}`);
 };
 
 type ShellResult = number | { exitCode: number; stderr: string; stdout: string };
@@ -61,7 +54,7 @@ type RunLeafOptions = {
   withoutTree?: boolean;
 };
 
-const startupMessage = `\n🌐 ${yellow}Site running at ${blue}https://localhost${reset}\n`;
+const startupMessage = `\n🌐 ${Terminal.yellow(`Site running at`)} ${Terminal.blue(`https://localhost`)}\n`;
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
@@ -75,7 +68,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
 
   if (!mcp && !verbose) {
     const prefix = withoutTree === true ? `` : `${context.prefix}${context.connector}─ `;
-    process.stdout.write(`${prefix}${cyan}${label}${reset}${ellipsis} `);
+    Console.log(`${prefix}${Terminal.cyan(label)}${ellipsis} `);
   }
 
   const start = _.now();
@@ -104,7 +97,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
                 stdio: `inherit`,
               });
               if (name === `server:prod`) {
-                process.stdout.write(`\n${startupMessage}`);
+                Console.log(`\n${startupMessage}`);
               }
 
               if (run.background === true) {
@@ -141,19 +134,19 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   if (!mcp && !verbose) {
     const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
-    process.stdout.write(`${statusIcon} ${dim}${seconds}s${reset}\n`);
+    Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
     if (exitCode === 0 && name === `server:frontend:dev`) {
-      process.stdout.write(startupMessage);
+      Console.log(startupMessage);
     }
   }
 
   if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
-    process.stderr.write(`\n${red}${fail} Error running ${label}${reset}\n\n`);
+    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
     if (rawResult.stderr.length > 0) {
-      process.stderr.write(rawResult.stderr);
+      Console.error(rawResult.stderr);
     }
     if (rawResult.stdout.length > 0) {
-      process.stdout.write(rawResult.stdout);
+      Console.log(rawResult.stdout);
     }
   }
 
@@ -224,9 +217,9 @@ const run = async (
   const start = _.now();
   const withTree = node.children.length > 0;
   if (!isMcp && !verbose && withTree) {
-    process.stdout.write(`\n`);
+    Console.log(`\n`);
     if (definition !== undefined) {
-      process.stdout.write(`${cyan}${definition.label}${reset}\n`);
+      Console.logLine(Terminal.cyan(definition.label));
     }
   }
 
@@ -254,12 +247,12 @@ const run = async (
   }
 
   if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
-    process.stderr.write(`\n${red}${fail} ${name} failed${reset}\n\n${result.message}\n`);
+    Console.error(`\n${Terminal.red(`${fail} ${name} failed`)}\n\n${result.message}\n`);
   }
 
   if (!isMcp && !verbose && result.exitCode === 0) {
     const seconds = Math.round((_.now() - start) / _.second);
-    process.stdout.write(`\n✅ Done in ${green}${seconds}s${reset}\n`);
+    Console.log(`\n✅ Done in ${Terminal.green(`${seconds}s`)}\n`);
   }
 
   const message = result.exitCode === 0 && result.message === `` ? `${name} ok.` : result.message;

@@ -1,8 +1,8 @@
-/* eslint-disable no-console */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { Console } from "@snappy/node";
 import { z } from "zod";
 
 import { Commands } from "./Commands";
@@ -32,8 +32,7 @@ server.registerTool(
       return { content: [{ text: resolved.error, type: `text` as const }] };
     }
     const result = await Runner.run(root, resolved.name, { mcp: true });
-    /* eslint-disable no-control-regex, regexp/hexadecimal-escape, regexp/letter-case, regexp/no-control-character, regexp/unicode-escape -- strip ANSI, ESC required */
-    const text = result.message.replaceAll(/\u001B\[[0-9;]*m/gu, ``);
+    const text = Console.stripAnsi(result.message);
 
     return { content: [{ text, type: `text` as const }] };
   },
@@ -48,4 +47,4 @@ server.registerResource(
 );
 
 await server.connect(new StdioServerTransport());
-console.error(`Do MCP server running on stdio`);
+Console.errorLine(`Do MCP server running on stdio`);
