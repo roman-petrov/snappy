@@ -2,6 +2,7 @@ import { Alert } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
+import { Page } from "../../components";
 import { t } from "../../core";
 import { Limit, TextCard, TextComposer } from "./components";
 import styles from "./Dashboard.module.scss";
@@ -24,8 +25,8 @@ export const DashboardView = ({
   initLoading ? undefined : limitReached ? (
     <Limit />
   ) : (
-    <section className={styles.section}>
-      <div className={styles.main}>
+    <Page title={undefined}>
+      <section className={styles.section}>
         <div className={styles.controlsSlot}>
           <div className={styles.controls}>
             <TextComposer
@@ -43,6 +44,6 @@ export const DashboardView = ({
         <div className={`${styles.resultSlot} ${styles.scroll}`}>
           {showResult ? <TextCard loading={loading} result={result} /> : undefined}
         </div>
-      </div>
-    </section>
+      </section>
+    </Page>
   );

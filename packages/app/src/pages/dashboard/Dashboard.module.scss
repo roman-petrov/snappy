@@ -6,16 +6,9 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  min-height: 0;
-  overflow: hidden;
-}
-
-.main {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
   gap: space.md();
   min-height: 0;
+  overflow: hidden;
 }
 
 .controls-slot {
