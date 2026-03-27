@@ -13,9 +13,9 @@ export const useTapState = ({
   children,
   cn = ``,
   disabled = false,
+  keepFocus = false,
   link,
   onClick,
-  onMouseDown,
   submit = false,
   tip,
   vibrate,
@@ -61,6 +61,7 @@ export const useTapState = ({
   const linkRelationship = isExternal ? link.rel : undefined;
   const linkTarget = isExternal ? link.target : undefined;
   const onLinkClick = renderAsLink && !isExternal && !isHash ? handleLinkClick : undefined;
+  const onMouseDown = keepFocus ? (event: { preventDefault: () => void }) => event.preventDefault() : undefined;
 
   return {
     ariaBusy,

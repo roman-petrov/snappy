@@ -13,9 +13,9 @@ export type TapProps = {
   children: ReactNode;
   cn?: string;
   disabled?: boolean;
+  keepFocus?: boolean;
   link?: string | TapLinkExternal;
   onClick?: () => void;
-  onMouseDown?: (event: { preventDefault: () => void }) => void;
   submit?: boolean;
   tip?: string;
   vibrate?: Vibrate;

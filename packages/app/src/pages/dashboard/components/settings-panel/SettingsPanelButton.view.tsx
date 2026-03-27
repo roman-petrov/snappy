@@ -10,8 +10,8 @@ export const SettingsPanelButtonView = ({ active, onPress, text, toggle, ...rest
   <Tap
     ariaPressed={active}
     cn={toggle === true ? `${styles.button} ${styles.toggle}` : styles.button}
+    keepFocus
     onClick={onPress}
-    onMouseDown={event => event.preventDefault()}
     {...rest}
   >
     {text}

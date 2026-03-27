@@ -26,8 +26,8 @@ export const TextComposerView = ({
       <IconButton
         disabled={loading}
         icon={showSettings ? `⬆️` : `⬇️`}
+        keepFocus
         onClick={toggleSettings}
-        onMouseDown={event => event.preventDefault()}
         tip={showSettings ? t(`textComposer.settingsHide`) : t(`textComposer.settingsShow`)}
       />
       <div className={styles.textAreaWrap}>
