@@ -11,6 +11,7 @@ export const SettingsPanelButtonView = ({ active, onPress, text, toggle, ...rest
     ariaPressed={active}
     cn={toggle === true ? `${styles.button} ${styles.toggle}` : styles.button}
     onClick={onPress}
+    onMouseDown={event => event.preventDefault()}
     {...rest}
   >
     {text}
