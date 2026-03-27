@@ -1,13 +1,11 @@
 import { Header, Logo } from "@snappy/ui";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import { AuthGuard } from "./AuthGuard";
 import { HeaderContent } from "./components";
 import styles from "./Layout.module.scss";
 
 export const Layout = () => {
-  const { pathname } = useLocation();
-
   return (
     <div className={styles.wrap}>
       <header className={styles.mobileHeader}>
@@ -24,7 +22,7 @@ export const Layout = () => {
         </Header>
       </div>
       <div className={styles.scroll}>
-        <main className={`${styles.main} ${pathname === `/` ? styles.mainDashboard : ``}`}>
+        <main className={styles.main}>
           <AuthGuard>
             <Outlet />
           </AuthGuard>
