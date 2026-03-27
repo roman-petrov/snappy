@@ -23,13 +23,12 @@ export const TapView = ({
   submit,
   title,
 }: TapViewProps) => {
-  const classNames = _.cn(styles.root, cn);
-
   const common = {
     "aria-busy": ariaBusy,
     "aria-label": ariaLabel,
     "aria-pressed": ariaPressed,
-    "className": classNames,
+    children,
+    "className": _.cn(styles.root, cn),
     onMouseDown,
     title,
   };
@@ -44,15 +43,9 @@ export const TapView = ({
         rel={linkRelationship}
         role="link"
         target={linkTarget}
-      >
-        {children}
-      </a>
+      />
     );
   }
 
-  return (
-    <button {...common} disabled={disabled} onClick={buttonOnClick} type={submit ? `submit` : `button`}>
-      {children}
-    </button>
-  );
+  return <button {...common} disabled={disabled} onClick={buttonOnClick} type={submit ? `submit` : `button`} />;
 };

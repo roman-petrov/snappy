@@ -4,20 +4,27 @@ import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import { useIsMobile } from "../hooks/useIsMobile";
 import { Tap } from "./Tap";
 
 const renderTap = (ui: ReactElement) => render(<MemoryRouter>{ui}</MemoryRouter>);
 const navigate = vi.fn();
+const { bridgeState, hapticImpact } = vi.hoisted(() => ({ bridgeState: { available: false }, hapticImpact: vi.fn() }));
 
 vi.mock(import(`../hooks/useGo`), () => ({ useGo: () => navigate }));
-
-vi.mock(import(`../hooks/useIsMobile`), () => ({ useIsMobile: vi.fn(() => false) }));
+vi.mock(import(`../core/AndroidBridge`), () => ({
+  AndroidBridge: {
+    get available() {
+      return bridgeState.available;
+    },
+    hapticImpact,
+    setBarStyle: vi.fn(),
+  },
+}));
 
 describe(`tap`, () => {
   it(`navigates on link click for spa path`, () => {
     navigate.mockReset();
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(<Tap link="/dashboard">Open</Tap>);
 
     fireEvent.click(within(container).getByRole(`link`));
@@ -27,7 +34,7 @@ describe(`tap`, () => {
 
   it(`does not navigate on disabled link click`, () => {
     navigate.mockReset();
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(
       <Tap disabled link="/dashboard">
         Open
@@ -54,8 +61,8 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`renders as link when link is set and not mobile`, () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
+  it(`renders as link when link is set and bridge is not available`, () => {
+    bridgeState.available = false;
     const { container } = renderTap(<Tap link="/foo">Go</Tap>);
 
     expect(container).toMatchInlineSnapshot(`
@@ -72,7 +79,7 @@ describe(`tap`, () => {
   });
 
   it(`renders as link with href when link is external object`, () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(<Tap link={{ href: `https://example.com` }}>External</Tap>);
 
     expect(container).toMatchInlineSnapshot(`
@@ -89,7 +96,7 @@ describe(`tap`, () => {
   });
 
   it(`passes rel and target for external link`, () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(
       <Tap link={{ href: `https://x.com`, rel: `noopener`, target: `_blank` }}>Link</Tap>,
     );
@@ -111,7 +118,7 @@ describe(`tap`, () => {
 
   it(`renders hash link with href and does not call navigate on click`, () => {
     navigate.mockReset();
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(<Tap link="#features">Section</Tap>);
 
     expect(container.querySelector(`a`)?.getAttribute(`href`)).toBe(`#features`);
@@ -123,7 +130,7 @@ describe(`tap`, () => {
 
   it(`does not call navigate on external link click`, () => {
     navigate.mockReset();
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(<Tap link={{ href: `https://example.com` }}>External</Tap>);
 
     fireEvent.click(within(container).getByRole(`link`));
@@ -134,7 +141,7 @@ describe(`tap`, () => {
   it(`calls both navigate and onClick when link is spa path and onClick is provided`, () => {
     navigate.mockReset();
     const onClick = vi.fn();
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(
       <Tap link="/settings" onClick={onClick}>
         Settings
@@ -147,8 +154,8 @@ describe(`tap`, () => {
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
-  it(`renders as button when link is set but is mobile`, () => {
-    vi.mocked(useIsMobile).mockReturnValue(true);
+  it(`renders as button when bridge is available and link is spa path`, () => {
+    bridgeState.available = true;
     const { container } = renderTap(<Tap link="/foo">Go</Tap>);
 
     expect(container).toMatchInlineSnapshot(`
@@ -163,9 +170,9 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`calls navigate on button click when mobile and link is spa path`, () => {
+  it(`calls navigate on button click when bridge is available and link is spa path`, () => {
     navigate.mockReset();
-    vi.mocked(useIsMobile).mockReturnValue(true);
+    bridgeState.available = true;
     const { container } = renderTap(<Tap link="/foo">Go</Tap>);
 
     fireEvent.click(within(container).getByRole(`button`));
@@ -196,7 +203,7 @@ describe(`tap`, () => {
   });
 
   it(`applies aria-disabled to link when disabled`, () => {
-    vi.mocked(useIsMobile).mockReturnValue(false);
+    bridgeState.available = false;
     const { container } = renderTap(
       <Tap disabled link="/x">
         Link
@@ -234,6 +241,23 @@ describe(`tap`, () => {
         </button>
       </div>
     `);
+  });
+
+  it(`calls hapticImpact when vibrate is provided`, () => {
+    bridgeState.available = true;
+    hapticImpact.mockReset();
+    const onClick = vi.fn();
+
+    const { container } = renderTap(
+      <Tap onClick={onClick} vibrate="confirm">
+        Click
+      </Tap>,
+    );
+
+    fireEvent.click(within(container).getByRole(`button`));
+
+    expect(hapticImpact).toHaveBeenCalledWith(`confirm`);
+    expect(hapticImpact).toHaveBeenCalledTimes(1);
   });
 
   it(`passes tip to aria and title`, () => {

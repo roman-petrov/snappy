@@ -3,9 +3,9 @@ import { useHref } from "react-router-dom";
 
 import type { TapProps } from "./Tap";
 
+import { AndroidBridge } from "../core/AndroidBridge";
 import { Vibrate } from "../core/Vibrate";
 import { useGo } from "../hooks/useGo";
-import { useIsMobile } from "../hooks/useIsMobile";
 
 export const useTapState = ({
   ariaBusy,
@@ -21,11 +21,11 @@ export const useTapState = ({
   vibrate,
 }: TapProps) => {
   const go = useGo();
-  const isMobile = useIsMobile();
   const isExternal = _.isObject(link);
   const isHash = _.isString(link) && link.startsWith(`#`);
   const spaPath = _.isString(link) && !isHash ? link : undefined;
   const spaHref = useHref(spaPath ?? `/`);
+  const useJsNavigation = AndroidBridge.available && spaPath !== undefined;
 
   const handleLinkClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -41,7 +41,7 @@ export const useTapState = ({
     onClick?.();
   };
 
-  const renderAsLink = link !== undefined && !isMobile;
+  const renderAsLink = link !== undefined && !useJsNavigation;
 
   const buttonOnClick =
     link === undefined
@@ -53,7 +53,9 @@ export const useTapState = ({
             }
             onClick();
           }
-      : handleLinkClick;
+      : useJsNavigation
+        ? handleLinkClick
+        : undefined;
 
   const linkHref = link === undefined ? undefined : isHash ? link : isExternal ? link.href : spaHref;
   const linkRelationship = isExternal ? link.rel : undefined;
