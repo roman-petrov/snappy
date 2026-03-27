@@ -18,12 +18,6 @@
   @include overlay.top;
 }
 
-.overlay-bottom {
-  @include overlay.bottom;
-
-  min-height: env(safe-area-inset-bottom, 0);
-}
-
 .corner {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -64,10 +58,6 @@
 
 .main-dashboard {
   overflow: hidden;
-}
-
-.safe-bottom {
-  min-height: env(safe-area-inset-bottom, 0);
 }
 
 .wrap[data-desktop] {

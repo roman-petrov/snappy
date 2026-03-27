@@ -27,9 +27,6 @@ export const Layout = () => {
         </div>
       </header>
       <div className={styles.scroll}>{main}</div>
-      <footer className={styles.overlayBottom}>
-        <div aria-hidden className={styles.safeBottom} />
-      </footer>
     </div>
   ) : (
     <div className={styles.wrap} data-desktop>
