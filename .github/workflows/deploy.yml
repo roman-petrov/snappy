@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: 🐰 Setup Bun
-        uses: oven-sh/setup-bun@ecf28ddc73e819eb6fa29df6b34ef8921c743461 # v2.1.3
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: latest
 
@@ -29,7 +29,7 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: 🔧 Setup Gradle (cache)
-        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
+        uses: gradle/actions/setup-gradle@39e147cb9de83bb9910b8ef8bd7fff0ee20fcd6f # v6.0.1
         with:
           cache-disabled: ${{ inputs.disable-cache }}
 
@@ -66,7 +66,7 @@ jobs:
           tar --exclude=node_modules --exclude=.git --exclude=.jscpd --exclude=.cursor --exclude=.vscode --exclude=.analyze --exclude=.github -czf /tmp/snappy.tar.gz .
 
       - name: 🔑 Setup SSH
-        uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+        uses: webfactory/ssh-agent@e83874834305fe9a4a2997156cb26c5de65a8555 # v0.10.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
