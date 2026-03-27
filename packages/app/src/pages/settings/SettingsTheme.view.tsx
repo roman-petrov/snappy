@@ -7,7 +7,7 @@ import { SettingsOptionList } from "./components";
 export type SettingsThemeViewProps = ReturnType<typeof useSettingsThemeState>;
 
 export const SettingsThemeView = ({ onSelect, value }: SettingsThemeViewProps) => (
-  <Page backLabel={t(`settingsSubscription.back`)} backLink="/settings" title={t(`settings.appearance`)}>
+  <Page back title={t(`settings.appearance`)}>
     <SettingsOptionList
       onSelect={onSelect}
       options={[

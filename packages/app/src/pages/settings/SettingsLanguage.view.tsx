@@ -7,7 +7,7 @@ import { SettingsOptionList } from "./components";
 export type SettingsLanguageViewProps = ReturnType<typeof useSettingsLanguageState>;
 
 export const SettingsLanguageView = ({ onSelect, value }: SettingsLanguageViewProps) => (
-  <Page backLabel={t(`settingsSubscription.back`)} backLink="/settings" title={t(`settings.language`)}>
+  <Page back title={t(`settings.language`)}>
     <SettingsOptionList
       onSelect={onSelect}
       options={[

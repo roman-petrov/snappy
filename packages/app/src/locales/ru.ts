@@ -113,7 +113,6 @@ export const ru = {
     autoRenewOn: `Автопродление включено. Следующее списание: {nextBilling}.`,
     autoRenewShortOff: `выкл`,
     autoRenewShortOn: `вкл`,
-    back: `Настройки`,
     delete: `Удалить подписку`,
     deleteWarning: `Удалить подписку безвозвратно? Неиспользованное оплаченное время сгорит, доступ Premium прекратится сразу. Это действие нельзя отменить.`,
     errors: { subscriptionNotFound: `Подписка не найдена.` },

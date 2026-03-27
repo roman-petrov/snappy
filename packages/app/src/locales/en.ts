@@ -106,7 +106,6 @@ export const en = {
     autoRenewOn: `Auto-renew is on. Next charge: {nextBilling}.`,
     autoRenewShortOff: `off`,
     autoRenewShortOn: `on`,
-    back: `Settings`,
     delete: `Delete subscription`,
     deleteWarning: `Delete subscription permanently? Unused paid time will be lost and Premium access will stop immediately. This action cannot be undone.`,
     errors: { subscriptionNotFound: `Subscription not found.` },

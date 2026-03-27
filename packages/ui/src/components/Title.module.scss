@@ -5,7 +5,7 @@
 
 .root {
   padding-inline-start: space.md();
-  margin: 0 0 space.sm();
+  margin: space.md() 0;
   border-inline-start: #{tokens.accent-edge()} solid color.primary();
 }
 
@@ -16,5 +16,6 @@
 @include core.mobile {
   .root {
     padding-inline-start: space.sm();
+    margin: space.sm() 0;
   }
 }
