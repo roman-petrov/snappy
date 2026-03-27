@@ -1,4 +1,4 @@
-import { Header, Logo, useIsMobile } from "@snappy/ui";
+import { Header, Logo } from "@snappy/ui";
 import { Outlet, useLocation } from "react-router-dom";
 
 import { AuthGuard } from "./AuthGuard";
@@ -8,17 +8,9 @@ import styles from "./Layout.module.scss";
 export const Layout = () => {
   const { pathname } = useLocation();
 
-  const main = (
-    <main className={`${styles.main} ${pathname === `/` ? styles.mainDashboard : ``}`}>
-      <AuthGuard>
-        <Outlet />
-      </AuthGuard>
-    </main>
-  );
-
-  return useIsMobile() ? (
-    <div className={styles.wrap} data-mobile>
-      <header className={styles.overlayTop}>
+  return (
+    <div className={styles.wrap}>
+      <header className={styles.mobileHeader}>
         <div className={styles.corner}>
           <Logo />
           <div className={styles.cornerRight}>
@@ -26,14 +18,18 @@ export const Layout = () => {
           </div>
         </div>
       </header>
-      <div className={styles.scroll}>{main}</div>
-    </div>
-  ) : (
-    <div className={styles.wrap} data-desktop>
-      <Header>
-        <HeaderContent />
-      </Header>
-      {main}
+      <div className={styles.desktopHeader}>
+        <Header>
+          <HeaderContent />
+        </Header>
+      </div>
+      <div className={styles.scroll}>
+        <main className={`${styles.main} ${pathname === `/` ? styles.mainDashboard : ``}`}>
+          <AuthGuard>
+            <Outlet />
+          </AuthGuard>
+        </main>
+      </div>
     </div>
   );
 };
