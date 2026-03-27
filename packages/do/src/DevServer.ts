@@ -44,6 +44,7 @@ const appDir = join(projectRoot, `packages`, `app`);
 const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
 const portHttps = 443;
+const hostHttps = `localhost`;
 const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
 
 export const DevServer = () => {
@@ -53,6 +54,7 @@ export const DevServer = () => {
     const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
     const apiPort = Number(new URL(apiAddr).port);
     const app = express();
+    const server = https.createServer(await Cert.generate(), app);
 
     const configBuilder = ViteConfig(
       {
@@ -69,10 +71,15 @@ export const DevServer = () => {
     const config = await Promise.resolve(resolved);
 
     const vite = await createViteServer({
+      ...config,
       appType: `custom`,
       configFile: false,
-      server: { ...config.server, allowedHosts: true, middlewareMode: true },
-      ...config,
+      server: {
+        ...config.server,
+        allowedHosts: true,
+        hmr: { clientPort: portHttps, host: hostHttps, protocol: `wss`, server },
+        middlewareMode: true,
+      },
     });
 
     app.use(`/api`, (request, response) => apiProxy(apiPort)(request.originalUrl, request, response));
@@ -131,7 +138,7 @@ export const DevServer = () => {
     app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
-    https.createServer(await Cert.generate(), app).listen(portHttps, `0.0.0.0`, appContext.start);
+    server.listen(portHttps, `0.0.0.0`, appContext.start);
   };
 
   return { start };
