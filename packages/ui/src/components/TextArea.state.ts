@@ -1,19 +1,31 @@
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type { TextAreaProps } from "./TextArea";
 
+import { ReactRef } from "../core/ReactRef";
+
 const parsePx = (value: string) => Number.parseFloat(value);
 
-export const useTextAreaState = ({ maxLines, onChange, value, ...rest }: TextAreaProps) => {
-  const [focused, setFocused] = useState(false);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+export const useTextAreaState = ({
+  ariaBusy,
+  collapsed = false,
+  maxLines,
+  onBlur,
+  onChange,
+  onFocus,
+  readOnly,
+  ref: forwardedRef,
+  value,
+  ...rest
+}: TextAreaProps) => {
+  const elementRef = useRef<HTMLTextAreaElement | null>(null);
+  const mergedRef = useMemo(() => ReactRef.merge(elementRef, forwardedRef), [forwardedRef]);
   const rafRef = useRef<number | undefined>(undefined);
-  const blur = () => setFocused(false);
-  const focus = () => setFocused(true);
-  const onTextChange = onChange;
+  const blur = () => onBlur?.();
+  const focus = () => onFocus?.();
 
   useLayoutEffect(() => {
-    const element = textareaRef.current;
+    const element = elementRef.current;
 
     if (element !== null) {
       const scrollTopBefore = element.scrollTop;
@@ -35,7 +47,7 @@ export const useTextAreaState = ({ maxLines, onChange, value, ...rest }: TextAre
       const collapsedHeight =
         contentHeight <= oneLineHeight + 1 ? Math.min(contentHeight, oneLineHeight) : oneLineHeight;
 
-      const nextHeight = focused ? expandedHeight : collapsedHeight;
+      const nextHeight = collapsed ? collapsedHeight : expandedHeight;
       const overflow = contentHeight > maxHeight;
 
       if (rafRef.current !== undefined) {
@@ -44,7 +56,7 @@ export const useTextAreaState = ({ maxLines, onChange, value, ...rest }: TextAre
 
       rafRef.current = requestAnimationFrame(() => {
         element.style.height = `${nextHeight}px`;
-        element.style.overflowY = focused && overflow ? `auto` : `hidden`;
+        element.style.overflowY = !collapsed && overflow ? `auto` : `hidden`;
 
         const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);
 
@@ -62,7 +74,7 @@ export const useTextAreaState = ({ maxLines, onChange, value, ...rest }: TextAre
         rafRef.current = undefined;
       }
     };
-  }, [focused, maxLines, value]);
+  }, [collapsed, maxLines, value]);
 
-  return { ...rest, blur, focus, onTextChange, textareaRef, value };
+  return { ...rest, ariaBusy, blur, focus, onChange, readOnly, ref: mergedRef, value };
 };

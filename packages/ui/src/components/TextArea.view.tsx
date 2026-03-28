@@ -5,22 +5,26 @@ import styles from "./TextArea.module.scss";
 export type TextAreaViewProps = ReturnType<typeof useTextAreaState>;
 
 export const TextAreaView = ({
+  ariaBusy = false,
   blur,
   disabled = false,
   focus,
-  onTextChange,
+  onChange,
   placeholder,
-  textareaRef,
+  readOnly = false,
+  ref,
   value,
 }: TextAreaViewProps) => (
   <textarea
+    aria-busy={ariaBusy}
     className={styles.root}
     disabled={disabled}
     onBlur={blur}
-    onChange={event => onTextChange(event.currentTarget.value)}
+    onChange={event => onChange(event.currentTarget.value)}
     onFocus={focus}
     placeholder={placeholder}
-    ref={textareaRef}
+    readOnly={readOnly}
+    ref={ref}
     rows={1}
     value={value}
   />

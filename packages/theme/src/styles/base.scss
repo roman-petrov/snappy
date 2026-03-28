@@ -22,3 +22,8 @@ body {
     color tokens.ease(),
     background-color tokens.ease();
 }
+
+::selection {
+  color: color.on-primary();
+  background: color.primary();
+}

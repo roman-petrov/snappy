@@ -17,6 +17,14 @@ $breakpoint-mobile: 768px;
   }
 }
 
+@mixin pressed {
+  @media (hover: none), (pointer: coarse) {
+    &:active:not(:disabled) {
+      @content;
+    }
+  }
+}
+
 @mixin focus($ring-color: null, $radius: null) {
   &:focus-visible {
     @if $radius {

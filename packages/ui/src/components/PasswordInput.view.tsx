@@ -1,7 +1,6 @@
 import type { usePasswordInputState } from "./PasswordInput.state";
 
 import { t } from "../locales";
-import { Icon } from "./Icon";
 import { IconButton } from "./IconButton";
 import { Input } from "./Input";
 
@@ -28,7 +27,7 @@ export const PasswordInputView = ({
     suffix={
       <IconButton
         disabled={disabled}
-        icon={<Icon name={visible ? `eye-closed` : `eye-open`} />}
+        icon={visible ? `eye-closed` : `eye-open`}
         onClick={toggleVisible}
         tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
       />

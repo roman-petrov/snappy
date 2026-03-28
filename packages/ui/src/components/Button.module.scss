@@ -33,6 +33,12 @@
       border-color: color.primary();
       border-style: solid;
     }
+
+    @include pressed {
+      background: color.accent-soft();
+      border-color: color.primary();
+      border-style: solid;
+    }
   }
 
   &.primary {
@@ -40,6 +46,13 @@
     background: color.primary();
 
     @include hover {
+      background: color.primary-hover();
+      box-shadow:
+        shadow.accent(),
+        0 0 0 1px color.primary-border();
+    }
+
+    @include pressed {
       background: color.primary-hover();
       box-shadow:
         shadow.accent(),

@@ -1,18 +1,23 @@
-/* eslint-disable react/no-danger */
+import { Html } from "@snappy/browser";
 import { _ } from "@snappy/core";
 
+import { $, type Color } from "../$";
 import { Icons } from "../assets";
 import styles from "./Icon.module.scss";
 
 export type Icon = keyof typeof Icons | { emoji: string };
 
-export type IconProps = { cn?: string; name: Icon };
+export type IconProps = { cn?: string; color?: Color; name: Icon };
 
-export const Icon = ({ cn = ``, name }: IconProps) =>
+export const Icon = ({ cn = ``, color, name }: IconProps) =>
   _.isString(name) ? (
-    <span aria-hidden className={`${styles.root} ${cn}`.trim()} dangerouslySetInnerHTML={{ __html: Icons[name] }} />
+    <span
+      aria-hidden
+      className={_.cn(styles.root, color === undefined ? `` : $.color(color), cn)}
+      {...Html.text(Icons[name])}
+    />
   ) : (
-    <span aria-hidden className={`${styles.root} ${styles.rootEmoji} ${cn}`.trim()}>
+    <span aria-hidden className={_.cn(styles.root, styles.rootEmoji, color === undefined ? `` : $.color(color), cn)}>
       {name.emoji}
     </span>
   );

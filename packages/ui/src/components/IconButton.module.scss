@@ -1,29 +1,95 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
 
 .root {
   @include primitives.inline-row-center;
-  @include primitives.circle(space.xl());
+  @include primitives.square(tokens.icon-button-size());
 
   position: relative;
   padding: 0;
-  overflow: hidden;
-  font-size: tokens.icon-size();
-  line-height: 1;
   color: color.text-muted();
-  transition:
-    color tokens.ease(),
-    background-color tokens.ease();
+  transition: color tokens.ease();
 
-  &:focus-visible {
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    content: "";
+    background: transparent;
+    transform: translate(-50%, -50%);
+    transition: background-color tokens.ease();
+
+    @include primitives.circle(tokens.icon-button-touch-size());
+  }
+
+  > span {
+    position: relative;
+
+    @include primitives.inline-row-center;
+    @include primitives.square(tokens.icon-button-size());
+
+    font-size: tokens.icon-button-size();
+
+    &.emoji {
+      font-size: 1.375rem;
+      line-height: 1;
+    }
+
+    > svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &:focus-visible::before {
     background: color.accent-soft();
   }
 
   @include hover {
     color: color.primary();
-    background: color.accent-soft();
+
+    &::before {
+      background: color.accent-soft();
+    }
+  }
+
+  @include pressed {
+    color: color.primary();
+
+    &::before {
+      background: color.accent-soft();
+    }
+  }
+
+  &.filled {
+    color: color.on-primary();
+
+    &::before {
+      background: color.primary();
+    }
+
+    &:focus-visible::before {
+      background: color.primary-hover();
+    }
+
+    @include hover {
+      color: color.on-primary();
+
+      &::before {
+        background: color.primary-hover();
+      }
+    }
+
+    @include pressed {
+      color: color.on-primary();
+
+      &::before {
+        background: color.primary-hover();
+      }
+    }
   }
 }

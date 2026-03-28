@@ -118,10 +118,11 @@ export const en = {
   settingsTheme: { dark: `Dark`, light: `Light`, system: `System` },
   subscribeButton: `Subscribe — {premiumPrice}/month`,
   textComposer: {
-    settingsHide: `Hide settings`,
-    settingsShow: `Show settings`,
     submit: `Process`,
     submitting: `Processing…`,
     textPlaceholder: `Enter text...`,
+    voiceStart: `Tap to dictate`,
+    voiceStop: `Tap the mic to stop`,
+    voiceUnavailable: `Voice input is not available in this browser`,
   },
 };

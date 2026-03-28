@@ -10,7 +10,11 @@ export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 export const HeaderContentView = ({ logoutOnClick }: HeaderContentViewProps) => (
   <div className={styles.root}>
     <SystemButtons />
-    {logoutOnClick === undefined ? undefined : <IconButton icon="⚙" link="/settings" tip={t(`settings.title`)} />}
-    {logoutOnClick === undefined ? undefined : <IconButton icon="➜" onClick={logoutOnClick} tip={t(`logout`)} />}
+    {logoutOnClick === undefined ? undefined : (
+      <IconButton icon={{ emoji: `⚙` }} link="/settings" tip={t(`settings.title`)} />
+    )}
+    {logoutOnClick === undefined ? undefined : (
+      <IconButton icon={{ emoji: `➜` }} onClick={logoutOnClick} tip={t(`logout`)} />
+    )}
   </div>
 );

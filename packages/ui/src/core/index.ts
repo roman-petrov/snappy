@@ -6,6 +6,8 @@ export * from "./AndroidBridge";
 
 export * from "./Locale";
 
+export * from "./ReactRef";
+
 export * from "./Theme";
 
 export * from "./ThemeFog";

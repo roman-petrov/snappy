@@ -10,7 +10,7 @@ export const PageView = ({ back, children, goBack, title }: PageViewProps) => (
   <section className={styles.section}>
     {back || title !== undefined ? (
       <div className={styles.head}>
-        {back ? <IconButton icon="←" onClick={goBack} tip="Back" /> : undefined}
+        {back ? <IconButton icon={{ emoji: `←` }} onClick={goBack} tip="Back" /> : undefined}
         {title === undefined ? undefined : <Title cn={styles.title} level={1} title={title} />}
       </div>
     ) : undefined}

@@ -34,6 +34,14 @@
   @return var(--layout-column-wide);
 }
 
+@function icon-button-size() {
+  @return var(--icon-button-size);
+}
+
+@function icon-button-touch-size() {
+  @return var(--icon-button-touch-size);
+}
+
 @function touch-min() {
   @return var(--touch-target-min);
 }

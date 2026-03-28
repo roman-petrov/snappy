@@ -3,12 +3,11 @@
 
 .root {
   @include primitives.inline-row-center;
-  @include primitives.square(tokens.icon-size(), $min: true);
+  @include primitives.square(tokens.icon-size());
 
   flex-shrink: 0;
   overflow: visible;
   vertical-align: middle;
-  color: inherit;
 }
 
 .root-emoji {

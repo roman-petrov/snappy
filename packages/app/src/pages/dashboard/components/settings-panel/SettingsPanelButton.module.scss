@@ -14,7 +14,6 @@
   @include focus;
 
   position: relative;
-  box-sizing: border-box;
   flex: 0 0 auto;
   width: 9rem;
   min-width: 9rem;
@@ -51,10 +50,16 @@
   @include hover {
     color: color.primary();
   }
+
+  @include pressed {
+    color: color.primary();
+  }
 }
 
-.button:active:not(:disabled) {
-  transform: scale(0.97);
+.button {
+  @include pressed {
+    transform: scale(0.97);
+  }
 }
 
 .button:disabled {
