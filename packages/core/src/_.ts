@@ -11,7 +11,7 @@ import { DateTime } from "./DateTime";
 import { ObjectValue } from "./ObjectValue";
 import { Time } from "./Time";
 
-const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf-8`);
+const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf8`);
 const camelCase = (s: string) => s.replaceAll(/-(?<c>[a-z])/gu, (_, c: string) => c.toUpperCase());
 
 const pascalCase = (s: string) => {
