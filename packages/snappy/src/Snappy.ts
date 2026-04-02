@@ -10,7 +10,7 @@ export const Snappy = ({ gigaChatAuthKey }: SnappyOptions) => {
   const client = new GigaChat({
     credentials: gigaChatAuthKey,
     httpsAgent: new Agent({ rejectUnauthorized: false }),
-    model: `GigaChat`,
+    model: `GigaChat-Max`,
     scope: `GIGACHAT_API_PERS`,
     timeout: 600,
   });
