@@ -13,14 +13,7 @@ const requireUser =
   (api: ServerAppApi) =>
   async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const token = AuthCookie.token(request.headers.cookie ?? ``);
-
-    if (token === undefined) {
-      await reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
-
-      return;
-    }
-
-    const payload = api.auth.verify(token);
+    const payload = token === undefined ? undefined : api.auth.verify(token);
     if (payload === undefined) {
       await reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
 
