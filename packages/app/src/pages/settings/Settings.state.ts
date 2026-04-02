@@ -10,7 +10,7 @@ export const useSettingsState = () => {
   const theme = useStoreValue($theme);
   const locale = useStoreValue($locale);
 
-  useAsyncEffect(async () => setSubscription(await api.subscriptionGet(``)), [locale]);
+  useAsyncEffect(async () => setSubscription(await api.subscriptionGet()), [locale]);
   const toggleFog = () => $fog.set(!fog);
 
   return { fog, locale, subscription, theme, toggleFog };

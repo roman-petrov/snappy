@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Config } from "@snappy/config";
 
-import { SnappyBot } from "@snappy/bot";
 import { Db } from "@snappy/db";
 import { Cron } from "@snappy/node";
 import { Payment } from "@snappy/payment";
@@ -12,23 +11,17 @@ import { SubscriptionRenewalCronJob } from "./cron-jobs";
 import { PaymentLog } from "./PaymentLog";
 import { Process } from "./Process";
 import { Subscription } from "./Subscription";
-import { User } from "./User";
 
-export const ServerApp = (
-  {
-    botApiKey,
-    botToken,
-    dbUrl,
-    freeRequestLimit,
-    gigaChatAuthKey,
-    jwtSecret,
-    premiumPeriodDays,
-    premiumPrice,
-    yooKassaSecretKey,
-    yooKassaShopId,
-  }: Config,
-  { apiBaseUrl, version }: { apiBaseUrl: string; version?: string },
-) => {
+export const ServerApp = ({
+  dbUrl,
+  freeRequestLimit,
+  gigaChatAuthKey,
+  jwtSecret,
+  premiumPeriodDays,
+  premiumPrice,
+  yooKassaSecretKey,
+  yooKassaShopId,
+}: Config) => {
   const db = Db(dbUrl);
   const snappy = Snappy({ gigaChatAuthKey });
   const payment = Payment({ credentials: { secretKey: yooKassaSecretKey, shopId: yooKassaShopId }, type: `yoo-kassa` });
@@ -54,14 +47,11 @@ export const ServerApp = (
     subscription: db.subscription,
   });
 
-  const user = User({ user: db.user });
-  const api = { auth, process: processModule, subscription, user };
+  const api = { auth, process: processModule, subscription };
   const cron = Cron();
   cron.addJob(SubscriptionRenewalCronJob(subscription));
-  const bot = SnappyBot({ apiKey: botApiKey, apiUrl: apiBaseUrl, botToken, ...(version !== undefined && { version }) });
-  const { start, stop } = bot;
 
-  return { api, start, stop };
+  return { api };
 };
 
 export type ServerApp = ReturnType<typeof ServerApp>;

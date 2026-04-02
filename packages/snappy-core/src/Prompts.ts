@@ -19,6 +19,6 @@ const stylePrompts: Record<SnappyStyle, string> = {
 };
 
 const addEmoji = `Добавь релевантные эмодзи, усиливающие смысл. Используй умеренно (1-2 на абзац или важную мысль). Эмодзи должны быть уместными.`;
-const addFormatting = `Примени форматирование Telegram HTML: <b>жирный</b>, <i>курсив</i>, <u>подчёркнутый</u>, <s>зачёркнутый</s>, <code>код</code>, <pre>блок кода</pre>. Используй теги для выделения ключевых мыслей.`;
+const addFormatting = `Примени HTML-разметку: <b>жирный</b>, <i>курсив</i>, <u>подчёркнутый</u>, <s>зачёркнутый</s>, <code>код</code>, <pre>блок кода</pre>. Используй теги для выделения ключевых мыслей.`;
 
 export const Prompts = { addEmoji, addFormatting, base, length: lengthPrompts, style: stylePrompts };

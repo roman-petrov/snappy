@@ -16,7 +16,7 @@ export const useDashboardState = () => {
 
   useAsyncEffectOnce(async () => {
     try {
-      const response = await api.remaining(``);
+      const response = await api.remaining();
 
       setOptions(response.options);
       if (response.remaining === 0 && response.isPremium !== true) {
@@ -35,7 +35,7 @@ export const useDashboardState = () => {
     }
     setIsEditMode(false);
     setLoading(true);
-    const processResult = await api.process(``, text.trim(), options);
+    const processResult = await api.process(text.trim(), options);
     setLoading(false);
     if (processResult.status !== `ok`) {
       if (processResult.status === `requestLimitReached`) {

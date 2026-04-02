@@ -10,7 +10,7 @@ export const SiteFooter = () => (
         <Logo />
       </span>
       <Text as="p" cn={styles.tagline} color="muted" text={t(`footer.tagline`)} typography="large" />
-      <Link link={{ href: `https://t.me/sn4ppy_bot`, rel: `noopener`, target: `_blank` }} text="@sn4ppy_bot" />
+      <Link link={{ href: `/app` }} text={t(`footer.appLink`)} />
     </div>
   </footer>
 );

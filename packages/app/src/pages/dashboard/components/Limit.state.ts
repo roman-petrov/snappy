@@ -18,7 +18,7 @@ export const useLimitState = () => {
     nextReset === undefined ? 0 : Math.max(0, nextReset - _.now());
 
   useAsyncEffectOnce(async () => {
-    const response = await api.remaining(``);
+    const response = await api.remaining();
     setNextResetAt(response.nextResetAt);
     setRemaining(remainingMs(response.nextResetAt));
     setFreeRequestLimit(response.freeRequestLimit);
@@ -36,7 +36,7 @@ export const useLimitState = () => {
   const subscribe = async () => {
     setPayError(``);
     setPayLoading(true);
-    const result = await api.premiumUrl(``);
+    const result = await api.premiumUrl();
     setPayLoading(false);
     if (result.status === `ok`) {
       window.location.href = result.url;

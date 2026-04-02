@@ -6,8 +6,6 @@ export type ApiAuthMeResult = ApiOkResult | { status: ApiAuthMeErrorCode };
 
 export type ApiAuthSuccessInternal = { token: string };
 
-export type ApiBotBody = { telegramId?: number };
-
 export type ApiForgotPasswordBody = { email?: string };
 
 export type ApiForgotPasswordErrorCode = `emailRequired`;

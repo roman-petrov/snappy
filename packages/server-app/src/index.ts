@@ -9,5 +9,3 @@ export * from "./Process";
 export * from "./ServerApp";
 
 export * from "./Subscription";
-
-export * from "./User";

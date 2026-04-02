@@ -17,11 +17,10 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const portHttp = 80;
 const portHttps = 443;
-const version = process.env[`SNAPPY_VERSION`];
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
-const appContext = ServerApp(Config, { apiBaseUrl: `http://127.0.0.1`, version });
+const appContext = ServerApp(Config);
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,
@@ -29,7 +28,6 @@ const handlerRef: { current: ((request: http.IncomingMessage, response: http.Ser
 
 const app = await App.createApp({
   api: appContext.api,
-  botApiKey: Config.botApiKey,
   serverFactory: handler => {
     handlerRef.current = handler;
 
@@ -114,7 +112,6 @@ if (handlerRef.current === undefined) {
   throw new Error(`serverFactory was not called`);
 }
 
-void appContext.start();
 https
   .createServer(
     sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : await Cert.generate(),

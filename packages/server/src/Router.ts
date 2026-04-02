@@ -23,9 +23,9 @@ export type Route<TSuccess = unknown> = {
   successBody: (result: TSuccess) => object;
 };
 
-type BindOptions = { api: ServerAppApi; botApiKey: string; routes: Route[] };
+type BindOptions = { api: ServerAppApi; routes: Route[] };
 
-const bind = (app: FastifyInstance, { api, botApiKey, routes }: BindOptions) => {
+const bind = (app: FastifyInstance, { api, routes }: BindOptions) => {
   for (const route of routes) {
     const handler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
       const result = await route.run(api, request);
@@ -50,7 +50,7 @@ const bind = (app: FastifyInstance, { api, botApiKey, routes }: BindOptions) => 
       await reply.status(HttpStatus.ok).send(route.successBody(result));
     };
 
-    const preHandler = route.auth === true ? Middleware.requireUser(api, botApiKey) : undefined;
+    const preHandler = route.auth === true ? Middleware.requireUser(api) : undefined;
     app[route.method](route.path, { preHandler }, handler);
   }
 };

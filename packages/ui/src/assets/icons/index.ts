@@ -8,7 +8,6 @@ import microphone from "./microphone.svg?raw";
 import process from "./process.svg?raw";
 import settingsHide from "./settings-hide.svg?raw";
 import settingsShow from "./settings-show.svg?raw";
-import telegram from "./telegram.svg?raw";
 
 export const Icons = {
   "alert-error": alertError,
@@ -21,5 +20,4 @@ export const Icons = {
   process,
   "settings-hide": settingsHide,
   "settings-show": settingsShow,
-  telegram,
 } as const;

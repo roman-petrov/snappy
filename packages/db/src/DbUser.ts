@@ -8,8 +8,6 @@ export type DbUser = {
   passwordHash: string | undefined;
   resetToken: string | undefined;
   resetTokenExpires: number | undefined;
-  telegramId: number | undefined;
-  telegramUsername: string | undefined;
 };
 
 const parse = (row: {
@@ -19,8 +17,6 @@ const parse = (row: {
   passwordHash: null | string;
   resetToken: null | string;
   resetTokenExpires: Date | null;
-  telegramId: null | number;
-  telegramUsername: null | string;
 }): DbUser => ({
   createdAt: row.createdAt.getTime(),
   email: row.email ?? undefined,
@@ -28,8 +24,6 @@ const parse = (row: {
   passwordHash: row.passwordHash ?? undefined,
   resetToken: row.resetToken ?? undefined,
   resetTokenExpires: row.resetTokenExpires === null ? undefined : row.resetTokenExpires.getTime(),
-  telegramId: row.telegramId ?? undefined,
-  telegramUsername: row.telegramUsername ?? undefined,
 });
 
 export const DbUser = (prisma: PrismaClient) => {
@@ -56,21 +50,5 @@ export const DbUser = (prisma: PrismaClient) => {
   const clearResetAndSetPassword = async (id: number, passwordHash: string) =>
     prisma.user.update({ data: { passwordHash, resetToken: null, resetTokenExpires: null }, where: { id } });
 
-  const upsertByTelegramId = async (telegramId: number, telegramUsername?: string) =>
-    parse(
-      await prisma.user.upsert({
-        create: { telegramId, telegramUsername: telegramUsername ?? undefined },
-        update: telegramUsername === undefined ? {} : { telegramUsername },
-        where: { telegramId },
-      }),
-    );
-
-  return {
-    clearResetAndSetPassword,
-    createWithEmailPassword,
-    findByEmail,
-    findByResetToken,
-    setResetToken,
-    upsertByTelegramId,
-  };
+  return { clearResetAndSetPassword, createWithEmailPassword, findByEmail, findByResetToken, setResetToken };
 };

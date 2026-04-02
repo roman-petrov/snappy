@@ -21,7 +21,7 @@ export const useSettingsSubscriptionState = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   const refresh = async () => {
-    const sub = await api.subscriptionGet(``);
+    const sub = await api.subscriptionGet();
     setSubscription(sub);
     const now = _.now();
     const { autoRenew, nextBillingAt, premiumUntil } = sub;
@@ -56,7 +56,7 @@ export const useSettingsSubscriptionState = () => {
   };
 
   const subscribe = async () => {
-    const result = await runLoadingAction(setSubscribeLoading, async () => api.premiumUrl(``));
+    const result = await runLoadingAction(setSubscribeLoading, async () => api.premiumUrl());
     if (result.status === `ok`) {
       window.location.href = result.url;
     } else {
@@ -65,10 +65,10 @@ export const useSettingsSubscriptionState = () => {
   };
 
   const setAutoRenew = async (enabled: boolean) =>
-    runAction(setToggleLoading, async () => api.subscriptionSetAutoRenew(``, enabled));
+    runAction(setToggleLoading, async () => api.subscriptionSetAutoRenew(enabled));
 
-  const renew = async () => runAction(setRenewLoading, async () => api.subscriptionRenew(``));
-  const deleteSubscription = async () => runAction(setDeleteLoading, async () => api.subscriptionDelete(``, true));
+  const renew = async () => runAction(setRenewLoading, async () => api.subscriptionRenew());
+  const deleteSubscription = async () => runAction(setDeleteLoading, async () => api.subscriptionDelete(true));
   const freeRequestLimit = subscription?.freeRequestLimit ?? 0;
   const premiumPrice = subscription?.premiumPrice ?? 0;
   const daysLeft = status.kind === `free` ? 0 : Math.max(0, Math.floor((status.premiumUntil - _.now()) / _.day));

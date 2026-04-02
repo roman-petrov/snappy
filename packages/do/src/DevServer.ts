@@ -49,8 +49,8 @@ const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name,
 
 export const DevServer = () => {
   const start = async () => {
-    const appContext = ServerApp(Config, { apiBaseUrl: `http://127.0.0.1` });
-    const apiApp = await App.createApp({ api: appContext.api, botApiKey: Config.botApiKey });
+    const appContext = ServerApp(Config);
+    const apiApp = await App.createApp({ api: appContext.api });
     const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
     const apiPort = Number(new URL(apiAddr).port);
     const app = express();
@@ -138,7 +138,7 @@ export const DevServer = () => {
     app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
-    server.listen(portHttps, `0.0.0.0`, appContext.start);
+    server.listen(portHttps, `0.0.0.0`);
   };
 
   return { start };

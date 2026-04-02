@@ -9,14 +9,12 @@
 | `DB_USER`             | yes      | PostgreSQL user                                                 |
 | `DB_PASSWORD`         | yes      | PostgreSQL password                                             |
 | `DB_NAME`             | yes      | Database name                                                   |
-| `BOT_TOKEN`           | yes      | Telegram Bot API token (from @BotFather)                        |
 | `GIGACHAT_AUTH_KEY`   | yes      | GigaChat API authorization key                                  |
-| `BOT_API_KEY`         | yes      | Secret key for bot–cabinet API auth; generate a random string   |
 | `JWT_SECRET`          | yes      | Secret for signing JWT (min 32 chars); generate a random string |
 | `YOOKASSA_SECRET_KEY` | no       | YooKassa secret key (payments)                                  |
 | `YOOKASSA_SHOP_ID`    | no       | YooKassa shop ID (payments)                                     |
 
-### Generating JWT_SECRET and BOT_API_KEY
+### Generating JWT_SECRET
 
 **JWT_SECRET** — use a cryptographically random string (≥32 chars):
 
@@ -24,13 +22,7 @@
 openssl rand -base64 32
 ```
 
-**BOT_API_KEY** — same approach; any random secret shared between bot and cabinet:
-
-```bash
-openssl rand -base64 32
-```
-
-Keep both values secret and use different values per environment.
+Keep the value secret and use different values per environment.
 
 ## Prerequisites
 
@@ -45,7 +37,7 @@ Keep both values secret and use different values per environment.
 
 | Secret                | Description             | Example                              |
 | --------------------- | ----------------------- | ------------------------------------ |
-| `SSH_HOST`            | Server hostname or IP   | `192.168.1.100` or `bot.example.com` |
+| `SSH_HOST`            | Server hostname or IP   | `192.168.1.100` or `app.example.com` |
 | `SSH_USER`            | SSH username            | `deploy` or `ubuntu`                 |
 | `SSH_PRIVATE_KEY`     | Private SSH key content | Full key with BEGIN/END              |
 | `DB_HOST`             | PostgreSQL host         | `localhost` or DB server host        |
@@ -53,8 +45,6 @@ Keep both values secret and use different values per environment.
 | `DB_USER`             | PostgreSQL user         |                                      |
 | `DB_PASSWORD`         | PostgreSQL password     |                                      |
 | `DB_NAME`             | PostgreSQL database     |                                      |
-| `BOT_TOKEN`           | Telegram bot token      |                                      |
-| `BOT_API_KEY`         | Bot–cabinet API secret  | Generate: `openssl rand -base64 32`  |
 | `JWT_SECRET`          | JWT signing secret      | Generate: `openssl rand -base64 32`  |
 | `GIGACHAT_AUTH_KEY`   | GigaChat API key        |                                      |
 | `YOOKASSA_SECRET_KEY` | YooKassa secret key     |                                      |

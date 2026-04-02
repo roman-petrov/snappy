@@ -84,7 +84,7 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`server:dev`]: {
     children: [`server:frontend:dev`],
-    description: `Run dev server (site + app + API + bot on port 80).`,
+    description: `Run dev server (site + app + API on port 80).`,
     label: `🖥️ Server`,
   },
   [`server:frontend:dev`]: {

@@ -79,7 +79,6 @@ jobs:
 
       - name: 🚀 Extract and run on server
         env:
-          SNAPPY_VERSION: ${{ github.sha }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -87,8 +86,6 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-          BOT_API_KEY: ${{ secrets.BOT_API_KEY }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           GIGACHAT_AUTH_KEY: ${{ secrets.GIGACHAT_AUTH_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
@@ -97,14 +94,11 @@ jobs:
           SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
         run: |
           ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
-            SNAPPY_VERSION="${SNAPPY_VERSION}" \
             DB_HOST="${DB_HOST}" \
             DB_PORT="${DB_PORT}" \
             DB_USER="${DB_USER}" \
             DB_PASSWORD="${DB_PASSWORD}" \
             DB_NAME="${DB_NAME}" \
-            BOT_TOKEN="${BOT_TOKEN}" \
-            BOT_API_KEY="${BOT_API_KEY}" \
             JWT_SECRET="${JWT_SECRET}" \
             GIGACHAT_AUTH_KEY="${GIGACHAT_AUTH_KEY}" \
             YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
