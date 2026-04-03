@@ -246,10 +246,6 @@ const run = async (
     });
   }
 
-  if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
-    Console.error(`\n${Terminal.red(`${fail} ${name} failed`)}\n\n${result.message}\n`);
-  }
-
   if (!isMcp && !verbose && result.exitCode === 0) {
     const seconds = Math.round((_.now() - start) / _.second);
     Console.log(`\n✅ Done in ${Terminal.green(`${seconds}s`)}\n`);

@@ -1,0 +1,75 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding: space.sm();
+}
+
+.bubble {
+  max-width: 90%;
+  padding: space.sm();
+  border-radius: radius.md();
+}
+
+.session-bubble {
+  align-self: flex-start;
+  background: color.primary-ghost();
+  border: 1px solid color.primary-border();
+}
+
+.session-row {
+  display: flex;
+  gap: space.sm();
+  align-items: center;
+}
+
+.session-list {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  align-self: stretch;
+}
+
+.session-spinner {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid color.border();
+  border-top-color: color.primary();
+  border-radius: 50%;
+  animation: session-spin 0.75s linear infinite;
+}
+
+.session-check {
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  color: color.success();
+}
+
+@keyframes session-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bubble-text {
+  @include typography.body;
+
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.ui-plan-wrap {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  align-self: stretch;
+  width: 100%;
+}

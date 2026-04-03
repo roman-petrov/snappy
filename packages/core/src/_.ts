@@ -64,6 +64,17 @@ const dec = (s: string) => int(s, 10);
 const hex = (s: string) => int(s, 16);
 const noop = () => {};
 
+const round = (value: number, fractionDigits: number) => {
+  const factor = 10 ** fractionDigits;
+
+  return Math.round(value * factor) / factor;
+};
+
+const b1024 = 1024;
+const kb = (kiloBytes: number) => kiloBytes * b1024;
+const mb = (megaBytes: number) => kb(kb(megaBytes));
+const gb = (gigaBytes: number) => kb(mb(gigaBytes));
+
 export const _ = {
   ...DateTime,
   ...ObjectValue,
@@ -74,6 +85,7 @@ export const _ = {
   daysInWeek: Time.daysInWeek,
   daysInYear: Time.daysInYear,
   dec,
+  gb,
   hex,
   isArray,
   isBoolean,
@@ -81,9 +93,12 @@ export const _ = {
   isNumber,
   isObject,
   isString,
+  kb,
   list,
+  mb,
   noop,
   pascalCase,
+  round,
   singleAction,
   timeBuild: Time.build,
   timeGet: Time.get,

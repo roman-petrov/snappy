@@ -1,20 +1,18 @@
-# 📋 Workflow
+# Workflow
 
-## 🗄️ Database migrations in feature branches
+Schema source of truth: `packages/db/prisma/schema.prisma`.
 
-Single clean migration at merge. Schema: `packages/db/prisma/schema.prisma`.
+## Feature branch
 
-### 🔄 During development
+1. Run `bun do dev`.
+2. Change only `schema.prisma`.
+3. Restart `bun do dev` after schema changes.
+4. Do not create migration files during daily development.
 
-1. Run `bun do dev` — DB container + schema push + server (no migration files)
-2. Edit schema → restart `bun do dev` to apply
-3. Repeat
+## Before merge
 
-### ✅ Before merge
-
-1. Rebase on `main`
-2. Run `bun prisma migrate dev --create-only` — creates migration from diff (Prisma prompts for name)
-3. Run `bun prisma generate` — ensure schema and client are in sync
-4. Review SQL in `packages/db/prisma/migrations/`
-5. Run `bun prisma migrate dev` to apply (or `bun prisma migrate reset` if DB is messy)
-6. Commit migration, merge
+1. Rebase on `main`.
+2. Create one migration: `bun prisma migrate dev --create-only`.
+3. Generate client: `bun prisma generate`.
+4. Review SQL in `packages/db/prisma/migrations/`.
+5. Commit schema + generated client + migration.

@@ -9,8 +9,6 @@
   @include primitives.inline-row;
 
   gap: space.sm();
-  text-decoration: none;
-  outline: none;
 
   @include focus($radius: radius.xs());
 }

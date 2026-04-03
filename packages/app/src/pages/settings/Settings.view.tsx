@@ -1,23 +1,32 @@
-import { i } from "@snappy/intl";
 import { SwitchDisplay } from "@snappy/ui";
 
 import type { useSettingsState } from "./Settings.state";
 
 import { Page } from "../../components";
 import { t } from "../../core";
+import { Routes } from "../../Routes";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "./components";
 
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
-export const SettingsView = ({ fog, locale, subscription, theme, toggleFog }: SettingsViewProps) => (
+export const SettingsView = ({
+  balanceEnd,
+  fog,
+  llmChatEnd,
+  llmImageEnd,
+  llmSpeechEnd,
+  locale,
+  theme,
+  toggleFog,
+}: SettingsViewProps) => (
   <Page title={t(`settings.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.systemGroup`)}>
         <SettingsCardRow
           end={`${t(`settingsTheme.${theme}`)} ›`}
           icon="🎨"
-          link="/settings/theme"
-          text={t(`settings.appearance`)}
+          link={Routes.settings.theme}
+          text={t(`settings.theme`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
@@ -30,27 +39,34 @@ export const SettingsView = ({ fog, locale, subscription, theme, toggleFog }: Se
         <SettingsCardRow
           end={`${t(`settingsLanguage.${locale}`)} ›`}
           icon="🌐"
-          link="/settings/language"
+          link={Routes.settings.language}
           text={t(`settings.language`)}
         />
       </SettingsCard>
-      <SettingsCard>
+      <SettingsCard title={t(`settings.modelsGroup`)}>
         <SettingsCardRow
-          end={`${
-            subscription.premiumUntil === undefined
-              ? t(`settings.subscriptionInactive`)
-              : t(`settings.subscriptionActiveUntil`, {
-                  autoRenew:
-                    subscription.autoRenew === true
-                      ? t(`settingsSubscription.autoRenewShortOn`)
-                      : t(`settingsSubscription.autoRenewShortOff`),
-                  date: i.date(subscription.premiumUntil),
-                })
-          } ›`}
-          icon="💳"
-          link="/settings/subscription"
-          text={t(`settings.subscription`)}
+          end={llmChatEnd}
+          icon="💬"
+          link={Routes.settings.models.chat}
+          text={t(`settings.modelsChat`)}
         />
+        <SettingsCardSeparator />
+        <SettingsCardRow
+          end={llmImageEnd}
+          icon="🖼️"
+          link={Routes.settings.models.image}
+          text={t(`settings.modelsImage`)}
+        />
+        <SettingsCardSeparator />
+        <SettingsCardRow
+          end={llmSpeechEnd}
+          icon="🎙️"
+          link={Routes.settings.models.speech}
+          text={t(`settings.modelsSpeech`)}
+        />
+      </SettingsCard>
+      <SettingsCard>
+        <SettingsCardRow end={balanceEnd} icon="💳" link={Routes.balance.topUp} text={t(`settings.balance`)} />
       </SettingsCard>
     </SettingsCards>
   </Page>

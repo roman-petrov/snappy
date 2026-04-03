@@ -6,6 +6,16 @@ export type ApiAuthMeResult = ApiOkResult | { status: ApiAuthMeErrorCode };
 
 export type ApiAuthSuccessInternal = { token: string };
 
+export type ApiBalancePaymentUrlBody = { amount?: number };
+
+export type ApiBalancePaymentUrlErrorCode = `invalidAmount` | `paymentError`;
+
+export type ApiBalancePaymentUrlResult =
+  | { status: ApiBalancePaymentUrlErrorCode }
+  | { status: ApiStatusOk; url: string };
+
+export type ApiBalanceResult = { balance: number; status: ApiStatusOk };
+
 export type ApiForgotPasswordBody = { email?: string };
 
 export type ApiForgotPasswordErrorCode = `emailRequired`;
@@ -13,6 +23,43 @@ export type ApiForgotPasswordErrorCode = `emailRequired`;
 export type ApiForgotPasswordResult =
   | { resetToken?: string; status: ApiStatusOk }
   | { status: ApiForgotPasswordErrorCode };
+
+export type ApiLlmChatBody = { model: string; prompt: string };
+
+export type ApiLlmChatErrorCode = Exclude<ApiLlmChatResult, ApiLlmChatOk>[`status`];
+
+export type ApiLlmChatOk = Extract<ApiLlmChatResult, { status: `ok` }>;
+
+export type ApiLlmChatResult = { status: `badRequest` } | { status: `balanceBlocked` } | { status: `ok`; text: string };
+
+export type ApiLlmImageBody = {
+  model: string;
+  prompt: string;
+  size: `256x256` | `512x512` | `1024x1024` | `1024x1792` | `1792x1024`;
+};
+
+export type ApiLlmImageOk = Extract<ApiLlmImageResult, { status: `ok` }>;
+
+export type ApiLlmImageResult =
+  | { bytes: Uint8Array; status: `ok` }
+  | { status: `badRequest` }
+  | { status: `balanceBlocked` };
+
+export type ApiLlmModelDescriptor = { name: string; source: string; type: `chat` | `image` | `speech-recognition` };
+
+export type ApiLlmModelsResult = {
+  settings: { maxImagePromptLength: number; maxSpeechFileMegaBytes: number; models: ApiLlmModelDescriptor[] };
+  status: `ok`;
+};
+
+export type ApiLlmSpeechRecognitionBody = { fileBase64: string; fileName: string; mimeType: string; model: string };
+
+export type ApiLlmSpeechRecognitionParameters = { data: ArrayBuffer; fileName: string; model: string; type: string };
+
+export type ApiLlmSpeechRecognitionResult =
+  | { status: `badRequest` }
+  | { status: `balanceBlocked` }
+  | { status: `ok`; text: string };
 
 export type ApiLoginClientErrorCode = Exclude<ApiLoginErrorCode, `jwtUnavailable`>;
 
@@ -23,22 +70,6 @@ export type ApiLoginErrorCode = `emailInvalidOrMissing` | `invalidCredentials` |
 export type ApiLoginResult = ApiAuthSuccessInternal | { status: ApiLoginErrorCode };
 
 export type ApiOkResult = { status: ApiStatusOk };
-
-export type ApiPaymentUrlErrorCode = `paymentError`;
-
-export type ApiPaymentUrlResult = { status: ApiStatusOk; url: string };
-
-import type { SnappyOptions } from "@snappy/domain";
-
-export type ApiPaymentUrlResultUnion = ApiPaymentUrlResult | { status: ApiPaymentUrlErrorCode };
-
-export type ApiProcessBody = { options: SnappyOptions; text: string };
-
-export type ApiProcessErrorCode = `processingFailed` | `requestLimitReached`;
-
-export type ApiProcessResult = { status: ApiStatusOk; text: string };
-
-export type ApiProcessResultUnion = ApiProcessResult | { status: ApiProcessErrorCode };
 
 export type ApiRegisterClientErrorCode = Exclude<ApiRegisterErrorCode, `jwtUnavailable`>;
 
@@ -52,20 +83,6 @@ export type ApiRegisterErrorCode =
 
 export type ApiRegisterResult = ApiAuthSuccessInternal | { status: ApiRegisterErrorCode };
 
-export type ApiRemainingResult = {
-  autoRenew?: boolean;
-  freeRequestLimit: number;
-  isPremium?: boolean;
-  nextBillingAt?: number;
-  nextResetAt?: number;
-  options: SnappyOptions;
-  premiumPeriodDays: number;
-  premiumPrice: number;
-  premiumUntil?: number;
-  remaining: number;
-  status: ApiStatusOk;
-};
-
 export type ApiResetPasswordBody = { newPassword?: string; token?: string };
 
 export type ApiResetPasswordErrorCode = `invalidOrExpiredToken` | `tokenAndPasswordRequired`;
@@ -74,28 +91,19 @@ export type ApiResetPasswordResult = ApiOkResult | { status: ApiResetPasswordErr
 
 export type ApiStatusOk = `ok`;
 
-export type ApiSubscriptionAutoRenewBody = { enabled: boolean };
-
-export type ApiSubscriptionAutoRenewErrorCode = `subscriptionNotFound`;
-
-export type ApiSubscriptionAutoRenewResult = ApiOkResult | { status: ApiSubscriptionAutoRenewErrorCode };
-
-export type ApiSubscriptionDeleteBody = { confirmLoseTime?: boolean };
-
-export type ApiSubscriptionDeleteErrorCode = `confirmRequired` | `subscriptionNotFound`;
-
-export type ApiSubscriptionDeleteResult = ApiOkResult | { status: ApiSubscriptionDeleteErrorCode };
-
-export type ApiSubscriptionRenewErrorCode = `subscriptionNotFound`;
-
-export type ApiSubscriptionRenewResult = ApiOkResult | { status: ApiSubscriptionRenewErrorCode };
-
-export type ApiSubscriptionResult = {
-  autoRenew?: boolean;
-  freeRequestLimit: number;
-  nextBillingAt?: number;
-  premiumPeriodDays: number;
-  premiumPrice: number;
-  premiumUntil?: number;
-  status: ApiStatusOk;
+export type ApiUserLlmSettingsBody = {
+  llmChatModel?: string;
+  llmImageModel?: string;
+  llmSpeechRecognitionModel?: string;
 };
+
+export type ApiUserLlmSettingsResult =
+  | {
+      llmChatModel: string;
+      llmImageModel: string;
+      llmSpeechRecognitionModel: string;
+      maxImagePromptLength: number;
+      maxSpeechFileMegaBytes: number;
+      status: `ok`;
+    }
+  | { status: `badRequest` };

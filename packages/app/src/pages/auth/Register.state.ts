@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { api, Password, t } from "../../core";
+import { api, Password } from "../../core";
 import { useAuthSubmit } from "../../hooks";
 
 export type RegisterRequirementResult = { labelKey: string; met: boolean; params?: { min?: number } };
@@ -30,7 +30,7 @@ export const useRegisterState = () => {
 
   const submit = () => {
     if (!meetsMinLength) {
-      setError(t(`registerPage.passwordRule`, { min: Password.minLength }));
+      setError({ key: `registerPage.passwordRule`, params: { min: Password.minLength } });
 
       return;
     }

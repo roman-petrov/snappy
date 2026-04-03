@@ -1,0 +1,49 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+
+$pill-radius: 9999px;
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.375rem;
+  padding: 0.125rem 0.4375rem;
+  color: color.text();
+  text-decoration: none;
+  background: color.primary-ghost();
+  border: 1px solid color.divider-line();
+  border-radius: $pill-radius;
+  transition:
+    tokens.transition(),
+    background-color tokens.ease(),
+    border-color tokens.ease(),
+    color tokens.ease(),
+    box-shadow tokens.ease(),
+    transform 0.12s ease;
+
+  @include focus($radius: $pill-radius);
+
+  @include hover {
+    color: color.primary();
+    background: color.accent-soft();
+    border-color: color.primary-border();
+    box-shadow: shadow.sm();
+  }
+
+  @include pressed {
+    color: color.primary();
+    transform: scale(0.97);
+  }
+}
+
+.amount {
+  @include typography.caption-sm;
+
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}

@@ -4,8 +4,10 @@ import type { IncomingMessage, Server, ServerResponse } from "node:http";
 
 import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
+import { _ } from "@snappy/core";
 import fastify, { type FastifyInstance } from "fastify";
 
+import { registerJsonBodyParser } from "./JsonBody";
 import { Router } from "./Router";
 import { Routes } from "./Routes";
 
@@ -15,12 +17,11 @@ export type CreateAppOptions = {
   serverFactory?: (handler: (request: IncomingMessage, response: ServerResponse) => void) => Server;
 };
 
-const createApp = async ({
-  allowCorsOrigin = false,
-  api,
-  serverFactory,
-}: CreateAppOptions): Promise<FastifyInstance> => {
-  const app = fastify({ logger: false, serverFactory }) as FastifyInstance;
+const createApp = async ({ allowCorsOrigin = false, api, serverFactory }: CreateAppOptions) => {
+  const bodyLimitMegaBytes = 50;
+  const bodyLimit = _.mb(bodyLimitMegaBytes);
+  const app = fastify({ bodyLimit, logger: false, serverFactory }) as FastifyInstance;
+  registerJsonBodyParser(app);
 
   await app.register(fastifyCookie);
   if (allowCorsOrigin) {

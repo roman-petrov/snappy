@@ -23,17 +23,17 @@ export * from './enums';
  */
 export type User = Prisma.UserModel
 /**
- * Model Subscription
+ * Model BalanceHistory
  * 
  */
-export type Subscription = Prisma.SubscriptionModel
+export type BalanceHistory = Prisma.BalanceHistoryModel
 /**
  * Model PaymentLog
  * 
  */
 export type PaymentLog = Prisma.PaymentLogModel
 /**
- * Model SnappySettings
+ * Model UserSettings
  * 
  */
-export type SnappySettings = Prisma.SnappySettingsModel
+export type UserSettings = Prisma.UserSettingsModel

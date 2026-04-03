@@ -3,6 +3,7 @@ import { Button, Input, PasswordInput } from "@snappy/ui";
 import type { useLoginState } from "./Login.state";
 
 import { t } from "../../core";
+import { Routes } from "../../Routes";
 import { AuthForm } from "./AuthForm";
 import { FormErrorAndActions } from "./components";
 
@@ -19,15 +20,15 @@ export const LoginView = ({ email, error, loading, password, setEmail, setPasswo
       required
       value={password}
     />
-    <FormErrorAndActions error={error}>
+    <FormErrorAndActions error={error === undefined ? `` : t(error.key, error.params)}>
       <Button
         disabled={loading}
         submit
         text={loading ? t(`loginPage.submitting`) : t(`loginPage.logIn`)}
         type="primary"
       />
-      <Button link="/forgot-password" text={t(`loginPage.forgotPassword`)} />
-      <Button link="/register" text={t(`loginPage.registerLink`)} />
+      <Button link={Routes.forgotPassword} text={t(`loginPage.forgotPassword`)} />
+      <Button link={Routes.register} text={t(`loginPage.registerLink`)} />
     </FormErrorAndActions>
   </AuthForm>
 );

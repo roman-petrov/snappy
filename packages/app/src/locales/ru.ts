@@ -1,6 +1,22 @@
 /* eslint-disable unicorn/filename-case */
-// cspell:word автопродление автопродления автосписание
+/* cspell:disable */
 export const ru = {
+  balance: {
+    amountLabel: `Сумма (₽)`,
+    lowLead: `Баланс нулевой или отрицательный. Пополните счёт, чтобы пользоваться AI.`,
+    lowTitle: `Баланс`,
+    tapTip: `Пополнить баланс`,
+    topUpCta: `Пополнить`,
+    topUpErrors: {
+      invalid: `Введите корректную сумму`,
+      invalidAmount: `Сумма вне допустимого диапазона`,
+      payment: `Ошибка оплаты`,
+    },
+    topUpLead: `Укажите сумму в рублях. Далее откроется страница оплаты.`,
+    topUpSubmit: `Оплатить`,
+    topUpSubmitting: `Переход…`,
+    topUpTitle: `Пополнение баланса`,
+  },
   dashboard: {
     actionClearInput: `Очистить`,
     actionEdit: `Изменить`,
@@ -8,9 +24,17 @@ export const ru = {
     copied: `Скопировано ✓`,
     copy: `Копировать`,
     errors: {
+      balanceBlocked: `Недостаточно средств на балансе. Пополните счёт`,
+      llmUnavailable: `Сервис AI временно недоступен. Попробуйте позже`,
+      modelsUnavailable: `Сервис AI не настроен на сервере (нужен ключ SNAPPY_PROXYAPI_KEY)`,
       paymentError: `Ошибка оплаты. Попробуйте позже`,
       processingFailed: `Ошибка обработки. Попробуйте ещё раз`,
-      requestLimitReached: `Лимит запросов исчерпан`,
+    },
+    presets: {
+      copyPrompt: `Скопировать промпт`,
+      groups: { audio: `Аудио`, text: `Текст`, visual: `Графика` },
+      heroLead: `Выберите сценарий и заполните форму, чтобы получить точный результат.`,
+      heroTitle: `Сначала ясность — потом магия`,
     },
     settingsHide: `Скрыть настройки`,
     settingsShow: `Показать настройки`,
@@ -28,14 +52,6 @@ export const ru = {
     submit: `Отправить`,
     submitting: `Отправка…`,
     title: `Забыли пароль`,
-  },
-  limit: {
-    lead: `Сегодня использованы все {freeRequestLimit} бесплатных запросов.`,
-    payError: `Ошибка оплаты. Попробуйте позже.`,
-    premiumLead: `Безлимит запросов, {premiumPrice}/мес, автосписание.`,
-    premiumTitle: `Премиум`,
-    resetLabel: `Снова доступно через`,
-    title: `Лимит запросов исчерпан`,
   },
   loginPage: {
     email: `Email`,
@@ -60,6 +76,7 @@ export const ru = {
       selling: `Продающий`,
     },
   },
+  page: { back: `Назад` },
   registerPage: {
     email: `Email`,
     errors: {
@@ -97,39 +114,17 @@ export const ru = {
     title: `Новый пароль`,
   },
   settings: {
-    appearance: `Тема`,
+    balance: `Баланс`,
     fogBackground: `Туман`,
     language: `Язык`,
-    subscription: `Подписка`,
-    subscriptionActiveUntil: `До {date}, автопродление: {autoRenew}`,
-    subscriptionInactive: `Не активна`,
+    modelsChat: `Текст`,
+    modelsGroup: `Модели`,
+    modelsImage: `Изображение`,
+    modelsSpeech: `Распознавание речи`,
     systemGroup: `Система`,
+    theme: `Тема`,
     title: `Настройки`,
   },
   settingsLanguage: { en: `English`, ru: `Русский`, system: `Системный` },
-  settingsSubscription: {
-    autoRenewLabel: `Автопродление`,
-    autoRenewOff: `Автопродление выключено. Продление только вручную.`,
-    autoRenewOn: `Автопродление включено. Следующее списание: {nextBilling}.`,
-    autoRenewShortOff: `выкл`,
-    autoRenewShortOn: `вкл`,
-    delete: `Удалить подписку`,
-    deleteWarning: `Удалить подписку безвозвратно? Неиспользованное оплаченное время сгорит, доступ Premium прекратится сразу. Это действие нельзя отменить.`,
-    errors: { subscriptionNotFound: `Подписка не найдена.` },
-    freeLead: `{freeRequestLimit} бесплатных запросов в день.`,
-    freeTitle: `Бесплатный тариф`,
-    premiumLead: `Действует до {premiumUntil}. Осталось {daysLeft} дн.`,
-    premiumTitle: `Премиум`,
-    renew: `Продлить на 30 дней`,
-  },
   settingsTheme: { dark: `Тёмная`, light: `Светлая`, system: `Системная` },
-  subscribeButton: `Оформить подписку — {premiumPrice}/мес`,
-  textComposer: {
-    submit: `Обработать`,
-    submitting: `Обработка…`,
-    textPlaceholder: `Введите текст...`,
-    voiceStart: `Нажмите, чтобы диктовать`,
-    voiceStop: `Нажмите на микрофон, чтобы остановить`,
-    voiceUnavailable: `Голосовой ввод недоступен в этом браузере`,
-  },
 };

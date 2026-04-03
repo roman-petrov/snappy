@@ -50,7 +50,7 @@ const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name,
 export const DevServer = () => {
   const start = async () => {
     const appContext = ServerApp(Config);
-    const apiApp = await App.createApp({ api: appContext.api });
+    const apiApp = await App.createApp({ api: appContext });
     const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
     const apiPort = Number(new URL(apiAddr).port);
     const app = express();

@@ -28,10 +28,12 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
+  balance: runtime.Decimal | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
+  balance: runtime.Decimal | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -41,6 +43,7 @@ export type UserMinAggregateOutputType = {
   resetToken: string | null
   resetTokenExpires: Date | null
   createdAt: Date | null
+  balance: runtime.Decimal | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -50,6 +53,7 @@ export type UserMaxAggregateOutputType = {
   resetToken: string | null
   resetTokenExpires: Date | null
   createdAt: Date | null
+  balance: runtime.Decimal | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -59,16 +63,19 @@ export type UserCountAggregateOutputType = {
   resetToken: number
   resetTokenExpires: number
   createdAt: number
+  balance: number
   _all: number
 }
 
 
 export type UserAvgAggregateInputType = {
   id?: true
+  balance?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
+  balance?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -78,6 +85,7 @@ export type UserMinAggregateInputType = {
   resetToken?: true
   resetTokenExpires?: true
   createdAt?: true
+  balance?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -87,6 +95,7 @@ export type UserMaxAggregateInputType = {
   resetToken?: true
   resetTokenExpires?: true
   createdAt?: true
+  balance?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -96,6 +105,7 @@ export type UserCountAggregateInputType = {
   resetToken?: true
   resetTokenExpires?: true
   createdAt?: true
+  balance?: true
   _all?: true
 }
 
@@ -192,6 +202,7 @@ export type UserGroupByOutputType = {
   resetToken: string | null
   resetTokenExpires: Date | null
   createdAt: Date
+  balance: runtime.Decimal
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -199,7 +210,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -224,8 +235,9 @@ export type UserWhereInput = {
   resetToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  snappySettings?: Prisma.SnappySettingsListRelationFilter
-  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
+  balance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryListRelationFilter
+  userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }
 
 export type UserOrderByWithRelationInput = {
@@ -235,8 +247,9 @@ export type UserOrderByWithRelationInput = {
   resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  snappySettings?: Prisma.SnappySettingsOrderByRelationAggregateInput
-  subscription?: Prisma.SubscriptionOrderByWithRelationInput
+  balance?: Prisma.SortOrder
+  balanceHistory?: Prisma.BalanceHistoryOrderByRelationAggregateInput
+  userSettings?: Prisma.UserSettingsOrderByWithRelationInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -249,8 +262,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   resetToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  snappySettings?: Prisma.SnappySettingsListRelationFilter
-  subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
+  balance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryListRelationFilter
+  userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -260,6 +274,7 @@ export type UserOrderByWithAggregationInput = {
   resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -277,6 +292,7 @@ export type UserScalarWhereWithAggregatesInput = {
   resetToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   resetTokenExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  balance?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCreateInput = {
@@ -285,8 +301,9 @@ export type UserCreateInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsCreateNestedManyWithoutUserInput
-  subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -296,8 +313,9 @@ export type UserUncheckedCreateInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedManyWithoutUserInput
-  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -306,8 +324,9 @@ export type UserUpdateInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUpdateManyWithoutUserNestedInput
-  subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -317,8 +336,9 @@ export type UserUncheckedUpdateInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedUpdateManyWithoutUserNestedInput
-  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -328,6 +348,7 @@ export type UserCreateManyInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -336,6 +357,7 @@ export type UserUpdateManyMutationInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -345,6 +367,7 @@ export type UserUncheckedUpdateManyInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -354,10 +377,12 @@ export type UserCountOrderByAggregateInput = {
   resetToken?: Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -367,6 +392,7 @@ export type UserMaxOrderByAggregateInput = {
   resetToken?: Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -376,10 +402,12 @@ export type UserMinOrderByAggregateInput = {
   resetToken?: Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  balance?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -399,6 +427,14 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
@@ -407,140 +443,148 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type UserCreateNestedOneWithoutSubscriptionInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionInput, Prisma.UserUncheckedCreateWithoutSubscriptionInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionInput
+export type UserCreateNestedOneWithoutBalanceHistoryInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSubscriptionNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionInput, Prisma.UserUncheckedCreateWithoutSubscriptionInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSubscriptionInput
-  upsert?: Prisma.UserUpsertWithoutSubscriptionInput
+export type UserUpdateOneRequiredWithoutBalanceHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
+  upsert?: Prisma.UserUpsertWithoutBalanceHistoryInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSubscriptionInput, Prisma.UserUpdateWithoutSubscriptionInput>, Prisma.UserUncheckedUpdateWithoutSubscriptionInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBalanceHistoryInput, Prisma.UserUpdateWithoutBalanceHistoryInput>, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
 }
 
-export type UserCreateNestedOneWithoutSnappySettingsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSnappySettingsInput, Prisma.UserUncheckedCreateWithoutSnappySettingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSnappySettingsInput
+export type UserCreateNestedOneWithoutUserSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateOneRequiredWithoutSnappySettingsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutSnappySettingsInput, Prisma.UserUncheckedCreateWithoutSnappySettingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSnappySettingsInput
-  upsert?: Prisma.UserUpsertWithoutSnappySettingsInput
+export type UserUpdateOneRequiredWithoutUserSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
+  upsert?: Prisma.UserUpsertWithoutUserSettingsInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSnappySettingsInput, Prisma.UserUpdateWithoutSnappySettingsInput>, Prisma.UserUncheckedUpdateWithoutSnappySettingsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserSettingsInput, Prisma.UserUpdateWithoutUserSettingsInput>, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
 }
 
-export type UserCreateWithoutSubscriptionInput = {
+export type UserCreateWithoutBalanceHistoryInput = {
   email?: string | null
   passwordHash?: string | null
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsCreateNestedManyWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSubscriptionInput = {
+export type UserUncheckedCreateWithoutBalanceHistoryInput = {
   id?: number
   email?: string | null
   passwordHash?: string | null
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedManyWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSubscriptionInput = {
+export type UserCreateOrConnectWithoutBalanceHistoryInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionInput, Prisma.UserUncheckedCreateWithoutSubscriptionInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
 }
 
-export type UserUpsertWithoutSubscriptionInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionInput, Prisma.UserUncheckedUpdateWithoutSubscriptionInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSubscriptionInput, Prisma.UserUncheckedCreateWithoutSubscriptionInput>
+export type UserUpsertWithoutBalanceHistoryInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSubscriptionInput = {
+export type UserUpdateToOneWithWhereWithoutBalanceHistoryInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSubscriptionInput, Prisma.UserUncheckedUpdateWithoutSubscriptionInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
 }
 
-export type UserUpdateWithoutSubscriptionInput = {
+export type UserUpdateWithoutBalanceHistoryInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUpdateManyWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSubscriptionInput = {
+export type UserUncheckedUpdateWithoutBalanceHistoryInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedUpdateManyWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
-export type UserCreateWithoutSnappySettingsInput = {
+export type UserCreateWithoutUserSettingsInput = {
   email?: string | null
   passwordHash?: string | null
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
 }
 
-export type UserUncheckedCreateWithoutSnappySettingsInput = {
+export type UserUncheckedCreateWithoutUserSettingsInput = {
   id?: number
   email?: string | null
   passwordHash?: string | null
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
+  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
 }
 
-export type UserCreateOrConnectWithoutSnappySettingsInput = {
+export type UserCreateOrConnectWithoutUserSettingsInput = {
   where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutSnappySettingsInput, Prisma.UserUncheckedCreateWithoutSnappySettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
 }
 
-export type UserUpsertWithoutSnappySettingsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutSnappySettingsInput, Prisma.UserUncheckedUpdateWithoutSnappySettingsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutSnappySettingsInput, Prisma.UserUncheckedCreateWithoutSnappySettingsInput>
+export type UserUpsertWithoutUserSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutSnappySettingsInput = {
+export type UserUpdateToOneWithWhereWithoutUserSettingsInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutSnappySettingsInput, Prisma.UserUncheckedUpdateWithoutSnappySettingsInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
 }
 
-export type UserUpdateWithoutSnappySettingsInput = {
+export type UserUpdateWithoutUserSettingsInput = {
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
 }
 
-export type UserUncheckedUpdateWithoutSnappySettingsInput = {
+export type UserUncheckedUpdateWithoutUserSettingsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -549,11 +593,11 @@ export type UserUncheckedUpdateWithoutSnappySettingsInput = {
  */
 
 export type UserCountOutputType = {
-  snappySettings: number
+  balanceHistory: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  snappySettings?: boolean | UserCountOutputTypeCountSnappySettingsArgs
+  balanceHistory?: boolean | UserCountOutputTypeCountBalanceHistoryArgs
 }
 
 /**
@@ -569,8 +613,8 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountSnappySettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SnappySettingsWhereInput
+export type UserCountOutputTypeCountBalanceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.BalanceHistoryWhereInput
 }
 
 
@@ -581,8 +625,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   resetToken?: boolean
   resetTokenExpires?: boolean
   createdAt?: boolean
-  snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
-  subscription?: boolean | Prisma.User$subscriptionArgs<ExtArgs>
+  balance?: boolean
+  balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
+  userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -593,6 +638,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   resetToken?: boolean
   resetTokenExpires?: boolean
   createdAt?: boolean
+  balance?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -602,6 +648,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   resetToken?: boolean
   resetTokenExpires?: boolean
   createdAt?: boolean
+  balance?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -611,12 +658,13 @@ export type UserSelectScalar = {
   resetToken?: boolean
   resetTokenExpires?: boolean
   createdAt?: boolean
+  balance?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "resetToken" | "resetTokenExpires" | "createdAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "resetToken" | "resetTokenExpires" | "createdAt" | "balance", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
-  subscription?: boolean | Prisma.User$subscriptionArgs<ExtArgs>
+  balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
+  userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -625,8 +673,8 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    snappySettings: Prisma.$SnappySettingsPayload<ExtArgs>[]
-    subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
+    balanceHistory: Prisma.$BalanceHistoryPayload<ExtArgs>[]
+    userSettings: Prisma.$UserSettingsPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -635,6 +683,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     resetToken: string | null
     resetTokenExpires: Date | null
     createdAt: Date
+    balance: runtime.Decimal
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1029,8 +1078,8 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  snappySettings<T extends Prisma.User$snappySettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$snappySettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SnappySettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  subscription<T extends Prisma.User$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  balanceHistory<T extends Prisma.User$balanceHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$balanceHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BalanceHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userSettings<T extends Prisma.User$userSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userSettingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1066,6 +1115,7 @@ export interface UserFieldRefs {
   readonly resetToken: Prisma.FieldRef<"User", 'String'>
   readonly resetTokenExpires: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly balance: Prisma.FieldRef<"User", 'Decimal'>
 }
     
 
@@ -1459,46 +1509,46 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * User.snappySettings
+ * User.balanceHistory
  */
-export type User$snappySettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$balanceHistoryArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the SnappySettings
+   * Select specific fields to fetch from the BalanceHistory
    */
-  select?: Prisma.SnappySettingsSelect<ExtArgs> | null
+  select?: Prisma.BalanceHistorySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the SnappySettings
+   * Omit specific fields from the BalanceHistory
    */
-  omit?: Prisma.SnappySettingsOmit<ExtArgs> | null
+  omit?: Prisma.BalanceHistoryOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SnappySettingsInclude<ExtArgs> | null
-  where?: Prisma.SnappySettingsWhereInput
-  orderBy?: Prisma.SnappySettingsOrderByWithRelationInput | Prisma.SnappySettingsOrderByWithRelationInput[]
-  cursor?: Prisma.SnappySettingsWhereUniqueInput
+  include?: Prisma.BalanceHistoryInclude<ExtArgs> | null
+  where?: Prisma.BalanceHistoryWhereInput
+  orderBy?: Prisma.BalanceHistoryOrderByWithRelationInput | Prisma.BalanceHistoryOrderByWithRelationInput[]
+  cursor?: Prisma.BalanceHistoryWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SnappySettingsScalarFieldEnum | Prisma.SnappySettingsScalarFieldEnum[]
+  distinct?: Prisma.BalanceHistoryScalarFieldEnum | Prisma.BalanceHistoryScalarFieldEnum[]
 }
 
 /**
- * User.subscription
+ * User.userSettings
  */
-export type User$subscriptionArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$userSettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Subscription
+   * Select specific fields to fetch from the UserSettings
    */
-  select?: Prisma.SubscriptionSelect<ExtArgs> | null
+  select?: Prisma.UserSettingsSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Subscription
+   * Omit specific fields from the UserSettings
    */
-  omit?: Prisma.SubscriptionOmit<ExtArgs> | null
+  omit?: Prisma.UserSettingsOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.SubscriptionInclude<ExtArgs> | null
-  where?: Prisma.SubscriptionWhereInput
+  include?: Prisma.UserSettingsInclude<ExtArgs> | null
+  where?: Prisma.UserSettingsWhereInput
 }
 
 /**

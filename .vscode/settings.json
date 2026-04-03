@@ -79,5 +79,10 @@
   // TypeScript
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.referencesCodeLens.enabled": true,
-  "typescript.tsdk": "./node_modules/typescript/lib"
+  "typescript.tsdk": "./node_modules/typescript/lib",
+
+  // Formatters
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }

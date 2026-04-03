@@ -27,7 +27,7 @@ const handlerRef: { current: ((request: http.IncomingMessage, response: http.Ser
 };
 
 const app = await App.createApp({
-  api: appContext.api,
+  api: appContext,
   serverFactory: handler => {
     handlerRef.current = handler;
 

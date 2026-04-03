@@ -11,7 +11,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "react": "^19.0.0"
+    "react": "^19.2.5"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",

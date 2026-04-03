@@ -9,7 +9,13 @@ import { AuthCookie } from "./AuthCookie";
 import { Middleware } from "./Middleware";
 
 const genericStatusToHttp: Record<string, number> = {
+  badRequest: HttpStatus.badRequest,
+  balanceBlocked: HttpStatus.paymentRequired,
+  invalidAmount: HttpStatus.badRequest,
   jwtUnavailable: HttpStatus.serviceUnavailable,
+  llmUnavailable: HttpStatus.serviceUnavailable,
+  modelsUnavailable: HttpStatus.serviceUnavailable,
+  paymentError: HttpStatus.badRequest,
   unauthorized: HttpStatus.unauthorized,
 };
 
@@ -18,9 +24,10 @@ export type Route<TSuccess = unknown> = {
   clearAuthCookie?: boolean;
   method: `get` | `post`;
   path: string;
+  rawSuccess?: { body: (result: TSuccess) => Buffer; contentType: string };
   run: (api: ServerAppApi, request: FastifyRequest) => Promise<TSuccess | { status: string }>;
   setAuthCookie?: boolean;
-  successBody: (result: TSuccess) => object;
+  successBody?: (result: TSuccess) => object;
 };
 
 type BindOptions = { api: ServerAppApi; routes: Route[] };
@@ -47,7 +54,17 @@ const bind = (app: FastifyInstance, { api, routes }: BindOptions) => {
       if (route.clearAuthCookie === true) {
         reply.clearCookie(AuthCookie.name, { path: `/` });
       }
-      await reply.status(HttpStatus.ok).send(route.successBody(result));
+      if (route.rawSuccess !== undefined) {
+        await reply.type(route.rawSuccess.contentType).send(route.rawSuccess.body(result));
+
+        return;
+      }
+      if (route.successBody !== undefined) {
+        await reply.status(HttpStatus.ok).send(route.successBody(result));
+
+        return;
+      }
+      await reply.status(HttpStatus.internalServerError).send({ status: `internal` });
     };
 
     const preHandler = route.auth === true ? Middleware.requireUser(api) : undefined;

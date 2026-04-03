@@ -10,22 +10,18 @@ export type SettingsOption<T extends string> = { icon: string; label: string; va
 export type SettingsOptionListProps<T extends string> = {
   onSelect: (value: T) => void;
   options: readonly SettingsOption<T>[];
-  selectedValue: T;
+  value: T;
 };
 
-export const SettingsOptionList = <T extends string>({
-  onSelect,
-  options,
-  selectedValue,
-}: SettingsOptionListProps<T>) => (
+export const SettingsOptionList = <T extends string>({ onSelect, options, value }: SettingsOptionListProps<T>) => (
   <SettingsCards>
     <SettingsCard>
       {options.map((opt, index) => (
         <Fragment key={opt.value}>
           {index > 0 && <SettingsCardSeparator />}
           <SettingsCardRow
-            ariaPressed={selectedValue === opt.value}
-            end={selectedValue === opt.value ? `✓` : undefined}
+            ariaPressed={value === opt.value}
+            end={value === opt.value ? `✓` : undefined}
             icon={opt.icon}
             onClick={() => onSelect(opt.value)}
             text={opt.label}

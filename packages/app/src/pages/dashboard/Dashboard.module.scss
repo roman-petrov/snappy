@@ -1,63 +1,85 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/typography";
 @use "pkg:@snappy/theme/core" as *;
 
-.section {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+.start-page {
+  padding: space.sm() 0 space.lg();
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr minmax(120px, 28%);
   gap: space.md();
-  min-height: 0;
-  overflow: hidden;
+  align-items: center;
+  padding: space.lg();
+  margin-bottom: space.lg();
+  background: linear-gradient(135deg, color.surface-elevated() 0%, color.primary-ghost() 100%);
+  border: 1px solid color.border();
+  border-radius: radius.lg();
 }
 
-.controls-slot {
-  order: 1;
+.hero-copy {
   min-width: 0;
 }
 
-.result-slot {
-  order: 2;
-  min-width: 0;
+.hero-eyebrow {
+  @include typography.caption;
+
+  margin: 0 0 space.xs();
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
 }
 
-.scroll {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: flex-end;
-  min-height: 0;
+.hero-title {
+  @include typography.h2;
+
+  margin: 0 0 space.sm();
+  line-height: 1.2;
+}
+
+.hero-lead {
+  @include typography.body;
+
+  max-width: 40rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.hero-emoji {
+  justify-self: end;
+  font-size: clamp(3.5rem, 10vw, 5rem);
+  line-height: 1;
+  user-select: none;
+}
+
+.preset-section {
+  margin-bottom: space.xl();
+}
+
+.section-title {
+  @include typography.h3;
+
+  padding-bottom: space.xs();
+  margin: 0 0 space.md();
+  border-bottom: 1px solid color.divider-line();
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: space.md();
 }
 
 @include mobile {
-  .section {
-    overflow: visible;
+  .hero {
+    grid-template-columns: 1fr;
   }
 
-  .scroll {
-    justify-content: flex-start;
+  .hero-emoji {
+    justify-self: center;
+    margin-top: space.sm();
   }
-
-  .result-slot {
-    order: 1;
-  }
-
-  .controls-slot {
-    order: 2;
-  }
-}
-
-.controls {
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: space.sm();
-  width: 100%;
-  max-width: none;
-}
-
-.input-options {
-  padding-bottom: space.sm();
-  margin-bottom: space.sm();
-  border-bottom: 1px solid color.border();
 }

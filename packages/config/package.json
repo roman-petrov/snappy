@@ -5,6 +5,6 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "dotenv": "^17.4.0"
+    "dotenv": "^17.4.1"
   }
 }

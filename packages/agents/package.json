@@ -1,0 +1,22 @@
+{
+  "name": "@snappy/agents",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/browser": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/domain": "workspace:*",
+    "@snappy/theme": "workspace:*",
+    "@snappy/ui": "workspace:*",
+    "react": "^19.2.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "vitest": "^4.1.4"
+  }
+}

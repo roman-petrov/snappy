@@ -3,6 +3,7 @@ import { Button, Input, PasswordInput, PasswordStrength } from "@snappy/ui";
 import type { useRegisterState } from "./Register.state";
 
 import { t } from "../../core";
+import { Routes } from "../../Routes";
 import { AuthForm } from "./AuthForm";
 import { FormErrorAndActions } from "./components";
 import styles from "./Register.module.scss";
@@ -63,14 +64,14 @@ export const RegisterView = ({
         }
       />
     </div>
-    <FormErrorAndActions error={error}>
+    <FormErrorAndActions error={error === undefined ? `` : t(error.key, error.params)}>
       <Button
         disabled={submitDisabled}
         submit
         text={loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
         type="primary"
       />
-      <Button link="/login" text={t(`loginPage.login`)} />
+      <Button link={Routes.login} text={t(`loginPage.login`)} />
     </FormErrorAndActions>
   </AuthForm>
 );

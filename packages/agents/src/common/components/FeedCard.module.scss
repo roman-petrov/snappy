@@ -1,0 +1,15 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+
+.root {
+  box-sizing: border-box;
+  align-self: flex-start;
+  max-width: min(90%, 42rem);
+  padding: space.md();
+  background: color.surface();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  box-shadow: shadow.sm();
+}

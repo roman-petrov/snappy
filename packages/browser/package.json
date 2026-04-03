@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "isomorphic-dompurify": "^3.7.1"
+    "isomorphic-dompurify": "^3.8.0"
   },
   "devDependencies": {
     "@types/dom-speech-recognition": "^0.0.9"

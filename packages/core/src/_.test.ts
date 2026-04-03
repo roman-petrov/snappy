@@ -2,7 +2,23 @@ import { describe, expect, it, vi } from "vitest";
 
 import { _ } from "./_";
 
-const { base64decode, camelCase, cn, dec, entries, hex, keys, list, noop, pascalCase, singleAction } = _;
+const {
+  base64decode,
+  camelCase,
+  cn,
+  dec,
+  entries,
+  gb,
+  hex,
+  kb,
+  keys,
+  list,
+  mb,
+  noop,
+  pascalCase,
+  round,
+  singleAction,
+} = _;
 
 describe(`base64decode`, () => {
   it(`decodes base64 to UTF-8 string`, () => {
@@ -40,6 +56,26 @@ describe(`cn`, () => {
   });
 });
 
+describe(`round`, () => {
+  it(`rounds to two fraction digits`, () => {
+    expect(round(10.126, 2)).toBe(10.13);
+    expect(round(10.124, 2)).toBe(10.12);
+  });
+
+  it(`rounds to zero fraction digits`, () => {
+    expect(round(1.4, 0)).toBe(1);
+    expect(round(1.6, 0)).toBe(2);
+  });
+
+  it(`rounds negative values`, () => {
+    expect(round(-10.126, 2)).toBe(-10.13);
+  });
+
+  it(`leaves already rounded two-decimal values unchanged`, () => {
+    expect(round(99.99, 2)).toBe(99.99);
+  });
+});
+
 describe(`dec`, () => {
   it(`parses decimal string to number`, () => {
     expect(dec(`42`)).toBe(42);
@@ -65,6 +101,48 @@ describe(`hex`, () => {
 
   it(`returns undefined for invalid hex`, () => {
     expect(hex(`gg`)).toBeUndefined();
+  });
+});
+
+describe(`gb`, () => {
+  it(`maps 0 GiB to 0 bytes`, () => {
+    expect(gb(0)).toBe(0);
+  });
+
+  it(`maps 1 GiB to the same bytes as 1024 MiB`, () => {
+    expect(gb(1)).toBe(mb(1024));
+  });
+
+  it(`maps 0.5 GiB to the same bytes as 512 MiB`, () => {
+    expect(gb(0.5)).toBe(mb(512));
+  });
+});
+
+describe(`kb`, () => {
+  it(`maps 0 KiB to 0 bytes`, () => {
+    expect(kb(0)).toBe(0);
+  });
+
+  it(`maps 1 KiB to 1024 bytes`, () => {
+    expect(kb(1)).toBe(1024);
+  });
+
+  it(`maps 2 KiB to twice 1 KiB`, () => {
+    expect(kb(2)).toBe(kb(1) + kb(1));
+  });
+});
+
+describe(`mb`, () => {
+  it(`maps 0 MiB to 0 bytes`, () => {
+    expect(mb(0)).toBe(0);
+  });
+
+  it(`maps 1 MiB to the same bytes as 1024 KiB`, () => {
+    expect(mb(1)).toBe(kb(1024));
+  });
+
+  it(`maps 100 MiB to 100 times 1 MiB`, () => {
+    expect(mb(100)).toBe(100 * mb(1));
   });
 });
 

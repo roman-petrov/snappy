@@ -1,59 +1,44 @@
-/* eslint-disable functional/no-expression-statements */
+// cspell:word dall-e
+
 import type { Config } from "@snappy/config";
 
+import { Ai } from "@snappy/ai";
 import { Db } from "@snappy/db";
-import { Cron } from "@snappy/node";
 import { Payment } from "@snappy/payment";
-import { Snappy } from "@snappy/snappy";
 
 import { Auth } from "./Auth";
-import { SubscriptionRenewalCronJob } from "./cron-jobs";
+import { Balance } from "./Balance";
+import { BalanceInfo } from "./BalanceInfo";
+import { BalancePayment } from "./BalancePayment";
+import { LlmProxy } from "./LlmProxy";
 import { PaymentLog } from "./PaymentLog";
-import { Process } from "./Process";
-import { Subscription } from "./Subscription";
+import { UserSettings } from "./UserSettings";
 
 export const ServerApp = ({
+  balanceMinRub,
+  balancePaymentMaxRub,
+  balancePaymentMinRub,
   dbUrl,
-  freeRequestLimit,
-  gigaChatAuthKey,
   jwtSecret,
-  premiumPeriodDays,
-  premiumPrice,
+  llmDebitPriceMultiplier,
+  proxyApiKey,
   yooKassaSecretKey,
   yooKassaShopId,
 }: Config) => {
   const db = Db(dbUrl);
-  const snappy = Snappy({ gigaChatAuthKey });
   const payment = Payment({ credentials: { secretKey: yooKassaSecretKey, shopId: yooKassaShopId }, type: `yoo-kassa` });
   const auth = Auth({ jwtSecret, user: db.user });
   const paymentLog = PaymentLog(db.paymentLog);
+  const balance = Balance({ balance: db.balance, balanceMinRub });
+  const balancePayment = BalancePayment({ balance, balancePaymentMaxRub, balancePaymentMinRub, payment, paymentLog });
+  const balanceInfo = BalanceInfo({ balance });
+  const ai = Ai(proxyApiKey, llmDebitPriceMultiplier);
+  const llm = LlmProxy({ ai, balance });
+  const userLlmSettings = UserSettings({ ai, userSettings: db.userSettings });
 
-  const subscription = Subscription({
-    freeRequestLimit,
-    payment,
-    paymentLog,
-    premiumPeriodDays,
-    premiumPrice,
-    subscription: db.subscription,
-  });
-
-  const processModule = Process({
-    freeRequestLimit,
-    hasActiveSubscription: subscription.hasActiveSubscription,
-    premiumPeriodDays,
-    premiumPrice,
-    snappy,
-    snappySettings: db.snappySettings,
-    subscription: db.subscription,
-  });
-
-  const api = { auth, process: processModule, subscription };
-  const cron = Cron();
-  cron.addJob(SubscriptionRenewalCronJob(subscription));
-
-  return { api };
+  return { auth, balance: balanceInfo, balancePayment, llm, userLlmSettings };
 };
 
 export type ServerApp = ReturnType<typeof ServerApp>;
 
-export type ServerAppApi = ReturnType<typeof ServerApp>[`api`];
+export type ServerAppApi = ReturnType<typeof ServerApp>;

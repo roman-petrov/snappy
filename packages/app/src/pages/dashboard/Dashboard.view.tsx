@@ -1,49 +1,51 @@
-import { Alert } from "@snappy/ui";
+import type { AgentGroupId } from "@snappy/agents";
 
 import type { useDashboardState } from "./Dashboard.state";
 
 import { Page } from "../../components";
 import { t } from "../../core";
-import { Limit, TextCard, TextComposer } from "./components";
+import { PresetCard } from "./components";
 import styles from "./Dashboard.module.scss";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 
-export const DashboardView = ({
-  error,
-  initLoading,
-  limitReached,
-  loading,
-  options,
-  processText,
-  result,
-  setOptions,
-  setText,
-  showResult,
-  text,
-}: DashboardViewProps) =>
-  initLoading ? undefined : limitReached ? (
-    <Limit />
-  ) : (
+const groupTitleKey = (groupId: AgentGroupId): string => `dashboard.presets.groups.${groupId}`;
+
+export const DashboardView = ({ blockShell, byGroup, groupOrder, initLoading, onPick }: DashboardViewProps) =>
+  initLoading || blockShell ? undefined : (
     <Page title={undefined}>
-      <section className={styles.section}>
-        <div className={styles.controlsSlot}>
-          <div className={styles.controls}>
-            <TextComposer
-              loading={loading}
-              onSubmit={processText}
-              onTextChange={setText}
-              options={options}
-              setOptions={setOptions}
-              showResult={showResult}
-              text={text}
-            />
-            {error === `` ? undefined : <Alert text={t(`dashboard.errors.${error}`)} variant="error" />}
+      <div className={styles.startPage}>
+        <header className={styles.hero}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroEyebrow}>Snappy</p>
+            <h2 className={styles.heroTitle}>{t(`dashboard.presets.heroTitle`)}</h2>
+            <p className={styles.heroLead}>{t(`dashboard.presets.heroLead`)}</p>
           </div>
-        </div>
-        <div className={`${styles.resultSlot} ${styles.scroll}`}>
-          {showResult ? <TextCard loading={loading} result={result} /> : undefined}
-        </div>
-      </section>
+          <span aria-hidden className={styles.heroEmoji}>
+            🪄
+          </span>
+        </header>
+
+        {groupOrder.map(groupId => {
+          const items = byGroup.get(groupId) ?? [];
+
+          return items.length === 0 ? undefined : (
+            <section className={styles.presetSection} key={groupId}>
+              <h3 className={styles.sectionTitle}>{t(groupTitleKey(groupId))}</h3>
+              <div className={styles.presetGrid}>
+                {items.map(agent => (
+                  <PresetCard
+                    description={agent.description}
+                    emoji={agent.emoji}
+                    key={agent.id}
+                    onClick={() => onPick(agent.id)}
+                    title={agent.title}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </Page>
   );

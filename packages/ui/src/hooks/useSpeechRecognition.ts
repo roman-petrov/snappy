@@ -1,5 +1,5 @@
 import { Speech, type SpeechRecognizerOptions, type SpeechRecognizerStop } from "@snappy/browser";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { Vibrate } from "../core/Vibrate";
 import { useUnmount } from "./useUnmount";
@@ -9,37 +9,34 @@ export const useSpeechRecognition = () => {
   const stopRef = useRef<SpeechRecognizerStop | undefined>(undefined);
   const speechSupported = Speech.recognize !== undefined;
 
-  const stop = useCallback(async () => {
+  const stop = async () => {
     const stopCurrent = stopRef.current;
     stopRef.current = undefined;
     setListening(false);
     if (stopCurrent !== undefined) {
       await stopCurrent();
     }
-  }, []);
+  };
 
-  const start = useCallback(
-    (options: SpeechRecognizerOptions) => {
-      if (!speechSupported || listening) {
-        return false;
-      }
-      const { recognize } = Speech;
-      if (recognize === undefined) {
-        return false;
-      }
-      setListening(true);
-      stopRef.current = recognize({
-        ...options,
-        onText: text => {
-          Vibrate.trigger(`clockTick`);
-          options.onText(text);
-        },
-      });
+  const start = (options: SpeechRecognizerOptions) => {
+    if (!speechSupported || listening) {
+      return false;
+    }
+    const { recognize } = Speech;
+    if (recognize === undefined) {
+      return false;
+    }
+    setListening(true);
+    stopRef.current = recognize({
+      ...options,
+      onText: text => {
+        Vibrate.trigger(`clockTick`);
+        options.onText(text);
+      },
+    });
 
-      return true;
-    },
-    [listening, speechSupported],
-  );
+    return true;
+  };
 
   useUnmount(stop);
 

@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
-import type { SnappyOptions } from "@snappy/domain";
-
 import { _, Json } from "@snappy/core";
 
 import type {
+  ApiBalancePaymentUrlBody,
+  ApiBalancePaymentUrlErrorCode,
+  ApiBalancePaymentUrlResult,
+  ApiBalanceResult,
   ApiForgotPasswordErrorCode,
   ApiForgotPasswordResult,
+  ApiLlmChatBody,
+  ApiLlmChatResult,
+  ApiLlmImageBody,
+  ApiLlmImageResult,
+  ApiLlmModelsResult,
+  ApiLlmSpeechRecognitionParameters,
+  ApiLlmSpeechRecognitionResult,
   ApiLoginClientErrorCode,
   ApiLoginClientResult,
   ApiOkResult,
-  ApiPaymentUrlErrorCode,
-  ApiPaymentUrlResult,
-  ApiPaymentUrlResultUnion,
-  ApiProcessErrorCode,
-  ApiProcessResult,
-  ApiProcessResultUnion,
   ApiRegisterClientErrorCode,
   ApiRegisterClientResult,
-  ApiRemainingResult,
   ApiResetPasswordErrorCode,
   ApiResetPasswordResult,
-  ApiSubscriptionAutoRenewErrorCode,
-  ApiSubscriptionAutoRenewResult,
-  ApiSubscriptionDeleteErrorCode,
-  ApiSubscriptionDeleteResult,
-  ApiSubscriptionRenewErrorCode,
-  ApiSubscriptionRenewResult,
-  ApiSubscriptionResult,
+  ApiUserLlmSettingsBody,
+  ApiUserLlmSettingsResult,
 } from "./Types";
 
 import { Endpoints } from "./Endpoints";
@@ -42,14 +39,47 @@ export const ServerApi = (client: Config) => {
   const base = baseUrl.replace(/\/$/u, ``);
   const jsonHeaders = { "Content-Type": `application/json` };
 
+  const bodyData = async (response: Response) => {
+    const text = await response.text();
+
+    return text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+  };
+
+  const httpError = (response: Response, data: Record<string, unknown>) => {
+    if (hasErrorStatus(data)) {
+      return new Error(data.status);
+    }
+
+    return new Error(String(response.status));
+  };
+
+  const llmData = async (response: Response) => {
+    const data = await bodyData(response);
+
+    if (!response.ok) {
+      throw httpError(response, data);
+    }
+
+    return data;
+  };
+
+  const llmResult = async <T>(response: Response): Promise<T> => {
+    const data = await llmData(response);
+
+    if (hasErrorStatus(data)) {
+      return data as T;
+    }
+
+    return data as T;
+  };
+
   const handleResponse = async <T, E extends string>(
     response: Response,
   ): Promise<[E] extends [never] ? T : T | { status: E }> => {
     if (!response.ok) {
       throw new Error(String(response.status));
     }
-    const text = await response.text();
-    const data = text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+    const data = await bodyData(response);
 
     if (hasErrorStatus(data)) {
       return { status: data.status } as [E] extends [never] ? T : T | { status: E };
@@ -70,6 +100,9 @@ export const ServerApi = (client: Config) => {
   ): Promise<[E] extends [never] ? T : T | { status: E }> =>
     request<T, E>(url, { body: Json.stringify(body), headers: jsonHeaders, method: `POST` });
 
+  const postResponse = async (url: string, body: Record<string, unknown>) =>
+    fetch(url, { body: Json.stringify(body), credentials: `include`, headers: jsonHeaders, method: `POST` });
+
   const forgotPassword = async (email: string): Promise<ApiForgotPasswordResult> =>
     postJson<ApiOkResult, ApiForgotPasswordErrorCode>(`${base}${Endpoints.auth.forgotPassword}`, { email });
 
@@ -87,43 +120,76 @@ export const ServerApi = (client: Config) => {
   const checkAuth = async (): Promise<ApiOkResult> =>
     request<ApiOkResult, never>(`${base}${Endpoints.auth.me}`, { method: `GET` });
 
-  const remaining = async (): Promise<ApiRemainingResult> =>
-    request<ApiRemainingResult, never>(`${base}${Endpoints.user.remaining}`, { method: `GET` });
+  const balanceGet = async (): Promise<ApiBalanceResult> =>
+    request<ApiBalanceResult, never>(`${base}${Endpoints.user.balance}`, { method: `GET` });
 
-  const process = async (text: string, options: SnappyOptions): Promise<ApiProcessResultUnion> =>
-    postJson<ApiProcessResult, ApiProcessErrorCode>(`${base}${Endpoints.process}`, { options, text });
-
-  const premiumUrl = async (): Promise<ApiPaymentUrlResultUnion> =>
-    postJson<ApiPaymentUrlResult, ApiPaymentUrlErrorCode>(`${base}${Endpoints.premium.paymentUrl}`, {});
-
-  const subscriptionSetAutoRenew = async (enabled: boolean): Promise<ApiSubscriptionAutoRenewResult> =>
-    postJson<ApiOkResult, ApiSubscriptionAutoRenewErrorCode>(`${base}${Endpoints.subscription.autoRenew}`, { enabled });
-
-  const subscriptionRenew = async (): Promise<ApiSubscriptionRenewResult> =>
-    postJson<ApiOkResult, ApiSubscriptionRenewErrorCode>(`${base}${Endpoints.subscription.renew}`, {});
-
-  const subscriptionDelete = async (confirmLoseTime = false): Promise<ApiSubscriptionDeleteResult> =>
-    postJson<ApiOkResult, ApiSubscriptionDeleteErrorCode>(`${base}${Endpoints.subscription.delete}`, {
-      confirmLoseTime,
+  const balancePaymentUrl = async (body: ApiBalancePaymentUrlBody): Promise<ApiBalancePaymentUrlResult> =>
+    postJson<{ status: `ok`; url: string }, ApiBalancePaymentUrlErrorCode>(`${base}${Endpoints.balance.paymentUrl}`, {
+      amount: body.amount,
     });
 
-  const subscriptionGet = async (): Promise<ApiSubscriptionResult> =>
-    request<ApiSubscriptionResult, never>(`${base}${Endpoints.subscription.get}`, { method: `GET` });
+  const llmChat = async (body: ApiLlmChatBody): Promise<ApiLlmChatResult> =>
+    llmResult<ApiLlmChatResult>(await postResponse(`${base}${Endpoints.llm.chat}`, body));
+
+  const llmSpeechRecognition = async (
+    parameters: ApiLlmSpeechRecognitionParameters,
+  ): Promise<ApiLlmSpeechRecognitionResult> =>
+    llmResult<ApiLlmSpeechRecognitionResult>(
+      await postResponse(`${base}${Endpoints.llm.speechRecognition}`, {
+        fileName: parameters.fileName,
+        mimeType: parameters.type.trim() === `` ? `application/octet-stream` : parameters.type.trim(),
+        model: parameters.model,
+      }),
+    );
+
+  const llmImage = async (body: ApiLlmImageBody): Promise<ApiLlmImageResult> => {
+    const response = await postResponse(`${base}${Endpoints.llm.image}`, body);
+    const contentType = response.headers.get(`content-type`) ?? ``;
+    if (response.ok && contentType.includes(`image/png`)) {
+      return { bytes: new Uint8Array(await response.arrayBuffer()), status: `ok` };
+    }
+
+    const data = await llmData(response);
+
+    if (hasErrorStatus(data)) {
+      return data as ApiLlmImageResult;
+    }
+
+    throw new Error(`image_http_error`);
+  };
+
+  const llmModels = async (): Promise<ApiLlmModelsResult> =>
+    request<ApiLlmModelsResult, never>(`${base}${Endpoints.llm.models}`, { method: `GET` });
+
+  const userLlmSettingsGet = async (): Promise<ApiUserLlmSettingsResult> =>
+    request<ApiUserLlmSettingsResult, never>(`${base}${Endpoints.user.llmSettings}`, { method: `GET` });
+
+  const userLlmSettingsSet = async (body: ApiUserLlmSettingsBody): Promise<ApiUserLlmSettingsResult> => {
+    const response = await postResponse(`${base}${Endpoints.user.llmSettings}`, body);
+    const data = await bodyData(response);
+
+    if (hasErrorStatus(data)) {
+      return { status: data.status } as ApiUserLlmSettingsResult;
+    }
+
+    return data as ApiUserLlmSettingsResult;
+  };
 
   return {
+    balanceGet,
+    balancePaymentUrl,
     checkAuth,
     forgotPassword,
+    llmChat,
+    llmImage,
+    llmModels,
+    llmSpeechRecognition,
     login,
     logout,
-    premiumUrl,
-    process,
     register,
-    remaining,
     resetPassword,
-    subscriptionDelete,
-    subscriptionGet,
-    subscriptionRenew,
-    subscriptionSetAutoRenew,
+    userLlmSettingsGet,
+    userLlmSettingsSet,
   };
 };
 

@@ -1,18 +1,23 @@
 # Deploy
 
-## Environment variables (.env)
+## Environment variables (application)
 
-| Variable              | Required | Description                                                     |
-| --------------------- | -------- | --------------------------------------------------------------- |
-| `DB_HOST`             | yes      | PostgreSQL host                                                 |
-| `DB_PORT`             | yes      | PostgreSQL port (e.g. 5432)                                     |
-| `DB_USER`             | yes      | PostgreSQL user                                                 |
-| `DB_PASSWORD`         | yes      | PostgreSQL password                                             |
-| `DB_NAME`             | yes      | Database name                                                   |
-| `GIGACHAT_AUTH_KEY`   | yes      | GigaChat API authorization key                                  |
-| `JWT_SECRET`          | yes      | Secret for signing JWT (min 32 chars); generate a random string |
-| `YOOKASSA_SECRET_KEY` | no       | YooKassa secret key (payments)                                  |
-| `YOOKASSA_SHOP_ID`    | no       | YooKassa shop ID (payments)                                     |
+Use these names in `.env` locally and for the server process in production (PM2, systemd, or secrets with the same
+keys).
+
+| Variable              | Description                                                                          |
+| --------------------- | ------------------------------------------------------------------------------------ |
+| `DB_HOST`             | PostgreSQL host                                                                      |
+| `DB_PORT`             | PostgreSQL port (e.g. 5432)                                                          |
+| `DB_USER`             | PostgreSQL user                                                                      |
+| `DB_PASSWORD`         | PostgreSQL password                                                                  |
+| `DB_NAME`             | Database name                                                                        |
+| `JWT_SECRET`          | Secret for signing JWT (min 32 chars); generate a random string                      |
+| `SNAPPY_PROXYAPI_KEY` | ProxyAPI-compatible API key for LLM proxy routes (`/api/llm/chat`, `/api/llm/image`) |
+| `YOOKASSA_SECRET_KEY` | YooKassa secret key (payments)                                                       |
+| `YOOKASSA_SHOP_ID`    | YooKassa shop ID (payments)                                                          |
+| `SSL_CERT_PEM`        | TLS certificate (PEM). With `SSL_KEY_PEM`, HTTPS on 443 in production                |
+| `SSL_KEY_PEM`         | TLS private key (PEM)                                                                |
 
 ### Generating JWT_SECRET
 
@@ -24,35 +29,31 @@ openssl rand -base64 32
 
 Keep the value secret and use different values per environment.
 
-## Prerequisites
+## Production: GitHub Actions
+
+### Prerequisites
 
 - A VPS with SSH access (port 22)
-- GitHub repository with the `production` environment and required secrets
+- GitHub repository with the `production` environment and secrets
 
-## GitHub Environment and secrets
+### GitHub secrets (deploy infrastructure only)
 
-1. Create an environment: **Settings** → **Environments** → **New environment** → name it `production`.
+Create an environment: **Settings** → **Environments** → **New environment** → name it `production`, then add:
 
-2. In the `production` environment, add **Environment secrets**:
+| Secret            | Description             | Example                              |
+| ----------------- | ----------------------- | ------------------------------------ |
+| `SSH_HOST`        | Server hostname or IP   | `192.168.1.100` or `app.example.com` |
+| `SSH_USER`        | SSH username            | `deploy` or `ubuntu`                 |
+| `SSH_PRIVATE_KEY` | Private SSH key content | Full key with BEGIN/END              |
 
-| Secret                | Description             | Example                              |
-| --------------------- | ----------------------- | ------------------------------------ |
-| `SSH_HOST`            | Server hostname or IP   | `192.168.1.100` or `app.example.com` |
-| `SSH_USER`            | SSH username            | `deploy` or `ubuntu`                 |
-| `SSH_PRIVATE_KEY`     | Private SSH key content | Full key with BEGIN/END              |
-| `DB_HOST`             | PostgreSQL host         | `localhost` or DB server host        |
-| `DB_PORT`             | PostgreSQL port         | `5432`                               |
-| `DB_USER`             | PostgreSQL user         |                                      |
-| `DB_PASSWORD`         | PostgreSQL password     |                                      |
-| `DB_NAME`             | PostgreSQL database     |                                      |
-| `JWT_SECRET`          | JWT signing secret      | Generate: `openssl rand -base64 32`  |
-| `GIGACHAT_AUTH_KEY`   | GigaChat API key        |                                      |
-| `YOOKASSA_SECRET_KEY` | YooKassa secret key     |                                      |
-| `YOOKASSA_SHOP_ID`    | YooKassa shop ID        |                                      |
-| `SSL_CERT_PEM`        | (optional) TLS cert     | PEM content for site HTTPS           |
-| `SSL_KEY_PEM`         | (optional) TLS key      | PEM content for site HTTPS           |
+### Application configuration in production
 
-If both `SSL_CERT_PEM` and `SSL_KEY_PEM` are set, the site runs on port 443 (HTTPS). Otherwise it runs on port 80
+Add **environment secrets** on the same `production` environment using the **same names** as in
+[Environment variables (application)](#environment-variables-application) (`DB_HOST`, `JWT_SECRET`,
+`SNAPPY_PROXYAPI_KEY`, …). The deploy workflow forwards the subset it knows about to the remote shell; for any variable
+not included in the workflow, set it in a server-side `.env` or PM2 ecosystem file, or extend the pipeline.
+
+If both `SSL_CERT_PEM` and `SSL_KEY_PEM` are set, the site listens on port 443 (HTTPS). Otherwise it listens on port 80
 (HTTP).
 
 ## Monitoring and logs

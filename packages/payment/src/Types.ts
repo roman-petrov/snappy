@@ -1,26 +1,8 @@
-export type PaymentChargeSavedMethodInput = {
-  amount: number;
-  currency: string;
-  description: string;
-  idempotenceKey: string;
-  savedMethodId: string;
-  userId: number;
-};
-
-export type PaymentChargeSavedMethodResult = PaymentResult<PaymentChargeSavedMethodSuccess>;
-
-export type PaymentChargeSavedMethodSuccess = {
-  providerCancellationCode?: string;
-  providerPaymentId?: string;
-  status: PaymentStatus;
-};
-
-export type PaymentChargeSavedMethodSuccessResult = PaymentSuccess<PaymentChargeSavedMethodSuccess>;
-
 export type PaymentCreateRedirectPaymentInput = {
   amount: number;
   currency: string;
   description: string;
+  metadataKind: PaymentMetadataKind;
   options?: { returnUrl?: string; savePaymentMethod?: boolean };
   userId: number;
 };
@@ -40,7 +22,7 @@ export type PaymentErrorCode =
 
 export type PaymentFailure = { code: PaymentErrorCode; externalMessage?: string; httpStatus?: number; ok: false };
 
-export type PaymentMetadataKind = `initial` | `renewal`;
+export type PaymentMetadataKind = `topup`;
 
 export type PaymentMoney = { currency: string; value: string };
 
@@ -49,7 +31,6 @@ export type PaymentPaidResult = PaymentResult<PaymentPaidSuccess>;
 export type PaymentPaidSuccess = { paid: boolean };
 
 export type PaymentProvider = {
-  chargeSavedMethod: (input: PaymentChargeSavedMethodInput) => Promise<PaymentResult<PaymentChargeSavedMethodSuccess>>;
   createRedirectPayment: (
     input: PaymentCreateRedirectPaymentInput,
   ) => Promise<PaymentResult<PaymentCreateRedirectPaymentSuccess>>;

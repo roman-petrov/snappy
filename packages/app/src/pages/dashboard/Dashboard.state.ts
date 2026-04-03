@@ -1,68 +1,43 @@
-import { Snappy } from "@snappy/domain";
-import { useAsyncEffectOnce } from "@snappy/ui";
+import { type AgentCard, type AgentGroupId, Agents } from "@snappy/agents";
+import { useStoreValue } from "@snappy/store";
+import { $locale, Locale, useAsyncEffect, useGo } from "@snappy/ui";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { api } from "../../core";
+import { Routes } from "../../Routes";
 
 export const useDashboardState = () => {
-  const [options, setOptions] = useState(Snappy.defaultOptions);
-  const [text, setText] = useState(``);
-  const [result, setResult] = useState(``);
-  const [error, setError] = useState(``);
+  const go = useGo();
+  const [blockShell, setBlockShell] = useState(false);
   const [initLoading, setInitLoading] = useState(true);
-  const [limitReached, setLimitReached] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(true);
+  const [agents, setAgents] = useState<AgentCard[]>([]);
+  const [groupOrder, setGroupOrder] = useState<readonly AgentGroupId[]>([]);
+  const locale = useStoreValue($locale);
 
-  useAsyncEffectOnce(async () => {
-    try {
-      const response = await api.remaining();
-
-      setOptions(response.options);
-      if (response.remaining === 0 && response.isPremium !== true) {
-        setLimitReached(true);
-      }
-    } finally {
+  useAsyncEffect(async () => {
+    setInitLoading(true);
+    setBlockShell(false);
+    const loc = Locale.effective();
+    const balanceResponse = await api.balanceGet();
+    if (balanceResponse.balance <= 0) {
+      setBlockShell(true);
+      void go(Routes.balance.low, { replace: true });
       setInitLoading(false);
-    }
-  });
-
-  const processText = async () => {
-    setError(``);
-    setResult(``);
-    if (text.trim() === ``) {
-      return;
-    }
-    setIsEditMode(false);
-    setLoading(true);
-    const processResult = await api.process(text.trim(), options);
-    setLoading(false);
-    if (processResult.status !== `ok`) {
-      if (processResult.status === `requestLimitReached`) {
-        setLimitReached(true);
-
-        return;
-      }
-      setError(processResult.status);
 
       return;
     }
-    setResult(processResult.text);
+    setAgents([...Agents.localized(loc)]);
+    setGroupOrder(Agents.groupOrder);
+    setInitLoading(false);
+  }, [go, locale]);
+
+  const byGroup = Agents.byGroup(agents);
+  const navigate = useNavigate();
+
+  const onPick = (id: string) => {
+    void navigate(Routes.agent(id));
   };
 
-  const showResult = !isEditMode && (loading || result !== ``);
-
-  return {
-    error,
-    initLoading,
-    limitReached,
-    loading,
-    options,
-    processText,
-    result,
-    setOptions,
-    setText,
-    showResult,
-    text,
-  };
+  return { blockShell, byGroup, groupOrder, initLoading, onPick };
 };

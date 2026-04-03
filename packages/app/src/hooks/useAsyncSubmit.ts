@@ -1,11 +1,13 @@
 import { useState } from "react";
 
-export const useAsyncSubmit = () => {
-  const [error, setError] = useState(``);
+export type AsyncSubmitError = { key: string; params?: Record<string, number | string> };
+
+export const useAsyncSubmit = <TError = AsyncSubmitError>() => {
+  const [error, setError] = useState<TError | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   const wrapSubmit = async (fn: () => Promise<void>) => {
-    setError(``);
+    setError(undefined);
     setLoading(true);
     try {
       await fn();

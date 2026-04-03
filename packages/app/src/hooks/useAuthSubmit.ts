@@ -1,6 +1,6 @@
 import { useGo } from "@snappy/ui";
 
-import { t } from "../core";
+import { Routes } from "../Routes";
 import { $loggedIn } from "../Store";
 import { useAsyncSubmit } from "./useAsyncSubmit";
 
@@ -12,12 +12,12 @@ export const useAuthSubmit = (errorsKeyPrefix: string) => {
     void wrapSubmit(async () => {
       const result = await submit();
       if (result.status !== `ok`) {
-        setError(t(`${errorsKeyPrefix}.errors.${result.status}`));
+        setError({ key: `${errorsKeyPrefix}.errors.${result.status}` });
 
         return;
       }
       $loggedIn.set(true);
-      void go(`/`, { replace: true });
+      void go(Routes.home, { replace: true });
     });
   };
 

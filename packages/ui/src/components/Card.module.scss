@@ -1,13 +1,5 @@
-@use "pkg:@snappy/theme/glass";
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/ui/scss/card" as card;
 
 .root {
-  @include glass.card;
-
-  width: 100%;
-  border: 1px solid color.border();
-  border-radius: radius.md();
-  box-shadow: shadow.md();
+  @include card.simple;
 }

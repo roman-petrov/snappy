@@ -8,7 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@snappy/core": "workspace:*",
-    "@snappy/domain": "workspace:*"
+    "@snappy/core": "workspace:*"
   }
 }

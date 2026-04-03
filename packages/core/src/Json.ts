@@ -11,7 +11,8 @@ const nullToUndefined = (value: unknown): unknown =>
         ? _.fromEntries(Object.entries(value).map(([key, v]) => [key, nullToUndefined(v)] as const))
         : value;
 
+const normalize = <T>(value: T): T => nullToUndefined(value) as T;
 const stringify = <T>(value: T) => JSON.stringify(value, (_key: string, v: unknown) => (v === undefined ? null : v));
-const parse = <T>(value: string) => nullToUndefined(JSON.parse(value)) as T;
+const parse = <T>(value: string) => normalize(JSON.parse(value)) as T;
 
-export const Json = { parse, stringify };
+export const Json = { normalize, parse, stringify };
