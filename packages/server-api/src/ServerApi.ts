@@ -1,33 +1,31 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
-import type { SnappyOptions } from "@snappy/domain";
-
 import { _, Json } from "@snappy/core";
 
 import type {
+  ApiBalancePaymentUrlBody,
+  ApiBalancePaymentUrlErrorCode,
+  ApiBalancePaymentUrlResult,
+  ApiBalanceResult,
   ApiForgotPasswordErrorCode,
   ApiForgotPasswordResult,
+  ApiLlmChatBody,
+  ApiLlmChatResult,
+  ApiLlmImageBody,
+  ApiLlmImageResult,
+  ApiLlmModelsResult,
+  ApiLlmSpeechRecognitionBody,
+  ApiLlmSpeechRecognitionParameters,
+  ApiLlmSpeechRecognitionResult,
   ApiLoginClientErrorCode,
   ApiLoginClientResult,
   ApiOkResult,
-  ApiPaymentUrlErrorCode,
-  ApiPaymentUrlResult,
-  ApiPaymentUrlResultUnion,
-  ApiProcessErrorCode,
-  ApiProcessResult,
-  ApiProcessResultUnion,
   ApiRegisterClientErrorCode,
   ApiRegisterClientResult,
-  ApiRemainingResult,
   ApiResetPasswordErrorCode,
   ApiResetPasswordResult,
-  ApiSubscriptionAutoRenewErrorCode,
-  ApiSubscriptionAutoRenewResult,
-  ApiSubscriptionDeleteErrorCode,
-  ApiSubscriptionDeleteResult,
-  ApiSubscriptionRenewErrorCode,
-  ApiSubscriptionRenewResult,
-  ApiSubscriptionResult,
+  ApiUserLlmSettingsBody,
+  ApiUserLlmSettingsResult,
 } from "./Types";
 
 import { Endpoints } from "./Endpoints";
@@ -87,43 +85,142 @@ export const ServerApi = (client: Config) => {
   const checkAuth = async (): Promise<ApiOkResult> =>
     request<ApiOkResult, never>(`${base}${Endpoints.auth.me}`, { method: `GET` });
 
-  const remaining = async (): Promise<ApiRemainingResult> =>
-    request<ApiRemainingResult, never>(`${base}${Endpoints.user.remaining}`, { method: `GET` });
+  const balanceGet = async (): Promise<ApiBalanceResult> =>
+    request<ApiBalanceResult, never>(`${base}${Endpoints.user.balance}`, { method: `GET` });
 
-  const process = async (text: string, options: SnappyOptions): Promise<ApiProcessResultUnion> =>
-    postJson<ApiProcessResult, ApiProcessErrorCode>(`${base}${Endpoints.process}`, { options, text });
-
-  const premiumUrl = async (): Promise<ApiPaymentUrlResultUnion> =>
-    postJson<ApiPaymentUrlResult, ApiPaymentUrlErrorCode>(`${base}${Endpoints.premium.paymentUrl}`, {});
-
-  const subscriptionSetAutoRenew = async (enabled: boolean): Promise<ApiSubscriptionAutoRenewResult> =>
-    postJson<ApiOkResult, ApiSubscriptionAutoRenewErrorCode>(`${base}${Endpoints.subscription.autoRenew}`, { enabled });
-
-  const subscriptionRenew = async (): Promise<ApiSubscriptionRenewResult> =>
-    postJson<ApiOkResult, ApiSubscriptionRenewErrorCode>(`${base}${Endpoints.subscription.renew}`, {});
-
-  const subscriptionDelete = async (confirmLoseTime = false): Promise<ApiSubscriptionDeleteResult> =>
-    postJson<ApiOkResult, ApiSubscriptionDeleteErrorCode>(`${base}${Endpoints.subscription.delete}`, {
-      confirmLoseTime,
+  const balancePaymentUrl = async (body: ApiBalancePaymentUrlBody): Promise<ApiBalancePaymentUrlResult> =>
+    postJson<{ status: `ok`; url: string }, ApiBalancePaymentUrlErrorCode>(`${base}${Endpoints.balance.paymentUrl}`, {
+      amount: body.amount,
     });
 
-  const subscriptionGet = async (): Promise<ApiSubscriptionResult> =>
-    request<ApiSubscriptionResult, never>(`${base}${Endpoints.subscription.get}`, { method: `GET` });
+  const llmChat = async (body: ApiLlmChatBody): Promise<ApiLlmChatResult> => {
+    const response = await fetch(`${base}${Endpoints.llm.chat}`, {
+      body: Json.stringify(body),
+      credentials: `include`,
+      headers: jsonHeaders,
+      method: `POST`,
+    });
+
+    const text = await response.text();
+    const data = text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+
+    if (!response.ok) {
+      if (hasErrorStatus(data)) {
+        throw new Error(data.status);
+      }
+      throw new Error(String(response.status));
+    }
+
+    if (hasErrorStatus(data)) {
+      return data as ApiLlmChatResult;
+    }
+
+    return data as ApiLlmChatResult;
+  };
+
+  const llmSpeechRecognition = async (
+    parameters: ApiLlmSpeechRecognitionParameters,
+  ): Promise<ApiLlmSpeechRecognitionResult> => {
+    const body: ApiLlmSpeechRecognitionBody = {
+      fileBase64: new Uint8Array(parameters.data).toBase64(),
+      fileName: parameters.fileName,
+      mimeType: parameters.type.trim() === `` ? `application/octet-stream` : parameters.type.trim(),
+      model: parameters.model,
+    };
+
+    const response = await fetch(`${base}${Endpoints.llm.speechRecognition}`, {
+      body: Json.stringify(body),
+      credentials: `include`,
+      headers: jsonHeaders,
+      method: `POST`,
+    });
+
+    const text = await response.text();
+    const data = text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+
+    if (!response.ok) {
+      if (hasErrorStatus(data)) {
+        throw new Error(data.status);
+      }
+      throw new Error(String(response.status));
+    }
+
+    if (hasErrorStatus(data)) {
+      return data as ApiLlmSpeechRecognitionResult;
+    }
+
+    return data as ApiLlmSpeechRecognitionResult;
+  };
+
+  const llmImage = async (body: ApiLlmImageBody): Promise<ApiLlmImageResult> => {
+    const response = await fetch(`${base}${Endpoints.llm.image}`, {
+      body: Json.stringify(body),
+      credentials: `include`,
+      headers: jsonHeaders,
+      method: `POST`,
+    });
+
+    const contentType = response.headers.get(`content-type`) ?? ``;
+    if (response.ok && contentType.includes(`image/png`)) {
+      return { bytes: new Uint8Array(await response.arrayBuffer()), status: `ok` };
+    }
+
+    const text = await response.text();
+    const data = text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+
+    if (!response.ok) {
+      if (hasErrorStatus(data)) {
+        throw new Error(data.status);
+      }
+      throw new Error(String(response.status));
+    }
+
+    if (hasErrorStatus(data)) {
+      return data as ApiLlmImageResult;
+    }
+
+    throw new Error(`image_http_error`);
+  };
+
+  const llmModels = async (): Promise<ApiLlmModelsResult> =>
+    request<ApiLlmModelsResult, never>(`${base}${Endpoints.llm.models}`, { method: `GET` });
+
+  const userLlmSettingsGet = async (): Promise<ApiUserLlmSettingsResult> =>
+    request<ApiUserLlmSettingsResult, never>(`${base}${Endpoints.user.llmSettings}`, { method: `GET` });
+
+  const userLlmSettingsSet = async (body: ApiUserLlmSettingsBody): Promise<ApiUserLlmSettingsResult> => {
+    const response = await fetch(`${base}${Endpoints.user.llmSettings}`, {
+      body: Json.stringify(body),
+      credentials: `include`,
+      headers: jsonHeaders,
+      method: `POST`,
+    });
+
+    const text = await response.text();
+    const data = text === `` ? ({} as Record<string, unknown>) : Json.parse<Record<string, unknown>>(text);
+
+    if (hasErrorStatus(data)) {
+      return { status: data.status } as ApiUserLlmSettingsResult;
+    }
+
+    return data as ApiUserLlmSettingsResult;
+  };
 
   return {
+    balanceGet,
+    balancePaymentUrl,
     checkAuth,
     forgotPassword,
+    llmChat,
+    llmImage,
+    llmModels,
+    llmSpeechRecognition,
     login,
     logout,
-    premiumUrl,
-    process,
     register,
-    remaining,
     resetPassword,
-    subscriptionDelete,
-    subscriptionGet,
-    subscriptionRenew,
-    subscriptionSetAutoRenew,
+    userLlmSettingsGet,
+    userLlmSettingsSet,
   };
 };
 

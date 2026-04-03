@@ -45,7 +45,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
   const mapStatus = (raw: string): PaymentStatus => paymentStatusMap[raw.trim().toLowerCase()] ?? `unknown`;
 
   const metadataKind = (raw: string | undefined): PaymentMetadataKind | undefined =>
-    raw === `initial` || raw === `renewal` ? raw : undefined;
+    raw === `topup` ? raw : undefined;
 
   const parseUserId = (raw: string | undefined) => {
     if (raw === undefined) {
@@ -148,6 +148,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
     amount,
     currency,
     description,
+    metadataKind: kind,
     options,
     userId,
   }) =>
@@ -158,40 +159,13 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
           ...captureBody(currency, amount),
           confirmation: { return_url: options?.returnUrl ?? returnUrl, type: `redirect` },
           description,
-          metadata: { type: `initial`, userId: userId.toString() },
+          metadata: { type: kind, userId: userId.toString() },
           ...(options?.savePaymentMethod === true ? { save_payment_method: true } : {}),
         },
         idempotenceKey: `${userId}-${_.now()}`,
         method: `POST`,
       },
       ({ confirmation, id }) => ({ providerPaymentId: id ?? ``, redirectUrl: confirmation?.confirmation_url ?? `` }),
-    );
-
-  const chargeSavedMethod: PaymentProvider[`chargeSavedMethod`] = async ({
-    amount,
-    currency,
-    description,
-    idempotenceKey,
-    savedMethodId,
-    userId,
-  }) =>
-    api(
-      ``,
-      {
-        body: {
-          ...captureBody(currency, amount),
-          description,
-          metadata: { type: `renewal`, userId: userId.toString() },
-          payment_method_id: savedMethodId,
-        },
-        idempotenceKey,
-        method: `POST`,
-      },
-      ({ cancellation_details, id, status }) => ({
-        providerCancellationCode: cancellation_details?.reason,
-        providerPaymentId: id,
-        status: mapStatus(status),
-      }),
     );
 
   const payment: PaymentProvider[`payment`] = async providerPaymentId =>
@@ -229,5 +203,5 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
     return PaymentResponse.success({ kind, providerPaymentId: id });
   };
 
-  return { chargeSavedMethod, createRedirectPayment, paid, parseWebhook, payment };
+  return { createRedirectPayment, paid, parseWebhook, payment };
 };

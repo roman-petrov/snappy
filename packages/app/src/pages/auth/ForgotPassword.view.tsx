@@ -3,6 +3,7 @@ import { Button, Input } from "@snappy/ui";
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../../core";
+import { Routes } from "../../Routes";
 import { AuthForm } from "./AuthForm";
 import { FormErrorAndActions, MessageWithLink } from "./components";
 
@@ -14,7 +15,7 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
       <MessageWithLink
         lead={t(`forgotPage.checkEmailLead`)}
         linkText={t(`forgotPage.backToLogin`)}
-        linkTo="/login"
+        linkTo={Routes.login}
         title={t(`forgotPage.checkEmail`)}
       />
     ) : (
@@ -34,7 +35,7 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
             text={loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
             type="primary"
           />
-          <Button link="/login" text={t(`loginPage.login`)} />
+          <Button link={Routes.login} text={t(`loginPage.login`)} />
         </FormErrorAndActions>
       </>
     )}

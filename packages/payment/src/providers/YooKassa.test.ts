@@ -55,7 +55,8 @@ describe(`yooKassa`, () => {
     const result = await payment.createRedirectPayment({
       amount: 199,
       currency: `RUB`,
-      description: `Premium`,
+      description: `Top up`,
+      metadataKind: `topup`,
       options: { savePaymentMethod: true },
       userId: 7,
     });
@@ -69,8 +70,8 @@ describe(`yooKassa`, () => {
           amount: { currency: `RUB`, value: `199.00` },
           capture: true,
           confirmation: { return_url: `https://fallback`, type: `redirect` },
-          description: `Premium`,
-          metadata: { type: `initial`, userId: `7` },
+          description: `Top up`,
+          metadata: { type: `topup`, userId: `7` },
           save_payment_method: true,
         }),
         headers: expect.objectContaining({
@@ -83,37 +84,6 @@ describe(`yooKassa`, () => {
     expect(btoaMock).toHaveBeenCalledWith(`shop:secret`);
   });
 
-  it(`maps recurring charge status and cancellation code`, async () => {
-    fetchMock.mockReset();
-    fetchMock.mockResolvedValue(
-      response(
-        200,
-        Json.stringify({
-          cancellation_details: { reason: `insufficient_funds` },
-          id: `p-2`,
-          status: `waiting_for_capture`,
-        }),
-      ),
-    );
-    const payment = YooKassa({ secretKey: `secret`, shopId: `shop` });
-
-    await expect(
-      payment.chargeSavedMethod({
-        amount: 200,
-        currency: `RUB`,
-        description: `Renewal`,
-        idempotenceKey: `idem-1`,
-        savedMethodId: `pm-1`,
-        userId: 8,
-      }),
-    ).resolves.toStrictEqual({
-      ok: true,
-      providerCancellationCode: `insufficient_funds`,
-      providerPaymentId: `p-2`,
-      status: `waiting-capture`,
-    });
-  });
-
   it(`maps payment snapshot including metadata and unknown status`, async () => {
     fetchMock.mockReset();
     fetchMock.mockResolvedValue(
@@ -121,7 +91,7 @@ describe(`yooKassa`, () => {
         200,
         Json.stringify({
           amount: { currency: `RUB`, value: `10.00` },
-          metadata: { type: `renewal`, userId: `42` },
+          metadata: { type: `topup`, userId: `42` },
           paid: true,
           payment_method: { id: `pm-7` },
           status: `unexpected_status`,
@@ -131,7 +101,7 @@ describe(`yooKassa`, () => {
     const payment = YooKassa({ secretKey: `secret`, shopId: `shop` });
 
     await expect(payment.payment(`fallback-id`)).resolves.toStrictEqual({
-      metadataKind: `renewal`,
+      metadataKind: `topup`,
       money: { currency: `RUB`, value: `10.00` },
       ok: true,
       providerCancellationCode: undefined,

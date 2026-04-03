@@ -1,5 +1,22 @@
 /* eslint-disable unicorn/filename-case */
+/* cspell:disable */
 export const en = {
+  balance: {
+    amountLabel: `Amount (RUB)`,
+    lowLead: `Your balance is zero or negative. Top up to use AI features.`,
+    lowTitle: `Balance`,
+    tapTip: `Top up balance`,
+    topUpCta: `Top up`,
+    topUpErrors: {
+      invalid: `Enter a valid amount`,
+      invalidAmount: `Amount is outside allowed range`,
+      payment: `Payment error`,
+    },
+    topUpLead: `Enter the amount in rubles. You will be redirected to the payment page.`,
+    topUpSubmit: `Pay`,
+    topUpSubmitting: `Redirecting…`,
+    topUpTitle: `Top up balance`,
+  },
   dashboard: {
     actionClearInput: `Clear`,
     actionEdit: `Edit`,
@@ -7,9 +24,17 @@ export const en = {
     copied: `Copied ✓`,
     copy: `Copy`,
     errors: {
+      balanceBlocked: `Insufficient balance. Top up to continue`,
+      llmUnavailable: `The AI service is temporarily unavailable. Try again later`,
+      modelsUnavailable: `The AI service is not configured on the server (SNAPPY_PROXYAPI_KEY is required)`,
       paymentError: `Payment error. Try again later`,
       processingFailed: `Processing failed. Try again`,
-      requestLimitReached: `Request limit reached`,
+    },
+    presets: {
+      copyPrompt: `Copy prompt`,
+      groups: { audio: `Audio`, text: `Text`, visual: `Graphics` },
+      heroLead: `Pick a scenario and fill the form to get a focused result.`,
+      heroTitle: `Clarity first — then the magic`,
     },
     settingsHide: `Hide settings`,
     settingsShow: `Show settings`,
@@ -28,14 +53,6 @@ export const en = {
     submitting: `Sending…`,
     title: `Forgot password`,
   },
-  limit: {
-    lead: `All {freeRequestLimit} free requests for today have been used.`,
-    payError: `Payment error. Please try again later.`,
-    premiumLead: `Unlimited requests, {premiumPrice}/month, auto-renewal.`,
-    premiumTitle: `Premium`,
-    resetLabel: `Available again in`,
-    title: `Request limit reached`,
-  },
   loginPage: {
     email: `Email`,
     errors: { emailInvalidOrMissing: `Enter a valid email`, invalidCredentials: `Invalid email or password` },
@@ -53,6 +70,7 @@ export const en = {
     length: { extend: `Extend`, keep: `Keep`, shorten: `Shorten` },
     style: { business: `Business`, friendly: `Friendly`, humorous: `Humorous`, neutral: `Neutral`, selling: `Selling` },
   },
+  page: { back: `Back` },
   registerPage: {
     email: `Email`,
     errors: {
@@ -91,38 +109,16 @@ export const en = {
   },
   settings: {
     appearance: `Theme`,
+    balance: `Balance`,
     fogBackground: `Fog`,
     language: `Language`,
-    subscription: `Subscription`,
-    subscriptionActiveUntil: `Until {date}, auto-renew: {autoRenew}`,
-    subscriptionInactive: `Inactive`,
+    modelsChat: `Text`,
+    modelsGroup: `Models`,
+    modelsImage: `Image`,
+    modelsSpeech: `Speech recognition`,
     systemGroup: `System`,
     title: `Settings`,
   },
   settingsLanguage: { en: `English`, ru: `Русский`, system: `System` },
-  settingsSubscription: {
-    autoRenewLabel: `Auto-renew`,
-    autoRenewOff: `Auto-renew is off. Renewal is manual only.`,
-    autoRenewOn: `Auto-renew is on. Next charge: {nextBilling}.`,
-    autoRenewShortOff: `off`,
-    autoRenewShortOn: `on`,
-    delete: `Delete subscription`,
-    deleteWarning: `Delete subscription permanently? Unused paid time will be lost and Premium access will stop immediately. This action cannot be undone.`,
-    errors: { subscriptionNotFound: `Subscription not found.` },
-    freeLead: `{freeRequestLimit} free requests per day.`,
-    freeTitle: `Free tier`,
-    premiumLead: `Active until {premiumUntil}. {daysLeft} days left.`,
-    premiumTitle: `Premium`,
-    renew: `Renew for 30 days`,
-  },
   settingsTheme: { dark: `Dark`, light: `Light`, system: `System` },
-  subscribeButton: `Subscribe — {premiumPrice}/month`,
-  textComposer: {
-    submit: `Process`,
-    submitting: `Processing…`,
-    textPlaceholder: `Enter text...`,
-    voiceStart: `Tap to dictate`,
-    voiceStop: `Tap the mic to stop`,
-    voiceUnavailable: `Voice input is not available in this browser`,
-  },
 };

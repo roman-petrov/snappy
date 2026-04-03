@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+
 import { SwitchDisplay } from "./SwitchDisplay";
 import { Tap, type TapProps } from "./Tap";
 

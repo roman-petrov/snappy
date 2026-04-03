@@ -47,10 +47,10 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model Subscription
+ * Model BalanceHistory
  * 
  */
-export type Subscription = Prisma.SubscriptionModel
+export type BalanceHistory = Prisma.BalanceHistoryModel
 /**
  * Model PaymentLog
  * 

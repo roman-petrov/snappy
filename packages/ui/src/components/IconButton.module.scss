@@ -26,11 +26,10 @@
   }
 
   > span {
-    position: relative;
-
     @include primitives.inline-row-center;
     @include primitives.square(tokens.icon-button-size());
 
+    position: relative;
     font-size: tokens.icon-button-size();
 
     &.emoji {

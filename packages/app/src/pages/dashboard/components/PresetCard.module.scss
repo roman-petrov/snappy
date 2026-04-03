@@ -1,0 +1,46 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/ui/scss/card" as card;
+
+.root {
+  @include card.button;
+
+  display: flex;
+  flex: 1;
+  gap: space.md();
+  align-items: flex-start;
+  padding: space.md();
+}
+
+.emoji {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  font-size: 2.25rem;
+  line-height: 1;
+  background: color.primary-ghost();
+  border-radius: radius.md();
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+}
+
+.title {
+  @include typography.h3;
+
+  margin: 0;
+}
+
+.desc {
+  @include typography.caption;
+
+  margin: 0;
+}

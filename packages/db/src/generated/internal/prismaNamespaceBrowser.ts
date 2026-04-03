@@ -52,7 +52,7 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  Subscription: 'Subscription',
+  BalanceHistory: 'BalanceHistory',
   PaymentLog: 'PaymentLog',
   SnappySettings: 'SnappySettings'
 } as const
@@ -79,21 +79,24 @@ export const UserScalarFieldEnum = {
   passwordHash: 'passwordHash',
   resetToken: 'resetToken',
   resetTokenExpires: 'resetTokenExpires',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  balance: 'balance'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
-export const SubscriptionScalarFieldEnum = {
+export const BalanceHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
   userId: 'userId',
-  premiumUntil: 'premiumUntil',
-  nextBillingAt: 'nextBillingAt',
-  autoRenew: 'autoRenew',
-  yooKassaPaymentMethodId: 'yooKassaPaymentMethodId'
+  kind: 'kind',
+  amountRub: 'amountRub',
+  balanceAfter: 'balanceAfter',
+  meta: 'meta'
 } as const
 
-export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+export type BalanceHistoryScalarFieldEnum = (typeof BalanceHistoryScalarFieldEnum)[keyof typeof BalanceHistoryScalarFieldEnum]
 
 
 export const PaymentLogScalarFieldEnum = {
@@ -115,12 +118,9 @@ export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof
 
 export const SnappySettingsScalarFieldEnum = {
   userId: 'userId',
-  requestCount: 'requestCount',
-  lastReset: 'lastReset',
-  addEmoji: 'addEmoji',
-  addFormatting: 'addFormatting',
-  length: 'length',
-  style: 'style'
+  llmChatModel: 'llmChatModel',
+  llmImageModel: 'llmImageModel',
+  llmSpeechRecognitionModel: 'llmSpeechRecognitionModel'
 } as const
 
 export type SnappySettingsScalarFieldEnum = (typeof SnappySettingsScalarFieldEnum)[keyof typeof SnappySettingsScalarFieldEnum]
@@ -132,6 +132,14 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {
@@ -148,4 +156,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

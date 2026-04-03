@@ -1,6 +1,7 @@
 import { useGo } from "@snappy/ui";
 
 import { t } from "../core";
+import { Routes } from "../Routes";
 import { $loggedIn } from "../Store";
 import { useAsyncSubmit } from "./useAsyncSubmit";
 
@@ -17,7 +18,7 @@ export const useAuthSubmit = (errorsKeyPrefix: string) => {
         return;
       }
       $loggedIn.set(true);
-      void go(`/`, { replace: true });
+      void go(Routes.home, { replace: true });
     });
   };
 

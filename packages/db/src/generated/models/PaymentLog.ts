@@ -238,7 +238,7 @@ export type PaymentLogGroupByOutputType = {
   _max: PaymentLogMaxAggregateOutputType | null
 }
 
-type GetPaymentLogGroupByPayload<T extends PaymentLogGroupByArgs> = Prisma.PrismaPromise<
+export type GetPaymentLogGroupByPayload<T extends PaymentLogGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<PaymentLogGroupByOutputType, T['by']> &
       {
@@ -485,10 +485,6 @@ export type PaymentLogMinOrderByAggregateInput = {
 export type PaymentLogSumOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
 }
 
 export type NullableIntFieldUpdateOperationsInput = {

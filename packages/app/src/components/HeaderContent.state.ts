@@ -2,6 +2,7 @@ import { useStoreValue } from "@snappy/store";
 import { useGo } from "@snappy/ui";
 
 import { api } from "../core";
+import { Routes } from "../Routes";
 import { $loggedIn } from "../Store";
 
 export const useHeaderContentState = () => {
@@ -12,9 +13,9 @@ export const useHeaderContentState = () => {
     ? async () => {
         await api.logout();
         $loggedIn.set(false);
-        void go(`/login`, { replace: true });
+        void go(Routes.login, { replace: true });
       }
     : undefined;
 
-  return { logoutOnClick };
+  return { balanceVisible: loggedIn, logoutOnClick };
 };

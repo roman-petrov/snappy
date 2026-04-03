@@ -7,48 +7,38 @@ import { PaymentLog } from "./PaymentLog";
 import { Mock } from "./test/Mock";
 
 describe(`paymentLog`, () => {
-  describe(`logInitialError / logInitialPending / logSubscriptionCancelled`, () => {
-    it(`logInitialError calls create with error entry`, async () => {
+  describe(`logTopUpError / logTopUpPending`, () => {
+    it(`logTopUpError calls create with error entry`, async () => {
       const db = Mock.createDb();
       (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
       const paymentLog = PaymentLog(db.paymentLog);
 
-      await paymentLog.logInitialError(10, `provider-error`);
+      await paymentLog.logTopUpError(10, `provider-error`);
 
       expect(db.paymentLog.create).toHaveBeenCalledWith({
         currency: `RUB`,
         errorMessage: `provider-error`,
         status: `error`,
-        type: `initial`,
+        type: `topup`,
         userId: 10,
       });
     });
 
-    it(`logInitialPending calls create with pending entry`, async () => {
+    it(`logTopUpPending calls create with pending entry`, async () => {
       const db = Mock.createDb();
       (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
       const paymentLog = PaymentLog(db.paymentLog);
 
-      await paymentLog.logInitialPending(5, `pay-id-1`, 199);
+      await paymentLog.logTopUpPending(5, `pay-id-1`, 199);
 
       expect(db.paymentLog.create).toHaveBeenCalledWith({
         amount: 199,
         currency: `RUB`,
         status: `pending`,
-        type: `initial`,
+        type: `topup`,
         userId: 5,
         yooKassaPaymentId: `pay-id-1`,
       });
-    });
-
-    it(`logSubscriptionCancelled calls create with ok entry`, async () => {
-      const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
-
-      await paymentLog.logSubscriptionCancelled(3);
-
-      expect(db.paymentLog.create).toHaveBeenCalledWith({ status: `ok`, type: `subscription_cancelled`, userId: 3 });
     });
   });
 
@@ -79,7 +69,7 @@ describe(`paymentLog`, () => {
       const paymentLog = PaymentLog(db.paymentLog);
 
       const result = {
-        metadataKind: `initial` as const,
+        metadataKind: `topup` as const,
         money: { currency: `RUB`, value: `199.00` },
         ok: true as const,
         providerPaid: true,
@@ -96,7 +86,7 @@ describe(`paymentLog`, () => {
         currency: `RUB`,
         paymentMethodId: `pm-1`,
         status: `succeeded`,
-        type: `initial`,
+        type: `topup`,
         userId: 7,
         yooKassaPaymentId: `pay-1`,
       });
@@ -125,7 +115,7 @@ describe(`paymentLog`, () => {
         errorMessage: `user_cancelled`,
         paymentMethodId: `pm-x`,
         status: `canceled`,
-        type: `payment_canceled`,
+        type: `topup`,
         userId: 2,
         yooKassaPaymentId: `pay-id`,
       });
@@ -143,58 +133,8 @@ describe(`paymentLog`, () => {
         expect.objectContaining({
           errorMessage: `network`,
           status: `error`,
-          type: `payment_canceled`,
+          type: `topup`,
           yooKassaPaymentId: `pay-id`,
-        }),
-      );
-    });
-  });
-
-  describe(`logRenewal`, () => {
-    it(`calls create with succeeded renewal when result has data`, async () => {
-      const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
-      const result = { ok: true as const, providerPaymentId: `pay-renew`, status: `succeeded` as const };
-
-      await paymentLog.logRenewal(result, 1, 199, `idem-key-1`);
-
-      expect(db.paymentLog.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          amount: 199,
-          currency: `RUB`,
-          idempotenceKey: `idem-key-1`,
-          status: `succeeded`,
-          type: `renewal`,
-          userId: 1,
-          yooKassaPaymentId: `pay-renew`,
-        }),
-      );
-    });
-
-    it(`calls create with failed status when result has data but not succeeded`, async () => {
-      const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
-
-      const result = {
-        ok: true as const,
-        providerCancellationCode: `insufficient_funds`,
-        providerPaymentId: undefined,
-        status: `canceled` as const,
-      };
-
-      await paymentLog.logRenewal(result, 2, 199, `idem-2`);
-
-      expect(db.paymentLog.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          amount: 199,
-          currency: `RUB`,
-          errorMessage: `insufficient_funds`,
-          idempotenceKey: `idem-2`,
-          status: `canceled`,
-          type: `renewal`,
-          userId: 2,
         }),
       );
     });

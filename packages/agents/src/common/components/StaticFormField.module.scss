@@ -1,0 +1,31 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/typography";
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  gap: space.md();
+  align-items: flex-start;
+  min-width: 0;
+
+  .label {
+    padding-top: space.sm();
+  }
+}
+
+.label {
+  @include typography.caption;
+
+  min-width: 0;
+  color: color.text();
+}
+
+.control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}

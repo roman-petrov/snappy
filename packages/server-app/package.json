@@ -5,20 +5,18 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@snappy/ai": "workspace:*",
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
     "@snappy/domain": "workspace:*",
-    "@snappy/node": "workspace:*",
     "@snappy/payment": "workspace:*",
     "@snappy/server-api": "workspace:*",
-    "@snappy/snappy": "workspace:*",
-    "@snappy/snappy-core": "workspace:*",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.7",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.4"
   }
 }

@@ -1,4 +1,5 @@
 import { _ } from "@snappy/core";
+import { useCallback } from "react";
 import {
   type NavigateFunction,
   type NavigateOptions,
@@ -11,7 +12,10 @@ export type Go = NavigateFunction;
 export const useGo = (): NavigateFunction => {
   const routerNavigate = useRouterNavigate();
 
-  return async (to: number | To, { viewTransition = true, ...options }: NavigateOptions = {}) => {
-    await (_.isNumber(to) ? routerNavigate(to) : routerNavigate(to, { ...options, viewTransition }));
-  };
+  return useCallback(
+    async (to: number | To, { viewTransition = true, ...options }: NavigateOptions = {}) => {
+      await (_.isNumber(to) ? routerNavigate(to) : routerNavigate(to, { ...options, viewTransition }));
+    },
+    [routerNavigate],
+  );
 };

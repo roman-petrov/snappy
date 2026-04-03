@@ -6,11 +6,14 @@ import type { FastifyRequest } from "fastify";
 
 import {
   type ApiAuthBody,
+  type ApiBalancePaymentUrlBody,
   type ApiForgotPasswordBody,
-  type ApiProcessBody,
+  type ApiLlmChatBody,
+  type ApiLlmImageBody,
+  type ApiLlmImageOk,
+  type ApiLlmSpeechRecognitionBody,
   type ApiResetPasswordBody,
-  type ApiSubscriptionAutoRenewBody,
-  type ApiSubscriptionDeleteBody,
+  type ApiUserLlmSettingsBody,
   Endpoints,
 } from "@snappy/server-api";
 
@@ -64,6 +67,14 @@ const withMethod =
     route(method, path, run, successBody, extra);
 
 const post = withMethod(`post`);
+
+const postBinary = <TSuccess>(
+  path: string,
+  run: Route<TSuccess>[`run`],
+  raw: NonNullable<Route<TSuccess>[`rawSuccess`]>,
+  extra?: Partial<Route<TSuccess>>,
+): Route<TSuccess> => ({ method: `post`, path, rawSuccess: raw, run, ...extra });
+
 const get = withMethod(`get`);
 const ok = () => ({ status: `ok` as const });
 const id = <T>(r: T): T => r;
@@ -90,56 +101,62 @@ export const Routes = [
     ok,
   ),
   get(
-    Endpoints.user.remaining,
-    withUserId(async (api, userId) => api.process.remaining(userId)),
+    Endpoints.user.balance,
+    withUserId(async (api, userId) => api.balance.balance(userId)),
     withOkStatus,
     { auth: true },
   ),
   post(
-    Endpoints.process,
-    withUserIdAndBody(async (api, userId, b) => api.process.process(userId, b), body<ApiProcessBody>),
-    (r: { text: string }) => ({ ...ok(), text: r.text }),
+    Endpoints.llm.chat,
+    withUserIdAndBody(async (api, userId, b) => api.llm.chat(userId, b), body<ApiLlmChatBody>),
+    id,
     { auth: true },
   ),
   post(
-    Endpoints.premium.paymentUrl,
-    withUserId(async (api, userId) => api.subscription.paymentUrl(userId)),
-    (r: { url: string }) => ({ ...ok(), url: r.url }),
+    Endpoints.llm.speechRecognition,
+    withUserIdAndBody(
+      async (api, userId, b) => api.llm.speechRecognition(userId, b),
+      body<ApiLlmSpeechRecognitionBody>,
+    ),
+    id,
+    { auth: true },
+  ),
+  postBinary<ApiLlmImageOk>(
+    Endpoints.llm.image,
+    withUserIdAndBody(async (api, userId, b) => api.llm.image(userId, b), body<ApiLlmImageBody>),
+    { body: r => Buffer.from(r.bytes), contentType: `image/png` },
     { auth: true },
   ),
   get(
-    Endpoints.subscription.get,
-    withUserId(async (api, userId) => api.subscription.get(userId)),
+    Endpoints.llm.models,
+    withUserId(async api => api.llm.models()),
+    withOkStatus,
+    { auth: true },
+  ),
+  get(
+    Endpoints.user.llmSettings,
+    withUserId(async (api, userId) => api.userLlmSettings.get(userId)),
     withOkStatus,
     { auth: true },
   ),
   post(
-    Endpoints.subscription.autoRenew,
-    withUserIdAndBody(
-      async (api, userId, b) => api.subscription.setAutoRenew(userId, b.enabled),
-      body<ApiSubscriptionAutoRenewBody>,
-    ),
-    ok,
+    Endpoints.user.llmSettings,
+    withUserIdAndBody(async (api, userId, b) => api.userLlmSettings.set(userId, b), body<ApiUserLlmSettingsBody>),
+    id,
     { auth: true },
   ),
   post(
-    Endpoints.subscription.delete,
+    Endpoints.balance.paymentUrl,
     withUserIdAndBody(
-      async (api, userId, b) => api.subscription.delete(userId, b.confirmLoseTime === true),
-      body<ApiSubscriptionDeleteBody>,
+      async (api, userId, b) => api.balancePayment.paymentUrl(userId, b.amount ?? 0),
+      body<ApiBalancePaymentUrlBody>,
     ),
-    ok,
-    { auth: true },
-  ),
-  post(
-    Endpoints.subscription.renew,
-    withUserId(async (api, userId) => api.subscription.renew(userId)),
-    ok,
+    id,
     { auth: true },
   ),
   post(
     Endpoints.webhooks.yookassa,
-    withBody(async (api, b) => api.subscription.webhook(b), body),
+    withBody(async (api, b) => api.balancePayment.webhook(b), body),
     ok,
   ),
 ] as Route[];

@@ -13,3 +13,6 @@ proguard
 wouter
 vectordrawable
 selfsigned
+ollama
+proxyapi
+topup

@@ -3,6 +3,7 @@ import { Button, PasswordInput } from "@snappy/ui";
 import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { t } from "../../core";
+import { Routes } from "../../Routes";
 import { AuthForm } from "./AuthForm";
 import { FormErrorAndActions, MessageWithLink } from "./components";
 
@@ -42,7 +43,7 @@ export const ResetPasswordView = ({
       <MessageWithLink
         lead={screen === `invalid` ? t(`resetPage.invalidLinkLead`) : t(`resetPage.doneLead`)}
         linkText={screen === `invalid` ? t(`resetPage.requestAgain`) : t(`loginPage.login`)}
-        linkTo={screen === `invalid` ? `/forgot-password` : `/login`}
+        linkTo={screen === `invalid` ? Routes.forgotPassword : Routes.login}
         title={screen === `invalid` ? t(`resetPage.invalidLink`) : t(`resetPage.done`)}
       />
     )}
