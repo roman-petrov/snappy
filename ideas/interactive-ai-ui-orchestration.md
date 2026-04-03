@@ -116,17 +116,19 @@ flowchart TD
   L2 --> E
   E --> B
 
-  classDef ctx fill:#E8EAF6,stroke:#3949AB,stroke-width:2px,color:#1A237E
-  classDef model fill:#FFF8E1,stroke:#FF8F00,stroke-width:2px,color:#E65100
-  classDef ui fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,color:#4A148C
-  classDef ans fill:#E0F7FA,stroke:#00838F,stroke-width:2px,color:#006064
-  classDef exec fill:#E8F5E9,stroke:#43A047,stroke-width:2px,color:#1B5E20
-  classDef lblUi fill:#EDE7F6,stroke:#7E57C2,stroke-width:2px,color:#4527A0
-  classDef lblAct fill:#DCEDC8,stroke:#689F38,stroke-width:2px,color:#33691E
+  classDef ctx fill:#BBDEFB,stroke:#64B5F6,stroke-width:2px,color:#1565C0
+  classDef model fill:#FFF9C4,stroke:#FFD54F,stroke-width:2px,color:#F57F17
+  classDef ui fill:#E1BEE7,stroke:#BA68C8,stroke-width:2px,color:#6A1B9A
+  classDef ans fill:#B2EBF2,stroke:#4DB6AC,stroke-width:2px,color:#00695C
+  classDef exec fill:#C8E6C9,stroke:#81C784,stroke-width:2px,color:#2E7D32
+  classDef lblUi fill:#F3E5F5,stroke:#CE93D8,stroke-width:2px,color:#7B1FA2
+  classDef lblAct fill:#FFE0B2,stroke:#FFB74D,stroke-width:2px,color:#E65100
 ```
 
 На практике **модель** сама выбирает, сколько раз вызывать **UI Tool**, обходить ли экран параметров и в каком порядке
-смешивать **tools** — схема показывает только две типичные ветки из узла **«Решение модели»**.
+смешивать **tools** — схема показывает только две типичные ветки из узла **«Решение модели»**. Оттенки приглушённые:
+**синий** — контекст; **жёлтый** — решение модели; **сиреневый** — экран и ветка «нужен экран»; **бирюзовый** — возврат
+**answers**; **персиковый** — прямой вызов **tools** или ответ в чат; **зелёный** — исполнение и сообщение.
 
 ---
 
