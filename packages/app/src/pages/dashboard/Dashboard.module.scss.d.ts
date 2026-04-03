@@ -1,9 +1,23 @@
 declare const __Dashboard: {
+  readonly startPage: "startPage";
+  readonly hero: "hero";
+  readonly heroCopy: "heroCopy";
+  readonly heroEyebrow: "heroEyebrow";
+  readonly heroTitle: "heroTitle";
+  readonly heroLead: "heroLead";
+  readonly heroEmoji: "heroEmoji";
+  readonly freeCard: "freeCard";
+  readonly presetSection: "presetSection";
+  readonly sectionTitle: "sectionTitle";
+  readonly presetGrid: "presetGrid";
+  readonly presetCard: "presetCard";
+  readonly cardMain: "cardMain";
+  readonly copyPrompt: "copyPrompt";
+  readonly cardSelected: "cardSelected";
+  readonly cardEmoji: "cardEmoji";
+  readonly cardBody: "cardBody";
+  readonly cardTitle: "cardTitle";
+  readonly cardDesc: "cardDesc";
   readonly section: "section";
-  readonly controlsSlot: "controlsSlot";
-  readonly resultSlot: "resultSlot";
-  readonly scroll: "scroll";
-  readonly controls: "controls";
-  readonly inputOptions: "inputOptions";
 };
 export default __Dashboard;

@@ -1,40 +1,33 @@
-import type { SnappyLength, SnappyOptions, SnappyStyle } from "@snappy/domain";
-
 import type { PrismaClient } from "./generated/client";
 
 import { DbTools } from "./core";
 
 export type DbSnappySettings = {
-  addEmoji: boolean;
-  addFormatting: boolean;
+  communityImageModel: string;
+  communityTextModel: string;
   lastReset: number;
-  length: SnappyLength;
+  llmProvider: string;
+  ollamaRelayKey: string;
   requestCount: number;
-  style: SnappyStyle;
   userId: number;
 };
 
 export const DbSnappySettings = (prisma: PrismaClient) => {
-  const parseLength = (value: string): SnappyLength => (value === `extend` || value === `shorten` ? value : `keep`);
-
-  const parseStyle = (value: string): SnappyStyle =>
-    value === `business` || value === `friendly` || value === `humorous` || value === `selling` ? value : `neutral`;
-
   const parse = (row: {
-    addEmoji: boolean;
-    addFormatting: boolean;
+    communityImageModel: string;
+    communityTextModel: string;
     lastReset: Date;
-    length: string;
+    llmProvider: string;
+    ollamaRelayKey: string;
     requestCount: number;
-    style: string;
     userId: number;
   }) => ({
-    addEmoji: row.addEmoji,
-    addFormatting: row.addFormatting,
+    communityImageModel: row.communityImageModel,
+    communityTextModel: row.communityTextModel,
     lastReset: row.lastReset.getTime(),
-    length: parseLength(row.length),
+    llmProvider: row.llmProvider,
+    ollamaRelayKey: row.ollamaRelayKey,
     requestCount: row.requestCount,
-    style: parseStyle(row.style),
     userId: row.userId,
   });
 
@@ -44,7 +37,7 @@ export const DbSnappySettings = (prisma: PrismaClient) => {
   const upsertWithReset = async (userId: number, lastReset: number, requestCount: number) =>
     parse(
       await prisma.snappySettings.upsert({
-        create: { lastReset: new Date(lastReset), requestCount, userId },
+        create: { lastReset: new Date(lastReset), ollamaRelayKey: ``, requestCount, userId },
         update: {},
         where: { userId },
       }),
@@ -58,19 +51,48 @@ export const DbSnappySettings = (prisma: PrismaClient) => {
     {
       incrementOnUpdate,
       lastReset,
-      options,
       requestCount,
-    }: { incrementOnUpdate: boolean; lastReset: number; options: SnappyOptions; requestCount: number },
+    }: { incrementOnUpdate: boolean; lastReset: number; requestCount: number },
   ) =>
     parse(
       await prisma.snappySettings.upsert({
-        create: { ...options, lastReset: new Date(lastReset), requestCount, userId },
+        create: { lastReset: new Date(lastReset), ollamaRelayKey: ``, requestCount, userId },
         update: incrementOnUpdate
-          ? { ...options, lastReset: new Date(lastReset), requestCount: { increment: 1 } }
-          : { ...options, lastReset: new Date(lastReset) },
+          ? { lastReset: new Date(lastReset), requestCount: { increment: 1 } }
+          : { lastReset: new Date(lastReset) },
         where: { userId },
       }),
     );
 
-  return { findByUserId, resetCounter, upsert, upsertWithReset };
+  const setOllamaRelayKey = async (userId: number, ollamaRelayKey: string) =>
+    prisma.snappySettings.upsert({
+      create: { lastReset: new Date(), ollamaRelayKey, requestCount: 0, userId },
+      update: { ollamaRelayKey },
+      where: { userId },
+    });
+
+  const patchRelaySettings = async (
+    userId: number,
+    patch: { communityImageModel: string; communityTextModel: string; llmProvider: string; ollamaRelayKey: string },
+  ) =>
+    prisma.snappySettings.upsert({
+      create: {
+        communityImageModel: patch.communityImageModel,
+        communityTextModel: patch.communityTextModel,
+        lastReset: new Date(),
+        llmProvider: patch.llmProvider,
+        ollamaRelayKey: patch.ollamaRelayKey,
+        requestCount: 0,
+        userId,
+      },
+      update: {
+        communityImageModel: patch.communityImageModel,
+        communityTextModel: patch.communityTextModel,
+        llmProvider: patch.llmProvider,
+        ollamaRelayKey: patch.ollamaRelayKey,
+      },
+      where: { userId },
+    });
+
+  return { findByUserId, patchRelaySettings, resetCounter, setOllamaRelayKey, upsert, upsertWithReset };
 };

@@ -1,49 +1,73 @@
-import { Alert } from "@snappy/ui";
+import type { ApiPreset, PresetGroupId } from "@snappy/server-api";
 
 import type { useDashboardState } from "./Dashboard.state";
 
 import { Page } from "../../components";
 import { t } from "../../core";
-import { Limit, TextCard, TextComposer } from "./components";
+import { Limit } from "../chat/components";
+import { PresetCard } from "./components";
 import styles from "./Dashboard.module.scss";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 
+const groupTitleKey = (groupId: PresetGroupId): string => `dashboard.presets.groups.${groupId}`;
+
 export const DashboardView = ({
-  error,
+  byGroup,
+  groupOrder,
   initLoading,
   limitReached,
-  loading,
-  options,
-  processText,
-  result,
-  setOptions,
-  setText,
-  showResult,
-  text,
-}: DashboardViewProps) =>
-  initLoading ? undefined : limitReached ? (
+  onPick,
+  presetId,
+}: DashboardViewProps) => {
+  const freePreset: ApiPreset = {
+    description: t(`dashboard.presets.freeModeDescription`),
+    emoji: `🪄`,
+    group: `text`,
+    id: `free`,
+    prompt: ``,
+    title: t(`dashboard.presets.freeModeTitle`),
+  };
+
+  return initLoading ? undefined : limitReached ? (
     <Limit />
   ) : (
     <Page title={undefined}>
-      <section className={styles.section}>
-        <div className={styles.controlsSlot}>
-          <div className={styles.controls}>
-            <TextComposer
-              loading={loading}
-              onSubmit={processText}
-              onTextChange={setText}
-              options={options}
-              setOptions={setOptions}
-              showResult={showResult}
-              text={text}
-            />
-            {error === `` ? undefined : <Alert text={t(`dashboard.errors.${error}`)} variant="error" />}
+      <div className={styles.startPage}>
+        <header className={styles.hero}>
+          <div className={styles.heroCopy}>
+            <p className={styles.heroEyebrow}>Snappy</p>
+            <h2 className={styles.heroTitle}>{t(`dashboard.presets.heroTitle`)}</h2>
+            <p className={styles.heroLead}>{t(`dashboard.presets.heroLead`)}</p>
           </div>
-        </div>
-        <div className={`${styles.resultSlot} ${styles.scroll}`}>
-          {showResult ? <TextCard loading={loading} result={result} /> : undefined}
-        </div>
-      </section>
+          <span aria-hidden className={styles.heroEmoji}>
+            🪄
+          </span>
+        </header>
+
+        <PresetCard onPick={onPick} preset={freePreset} selected={presetId === freePreset.id} variant="free" />
+
+        {groupOrder.map(groupId => {
+          const items = byGroup.get(groupId) ?? [];
+
+          return items.length === 0 ? undefined : (
+            <section className={styles.presetSection} key={groupId}>
+              <h3 className={styles.sectionTitle}>{t(groupTitleKey(groupId))}</h3>
+              <div className={styles.presetGrid}>
+                {items.map(preset => (
+                  <PresetCard
+                    key={preset.id}
+                    onPick={onPick}
+                    preset={preset}
+                    selected={presetId === preset.id}
+                    variant="grid"
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </Page>
   );
+};

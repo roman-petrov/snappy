@@ -199,7 +199,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -224,7 +224,9 @@ export type UserWhereInput = {
   resetToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  snappySettings?: Prisma.SnappySettingsListRelationFilter
+  agentSessions?: Prisma.AgentSessionListRelationFilter
+  snappySettings?: Prisma.XOR<Prisma.SnappySettingsNullableScalarRelationFilter, Prisma.SnappySettingsWhereInput> | null
+  storedFiles?: Prisma.StoredFileListRelationFilter
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
 }
 
@@ -235,7 +237,9 @@ export type UserOrderByWithRelationInput = {
   resetToken?: Prisma.SortOrderInput | Prisma.SortOrder
   resetTokenExpires?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  snappySettings?: Prisma.SnappySettingsOrderByRelationAggregateInput
+  agentSessions?: Prisma.AgentSessionOrderByRelationAggregateInput
+  snappySettings?: Prisma.SnappySettingsOrderByWithRelationInput
+  storedFiles?: Prisma.StoredFileOrderByRelationAggregateInput
   subscription?: Prisma.SubscriptionOrderByWithRelationInput
 }
 
@@ -249,7 +253,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   resetToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetTokenExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  snappySettings?: Prisma.SnappySettingsListRelationFilter
+  agentSessions?: Prisma.AgentSessionListRelationFilter
+  snappySettings?: Prisma.XOR<Prisma.SnappySettingsNullableScalarRelationFilter, Prisma.SnappySettingsWhereInput> | null
+  storedFiles?: Prisma.StoredFileListRelationFilter
   subscription?: Prisma.XOR<Prisma.SubscriptionNullableScalarRelationFilter, Prisma.SubscriptionWhereInput> | null
 }, "id" | "email">
 
@@ -285,7 +291,9 @@ export type UserCreateInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsCreateNestedManyWithoutUserInput
+  agentSessions?: Prisma.AgentSessionCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileCreateNestedManyWithoutUserInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
 }
 
@@ -296,7 +304,9 @@ export type UserUncheckedCreateInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedManyWithoutUserInput
+  agentSessions?: Prisma.AgentSessionUncheckedCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUserInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -306,7 +316,9 @@ export type UserUpdateInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUpdateManyWithoutUserNestedInput
+  agentSessions?: Prisma.AgentSessionUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUpdateManyWithoutUserNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
 }
 
@@ -317,7 +329,9 @@ export type UserUncheckedUpdateInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedUpdateManyWithoutUserNestedInput
+  agentSessions?: Prisma.AgentSessionUncheckedUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUncheckedUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUserNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
 }
 
@@ -435,13 +449,43 @@ export type UserUpdateOneRequiredWithoutSnappySettingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSnappySettingsInput, Prisma.UserUpdateWithoutSnappySettingsInput>, Prisma.UserUncheckedUpdateWithoutSnappySettingsInput>
 }
 
+export type UserCreateNestedOneWithoutAgentSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAgentSessionsInput, Prisma.UserUncheckedCreateWithoutAgentSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAgentSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAgentSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAgentSessionsInput, Prisma.UserUncheckedCreateWithoutAgentSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAgentSessionsInput
+  upsert?: Prisma.UserUpsertWithoutAgentSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAgentSessionsInput, Prisma.UserUpdateWithoutAgentSessionsInput>, Prisma.UserUncheckedUpdateWithoutAgentSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutStoredFilesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoredFilesInput, Prisma.UserUncheckedCreateWithoutStoredFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoredFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutStoredFilesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutStoredFilesInput, Prisma.UserUncheckedCreateWithoutStoredFilesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutStoredFilesInput
+  upsert?: Prisma.UserUpsertWithoutStoredFilesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutStoredFilesInput, Prisma.UserUpdateWithoutStoredFilesInput>, Prisma.UserUncheckedUpdateWithoutStoredFilesInput>
+}
+
 export type UserCreateWithoutSubscriptionInput = {
   email?: string | null
   passwordHash?: string | null
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsCreateNestedManyWithoutUserInput
+  agentSessions?: Prisma.AgentSessionCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSubscriptionInput = {
@@ -451,7 +495,9 @@ export type UserUncheckedCreateWithoutSubscriptionInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedManyWithoutUserInput
+  agentSessions?: Prisma.AgentSessionUncheckedCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSubscriptionInput = {
@@ -476,7 +522,9 @@ export type UserUpdateWithoutSubscriptionInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUpdateManyWithoutUserNestedInput
+  agentSessions?: Prisma.AgentSessionUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubscriptionInput = {
@@ -486,7 +534,9 @@ export type UserUncheckedUpdateWithoutSubscriptionInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  snappySettings?: Prisma.SnappySettingsUncheckedUpdateManyWithoutUserNestedInput
+  agentSessions?: Prisma.AgentSessionUncheckedUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUncheckedUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSnappySettingsInput = {
@@ -495,6 +545,8 @@ export type UserCreateWithoutSnappySettingsInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
+  agentSessions?: Prisma.AgentSessionCreateNestedManyWithoutUserInput
+  storedFiles?: Prisma.StoredFileCreateNestedManyWithoutUserInput
   subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
 }
 
@@ -505,6 +557,8 @@ export type UserUncheckedCreateWithoutSnappySettingsInput = {
   resetToken?: string | null
   resetTokenExpires?: Date | string | null
   createdAt?: Date | string
+  agentSessions?: Prisma.AgentSessionUncheckedCreateNestedManyWithoutUserInput
+  storedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUserInput
   subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
 }
 
@@ -530,6 +584,8 @@ export type UserUpdateWithoutSnappySettingsInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agentSessions?: Prisma.AgentSessionUpdateManyWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUpdateManyWithoutUserNestedInput
   subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
 }
 
@@ -540,6 +596,132 @@ export type UserUncheckedUpdateWithoutSnappySettingsInput = {
   resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agentSessions?: Prisma.AgentSessionUncheckedUpdateManyWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAgentSessionsInput = {
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  snappySettings?: Prisma.SnappySettingsCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileCreateNestedManyWithoutUserInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutAgentSessionsInput = {
+  id?: number
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedOneWithoutUserInput
+  storedFiles?: Prisma.StoredFileUncheckedCreateNestedManyWithoutUserInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutAgentSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAgentSessionsInput, Prisma.UserUncheckedCreateWithoutAgentSessionsInput>
+}
+
+export type UserUpsertWithoutAgentSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAgentSessionsInput, Prisma.UserUncheckedUpdateWithoutAgentSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAgentSessionsInput, Prisma.UserUncheckedCreateWithoutAgentSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAgentSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAgentSessionsInput, Prisma.UserUncheckedUpdateWithoutAgentSessionsInput>
+}
+
+export type UserUpdateWithoutAgentSessionsInput = {
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snappySettings?: Prisma.SnappySettingsUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUpdateManyWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAgentSessionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  snappySettings?: Prisma.SnappySettingsUncheckedUpdateOneWithoutUserNestedInput
+  storedFiles?: Prisma.StoredFileUncheckedUpdateManyWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutStoredFilesInput = {
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  agentSessions?: Prisma.AgentSessionCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsCreateNestedOneWithoutUserInput
+  subscription?: Prisma.SubscriptionCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutStoredFilesInput = {
+  id?: number
+  email?: string | null
+  passwordHash?: string | null
+  resetToken?: string | null
+  resetTokenExpires?: Date | string | null
+  createdAt?: Date | string
+  agentSessions?: Prisma.AgentSessionUncheckedCreateNestedManyWithoutUserInput
+  snappySettings?: Prisma.SnappySettingsUncheckedCreateNestedOneWithoutUserInput
+  subscription?: Prisma.SubscriptionUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutStoredFilesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoredFilesInput, Prisma.UserUncheckedCreateWithoutStoredFilesInput>
+}
+
+export type UserUpsertWithoutStoredFilesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutStoredFilesInput, Prisma.UserUncheckedUpdateWithoutStoredFilesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutStoredFilesInput, Prisma.UserUncheckedCreateWithoutStoredFilesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutStoredFilesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutStoredFilesInput, Prisma.UserUncheckedUpdateWithoutStoredFilesInput>
+}
+
+export type UserUpdateWithoutStoredFilesInput = {
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agentSessions?: Prisma.AgentSessionUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUpdateOneWithoutUserNestedInput
+  subscription?: Prisma.SubscriptionUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutStoredFilesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetTokenExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  agentSessions?: Prisma.AgentSessionUncheckedUpdateManyWithoutUserNestedInput
+  snappySettings?: Prisma.SnappySettingsUncheckedUpdateOneWithoutUserNestedInput
   subscription?: Prisma.SubscriptionUncheckedUpdateOneWithoutUserNestedInput
 }
 
@@ -549,11 +731,13 @@ export type UserUncheckedUpdateWithoutSnappySettingsInput = {
  */
 
 export type UserCountOutputType = {
-  snappySettings: number
+  agentSessions: number
+  storedFiles: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  snappySettings?: boolean | UserCountOutputTypeCountSnappySettingsArgs
+  agentSessions?: boolean | UserCountOutputTypeCountAgentSessionsArgs
+  storedFiles?: boolean | UserCountOutputTypeCountStoredFilesArgs
 }
 
 /**
@@ -569,8 +753,15 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountSnappySettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.SnappySettingsWhereInput
+export type UserCountOutputTypeCountAgentSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AgentSessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountStoredFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoredFileWhereInput
 }
 
 
@@ -581,7 +772,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   resetToken?: boolean
   resetTokenExpires?: boolean
   createdAt?: boolean
+  agentSessions?: boolean | Prisma.User$agentSessionsArgs<ExtArgs>
   snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
+  storedFiles?: boolean | Prisma.User$storedFilesArgs<ExtArgs>
   subscription?: boolean | Prisma.User$subscriptionArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -615,7 +808,9 @@ export type UserSelectScalar = {
 
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "resetToken" | "resetTokenExpires" | "createdAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  agentSessions?: boolean | Prisma.User$agentSessionsArgs<ExtArgs>
   snappySettings?: boolean | Prisma.User$snappySettingsArgs<ExtArgs>
+  storedFiles?: boolean | Prisma.User$storedFilesArgs<ExtArgs>
   subscription?: boolean | Prisma.User$subscriptionArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -625,7 +820,9 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
-    snappySettings: Prisma.$SnappySettingsPayload<ExtArgs>[]
+    agentSessions: Prisma.$AgentSessionPayload<ExtArgs>[]
+    snappySettings: Prisma.$SnappySettingsPayload<ExtArgs> | null
+    storedFiles: Prisma.$StoredFilePayload<ExtArgs>[]
     subscription: Prisma.$SubscriptionPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1029,7 +1226,9 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  snappySettings<T extends Prisma.User$snappySettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$snappySettingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SnappySettingsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  agentSessions<T extends Prisma.User$agentSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$agentSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AgentSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  snappySettings<T extends Prisma.User$snappySettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$snappySettingsArgs<ExtArgs>>): Prisma.Prisma__SnappySettingsClient<runtime.Types.Result.GetResult<Prisma.$SnappySettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  storedFiles<T extends Prisma.User$storedFilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$storedFilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoredFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   subscription<T extends Prisma.User$subscriptionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subscriptionArgs<ExtArgs>>): Prisma.Prisma__SubscriptionClient<runtime.Types.Result.GetResult<Prisma.$SubscriptionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1459,6 +1658,30 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
+ * User.agentSessions
+ */
+export type User$agentSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AgentSession
+   */
+  select?: Prisma.AgentSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AgentSession
+   */
+  omit?: Prisma.AgentSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AgentSessionInclude<ExtArgs> | null
+  where?: Prisma.AgentSessionWhereInput
+  orderBy?: Prisma.AgentSessionOrderByWithRelationInput | Prisma.AgentSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AgentSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AgentSessionScalarFieldEnum | Prisma.AgentSessionScalarFieldEnum[]
+}
+
+/**
  * User.snappySettings
  */
 export type User$snappySettingsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1475,11 +1698,30 @@ export type User$snappySettingsArgs<ExtArgs extends runtime.Types.Extensions.Int
    */
   include?: Prisma.SnappySettingsInclude<ExtArgs> | null
   where?: Prisma.SnappySettingsWhereInput
-  orderBy?: Prisma.SnappySettingsOrderByWithRelationInput | Prisma.SnappySettingsOrderByWithRelationInput[]
-  cursor?: Prisma.SnappySettingsWhereUniqueInput
+}
+
+/**
+ * User.storedFiles
+ */
+export type User$storedFilesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoredFile
+   */
+  select?: Prisma.StoredFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoredFile
+   */
+  omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  where?: Prisma.StoredFileWhereInput
+  orderBy?: Prisma.StoredFileOrderByWithRelationInput | Prisma.StoredFileOrderByWithRelationInput[]
+  cursor?: Prisma.StoredFileWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.SnappySettingsScalarFieldEnum | Prisma.SnappySettingsScalarFieldEnum[]
+  distinct?: Prisma.StoredFileScalarFieldEnum | Prisma.StoredFileScalarFieldEnum[]
 }
 
 /**

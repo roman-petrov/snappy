@@ -1,0 +1,55 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/typography";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  min-height: 0;
+  max-height: min(55vh, 28rem);
+  padding: space.md();
+  overflow: hidden auto;
+}
+
+.title {
+  @include typography.h3;
+
+  margin: 0;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
+  gap: space.md();
+  align-items: center;
+  min-width: 0;
+}
+
+.field-row-start {
+  align-items: flex-start;
+
+  .label {
+    padding-top: space.sm();
+  }
+}
+
+.label {
+  @include typography.caption;
+
+  min-width: 0;
+  color: color.text();
+}
+
+.control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.field-row-start .control {
+  align-items: flex-start;
+}

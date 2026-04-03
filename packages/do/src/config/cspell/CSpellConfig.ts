@@ -19,6 +19,7 @@ export const CSpellConfig = {
     `.vscode/**`,
     `**/node_modules/**`,
     `**/*.sql`,
+    `**/*.json`,
     `bun.lockb`,
     `**/packages/*/src/generated/**`,
     `**/gradlew`,

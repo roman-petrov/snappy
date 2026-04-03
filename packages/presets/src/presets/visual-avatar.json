@@ -1,0 +1,65 @@
+{
+  "group": "visual",
+  "en": {
+    "emoji": "🧑‍🎨",
+    "labels": {
+      "description": "🖼️ Portrait or character look — then generate an image",
+      "title": "Avatar"
+    },
+    "prompt": "From the latest user message, infer the avatar concept (look and art direction). Then call **generate_image** with a short English prompt for the image.",
+    "uiPlan": {
+      "title": "🧑‍🎨 Avatar",
+      "fields": [
+        {
+          "id": "look",
+          "kind": "text",
+          "label": "👤 Look & traits",
+          "placeholder": "Hair, clothes, mood…",
+          "prompt": "Appearance and character traits to show:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Art style",
+          "default": "flat",
+          "options": [
+            { "label": "⬜ Flat", "value": "flat", "prompt": "Flat illustration style, clean shapes." },
+            { "label": "📷 Realistic", "value": "realistic", "prompt": "Realistic or photographic rendering." },
+            { "label": "🎌 Anime", "value": "anime", "prompt": "Anime or manga-inspired look." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "🖼️",
+    "labels": {
+      "description": "🖼️ Портрет или образ персонажа — затем сгенерируй картинку",
+      "title": "Аватар"
+    },
+    "prompt": "По последнему сообщению пользователя сформулируй концепцию аватара (внешность и стиль). Затем вызови **generate_image** с кратким англоязычным промптом для изображения.",
+    "uiPlan": {
+      "title": "🖼️ Аватар",
+      "fields": [
+        {
+          "id": "look",
+          "kind": "text",
+          "label": "👤 Внешность и черты",
+          "placeholder": "Волосы, одежда, настроение…",
+          "prompt": "Внешность и характер образа:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Стиль рисунка",
+          "default": "flat",
+          "options": [
+            { "label": "⬜ Плоский", "value": "flat", "prompt": "Плоская иллюстрация, чистые формы." },
+            { "label": "📷 Реализм", "value": "realistic", "prompt": "Реалистичная или фотореалистичная подача." },
+            { "label": "🎌 Аниме", "value": "anime", "prompt": "Стиль аниме/манга." }
+          ]
+        }
+      ]
+    }
+  }
+}

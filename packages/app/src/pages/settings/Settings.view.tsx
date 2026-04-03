@@ -33,6 +33,8 @@ export const SettingsView = ({ fog, locale, subscription, theme, toggleFog }: Se
           link="/settings/language"
           text={t(`settings.language`)}
         />
+        <SettingsCardSeparator />
+        <SettingsCardRow end="›" icon="🦙" link="/settings/ollama-relay" text={t(`settings.ollamaRelay`)} />
       </SettingsCard>
       <SettingsCard>
         <SettingsCardRow

@@ -1,0 +1,122 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/typography";
+
+.feed {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: space.sm();
+  min-height: 0;
+  padding: space.sm();
+  overflow: auto;
+}
+
+.scroll {
+  min-height: 0;
+}
+
+.bubble {
+  max-width: 90%;
+  padding: space.sm();
+  border-radius: radius.md();
+}
+
+.bubble-text {
+  @include typography.body;
+
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: radius.sm();
+}
+
+.ui-plan-wrap {
+  flex-shrink: 0;
+  padding: space.sm();
+}
+
+.model-progress {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: space.sm();
+  padding: space.md();
+  background: linear-gradient(135deg, color.primary-ghost() 0%, color.surface() 100%);
+  border: 1px solid color.primary-border();
+  border-radius: radius.md();
+  box-shadow: 0 4px 20px color.a-shadow();
+}
+
+.model-progress-track {
+  position: relative;
+  height: 4px;
+  overflow: hidden;
+  background: color.border();
+  border-radius: radius.sm();
+}
+
+.model-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 35%;
+  height: 100%;
+  background: linear-gradient(90deg, color.primary() 0%, color.primary-border() 50%, color.primary() 100%);
+  border-radius: radius.sm();
+  animation: model-progress-slide 1.1s ease-in-out infinite;
+}
+
+@keyframes model-progress-slide {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+.model-progress-text {
+  @include typography.body;
+
+  margin: 0;
+  text-align: center;
+  opacity: 0.92;
+  animation: model-progress-text-pulse 2.2s ease-in-out infinite;
+}
+
+@keyframes model-progress-text-pulse {
+  0%,
+  100% {
+    opacity: 0.78;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.composer {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: space.sm();
+}
+
+.composer-row {
+  display: flex;
+  gap: space.sm();
+  align-items: flex-end;
+}
+
+.composer-input-wrap {
+  flex: 1;
+  min-width: 0;
+}

@@ -70,7 +70,11 @@ export const ru = {
     },
     title: `🛠️ Что умеет Snappy`,
   },
-  footer: { appLink: `Веб-приложение`, tagline: `Умная обработка текста с искусственным интеллектом.` },
+  footer: {
+    appLink: `Веб-приложение`,
+    clientDownload: `Клиент Ollama (Windows)`,
+    tagline: `Умная обработка текста с искусственным интеллектом.`,
+  },
   hero: {
     androidApp: `Скачать приложение Android`,
     cta: `Открыть веб-приложение`,

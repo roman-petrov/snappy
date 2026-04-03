@@ -1,7 +1,13 @@
 .root {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  vertical-align: middle;
   color: inherit;
   text-align: inherit;
   text-decoration: none;
+  appearance: none;
   cursor: pointer;
   user-select: none;
   outline: none;

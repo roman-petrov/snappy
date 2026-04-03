@@ -1,6 +1,4 @@
-gigachat
 yookassa
-giga
 gramio
 cascadia
 sonarjs
@@ -13,3 +11,4 @@ proguard
 wouter
 vectordrawable
 selfsigned
+ollama

@@ -1,0 +1,65 @@
+{
+  "group": "text",
+  "en": {
+    "emoji": "📧",
+    "labels": {
+      "description": "📧 Draft a letter or email in the tone you need",
+      "title": "Email draft"
+    },
+    "prompt": "Write a complete email (subject line, greeting, body, closing) that matches the intent and tone described in the latest user message. Output the email text only.",
+    "uiPlan": {
+      "title": "✉️ Email draft",
+      "fields": [
+        {
+          "id": "intent",
+          "kind": "text",
+          "label": "📝 What should the email say?",
+          "placeholder": "Goal, key points, recipient context…",
+          "prompt": "What the email should communicate:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Tone",
+          "default": "polite",
+          "options": [
+            { "label": "🙂 Polite", "value": "polite", "prompt": "Use a polite, courteous tone throughout." },
+            { "label": "➡️ Direct", "value": "direct", "prompt": "Be direct and concise; minimize filler." },
+            { "label": "🤝 Friendly", "value": "friendly", "prompt": "Use a warm, friendly tone." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "✉️",
+    "labels": {
+      "description": "📧 Черновик письма или email в нужном тоне",
+      "title": "Черновик письма"
+    },
+    "prompt": "Составь полное письмо (тема, обращение, основная часть, завершение) по замыслу и тону из последнего сообщения пользователя. Выдай только текст письма.",
+    "uiPlan": {
+      "title": "✉️ Черновик письма",
+      "fields": [
+        {
+          "id": "intent",
+          "kind": "text",
+          "label": "📝 Содержание письма",
+          "placeholder": "Цель, ключевые мысли, контекст…",
+          "prompt": "О чём должно быть письмо:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Тон",
+          "default": "polite",
+          "options": [
+            { "label": "🙂 Вежливый", "value": "polite", "prompt": "Вежливый, уважительный тон на всём протяжении." },
+            { "label": "➡️ Прямой", "value": "direct", "prompt": "Прямо и по делу, без лишних слов." },
+            { "label": "🤝 Дружелюбный", "value": "friendly", "prompt": "Тёплый дружелюбный тон." }
+          ]
+        }
+      ]
+    }
+  }
+}

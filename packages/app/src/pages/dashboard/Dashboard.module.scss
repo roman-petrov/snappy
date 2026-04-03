@@ -1,32 +1,208 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/typography";
 @use "pkg:@snappy/theme/core" as *;
 
-.section {
-  display: flex;
+.start-page {
   flex: 1;
-  flex-direction: column;
+  min-height: 0;
+  padding: space.sm() 0 space.lg();
+  overflow: hidden auto;
+  scrollbar-gutter: stable;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr minmax(120px, 28%);
   gap: space.md();
-  min-height: 0;
-  overflow: hidden;
+  align-items: center;
+  padding: space.lg();
+  margin-bottom: space.lg();
+  background: linear-gradient(135deg, color.surface-elevated() 0%, color.primary-ghost() 100%);
+  border: 1px solid color.border();
+  border-radius: radius.lg();
 }
 
-.controls-slot {
-  order: 1;
+.hero-copy {
   min-width: 0;
 }
 
-.result-slot {
-  order: 2;
-  min-width: 0;
+.hero-eyebrow {
+  @include typography.caption;
+
+  margin: 0 0 space.xs();
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
 }
 
-.scroll {
+.hero-title {
+  @include typography.h2;
+
+  margin: 0 0 space.sm();
+  line-height: 1.2;
+}
+
+.hero-lead {
+  @include typography.body;
+
+  max-width: 40rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.hero-emoji {
+  justify-self: end;
+  font-size: clamp(3.5rem, 10vw, 5rem);
+  line-height: 1;
+  user-select: none;
+}
+
+.free-card {
+  display: flex;
+  gap: space.md();
+  align-items: center;
+  width: 100%;
+  padding: space.md() space.lg();
+  margin-bottom: space.xl();
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: color.surface();
+  border: 1px solid color.primary-border();
+  border-radius: radius.lg();
+  box-shadow: 0 8px 28px color.a-shadow();
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: color.primary();
+    box-shadow: 0 12px 36px color.a-shadow();
+    transform: translateY(-1px);
+  }
+}
+
+.preset-section {
+  margin-bottom: space.xl();
+}
+
+.section-title {
+  @include typography.h3;
+
+  padding-bottom: space.xs();
+  margin: 0 0 space.md();
+  border-bottom: 1px solid color.divider-line();
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: space.md();
+}
+
+.preset-card {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding: space.md();
+  color: inherit;
+  background: color.surface();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    border-color: color.primary-border();
+    box-shadow: 0 6px 20px color.a-shadow();
+    transform: translateY(-2px);
+  }
+}
+
+.card-main {
   display: flex;
   flex: 1;
+  gap: space.md();
+  align-items: flex-start;
+  width: 100%;
+  padding: 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.copy-prompt {
+  @include typography.caption;
+
+  align-self: flex-start;
+  padding: space.xs() space.sm();
+  margin-left: calc(3.25rem + space.md());
+  color: color.primary();
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid color.primary-border();
+  border-radius: radius.sm();
+
+  &:hover {
+    background: color.primary-ghost();
+  }
+}
+
+.card-selected {
+  border-color: color.primary();
+  box-shadow: 0 0 0 2px color.primary-ghost();
+}
+
+.card-emoji {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  font-size: 2.25rem;
+  line-height: 1;
+  background: color.primary-ghost();
+  border-radius: radius.md();
+}
+
+.card-body {
+  display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  min-height: 0;
+  gap: space.xs();
+}
+
+.card-title {
+  @include typography.h3;
+
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.card-desc {
+  @include typography.caption;
+
+  margin: 0;
+  opacity: 0.85;
+}
+
+.free-card .card-emoji {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 2.5rem;
+}
+
+.free-card .card-body {
+  flex: 1;
+  min-width: 0;
 }
 
 @include mobile {
@@ -34,30 +210,12 @@
     overflow: visible;
   }
 
-  .scroll {
-    justify-content: flex-start;
+  .hero {
+    grid-template-columns: 1fr;
   }
 
-  .result-slot {
-    order: 1;
+  .hero-emoji {
+    justify-self: center;
+    margin-top: space.sm();
   }
-
-  .controls-slot {
-    order: 2;
-  }
-}
-
-.controls {
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: space.sm();
-  width: 100%;
-  max-width: none;
-}
-
-.input-options {
-  padding-bottom: space.sm();
-  margin-bottom: space.sm();
-  border-bottom: 1px solid color.border();
 }

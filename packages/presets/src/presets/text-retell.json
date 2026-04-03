@@ -1,0 +1,65 @@
+{
+  "group": "text",
+  "en": {
+    "emoji": "📖",
+    "labels": {
+      "description": "📚 Retell in your own words — choose tone",
+      "title": "Retell"
+    },
+    "prompt": "Retell the source in your own words using the tone in the latest user message. Preserve facts and meaning; change wording.",
+    "uiPlan": {
+      "title": "📖 Retell",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Source text",
+          "placeholder": "Paste the text…",
+          "prompt": "Source text to retell:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Tone",
+          "default": "neutral",
+          "options": [
+            { "label": "⚖️ Neutral", "value": "neutral", "prompt": "Neutral, factual paraphrase." },
+            { "label": "🔥 Lively", "value": "lively", "prompt": "Livelier wording; still accurate." },
+            { "label": "🎓 Academic", "value": "academic", "prompt": "More formal, academic-style phrasing." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📚",
+    "labels": {
+      "description": "📚 Пересказ своими словами — выбери тон",
+      "title": "Пересказ"
+    },
+    "prompt": "Перескажи исходник своими словами в тоне из последнего сообщения пользователя. Сохрани факты и смысл, измени формулировки.",
+    "uiPlan": {
+      "title": "📚 Пересказ",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Исходный текст",
+          "placeholder": "Вставьте текст…",
+          "prompt": "Текст для пересказа:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Тон",
+          "default": "neutral",
+          "options": [
+            { "label": "⚖️ Нейтральный", "value": "neutral", "prompt": "Нейтральный точный пересказ." },
+            { "label": "🔥 Живой", "value": "lively", "prompt": "Более живая подача; без искажения фактов." },
+            { "label": "🎓 Академический", "value": "academic", "prompt": "Более формальный академический стиль." }
+          ]
+        }
+      ]
+    }
+  }
+}

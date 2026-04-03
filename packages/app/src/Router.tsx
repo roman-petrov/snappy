@@ -1,9 +1,19 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Layout } from "./Layout";
-import { ForgotPassword, Login, Register, ResetPassword } from "./pages/auth";
-import { Dashboard } from "./pages/dashboard";
-import { Settings, SettingsLanguage, SettingsSubscription, SettingsTheme } from "./pages/settings";
+import {
+  Chat,
+  Dashboard,
+  ForgotPassword,
+  Login,
+  Register,
+  ResetPassword,
+  Settings,
+  SettingsLanguage,
+  SettingsOllamaRelay,
+  SettingsSubscription,
+  SettingsTheme,
+} from "./pages";
 
 export const Router = (basename: string) =>
   createBrowserRouter(
@@ -11,6 +21,8 @@ export const Router = (basename: string) =>
       {
         children: [
           { element: <Dashboard />, index: true },
+          { element: <Navigate replace to="../preset/free" />, path: `chat` },
+          { element: <Chat />, path: `preset/:presetId` },
           { element: <Login />, path: `login` },
           { element: <Register />, path: `register` },
           { element: <ForgotPassword />, path: `forgot-password` },
@@ -18,6 +30,7 @@ export const Router = (basename: string) =>
           { element: <Settings />, path: `settings` },
           { element: <SettingsTheme />, path: `settings/theme` },
           { element: <SettingsLanguage />, path: `settings/language` },
+          { element: <SettingsOllamaRelay />, path: `settings/ollama-relay` },
           { element: <SettingsSubscription />, path: `settings/subscription` },
           { element: <Navigate replace to="/" />, path: `*` },
         ],

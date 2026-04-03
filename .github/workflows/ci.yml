@@ -11,6 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         task:
+          - name: 🖥️ build:client
+            arg: build:client
           - name: 🌐 build:site
             arg: build:site
           - name: ⚡ build:ssr

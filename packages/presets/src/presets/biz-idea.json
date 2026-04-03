@@ -1,0 +1,93 @@
+{
+  "group": "business",
+  "en": {
+    "emoji": "💡",
+    "labels": {
+      "description": "🧠 Structure your idea — lean canvas or full pitch",
+      "title": "Business idea"
+    },
+    "prompt": "Develop a clear structured write-up from the problem, audience, and depth described in the latest user message.",
+    "uiPlan": {
+      "title": "💡 Business idea",
+      "fields": [
+        {
+          "id": "problem",
+          "kind": "text",
+          "label": "🎯 Problem you solve",
+          "placeholder": "Pain point…",
+          "prompt": "Problem or pain you address:"
+        },
+        {
+          "id": "audience",
+          "kind": "text",
+          "label": "👥 Target audience",
+          "placeholder": "Who pays / uses?",
+          "prompt": "Who the product or service is for:"
+        },
+        {
+          "id": "depth",
+          "kind": "tabs_single",
+          "label": "📊 Depth",
+          "default": "lean",
+          "options": [
+            {
+              "label": "📋 Lean canvas",
+              "value": "lean",
+              "prompt": "Structure the answer as a lean canvas: problem, segments, value proposition, channels, revenue, costs, metrics, unfair advantage."
+            },
+            {
+              "label": "🎤 Full pitch",
+              "value": "full",
+              "prompt": "Structure the answer as a fuller pitch: problem, solution, market, model, traction, team, ask."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "🧠",
+    "labels": {
+      "description": "🧠 Структура идеи — lean canvas или полный питч",
+      "title": "Бизнес-идея"
+    },
+    "prompt": "Дай связный структурированный текст по проблеме, аудитории и глубине из последнего сообщения пользователя.",
+    "uiPlan": {
+      "title": "🧠 Бизнес-идея",
+      "fields": [
+        {
+          "id": "problem",
+          "kind": "text",
+          "label": "🎯 Какую проблему решаете",
+          "placeholder": "Боль пользователя…",
+          "prompt": "Проблема или боль, которую закрываете:"
+        },
+        {
+          "id": "audience",
+          "kind": "text",
+          "label": "👥 Аудитория",
+          "placeholder": "Кто платит / пользуется?",
+          "prompt": "Для кого продукт или услуга:"
+        },
+        {
+          "id": "depth",
+          "kind": "tabs_single",
+          "label": "📊 Глубина",
+          "default": "lean",
+          "options": [
+            {
+              "label": "📋 Lean canvas",
+              "value": "lean",
+              "prompt": "Оформи как lean canvas: проблема, сегменты, ценность, каналы, доход, затраты, метрики, преимущество."
+            },
+            {
+              "label": "🎤 Полный питч",
+              "value": "full",
+              "prompt": "Оформи как развёрнутый питч: проблема, решение, рынок, модель, трекшн, команда, запрос."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

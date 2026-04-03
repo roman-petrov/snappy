@@ -1,68 +1,46 @@
-import { Snappy } from "@snappy/domain";
-import { useAsyncEffectOnce } from "@snappy/ui";
+import type { ApiPreset, PresetGroupId } from "@snappy/server-api";
+
+import { useStoreValue } from "@snappy/store";
+import { $locale, Locale, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { api } from "../../core";
 
 export const useDashboardState = () => {
-  const [options, setOptions] = useState(Snappy.defaultOptions);
-  const [text, setText] = useState(``);
-  const [result, setResult] = useState(``);
-  const [error, setError] = useState(``);
   const [initLoading, setInitLoading] = useState(true);
   const [limitReached, setLimitReached] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(true);
+  const [presets, setPresets] = useState<ApiPreset[]>([]);
+  const [groupOrder, setGroupOrder] = useState<readonly PresetGroupId[]>([]);
+  const locale = useStoreValue($locale);
 
-  useAsyncEffectOnce(async () => {
-    try {
-      const response = await api.remaining();
-
-      setOptions(response.options);
-      if (response.remaining === 0 && response.isPremium !== true) {
-        setLimitReached(true);
-      }
-    } finally {
-      setInitLoading(false);
+  useAsyncEffect(async () => {
+    setInitLoading(true);
+    const loc = Locale.effective();
+    const [remainingResponse, presetsResponse] = await Promise.all([api.remaining(), api.presetsList(loc)]);
+    if (remainingResponse.remaining === 0 && remainingResponse.isPremium !== true) {
+      setLimitReached(true);
     }
-  });
+    setPresets([...presetsResponse.presets]);
+    setGroupOrder(presetsResponse.groupOrder);
+    setInitLoading(false);
+  }, [locale]);
 
-  const processText = async () => {
-    setError(``);
-    setResult(``);
-    if (text.trim() === ``) {
-      return;
-    }
-    setIsEditMode(false);
-    setLoading(true);
-    const processResult = await api.process(text.trim(), options);
-    setLoading(false);
-    if (processResult.status !== `ok`) {
-      if (processResult.status === `requestLimitReached`) {
-        setLimitReached(true);
+  const byGroup = presets.reduce((map, preset) => {
+    const next = new Map(map);
+    const bucket = [...(next.get(preset.group) ?? []), preset];
+    next.set(preset.group, bucket);
 
-        return;
-      }
-      setError(processResult.status);
+    return next;
+  }, new Map<PresetGroupId, ApiPreset[]>());
 
-      return;
-    }
-    setResult(processResult.text);
+  const navigate = useNavigate();
+  const [presetId, setPresetId] = useState(`free`);
+
+  const onPick = (id: string) => {
+    setPresetId(id);
+    void navigate(`preset/${encodeURIComponent(id)}`);
   };
 
-  const showResult = !isEditMode && (loading || result !== ``);
-
-  return {
-    error,
-    initLoading,
-    limitReached,
-    loading,
-    options,
-    processText,
-    result,
-    setOptions,
-    setText,
-    showResult,
-    text,
-  };
+  return { byGroup, groupOrder, initLoading, limitReached, onPick, presetId };
 };

@@ -9,6 +9,7 @@ import { join } from "node:path";
 
 import { Build } from "./Build";
 import { Commands } from "./Commands";
+import { waitForLocalPort } from "./waitForLocalPort";
 
 const ok = `✓`;
 const fail = `✗`;
@@ -54,7 +55,19 @@ type RunLeafOptions = {
   withoutTree?: boolean;
 };
 
-const startupMessage = `\n🌐 ${Terminal.yellow(`Site running at`)} ${Terminal.blue(`https://localhost`)}\n`;
+const mergeSpawnEnv = (runEnv: Record<string, string | undefined> | undefined): Record<string, string | undefined> => {
+  if (runEnv === undefined) {
+    return { ...process.env };
+  }
+  const out: Record<string, string | undefined> = { ...process.env, ...runEnv };
+  const parentOpt = process.env[`NODE_OPTIONS`];
+  const runOpt = runEnv[`NODE_OPTIONS`];
+  if (parentOpt !== undefined && runOpt !== undefined) {
+    out[`NODE_OPTIONS`] = `${parentOpt} ${runOpt}`;
+  }
+
+  return out;
+};
 
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
@@ -78,6 +91,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     "build:app": Build.app,
     "build:app-android": Build.appAndroid,
     "build:app-android-debug": Build.appAndroidDebug,
+    "build:client": Build.client,
     "build:site": Build.site,
     "build:ssr": Build.ssr,
   } as const;
@@ -92,16 +106,19 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
           : (async () => {
               const proc = nodeSpawn(run.command, [], {
                 cwd: join(root, run.cwd),
-                env: run.env === undefined ? process.env : { ...process.env, ...run.env },
+                env: mergeSpawnEnv(run.env) as typeof process.env,
                 shell: true,
                 stdio: `inherit`,
               });
-              if (name === `server:prod`) {
-                Console.log(`\n${startupMessage}`);
+              if (`spawnNotice` in run && run.spawnNotice !== undefined) {
+                Console.log(`\n${run.spawnNotice()}`);
               }
 
               if (run.background === true) {
                 backgroundProcesses.push(proc);
+                if (`waitForListenPort` in run && run.waitForListenPort !== undefined) {
+                  await waitForLocalPort(run.waitForListenPort);
+                }
 
                 return 0;
               }
@@ -135,9 +152,6 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
     Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
-    if (exitCode === 0 && name === `server:frontend:dev`) {
-      Console.log(startupMessage);
-    }
   }
 
   if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
@@ -233,6 +247,20 @@ const run = async (
     verbose,
   });
 
+  if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
+    Console.error(`\n${Terminal.red(`${fail} ${name} failed`)}\n\n${result.message}\n`);
+  }
+
+  if (!isMcp && !verbose && result.exitCode === 0) {
+    const seconds = Math.round((_.now() - start) / _.second);
+    Console.log(`\n✅ Done in ${Terminal.green(`${seconds}s`)}\n`);
+    if (definition !== undefined && `successFooter` in definition && definition.successFooter !== undefined) {
+      const footer = definition.successFooter();
+      const text = footer instanceof Promise ? await footer : footer;
+      Console.log(text);
+    }
+  }
+
   if (result.exitCode === 0 && backgroundProcesses.length > 0) {
     await new Promise<void>(resolve => {
       const cleanup = () => {
@@ -244,15 +272,6 @@ const run = async (
       process.on(`SIGINT`, cleanup);
       process.on(`SIGTERM`, cleanup);
     });
-  }
-
-  if (!isMcp && !verbose && result.exitCode !== 0 && result.message.length > 0) {
-    Console.error(`\n${Terminal.red(`${fail} ${name} failed`)}\n\n${result.message}\n`);
-  }
-
-  if (!isMcp && !verbose && result.exitCode === 0) {
-    const seconds = Math.round((_.now() - start) / _.second);
-    Console.log(`\n✅ Done in ${Terminal.green(`${seconds}s`)}\n`);
   }
 
   const message = result.exitCode === 0 && result.message === `` ? `${name} ok.` : result.message;

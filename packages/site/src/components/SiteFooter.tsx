@@ -10,7 +10,10 @@ export const SiteFooter = () => (
         <Logo />
       </span>
       <Text as="p" cn={styles.tagline} color="muted" text={t(`footer.tagline`)} typography="large" />
-      <Link link={{ href: `/app` }} text={t(`footer.appLink`)} />
+      <div className={styles.links}>
+        <Link link={{ href: `/app` }} text={t(`footer.appLink`)} />
+        <Link link={{ href: `/downloads/snappy-client.exe` }} text={t(`footer.clientDownload`)} />
+      </div>
     </div>
   </footer>
 );

@@ -1,4 +1,5 @@
 export const Endpoints = {
+  agent: { session: (id: string) => `/api/agent/session/${id}`, step: `/api/agent/step` },
   auth: {
     forgotPassword: `/api/auth/forgot-password`,
     login: `/api/auth/login`,
@@ -7,8 +8,10 @@ export const Endpoints = {
     register: `/api/auth/register`,
     resetPassword: `/api/auth/reset-password`,
   },
+  files: { download: (id: string) => `/api/files/${id}` },
   premium: { paymentUrl: `/api/premium/payment-url` },
-  process: `/api/process`,
+  presets: { list: `/api/presets`, one: (id: string) => `/api/presets/${encodeURIComponent(id)}` },
+  settings: { communityModels: `/api/settings/community-models`, relay: `/api/settings/relay` },
   subscription: {
     autoRenew: `/api/subscription/auto-renew`,
     delete: `/api/subscription/delete`,

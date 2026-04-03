@@ -1,0 +1,57 @@
+{
+  "group": "data",
+  "en": {
+    "emoji": "📑",
+    "labels": {
+      "description": "📑 Structured rows and columns — fill the grid",
+      "title": "Table"
+    },
+    "prompt": "Build or describe a table from the column spec and sample rows in the latest user message. Output as plain text or a markdown table.",
+    "uiPlan": {
+      "title": "📑 Table",
+      "fields": [
+        {
+          "id": "columns",
+          "kind": "text",
+          "label": "📋 Columns / headers",
+          "placeholder": "Column names and types…",
+          "prompt": "Column definitions (names, types):"
+        },
+        {
+          "id": "sample",
+          "kind": "text",
+          "label": "🧾 Sample data",
+          "placeholder": "Optional rows…",
+          "prompt": "Example rows (optional):"
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📋",
+    "labels": {
+      "description": "📑 Структурированные строки и столбцы — заполни сетку",
+      "title": "Таблица"
+    },
+    "prompt": "Собери или опиши таблицу по столбцам и примеру строк из последнего сообщения пользователя. Выдай текстом или markdown-таблицей.",
+    "uiPlan": {
+      "title": "📋 Таблица",
+      "fields": [
+        {
+          "id": "columns",
+          "kind": "text",
+          "label": "📋 Столбцы / заголовки",
+          "placeholder": "Имена и типы столбцов…",
+          "prompt": "Описание столбцов (имена, типы):"
+        },
+        {
+          "id": "sample",
+          "kind": "text",
+          "label": "🧾 Пример данных",
+          "placeholder": "Строки по желанию…",
+          "prompt": "Пример строк (по желанию):"
+        }
+      ]
+    }
+  }
+}

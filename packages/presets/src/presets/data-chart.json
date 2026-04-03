@@ -1,0 +1,85 @@
+{
+  "group": "data",
+  "en": {
+    "emoji": "📈",
+    "labels": {
+      "description": "📈 Bars, pie, or line — from your numbers",
+      "title": "Chart"
+    },
+    "prompt": "Help describe or structure data for a chart using the numbers and choices in the latest user message. Give a clear description or a text-friendly data layout.",
+    "uiPlan": {
+      "title": "📈 Chart",
+      "fields": [
+        {
+          "id": "data",
+          "kind": "text",
+          "label": "📊 Data (numbers or table)",
+          "placeholder": "Paste values, labels, units…",
+          "prompt": "Data to visualize:"
+        },
+        {
+          "id": "chart_type",
+          "kind": "tabs_single",
+          "label": "📉 Chart type",
+          "default": "bar",
+          "options": [
+            { "label": "📊 Bar", "value": "bar", "prompt": "Prefer a bar chart reading of the data." },
+            { "label": "📈 Line", "value": "line", "prompt": "Prefer a line chart reading of the data." },
+            { "label": "🥧 Pie", "value": "pie", "prompt": "Prefer a pie chart reading of the data." }
+          ]
+        },
+        {
+          "id": "look",
+          "kind": "tabs_single",
+          "label": "👁️ Look",
+          "default": "2d",
+          "options": [
+            { "label": "2️⃣ 2D", "value": "2d", "prompt": "Describe as a flat 2D chart." },
+            { "label": "3️⃣ 3D", "value": "3d", "prompt": "Optionally note a 3D-style presentation if relevant." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📊",
+    "labels": {
+      "description": "📈 Столбцы, круг или линия — из твоих чисел",
+      "title": "Диаграмма"
+    },
+    "prompt": "Помоги описать или структурировать данные для диаграммы по числам и выбору из последнего сообщения пользователя. Дай понятное описание или текстовую раскладку данных.",
+    "uiPlan": {
+      "title": "📊 Диаграмма",
+      "fields": [
+        {
+          "id": "data",
+          "kind": "text",
+          "label": "📊 Данные (числа или таблица)",
+          "placeholder": "Значения, подписи, единицы…",
+          "prompt": "Данные для визуализации:"
+        },
+        {
+          "id": "chart_type",
+          "kind": "tabs_single",
+          "label": "📉 Тип графика",
+          "default": "bar",
+          "options": [
+            { "label": "📊 Столбцы", "value": "bar", "prompt": "Ориентир — столбчатая диаграмма." },
+            { "label": "📈 Линия", "value": "line", "prompt": "Ориентир — линейный график." },
+            { "label": "🥧 Круг", "value": "pie", "prompt": "Ориентир — круговая диаграмма." }
+          ]
+        },
+        {
+          "id": "look",
+          "kind": "tabs_single",
+          "label": "👁️ Вид",
+          "default": "2d",
+          "options": [
+            { "label": "2️⃣ 2D", "value": "2d", "prompt": "Описывай как плоскую 2D-диаграмму." },
+            { "label": "3️⃣ 3D", "value": "3d", "prompt": "При необходимости учти 3D-подачу." }
+          ]
+        }
+      ]
+    }
+  }
+}

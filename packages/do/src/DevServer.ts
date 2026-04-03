@@ -3,39 +3,19 @@
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
 import { Cert } from "@snappy/node";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import express from "express";
+import httpProxy from "http-proxy";
 import { readFileSync } from "node:fs";
-import * as http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
 
 import { ViteConfig } from "./config/vite/ViteConfig";
-
-const apiProxy = (port: number) => (path: string, request: http.IncomingMessage, response: http.ServerResponse) => {
-  const options = {
-    headers: { ...request.headers, host: `127.0.0.1:${port}` },
-    hostname: `127.0.0.1`,
-    method: request.method,
-    path,
-    port,
-  };
-
-  const proxyRequest = http.request(options, proxyResponse => {
-    response.writeHead(proxyResponse.statusCode ?? HttpStatus.internalServerError, proxyResponse.headers);
-    proxyResponse.pipe(response);
-  });
-  proxyRequest.on(`error`, () => {
-    response.statusCode = HttpStatus.badGateway;
-    response.end(`API proxy error`);
-  });
-  request.pipe(proxyRequest);
-};
+import { devPort } from "./DevHttps";
 
 const doDir = import.meta.dirname;
 const projectRoot = join(doDir, `..`, `..`, `..`);
@@ -43,18 +23,27 @@ const siteDir = join(projectRoot, `packages`, `site`);
 const appDir = join(projectRoot, `packages`, `app`);
 const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
 const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
-const portHttps = 443;
-const hostHttps = `localhost`;
+const hostDev = `localhost`;
 const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
 
 export const DevServer = () => {
   const start = async () => {
     const appContext = ServerApp(Config);
-    const apiApp = await App.createApp({ api: appContext.api });
+    const ssl = await Cert.generate();
+
+    const apiApp = await App.createApp({
+      api: appContext.api,
+      bridge: appContext.api.bridge,
+      serverFactory: handler => https.createServer(ssl, handler),
+    });
+
     const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
     const apiPort = Number(new URL(apiAddr).port);
+    const apiTarget = `https://127.0.0.1:${String(apiPort)}`;
+    const proxy = httpProxy.createProxyServer({ secure: false, target: apiTarget, ws: true });
+    proxy.on(`error`, () => undefined);
     const app = express();
-    const server = https.createServer(await Cert.generate(), app);
+    const server = https.createServer(ssl, app);
 
     const configBuilder = ViteConfig(
       {
@@ -77,12 +66,22 @@ export const DevServer = () => {
       server: {
         ...config.server,
         allowedHosts: true,
-        hmr: { clientPort: portHttps, host: hostHttps, protocol: `wss`, server },
+        hmr: { clientPort: devPort, host: hostDev, protocol: `wss`, server },
         middlewareMode: true,
       },
     });
 
-    app.use(`/api`, (request, response) => apiProxy(apiPort)(request.originalUrl, request, response));
+    app.use(`/api`, (request, response) => {
+      // Express strips the mount path from `url`; Fastify routes are registered as `/api/...`.
+      request.url = `${request.baseUrl}${request.url}`;
+      proxy.web(request, response, { target: apiTarget });
+    });
+
+    server.on(`upgrade`, (request, socket, head) => {
+      if (request.url?.startsWith(`/api`) === true) {
+        proxy.ws(request, socket, head, { target: apiTarget });
+      }
+    });
 
     const indexHtmlFromDir = async (dir: string, documentUrl?: string) => {
       const indexPath = join(dir, `index.html`);
@@ -138,7 +137,13 @@ export const DevServer = () => {
     app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
-    server.listen(portHttps, `0.0.0.0`);
+    await new Promise<void>((resolve, reject) => {
+      server.once(`error`, reject);
+      server.listen(devPort, `0.0.0.0`, () => {
+        server.off(`error`, reject);
+        resolve();
+      });
+    });
   };
 
   return { start };

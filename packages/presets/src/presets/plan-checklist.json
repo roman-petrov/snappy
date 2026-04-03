@@ -1,0 +1,69 @@
+{
+  "group": "plans",
+  "en": {
+    "emoji": "☑️",
+    "labels": {
+      "description": "☑️ Step list toward your goal — pick step size",
+      "title": "Checklist"
+    },
+    "prompt": "Produce a numbered checklist toward the goal in the latest user message. Match the requested step granularity.",
+    "uiPlan": {
+      "title": "☑️ Checklist",
+      "fields": [
+        {
+          "id": "goal",
+          "kind": "text",
+          "label": "🎯 Goal",
+          "placeholder": "What to achieve?",
+          "prompt": "Goal to reach:"
+        },
+        {
+          "id": "granularity",
+          "kind": "tabs_single",
+          "label": "📐 Step size",
+          "default": "medium",
+          "options": [
+            { "label": "🔹 Fine", "value": "fine", "prompt": "Small, detailed steps; many items." },
+            { "label": "🔸 Medium", "value": "medium", "prompt": "Balanced steps: actionable but not tiny." },
+            { "label": "🔶 Coarse", "value": "coarse", "prompt": "High-level milestones only; few steps." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "✅",
+    "labels": {
+      "description": "☑️ Список шагов к цели — выбери размер шага",
+      "title": "Чеклист"
+    },
+    "prompt": "Составь пошаговый чеклист к цели из последнего сообщения пользователя. Соблюди выбранную детализацию шагов.",
+    "uiPlan": {
+      "title": "✅ Чеклист",
+      "fields": [
+        {
+          "id": "goal",
+          "kind": "text",
+          "label": "🎯 Цель",
+          "placeholder": "Чего достичь?",
+          "prompt": "Цель:"
+        },
+        {
+          "id": "granularity",
+          "kind": "tabs_single",
+          "label": "📐 Размер шага",
+          "default": "medium",
+          "options": [
+            { "label": "🔹 Мелко", "value": "fine", "prompt": "Мелкие шаги, много пунктов." },
+            {
+              "label": "🔸 Средне",
+              "value": "medium",
+              "prompt": "Средняя детализация: шаги конкретные, но не микроскопические."
+            },
+            { "label": "🔶 Крупно", "value": "coarse", "prompt": "Крупные вехи, мало шагов." }
+          ]
+        }
+      ]
+    }
+  }
+}

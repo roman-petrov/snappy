@@ -1,0 +1,83 @@
+{
+  "group": "plans",
+  "en": {
+    "emoji": "🗓️",
+    "labels": {
+      "description": "🗓️ Agenda, goals, and duration in one plan",
+      "title": "Meeting"
+    },
+    "prompt": "Produce a meeting plan from the goal, context, and duration in the latest user message. Include agenda and expected outcomes.",
+    "uiPlan": {
+      "title": "🗓️ Meeting",
+      "fields": [
+        {
+          "id": "goal",
+          "kind": "text",
+          "label": "🎯 Goal",
+          "placeholder": "What must be decided or done?",
+          "prompt": "Meeting goal:"
+        },
+        {
+          "id": "context",
+          "kind": "text",
+          "label": "👥 Participants / context",
+          "placeholder": "Roles, constraints…",
+          "prompt": "Participants and context:"
+        },
+        {
+          "id": "duration",
+          "kind": "tabs_single",
+          "label": "⏱️ Duration",
+          "default": "30",
+          "options": [
+            {
+              "label": "🕧 30 min",
+              "value": "30",
+              "prompt": "Total time about 30 minutes; pace the agenda accordingly."
+            },
+            { "label": "🕐 1 h", "value": "60", "prompt": "Total time about 1 hour; pace the agenda accordingly." },
+            { "label": "🕑 2 h", "value": "120", "prompt": "Total time about 2 hours; pace the agenda accordingly." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📅",
+    "labels": {
+      "description": "🗓️ Повестка, цели и длительность в одном плане",
+      "title": "Встреча"
+    },
+    "prompt": "Составь план встречи по цели, контексту и длительности из последнего сообщения пользователя. Включи повестку и ожидаемые результаты.",
+    "uiPlan": {
+      "title": "📅 Встреча",
+      "fields": [
+        {
+          "id": "goal",
+          "kind": "text",
+          "label": "🎯 Цель",
+          "placeholder": "Что решить или сделать?",
+          "prompt": "Цель встречи:"
+        },
+        {
+          "id": "context",
+          "kind": "text",
+          "label": "👥 Участники / контекст",
+          "placeholder": "Роли, ограничения…",
+          "prompt": "Участники и контекст:"
+        },
+        {
+          "id": "duration",
+          "kind": "tabs_single",
+          "label": "⏱️ Длительность",
+          "default": "30",
+          "options": [
+            { "label": "🕧 30 мин", "value": "30", "prompt": "Ориентир по времени ~30 минут; распредели повестку." },
+            { "label": "🕐 1 ч", "value": "60", "prompt": "Ориентир по времени ~1 час; распредели повестку." },
+            { "label": "🕑 2 ч", "value": "120", "prompt": "Ориентир по времени ~2 часа; распредели повестку." }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,67 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/typography";
+@use "./scss/tabs" as button;
+
+.tab {
+  @include typography.caption;
+  @include primitives.inline-row-center;
+  @include button.shadow;
+  @include focus;
+
+  position: relative;
+  flex: 0 0 auto;
+  width: 9rem;
+  min-width: 9rem;
+  height: 2rem;
+  padding: 0 space.md();
+  color: color.text();
+  white-space: nowrap;
+  background: color.surface-glass();
+  border: 1px solid color.border();
+  border-radius: radius.sm();
+  transition:
+    background tokens.ease(),
+    border-color tokens.ease(),
+    box-shadow tokens.ease(),
+    color tokens.ease(),
+    transform tokens.ease();
+}
+
+.tab[aria-pressed="true"] {
+  color: color.primary();
+}
+
+.toggle[aria-pressed="true"] {
+  @include button.active-surface;
+}
+
+.tab[aria-pressed="true"]:not(.toggle) {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.tab:not([aria-pressed="true"]) {
+  @include hover {
+    color: color.primary();
+  }
+
+  @include pressed {
+    color: color.primary();
+  }
+}
+
+.tab {
+  @include pressed {
+    transform: scale(0.97);
+  }
+}
+
+.tab:disabled {
+  opacity: 0.6;
+}

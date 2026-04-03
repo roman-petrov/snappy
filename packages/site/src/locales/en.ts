@@ -63,7 +63,7 @@ export const en = {
     styles: { desc: `One draft — different tones: business, friendly, neutral, selling or humorous.`, title: `Styles` },
     title: `🛠️ What Snappy can do`,
   },
-  footer: { appLink: `Web app`, tagline: `Smart text processing with AI.` },
+  footer: { appLink: `Web app`, clientDownload: `Ollama client (Windows)`, tagline: `Smart text processing with AI.` },
   hero: {
     androidApp: `Download Android app`,
     cta: `Open web app`,

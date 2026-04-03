@@ -1,0 +1,79 @@
+{
+  "group": "plans",
+  "en": {
+    "emoji": "🎙️",
+    "labels": {
+      "description": "🎙️ Outline for a talk — topic, audience, length",
+      "title": "Speech"
+    },
+    "prompt": "Draft a speech outline from the topic, audience, and length in the latest user message. Split into sections with rough timing.",
+    "uiPlan": {
+      "title": "🎙️ Speech",
+      "fields": [
+        {
+          "id": "topic",
+          "kind": "text",
+          "label": "📌 Topic",
+          "placeholder": "What is the talk about?",
+          "prompt": "Talk topic:"
+        },
+        {
+          "id": "audience",
+          "kind": "text",
+          "label": "👥 Audience",
+          "placeholder": "Who listens?",
+          "prompt": "Audience:"
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "⏱️ Length",
+          "default": "5",
+          "options": [
+            { "label": "🕔 ~5 min", "value": "5", "prompt": "Target length about 5 minutes; keep sections short." },
+            { "label": "🕒 ~15 min", "value": "15", "prompt": "Target length about 15 minutes; allow more sections." },
+            { "label": "🕕 ~30 min", "value": "30", "prompt": "Target length about 30 minutes; deeper structure." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "🎤",
+    "labels": {
+      "description": "🎙️ План выступления — тема, аудитория, длительность",
+      "title": "Речь"
+    },
+    "prompt": "Составь структуру выступления по теме, аудитории и длительности из последнего сообщения пользователя. Разбей на блоки с ориентировочным таймингом.",
+    "uiPlan": {
+      "title": "🎤 Речь",
+      "fields": [
+        {
+          "id": "topic",
+          "kind": "text",
+          "label": "📌 Тема",
+          "placeholder": "О чём выступление?",
+          "prompt": "Тема выступления:"
+        },
+        {
+          "id": "audience",
+          "kind": "text",
+          "label": "👥 Аудитория",
+          "placeholder": "Кто слушает?",
+          "prompt": "Аудитория:"
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "⏱️ Длительность",
+          "default": "5",
+          "options": [
+            { "label": "🕔 ~5 мин", "value": "5", "prompt": "Ориентир ~5 минут; короткие блоки." },
+            { "label": "🕒 ~15 мин", "value": "15", "prompt": "Ориентир ~15 минут; больше блоков." },
+            { "label": "🕕 ~30 мин", "value": "30", "prompt": "Ориентир ~30 минут; развёрнутая структура." }
+          ]
+        }
+      ]
+    }
+  }
+}

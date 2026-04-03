@@ -5,10 +5,11 @@ import type { ServerAppApi } from "@snappy/server-app";
 import type { FastifyRequest } from "fastify";
 
 import {
+  type ApiAgentStepBody,
   type ApiAuthBody,
   type ApiForgotPasswordBody,
-  type ApiProcessBody,
   type ApiResetPasswordBody,
+  type ApiSettingsRelayPatchBody,
   type ApiSubscriptionAutoRenewBody,
   type ApiSubscriptionDeleteBody,
   Endpoints,
@@ -90,15 +91,74 @@ export const Routes = [
     ok,
   ),
   get(
-    Endpoints.user.remaining,
-    withUserId(async (api, userId) => api.process.remaining(userId)),
+    Endpoints.settings.relay,
+    withUserId(async (api, userId) => api.userSettings.get(userId)),
     withOkStatus,
     { auth: true },
   ),
   post(
-    Endpoints.process,
-    withUserIdAndBody(async (api, userId, b) => api.process.process(userId, b), body<ApiProcessBody>),
-    (r: { text: string }) => ({ ...ok(), text: r.text }),
+    Endpoints.settings.relay,
+    withUserIdAndBody(
+      async (api, userId, b) =>
+        api.userSettings.patchRelay(userId, {
+          communityImageModel: b.communityImageModel ?? ``,
+          communityTextModel: b.communityTextModel ?? ``,
+          llmProvider: b.llmProvider ?? `community`,
+          ollamaRelayKey: b.ollamaRelayKey ?? ``,
+        }),
+      body<ApiSettingsRelayPatchBody>,
+    ),
+    ok,
+    { auth: true },
+  ),
+  get(
+    Endpoints.settings.communityModels,
+    withUserId(async api => api.communityModels.list()),
+    withOkStatus,
+    { auth: true },
+  ),
+  get(
+    Endpoints.user.remaining,
+    withUserId(async (api, userId) => api.agent.remaining(userId)),
+    withOkStatus,
+    { auth: true },
+  ),
+  get(
+    Endpoints.presets.list,
+    async (api, request) => {
+      const { locale } = request.query as { locale?: string };
+
+      return api.presets.list(locale ?? `ru`);
+    },
+    withOkStatus,
+  ),
+  get(
+    `/api/presets/:presetId`,
+    async (api, request) => {
+      const { presetId } = request.params as { presetId?: string };
+      const { locale } = request.query as { locale?: string };
+
+      return api.presets.byId(presetId ?? ``, locale ?? `ru`);
+    },
+    withOkStatus,
+  ),
+  post(
+    Endpoints.agent.step,
+    withUserIdAndBody(async (api, userId, b) => api.agent.step(userId, b), body<ApiAgentStepBody>),
+    id,
+    { auth: true },
+  ),
+  get(
+    `/api/agent/session/:sessionId`,
+    withUserIdRequired(async (api, userId, request) => {
+      const { sessionId } = request.params as { sessionId?: string };
+      if (sessionId === undefined) {
+        return { status: `processingFailed` };
+      }
+
+      return api.agent.getSession(userId, sessionId);
+    }),
+    id,
     { auth: true },
   ),
   post(

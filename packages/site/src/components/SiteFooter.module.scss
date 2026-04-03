@@ -27,6 +27,13 @@
   margin: 0 0 space.sm();
 }
 
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.md();
+  justify-content: center;
+}
+
 @include core.mobile {
   .footer {
     padding: space.xl() space.md();

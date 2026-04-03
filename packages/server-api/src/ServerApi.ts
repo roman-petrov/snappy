@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-promise-reject */
-import type { SnappyOptions } from "@snappy/domain";
-
 import { _, Json } from "@snappy/core";
 
 import type {
+  ApiAgentStepBody,
+  ApiAgentStepResultUnion,
+  ApiCommunityModelsResult,
   ApiForgotPasswordErrorCode,
   ApiForgotPasswordResult,
   ApiLoginClientErrorCode,
@@ -13,14 +14,15 @@ import type {
   ApiPaymentUrlErrorCode,
   ApiPaymentUrlResult,
   ApiPaymentUrlResultUnion,
-  ApiProcessErrorCode,
-  ApiProcessResult,
-  ApiProcessResultUnion,
+  ApiPresetByIdResult,
+  ApiPresetsResult,
   ApiRegisterClientErrorCode,
   ApiRegisterClientResult,
   ApiRemainingResult,
   ApiResetPasswordErrorCode,
   ApiResetPasswordResult,
+  ApiSettingsRelayPatchBody,
+  ApiSettingsRelayResult,
   ApiSubscriptionAutoRenewErrorCode,
   ApiSubscriptionAutoRenewResult,
   ApiSubscriptionDeleteErrorCode,
@@ -90,8 +92,23 @@ export const ServerApi = (client: Config) => {
   const remaining = async (): Promise<ApiRemainingResult> =>
     request<ApiRemainingResult, never>(`${base}${Endpoints.user.remaining}`, { method: `GET` });
 
-  const process = async (text: string, options: SnappyOptions): Promise<ApiProcessResultUnion> =>
-    postJson<ApiProcessResult, ApiProcessErrorCode>(`${base}${Endpoints.process}`, { options, text });
+  const presetById = async (id: string, locale: `en` | `ru`): Promise<ApiPresetByIdResult> =>
+    request<ApiPresetByIdResult, never>(`${base}${Endpoints.presets.one(id)}?locale=${locale}`, { method: `GET` });
+
+  const presetsList = async (locale: `en` | `ru`): Promise<ApiPresetsResult> =>
+    request<ApiPresetsResult, never>(`${base}${Endpoints.presets.list}?locale=${locale}`, { method: `GET` });
+
+  const agentStep = async (body: ApiAgentStepBody): Promise<ApiAgentStepResultUnion> =>
+    postJson<
+      Exclude<ApiAgentStepResultUnion, { status: string }>,
+      `modelsUnavailable` | `processingFailed` | `relayKeyMissing` | `relayOffline` | `requestLimitReached`
+    >(`${base}${Endpoints.agent.step}`, body as Record<string, unknown>);
+
+  const agentSession = async (sessionId: string) =>
+    request<{ messages: unknown[]; sessionId: string; status: `ok` }, never>(
+      `${base}${Endpoints.agent.session(sessionId)}`,
+      { method: `GET` },
+    );
 
   const premiumUrl = async (): Promise<ApiPaymentUrlResultUnion> =>
     postJson<ApiPaymentUrlResult, ApiPaymentUrlErrorCode>(`${base}${Endpoints.premium.paymentUrl}`, {});
@@ -110,16 +127,31 @@ export const ServerApi = (client: Config) => {
   const subscriptionGet = async (): Promise<ApiSubscriptionResult> =>
     request<ApiSubscriptionResult, never>(`${base}${Endpoints.subscription.get}`, { method: `GET` });
 
+  const settingsRelayGet = async (): Promise<ApiSettingsRelayResult> =>
+    request<ApiSettingsRelayResult, never>(`${base}${Endpoints.settings.relay}`, { method: `GET` });
+
+  const settingsRelayPatch = async (body: ApiSettingsRelayPatchBody): Promise<ApiOkResult> =>
+    postJson<ApiOkResult, never>(`${base}${Endpoints.settings.relay}`, body as Record<string, unknown>);
+
+  const communityModelsGet = async (): Promise<ApiCommunityModelsResult> =>
+    request<ApiCommunityModelsResult, never>(`${base}${Endpoints.settings.communityModels}`, { method: `GET` });
+
   return {
+    agentSession,
+    agentStep,
     checkAuth,
+    communityModelsGet,
     forgotPassword,
     login,
     logout,
     premiumUrl,
-    process,
+    presetById,
+    presetsList,
     register,
     remaining,
     resetPassword,
+    settingsRelayGet,
+    settingsRelayPatch,
     subscriptionDelete,
     subscriptionGet,
     subscriptionRenew,

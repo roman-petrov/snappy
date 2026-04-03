@@ -5,9 +5,8 @@
     ".jscpd",
     "**/dist/**",
     "**/build/**",
-    "**/*.html",
+    "**/*.json",
     "**/*.test.{ts,tsx}",
-    "**/package.json",
     "**/node_modules",
     "**/packages/*/src/generated"
   ],

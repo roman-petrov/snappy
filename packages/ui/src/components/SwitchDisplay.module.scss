@@ -3,6 +3,10 @@
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/tokens";
 
+.tap {
+  padding: 0;
+}
+
 .root {
   position: relative;
   width: tokens.touch-min();

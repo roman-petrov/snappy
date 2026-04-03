@@ -4,6 +4,6 @@ import { ServerApp } from "@snappy/server-app";
 
 const port = 80;
 const appContext = ServerApp(Config);
-const app = await App.createApp({ allowCorsOrigin: true, api: appContext.api });
+const app = await App.createApp({ allowCorsOrigin: true, api: appContext.api, bridge: appContext.api.bridge });
 
 await app.listen({ host: `0.0.0.0`, port });

@@ -1,16 +1,42 @@
 /* eslint-disable unicorn/filename-case */
-// cspell:word автопродление автопродления автосписание
+/* cspell:disable */
 export const ru = {
   dashboard: {
     actionClearInput: `Очистить`,
     actionEdit: `Изменить`,
     actionNew: `Новый`,
+    agent: {
+      continue: `Продолжить`,
+      modelWorking: `Идёт ответ модели — подождите немного.`,
+      pickPreset: `Режим`,
+      placeholder: `Сообщение…`,
+      send: `Отправить`,
+      start: `Начать`,
+    },
     copied: `Скопировано ✓`,
     copy: `Копировать`,
     errors: {
+      modelsUnavailable: `Нет доступных моделей для чата и картинок. Укажите их в настройках или подключите релей, который объявляет модели`,
       paymentError: `Ошибка оплаты. Попробуйте позже`,
       processingFailed: `Ошибка обработки. Попробуйте ещё раз`,
+      relayKeyMissing: `Укажите ключ релея Ollama в настройках и запустите десктоп-клиент`,
+      relayOffline: `Клиент Ollama не подключён. Запустите приложение Snappy на ПК с Ollama`,
       requestLimitReached: `Лимит запросов исчерпан`,
+    },
+    presets: {
+      copyPrompt: `Скопировать промпт`,
+      freeModeDescription: `Опишите задачу — ассистент подстроится и при необходимости покажет форму`,
+      freeModeTitle: `Свободный режим`,
+      groups: {
+        business: `Идеи и бизнес`,
+        data: `Данные и схемы`,
+        greetings: `Поздравления`,
+        plans: `Выступления и планы`,
+        text: `Текст`,
+        visual: `Визуал и вектор`,
+      },
+      heroLead: `Выберите сценарий или свободный режим — форма и инструменты вместо бесконечной переписки.`,
+      heroTitle: `Сначала ясность — потом магия`,
     },
     settingsHide: `Скрыть настройки`,
     settingsShow: `Показать настройки`,
@@ -60,6 +86,7 @@ export const ru = {
       selling: `Продающий`,
     },
   },
+  page: { back: `Назад` },
   registerPage: {
     email: `Email`,
     errors: {
@@ -100,6 +127,7 @@ export const ru = {
     appearance: `Тема`,
     fogBackground: `Туман`,
     language: `Язык`,
+    ollamaRelay: `Ключ Ollama`,
     subscription: `Подписка`,
     subscriptionActiveUntil: `До {date}, автопродление: {autoRenew}`,
     subscriptionInactive: `Не активна`,
@@ -107,6 +135,21 @@ export const ru = {
     title: `Настройки`,
   },
   settingsLanguage: { en: `English`, ru: `Русский`, system: `Системный` },
+  settingsOllamaRelay: {
+    communityCatalogEmpty: `Сейчас нет объявленных моделей в пуле. Запустите локальный клиент релея с SNAPPY_RELAY_PUBLIC=1 и Ollama — тогда список обновится.`,
+    imageModelLabel: `Модель картинок`,
+    label: `Ключ релея`,
+    lead: `Пул: запросы идут на публичные релеи тех, кто включил SNAPPY_RELAY_PUBLIC=1 и подключился к серверу — сервер показывает их модели Ollama. Свой релей: только ваш ключ и ваш ПК. «Авто» — первая модель из каталога для чата/картинок.`,
+    modelAuto: `Авто (первая из каталога)`,
+    providerCommunity: `Общий пул (чужие релеи)`,
+    providerLabel: `Источник LLM`,
+    providerSelf: `Только мой релей (этот ключ)`,
+    refreshCommunityModels: `Обновить список моделей из пула`,
+    save: `Сохранить`,
+    saving: `Сохранение…`,
+    textModelLabel: `Чат-модель`,
+    title: `Ollama (релей)`,
+  },
   settingsSubscription: {
     autoRenewLabel: `Автопродление`,
     autoRenewOff: `Автопродление выключено. Продление только вручную.`,
@@ -124,12 +167,4 @@ export const ru = {
   },
   settingsTheme: { dark: `Тёмная`, light: `Светлая`, system: `Системная` },
   subscribeButton: `Оформить подписку — {premiumPrice}/мес`,
-  textComposer: {
-    submit: `Обработать`,
-    submitting: `Обработка…`,
-    textPlaceholder: `Введите текст...`,
-    voiceStart: `Нажмите, чтобы диктовать`,
-    voiceStop: `Нажмите на микрофон, чтобы остановить`,
-    voiceUnavailable: `Голосовой ввод недоступен в этом браузере`,
-  },
 };

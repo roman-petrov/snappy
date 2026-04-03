@@ -8,25 +8,27 @@ datasource db {
 }
 
 model User {
-  id                 Int       @id @default(autoincrement())
-  email              String?   @unique
-  passwordHash       String?
-  resetToken         String?
-  resetTokenExpires  DateTime?
-  createdAt          DateTime  @default(now())
+  id                Int       @id @default(autoincrement())
+  email             String?   @unique
+  passwordHash      String?
+  resetToken        String?
+  resetTokenExpires DateTime?
+  createdAt         DateTime  @default(now())
 
-  snappySettings SnappySettings[]
-  subscription       Subscription?
+  agentSessions AgentSession[]
+  snappySettings SnappySettings?
+  storedFiles   StoredFile[]
+  subscription  Subscription?
 
   @@map("users")
 }
 
 model Subscription {
-  userId                   Int       @id
-  premiumUntil             DateTime
-  nextBillingAt            DateTime
-  autoRenew                Boolean   @default(true)
-  yooKassaPaymentMethodId  String?
+  userId                  Int      @id
+  premiumUntil            DateTime
+  nextBillingAt           DateTime
+  autoRenew               Boolean  @default(true)
+  yooKassaPaymentMethodId String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -34,31 +36,77 @@ model Subscription {
 }
 
 model PaymentLog {
-  id                  String   @id @default(uuid())
-  createdAt           DateTime @default(now())
-  type                String
-  userId              Int?
-  yooKassaPaymentId   String?
-  amount              Decimal? @db.Decimal(12, 2)
-  currency            String?
-  status              String
-  idempotenceKey      String?
-  errorMessage        String?
-  paymentMethodId     String?
+  id                String   @id @default(uuid())
+  createdAt         DateTime @default(now())
+  type              String
+  userId            Int?
+  yooKassaPaymentId String?
+  amount            Decimal? @db.Decimal(12, 2)
+  currency          String?
+  status            String
+  idempotenceKey    String?
+  errorMessage      String?
+  paymentMethodId   String?
 
   @@map("payment_logs")
 }
 
 model SnappySettings {
-  userId        Int      @id
-  requestCount  Int      @default(0)
-  lastReset     DateTime @default(now())
-  addEmoji      Boolean  @default(false)
-  addFormatting Boolean  @default(false)
-  length        String   @default("keep")
-  style         String   @default("neutral")
+  userId               Int      @id
+  lastReset            DateTime @default(now())
+  requestCount         Int      @default(0)
+  ollamaRelayKey       String   @default("")
+  llmProvider          String   @default("community")
+  communityTextModel   String   @default("")
+  communityImageModel  String   @default("")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("snappy_settings")
+}
+
+model AgentSession {
+  id        String   @id @default(uuid())
+  userId    Int
+  presetId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages AgentMessage[]
+  files    StoredFile[]
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("agent_sessions")
+}
+
+model AgentMessage {
+  id              String   @id @default(uuid())
+  sessionId       String
+  role            String
+  content         Json
+  createdAt       DateTime @default(now())
+  hiddenFromFeed  Boolean  @default(false)
+
+  session AgentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@map("agent_messages")
+}
+
+model StoredFile {
+  id         String   @id @default(uuid())
+  userId     Int
+  sessionId  String?
+  kind       String
+  mime       String
+  size       Int
+  storageKey String
+  createdAt  DateTime @default(now())
+
+  session AgentSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("stored_files")
 }

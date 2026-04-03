@@ -103,4 +103,26 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
   return exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { app, appAndroid, appAndroidDebug, site, ssr };
+const client = async (root: string, options: BuildOptions = {}) => {
+  const clientOutDir = join(root, distDir, `client`);
+  fs.mkdirSync(clientOutDir, { recursive: true });
+  const exePath = join(clientOutDir, `snappy-client.exe`);
+
+  const result = await runSpawn(
+    root,
+    [`bun`, `build`, `--compile`, `--target=bun-windows-x64`, `packages/client/src/main.ts`, `--outfile`, exePath],
+    options.capture === true,
+  );
+  if (exitCode(result) !== 0) {
+    return result;
+  }
+  const siteDownloads = join(root, `packages`, `site`, `public`, `downloads`);
+  fs.mkdirSync(siteDownloads, { recursive: true });
+  if (fs.existsSync(exePath)) {
+    fs.copyFileSync(exePath, join(siteDownloads, `snappy-client.exe`));
+  }
+
+  return 0;
+};
+
+export const Build = { app, appAndroid, appAndroidDebug, client, site, ssr };

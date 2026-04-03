@@ -1,0 +1,14 @@
+{
+  "name": "@snappy/presets",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/domain": "workspace:*",
+    "zod": "^4.3.6"
+  }
+}

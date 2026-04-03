@@ -22,16 +22,20 @@ const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
 const appContext = ServerApp(Config);
 
+const sslOptions =
+  sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : await Cert.generate();
+
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,
 };
 
 const app = await App.createApp({
   api: appContext.api,
+  bridge: appContext.api.bridge,
   serverFactory: handler => {
     handlerRef.current = handler;
 
-    return http.createServer(handler);
+    return https.createServer(sslOptions, handler);
   },
 });
 
@@ -112,10 +116,5 @@ if (handlerRef.current === undefined) {
   throw new Error(`serverFactory was not called`);
 }
 
-https
-  .createServer(
-    sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : await Cert.generate(),
-    handlerRef.current,
-  )
-  .listen(portHttps, `0.0.0.0`);
+await app.listen({ host: `0.0.0.0`, port: portHttps });
 http.createServer(handlerRef.current).listen(portHttp, `127.0.0.1`);

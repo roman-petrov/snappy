@@ -1,0 +1,79 @@
+{
+  "group": "visual",
+  "en": {
+    "emoji": "🏷️",
+    "labels": {
+      "description": "🎨 Logo concept and wording — brand-ready",
+      "title": "Logo"
+    },
+    "prompt": "From the latest user message, describe the logo concept (brand, industry, style). Then call **generate_image** with a short English prompt for the visual.",
+    "uiPlan": {
+      "title": "🏷️ Logo",
+      "fields": [
+        {
+          "id": "brand",
+          "kind": "text",
+          "label": "✨ Brand / name",
+          "placeholder": "Name to appear in the logo…",
+          "prompt": "Brand or name to feature:"
+        },
+        {
+          "id": "industry",
+          "kind": "text",
+          "label": "🏢 Industry or vibe",
+          "placeholder": "e.g. tech, cafe, sports…",
+          "prompt": "Industry or mood:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Style",
+          "default": "minimal",
+          "options": [
+            { "label": "◻️ Minimal", "value": "minimal", "prompt": "Minimal, simple geometry and typography." },
+            { "label": "💪 Bold", "value": "bold", "prompt": "Bold, high-contrast mark." },
+            { "label": "📜 Vintage", "value": "vintage", "prompt": "Vintage or retro-inspired logo." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "🎨",
+    "labels": {
+      "description": "🎨 Концепция логотипа и текст — готово к бренду",
+      "title": "Логотип"
+    },
+    "prompt": "По последнему сообщению пользователя опиши концепцию логотипа (бренд, сфера, стиль). Затем вызови **generate_image** с кратким англоязычным промптом для визуала.",
+    "uiPlan": {
+      "title": "🎨 Логотип",
+      "fields": [
+        {
+          "id": "brand",
+          "kind": "text",
+          "label": "✨ Бренд / название",
+          "placeholder": "Имя в логотипе…",
+          "prompt": "Бренд или название:"
+        },
+        {
+          "id": "industry",
+          "kind": "text",
+          "label": "🏢 Сфера или настроение",
+          "placeholder": "IT, кафе, спорт…",
+          "prompt": "Сфера или настроение:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Стиль",
+          "default": "minimal",
+          "options": [
+            { "label": "◻️ Минимализм", "value": "minimal", "prompt": "Минимализм, простая геометрия и типографика." },
+            { "label": "💪 Жирный", "value": "bold", "prompt": "Жирный контрастный знак." },
+            { "label": "📜 Винтаж", "value": "vintage", "prompt": "Винтаж или ретро." }
+          ]
+        }
+      ]
+    }
+  }
+}

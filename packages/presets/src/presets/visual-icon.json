@@ -1,0 +1,65 @@
+{
+  "group": "visual",
+  "en": {
+    "emoji": "🎯",
+    "labels": {
+      "description": "🔷 Simple icon or glyph — clear brief",
+      "title": "Icon"
+    },
+    "prompt": "From the latest user message, describe the icon (subject and style). Then call **generate_image** with a short English prompt for the icon.",
+    "uiPlan": {
+      "title": "🎯 Icon",
+      "fields": [
+        {
+          "id": "brief",
+          "kind": "text",
+          "label": "❓ What should it represent?",
+          "placeholder": "Subject, metaphor, constraints…",
+          "prompt": "What the icon should depict:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Style",
+          "default": "flat",
+          "options": [
+            { "label": "⬜ Flat", "value": "flat", "prompt": "Flat icon, simple fills." },
+            { "label": "◻️ Outline", "value": "outline", "prompt": "Outline/stroke-only icon." },
+            { "label": "🟦 Filled", "value": "filled", "prompt": "Solid filled silhouette style." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "🔷",
+    "labels": {
+      "description": "🔷 Простая иконка или знак — чёткое ТЗ",
+      "title": "Иконка"
+    },
+    "prompt": "По последнему сообщению пользователя опиши иконку (содержание и стиль). Затем вызови **generate_image** с кратким англоязычным промптом для иконки.",
+    "uiPlan": {
+      "title": "🔷 Иконка",
+      "fields": [
+        {
+          "id": "brief",
+          "kind": "text",
+          "label": "❓ Что должно отображаться?",
+          "placeholder": "Тема, метафора, ограничения…",
+          "prompt": "Что должна показывать иконка:"
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Стиль",
+          "default": "flat",
+          "options": [
+            { "label": "⬜ Плоский", "value": "flat", "prompt": "Плоская иконка, простые заливки." },
+            { "label": "◻️ Контур", "value": "outline", "prompt": "Контурная иконка, только обводка." },
+            { "label": "🟦 Заливка", "value": "filled", "prompt": "Сплошной силуэт." }
+          ]
+        }
+      ]
+    }
+  }
+}

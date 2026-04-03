@@ -1,0 +1,18 @@
+{
+  "name": "@snappy/agent",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/ai": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/domain": "workspace:*",
+    "@snappy/presets": "workspace:*",
+    "zod": "^4.3.6",
+    "zod-to-json-schema": "^3.25.1"
+  }
+}

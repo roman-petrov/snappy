@@ -2,7 +2,7 @@ import { _ } from "@snappy/core";
 import selfsigned from "selfsigned";
 
 const generate = async () => {
-  const hosts = [`home.local`, `localhost`];
+  const hosts = [`home.local`, `localhost`, `127.0.0.1`];
 
   const generated = await selfsigned.generate([{ name: `commonName`, value: hosts[0] }], {
     algorithm: `sha256`,

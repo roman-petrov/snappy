@@ -1,0 +1,65 @@
+{
+  "group": "business",
+  "en": {
+    "emoji": "❔",
+    "labels": {
+      "description": "💬 Questions and short answers — you choose how many",
+      "title": "FAQ"
+    },
+    "prompt": "Produce an FAQ as question–answer pairs from the subject and constraints in the latest user message. Use exactly the number of pairs implied there.",
+    "uiPlan": {
+      "title": "❓ FAQ",
+      "fields": [
+        {
+          "id": "about",
+          "kind": "text",
+          "label": "📋 What is it about?",
+          "placeholder": "Product, service, policy…",
+          "prompt": "Subject of the FAQ:"
+        },
+        {
+          "id": "count",
+          "kind": "tabs_single",
+          "label": "🔢 Number of Q&As",
+          "default": "5",
+          "options": [
+            { "label": "3️⃣ 3", "value": "3", "prompt": "Write exactly 3 question–answer pairs." },
+            { "label": "5️⃣ 5", "value": "5", "prompt": "Write exactly 5 question–answer pairs." },
+            { "label": "8️⃣ 8", "value": "8", "prompt": "Write exactly 8 question–answer pairs." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "❓",
+    "labels": {
+      "description": "💬 Вопросы и короткие ответы — сколько пар нужно",
+      "title": "FAQ"
+    },
+    "prompt": "Составь FAQ в виде пар вопрос–ответ по теме и ограничениям из последнего сообщения пользователя. Соблюди указанное количество пар.",
+    "uiPlan": {
+      "title": "❓ FAQ",
+      "fields": [
+        {
+          "id": "about",
+          "kind": "text",
+          "label": "📋 О чём FAQ?",
+          "placeholder": "Продукт, услуга, правила…",
+          "prompt": "Тема FAQ:"
+        },
+        {
+          "id": "count",
+          "kind": "tabs_single",
+          "label": "🔢 Количество пар вопрос–ответ",
+          "default": "5",
+          "options": [
+            { "label": "3️⃣ 3", "value": "3", "prompt": "Ровно 3 пары вопрос–ответ." },
+            { "label": "5️⃣ 5", "value": "5", "prompt": "Ровно 5 пар вопрос–ответ." },
+            { "label": "8️⃣ 8", "value": "8", "prompt": "Ровно 8 пар вопрос–ответ." }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,33 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/tokens";
+@use "./scss/tabs" as button;
+
+.tabs {
+  position: relative;
+  display: flex;
+  gap: space.xs();
+  width: max-content;
+  min-width: fit-content;
+  padding: 0;
+  overflow: visible;
+}
+
+.indicator-track {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.indicator {
+  @include button.active-surface;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  min-width: 0;
+  border-radius: radius.sm();
+  transition:
+    left tokens.ease(),
+    width tokens.ease();
+}

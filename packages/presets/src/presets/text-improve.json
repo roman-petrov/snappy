@@ -1,0 +1,155 @@
+{
+  "group": "text",
+  "en": {
+    "emoji": "✏️",
+    "labels": {
+      "description": "✨ Clearer text: length, tone, optional emoji & markup",
+      "title": "Improve text"
+    },
+    "prompt": "Rewrite or improve the text using the instructions and constraints in the latest user message. Reply with the finished text only—no preamble, no questions.",
+    "uiPlan": {
+      "title": "✏️ Improve text",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Source text",
+          "placeholder": "Paste or type the text to improve…",
+          "prompt": "Text to improve (your reply must be only the revised text):"
+        },
+        {
+          "id": "clarity",
+          "kind": "toggle",
+          "label": "💡 Prioritize clarity",
+          "default": true,
+          "promptOn": "Prioritize clarity and plain language.",
+          "promptOff": "Clarity is not the top priority; follow other constraints first."
+        },
+        {
+          "id": "addEmoji",
+          "kind": "toggle",
+          "label": "😎 Emoji in output",
+          "default": false,
+          "promptOn": "You may use emoji in the output where it fits naturally.",
+          "promptOff": "Do not use emoji in the output."
+        },
+        {
+          "id": "addFormatting",
+          "kind": "toggle",
+          "label": "📝 Markup (bold, lists…)",
+          "default": false,
+          "promptOn": "Use light markdown-style formatting (bold, lists) where helpful.",
+          "promptOff": "Use plain text; avoid lists and bold except if essential."
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "📏 Length",
+          "default": "keep",
+          "options": [
+            { "label": "⬇️ Shorten", "value": "shorten", "prompt": "Make the result shorter than the original." },
+            { "label": "↔️ Keep", "value": "keep", "prompt": "Keep length close to the original." },
+            {
+              "label": "⬆️ Extend",
+              "value": "extend",
+              "prompt": "Expand the text with useful detail where appropriate."
+            }
+          ]
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Style",
+          "default": "neutral",
+          "options": [
+            { "label": "💼 Business", "value": "business", "prompt": "Use a concise, professional business tone." },
+            { "label": "🤝 Friendly", "value": "friendly", "prompt": "Use a warm, friendly tone." },
+            {
+              "label": "😄 Humorous",
+              "value": "humorous",
+              "prompt": "Add light humor where it fits; stay respectful."
+            },
+            { "label": "⚖️ Neutral", "value": "neutral", "prompt": "Keep a neutral, matter-of-fact tone." },
+            {
+              "label": "🛒 Selling",
+              "value": "selling",
+              "prompt": "Emphasize benefits and persuasive, marketing-style wording."
+            },
+            { "label": "🎩 Formal", "value": "formal", "prompt": "Use formal register and polite phrasing." },
+            { "label": "☕ Casual", "value": "casual", "prompt": "Use casual, conversational wording." }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "✨",
+    "labels": {
+      "description": "✨ Яснее текст: длина, тон, эмодзи и разметка по желанию",
+      "title": "Улучшение текста"
+    },
+    "prompt": "Перепиши или улучши текст по инструкциям и ограничениям в последнем сообщении пользователя. Ответь только готовым текстом — без вступлений и вопросов.",
+    "uiPlan": {
+      "title": "✨ Улучшение текста",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Исходный текст",
+          "placeholder": "Вставьте или введите текст…",
+          "prompt": "Текст для улучшения (в ответе только переработанный текст):"
+        },
+        {
+          "id": "clarity",
+          "kind": "toggle",
+          "label": "💡 Приоритет ясности",
+          "default": true,
+          "promptOn": "В первую очередь добивайся ясности и простоты формулировок.",
+          "promptOff": "Ясность не главный приоритет; следуй остальным ограничениям."
+        },
+        {
+          "id": "addEmoji",
+          "kind": "toggle",
+          "label": "😎 Эмодзи в ответе",
+          "default": false,
+          "promptOn": "При необходимости используй эмодзи в тексте.",
+          "promptOff": "Не используй эмодзи в ответе."
+        },
+        {
+          "id": "addFormatting",
+          "kind": "toggle",
+          "label": "📝 Разметка (жирный, списки…)",
+          "default": false,
+          "promptOn": "По возможности используй лёгкую разметку: жирный, списки.",
+          "promptOff": "Обойдись обычным текстом без списков и выделений, если не необходимо."
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "📏 Длина текста",
+          "default": "keep",
+          "options": [
+            { "label": "⬇️ Сократить", "value": "shorten", "prompt": "Сделай текст короче исходного." },
+            { "label": "↔️ Без изменений", "value": "keep", "prompt": "Сохрани объём примерно как у исходника." },
+            { "label": "⬆️ Расширить", "value": "extend", "prompt": "Расширь текст, добавь уместные детали." }
+          ]
+        },
+        {
+          "id": "style",
+          "kind": "tabs_single",
+          "label": "🎨 Стиль",
+          "default": "neutral",
+          "options": [
+            { "label": "💼 Деловой", "value": "business", "prompt": "Деловой, профессиональный тон." },
+            { "label": "🤝 Дружеский", "value": "friendly", "prompt": "Дружелюбный, тёплый тон." },
+            { "label": "😄 Юмор", "value": "humorous", "prompt": "Лёгкий юмор там, где уместно; без грубости." },
+            { "label": "⚖️ Нейтральный", "value": "neutral", "prompt": "Нейтральный, сухой тон без окраски." },
+            { "label": "🛒 Продающий", "value": "selling", "prompt": "Акцент на выгодах и убедительные формулировки." },
+            { "label": "🎩 Формальный", "value": "formal", "prompt": "Формальный стиль и вежливые обороты." },
+            { "label": "☕ Разговорный", "value": "casual", "prompt": "Разговорный, непринуждённый стиль." }
+          ]
+        }
+      ]
+    }
+  }
+}

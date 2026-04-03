@@ -37,3 +37,18 @@ export type PaymentLog = Prisma.PaymentLogModel
  * 
  */
 export type SnappySettings = Prisma.SnappySettingsModel
+/**
+ * Model AgentSession
+ * 
+ */
+export type AgentSession = Prisma.AgentSessionModel
+/**
+ * Model AgentMessage
+ * 
+ */
+export type AgentMessage = Prisma.AgentMessageModel
+/**
+ * Model StoredFile
+ * 
+ */
+export type StoredFile = Prisma.StoredFileModel

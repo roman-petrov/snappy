@@ -1,0 +1,93 @@
+{
+  "group": "business",
+  "en": {
+    "emoji": "📣",
+    "labels": {
+      "description": "📱 Post or announcement copy — tone and length",
+      "title": "Social post"
+    },
+    "prompt": "Write ready-to-post copy for the topic and constraints in the latest user message. One coherent post; no meta-commentary.",
+    "uiPlan": {
+      "title": "📣 Social post",
+      "fields": [
+        {
+          "id": "topic",
+          "kind": "text",
+          "label": "✏️ Topic / offer",
+          "placeholder": "What to communicate?",
+          "prompt": "Topic or offer to communicate:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Tone",
+          "default": "neutral",
+          "options": [
+            { "label": "⚖️ Neutral", "value": "neutral", "prompt": "Neutral, informative tone." },
+            { "label": "🚀 Hype", "value": "hype", "prompt": "Energetic, hype-style wording where appropriate." },
+            { "label": "💼 Professional", "value": "pro", "prompt": "Professional, restrained tone." }
+          ]
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "📏 Length",
+          "default": "short",
+          "options": [
+            { "label": "📌 Short", "value": "short", "prompt": "Keep the post short (roughly one screen on mobile)." },
+            {
+              "label": "📐 Medium",
+              "value": "medium",
+              "prompt": "Medium length: a few short paragraphs or bullet ideas."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📱",
+    "labels": {
+      "description": "📱 Текст поста или объявления — тон и длина",
+      "title": "Пост"
+    },
+    "prompt": "Напиши готовый текст поста по теме и ограничениям из последнего сообщения пользователя. Один цельный пост, без пояснений с твоей стороны.",
+    "uiPlan": {
+      "title": "📱 Пост",
+      "fields": [
+        {
+          "id": "topic",
+          "kind": "text",
+          "label": "✏️ Тема / предложение",
+          "placeholder": "Что сообщить?",
+          "prompt": "Тема или предложение:"
+        },
+        {
+          "id": "tone",
+          "kind": "tabs_single",
+          "label": "🎭 Тон",
+          "default": "neutral",
+          "options": [
+            { "label": "⚖️ Нейтральный", "value": "neutral", "prompt": "Нейтральный информативный тон." },
+            { "label": "🚀 Хайп", "value": "hype", "prompt": "Энергичные, «хайповые» формулировки по уместности." },
+            { "label": "💼 Деловой", "value": "pro", "prompt": "Деловой сдержанный тон." }
+          ]
+        },
+        {
+          "id": "length",
+          "kind": "tabs_single",
+          "label": "📏 Длина",
+          "default": "short",
+          "options": [
+            { "label": "📌 Коротко", "value": "short", "prompt": "Короткий пост (примерно один экран на телефоне)." },
+            {
+              "label": "📐 Средне",
+              "value": "medium",
+              "prompt": "Средняя длина: несколько коротких абзацев или тезисов."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

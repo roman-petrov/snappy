@@ -1,5 +1,8 @@
 import type { CmdDefinition } from "./CommandTypes";
 
+import { devSiteRunningFooter, prodSpawnNotice } from "./CommandAnnounce";
+import { devBridgeWsUrl, devPort } from "./DevHttps";
+
 const nodeLoaderPath = `src/NodeLoader.js`;
 
 /**
@@ -20,8 +23,23 @@ const defs: Record<string, CmdDefinition> = {
     run: { handler: `build:app-android` },
   },
   [`build:app`]: { description: `Vite: build app into dist/app.`, label: `💻 App`, run: { handler: `build:app` } },
+  [`build:client`]: {
+    description: `Bun: compile desktop relay client to dist/client + copy exe to site/public/downloads.`,
+    label: `🖥️ Client exe`,
+    run: { handler: `build:client` },
+  },
   [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
   [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
+  [`client:dev`]: {
+    description: `Run relay client to local Ollama; registers models in the community catalog (same as SNAPPY_RELAY_PUBLIC=1).`,
+    label: `🖥️ Client`,
+    run: {
+      background: true,
+      command: `bun packages/client/src/main.ts`,
+      cwd: `.`,
+      env: { SNAPPY_BRIDGE_URL: devBridgeWsUrl, SNAPPY_RELAY_PUBLIC: `1` },
+    },
+  },
   [`db:container:up`]: {
     description: `Docker: start DB container.`,
     label: `🐳 Database container`,
@@ -83,8 +101,8 @@ const defs: Record<string, CmdDefinition> = {
     },
   },
   [`server:dev`]: {
-    children: [`server:frontend:dev`],
-    description: `Run dev server (site + app + API on port 80).`,
+    children: [`server:frontend:dev`, `client:dev`],
+    description: `Dev HTTPS (site + app + API) + relay client to Ollama.`,
     label: `🖥️ Server`,
   },
   [`server:frontend:dev`]: {
@@ -94,6 +112,8 @@ const defs: Record<string, CmdDefinition> = {
       background: true,
       command: `node --import ./${nodeLoaderPath} --import tsx/esm src/main.dev-server.ts`,
       cwd: `packages/do`,
+      env: { NODE_ENV: `development`, NODE_OPTIONS: `--disable-warning=DEP0060` },
+      waitForListenPort: devPort,
     },
   },
   [`server:prod`]: {
@@ -103,6 +123,7 @@ const defs: Record<string, CmdDefinition> = {
       command: `node --import ./packages/do/${nodeLoaderPath} --import tsx/esm packages/server-prod/src/main.ts`,
       cwd: `.`,
       shutdown: { command: `docker compose down` },
+      spawnNotice: prodSpawnNotice,
     },
   },
   [`stylelint-fix`]: {
@@ -111,16 +132,17 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app`, `build:app-android`],
-    description: `Build site into dist (site + ssr + app + Android APK).`,
+    children: [`build:client`, `build:site`, `build:ssr`, `build:app`, `build:app-android`],
+    description: `Build site into dist (client exe + site + ssr + app + Android APK).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
   dev: {
     children: [`env:dev`, `server:dev`],
-    description: `Start Docker + DB + run server in watch (server-dev).`,
+    description: `Start Docker + DB + dev server (includes relay client).`,
     label: `🚀 Dev server`,
+    successFooter: devSiteRunningFooter,
   },
   eslint: {
     description: `ESLint: lint JS/TS.`,

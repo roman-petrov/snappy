@@ -34,11 +34,17 @@ export * from "./SwitchDisplay";
 
 export * from "./SystemButtons";
 
+export * from "./TabButton";
+
+export * from "./Tabs";
+
 export * from "./Tap";
 
 export * from "./Text";
 
 export * from "./TextArea";
+
+export * from "./TextInput";
 
 export * from "./TextOverlayEffect";
 

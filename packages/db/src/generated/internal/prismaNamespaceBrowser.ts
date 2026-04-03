@@ -54,7 +54,10 @@ export const ModelName = {
   User: 'User',
   Subscription: 'Subscription',
   PaymentLog: 'PaymentLog',
-  SnappySettings: 'SnappySettings'
+  SnappySettings: 'SnappySettings',
+  AgentSession: 'AgentSession',
+  AgentMessage: 'AgentMessage',
+  StoredFile: 'StoredFile'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -115,15 +118,52 @@ export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof
 
 export const SnappySettingsScalarFieldEnum = {
   userId: 'userId',
-  requestCount: 'requestCount',
   lastReset: 'lastReset',
-  addEmoji: 'addEmoji',
-  addFormatting: 'addFormatting',
-  length: 'length',
-  style: 'style'
+  requestCount: 'requestCount',
+  ollamaRelayKey: 'ollamaRelayKey',
+  llmProvider: 'llmProvider',
+  communityTextModel: 'communityTextModel',
+  communityImageModel: 'communityImageModel'
 } as const
 
 export type SnappySettingsScalarFieldEnum = (typeof SnappySettingsScalarFieldEnum)[keyof typeof SnappySettingsScalarFieldEnum]
+
+
+export const AgentSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  presetId: 'presetId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AgentSessionScalarFieldEnum = (typeof AgentSessionScalarFieldEnum)[keyof typeof AgentSessionScalarFieldEnum]
+
+
+export const AgentMessageScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt',
+  hiddenFromFeed: 'hiddenFromFeed'
+} as const
+
+export type AgentMessageScalarFieldEnum = (typeof AgentMessageScalarFieldEnum)[keyof typeof AgentMessageScalarFieldEnum]
+
+
+export const StoredFileScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  sessionId: 'sessionId',
+  kind: 'kind',
+  mime: 'mime',
+  size: 'size',
+  storageKey: 'storageKey',
+  createdAt: 'createdAt'
+} as const
+
+export type StoredFileScalarFieldEnum = (typeof StoredFileScalarFieldEnum)[keyof typeof StoredFileScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -132,6 +172,13 @@ export const SortOrder = {
 } as const
 
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
 export const QueryMode = {
@@ -148,4 +195,13 @@ export const NullsOrder = {
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 

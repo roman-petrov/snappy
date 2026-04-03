@@ -9,7 +9,6 @@
 | `DB_USER`             | yes      | PostgreSQL user                                                 |
 | `DB_PASSWORD`         | yes      | PostgreSQL password                                             |
 | `DB_NAME`             | yes      | Database name                                                   |
-| `GIGACHAT_AUTH_KEY`   | yes      | GigaChat API authorization key                                  |
 | `JWT_SECRET`          | yes      | Secret for signing JWT (min 32 chars); generate a random string |
 | `YOOKASSA_SECRET_KEY` | no       | YooKassa secret key (payments)                                  |
 | `YOOKASSA_SHOP_ID`    | no       | YooKassa shop ID (payments)                                     |
@@ -46,7 +45,6 @@ Keep the value secret and use different values per environment.
 | `DB_PASSWORD`         | PostgreSQL password     |                                      |
 | `DB_NAME`             | PostgreSQL database     |                                      |
 | `JWT_SECRET`          | JWT signing secret      | Generate: `openssl rand -base64 32`  |
-| `GIGACHAT_AUTH_KEY`   | GigaChat API key        |                                      |
 | `YOOKASSA_SECRET_KEY` | YooKassa secret key     |                                      |
 | `YOOKASSA_SHOP_ID`    | YooKassa shop ID        |                                      |
 | `SSL_CERT_PEM`        | (optional) TLS cert     | PEM content for site HTTPS           |

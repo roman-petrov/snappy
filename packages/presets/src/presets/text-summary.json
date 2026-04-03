@@ -1,0 +1,69 @@
+{
+  "group": "text",
+  "en": {
+    "emoji": "📝",
+    "labels": {
+      "description": "📄 Short recap of long text — pick depth",
+      "title": "Summary"
+    },
+    "prompt": "Summarize the material according to the depth and source text in the latest user message. Keep main ideas and meaning.",
+    "uiPlan": {
+      "title": "📄 Summary",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Text to summarize",
+          "placeholder": "Paste the text…",
+          "prompt": "Source text to summarize:"
+        },
+        {
+          "id": "depth",
+          "kind": "tabs_single",
+          "label": "📊 Depth",
+          "default": "short",
+          "options": [
+            { "label": "📏 Brief", "value": "short", "prompt": "Very brief summary: key points only." },
+            { "label": "📐 Medium", "value": "medium", "prompt": "Medium summary: main ideas with light structure." },
+            {
+              "label": "📚 Detailed",
+              "value": "long",
+              "prompt": "More detailed summary: sections or bullets as needed."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "ru": {
+    "emoji": "📄",
+    "labels": {
+      "description": "📄 Краткое содержание длинного текста — выбери глубину",
+      "title": "Краткое содержание"
+    },
+    "prompt": "Сделай пересказ по глубине и исходному тексту из последнего сообщения пользователя. Сохрани главное и смысл.",
+    "uiPlan": {
+      "title": "📄 Краткое содержание",
+      "fields": [
+        {
+          "id": "source",
+          "kind": "text",
+          "label": "📃 Текст для пересказа",
+          "placeholder": "Вставьте текст…",
+          "prompt": "Исходный текст для пересказа:"
+        },
+        {
+          "id": "depth",
+          "kind": "tabs_single",
+          "label": "📊 Глубина",
+          "default": "short",
+          "options": [
+            { "label": "📏 Кратко", "value": "short", "prompt": "Очень кратко: только ключевые мысли." },
+            { "label": "📐 Средне", "value": "medium", "prompt": "Средний пересказ: главное с лёгкой структурой." },
+            { "label": "📚 Подробно", "value": "long", "prompt": "Подробнее: можно по блокам или спискам." }
+          ]
+        }
+      ]
+    }
+  }
+}

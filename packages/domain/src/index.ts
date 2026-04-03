@@ -1,1 +1,3 @@
-export * from "./Snappy";
+export * from "./UiPlan";
+
+export * from "./UiPlanSchema";
