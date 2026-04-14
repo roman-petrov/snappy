@@ -27,13 +27,11 @@ export type AggregateBalanceHistory = {
 }
 
 export type BalanceHistoryAvgAggregateOutputType = {
-  userId: number | null
   amountRub: runtime.Decimal | null
   balanceAfter: runtime.Decimal | null
 }
 
 export type BalanceHistorySumAggregateOutputType = {
-  userId: number | null
   amountRub: runtime.Decimal | null
   balanceAfter: runtime.Decimal | null
 }
@@ -41,7 +39,7 @@ export type BalanceHistorySumAggregateOutputType = {
 export type BalanceHistoryMinAggregateOutputType = {
   id: string | null
   createdAt: Date | null
-  userId: number | null
+  userId: string | null
   kind: string | null
   amountRub: runtime.Decimal | null
   balanceAfter: runtime.Decimal | null
@@ -50,7 +48,7 @@ export type BalanceHistoryMinAggregateOutputType = {
 export type BalanceHistoryMaxAggregateOutputType = {
   id: string | null
   createdAt: Date | null
-  userId: number | null
+  userId: string | null
   kind: string | null
   amountRub: runtime.Decimal | null
   balanceAfter: runtime.Decimal | null
@@ -69,13 +67,11 @@ export type BalanceHistoryCountAggregateOutputType = {
 
 
 export type BalanceHistoryAvgAggregateInputType = {
-  userId?: true
   amountRub?: true
   balanceAfter?: true
 }
 
 export type BalanceHistorySumAggregateInputType = {
-  userId?: true
   amountRub?: true
   balanceAfter?: true
 }
@@ -198,7 +194,7 @@ export type BalanceHistoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.I
 export type BalanceHistoryGroupByOutputType = {
   id: string
   createdAt: Date
-  userId: number
+  userId: string
   kind: string
   amountRub: runtime.Decimal
   balanceAfter: runtime.Decimal
@@ -231,7 +227,7 @@ export type BalanceHistoryWhereInput = {
   NOT?: Prisma.BalanceHistoryWhereInput | Prisma.BalanceHistoryWhereInput[]
   id?: Prisma.StringFilter<"BalanceHistory"> | string
   createdAt?: Prisma.DateTimeFilter<"BalanceHistory"> | Date | string
-  userId?: Prisma.IntFilter<"BalanceHistory"> | number
+  userId?: Prisma.StringFilter<"BalanceHistory"> | string
   kind?: Prisma.StringFilter<"BalanceHistory"> | string
   amountRub?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -256,7 +252,7 @@ export type BalanceHistoryWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.BalanceHistoryWhereInput[]
   NOT?: Prisma.BalanceHistoryWhereInput | Prisma.BalanceHistoryWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"BalanceHistory"> | Date | string
-  userId?: Prisma.IntFilter<"BalanceHistory"> | number
+  userId?: Prisma.StringFilter<"BalanceHistory"> | string
   kind?: Prisma.StringFilter<"BalanceHistory"> | string
   amountRub?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -285,7 +281,7 @@ export type BalanceHistoryScalarWhereWithAggregatesInput = {
   NOT?: Prisma.BalanceHistoryScalarWhereWithAggregatesInput | Prisma.BalanceHistoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"BalanceHistory"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"BalanceHistory"> | Date | string
-  userId?: Prisma.IntWithAggregatesFilter<"BalanceHistory"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"BalanceHistory"> | string
   kind?: Prisma.StringWithAggregatesFilter<"BalanceHistory"> | string
   amountRub?: Prisma.DecimalWithAggregatesFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalWithAggregatesFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -305,7 +301,7 @@ export type BalanceHistoryCreateInput = {
 export type BalanceHistoryUncheckedCreateInput = {
   id?: string
   createdAt?: Date | string
-  userId: number
+  userId: string
   kind: string
   amountRub: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -325,7 +321,7 @@ export type BalanceHistoryUpdateInput = {
 export type BalanceHistoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   amountRub?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -335,7 +331,7 @@ export type BalanceHistoryUncheckedUpdateInput = {
 export type BalanceHistoryCreateManyInput = {
   id?: string
   createdAt?: Date | string
-  userId: number
+  userId: string
   kind: string
   amountRub: runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -354,7 +350,7 @@ export type BalanceHistoryUpdateManyMutationInput = {
 export type BalanceHistoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   kind?: Prisma.StringFieldUpdateOperationsInput | string
   amountRub?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -382,7 +378,6 @@ export type BalanceHistoryCountOrderByAggregateInput = {
 }
 
 export type BalanceHistoryAvgOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
   amountRub?: Prisma.SortOrder
   balanceAfter?: Prisma.SortOrder
 }
@@ -406,7 +401,6 @@ export type BalanceHistoryMinOrderByAggregateInput = {
 }
 
 export type BalanceHistorySumOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
   amountRub?: Prisma.SortOrder
   balanceAfter?: Prisma.SortOrder
 }
@@ -451,10 +445,6 @@ export type BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput = {
   update?: Prisma.BalanceHistoryUpdateWithWhereUniqueWithoutUserInput | Prisma.BalanceHistoryUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.BalanceHistoryUpdateManyWithWhereWithoutUserInput | Prisma.BalanceHistoryUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.BalanceHistoryScalarWhereInput | Prisma.BalanceHistoryScalarWhereInput[]
-}
-
-export type StringFieldUpdateOperationsInput = {
-  set?: string
 }
 
 export type BalanceHistoryCreateWithoutUserInput = {
@@ -507,7 +497,7 @@ export type BalanceHistoryScalarWhereInput = {
   NOT?: Prisma.BalanceHistoryScalarWhereInput | Prisma.BalanceHistoryScalarWhereInput[]
   id?: Prisma.StringFilter<"BalanceHistory"> | string
   createdAt?: Prisma.DateTimeFilter<"BalanceHistory"> | Date | string
-  userId?: Prisma.IntFilter<"BalanceHistory"> | number
+  userId?: Prisma.StringFilter<"BalanceHistory"> | string
   kind?: Prisma.StringFilter<"BalanceHistory"> | string
   amountRub?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   balanceAfter?: Prisma.DecimalFilter<"BalanceHistory"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -614,7 +604,7 @@ export type $BalanceHistoryPayload<ExtArgs extends runtime.Types.Extensions.Inte
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     createdAt: Date
-    userId: number
+    userId: string
     kind: string
     amountRub: runtime.Decimal
     balanceAfter: runtime.Decimal
@@ -1045,7 +1035,7 @@ export interface Prisma__BalanceHistoryClient<T, Null = never, ExtArgs extends r
 export interface BalanceHistoryFieldRefs {
   readonly id: Prisma.FieldRef<"BalanceHistory", 'String'>
   readonly createdAt: Prisma.FieldRef<"BalanceHistory", 'DateTime'>
-  readonly userId: Prisma.FieldRef<"BalanceHistory", 'Int'>
+  readonly userId: Prisma.FieldRef<"BalanceHistory", 'String'>
   readonly kind: Prisma.FieldRef<"BalanceHistory", 'String'>
   readonly amountRub: Prisma.FieldRef<"BalanceHistory", 'Decimal'>
   readonly balanceAfter: Prisma.FieldRef<"BalanceHistory", 'Decimal'>

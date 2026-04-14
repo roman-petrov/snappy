@@ -13,14 +13,14 @@ describe(`paymentLog`, () => {
       (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
       const paymentLog = PaymentLog(db.paymentLog);
 
-      await paymentLog.logTopUpError(10, `provider-error`);
+      await paymentLog.logTopUpError(`10`, `provider-error`);
 
       expect(db.paymentLog.create).toHaveBeenCalledWith({
         currency: `RUB`,
         errorMessage: `provider-error`,
         status: `error`,
         type: `topup`,
-        userId: 10,
+        userId: `10`,
       });
     });
 
@@ -29,14 +29,14 @@ describe(`paymentLog`, () => {
       (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
       const paymentLog = PaymentLog(db.paymentLog);
 
-      await paymentLog.logTopUpPending(5, `pay-id-1`, 199);
+      await paymentLog.logTopUpPending(`5`, `pay-id-1`, 199);
 
       expect(db.paymentLog.create).toHaveBeenCalledWith({
         amount: 199,
         currency: `RUB`,
         status: `pending`,
         type: `topup`,
-        userId: 5,
+        userId: `5`,
         yooKassaPaymentId: `pay-id-1`,
       });
     });
@@ -76,10 +76,10 @@ describe(`paymentLog`, () => {
         providerPaymentId: `pay-1`,
         savedMethodId: `pm-1`,
         status: `succeeded` as const,
-        userId: 7,
+        userId: `7`,
       };
 
-      await paymentLog.logPaymentSucceeded(result, 7);
+      await paymentLog.logPaymentSucceeded(result, `7`);
 
       expect(db.paymentLog.create).toHaveBeenCalledWith({
         amount: `199.00`,
@@ -87,7 +87,7 @@ describe(`paymentLog`, () => {
         paymentMethodId: `pm-1`,
         status: `succeeded`,
         type: `topup`,
-        userId: 7,
+        userId: `7`,
         yooKassaPaymentId: `pay-1`,
       });
     });
@@ -106,7 +106,7 @@ describe(`paymentLog`, () => {
         providerPaymentId: `pay-id`,
         savedMethodId: `pm-x`,
         status: `canceled` as const,
-        userId: 2,
+        userId: `2`,
       };
 
       await paymentLog.logPaymentCanceled(`pay-id`, result);
@@ -116,7 +116,7 @@ describe(`paymentLog`, () => {
         paymentMethodId: `pm-x`,
         status: `canceled`,
         type: `topup`,
-        userId: 2,
+        userId: `2`,
         yooKassaPaymentId: `pay-id`,
       });
     });

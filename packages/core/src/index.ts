@@ -18,6 +18,8 @@ export * from "./Serializer";
 
 export * from "./Store";
 
+export * from "./StructuredPrompt";
+
 export * from "./Time";
 
 export * from "./Timer";

@@ -11,7 +11,7 @@ export const insertBalanceHistory = async (
     balanceAfter: number | Prisma.Decimal | string;
     kind: string;
     meta?: BalanceHistoryMeta;
-    userId: number;
+    userId: string;
   },
 ) =>
   tx.balanceHistory.create({

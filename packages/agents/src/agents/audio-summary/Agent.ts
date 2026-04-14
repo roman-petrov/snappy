@@ -1,4 +1,4 @@
-import { SimpleStaticAudioAgent } from "../../templates/simple-static/SimpleStaticAgent";
+import { StaticAudioAgent } from "../../core";
 import { Data } from "./Meta";
 
-export const Agent = SimpleStaticAudioAgent(Data);
+export const Agent = StaticAudioAgent(Data);

@@ -22,7 +22,7 @@ export const BalancePayment = ({
   const currency = `RUB`;
   const description = `Snappy — пополнение баланса`;
 
-  const paymentUrl = async (userId: number, amount: number) => {
+  const paymentUrl = async (userId: string, amount: number) => {
     if (!Number.isFinite(amount) || amount < balancePaymentMinRub || amount > balancePaymentMaxRub) {
       return { status: `invalidAmount` as const };
     }
@@ -67,7 +67,7 @@ export const BalancePayment = ({
     }
 
     const { money, userId } = result;
-    if (userId === undefined || userId <= 0) {
+    if (userId === undefined || userId === ``) {
       return;
     }
 

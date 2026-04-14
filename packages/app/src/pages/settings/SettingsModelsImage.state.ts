@@ -1,4 +1,4 @@
-import { AiConstants, type AiImageQuality } from "@snappy/domain";
+import { AiConstants, type AiImageQuality } from "@snappy/ai";
 import { useEffect, useState } from "react";
 
 import type { SettingsOption } from "./components";
@@ -13,7 +13,7 @@ export const useSettingsModelsImageState = () => {
   const modelOptions: readonly SettingsOption<string>[] = ids.map(id => ({ icon: `🎨`, label: id, value: id }));
 
   useEffect(() => {
-    if (settingsResponse.status !== `ok`) {
+    if (settingsResponse === undefined) {
       setModelValue(ids[0] ?? ``);
       setQualityValue(AiConstants.imageQuality[0]);
 
@@ -25,16 +25,12 @@ export const useSettingsModelsImageState = () => {
 
   const onModelSelect = async (next: string) => {
     const response = await api.userLlmSettingsSet({ llmImageModel: next });
-    if (response.status === `ok`) {
-      setModelValue(response.llmImageModel);
-    }
+    setModelValue(response.llmImageModel);
   };
 
   const onQualitySelect = async (next: AiImageQuality) => {
     const response = await api.userLlmSettingsSet({ llmImageQuality: next });
-    if (response.status === `ok`) {
-      setQualityValue(response.llmImageQuality);
-    }
+    setQualityValue(response.llmImageQuality);
   };
 
   const qualityOptions = AiConstants.imageQuality;

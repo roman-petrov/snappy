@@ -1,54 +1,77 @@
-/* eslint-disable unicorn/no-null */
+/* eslint-disable functional/no-expression-statements */
+import type { AiImageQuality } from "@snappy/ai";
+
 import type { PrismaClient } from "./generated/client";
 
-export type DbUser = {
-  createdAt: number;
-  email: string | undefined;
-  id: number;
-  passwordHash: string | undefined;
-  resetToken: string | undefined;
-  resetTokenExpires: number | undefined;
-};
+import { type BalanceHistoryMeta, insertBalanceHistory } from "./DbBalanceHistory";
 
-const parse = (row: {
-  createdAt: Date;
-  email: null | string;
-  id: number;
-  passwordHash: null | string;
-  resetToken: null | string;
-  resetTokenExpires: Date | null;
-}): DbUser => ({
-  createdAt: row.createdAt.getTime(),
-  email: row.email ?? undefined,
-  id: row.id,
-  passwordHash: row.passwordHash ?? undefined,
-  resetToken: row.resetToken ?? undefined,
-  resetTokenExpires: row.resetTokenExpires === null ? undefined : row.resetTokenExpires.getTime(),
-});
+export type UserBalanceCreditKind = `credit_payment`;
+
+export type UserBalanceDebitKind = `debit_llm`;
+
+type UserBalanceLedgerKind = UserBalanceCreditKind | UserBalanceDebitKind;
 
 export const DbUser = (prisma: PrismaClient) => {
-  const findByEmail = async (email: string) => {
-    const row = await prisma.user.findUnique({ where: { email } });
+  const readBalance = async (userId: string) => {
+    const row = await prisma.user.findUnique({ select: { balance: true }, where: { id: userId } });
 
-    return row === null ? undefined : parse(row);
+    return row === null ? 0 : Number(row.balance);
   };
 
-  const createWithEmailPassword = async (email: string, passwordHash: string) =>
-    parse(await prisma.user.create({ data: { email, passwordHash } }));
-
-  const setResetToken = async (id: number, resetToken: string, resetTokenExpires: number) =>
-    prisma.user.update({ data: { resetToken, resetTokenExpires: new Date(resetTokenExpires) }, where: { id } });
-
-  const findByResetToken = async (token: string, expiresAfter: number) => {
-    const row = await prisma.user.findFirst({
-      where: { resetToken: token, resetTokenExpires: { gt: new Date(expiresAfter) } },
+  const applyBalanceDelta = async (
+    userId: string,
+    delta: number,
+    kind: UserBalanceLedgerKind,
+    amountRubForHistory: number,
+    meta?: BalanceHistoryMeta,
+  ) =>
+    prisma.$transaction(async tx => {
+      await tx.user.update({ data: { balance: { increment: delta } }, where: { id: userId } });
+      const row = await tx.user.findUniqueOrThrow({ select: { balance: true }, where: { id: userId } });
+      await insertBalanceHistory(tx, { amountRub: amountRubForHistory, balanceAfter: row.balance, kind, meta, userId });
     });
 
-    return row === null ? undefined : parse(row);
+  const creditBalance = async (
+    userId: string,
+    amountRub: number,
+    kind: UserBalanceCreditKind,
+    meta?: BalanceHistoryMeta,
+  ) => applyBalanceDelta(userId, amountRub, kind, amountRub, meta);
+
+  const debitBalance = async (
+    userId: string,
+    amountRub: number,
+    kind: UserBalanceDebitKind,
+    meta?: BalanceHistoryMeta,
+  ) => applyBalanceDelta(userId, -amountRub, kind, amountRub, meta);
+
+  const findSettingsByUserId = async (userId: string) =>
+    (await prisma.userSettings.findUnique({ where: { userId } })) ?? undefined;
+
+  const updateLlmModels = async (
+    userId: string,
+    patch: {
+      llmChatModel?: string;
+      llmImageModel?: string;
+      llmImageQuality?: AiImageQuality;
+      llmSpeechRecognitionModel?: string;
+    },
+  ): Promise<void> => {
+    const modelPatch = {
+      ...(patch.llmChatModel === undefined ? {} : { llmChatModel: patch.llmChatModel }),
+      ...(patch.llmImageModel === undefined ? {} : { llmImageModel: patch.llmImageModel }),
+      ...(patch.llmImageQuality === undefined ? {} : { llmImageQuality: patch.llmImageQuality }),
+      ...(patch.llmSpeechRecognitionModel === undefined
+        ? {}
+        : { llmSpeechRecognitionModel: patch.llmSpeechRecognitionModel }),
+    };
+
+    await prisma.userSettings.upsert({ create: { userId, ...modelPatch }, update: modelPatch, where: { userId } });
   };
 
-  const clearResetAndSetPassword = async (id: number, passwordHash: string) =>
-    prisma.user.update({ data: { passwordHash, resetToken: null, resetTokenExpires: null }, where: { id } });
-
-  return { clearResetAndSetPassword, createWithEmailPassword, findByEmail, findByResetToken, setResetToken };
+  return { creditBalance, debitBalance, findSettingsByUserId, readBalance, updateLlmModels };
 };
+
+export type DbUser = ReturnType<typeof DbUser>;
+
+export type { BalanceHistoryMeta } from "./DbBalanceHistory";

@@ -10,7 +10,6 @@ export default defineConfig([
       "unicorn/import-style": `off`,
       "unicorn/no-anonymous-default-export": `off`,
       "unicorn/no-array-callback-reference": `off`,
-      "unicorn/no-array-reduce": `off`,
       "unicorn/no-await-expression-member": `off`,
       "unicorn/no-keyword-prefix": `off`,
       "unicorn/no-nested-ternary": `off`,

@@ -17,7 +17,7 @@ import type {
 
 import { PaymentResponse } from "../PaymentResponse";
 
-export type YooKassaCredentials = { returnUrl?: string; secretKey?: string; shopId?: string };
+export type YooKassaConfig = { returnUrl?: string; secretKey?: string; shopId?: string };
 
 type ApiInit = { body?: object; idempotenceKey?: string; method: `GET` | `POST` };
 
@@ -34,7 +34,7 @@ type RawPayment = {
 
 type YooKassaWebhookEventName = `payment.canceled` | `payment.succeeded`;
 
-export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials): PaymentProvider => {
+export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaConfig): PaymentProvider => {
   const paymentStatusMap: Record<string, PaymentStatus> = {
     canceled: `canceled`,
     pending: `pending`,
@@ -51,10 +51,9 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
     if (raw === undefined) {
       return undefined;
     }
+    const userId = raw.trim();
 
-    const parsed = _.dec(raw);
-
-    return parsed !== undefined && Number.isInteger(parsed) && parsed > 0 ? parsed : undefined;
+    return userId === `` ? undefined : userId;
   };
 
   const snapshotFromRaw = (raw: RawPayment, fallbackPaymentId: string): PaymentSnapshot => {
@@ -159,7 +158,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaCredentials):
           ...captureBody(currency, amount),
           confirmation: { return_url: options?.returnUrl ?? returnUrl, type: `redirect` },
           description,
-          metadata: { type: kind, userId: userId.toString() },
+          metadata: { type: kind, userId },
           ...(options?.savePaymentMethod === true ? { save_payment_method: true } : {}),
         },
         idempotenceKey: `${userId}-${_.now()}`,

@@ -1,5 +1,7 @@
 export * from "./Agents";
 
+export * from "./AgentsAi";
+
 export * from "./common";
 
 export * from "./core";

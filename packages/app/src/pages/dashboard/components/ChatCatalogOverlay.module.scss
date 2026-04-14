@@ -1,0 +1,50 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+
+.overlay {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  width: 100%;
+  padding: space.md();
+  margin: 0;
+  background: color.surface();
+  border: 1px solid color.border();
+  border-radius: radius.lg();
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  @include typography.h2;
+
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+}
+
+.section-title {
+  @include typography.h3;
+
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: space.md();
+}

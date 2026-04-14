@@ -9,6 +9,7 @@ import type { Action } from "./Types";
 
 import { DateTime } from "./DateTime";
 import { ObjectValue } from "./ObjectValue";
+import { Stats } from "./Stats";
 import { Time } from "./Time";
 
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf8`);
@@ -64,6 +65,9 @@ const dec = (s: string) => int(s, 10);
 const hex = (s: string) => int(s, 16);
 const noop = () => {};
 
+const gen = <TItem>(count: number, map: (index: number) => TItem) =>
+  Array.from({ length: Math.max(0, count) }, (_, index) => map(index));
+
 const round = (value: number, fractionDigits: number) => {
   const factor = 10 ** fractionDigits;
 
@@ -78,6 +82,7 @@ const gb = (gigaBytes: number) => kb(mb(gigaBytes));
 export const _ = {
   ...DateTime,
   ...ObjectValue,
+  ...Stats,
   ...Time.constants,
   base64decode,
   camelCase,
@@ -86,6 +91,7 @@ export const _ = {
   daysInYear: Time.daysInYear,
   dec,
   gb,
+  gen,
   hex,
   isArray,
   isBoolean,

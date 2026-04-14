@@ -7,10 +7,12 @@
   "dependencies": {
     "@fastify/cookie": "^11.0.1",
     "@fastify/cors": "^11.2.0",
+    "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/server-api": "workspace:*",
     "@snappy/server-app": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "better-auth": "^1.6.9",
     "fastify": "^5.8.4"
   },
   "devDependencies": {

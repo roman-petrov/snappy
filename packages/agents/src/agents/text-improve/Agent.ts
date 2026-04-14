@@ -1,4 +1,4 @@
-import { SimpleStaticTextAgent } from "../../templates/simple-static/SimpleStaticAgent";
+import { StaticTextAgent } from "../../core";
 import { Data } from "./Meta";
 
-export const Agent = SimpleStaticTextAgent(Data);
+export const Agent = StaticTextAgent(Data);

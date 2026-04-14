@@ -1,4 +1,4 @@
-# cspell:words webfactory
+# cspell:words webfactory aitunnel
 name: 🚀 Deploy
 
 on:
@@ -52,14 +52,14 @@ jobs:
       - name: 🤖 Build Android app
         run: bun do build:app-android
 
-      - name: 📥 Apply migrations
+      - name: ⬇️ Push Prisma schema
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
-        run: bun do db:migrate:deploy
+        run: bun prisma db push --force-reset
 
       - name: 📦 Create deploy archive
         run: |
@@ -87,7 +87,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          PROXY_API_KEY: ${{ secrets.PROXY_API_KEY }}
+          AI_TUNNEL_API_KEY: ${{ secrets.AI_TUNNEL_API_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
@@ -100,7 +100,7 @@ jobs:
             DB_PASSWORD="${DB_PASSWORD}" \
             DB_NAME="${DB_NAME}" \
             JWT_SECRET="${JWT_SECRET}" \
-            PROXY_API_KEY="${PROXY_API_KEY}" \
+            AI_TUNNEL_API_KEY="${AI_TUNNEL_API_KEY}" \
             YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
             YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \
             SSL_CERT_PEM="$(echo -n "$SSL_CERT_PEM" | base64 -w 0)" \

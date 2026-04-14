@@ -1,0 +1,14 @@
+{
+  "name": "@snappy/coder",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/agent": "workspace:*",
+    "@snappy/ai": "workspace:*",
+    "@snappy/core": "workspace:*"
+  }
+}

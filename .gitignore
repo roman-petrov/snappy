@@ -1,6 +1,9 @@
+# Dot files/folders
 .analyze
 .jscpd
+.env
+.snappy
+# Others
 **/node_modules
 bun.lockb
 dist
-.env

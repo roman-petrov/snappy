@@ -1,53 +1,79 @@
-import type { ImageGenerationOptions } from "@snappy/domain";
-import type { ComponentType } from "react";
+import type { AiChatAssistantMessage, AiChatInput as DomainAiChatInput, ImageGenerationOptions } from "@snappy/ai";
+import type { Action } from "@snappy/core";
+import type { FunctionComponent } from "react";
 
 export type AgentCard = { description: string; emoji: string; group: AgentGroupId; id: string; title: string };
 
-export type AgentChromeProps = {
-  agentId: string;
-  hostTools: AgentHostTools;
-  maxImagePromptLength: number;
-  maxSpeechFileMegaBytes: number;
-};
+export type AgentChatInput = DomainAiChatInput | string;
 
-export type AgentFeedItem = FeedLine & { id: string };
+export type AgentChatOutput = AiChatAssistantMessage | string;
 
-export type AgentGroupId = `audio` | `text` | `visual`;
+export type AgentGroupId = `audio` | `lab` | `text` | `visual`;
 
 export type AgentHostTools = {
-  chat: (prompt: string) => Promise<string | undefined>;
-  image: (prompt: string, options: ImageGenerationOptions) => Promise<Uint8Array | undefined>;
-  speechRecognition: (file: File) => Promise<string | undefined>;
+  ask: <TResult, TProps extends object = object>(request: AgentUiRequest<TResult, TProps>) => Promise<TResult>;
+  chat: (input: AgentChatInput) => Promise<AgentChatOutput>;
+  image: (prompt: string, options: ImageGenerationOptions) => Promise<Uint8Array>;
+  speechRecognition: (file: File) => Promise<string>;
 };
+
+export type AgentInfo = { description: string; emoji: string; group: AgentGroupId; title: string };
+
+export type AgentInstance = { meta: AgentInfo; start: (input: AgentStartInput) => Action };
 
 export type AgentLocale = `en` | `ru`;
 
-export type AgentModule = {
-  group: AgentGroupId;
-  localize: (locale: AgentLocale) => { description: string; emoji: string; title: string };
-  mount: (input: AgentMountInput) => AgentMounted;
-};
+export type AgentModule = (locale: AgentLocale) => AgentInstance;
 
-export type AgentMounted = {
-  title: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention -- component type
-  View: ComponentType<Record<string, never>>;
-};
-
-export type AgentMountInput = {
-  agentId: string;
+export type AgentStartInput = {
+  feed: ChatFeedClient;
   hostTools: AgentHostTools;
-  locale: AgentLocale;
+  isStopped: () => boolean;
   maxImagePromptLength: number;
   maxSpeechFileMegaBytes: number;
+  onDone: (input: { failed: boolean }) => Promise<void>;
 };
 
-export type AgentRegistryItem = { entry: AgentModule; id: string };
+export type AgentTools = Omit<AgentHostTools, `ask` | `chat`> & {
+  chat: (prompt: string) => Promise<string>;
+  vectorize: (input: { imageBase64: string }) => Promise<string>;
+};
 
-export type AgentSessionStep = { done: Promise<void>; id: string; kind: AgentToolStepKind };
+export type AgentToolStepKind = `chat` | `image` | `showStaticForm` | `speechRecognition` | `vectorize`;
 
-export type AgentTools = AgentHostTools & { vectorize: (input: { imageBase64: string }) => Promise<string> };
+export type AgentUiProps<TResult> = { onReject: () => void; onResolve: (value: TResult) => void };
 
-export type AgentToolStepKind = `chat` | `image` | `speechRecognition` | `vectorize`;
+export type AgentUiRequest<TResult, TProps extends object = object> = {
+  component: FunctionComponent<AgentUiProps<TResult> & TProps>;
+  props: TProps;
+};
 
-export type FeedLine = { imageSrc?: string; text: string };
+export type ChatFeedClient = {
+  append: (message: ChatFeedMessageDraft) => string;
+  clear: () => void;
+  list: () => ChatFeedMessage[];
+  patch: (
+    id: string,
+    patch: Partial<Extract<ChatFeedMessage, { type: `tool` }>>,
+  ) => Extract<ChatFeedMessage, { type: `tool` }>;
+  remove: (id: string) => void;
+  subscribe: (listener: (messages: ChatFeedMessage[]) => void) => () => void;
+};
+
+export type ChatFeedMessage =
+  | {
+      cost?: number;
+      id: string;
+      status: `done` | `error` | `running`;
+      text: string;
+      tool: AgentToolStepKind;
+      type: `tool`;
+    }
+  | { generationPrompt: string; html: string; id: string; type: `text` }
+  | { generationPrompt: string; id: string; src: string; type: `image` }
+  | { id: string; role: `assistant` | `system` | `tool` | `user`; text: string; type: `llm` }
+  | { id: string; text: string; type: `start` };
+
+export type ChatFeedMessageDraft = DropId<ChatFeedMessage>;
+
+type DropId<TValue> = TValue extends { id: string } ? Omit<TValue, `id`> : never;

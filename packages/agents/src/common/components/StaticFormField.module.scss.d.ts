@@ -3,6 +3,5 @@ declare const __StaticFormField: {
   readonly head: "head";
   readonly label: "label";
   readonly body: "body";
-  readonly bodyEnd: "bodyEnd";
 };
 export default __StaticFormField;

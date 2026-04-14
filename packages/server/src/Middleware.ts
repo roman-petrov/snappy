@@ -1,26 +1,25 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-import type { ServerAppApi } from "@snappy/server-app";
+import type { ServerApp } from "@snappy/server-app";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { HttpStatus } from "@snappy/core";
+import { fromNodeHeaders } from "better-auth/node";
 
-import { AuthCookie } from "./AuthCookie";
-
-type RequestWithUserId = FastifyRequest & { userId?: number };
+export type RequestWithUserId = FastifyRequest & { userId: string };
 
 const requireUser =
-  (api: ServerAppApi) =>
+  (api: ServerApp) =>
   async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const token = AuthCookie.token(request.headers.cookie ?? ``);
-    const payload = token === undefined ? undefined : api.auth.verify(token);
-    if (payload === undefined) {
+    const session = await api.betterAuth.api.getSession({ headers: fromNodeHeaders(request.headers) });
+    const userId = session?.user.id;
+    if (userId === undefined || userId === ``) {
       await reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
 
       return;
     }
-
-    (request as RequestWithUserId).userId = payload.userId;
+    (request as RequestWithUserId).userId = userId;
   };
 
 export const Middleware = { requireUser };

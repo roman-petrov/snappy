@@ -1,55 +1,68 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Ai } from "@snappy/ai";
 import type { Db } from "@snappy/db";
 import type { ApiUserLlmSettingsBody, ApiUserLlmSettingsResult } from "@snappy/server-api";
 
-import { AiConstants, type AiImageQuality } from "@snappy/domain";
+import { type Ai, AiConstants, type AiImageQuality } from "@snappy/ai";
 
-export const UserSettings = ({ ai, userSettings }: { ai: Ai; userSettings: Db[`userSettings`] }) => {
+import { HttpError } from "./HttpError";
+
+export type UserSettingsConfig = { ai: Ai; user: Db[`user`] };
+
+export const UserSettings = ({ ai, user }: UserSettingsConfig) => {
+  const required = <T>(value: T | undefined): T => value ?? HttpError.badRequest();
   const imageQualitySet = new Set<string>(AiConstants.imageQuality);
-  const [defaultImageQuality] = AiConstants.imageQuality;
+  const { defaults, maxImagePromptLength, maxSpeechFileMegaBytes, models } = ai;
+  const defaultImageQuality = defaults.imageQuality;
 
   const isImageQuality = (value: null | string | undefined): value is AiImageQuality =>
     value !== undefined && value !== null && imageQualitySet.has(value);
 
-  const chatNames = new Set(ai.models.filter(model => model.type === `chat`).map(model => model.name));
-  const imageNames = new Set(ai.models.filter(model => model.type === `image`).map(model => model.name));
-  const speechNames = new Set(ai.models.filter(model => model.type === `speech-recognition`).map(model => model.name));
-  const defaultChat = ai.models.find(model => model.type === `chat`)?.name;
-  const defaultImage = ai.models.find(model => model.type === `image`)?.name;
-  const defaultSpeech = ai.models.find(model => model.type === `speech-recognition`)?.name;
+  const chatNames = new Set(models.filter(model => model.type === `chat`).map(model => model.name));
+  const imageNames = new Set(models.filter(model => model.type === `image`).map(model => model.name));
+  const speechNames = new Set(models.filter(model => model.type === `speech-recognition`).map(model => model.name));
 
-  const get = async (userId: number): Promise<ApiUserLlmSettingsResult> => {
-    if (defaultChat === undefined || defaultImage === undefined || defaultSpeech === undefined) {
-      return { status: `badRequest` };
-    }
+  const defaultChat = chatNames.has(defaults.models.chat)
+    ? defaults.models.chat
+    : models.find(model => model.type === `chat`)?.name;
 
-    const row = await userSettings.findByUserId(userId);
+  const defaultImage = imageNames.has(defaults.models.image)
+    ? defaults.models.image
+    : models.find(model => model.type === `image`)?.name;
+
+  const defaultSpeech = speechNames.has(defaults.models.speechRecognition)
+    ? defaults.models.speechRecognition
+    : models.find(model => model.type === `speech-recognition`)?.name;
+
+  const chat = required(defaultChat);
+  const image = required(defaultImage);
+  const speech = required(defaultSpeech);
+
+  const fallbackModel = (value: null | string | undefined, names: Set<string>, fallback: string) =>
+    value !== undefined && value !== null && names.has(value) ? value : fallback;
+
+  const get = async (userId: string): Promise<ApiUserLlmSettingsResult> => {
+    const row = await user.findSettingsByUserId(userId);
 
     return {
-      llmChatModel: row?.llmChatModel ?? defaultChat,
-      llmImageModel: row?.llmImageModel ?? defaultImage,
+      llmChatModel: fallbackModel(row?.llmChatModel, chatNames, chat),
+      llmImageModel: fallbackModel(row?.llmImageModel, imageNames, image),
       llmImageQuality: isImageQuality(row?.llmImageQuality) ? row.llmImageQuality : defaultImageQuality,
-      llmSpeechRecognitionModel: row?.llmSpeechRecognitionModel ?? defaultSpeech,
-      maxImagePromptLength: ai.maxImagePromptLength,
-      maxSpeechFileMegaBytes: ai.maxSpeechFileMegaBytes,
-      status: `ok`,
+      llmSpeechRecognitionModel: fallbackModel(row?.llmSpeechRecognitionModel, speechNames, speech),
+      maxImagePromptLength,
+      maxSpeechFileMegaBytes,
     };
   };
 
-  const set = async (userId: number, body: ApiUserLlmSettingsBody): Promise<ApiUserLlmSettingsResult> => {
-    if (body.llmChatModel !== undefined && !chatNames.has(body.llmChatModel)) {
-      return { status: `badRequest` };
+  const set = async (userId: string, body: ApiUserLlmSettingsBody): Promise<ApiUserLlmSettingsResult> => {
+    if (
+      (body.llmChatModel !== undefined && !chatNames.has(body.llmChatModel)) ||
+      (body.llmImageModel !== undefined && !imageNames.has(body.llmImageModel)) ||
+      (body.llmImageQuality !== undefined && !isImageQuality(body.llmImageQuality)) ||
+      (body.llmSpeechRecognitionModel !== undefined && !speechNames.has(body.llmSpeechRecognitionModel))
+    ) {
+      HttpError.badRequest();
     }
-    if (body.llmImageModel !== undefined && !imageNames.has(body.llmImageModel)) {
-      return { status: `badRequest` };
-    }
-    if (body.llmImageQuality !== undefined && !isImageQuality(body.llmImageQuality)) {
-      return { status: `badRequest` };
-    }
-    if (body.llmSpeechRecognitionModel !== undefined && !speechNames.has(body.llmSpeechRecognitionModel)) {
-      return { status: `badRequest` };
-    }
+
     if (
       body.llmChatModel === undefined &&
       body.llmImageQuality === undefined &&
@@ -59,7 +72,7 @@ export const UserSettings = ({ ai, userSettings }: { ai: Ai; userSettings: Db[`u
       return get(userId);
     }
 
-    await userSettings.updateLlmModels(userId, body);
+    await user.updateLlmModels(userId, body);
 
     return get(userId);
   };

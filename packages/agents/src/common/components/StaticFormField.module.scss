@@ -27,20 +27,12 @@
   color: color.text();
 }
 
-.body,
-.body-end {
+.body {
   display: flex;
   flex-direction: column;
   gap: space.sm();
+  align-items: stretch;
   width: 100%;
   min-width: 0;
   padding: space.md();
-}
-
-.body {
-  align-items: stretch;
-}
-
-.body-end {
-  align-items: flex-end;
 }

@@ -1,29 +1,59 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import type { Meta } from "../../common/Meta";
+import { Meta } from "../../common/Meta";
 
-export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
-  ({
-    en: {
-      description: `Meeting recording → structured notes, decisions, actions`,
+export const Data = Meta(
+  parameters =>
+    ({
+      "meta.description": [
+        ``,
+        `Meeting recording → structured notes, decisions, actions`,
+        `Запись встречи → структура, итоги, договорённости`,
+      ],
+      "meta.title": [``, `Meeting notes`, `Протокол встречи`],
+      "ui.field.addEmoji.label": [`😎`, `Emoji`, `Эмодзи`],
+      "ui.field.addFormatting.label": [`📝`, `Markup`, `Разметка`],
+      "ui.field.audio.hint": [
+        ``,
+        `Max ${parameters.maxSpeechFileMegaBytes} MB`,
+        `До ${parameters.maxSpeechFileMegaBytes} МБ`,
+      ],
+      "ui.field.audio.label": [`🎵`, `Meeting recording`, `Запись встречи`],
+      "ui.field.audio.pickLabel": [``, `Choose file`, `Выбрать файл`],
+      "ui.field.context.label": [`👥`, `Context (optional)`, `Контекст (необязательно)`],
+      "ui.field.context.placeholder": [
+        ``,
+        `Meeting title, participant names, project…`,
+        `Название, участники, проект…`,
+      ],
+      "ui.field.meetingType.label": [`📅`, `Meeting type`, `Тип встречи`],
+      "ui.field.meetingType.option.client.label": [``, `Client`, `С клиентом`],
+      "ui.field.meetingType.option.general.label": [``, `General`, `Общая`],
+      "ui.field.meetingType.option.planning.label": [``, `Planning`, `Планирование`],
+      "ui.field.meetingType.option.standup.label": [``, `Stand-up`, `Стендап`],
+    }) as const,
+  ({ i18n }) =>
+    ({
+      description: i18n(`meta.description`),
       emoji: `📋`,
+      group: `audio`,
       prompt: `You receive an automatic transcript of a meeting (possibly multiple speakers; diarization may be imperfect). Produce structured meeting notes that follow every bullet in the parameter list. If speakers are unclear, label them Speaker A / Speaker B or use names from the optional context. Use sections in order: Overview; Decisions; Agreements & action items (what / who / deadline when mentioned); Open questions; Risks (if any). Output only the notes—no preamble.`,
-      title: `Meeting notes`,
+      title: i18n(`meta.title`),
       uiPlan: {
         fields: [
           {
             accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
-            hint: `Max ${maxSpeechFileMegaBytes} MB`,
+            hint: i18n(`ui.field.audio.hint`),
             id: `audio`,
             kind: `file`,
-            label: `🎵 Meeting recording`,
-            pickLabel: `Choose file`,
+            label: i18n(`ui.field.audio.label`),
+            pickLabel: i18n(`ui.field.audio.pickLabel`),
           },
           {
             default: false,
             id: `addEmoji`,
             kind: `toggle`,
-            label: `😎 Emoji`,
+            label: i18n(`ui.field.addEmoji.label`),
             promptOff: `No emoji.`,
             promptOn: `Use emoji sparingly for section cues only.`,
           },
@@ -31,7 +61,7 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             default: true,
             id: `addFormatting`,
             kind: `toggle`,
-            label: `📝 Markup`,
+            label: i18n(`ui.field.addFormatting.label`),
             promptOff: `Plain text with clear headings as lines (e.g. ALL CAPS lines).`,
             promptOn: `Use HTML: <h2>/<h3> for sections, <ul>/<li> for lists, <strong> for emphasis.`,
           },
@@ -39,95 +69,40 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             default: `general`,
             id: `meetingType`,
             kind: `tabs_single`,
-            label: `📅 Meeting type`,
+            label: i18n(`ui.field.meetingType.label`),
             options: [
               {
-                label: `Stand-up`,
+                label: i18n(`ui.field.meetingType.option.standup.label`),
                 prompt: `Optimize for daily stand-up: blockers, today, yesterday.`,
                 value: `standup`,
               },
               {
-                label: `Planning`,
+                label: i18n(`ui.field.meetingType.option.planning.label`),
                 prompt: `Optimize for planning: scope, estimates, dependencies, risks.`,
                 value: `planning`,
               },
-              { label: `Client`, prompt: `Optimize for client call: asks, commitments, follow-ups.`, value: `client` },
-              { label: `General`, prompt: `General meeting: balanced sections below.`, value: `general` },
+              {
+                label: i18n(`ui.field.meetingType.option.client.label`),
+                prompt: `Optimize for client call: asks, commitments, follow-ups.`,
+                value: `client`,
+              },
+              {
+                label: i18n(`ui.field.meetingType.option.general.label`),
+                prompt: `General meeting: balanced sections below.`,
+                value: `general`,
+              },
             ],
           },
           {
             id: `context`,
             kind: `text`,
-            label: `👥 Context (optional)`,
+            label: i18n(`ui.field.context.label`),
             omitWhenEmpty: true,
-            placeholder: `Meeting title, participant names, project…`,
+            placeholder: i18n(`ui.field.context.placeholder`),
             prompt: `Context (names, project, goal):`,
           },
         ],
       },
-    },
-    group: `audio`,
-    ru: {
-      description: `Запись встречи → структура, итоги, договорённости`,
-      emoji: `📋`,
-      prompt: `Ниже автоматическая расшифровка встречи (возможны несколько спикеров; разметка по голосам может быть неточной). Составь структурированный протокол, строго следуя каждому пункту параметров. Если спикеры неочевидны — обозначь Участник A / B или используй имена из контекста. Секции по порядку: Краткое содержание; Принятые решения; Договорённости и действия (что / кто / срок, если звучало); Открытые вопросы; Риски (если есть). В ответе только протокол, без вступления.`,
-      title: `Протокол встречи`,
-      uiPlan: {
-        fields: [
-          {
-            accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
-            hint: `До ${maxSpeechFileMegaBytes} МБ`,
-            id: `audio`,
-            kind: `file`,
-            label: `🎵 Запись встречи`,
-            pickLabel: `Выбрать файл`,
-          },
-          {
-            default: false,
-            id: `addEmoji`,
-            kind: `toggle`,
-            label: `😎 Эмодзи`,
-            promptOff: `Без эмодзи.`,
-            promptOn: `Эмодзи умеренно, только как маркеры секций.`,
-          },
-          {
-            default: true,
-            id: `addFormatting`,
-            kind: `toggle`,
-            label: `📝 Разметка`,
-            promptOff: `Обычный текст, заголовки строками (например ЗАГЛАВНЫМИ).`,
-            promptOn: `HTML: <h2>/<h3> для секций, <ul>/<li> для списков, <strong> для акцентов.`,
-          },
-          {
-            default: `general`,
-            id: `meetingType`,
-            kind: `tabs_single`,
-            label: `📅 Тип встречи`,
-            options: [
-              { label: `Стендап`, prompt: `Фокус на стендап: блокеры, сегодня, вчера.`, value: `standup` },
-              {
-                label: `Планирование`,
-                prompt: `Фокус на планировании: объём, оценки, зависимости, риски.`,
-                value: `planning`,
-              },
-              {
-                label: `С клиентом`,
-                prompt: `Фокус на звонке с клиентом: запросы, обязательства, follow-up.`,
-                value: `client`,
-              },
-              { label: `Общая`, prompt: `Общая встреча: сбалансированные секции ниже.`, value: `general` },
-            ],
-          },
-          {
-            id: `context`,
-            kind: `text`,
-            label: `👥 Контекст (необязательно)`,
-            omitWhenEmpty: true,
-            placeholder: `Название, участники, проект…`,
-            prompt: `Контекст (имена, проект, цель):`,
-          },
-        ],
-      },
-    },
-  }) as const;
+    }) as const,
+);
 /* jscpd:ignore-end */

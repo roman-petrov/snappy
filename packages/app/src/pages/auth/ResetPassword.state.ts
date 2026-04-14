@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { api, Password } from "../../core";
+import { Auth, Password } from "../../core";
 import { useAsyncSubmit } from "../../hooks";
 
 export const useResetPasswordState = () => {
@@ -18,7 +18,7 @@ export const useResetPasswordState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await api.resetPassword(token, password);
+      const result = await Auth.resetPassword(token, password);
       if (result.status !== `ok`) {
         setError({ key: `resetPage.errors.${result.status}` });
 

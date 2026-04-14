@@ -4,7 +4,7 @@ export type PaymentCreateRedirectPaymentInput = {
   description: string;
   metadataKind: PaymentMetadataKind;
   options?: { returnUrl?: string; savePaymentMethod?: boolean };
-  userId: number;
+  userId: string;
 };
 
 export type PaymentCreateRedirectPaymentResult = PaymentResult<PaymentCreateRedirectPaymentSuccess>;
@@ -51,7 +51,7 @@ export type PaymentSnapshot = {
   providerPaymentId: string;
   savedMethodId?: string;
   status: PaymentStatus;
-  userId?: number;
+  userId?: string;
 };
 
 export type PaymentSnapshotSuccess = PaymentSuccess<PaymentSnapshot>;

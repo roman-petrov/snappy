@@ -9,14 +9,12 @@
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
-    "@snappy/domain": "workspace:*",
     "@snappy/payment": "workspace:*",
     "@snappy/server-api": "workspace:*",
-    "bcryptjs": "^3.0.3",
-    "jsonwebtoken": "^9.0.2"
+    "better-auth": "^1.6.9",
+    "fastify": "^5.8.4"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.7",
     "vitest": "^4.1.4"
   }
 }

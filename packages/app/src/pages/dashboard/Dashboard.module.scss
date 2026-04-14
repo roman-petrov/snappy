@@ -1,85 +1,77 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/typography";
-@use "pkg:@snappy/theme/core" as *;
 
-.start-page {
-  padding: space.sm() 0 space.lg();
+.root {
+  position: relative;
+  min-height: 100%;
 }
 
-.hero {
-  display: grid;
-  grid-template-columns: 1fr minmax(120px, 28%);
-  gap: space.md();
-  align-items: center;
-  padding: space.lg();
-  margin-bottom: space.lg();
-  background: linear-gradient(135deg, color.surface-elevated() 0%, color.primary-ghost() 100%);
-  border: 1px solid color.border();
-  border-radius: radius.lg();
+.overlay-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgb(255 255 255 / 55%);
+  backdrop-filter: blur(1px);
 }
 
-.hero-copy {
-  min-width: 0;
+.overlay-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: space.md();
+  overflow: hidden auto;
 }
 
-.hero-eyebrow {
-  @include typography.caption;
-
-  margin: 0 0 space.xs();
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  opacity: 0.75;
+.chat-layer {
+  overflow: visible;
 }
 
-.hero-title {
-  @include typography.h2;
-
-  margin: 0 0 space.sm();
-  line-height: 1.2;
+.agent-chrome-wrap {
+  position: absolute;
+  z-index: 0;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.hero-lead {
-  @include typography.body;
-
-  max-width: 40rem;
-  margin: 0;
-  opacity: 0.9;
+.agent-chrome-wrap-active {
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  pointer-events: auto;
+  background: rgb(255 255 255 / 55%);
+  backdrop-filter: blur(1px);
 }
 
-.hero-emoji {
-  justify-self: end;
-  font-size: clamp(3.5rem, 10vw, 5rem);
-  line-height: 1;
-  user-select: none;
+.agent-chrome-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: space.md();
+  overflow: hidden auto;
 }
 
-.preset-section {
-  margin-bottom: space.xl();
+.agent-chrome-body-hidden {
+  display: none;
 }
 
-.section-title {
-  @include typography.h3;
-
-  padding-bottom: space.xs();
-  margin: 0 0 space.md();
-  border-bottom: 1px solid color.divider-line();
+.agent-chrome-body-off {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.preset-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: space.md();
-}
-
-@include mobile {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-
-  .hero-emoji {
-    justify-self: center;
-    margin-top: space.sm();
-  }
+.action-row {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: flex-end;
+  padding: space.xs();
+  pointer-events: auto;
+  background: transparent;
 }

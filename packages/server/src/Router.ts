@@ -1,64 +1,38 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
-import type { ServerAppApi } from "@snappy/server-app";
+import type { ServerApp } from "@snappy/server-app";
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { _, HttpStatus } from "@snappy/core";
 
-import { AuthCookie } from "./AuthCookie";
 import { Middleware } from "./Middleware";
 
-const genericStatusToHttp: Record<string, number> = {
-  badRequest: HttpStatus.badRequest,
-  balanceBlocked: HttpStatus.paymentRequired,
-  invalidAmount: HttpStatus.badRequest,
-  jwtUnavailable: HttpStatus.serviceUnavailable,
-  llmUnavailable: HttpStatus.serviceUnavailable,
-  modelsUnavailable: HttpStatus.serviceUnavailable,
-  paymentError: HttpStatus.badRequest,
-  unauthorized: HttpStatus.unauthorized,
-};
-
 export type Route<TSuccess = unknown> = {
-  auth?: boolean;
-  clearAuthCookie?: boolean;
   method: `get` | `post`;
+  noAuth?: true;
   path: string;
-  rawSuccess?: { body: (result: TSuccess) => Buffer; contentType: string };
-  run: (api: ServerAppApi, request: FastifyRequest) => Promise<TSuccess | { status: string }>;
-  setAuthCookie?: boolean;
+  run: (api: ServerApp, request: FastifyRequest) => Promise<TSuccess | { status: string }>;
+  runRaw?: (api: ServerApp, request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   successBody?: (result: TSuccess) => object;
 };
 
-type BindOptions = { api: ServerAppApi; routes: Route[] };
+type BindOptions = { api: ServerApp; routes: Route[] };
 
 const bind = (app: FastifyInstance, { api, routes }: BindOptions) => {
   for (const route of routes) {
     const handler = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+      if (route.runRaw !== undefined) {
+        await route.runRaw(api, request, reply);
+
+        return;
+      }
       const result = await route.run(api, request);
       if (_.isObject(result) && `status` in result && _.isString(result.status) && result.status !== `ok`) {
-        await reply.status(genericStatusToHttp[result.status] ?? HttpStatus.ok).send({ status: result.status });
+        await reply.status(HttpStatus.ok).send({ status: result.status });
 
         return;
       }
 
-      const token = _.isObject(result) && `token` in result ? (result as { token: unknown }).token : undefined;
-      if (route.setAuthCookie === true && _.isString(token)) {
-        reply.setCookie(AuthCookie.name, token, {
-          httpOnly: true,
-          maxAge: AuthCookie.maxAgeMs / _.second,
-          path: `/`,
-          sameSite: `lax`,
-        });
-      }
-      if (route.clearAuthCookie === true) {
-        reply.clearCookie(AuthCookie.name, { path: `/` });
-      }
-      if (route.rawSuccess !== undefined) {
-        await reply.type(route.rawSuccess.contentType).send(route.rawSuccess.body(result));
-
-        return;
-      }
       if (route.successBody !== undefined) {
         await reply.status(HttpStatus.ok).send(route.successBody(result));
 
@@ -67,7 +41,7 @@ const bind = (app: FastifyInstance, { api, routes }: BindOptions) => {
       await reply.status(HttpStatus.internalServerError).send({ status: `internal` });
     };
 
-    const preHandler = route.auth === true ? Middleware.requireUser(api) : undefined;
+    const preHandler = route.noAuth === true ? undefined : Middleware.requireUser(api);
     app[route.method](route.path, { preHandler }, handler);
   }
 };

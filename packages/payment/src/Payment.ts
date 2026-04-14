@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { PaymentProvider } from "./Types";
 
-import { YooKassa, type YooKassaCredentials } from "./providers";
+import { YooKassa, type YooKassaConfig } from "./providers";
 
-export type PaymentCredentialsByType = { "yoo-kassa": YooKassaCredentials };
+export type PaymentCredentialsByType = { "yoo-kassa": YooKassaConfig };
 
 export type PaymentInit = {
   [K in PaymentProviderType]: { credentials: PaymentCredentialsByType[K]; type: K };

@@ -1,48 +1,41 @@
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable functional/prefer-tacit */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type { ServerAppApi } from "@snappy/server-app";
-import type { FastifyRequest } from "fastify";
+import type { FastifyReply, FastifyRequest } from "fastify";
 
-import {
-  type ApiAuthBody,
-  type ApiBalancePaymentUrlBody,
-  type ApiForgotPasswordBody,
-  type ApiLlmChatBody,
-  type ApiLlmImageBody,
-  type ApiLlmImageOk,
-  type ApiLlmSpeechRecognitionBody,
-  type ApiResetPasswordBody,
-  type ApiUserLlmSettingsBody,
-  Endpoints,
-} from "@snappy/server-api";
+import { type ApiBalancePaymentUrlBody, type ApiUserLlmSettingsBody, Endpoints } from "@snappy/server-api";
+import { AiTunnelRoute, type ServerApp } from "@snappy/server-app";
 
+import type { RequestWithUserId } from "./Middleware";
 import type { Route } from "./Router";
 
-type RequestWithUserId = FastifyRequest & { userId?: number };
-
-const getUserId = (request: FastifyRequest): number | undefined => (request as RequestWithUserId).userId;
+const getUserId = (request: FastifyRequest) => (request as RequestWithUserId).userId;
 
 const withBody =
   <TBody, TSuccess>(
-    run: (api: ServerAppApi, body: TBody) => Promise<TSuccess | { status: string }>,
+    run: (api: ServerApp, body: TBody) => Promise<TSuccess | { status: string }>,
     bodyFromRequest: (request: FastifyRequest) => TBody,
   ) =>
-  async (api: ServerAppApi, request: FastifyRequest) =>
+  async (api: ServerApp, request: FastifyRequest) =>
     run(api, bodyFromRequest(request));
 
 const withUserIdRequired =
   <TSuccess>(
-    runWithId: (api: ServerAppApi, userId: number, request: FastifyRequest) => Promise<TSuccess | { status: string }>,
+    runWithId: (api: ServerApp, userId: string, request: FastifyRequest) => Promise<TSuccess | { status: string }>,
   ) =>
-  async (api: ServerAppApi, request: FastifyRequest): Promise<TSuccess | { status: string }> =>
-    runWithId(api, getUserId(request) ?? 0, request);
+  async (api: ServerApp, request: FastifyRequest): Promise<TSuccess | { status: string }> =>
+    runWithId(api, getUserId(request), request);
 
-const withUserId = <TSuccess>(run: (api: ServerAppApi, userId: number) => Promise<TSuccess | { status: string }>) =>
+const withUserId = <TSuccess>(run: (api: ServerApp, userId: string) => Promise<TSuccess | { status: string }>) =>
   withUserIdRequired(run);
 
+const withUserIdRaw =
+  (run: (api: ServerApp, userId: string, request: FastifyRequest, reply: FastifyReply) => Promise<void>) =>
+  async (api: ServerApp, request: FastifyRequest, reply: FastifyReply) =>
+    run(api, getUserId(request), request, reply);
+
 const withUserIdAndBody = <TBody, TSuccess>(
-  run: (api: ServerAppApi, userId: number, body: TBody) => Promise<TSuccess | { status: string }>,
+  run: (api: ServerApp, userId: string, body: TBody) => Promise<TSuccess | { status: string }>,
   bodyFromRequest: (request: FastifyRequest) => TBody,
 ) => withUserIdRequired(async (api, id, request) => run(api, id, bodyFromRequest(request)));
 
@@ -56,6 +49,13 @@ const route = <T = unknown>(
   extra?: Partial<Route<T>>,
 ): Route<T> => ({ method, path, run, successBody, ...extra });
 
+const routeRaw = (
+  method: `get` | `post`,
+  path: string,
+  runRaw: NonNullable<Route[`runRaw`]>,
+  extra?: Partial<Route>,
+): Route => ({ method, path, run: async () => ({ status: `ok` as const }), runRaw, successBody: undefined, ...extra });
+
 const withMethod =
   (method: `get` | `post`) =>
   <T = unknown>(
@@ -67,83 +67,35 @@ const withMethod =
     route(method, path, run, successBody, extra);
 
 const post = withMethod(`post`);
-
-const postBinary = <TSuccess>(
-  path: string,
-  run: Route<TSuccess>[`run`],
-  raw: NonNullable<Route<TSuccess>[`rawSuccess`]>,
-  extra?: Partial<Route<TSuccess>>,
-): Route<TSuccess> => ({ method: `post`, path, rawSuccess: raw, run, ...extra });
-
 const get = withMethod(`get`);
+
+const postRaw = (path: string, runRaw: NonNullable<Route[`runRaw`]>, extra?: Partial<Route>): Route =>
+  routeRaw(`post`, path, runRaw, extra);
+
 const ok = () => ({ status: `ok` as const });
 const id = <T>(r: T): T => r;
-const withOkStatus = <T extends object>(r: T) => ({ ...r, status: `ok` as const });
-
-const authBodyOk = (
-  path: string,
-  run: (api: ServerAppApi, b: ApiAuthBody) => Promise<Record<string, unknown> | { status: string }>,
-) => post(path, withBody(run, body<ApiAuthBody>), ok, { setAuthCookie: true });
 
 export const Routes = [
-  authBodyOk(Endpoints.auth.register, async (api, b) => api.auth.register(b)),
-  authBodyOk(Endpoints.auth.login, async (api, b) => api.auth.login(b)),
-  post(Endpoints.auth.logout, async () => ok(), id, { clearAuthCookie: true }),
-  get(Endpoints.auth.me, async () => ok(), id, { auth: true }),
-  post(
-    Endpoints.auth.forgotPassword,
-    withBody(async (api, b) => api.auth.forgotPassword(b), body<ApiForgotPasswordBody>),
-    id,
-  ),
-  post(
-    Endpoints.auth.resetPassword,
-    withBody(async (api, b) => api.auth.resetPassword(b), body<ApiResetPasswordBody>),
-    ok,
-  ),
   get(
     Endpoints.user.balance,
-    withUserId(async (api, userId) => api.balance.balance(userId)),
-    withOkStatus,
-    { auth: true },
-  ),
-  post(
-    Endpoints.llm.chat,
-    withUserIdAndBody(async (api, userId, b) => api.llm.chat(userId, b), body<ApiLlmChatBody>),
+    withUserId(async (api, userId) => ({ balance: await api.balance.read(userId) })),
     id,
-    { auth: true },
   ),
-  post(
-    Endpoints.llm.speechRecognition,
-    withUserIdAndBody(
-      async (api, userId, b) => api.llm.speechRecognition(userId, b),
-      body<ApiLlmSpeechRecognitionBody>,
+  postRaw(
+    `${AiTunnelRoute}/*`,
+    withUserIdRaw(async (api, userId, request, reply) =>
+      api.aiTunnelProxy(userId, (request.params as { readonly [`*`]: string })[`*`], request, reply),
     ),
-    id,
-    { auth: true },
-  ),
-  postBinary<ApiLlmImageOk>(
-    Endpoints.llm.image,
-    withUserIdAndBody(async (api, userId, b) => api.llm.image(userId, b), body<ApiLlmImageBody>),
-    { body: r => Buffer.from(r.bytes), contentType: `image/png` },
-    { auth: true },
-  ),
-  get(
-    Endpoints.llm.models,
-    withUserId(async api => api.llm.models()),
-    withOkStatus,
-    { auth: true },
   ),
   get(
     Endpoints.user.llmSettings,
     withUserId(async (api, userId) => api.userLlmSettings.get(userId)),
-    withOkStatus,
-    { auth: true },
+    id,
   ),
   post(
     Endpoints.user.llmSettings,
     withUserIdAndBody(async (api, userId, b) => api.userLlmSettings.set(userId, b), body<ApiUserLlmSettingsBody>),
     id,
-    { auth: true },
   ),
   post(
     Endpoints.balance.paymentUrl,
@@ -152,11 +104,11 @@ export const Routes = [
       body<ApiBalancePaymentUrlBody>,
     ),
     id,
-    { auth: true },
   ),
   post(
     Endpoints.webhooks.yookassa,
     withBody(async (api, b) => api.balancePayment.webhook(b), body),
     ok,
+    { noAuth: true },
   ),
 ] as Route[];

@@ -10,6 +10,7 @@ export default defineConfig([
       "vitest/max-expects": `off`,
       "vitest/prefer-describe-function-title": `off`,
       "vitest/prefer-expect-assertions": `off`,
+      "vitest/prefer-lowercase-title": `off`,
       "vitest/require-mock-type-parameters": `off`,
     },
   },

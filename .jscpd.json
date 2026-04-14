@@ -3,6 +3,7 @@
   "ignore": [
     ".github",
     ".jscpd",
+    ".snappy",
     "**/dist/**",
     "**/build/**",
     "**/*.{json,html}",

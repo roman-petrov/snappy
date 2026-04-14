@@ -1,27 +1,22 @@
-import type { AiModelType } from "@snappy/domain";
+import type { ApiUserLlmSettingsResult } from "@snappy/server-api";
 
-import { useAsyncEffect } from "@snappy/ui";
+import { Ai, type AiModelType } from "@snappy/ai";
+import { Locale, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
 import { api } from "../../../core";
 
-type SettingsResponse = Awaited<ReturnType<typeof api.userLlmSettingsGet>> | { status: `error` };
-
 export const useSettingsModelIds = (modelType: AiModelType) => {
   const [ids, setIds] = useState<string[]>([]);
-  const [settingsResponse, setSettingsResponse] = useState<SettingsResponse>({ status: `error` });
+  const [settingsResponse, setSettingsResponse] = useState<ApiUserLlmSettingsResult | undefined>(undefined);
 
   useAsyncEffect(async () => {
-    const [modelsResponse, nextSettingsResponse] = await Promise.all([
-      api.llmModels().catch(() => ({ status: `error` as const })),
-      api.userLlmSettingsGet().catch(() => ({ status: `error` as const })),
+    const [ai, nextSettingsResponse] = await Promise.all([
+      Ai({ locale: Locale.effective(), url: `${globalThis.location.origin}/api/ai-tunnel/v1` }),
+      api.userLlmSettingsGet(),
     ]);
 
-    setIds(
-      modelsResponse.status === `ok`
-        ? modelsResponse.settings.models.filter(model => model.type === modelType).map(model => model.name)
-        : [],
-    );
+    setIds(ai.models.filter(model => model.type === modelType).map(model => model.name));
     setSettingsResponse(nextSettingsResponse);
   }, [modelType]);
 

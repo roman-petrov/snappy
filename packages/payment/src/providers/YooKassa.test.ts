@@ -58,7 +58,7 @@ describe(`yooKassa`, () => {
       description: `Top up`,
       metadataKind: `topup`,
       options: { savePaymentMethod: true },
-      userId: 7,
+      userId: `7`,
     });
 
     expect(result).toStrictEqual({ ok: true, providerPaymentId: `p-1`, redirectUrl: `https://ok` });
@@ -109,7 +109,7 @@ describe(`yooKassa`, () => {
       providerPaymentId: `fallback-id`,
       savedMethodId: `pm-7`,
       status: `unknown`,
-      userId: 42,
+      userId: `42`,
     });
   });
 

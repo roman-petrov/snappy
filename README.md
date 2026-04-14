@@ -1,3 +1,5 @@
+<!-- cspell:word neuro aiesa lmsys -->
+
 # Snappy
 
 ## 📋 Prerequisites
@@ -13,10 +15,31 @@
 - 🐘 [pgAdmin](https://www.pgadmin.org/download/)
 - 📱 [Android SDK](https://developer.android.com/tools/releases/platform-tools)
 
-## AI (recommended)
+## 🛠️ Technologies
+
+- 🟦 [TypeScript](https://www.typescriptlang.org/)
+- ⚡ [Vite](https://vite.dev/)
+- ⚛️ [React](https://react.dev/)
+- 🔐 [Better Auth](https://www.better-auth.com/)
+- 🧬 [Prisma](https://www.prisma.io/)
+- 🍞 [Bun](https://bun.sh/)
+- 🧪 [Vitest](https://vitest.dev/)
+- ✨ [ESLint](https://eslint.org/)
+- 🎨 [Prettier](https://prettier.io/)
+- 🖌️ [Stylelint](https://stylelint.io/)
+- 📦 [Zod](https://zod.dev/)
+
+## 🤖 AI (recommended)
 
 - 🎮 [MSI Afterburner](https://www.msi.com/Landing/afterburner)
 - 🦙 [Ollama](https://ollama.com/)
+
+## 🤖 Agents
+
+- 🧠 [Hermes Agent](https://hermes-agent.nousresearch.com/) — Autonomous agent with memory
+  ([GitHub](https://github.com/NousResearch/Hermes-Agent)).
+- 💻 [OpenCode](https://opencode.ai/) — Open-source coding agent ([GitHub](https://github.com/sst/opencode)).
+- 🧩 **Claude Code** — Community research mirror ([GitHub](https://github.com/yasasbanukaofficial/claude-code)).
 
 ## 📱 Android Debug
 
@@ -32,9 +55,25 @@ is reachable at **home.local**.
 - 📦 `!upgrade.bat`: Upgrade dependencies interactively.
 - 🔄 `!upgrade_actions.bat`: Upgrade GitHub Actions.
 
-## Model providers
+## 🇷🇺 Russian model providers
 
 - [AITunnel](https://aitunnel.ru/)
 - [ProxyAPI](https://proxyapi.ru/)
 - [RouterAI](https://routerai.ru/)
 - [RockAPI](https://www.rockapi.ru/)
+- [GenAPI](https://gen-api.ru/)
+- [VseLLM](https://vsellm.ru/)
+- [NeuroAPI](https://neuroapi.host/)
+- [Aiesa](https://aiesa.ru/)
+- [Cloud.ru Evolution Foundation Models](https://cloud.ru/products/evolution-foundation-models)
+- [Yandex Cloud Foundation Models](https://yandex.cloud/ru/docs/foundation-models/)
+- [GigaChat API](https://developers.sber.ru/portal/products/gigachat-api)
+
+## 🏆 LLM rankings
+
+- [LMSYS Chatbot Arena](https://lmarena.ai/) — blind pairwise comparisons and user-voted Elo ratings.
+- [Hugging Face Open LLM Leaderboard](https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard) —
+  open-weight models on standard benchmarks.
+- [Artificial Analysis](https://artificialanalysis.ai/) — quality, throughput, and price in one place.
+- [SWE-bench](https://www.swebench.com/) — real-world GitHub-style coding and patching (software engineering).
+- [LiveBench](https://livebench.ai/) — frequently updated benchmarks focused on contamination resistance.

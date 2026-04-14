@@ -1,3 +1,4 @@
+
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/"
@@ -8,13 +9,16 @@ datasource db {
 }
 
 model User {
-  id                Int       @id @default(autoincrement())
-  email             String?   @unique
-  passwordHash      String?
-  resetToken        String?
-  resetTokenExpires DateTime?
-  createdAt         DateTime  @default(now())
-  balance           Decimal   @default(0) @db.Decimal(12, 2)
+  id                String           @id
+  name              String
+  email             String           @unique
+  emailVerified     Boolean          @default(false)
+  image             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  balance           Decimal          @default(0) @db.Decimal(12, 2)
+  sessions          Session[]
+  accounts          Account[]
 
   balanceHistory BalanceHistory[]
   userSettings   UserSettings?
@@ -25,7 +29,7 @@ model User {
 model BalanceHistory {
   id           String   @id @default(uuid())
   createdAt    DateTime @default(now())
-  userId       Int
+  userId       String
   kind         String
   amountRub    Decimal  @db.Decimal(12, 2)
   balanceAfter Decimal  @db.Decimal(12, 2)
@@ -40,7 +44,7 @@ model PaymentLog {
   id                String   @id @default(uuid())
   createdAt         DateTime @default(now())
   type              String
-  userId            Int?
+  userId            String?
   yooKassaPaymentId String?
   amount            Decimal? @db.Decimal(12, 2)
   currency          String?
@@ -53,7 +57,7 @@ model PaymentLog {
 }
 
 model UserSettings {
-  userId                    Int     @id
+  userId                    String  @id
   llmChatModel              String?
   llmImageModel             String?
   llmImageQuality           String?
@@ -62,4 +66,51 @@ model UserSettings {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_settings")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }

@@ -9,6 +9,7 @@ export const ESLintConfig = defineConfig([
   globalIgnores([
     `.analyze`,
     `.jscpd`,
+    `.snappy`,
     `**/dist/**`,
     `**/*.{scss,html,module.scss.d.ts}`,
     `**/packages/*/src/generated/**`,

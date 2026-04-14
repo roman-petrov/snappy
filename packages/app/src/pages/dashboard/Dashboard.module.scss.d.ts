@@ -1,13 +1,13 @@
 declare const __Dashboard: {
-  readonly startPage: "startPage";
-  readonly hero: "hero";
-  readonly heroCopy: "heroCopy";
-  readonly heroEyebrow: "heroEyebrow";
-  readonly heroTitle: "heroTitle";
-  readonly heroLead: "heroLead";
-  readonly heroEmoji: "heroEmoji";
-  readonly presetSection: "presetSection";
-  readonly sectionTitle: "sectionTitle";
-  readonly presetGrid: "presetGrid";
+  readonly root: "root";
+  readonly overlayLayer: "overlayLayer";
+  readonly overlayScroll: "overlayScroll";
+  readonly chatLayer: "chatLayer";
+  readonly agentChromeWrap: "agentChromeWrap";
+  readonly agentChromeWrapActive: "agentChromeWrapActive";
+  readonly agentChromeBody: "agentChromeBody";
+  readonly agentChromeBodyHidden: "agentChromeBodyHidden";
+  readonly agentChromeBodyOff: "agentChromeBodyOff";
+  readonly actionRow: "actionRow";
 };
 export default __Dashboard;

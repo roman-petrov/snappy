@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { api, Password } from "../../core";
+import { Auth, Password } from "../../core";
 import { useAuthSubmit } from "../../hooks";
 
 export type RegisterRequirementResult = { labelKey: string; met: boolean; params?: { min?: number } };
@@ -34,7 +34,7 @@ export const useRegisterState = () => {
 
       return;
     }
-    onSubmit(async () => api.register(email.trim(), password));
+    onSubmit(async () => Auth.signUp(email.trim(), password));
   };
 
   const generatePassword = () => setPassword(Password.generate());

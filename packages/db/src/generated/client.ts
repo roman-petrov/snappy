@@ -61,3 +61,18 @@ export type PaymentLog = Prisma.PaymentLogModel
  * 
  */
 export type UserSettings = Prisma.UserSettingsModel
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel

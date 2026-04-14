@@ -1,0 +1,23 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+  width: 100%;
+}
+
+.hint {
+  @include typography.caption;
+
+  color: color.text-muted();
+}
+
+.file-name {
+  @include typography.caption;
+
+  color: color.text();
+  word-break: break-all;
+}

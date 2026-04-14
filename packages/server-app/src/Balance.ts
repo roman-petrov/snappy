@@ -1,15 +1,17 @@
 /* eslint-disable functional/no-expression-statements */
 import type { BalanceHistoryMeta, Db } from "@snappy/db";
 
-export const Balance = ({ balance: dbBalance, balanceMinRub }: { balance: Db[`balance`]; balanceMinRub: number }) => {
-  const read = async (userId: number) => dbBalance.read(userId);
-  const isLlmBlocked = async (userId: number) => (await read(userId)) <= balanceMinRub;
+export type BalanceConfig = { balanceMinRub: number; user: Db[`user`] };
 
-  const creditFromTopUp = async (userId: number, amountRub: number, meta?: BalanceHistoryMeta) =>
-    dbBalance.credit(userId, amountRub, `credit_payment`, meta);
+export const Balance = ({ balanceMinRub, user: dbUser }: BalanceConfig) => {
+  const read = async (userId: string) => dbUser.readBalance(userId);
+  const isLlmBlocked = async (userId: string) => (await read(userId)) <= balanceMinRub;
 
-  const debitForLlm = async (userId: number, rub: number, meta: { call: string; model: string }) => {
-    await dbBalance.debit(userId, rub, `debit_llm`, { ...meta, chargedRub: rub });
+  const creditFromTopUp = async (userId: string, amountRub: number, meta?: BalanceHistoryMeta) =>
+    dbUser.creditBalance(userId, amountRub, `credit_payment`, meta);
+
+  const debitForLlm = async (userId: string, rub: number, meta: { call: string; model: string }) => {
+    await dbUser.debitBalance(userId, rub, `debit_llm`, { ...meta, chargedRub: rub });
   };
 
   return { creditFromTopUp, debitForLlm, isLlmBlocked, read };

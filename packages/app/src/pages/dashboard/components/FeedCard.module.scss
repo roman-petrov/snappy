@@ -1,0 +1,38 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+
+.root {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  gap: space.sm();
+  align-self: start;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, color.surface-active() 40%, color.surface()) 0%,
+    color.surface() 100%
+  );
+  border: 1px solid color-mix(in srgb, color.border() 72%, transparent);
+  border-radius: radius.lg();
+  box-shadow: shadow.md();
+}
+
+.body {
+  position: relative;
+  min-width: 0;
+  padding: space.md();
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.xs();
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 space.md() space.md();
+  border-top: 1px solid color-mix(in srgb, color.border() 55%, transparent);
+}

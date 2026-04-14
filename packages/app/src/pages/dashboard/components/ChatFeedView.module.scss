@@ -1,0 +1,62 @@
+@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding-bottom: space.sm();
+}
+
+.session {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding: space.sm();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+}
+
+.session-running {
+  background: color.primary-ghost();
+  border-color: color.primary-border();
+}
+
+.session-done {
+  background: color.surface();
+}
+
+.session-error {
+  background: color.error-ghost();
+  border-color: color.error();
+}
+
+.session-stopped {
+  background: color.warning-ghost();
+  border-color: color.warning();
+}
+
+.session-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.session-title {
+  @include typography.h3;
+
+  margin: 0;
+}
+
+.session-actions {
+  display: flex;
+  gap: space.xs();
+}
+
+.session-body {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+}

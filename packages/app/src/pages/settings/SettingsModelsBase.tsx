@@ -1,9 +1,9 @@
-import type { AiModelType } from "@snappy/domain";
+import type { AiModelType } from "@snappy/ai";
 
 import { useSettingsModelsBaseState } from "./SettingsModelsBase.state";
 import { SettingsModelsBaseView } from "./SettingsModelsBase.view";
 
-type SettingsModelsBaseProps = {
+export type SettingsModelsBaseProps = {
   icon: string;
   modelType: AiModelType;
   settingsField: `llmChatModel` | `llmImageModel` | `llmSpeechRecognitionModel`;

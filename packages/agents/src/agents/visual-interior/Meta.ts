@@ -1,59 +1,125 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import type { Meta } from "../../common/Meta";
+import { Meta } from "../../common/Meta";
 
-export const Data: Meta = () =>
-  ({
-    en: {
-      description: `Room render for renovation planning — style, palette, light, staging`,
+export const Data = Meta(
+  () =>
+    ({
+      "meta.description": [
+        ``,
+        `Room render for renovation planning — style, palette, light, staging`,
+        `Визуализация комнаты под ремонт — стиль, палитра, свет, наполнение`,
+      ],
+      "meta.title": [``, `Interior`, `Интерьер`],
+      "ui.field.camera.label": [`📷`, `Camera`, `Камера`],
+      "ui.field.camera.option.corner.label": [`📐`, `Corner`, `Из угла`],
+      "ui.field.camera.option.focal_wall.label": [`🎯`, `Feature wall`, `Акцентная стена`],
+      "ui.field.camera.option.straight_on.label": [`⬜`, `Straight-on`, `Фронтально`],
+      "ui.field.camera.option.wide.label": [`🏠`, `Wide shot`, `Широкий план`],
+      "ui.field.extra.label": [`📝`, `Optional detail`, `Уточнение`],
+      "ui.field.extra.placeholder": [
+        ``,
+        `e.g. emerald sofa, fluted panels, terrazzo…`,
+        `Напр. диван изумрудный, рейки на стене, терраццо…`,
+      ],
+      "ui.field.floor.label": [`⬛`, `Floor`, `Пол`],
+      "ui.field.floor.option.carpet.label": [`🟫`, `Carpet / rug`, `Ковёр`],
+      "ui.field.floor.option.concrete.label": [`🧱`, `Concrete`, `Бетон`],
+      "ui.field.floor.option.tile_dark.label": [`◼️`, `Dark tile`, `Тёмная плитка`],
+      "ui.field.floor.option.tile_light.label": [`◻️`, `Light tile`, `Светлая плитка`],
+      "ui.field.floor.option.wood_dark.label": [`🪵`, `Dark wood`, `Тёмное дерево`],
+      "ui.field.floor.option.wood_light.label": [`🪵`, `Light wood`, `Светлое дерево`],
+      "ui.field.light.label": [`💡`, `Light`, `Свет`],
+      "ui.field.light.option.accent_dramatic.label": [`🎭`, `Accent drama`, `Акценты`],
+      "ui.field.light.option.daylight.label": [`☀️`, `Daylight`, `День`],
+      "ui.field.light.option.evening_cozy.label": [`🕯️`, `Evening cozy`, `Вечер`],
+      "ui.field.light.option.golden.label": [`🌇`, `Golden hour`, `Золотой час`],
+      "ui.field.light.option.soft_overcast.label": [`☁️`, `Soft overcast`, `Пасмурно`],
+      "ui.field.palette.label": [`🎨`, `Palette`, `Палитра`],
+      "ui.field.palette.option.cool_gray.label": [`🌫️`, `Cool gray`, `Холодный серый`],
+      "ui.field.palette.option.dark_moody.label": [`🌙`, `Dark moody`, `Тёмное настроение`],
+      "ui.field.palette.option.earth.label": [`🪨`, `Earth`, `Земля`],
+      "ui.field.palette.option.monochrome.label": [`⬛`, `Monochrome`, `Монохром`],
+      "ui.field.palette.option.pastel_pop.label": [`🍬`, `Pastel accents`, `Пастель + акцент`],
+      "ui.field.palette.option.warm_neutral.label": [`🌅`, `Warm neutral`, `Тёплый нейтраль`],
+      "ui.field.palette.option.white_air.label": [`☁️`, `White airy`, `Белое облако`],
+      "ui.field.room.label": [`🚪`, `Room`, `Комната`],
+      "ui.field.room.option.bathroom.label": [`🛁`, `Bathroom`, `Ванная`],
+      "ui.field.room.option.bedroom.label": [`🛏️`, `Bedroom`, `Спальня`],
+      "ui.field.room.option.dining.label": [`🍽️`, `Dining`, `Столовая`],
+      "ui.field.room.option.hall.label": [`🚶`, `Hall`, `Прихожая`],
+      "ui.field.room.option.kids.label": [`🧸`, `Kids`, `Детская`],
+      "ui.field.room.option.kitchen.label": [`🍳`, `Kitchen`, `Кухня`],
+      "ui.field.room.option.living.label": [`🛋️`, `Living`, `Гостиная`],
+      "ui.field.room.option.office.label": [`💼`, `Office`, `Кабинет`],
+      "ui.field.stage.label": [`🪑`, `Fill`, `Наполнение`],
+      "ui.field.stage.option.full_staged.label": [`✨`, `Full staging`, `Полный антураж`],
+      "ui.field.stage.option.light_furnished.label": [`📦`, `Essentials`, `Минимум`],
+      "ui.field.stage.option.lived_in.label": [`🏠`, `Lived-in`, `Живой`],
+      "ui.field.stage.option.shell.label": [`🏗️`, `Shell`, `Коробка`],
+      "ui.field.style.label": [`🖌️`, `Style`, `Стиль`],
+      "ui.field.style.option.boho.label": [`🌿`, `Boho`, `Бохо`],
+      "ui.field.style.option.coastal.label": [`🐚`, `Coastal`, `Побережье`],
+      "ui.field.style.option.industrial.label": [`🏭`, `Industrial`, `Лофт`],
+      "ui.field.style.option.japandi.label": [`🎋`, `Japandi`, `Джапанди`],
+      "ui.field.style.option.loft.label": [`🏙️`, `Urban loft`, `Урбан`],
+      "ui.field.style.option.midcentury.label": [`🪑`, `Mid-century`, `Модерн`],
+      "ui.field.style.option.minimal.label": [`◻️`, `Minimal`, `Минимализм`],
+      "ui.field.style.option.modern_classic.label": [`🏛️`, `Modern classic`, `Неоклассика`],
+      "ui.field.style.option.scandi.label": [`🌲`, `Scandinavian`, `Сканди`],
+    }) as const,
+  ({ i18n }) =>
+    ({
+      description: i18n(`meta.description`),
       emoji: `🛋️`,
+      group: `visual`,
       prompt: `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; watermarks; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition. Reply with that string only—no other text.`,
-      title: `Interior`,
+      title: i18n(`meta.title`),
       uiPlan: {
         fields: [
           {
             default: `living`,
             id: `room`,
             kind: `tabs_single`,
-            label: `🚪 Room`,
+            label: i18n(`ui.field.room.label`),
             options: [
               {
-                label: `🛋️ Living`,
+                label: i18n(`ui.field.room.option.living.label`),
                 prompt: `Depict a living room; show seating zone and at least one full wall treatment clearly.`,
                 value: `living`,
               },
               {
-                label: `🍳 Kitchen`,
+                label: i18n(`ui.field.room.option.kitchen.label`),
                 prompt: `Depict a kitchen; show cabinetry run, countertop, backsplash, and hood or upper cabinets legibly.`,
                 value: `kitchen`,
               },
               {
-                label: `🛏️ Bedroom`,
+                label: i18n(`ui.field.room.option.bedroom.label`),
                 prompt: `Depict a bedroom; center the bed; include nightstands or wardrobe cues for scale.`,
                 value: `bedroom`,
               },
               {
-                label: `🛁 Bathroom`,
+                label: i18n(`ui.field.room.option.bathroom.label`),
                 prompt: `Depict a bathroom; show vanity, mirror zone, fixtures, and wall/floor tile readably; spa-clean.`,
                 value: `bathroom`,
               },
               {
-                label: `🧸 Kids`,
+                label: i18n(`ui.field.room.option.kids.label`),
                 prompt: `Depict a children's room; playful but tidy; safe layout; age-neutral styling.`,
                 value: `kids`,
               },
               {
-                label: `💼 Office`,
+                label: i18n(`ui.field.room.option.office.label`),
                 prompt: `Depict a home office; desk workspace plus storage wall or shelving visible.`,
                 value: `office`,
               },
               {
-                label: `🚶 Hall`,
+                label: i18n(`ui.field.room.option.hall.label`),
                 prompt: `Depict an entryway or corridor; emphasize depth; console, bench, or built-in storage optional.`,
                 value: `hall`,
               },
               {
-                label: `🍽️ Dining`,
+                label: i18n(`ui.field.room.option.dining.label`),
                 prompt: `Depict a dining zone; table and chairs as hero; pendant or linear light above table.`,
                 value: `dining`,
               },
@@ -63,50 +129,50 @@ export const Data: Meta = () =>
             default: `scandi`,
             id: `style`,
             kind: `tabs_single`,
-            label: `🖌️ Style`,
+            label: i18n(`ui.field.style.label`),
             options: [
               {
-                label: `🌲 Scandinavian`,
+                label: i18n(`ui.field.style.option.scandi.label`),
                 prompt: `Apply Scandinavian design: pale wood, clean lines, cozy textiles, minimal clutter.`,
                 value: `scandi`,
               },
               {
-                label: `◻️ Minimal`,
+                label: i18n(`ui.field.style.option.minimal.label`),
                 prompt: `Apply strict minimalism: few objects, hidden-storage feel, generous negative space.`,
                 value: `minimal`,
               },
               {
-                label: `🏭 Industrial`,
+                label: i18n(`ui.field.style.option.industrial.label`),
                 prompt: `Apply refined industrial loft: concrete or brick hints, black metal frames, factory pendants—polished not grimy.`,
                 value: `industrial`,
               },
               {
-                label: `🏛️ Modern classic`,
+                label: i18n(`ui.field.style.option.modern_classic.label`),
                 prompt: `Apply modern classic: subtle moldings, symmetry, neutral luxe fabrics, restrained metallic accents.`,
                 value: `modern_classic`,
               },
               {
-                label: `🌿 Boho`,
+                label: i18n(`ui.field.style.option.boho.label`),
                 prompt: `Apply curated boho: layered rugs and textiles, plants, warm patterns—tidy not chaotic.`,
                 value: `boho`,
               },
               {
-                label: `🎋 Japandi`,
+                label: i18n(`ui.field.style.option.japandi.label`),
                 prompt: `Apply Japandi: light wood, low horizontals, calm textures, wabi-sabi restraint.`,
                 value: `japandi`,
               },
               {
-                label: `🪑 Mid-century`,
+                label: i18n(`ui.field.style.option.midcentury.label`),
                 prompt: `Apply mid-century modern: tapered legs, organic curves, walnut and muted accent hues—generic not branded.`,
                 value: `midcentury`,
               },
               {
-                label: `🐚 Coastal`,
+                label: i18n(`ui.field.style.option.coastal.label`),
                 prompt: `Apply relaxed coastal: airy whites, sand tones, natural fibers, soft blue-green hints.`,
                 value: `coastal`,
               },
               {
-                label: `🏙️ Urban loft`,
+                label: i18n(`ui.field.style.option.loft.label`),
                 prompt: `Apply contemporary loft: tall volume, large window wall implied, bold simple furniture silhouettes.`,
                 value: `loft`,
               },
@@ -116,40 +182,40 @@ export const Data: Meta = () =>
             default: `warm_neutral`,
             id: `palette`,
             kind: `tabs_single`,
-            label: `🎨 Palette`,
+            label: i18n(`ui.field.palette.label`),
             options: [
               {
-                label: `🌅 Warm neutral`,
+                label: i18n(`ui.field.palette.option.warm_neutral.label`),
                 prompt: `Use warm neutrals: cream, beige, camel, greige, warm white walls.`,
                 value: `warm_neutral`,
               },
               {
-                label: `🌫️ Cool gray`,
+                label: i18n(`ui.field.palette.option.cool_gray.label`),
                 prompt: `Use cool grays with crisp white; allow brushed nickel or chrome accents sparingly.`,
                 value: `cool_gray`,
               },
               {
-                label: `🪨 Earth`,
+                label: i18n(`ui.field.palette.option.earth.label`),
                 prompt: `Use earth tones: terracotta, clay, olive, walnut, stone, sand.`,
                 value: `earth`,
               },
               {
-                label: `⬛ Monochrome`,
+                label: i18n(`ui.field.palette.option.monochrome.label`),
                 prompt: `Use black, white, and gray only; strong planar contrast.`,
                 value: `monochrome`,
               },
               {
-                label: `🍬 Pastel accents`,
+                label: i18n(`ui.field.palette.option.pastel_pop.label`),
                 prompt: `Use soft pastel base walls with one or two controlled accent colors in furniture or decor.`,
                 value: `pastel_pop`,
               },
               {
-                label: `🌙 Dark moody`,
+                label: i18n(`ui.field.palette.option.dark_moody.label`),
                 prompt: `Use dark walls or cabinetry with warm wood and amber light for depth—still readable detail.`,
                 value: `dark_moody`,
               },
               {
-                label: `☁️ White airy`,
+                label: i18n(`ui.field.palette.option.white_air.label`),
                 prompt: `Use predominantly white and pale tones; bright gallery-like airiness.`,
                 value: `white_air`,
               },
@@ -159,25 +225,25 @@ export const Data: Meta = () =>
             default: `full_staged`,
             id: `stage`,
             kind: `tabs_single`,
-            label: `🪑 Fill`,
+            label: i18n(`ui.field.stage.label`),
             options: [
               {
-                label: `🏗️ Shell`,
+                label: i18n(`ui.field.stage.option.shell.label`),
                 prompt: `Show near-empty architectural shell: finished surfaces, minimal or no furniture—planning clarity.`,
                 value: `shell`,
               },
               {
-                label: `📦 Essentials`,
+                label: i18n(`ui.field.stage.option.light_furnished.label`),
                 prompt: `Show only essential pieces defining function; no heavy styling props.`,
                 value: `light_furnished`,
               },
               {
-                label: `✨ Full staging`,
+                label: i18n(`ui.field.stage.option.full_staged.label`),
                 prompt: `Show magazine-complete staging: full furniture set, layered decor, styled surfaces.`,
                 value: `full_staged`,
               },
               {
-                label: `🏠 Lived-in`,
+                label: i18n(`ui.field.stage.option.lived_in.label`),
                 prompt: `Show warm lived-in cues: throws, books, slight asymmetry—still photogenic and tidy.`,
                 value: `lived_in`,
               },
@@ -187,31 +253,35 @@ export const Data: Meta = () =>
             default: `wood_light`,
             id: `floor`,
             kind: `tabs_single`,
-            label: `⬛ Floor`,
+            label: i18n(`ui.field.floor.label`),
             options: [
               {
-                label: `🪵 Light wood`,
+                label: i18n(`ui.field.floor.option.wood_light.label`),
                 prompt: `Specify wide-plank light oak or maple flooring with subtle grain.`,
                 value: `wood_light`,
               },
-              { label: `🪵 Dark wood`, prompt: `Specify dark-stained wide-plank wood flooring.`, value: `wood_dark` },
               {
-                label: `◻️ Light tile`,
+                label: i18n(`ui.field.floor.option.wood_dark.label`),
+                prompt: `Specify dark-stained wide-plank wood flooring.`,
+                value: `wood_dark`,
+              },
+              {
+                label: i18n(`ui.field.floor.option.tile_light.label`),
                 prompt: `Specify large-format light stone-look or porcelain tiles; minimal grout contrast.`,
                 value: `tile_light`,
               },
               {
-                label: `◼️ Dark tile`,
+                label: i18n(`ui.field.floor.option.tile_dark.label`),
                 prompt: `Specify large-format charcoal or slate-look tiles; matte or satin.`,
                 value: `tile_dark`,
               },
               {
-                label: `🧱 Concrete`,
+                label: i18n(`ui.field.floor.option.concrete.label`),
                 prompt: `Specify polished concrete or microcement floor; subtle variation, no harsh stains.`,
                 value: `concrete`,
               },
               {
-                label: `🟫 Carpet / rug`,
+                label: i18n(`ui.field.floor.option.carpet.label`),
                 prompt: `Specify neutral low-pile wall-to-wall or large area rug; describe texture and edge clean.`,
                 value: `carpet`,
               },
@@ -221,30 +291,30 @@ export const Data: Meta = () =>
             default: `daylight`,
             id: `light`,
             kind: `tabs_single`,
-            label: `💡 Light`,
+            label: i18n(`ui.field.light.label`),
             options: [
               {
-                label: `☀️ Daylight`,
+                label: i18n(`ui.field.light.option.daylight.label`),
                 prompt: `Light with bright natural daylight through windows; soft realistic shadows; neutral white balance.`,
                 value: `daylight`,
               },
               {
-                label: `🌇 Golden hour`,
+                label: i18n(`ui.field.light.option.golden.label`),
                 prompt: `Light with warm low sun; golden beams and gentle bounce on walls.`,
                 value: `golden`,
               },
               {
-                label: `☁️ Soft overcast`,
+                label: i18n(`ui.field.light.option.soft_overcast.label`),
                 prompt: `Light with soft even overcast daylight; low contrast; calm exposure.`,
                 value: `soft_overcast`,
               },
               {
-                label: `🕯️ Evening cozy`,
+                label: i18n(`ui.field.light.option.evening_cozy.label`),
                 prompt: `Light with warm ambient lamps, floor uplight, and subtle indirect strip—pools of cozy light.`,
                 value: `evening_cozy`,
               },
               {
-                label: `🎭 Accent drama`,
+                label: i18n(`ui.field.light.option.accent_dramatic.label`),
                 prompt: `Use directional accent spots on key pieces or art; higher contrast sculptural lighting.`,
                 value: `accent_dramatic`,
               },
@@ -254,25 +324,25 @@ export const Data: Meta = () =>
             default: `wide`,
             id: `camera`,
             kind: `tabs_single`,
-            label: `📷 Camera`,
+            label: i18n(`ui.field.camera.label`),
             options: [
               {
-                label: `🏠 Wide shot`,
+                label: i18n(`ui.field.camera.option.wide.label`),
                 prompt: `Frame wide-angle one-point perspective showing most of the room volume and ceiling line.`,
                 value: `wide`,
               },
               {
-                label: `📐 Corner`,
+                label: i18n(`ui.field.camera.option.corner.label`),
                 prompt: `Frame from a corner looking diagonally across—maximize depth and both wall planes.`,
                 value: `corner`,
               },
               {
-                label: `⬜ Straight-on`,
+                label: i18n(`ui.field.camera.option.straight_on.label`),
                 prompt: `Frame straight-on to a hero wall or symmetrical composition—architectural elevation feel.`,
                 value: `straight_on`,
               },
               {
-                label: `🎯 Feature wall`,
+                label: i18n(`ui.field.camera.option.focal_wall.label`),
                 prompt: `Frame tighter on one feature wall with furniture in foreground—material and styling readable.`,
                 value: `focal_wall`,
               },
@@ -281,299 +351,13 @@ export const Data: Meta = () =>
           {
             id: `extra`,
             kind: `text`,
-            label: `📝 Optional detail`,
+            label: i18n(`ui.field.extra.label`),
             omitWhenEmpty: true,
-            placeholder: `e.g. emerald sofa, fluted panels, terrazzo…`,
+            placeholder: i18n(`ui.field.extra.placeholder`),
             prompt: `Optional furniture, material, or layout note (one short line):`,
           },
         ],
       },
-    },
-    group: `visual`,
-    ru: {
-      description: `Визуализация комнаты под ремонт — стиль, палитра, свет, наполнение`,
-      emoji: `🛋️`,
-      prompt: `Собери **один** промпт для генерации изображения. Каждый пункт ниже — жёсткое условие. Цель: **одна визуализация интерьера** для планирования ремонта — фотореализм или качественный интерьерный 3D-рендер. Исключить: планы этажей, чертежи, вид сверху, изометрические «разрезы домика», только фасад снаружи. Собери тип комнаты, стиль, **палитру строго по подписи выбранной вкладки**, степень заполнения мебелью, материал пола, свет, кадр. Строку уточнения вплети в предметы или планировку — не противоречь вкладкам. Запрет: люди и животные, если уточнение явно не просит; водяные знаки; читаемые бренды на предметах; постеры со словами — только абстрактное искусство или фактура. Требуй читаемые материалы, правдоподобный масштаб, чистую композицию. Верни только эту строку — без другого текста.`,
-      title: `Интерьер`,
-      uiPlan: {
-        fields: [
-          {
-            default: `living`,
-            id: `room`,
-            kind: `tabs_single`,
-            label: `🚪 Комната`,
-            options: [
-              {
-                label: `🛋️ Гостиная`,
-                prompt: `Покажи гостиную; зона дивана и минимум одна целая стена с отделкой читаемы.`,
-                value: `living`,
-              },
-              {
-                label: `🍳 Кухня`,
-                prompt: `Покажи кухню; ряд шкафов, столешница, фартук, вытяжка или верхние шкафы — всё узнаваемо.`,
-                value: `kitchen`,
-              },
-              {
-                label: `🛏️ Спальня`,
-                prompt: `Покажи спальню; кровать в фокусе; тумбы или шкаф для масштаба.`,
-                value: `bedroom`,
-              },
-              {
-                label: `🛁 Ванная`,
-                prompt: `Покажи ванную; раковина, зеркало, сантехника, плитка на стене и полу читаемы; «спа»-чистота.`,
-                value: `bathroom`,
-              },
-              {
-                label: `🧸 Детская`,
-                prompt: `Покажи детскую; игриво, но аккуратно; безопасная планировка; возраст нейтрален.`,
-                value: `kids`,
-              },
-              {
-                label: `💼 Кабинет`,
-                prompt: `Покажи домашний офис; рабочий стол и стена хранения или полки в кадре.`,
-                value: `office`,
-              },
-              {
-                label: `🚶 Прихожая`,
-                prompt: `Покажи прихожую или коридор; глубина; консоль, лавка или встроенное хранение по смыслу.`,
-                value: `hall`,
-              },
-              {
-                label: `🍽️ Столовая`,
-                prompt: `Покажи столовую зону; стол и стулья — герой; светильник над столом.`,
-                value: `dining`,
-              },
-            ],
-          },
-          {
-            default: `scandi`,
-            id: `style`,
-            kind: `tabs_single`,
-            label: `🖌️ Стиль`,
-            options: [
-              {
-                label: `🌲 Сканди`,
-                prompt: `Стиль скандинавский: светлое дерево, простые линии, уютный текстиль, мало визуального шума.`,
-                value: `scandi`,
-              },
-              {
-                label: `◻️ Минимализм`,
-                prompt: `Строгий минимализм: мало предметов, ощущение скрытого хранения, много воздуха.`,
-                value: `minimal`,
-              },
-              {
-                label: `🏭 Лофт`,
-                prompt: `Утончённый индустриальный лофт: бетон или кирпич намёк, чёрный металл, фабричные светильники — чисто, не грязно.`,
-                value: `industrial`,
-              },
-              {
-                label: `🏛️ Неоклассика`,
-                prompt: `Современная классика: лёгкий молдинг, симметрия, нейтральные дорогие ткани, сдержанный металл.`,
-                value: `modern_classic`,
-              },
-              {
-                label: `🌿 Бохо`,
-                prompt: `Аккуратное бохо: слои ковров и тканей, растения, тёплый орнамент — порядок, не хаос.`,
-                value: `boho`,
-              },
-              {
-                label: `🎋 Джапанди`,
-                prompt: `Джапанди: светлое дерево, низкие горизонтали, спокойные фактуры, сдержанность ваби-саби.`,
-                value: `japandi`,
-              },
-              {
-                label: `🪑 Модерн`,
-                prompt: `Модерн mid-century: сужающиеся ножки, мягкие изгибы, орех и приглушённые акценты — обобщённо, без брендов.`,
-                value: `midcentury`,
-              },
-              {
-                label: `🐚 Побережье`,
-                prompt: `Побережье: воздушные белые, песочные тона, натуральные волокна, лёгкий сине-зелёный акцент.`,
-                value: `coastal`,
-              },
-              {
-                label: `🏙️ Урбан`,
-                prompt: `Современный урбан-лофт: высокий объём, крупное окно в подразумеваемой стене, смелые простые формы мебели.`,
-                value: `loft`,
-              },
-            ],
-          },
-          {
-            default: `warm_neutral`,
-            id: `palette`,
-            kind: `tabs_single`,
-            label: `🎨 Палитра`,
-            options: [
-              {
-                label: `🌅 Тёплый нейтраль`,
-                prompt: `Тёплые нейтрали: крем, беж, верблюд, грейдж, тёплый белый на стенах.`,
-                value: `warm_neutral`,
-              },
-              {
-                label: `🌫️ Холодный серый`,
-                prompt: `Холодные серые с чистым белым; хром или сатин никель точечно.`,
-                value: `cool_gray`,
-              },
-              {
-                label: `🪨 Земля`,
-                prompt: `Земляная палитра: терракота, глина, олива, орех, камень, песок.`,
-                value: `earth`,
-              },
-              {
-                label: `⬛ Монохром`,
-                prompt: `Только чёрный, белый и серый; сильный контраст плоскостей.`,
-                value: `monochrome`,
-              },
-              {
-                label: `🍬 Пастель + акцент`,
-                prompt: `Светлая пастельная база и один–два сдержанных акцентных цвета в мебели или декоре.`,
-                value: `pastel_pop`,
-              },
-              {
-                label: `🌙 Тёмное настроение`,
-                prompt: `Тёмные стены или фасады кухни, тёплое дерево и янтарный свет — детали читаемы.`,
-                value: `dark_moody`,
-              },
-              {
-                label: `☁️ Белое облако`,
-                prompt: `Преобладают белый и очень светлые тона; яркая «галерейная» воздушность.`,
-                value: `white_air`,
-              },
-            ],
-          },
-          {
-            default: `full_staged`,
-            id: `stage`,
-            kind: `tabs_single`,
-            label: `🪑 Наполнение`,
-            options: [
-              {
-                label: `🏗️ Коробка`,
-                prompt: `Почти пустое архитектурное пространство: отделка есть, мебели нет или минимум — для планирования.`,
-                value: `shell`,
-              },
-              {
-                label: `📦 Минимум`,
-                prompt: `Только необходимая мебель по функции; без декоративного перегруза.`,
-                value: `light_furnished`,
-              },
-              {
-                label: `✨ Полный антураж`,
-                prompt: `Журнальная постановка: полный комплект мебели, декор, стилизованные поверхности.`,
-                value: `full_staged`,
-              },
-              {
-                label: `🏠 Живой`,
-                prompt: `Тёплые «живые» детали: пледы, книги, лёгкая асимметрия — всё ещё опрятно и фотогенично.`,
-                value: `lived_in`,
-              },
-            ],
-          },
-          {
-            default: `wood_light`,
-            id: `floor`,
-            kind: `tabs_single`,
-            label: `⬛ Пол`,
-            options: [
-              {
-                label: `🪵 Светлое дерево`,
-                prompt: `Широкая доска светлого дуба или клёна; умеренный рисунок волокна.`,
-                value: `wood_light`,
-              },
-              { label: `🪵 Тёмное дерево`, prompt: `Тёмный тониров широкой доски.`, value: `wood_dark` },
-              {
-                label: `◻️ Светлая плитка`,
-                prompt: `Крупный формат светлого керамогранита или камня; шов едва заметен.`,
-                value: `tile_light`,
-              },
-              {
-                label: `◼️ Тёмная плитка`,
-                prompt: `Крупный формат графитовой или сланцевой плитки; матовый или сатин.`,
-                value: `tile_dark`,
-              },
-              {
-                label: `🧱 Бетон`,
-                prompt: `Полированный бетон или микроцемент; лёгкая вариация, без пятен.`,
-                value: `concrete`,
-              },
-              {
-                label: `🟫 Ковёр`,
-                prompt: `Нейтральный низкий ворс по всей комнате или крупный ковёр; опиши фактуру и ровные края.`,
-                value: `carpet`,
-              },
-            ],
-          },
-          {
-            default: `daylight`,
-            id: `light`,
-            kind: `tabs_single`,
-            label: `💡 Свет`,
-            options: [
-              {
-                label: `☀️ День`,
-                prompt: `Яркий дневной свет из окон; мягкие реалистичные тени; нейтральный баланс белого.`,
-                value: `daylight`,
-              },
-              {
-                label: `🌇 Золотой час`,
-                prompt: `Низкое тёплое солнце; золотые лучи и мягкий отскок на стенах.`,
-                value: `golden`,
-              },
-              {
-                label: `☁️ Пасмурно`,
-                prompt: `Ровный рассеянный дневной свет; низкий контраст; спокойная экспозиция.`,
-                value: `soft_overcast`,
-              },
-              {
-                label: `🕯️ Вечер`,
-                prompt: `Тёплые торшеры и настольные, лёгкий индирект — уютные пятна света.`,
-                value: `evening_cozy`,
-              },
-              {
-                label: `🎭 Акценты`,
-                prompt: `Направленные акценты на мебель или арт; выше контраст, скульптурный свет.`,
-                value: `accent_dramatic`,
-              },
-            ],
-          },
-          {
-            default: `wide`,
-            id: `camera`,
-            kind: `tabs_single`,
-            label: `📷 Камера`,
-            options: [
-              {
-                label: `🏠 Широкий план`,
-                prompt: `Широкий угол, одна точка схода; виден объём комнаты и линия потолка.`,
-                value: `wide`,
-              },
-              {
-                label: `📐 Из угла`,
-                prompt: `Кадр из угла по диагонали — максимум глубины и двух стен.`,
-                value: `corner`,
-              },
-              {
-                label: `⬜ Фронтально`,
-                prompt: `Строго на героическую стену или симметричную композицию — почти фасад интерьера.`,
-                value: `straight_on`,
-              },
-              {
-                label: `🎯 Акцентная стена`,
-                prompt: `Крупнее акцентная стена, мебель на переднем плане — материал и стиль читаемы.`,
-                value: `focal_wall`,
-              },
-            ],
-          },
-          {
-            id: `extra`,
-            kind: `text`,
-            label: `📝 Уточнение`,
-            omitWhenEmpty: true,
-            placeholder: `Напр. диван изумрудный, рейки на стене, терраццо…`,
-            prompt: `Уточнение: мебель, материал или планировка (одна короткая строка):`,
-          },
-        ],
-      },
-    },
-  }) as const;
+    }) as const,
+);
 /* jscpd:ignore-end */

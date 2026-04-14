@@ -14,5 +14,5 @@ wouter
 vectordrawable
 selfsigned
 ollama
-proxyapi
 topup
+lancedb

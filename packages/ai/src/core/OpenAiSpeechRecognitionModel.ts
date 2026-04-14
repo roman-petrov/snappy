@@ -1,25 +1,25 @@
+import type { Transcription } from "openai/resources/audio/transcriptions";
+
 import { type OpenAI, toFile } from "openai";
 
 import type { AiGenericSpeechRecognitionModel } from "../Types";
 
-export type OpenAiSpeechRecognitionModelDefinition = {
-  cost: (promptTok: number, completionTok: number, byteLength: number, audioSeconds: number) => number;
+export type OpenAiSpeechRecognitionModelConfig = {
+  cost: (usage: OpenAiSpeechRecognitionUsage | undefined) => number;
   name: string;
 };
 
+export type OpenAiSpeechRecognitionUsage = Transcription[`usage`];
+
 export const OpenAiSpeechRecognitionModel =
-  ({ cost, name }: OpenAiSpeechRecognitionModelDefinition) =>
+  ({ cost, name }: OpenAiSpeechRecognitionModelConfig) =>
   (client: OpenAI): AiGenericSpeechRecognitionModel => {
     const process: AiGenericSpeechRecognitionModel[`process`] = async input => {
-      const file = await toFile(Buffer.from(input.bytes), input.fileName, { type: input.mimeType });
+      const file = await toFile(new Uint8Array(input.bytes), input.fileName, { type: input.mimeType });
       const transcription = await client.audio.transcriptions.create({ file, model: name, response_format: `json` });
       const { text, usage } = transcription;
-      const promptTok = usage?.type === `tokens` ? usage.input_tokens : 0;
-      const completionTok = usage?.type === `tokens` ? usage.output_tokens : 0;
-      const audioSeconds = usage?.type === `duration` ? usage.seconds : 0;
-      const costValue = cost(promptTok, completionTok, input.bytes.length, audioSeconds);
 
-      return { cost: costValue, text };
+      return { cost: cost(usage), text };
     };
 
     return { name, process, type: `speech-recognition` };

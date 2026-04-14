@@ -6,13 +6,15 @@
   "main": "./src/main.tsx",
   "dependencies": {
     "@snappy/agents": "workspace:*",
+    "@snappy/ai": "workspace:*",
+    "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/domain": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/server-api": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "better-auth": "^1.6.9",
     "react": "^19.2.5",
     "react-router-dom": "^7.14.1"
   },

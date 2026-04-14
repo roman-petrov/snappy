@@ -1,36 +1,52 @@
+import type { AgentLocale } from "@snappy/agent";
+
+import type { StaticFormPlan } from "../core";
 import type { AgentGroupId } from "../Types";
 
-export type AgentMetaPayload = { en: MetaLocalePack; group: AgentGroupId; ru: MetaLocalePack };
+export type Meta = (parameters: MetaParameters, locale: AgentLocale) => MetaPayload;
 
-export type Meta = (parameters: MetaParameters) => AgentMetaPayload;
+export type MetaCreateInput<TLocalization extends MetaLocalizationShape<TLocalization>> = {
+  i18n: (key: keyof TLocalization) => string;
+  parameters: MetaParameters;
+};
 
-export type MetaLocalePack = {
+export type MetaI18n<TLocalization extends MetaLocalizationShape<TLocalization>> = (key: keyof TLocalization) => string;
+
+export type MetaLocaleTuple = readonly [emoji: string, en: string, ru: string];
+
+export type MetaLocalization = Record<string, MetaLocaleTuple>;
+
+export type MetaLocalizationFactory<TLocalization extends MetaLocalizationShape<TLocalization>> = (
+  parameters: MetaParameters,
+) => TLocalization;
+
+export type MetaParameters = { maxImagePromptLength?: number; maxSpeechFileMegaBytes?: number };
+
+export type MetaPayload = {
   description: string;
   emoji: string;
+  group: AgentGroupId;
   prompt: string;
   title: string;
   uiPlan: StaticFormPlan;
 };
 
-export type MetaParameters = { maxImagePromptLength?: number; maxSpeechFileMegaBytes?: number };
+type MetaLocalizationShape<TLocalization> = { readonly [K in keyof TLocalization]: MetaLocaleTuple };
 
-export type StaticFormAnswers = Record<string, boolean | File | number | string | string[] | undefined>;
+export const Meta =
+  <TLocalization extends MetaLocalizationShape<TLocalization>>(
+    localizationFactory: MetaLocalizationFactory<TLocalization>,
+    create: (input: MetaCreateInput<TLocalization>) => MetaPayload,
+  ): Meta =>
+  (parameters, locale) => {
+    const localization = localizationFactory(parameters);
 
-export type StaticFormField =
-  | { accept?: string; hint?: string; id: string; kind: `file`; label: string; pickLabel: string }
-  | { default?: boolean; id: string; kind: `toggle`; label: string; promptOff?: string; promptOn?: string }
-  | { default?: string; id: string; kind: `tabs_single`; label: string; options: StaticTabOption[] }
-  | {
-      default?: string;
-      id: string;
-      kind: `text`;
-      label: string;
-      omitWhenEmpty?: boolean;
-      placeholder?: string;
-      prompt?: string;
-    }
-  | { default?: string[]; id: string; kind: `tabs_multi`; label: string; options: StaticTabOption[] };
+    const i18n: MetaI18n<TLocalization> = key => {
+      const [emoji, en, ru] = localization[key];
+      const text = locale === `ru` ? ru : en;
 
-export type StaticFormPlan = { fields: readonly StaticFormField[] };
+      return emoji === `` ? text : `${emoji} ${text}`;
+    };
 
-export type StaticTabOption = { label: string; prompt?: string; value: string };
+    return { ...create({ i18n, parameters }), localization };
+  };

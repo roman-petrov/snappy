@@ -5,8 +5,11 @@
     "packages/*"
   ],
   "dependencies": {
+    "@snappy/coder-cli": "workspace:*",
     "@snappy/config": "workspace:*",
+    "@snappy/db": "workspace:*",
     "@snappy/do": "workspace:*",
+    "@snappy/server-app": "workspace:*",
     "prisma": "^7.7.0"
   },
   "devDependencies": {

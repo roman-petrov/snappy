@@ -6,39 +6,33 @@ import { Ai } from "@snappy/ai";
 import { Db } from "@snappy/db";
 import { Payment } from "@snappy/payment";
 
-import { Auth } from "./Auth";
+import { AiTunnelProxy } from "./AiTunnelProxy";
 import { Balance } from "./Balance";
-import { BalanceInfo } from "./BalanceInfo";
 import { BalancePayment } from "./BalancePayment";
-import { LlmProxy } from "./LlmProxy";
+import { BetterAuth } from "./BetterAuth";
 import { PaymentLog } from "./PaymentLog";
 import { UserSettings } from "./UserSettings";
 
-export const ServerApp = ({
+export const ServerApp = async ({
+  aiTunnelKey,
   balanceMinRub,
   balancePaymentMaxRub,
   balancePaymentMinRub,
   dbUrl,
-  jwtSecret,
-  llmDebitPriceMultiplier,
-  proxyApiKey,
   yooKassaSecretKey,
   yooKassaShopId,
 }: Config) => {
   const db = Db(dbUrl);
+  const betterAuth = BetterAuth({ prisma: db.prisma });
   const payment = Payment({ credentials: { secretKey: yooKassaSecretKey, shopId: yooKassaShopId }, type: `yoo-kassa` });
-  const auth = Auth({ jwtSecret, user: db.user });
   const paymentLog = PaymentLog(db.paymentLog);
-  const balance = Balance({ balance: db.balance, balanceMinRub });
+  const balance = Balance({ balanceMinRub, user: db.user });
   const balancePayment = BalancePayment({ balance, balancePaymentMaxRub, balancePaymentMinRub, payment, paymentLog });
-  const balanceInfo = BalanceInfo({ balance });
-  const ai = Ai(proxyApiKey, llmDebitPriceMultiplier);
-  const llm = LlmProxy({ ai, balance });
-  const userLlmSettings = UserSettings({ ai, userSettings: db.userSettings });
+  const ai = await Ai({ aiTunnelKey, locale: `en` });
+  const aiTunnelProxy = AiTunnelProxy({ aiTunnelKey, balance });
+  const userLlmSettings = UserSettings({ ai, user: db.user });
 
-  return { auth, balance: balanceInfo, balancePayment, llm, userLlmSettings };
+  return { aiTunnelProxy, balance, balancePayment, betterAuth, db, userLlmSettings };
 };
 
-export type ServerApp = ReturnType<typeof ServerApp>;
-
-export type ServerAppApi = ReturnType<typeof ServerApp>;
+export type ServerApp = Awaited<ReturnType<typeof ServerApp>>;

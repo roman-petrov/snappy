@@ -1,51 +1,63 @@
-import type { AgentGroupId } from "@snappy/agents";
+import { Button } from "@snappy/ui";
 
 import type { useDashboardState } from "./Dashboard.state";
 
 import { Page } from "../../components";
 import { t } from "../../core";
-import { PresetCard } from "./components";
+import { ChatCatalogOverlay, ChatFeedView } from "./components";
 import styles from "./Dashboard.module.scss";
 
 export type DashboardViewProps = ReturnType<typeof useDashboardState>;
 
-const groupTitleKey = (groupId: AgentGroupId): string => `dashboard.presets.groups.${groupId}`;
-
-export const DashboardView = ({ blockShell, byGroup, groupOrder, initLoading, onPick }: DashboardViewProps) =>
-  initLoading || blockShell ? undefined : (
-    <Page title={undefined}>
-      <div className={styles.startPage}>
-        <header className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <p className={styles.heroEyebrow}>Snappy</p>
-            <h2 className={styles.heroTitle}>{t(`dashboard.presets.heroTitle`)}</h2>
-            <p className={styles.heroLead}>{t(`dashboard.presets.heroLead`)}</p>
-          </div>
-          <span aria-hidden className={styles.heroEmoji}>
-            🪄
-          </span>
-        </header>
-
-        {groupOrder.map(groupId => {
-          const items = byGroup.get(groupId) ?? [];
-
-          return items.length === 0 ? undefined : (
-            <section className={styles.presetSection} key={groupId}>
-              <h3 className={styles.sectionTitle}>{t(groupTitleKey(groupId))}</h3>
-              <div className={styles.presetGrid}>
-                {items.map(agent => (
-                  <PresetCard
-                    description={agent.description}
-                    emoji={agent.emoji}
-                    key={agent.id}
-                    onClick={() => onPick(agent.id)}
-                    title={agent.title}
-                  />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+export const DashboardView = ({
+  activeSession,
+  agentRunning,
+  catalogOpen,
+  onCloseCatalog,
+  onOpenCatalog,
+  onPickAgent,
+  onRejectUi,
+  onRemoveSession,
+  onResolveUi,
+  onStop,
+  pendingUi,
+  presets,
+  regenerateArtifact,
+  regeneratingMessageIds,
+  sessions,
+}: DashboardViewProps) => (
+  <Page>
+    <div className={styles.root}>
+      {agentRunning ? undefined : (
+        <div className={styles.actionRow}>
+          <Button onClick={onOpenCatalog} text={t(`chat.openCatalog`)} />
+        </div>
+      )}
+      <div className={styles.chatLayer}>
+        <ChatFeedView
+          activeSession={activeSession}
+          onRejectUi={onRejectUi}
+          onRemoveSession={onRemoveSession}
+          onResolveUi={onResolveUi}
+          onStopSession={onStop}
+          pendingUi={pendingUi}
+          regenerateArtifact={regenerateArtifact}
+          regeneratingMessageIds={regeneratingMessageIds}
+          sessions={sessions}
+        />
       </div>
-    </Page>
-  );
+      {catalogOpen ? (
+        <div className={styles.overlayLayer}>
+          <div className={styles.overlayScroll}>
+            <ChatCatalogOverlay
+              byGroup={presets.byGroup}
+              groupOrder={presets.groupOrder}
+              onClose={onCloseCatalog}
+              onPick={onPickAgent}
+            />
+          </div>
+        </div>
+      ) : undefined}
+    </div>
+  </Page>
+);

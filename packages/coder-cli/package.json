@@ -1,0 +1,25 @@
+{
+  "name": "@snappy/coder-cli",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "coder": "./src/main.ts"
+  },
+  "exports": {
+    ".": "./src/main.ts"
+  },
+  "dependencies": {
+    "@snappy/ai": "workspace:*",
+    "@snappy/coder": "workspace:*",
+    "@snappy/coder-db": "workspace:*",
+    "@snappy/coder-store": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/node": "workspace:*",
+    "dotenv": "^17.4.2",
+    "globby": "^16.2.0"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.5"
+  }
+}

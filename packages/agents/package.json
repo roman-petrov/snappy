@@ -8,12 +8,14 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@snappy/agent": "workspace:*",
+    "@snappy/ai": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/domain": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "react": "^19.2.5"
+    "react": "^19.2.5",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/react": "^19.2.14",

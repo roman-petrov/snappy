@@ -1,8 +1,12 @@
 export * from "./Alert";
 
+export * from "./BusyShimmerOverlay";
+
 export * from "./Button";
 
 export * from "./Card";
+
+export * from "./FileSelect";
 
 export * from "./Header";
 
@@ -45,7 +49,5 @@ export * from "./Text";
 export * from "./TextArea";
 
 export * from "./TextInput";
-
-export * from "./TextOverlayEffect";
 
 export * from "./Title";

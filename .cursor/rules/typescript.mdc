@@ -163,12 +163,17 @@ export const Math = { add, subtract, multiply, divide };
 
 - Export as a **closure (factory)** that returns an API:
   `export const <ModuleName> = (deps?) => ({ method1, method2 })`.
+- Factory parameters must be passed as an **object**.
+- Declare and export a named config type directly before factory declaration: `export type <ModuleName>Config = { ... }`
+  and use it in the signature.
 - **Declare each function as a local `const` first**, then return the object. Don't inline arrow functions in the return
   literal — extract them above the `return`.
 - Export the API type: `export type <ModuleName> = ReturnType<typeof <ModuleName>>`.
 
 ```ts
-export const Timer = (delay: number) => {
+export type TimerConfig = { delay: number };
+
+export const Timer = ({ delay }: TimerConfig) => {
   let id: ReturnType<typeof setInterval> | undefined = undefined;
 
   const start = () => {

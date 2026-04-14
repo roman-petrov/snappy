@@ -20,22 +20,12 @@ export type UserSettingsModel = runtime.Types.Result.DefaultSelection<Prisma.$Us
 
 export type AggregateUserSettings = {
   _count: UserSettingsCountAggregateOutputType | null
-  _avg: UserSettingsAvgAggregateOutputType | null
-  _sum: UserSettingsSumAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
   _max: UserSettingsMaxAggregateOutputType | null
 }
 
-export type UserSettingsAvgAggregateOutputType = {
-  userId: number | null
-}
-
-export type UserSettingsSumAggregateOutputType = {
-  userId: number | null
-}
-
 export type UserSettingsMinAggregateOutputType = {
-  userId: number | null
+  userId: string | null
   llmChatModel: string | null
   llmImageModel: string | null
   llmImageQuality: string | null
@@ -43,7 +33,7 @@ export type UserSettingsMinAggregateOutputType = {
 }
 
 export type UserSettingsMaxAggregateOutputType = {
-  userId: number | null
+  userId: string | null
   llmChatModel: string | null
   llmImageModel: string | null
   llmImageQuality: string | null
@@ -59,14 +49,6 @@ export type UserSettingsCountAggregateOutputType = {
   _all: number
 }
 
-
-export type UserSettingsAvgAggregateInputType = {
-  userId?: true
-}
-
-export type UserSettingsSumAggregateInputType = {
-  userId?: true
-}
 
 export type UserSettingsMinAggregateInputType = {
   userId?: true
@@ -131,18 +113,6 @@ export type UserSettingsAggregateArgs<ExtArgs extends runtime.Types.Extensions.I
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: UserSettingsAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: UserSettingsSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserSettingsMinAggregateInputType
@@ -173,21 +143,17 @@ export type UserSettingsGroupByArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   _count?: UserSettingsCountAggregateInputType | true
-  _avg?: UserSettingsAvgAggregateInputType
-  _sum?: UserSettingsSumAggregateInputType
   _min?: UserSettingsMinAggregateInputType
   _max?: UserSettingsMaxAggregateInputType
 }
 
 export type UserSettingsGroupByOutputType = {
-  userId: number
+  userId: string
   llmChatModel: string | null
   llmImageModel: string | null
   llmImageQuality: string | null
   llmSpeechRecognitionModel: string | null
   _count: UserSettingsCountAggregateOutputType | null
-  _avg: UserSettingsAvgAggregateOutputType | null
-  _sum: UserSettingsSumAggregateOutputType | null
   _min: UserSettingsMinAggregateOutputType | null
   _max: UserSettingsMaxAggregateOutputType | null
 }
@@ -211,7 +177,7 @@ export type UserSettingsWhereInput = {
   AND?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
   OR?: Prisma.UserSettingsWhereInput[]
   NOT?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
-  userId?: Prisma.IntFilter<"UserSettings"> | number
+  userId?: Prisma.StringFilter<"UserSettings"> | string
   llmChatModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmImageModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmImageQuality?: Prisma.StringNullableFilter<"UserSettings"> | string | null
@@ -229,7 +195,7 @@ export type UserSettingsOrderByWithRelationInput = {
 }
 
 export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
-  userId?: number
+  userId?: string
   AND?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
   OR?: Prisma.UserSettingsWhereInput[]
   NOT?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
@@ -247,17 +213,15 @@ export type UserSettingsOrderByWithAggregationInput = {
   llmImageQuality?: Prisma.SortOrderInput | Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
-  _avg?: Prisma.UserSettingsAvgOrderByAggregateInput
   _max?: Prisma.UserSettingsMaxOrderByAggregateInput
   _min?: Prisma.UserSettingsMinOrderByAggregateInput
-  _sum?: Prisma.UserSettingsSumOrderByAggregateInput
 }
 
 export type UserSettingsScalarWhereWithAggregatesInput = {
   AND?: Prisma.UserSettingsScalarWhereWithAggregatesInput | Prisma.UserSettingsScalarWhereWithAggregatesInput[]
   OR?: Prisma.UserSettingsScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserSettingsScalarWhereWithAggregatesInput | Prisma.UserSettingsScalarWhereWithAggregatesInput[]
-  userId?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
+  userId?: Prisma.StringWithAggregatesFilter<"UserSettings"> | string
   llmChatModel?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
   llmImageModel?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
   llmImageQuality?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
@@ -273,7 +237,7 @@ export type UserSettingsCreateInput = {
 }
 
 export type UserSettingsUncheckedCreateInput = {
-  userId: number
+  userId: string
   llmChatModel?: string | null
   llmImageModel?: string | null
   llmImageQuality?: string | null
@@ -289,7 +253,7 @@ export type UserSettingsUpdateInput = {
 }
 
 export type UserSettingsUncheckedUpdateInput = {
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -297,7 +261,7 @@ export type UserSettingsUncheckedUpdateInput = {
 }
 
 export type UserSettingsCreateManyInput = {
-  userId: number
+  userId: string
   llmChatModel?: string | null
   llmImageModel?: string | null
   llmImageQuality?: string | null
@@ -312,7 +276,7 @@ export type UserSettingsUpdateManyMutationInput = {
 }
 
 export type UserSettingsUncheckedUpdateManyInput = {
-  userId?: Prisma.IntFieldUpdateOperationsInput | number
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -332,10 +296,6 @@ export type UserSettingsCountOrderByAggregateInput = {
   llmSpeechRecognitionModel?: Prisma.SortOrder
 }
 
-export type UserSettingsAvgOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
-}
-
 export type UserSettingsMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrder
@@ -350,10 +310,6 @@ export type UserSettingsMinOrderByAggregateInput = {
   llmImageModel?: Prisma.SortOrder
   llmImageQuality?: Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrder
-}
-
-export type UserSettingsSumOrderByAggregateInput = {
-  userId?: Prisma.SortOrder
 }
 
 export type UserSettingsCreateNestedOneWithoutUserInput = {
@@ -486,7 +442,7 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     user: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    userId: number
+    userId: string
     llmChatModel: string | null
     llmImageModel: string | null
     llmImageQuality: string | null
@@ -915,7 +871,7 @@ export interface Prisma__UserSettingsClient<T, Null = never, ExtArgs extends run
  * Fields of the UserSettings model
  */
 export interface UserSettingsFieldRefs {
-  readonly userId: Prisma.FieldRef<"UserSettings", 'Int'>
+  readonly userId: Prisma.FieldRef<"UserSettings", 'String'>
   readonly llmChatModel: Prisma.FieldRef<"UserSettings", 'String'>
   readonly llmImageModel: Prisma.FieldRef<"UserSettings", 'String'>
   readonly llmImageQuality: Prisma.FieldRef<"UserSettings", 'String'>

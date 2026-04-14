@@ -20,7 +20,7 @@ const portHttps = 443;
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
-const appContext = ServerApp(Config);
+const appContext = await ServerApp(Config);
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,

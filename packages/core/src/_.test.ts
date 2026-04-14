@@ -9,6 +9,7 @@ const {
   dec,
   entries,
   gb,
+  gen,
   hex,
   kb,
   keys,
@@ -115,6 +116,20 @@ describe(`gb`, () => {
 
   it(`maps 0.5 GiB to the same bytes as 512 MiB`, () => {
     expect(gb(0.5)).toBe(mb(512));
+  });
+});
+
+describe(`gen`, () => {
+  it(`creates sequence using index mapper`, () => {
+    expect(gen(4, index => index * 2)).toStrictEqual([0, 2, 4, 6]);
+  });
+
+  it(`returns empty array for zero count`, () => {
+    expect(gen(0, index => index)).toStrictEqual([]);
+  });
+
+  it(`returns empty array for negative count`, () => {
+    expect(gen(-3, index => index)).toStrictEqual([]);
   });
 });
 

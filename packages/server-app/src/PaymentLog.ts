@@ -10,7 +10,7 @@ const paymentOutcomeNote = (result: PaymentQueryResult) =>
 export const PaymentLog = (log: Db[`paymentLog`]) => {
   const isSucceededAlready = async (paymentId: string) => log.hasSucceededPayment(paymentId);
 
-  const logTopUpError = async (userId: number, code: PaymentErrorCode, externalMessage?: string) =>
+  const logTopUpError = async (userId: string, code: PaymentErrorCode, externalMessage?: string) =>
     log.create({
       currency: `RUB`,
       errorMessage: paymentFailureNote(code, externalMessage),
@@ -19,7 +19,7 @@ export const PaymentLog = (log: Db[`paymentLog`]) => {
       userId,
     });
 
-  const logTopUpPending = async (userId: number, paymentId: string, amount: number | string) =>
+  const logTopUpPending = async (userId: string, paymentId: string, amount: number | string) =>
     log.create({ amount, currency: `RUB`, status: `pending`, type: `topup`, userId, yooKassaPaymentId: paymentId });
 
   const logPaymentNonSucceeded = async (result: PaymentSnapshotSuccess) =>
@@ -33,7 +33,7 @@ export const PaymentLog = (log: Db[`paymentLog`]) => {
       yooKassaPaymentId: result.providerPaymentId,
     });
 
-  const logPaymentSucceeded = async (result: PaymentSnapshotSuccess, userId: number) =>
+  const logPaymentSucceeded = async (result: PaymentSnapshotSuccess, userId: string) =>
     log.create({
       amount: result.money?.value,
       currency: result.money?.currency,
@@ -50,7 +50,7 @@ export const PaymentLog = (log: Db[`paymentLog`]) => {
       paymentMethodId: result.ok ? (result.savedMethodId ?? undefined) : undefined,
       status: result.ok ? `canceled` : `error`,
       type: result.ok ? (result.metadataKind ?? `topup`) : `topup`,
-      userId: result.ok && result.userId !== undefined && result.userId > 0 ? result.userId : undefined,
+      userId: result.ok && result.userId !== undefined && result.userId !== `` ? result.userId : undefined,
       yooKassaPaymentId: paymentId,
     });
 

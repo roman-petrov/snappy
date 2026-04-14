@@ -1,29 +1,58 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import type { Meta } from "../../common/Meta";
+import { Meta } from "../../common/Meta";
 
-export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
-  ({
-    en: {
-      description: `Transcribe audio and get a tailored summary`,
+export const Data = Meta(
+  parameters =>
+    ({
+      "meta.description": [
+        ``,
+        `Transcribe audio and get a tailored summary`,
+        `Транскрипт аудио и резюме по вашим правилам`,
+      ],
+      "meta.title": [``, `Audio summary`, `Резюме аудио`],
+      "ui.field.addEmoji.label": [`😎`, `Emoji`, `Эмодзи`],
+      "ui.field.addFormatting.label": [`📝`, `Markup`, `Разметка`],
+      "ui.field.audio.hint": [
+        ``,
+        `Max ${parameters.maxSpeechFileMegaBytes} MB`,
+        `До ${parameters.maxSpeechFileMegaBytes} МБ`,
+      ],
+      "ui.field.audio.label": [`🎵`, `Audio file`, `Аудиофайл`],
+      "ui.field.audio.pickLabel": [``, `Choose file`, `Выбрать файл`],
+      "ui.field.context.label": [`📌`, `Context (optional)`, `Контекст (необязательно)`],
+      "ui.field.context.placeholder": [``, `Topic, audience, or goal…`, `Тема, аудитория или цель…`],
+      "ui.field.length.label": [`📏`, `Length`, `Длина`],
+      "ui.field.length.option.long.label": [``, `Long`, `Подробно`],
+      "ui.field.length.option.medium.label": [``, `Medium`, `Средне`],
+      "ui.field.length.option.short.label": [``, `Short`, `Кратко`],
+      "ui.field.outputLang.label": [`🌍`, `Output language`, `Язык итога`],
+      "ui.field.outputLang.option.en.label": [``, `English`, `English`],
+      "ui.field.outputLang.option.match.label": [``, `Match audio`, `Как в аудио`],
+      "ui.field.outputLang.option.ru.label": [``, `Russian`, `Русский`],
+    }) as const,
+  ({ i18n }) =>
+    ({
+      description: i18n(`meta.description`),
       emoji: `🎧`,
+      group: `audio`,
       prompt: `You receive an automatic speech-to-text transcript below. Write a summary that follows every bullet in the parameter list exactly. Output only the summary—no preamble, title, or questions.`,
-      title: `Audio summary`,
+      title: i18n(`meta.title`),
       uiPlan: {
         fields: [
           {
             accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
-            hint: `Max ${maxSpeechFileMegaBytes} MB`,
+            hint: i18n(`ui.field.audio.hint`),
             id: `audio`,
             kind: `file`,
-            label: `🎵 Audio file`,
-            pickLabel: `Choose file`,
+            label: i18n(`ui.field.audio.label`),
+            pickLabel: i18n(`ui.field.audio.pickLabel`),
           },
           {
             default: true,
             id: `addEmoji`,
             kind: `toggle`,
-            label: `😎 Emoji`,
+            label: i18n(`ui.field.addEmoji.label`),
             promptOff: `No emoji.`,
             promptOn: `Use emoji where they reinforce meaning; keep the text readable.`,
           },
@@ -31,7 +60,7 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             default: true,
             id: `addFormatting`,
             kind: `toggle`,
-            label: `📝 Markup`,
+            label: i18n(`ui.field.addFormatting.label`),
             promptOff: `Plain text only (no HTML).`,
             promptOn: `Use HTML for structure: <strong>/<b>, <em>/<i>, <ul>/<ol>/<li>; headings <h2>–<h6> only if they help scanning.`,
           },
@@ -39,99 +68,58 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             default: `medium`,
             id: `length`,
             kind: `tabs_single`,
-            label: `📏 Length`,
+            label: i18n(`ui.field.length.label`),
             options: [
-              { label: `Short`, prompt: `Keep the summary brief: only the essentials.`, value: `short` },
-              { label: `Medium`, prompt: `Balanced length: main points with light detail.`, value: `medium` },
-              { label: `Long`, prompt: `Detailed summary: cover nuances and examples when present.`, value: `long` },
+              {
+                label: i18n(`ui.field.length.option.short.label`),
+                prompt: `Keep the summary brief: only the essentials.`,
+                value: `short`,
+              },
+              {
+                label: i18n(`ui.field.length.option.medium.label`),
+                prompt: `Balanced length: main points with light detail.`,
+                value: `medium`,
+              },
+              {
+                label: i18n(`ui.field.length.option.long.label`),
+                prompt: `Detailed summary: cover nuances and examples when present.`,
+                value: `long`,
+              },
             ],
           },
           {
             default: `match`,
             id: `outputLang`,
             kind: `tabs_single`,
-            label: `🌍 Output language`,
+            label: i18n(`ui.field.outputLang.label`),
             options: [
-              { label: `Match audio`, prompt: `Write in the same language as the transcript.`, value: `match` },
-              { label: `English`, prompt: `Write the summary in English.`, value: `en` },
-              { label: `Russian`, prompt: `Write the summary in Russian.`, value: `ru` },
+              {
+                label: i18n(`ui.field.outputLang.option.match.label`),
+                prompt: `Write in the same language as the transcript.`,
+                value: `match`,
+              },
+              {
+                label: i18n(`ui.field.outputLang.option.en.label`),
+                prompt: `Write the summary in English.`,
+                value: `en`,
+              },
+              {
+                label: i18n(`ui.field.outputLang.option.ru.label`),
+                prompt: `Write the summary in Russian.`,
+                value: `ru`,
+              },
             ],
           },
           {
             id: `context`,
             kind: `text`,
-            label: `📌 Context (optional)`,
+            label: i18n(`ui.field.context.label`),
             omitWhenEmpty: true,
-            placeholder: `Topic, audience, or goal…`,
+            placeholder: i18n(`ui.field.context.placeholder`),
             prompt: `Context:`,
           },
         ],
       },
-    },
-    group: `audio`,
-    ru: {
-      description: `Транскрипт аудио и резюме по вашим правилам`,
-      emoji: `🎧`,
-      prompt: `Ниже автоматический текст расшифровки речи. Сделай резюме, строго выполняя каждый пункт параметров из списка. В ответе — только резюме: без вступления, заголовка «Резюме» и вопросов.`,
-      title: `Резюме аудио`,
-      uiPlan: {
-        fields: [
-          {
-            accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
-            hint: `До ${maxSpeechFileMegaBytes} МБ`,
-            id: `audio`,
-            kind: `file`,
-            label: `🎵 Аудиофайл`,
-            pickLabel: `Выбрать файл`,
-          },
-          {
-            default: true,
-            id: `addEmoji`,
-            kind: `toggle`,
-            label: `😎 Эмодзи`,
-            promptOff: `Без эмодзи.`,
-            promptOn: `Добавляй эмодзи, где усиливают смысл; сохраняй читаемость.`,
-          },
-          {
-            default: true,
-            id: `addFormatting`,
-            kind: `toggle`,
-            label: `📝 Разметка`,
-            promptOff: `Только обычный текст (без HTML).`,
-            promptOn: `HTML: <strong>/<b>, <em>/<i>, списки <ul>/<ol>/<li>; заголовки <h2>–<h6> только если помогают структуре.`,
-          },
-          {
-            default: `medium`,
-            id: `length`,
-            kind: `tabs_single`,
-            label: `📏 Длина`,
-            options: [
-              { label: `Кратко`, prompt: `Коротко: только суть.`, value: `short` },
-              { label: `Средне`, prompt: `Сбалансированно: главное и немного деталей.`, value: `medium` },
-              { label: `Подробно`, prompt: `Развёрнуто: нюансы и примеры из транскрипта, если есть.`, value: `long` },
-            ],
-          },
-          {
-            default: `match`,
-            id: `outputLang`,
-            kind: `tabs_single`,
-            label: `🌍 Язык итога`,
-            options: [
-              { label: `Как в аудио`, prompt: `Пиши на том же языке, что транскрипт.`, value: `match` },
-              { label: `English`, prompt: `Итог на английском.`, value: `en` },
-              { label: `Русский`, prompt: `Итог на русском.`, value: `ru` },
-            ],
-          },
-          {
-            id: `context`,
-            kind: `text`,
-            label: `📌 Контекст (необязательно)`,
-            omitWhenEmpty: true,
-            placeholder: `Тема, аудитория или цель…`,
-            prompt: `Контекст:`,
-          },
-        ],
-      },
-    },
-  }) as const;
+    }) as const,
+);
 /* jscpd:ignore-end */

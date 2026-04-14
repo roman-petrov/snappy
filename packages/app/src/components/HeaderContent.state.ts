@@ -1,7 +1,7 @@
 import { useStoreValue } from "@snappy/store";
 import { useGo } from "@snappy/ui";
 
-import { api } from "../core";
+import { Auth } from "../core";
 import { Routes } from "../Routes";
 import { $loggedIn } from "../Store";
 
@@ -11,7 +11,7 @@ export const useHeaderContentState = () => {
 
   const logoutOnClick = loggedIn
     ? async () => {
-        await api.logout();
+        await Auth.signOut();
         $loggedIn.set(false);
         void go(Routes.login, { replace: true });
       }

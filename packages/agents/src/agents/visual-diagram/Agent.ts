@@ -1,4 +1,4 @@
-import { SimpleStaticVisualAgent } from "../../templates/simple-static/SimpleStaticAgent";
+import { StaticVisualAgent } from "../../core";
 import { Data } from "./Meta";
 
-export const Agent = SimpleStaticVisualAgent(Data, {});
+export const Agent = StaticVisualAgent(Data, {});

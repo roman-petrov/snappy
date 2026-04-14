@@ -17,11 +17,9 @@ export const useSettingsState = () => {
   useAsyncEffect(async () => {
     const [bal, llm] = await Promise.all([api.balanceGet(), api.userLlmSettingsGet()]);
     setBalanceEnd(`${i.price(bal.balance)} ›`);
-    if (llm.status === `ok`) {
-      setLlmChatEnd(`${llm.llmChatModel} ›`);
-      setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality} ›`);
-      setLlmSpeechEnd(`${llm.llmSpeechRecognitionModel} ›`);
-    }
+    setLlmChatEnd(`${llm.llmChatModel} ›`);
+    setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality} ›`);
+    setLlmSpeechEnd(`${llm.llmSpeechRecognitionModel} ›`);
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 

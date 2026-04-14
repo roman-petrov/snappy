@@ -1,0 +1,17 @@
+{
+  "name": "@snappy/coder-store",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/agent": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.5"
+  }
+}

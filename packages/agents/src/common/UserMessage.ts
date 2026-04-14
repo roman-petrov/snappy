@@ -1,7 +1,7 @@
 import { _ } from "@snappy/core";
 
+import type { StaticFormField, StaticFormPlan, StaticTabOption } from "../core";
 import type { AgentLocale } from "../Types";
-import type { StaticFormField, StaticFormPlan, StaticTabOption } from "./Meta";
 
 export type UserMessageBuildInput = {
   answers: Record<string, unknown>;

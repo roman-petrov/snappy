@@ -1,19 +1,17 @@
 /* eslint-disable id-length */
-/* eslint-disable @typescript-eslint/naming-convention */
+
 /* eslint-disable functional/no-promise-reject */
-import type { AiImageSize } from "@snappy/domain";
 import type { OpenAI } from "openai";
+import type { ImagesResponse } from "openai/resources/images";
 
 import type { AiGenericImageModel } from "../Types";
 
-export type OpenAiImageModelDefinition = {
-  b64JsonResponse: boolean;
-  cost: (totalTokens: number, size: AiImageSize) => number;
-  name: string;
-};
+export type OpenAiImageModelConfig = { cost: (usage: OpenAiImageUsage | undefined) => number; name: string };
+
+export type OpenAiImageUsage = ImagesResponse[`usage`];
 
 export const OpenAiImageModel =
-  ({ b64JsonResponse, cost, name }: OpenAiImageModelDefinition) =>
+  ({ cost, name }: OpenAiImageModelConfig) =>
   (client: OpenAI): AiGenericImageModel => {
     const process: AiGenericImageModel[`process`] = async (prompt, { quality, size }) => {
       const raw = await client.images.generate({
@@ -22,7 +20,6 @@ export const OpenAiImageModel =
         prompt,
         ...(quality === undefined ? {} : { quality }),
         size,
-        ...(b64JsonResponse ? { response_format: `b64_json` as const } : {}),
       });
 
       const first = raw.data?.[0];
@@ -30,14 +27,9 @@ export const OpenAiImageModel =
         throw new Error(`openai_image_invalid`);
       }
 
-      const { usage } = raw as { usage?: { total_tokens?: number } };
-      const totalTokens = usage?.total_tokens ?? 0;
-      const costValue = cost(totalTokens, size);
+      const { usage } = raw;
+      const costValue = cost(usage);
       const { b64_json: b64, url } = first;
-
-      if (b64 !== undefined && b64.length > 0) {
-        return { bytes: new Uint8Array(Buffer.from(b64, `base64`)), cost: costValue };
-      }
 
       if (url !== undefined && url.length > 0) {
         const response = await fetch(url);
@@ -46,6 +38,9 @@ export const OpenAiImageModel =
         }
 
         return { bytes: new Uint8Array(await response.arrayBuffer()), cost: costValue };
+      }
+      if (b64 !== undefined && b64.length > 0) {
+        return { bytes: Uint8Array.fromBase64(b64), cost: costValue };
       }
 
       throw new Error(`openai_image_invalid`);

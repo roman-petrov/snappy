@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { api } from "../../core";
+import { Auth } from "../../core";
 import { useAsyncSubmit } from "../../hooks";
 
 export const useForgotPasswordState = () => {
@@ -10,7 +10,7 @@ export const useForgotPasswordState = () => {
 
   const submit = () => {
     void wrapSubmit(async () => {
-      const result = await api.forgotPassword(email.trim());
+      const result = await Auth.requestPasswordReset(email.trim());
       if (result.status !== `ok`) {
         setError({ key: `forgotPage.errors.${result.status}` });
 

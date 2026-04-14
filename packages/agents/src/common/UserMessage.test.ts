@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { StaticFormPlan } from "./Meta";
+import type { StaticFormPlan } from "../core";
 
 import { UserMessage, type UserMessageBuildInput } from "./UserMessage";
 

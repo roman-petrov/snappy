@@ -14,9 +14,7 @@ const hrefDeep = (node: Record<string, unknown> | string): Record<string, unknow
       );
 
 const segment = {
-  agent: `agent/:agentId`,
   balance: { low: `balance/low`, topUp: `balance/top-up` },
-  chat: `chat`,
   forgotPassword: `forgot-password`,
   login: `login`,
   register: `register`,
@@ -50,17 +48,11 @@ type FlatRoutePaths = Record<FlatRouteKey, string>;
 
 type HrefTree<T> = { readonly [K in keyof T]: T[K] extends string ? string : HrefTree<T[K]> };
 
-type RouterOnlyKey = `agent` | `chat` | `wildcard`;
+type RouterOnlyKey = `chat` | `wildcard`;
 
-type RoutesShape = AllNestedPaths &
-  FlatRoutePaths & {
-    readonly agent: (agentId: string) => string;
-    readonly home: `/`;
-    readonly segment: typeof segment;
-  };
+type RoutesShape = AllNestedPaths & FlatRoutePaths & { readonly home: `/`; readonly segment: typeof segment };
 
-const [agentRoot] = segment.agent.split(`/:`);
-const routerOnlyKey = (key: string): key is RouterOnlyKey => key === `agent` || key === `chat` || key === `wildcard`;
+const routerOnlyKey = (key: string): key is RouterOnlyKey => key === `chat` || key === `wildcard`;
 
 const branches = _.fromEntries(
   _.keys(segment).flatMap(key => {
@@ -84,12 +76,6 @@ const flatNav = _.fromEntries(
   }),
 );
 
-const routesBuilt = {
-  home: `/`,
-  segment,
-  ...branches,
-  ...flatNav,
-  agent: (agentId: string) => toHref(`${agentRoot}/${encodeURIComponent(agentId)}`),
-};
+const routesBuilt = { home: `/`, segment, ...branches, ...flatNav };
 
 export const Routes = routesBuilt as unknown as RoutesShape;

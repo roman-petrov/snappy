@@ -8,7 +8,7 @@ export type DbPaymentLogEntry = {
   paymentMethodId?: string;
   status: string;
   type: string;
-  userId?: number;
+  userId?: string;
   yooKassaPaymentId?: string;
 };
 

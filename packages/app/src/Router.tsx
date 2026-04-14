@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Layout } from "./Layout";
 import {
-  Chat,
   Dashboard,
   ForgotPassword,
   Login,
@@ -24,8 +23,6 @@ export const Router = (basename: string) =>
       {
         children: [
           { element: <Dashboard />, index: true },
-          { element: <Navigate replace to={Routes.home} />, path: Routes.segment.chat },
-          { element: <Chat />, path: Routes.segment.agent },
           { element: <BalanceLow />, path: Routes.segment.balance.low },
           { element: <TopUp />, path: Routes.segment.balance.topUp },
           { element: <Login />, path: Routes.segment.login },

@@ -1,4 +1,5 @@
 .analyze
+.snappy
 bun.lockb
 dist
 **/build
