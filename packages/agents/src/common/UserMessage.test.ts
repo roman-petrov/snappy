@@ -8,12 +8,7 @@ const { build } = UserMessage;
 
 describe(`build`, () => {
   it(`returns trimmed main prompt only when the plan has no fields`, () => {
-    const input: UserMessageBuildInput = {
-      answers: {},
-      locale: `en`,
-      mainPrompt: `  hello  `,
-      plan: { fields: [] },
-    };
+    const input: UserMessageBuildInput = { answers: {}, locale: `en`, mainPrompt: `  hello  `, plan: { fields: [] } };
 
     expect(build(input)).toBe(`hello`);
   });
@@ -77,10 +72,7 @@ describe(`build`, () => {
   });
 
   it(`omits text field when omitWhenEmpty and value is empty`, () => {
-    const plan: StaticFormPlan = {
-      fields: [{ id: `opt`, kind: `text`, label: `Opt`, omitWhenEmpty: true }],
-    };
-
+    const plan: StaticFormPlan = { fields: [{ id: `opt`, kind: `text`, label: `Opt`, omitWhenEmpty: true }] };
     const input: UserMessageBuildInput = { answers: { opt: `   ` }, locale: `en`, mainPrompt: `Only`, plan };
 
     expect(build(input)).toBe(`Only`);
