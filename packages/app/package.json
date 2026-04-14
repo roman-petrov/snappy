@@ -14,7 +14,7 @@
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
     "react": "^19.2.5",
-    "react-router-dom": "^7.14.0"
+    "react-router-dom": "^7.14.1"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
