@@ -21,7 +21,7 @@ type ProxyApiDallE3PerImageRub = { rubPerImage1024x1024: number; rubPerImage1024
 
 type ProxyApiGeminiFlashImagePrices = { approxRubPerImage1K: number; rubImageOutputPerMillionTokens: number };
 
-type ProxyApiGptImage15Prices = {
+type ProxyApiGptImageLowMediumPrices = {
   low: { rubPerImage1024x1024: number; rubPerImage1536x1024: number };
   medium: { rubPerImage1024x1024: number; rubPerImage1536x1024: number };
 };
@@ -37,7 +37,8 @@ type ProxyApiPriceListShape = {
     dall_e_2: ProxyApiDallE2PerImageRub;
     dall_e_3: ProxyApiDallE3PerImageRub;
     gemini_3_1_flash_image_preview: ProxyApiGeminiFlashImagePrices;
-    gpt_image_1_5: ProxyApiGptImage15Prices;
+    gpt_image_1_5: ProxyApiGptImageLowMediumPrices;
+    gpt_image_1_mini: ProxyApiGptImageLowMediumPrices;
   };
   speechRecognition: {
     gpt_4o_transcribe: { rubPerMinuteIncomingAudio: number };
@@ -59,6 +60,10 @@ export const ProxyApiPriceList = {
     gpt_image_1_5: {
       low: { rubPerImage1024x1024: 2.73, rubPerImage1536x1024: 3.95 },
       medium: { rubPerImage1024x1024: 11, rubPerImage1536x1024: 16 },
+    },
+    gpt_image_1_mini: {
+      low: { rubPerImage1024x1024: 0.67, rubPerImage1536x1024: 1.01 },
+      medium: { rubPerImage1024x1024: 2.69, rubPerImage1536x1024: 4.03 },
     },
   },
   speechRecognition: {

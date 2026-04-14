@@ -7,7 +7,7 @@ const calc = ProxyApiCostCalculator(1);
 const perMillion = 1_000_000;
 const imageTokenRubPerMillion = 400;
 const chatModelIds = [`gpt-5-mini`, `gpt-5.4-mini`, `gpt-5.4-nano`] as const;
-const imageModelIds = [`dall-e-3`, `gemini-3.1-flash-image-preview`, `gpt-image-1.5`] as const;
+const imageModelIds = [`dall-e-3`, `gemini-3.1-flash-image-preview`, `gpt-image-1.5`, `gpt-image-1-mini`] as const;
 const speechModelIds = [`whisper-1`, `gpt-4o-transcribe`] as const;
 
 describe(`proxyApiCostCalculator.chat`, () => {
@@ -112,6 +112,23 @@ describe(`proxyApiCostCalculator.image`, () => {
       const tokens = 333_333;
 
       expect(calc.image(`gpt-image-1.5`, { size: `1024x1024`, totalTokens: tokens })).toBe(
+        (tokens / perMillion) * imageTokenRubPerMillion,
+      );
+    });
+  });
+
+  describe(`gpt-image-1-mini`, () => {
+    it(`maps Snappy sizes to low/medium tiers (proxyapi.ru list)`, () => {
+      expect(calc.image(`gpt-image-1-mini`, { size: `256x256`, totalTokens: 0 })).toBe(0.67);
+      expect(calc.image(`gpt-image-1-mini`, { size: `512x512`, totalTokens: 0 })).toBe(1.01);
+      expect(calc.image(`gpt-image-1-mini`, { size: `1024x1024`, totalTokens: 0 })).toBe(2.69);
+      expect(calc.image(`gpt-image-1-mini`, { size: `1024x1792`, totalTokens: 0 })).toBe(4.03);
+    });
+
+    it(`uses the same token path as dall-e-3 when usage is reported (400 ₽/M, 0.1 ₽ floor)`, () => {
+      const tokens = 333_333;
+
+      expect(calc.image(`gpt-image-1-mini`, { size: `1024x1024`, totalTokens: tokens })).toBe(
         (tokens / perMillion) * imageTokenRubPerMillion,
       );
     });

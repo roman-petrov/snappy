@@ -5,7 +5,7 @@ import type { AiGenericModel, AiModelProvider } from "../Types";
 
 import { Urls } from "./core";
 import { Gpt_5_4_Mini, Gpt_5_4_Nano, Gpt_5_Mini } from "./models/chat";
-import { Dall_E_3, Gemini_3_1_FlashImagePreview, Gpt_Image_1_5 } from "./models/image";
+import { Dall_E_3, Gemini_3_1_FlashImagePreview, Gpt_Image_1_5, Gpt_Image_1_Mini } from "./models/image";
 import { Gpt_4_o_Transcribe, Whisper_1 } from "./models/speech-recognition";
 import { ProxyApiCostCalculator } from "./ProxyApiCostCalculator";
 
@@ -21,6 +21,7 @@ export const ProxyApi: AiModelProvider = (apiKey, priceMultiplier) => {
     Whisper_1(client, costCalculator),
     Dall_E_3(client, costCalculator),
     Gpt_Image_1_5(client, costCalculator),
+    Gpt_Image_1_Mini(client, costCalculator),
     Gemini_3_1_FlashImagePreview(apiKey, costCalculator),
   ].map((model: AiGenericModel) => ({ ...model, source: `proxy-api` as const }));
 };

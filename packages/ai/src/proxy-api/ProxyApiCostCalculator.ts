@@ -29,7 +29,12 @@ const speechApiModelToPricesKey = { [`gpt-4o-transcribe`]: `gpt_4o_transcribe`, 
 
 export type ProxyApiSpeechCostModelId = keyof typeof speechApiModelToPricesKey;
 
-export const proxyApiImageCostModelIds = [`dall-e-3`, `gemini-3.1-flash-image-preview`, `gpt-image-1.5`] as const;
+export const proxyApiImageCostModelIds = [
+  `dall-e-3`,
+  `gemini-3.1-flash-image-preview`,
+  `gpt-image-1.5`,
+  `gpt-image-1-mini`,
+] as const;
 
 export type ProxyApiImageCostModelId = (typeof proxyApiImageCostModelIds)[number];
 
@@ -68,8 +73,11 @@ const dallE3RubForSize = (size: AiImageSize) => {
   }
 };
 
-const gptImage15RubForSize = (size: AiImageSize) => {
-  const { low, medium } = ProxyApiPriceList.image.gpt_image_1_5;
+const gptImageLowMediumRubForSize = (
+  tiers: (typeof ProxyApiPriceList.image)[`gpt_image_1_5` | `gpt_image_1_mini`],
+  size: AiImageSize,
+) => {
+  const { low, medium } = tiers;
 
   switch (size) {
     case `256x256`: {
@@ -113,8 +121,15 @@ const image = (modelId: ProxyApiImageCostModelId, options: ProxyApiImageCostOpti
 
       return totalTokens > 0 ? (totalTokens / perMillion) * rubImageOutputPerMillionTokens : approxRubPerImage1K;
     }
+    case `gpt-image-1-mini`: {
+      return totalTokens > 0
+        ? imageRubFromReportedTokens(totalTokens)
+        : gptImageLowMediumRubForSize(ProxyApiPriceList.image.gpt_image_1_mini, size);
+    }
     case `gpt-image-1.5`: {
-      return totalTokens > 0 ? imageRubFromReportedTokens(totalTokens) : gptImage15RubForSize(size);
+      return totalTokens > 0
+        ? imageRubFromReportedTokens(totalTokens)
+        : gptImageLowMediumRubForSize(ProxyApiPriceList.image.gpt_image_1_5, size);
     }
     default: {
       const x: never = modelId;
