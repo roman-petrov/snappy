@@ -15,7 +15,7 @@ const llmDebitPriceMultiplier = 1.25;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
 const jwtSecret = env[`JWT_SECRET`] ?? ``;
-const proxyApiKey = env[`SNAPPY_PROXYAPI_KEY`] ?? ``;
+const proxyApiKey = env[`PROXY_API_KEY`] ?? ``;
 
 export const Config = {
   balanceMinRub,

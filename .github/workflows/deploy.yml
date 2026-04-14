@@ -87,6 +87,7 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          PROXY_API_KEY: ${{ secrets.PROXY_API_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
           SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
@@ -99,6 +100,7 @@ jobs:
             DB_PASSWORD="${DB_PASSWORD}" \
             DB_NAME="${DB_NAME}" \
             JWT_SECRET="${JWT_SECRET}" \
+            PROXY_API_KEY="${PROXY_API_KEY}" \
             YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
             YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \
             SSL_CERT_PEM="$(echo -n "$SSL_CERT_PEM" | base64 -w 0)" \
