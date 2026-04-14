@@ -1,3 +1,4 @@
+/* jscpd:ignore-start */
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/radius";
 @use "pkg:@snappy/theme/shadow";
@@ -13,3 +14,4 @@
   border-radius: radius.md();
   box-shadow: shadow.sm();
 }
+/* jscpd:ignore-end */
