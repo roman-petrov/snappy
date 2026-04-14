@@ -84,7 +84,11 @@ export const StaticFormView = ({ answers, disabled, pickFile, plan, setField, su
         })();
 
         return (
-          <StaticFormField key={field.id} label={field.label}>
+          <StaticFormField
+            alignControl={field.kind === `toggle` ? `end` : `stretch`}
+            key={field.id}
+            label={field.label}
+          >
             {child}
           </StaticFormField>
         );

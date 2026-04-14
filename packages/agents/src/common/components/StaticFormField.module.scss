@@ -1,31 +1,46 @@
-@use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/typography";
 
-.row {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 7fr);
-  gap: space.md();
-  align-items: flex-start;
+.card {
+  box-sizing: border-box;
   min-width: 0;
+  overflow: hidden;
+  background: color.surface();
+  border: 1px solid color.border();
+  border-radius: radius.md();
+  box-shadow: shadow.sm();
+}
 
-  .label {
-    padding-top: space.sm();
-  }
+.head {
+  padding: space.sm() space.md();
+  background: color-mix(in srgb, color.primary() 9%, color.surface-active());
+  border-bottom: 1px solid color-mix(in srgb, color.border() 65%, transparent);
 }
 
 .label {
-  @include typography.caption;
+  @include typography.caption-bold;
 
-  min-width: 0;
+  display: block;
   color: color.text();
 }
 
-.control {
+.body,
+.body-end {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: flex-start;
+  flex-direction: column;
+  gap: space.sm();
   width: 100%;
   min-width: 0;
+  padding: space.md();
+}
+
+.body {
+  align-items: stretch;
+}
+
+.body-end {
+  align-items: flex-end;
 }
