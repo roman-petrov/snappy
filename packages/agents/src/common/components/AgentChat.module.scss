@@ -7,11 +7,13 @@
   display: flex;
   flex-direction: column;
   gap: space.sm();
-  padding: space.sm();
+  padding-block: space.sm();
 }
 
 .bubble {
-  max-width: 90%;
+  box-sizing: border-box;
+  align-self: stretch;
+  max-width: none;
   padding: space.sm();
   border-radius: radius.md();
 }

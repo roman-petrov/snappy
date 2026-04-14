@@ -6,8 +6,9 @@
 
 .root {
   box-sizing: border-box;
-  align-self: flex-start;
-  max-width: min(90%, 42rem);
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
   padding: space.md();
   background: color.surface();
   border: 1px solid color.border();
