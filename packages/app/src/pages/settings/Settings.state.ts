@@ -19,7 +19,7 @@ export const useSettingsState = () => {
     setBalanceEnd(`${i.price(bal.balance)} ›`);
     if (llm.status === `ok`) {
       setLlmChatEnd(`${llm.llmChatModel} ›`);
-      setLlmImageEnd(`${llm.llmImageModel} ›`);
+      setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality} ›`);
       setLlmSpeechEnd(`${llm.llmSpeechRecognitionModel} ›`);
     }
   }, [locale]);

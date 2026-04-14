@@ -38,6 +38,7 @@ export type UserSettingsMinAggregateOutputType = {
   userId: number | null
   llmChatModel: string | null
   llmImageModel: string | null
+  llmImageQuality: string | null
   llmSpeechRecognitionModel: string | null
 }
 
@@ -45,6 +46,7 @@ export type UserSettingsMaxAggregateOutputType = {
   userId: number | null
   llmChatModel: string | null
   llmImageModel: string | null
+  llmImageQuality: string | null
   llmSpeechRecognitionModel: string | null
 }
 
@@ -52,6 +54,7 @@ export type UserSettingsCountAggregateOutputType = {
   userId: number
   llmChatModel: number
   llmImageModel: number
+  llmImageQuality: number
   llmSpeechRecognitionModel: number
   _all: number
 }
@@ -69,6 +72,7 @@ export type UserSettingsMinAggregateInputType = {
   userId?: true
   llmChatModel?: true
   llmImageModel?: true
+  llmImageQuality?: true
   llmSpeechRecognitionModel?: true
 }
 
@@ -76,6 +80,7 @@ export type UserSettingsMaxAggregateInputType = {
   userId?: true
   llmChatModel?: true
   llmImageModel?: true
+  llmImageQuality?: true
   llmSpeechRecognitionModel?: true
 }
 
@@ -83,6 +88,7 @@ export type UserSettingsCountAggregateInputType = {
   userId?: true
   llmChatModel?: true
   llmImageModel?: true
+  llmImageQuality?: true
   llmSpeechRecognitionModel?: true
   _all?: true
 }
@@ -177,6 +183,7 @@ export type UserSettingsGroupByOutputType = {
   userId: number
   llmChatModel: string | null
   llmImageModel: string | null
+  llmImageQuality: string | null
   llmSpeechRecognitionModel: string | null
   _count: UserSettingsCountAggregateOutputType | null
   _avg: UserSettingsAvgAggregateOutputType | null
@@ -207,6 +214,7 @@ export type UserSettingsWhereInput = {
   userId?: Prisma.IntFilter<"UserSettings"> | number
   llmChatModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmImageModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
+  llmImageQuality?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmSpeechRecognitionModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
@@ -215,6 +223,7 @@ export type UserSettingsOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrderInput | Prisma.SortOrder
   llmImageModel?: Prisma.SortOrderInput | Prisma.SortOrder
+  llmImageQuality?: Prisma.SortOrderInput | Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
@@ -226,6 +235,7 @@ export type UserSettingsWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserSettingsWhereInput | Prisma.UserSettingsWhereInput[]
   llmChatModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmImageModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
+  llmImageQuality?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   llmSpeechRecognitionModel?: Prisma.StringNullableFilter<"UserSettings"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "userId">
@@ -234,6 +244,7 @@ export type UserSettingsOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrderInput | Prisma.SortOrder
   llmImageModel?: Prisma.SortOrderInput | Prisma.SortOrder
+  llmImageQuality?: Prisma.SortOrderInput | Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserSettingsCountOrderByAggregateInput
   _avg?: Prisma.UserSettingsAvgOrderByAggregateInput
@@ -249,12 +260,14 @@ export type UserSettingsScalarWhereWithAggregatesInput = {
   userId?: Prisma.IntWithAggregatesFilter<"UserSettings"> | number
   llmChatModel?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
   llmImageModel?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
+  llmImageQuality?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
   llmSpeechRecognitionModel?: Prisma.StringNullableWithAggregatesFilter<"UserSettings"> | string | null
 }
 
 export type UserSettingsCreateInput = {
   llmChatModel?: string | null
   llmImageModel?: string | null
+  llmImageQuality?: string | null
   llmSpeechRecognitionModel?: string | null
   user: Prisma.UserCreateNestedOneWithoutUserSettingsInput
 }
@@ -263,12 +276,14 @@ export type UserSettingsUncheckedCreateInput = {
   userId: number
   llmChatModel?: string | null
   llmImageModel?: string | null
+  llmImageQuality?: string | null
   llmSpeechRecognitionModel?: string | null
 }
 
 export type UserSettingsUpdateInput = {
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutUserSettingsNestedInput
 }
@@ -277,6 +292,7 @@ export type UserSettingsUncheckedUpdateInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -284,12 +300,14 @@ export type UserSettingsCreateManyInput = {
   userId: number
   llmChatModel?: string | null
   llmImageModel?: string | null
+  llmImageQuality?: string | null
   llmSpeechRecognitionModel?: string | null
 }
 
 export type UserSettingsUpdateManyMutationInput = {
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -297,6 +315,7 @@ export type UserSettingsUncheckedUpdateManyInput = {
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -309,6 +328,7 @@ export type UserSettingsCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrder
   llmImageModel?: Prisma.SortOrder
+  llmImageQuality?: Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrder
 }
 
@@ -320,6 +340,7 @@ export type UserSettingsMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrder
   llmImageModel?: Prisma.SortOrder
+  llmImageQuality?: Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrder
 }
 
@@ -327,6 +348,7 @@ export type UserSettingsMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   llmChatModel?: Prisma.SortOrder
   llmImageModel?: Prisma.SortOrder
+  llmImageQuality?: Prisma.SortOrder
   llmSpeechRecognitionModel?: Prisma.SortOrder
 }
 
@@ -369,12 +391,14 @@ export type UserSettingsUncheckedUpdateOneWithoutUserNestedInput = {
 export type UserSettingsCreateWithoutUserInput = {
   llmChatModel?: string | null
   llmImageModel?: string | null
+  llmImageQuality?: string | null
   llmSpeechRecognitionModel?: string | null
 }
 
 export type UserSettingsUncheckedCreateWithoutUserInput = {
   llmChatModel?: string | null
   llmImageModel?: string | null
+  llmImageQuality?: string | null
   llmSpeechRecognitionModel?: string | null
 }
 
@@ -397,12 +421,14 @@ export type UserSettingsUpdateToOneWithWhereWithoutUserInput = {
 export type UserSettingsUpdateWithoutUserInput = {
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type UserSettingsUncheckedUpdateWithoutUserInput = {
   llmChatModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmImageModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  llmImageQuality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   llmSpeechRecognitionModel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -412,6 +438,7 @@ export type UserSettingsSelect<ExtArgs extends runtime.Types.Extensions.Internal
   userId?: boolean
   llmChatModel?: boolean
   llmImageModel?: boolean
+  llmImageQuality?: boolean
   llmSpeechRecognitionModel?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -420,6 +447,7 @@ export type UserSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   llmChatModel?: boolean
   llmImageModel?: boolean
+  llmImageQuality?: boolean
   llmSpeechRecognitionModel?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -428,6 +456,7 @@ export type UserSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   userId?: boolean
   llmChatModel?: boolean
   llmImageModel?: boolean
+  llmImageQuality?: boolean
   llmSpeechRecognitionModel?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userSettings"]>
@@ -436,10 +465,11 @@ export type UserSettingsSelectScalar = {
   userId?: boolean
   llmChatModel?: boolean
   llmImageModel?: boolean
+  llmImageQuality?: boolean
   llmSpeechRecognitionModel?: boolean
 }
 
-export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "llmChatModel" | "llmImageModel" | "llmSpeechRecognitionModel", ExtArgs["result"]["userSettings"]>
+export type UserSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"userId" | "llmChatModel" | "llmImageModel" | "llmImageQuality" | "llmSpeechRecognitionModel", ExtArgs["result"]["userSettings"]>
 export type UserSettingsInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -459,6 +489,7 @@ export type $UserSettingsPayload<ExtArgs extends runtime.Types.Extensions.Intern
     userId: number
     llmChatModel: string | null
     llmImageModel: string | null
+    llmImageQuality: string | null
     llmSpeechRecognitionModel: string | null
   }, ExtArgs["result"]["userSettings"]>
   composites: {}
@@ -887,6 +918,7 @@ export interface UserSettingsFieldRefs {
   readonly userId: Prisma.FieldRef<"UserSettings", 'Int'>
   readonly llmChatModel: Prisma.FieldRef<"UserSettings", 'String'>
   readonly llmImageModel: Prisma.FieldRef<"UserSettings", 'String'>
+  readonly llmImageQuality: Prisma.FieldRef<"UserSettings", 'String'>
   readonly llmSpeechRecognitionModel: Prisma.FieldRef<"UserSettings", 'String'>
 }
     

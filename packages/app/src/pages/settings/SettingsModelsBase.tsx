@@ -1,9 +1,11 @@
+import type { AiModelType } from "@snappy/domain";
+
 import { useSettingsModelsBaseState } from "./SettingsModelsBase.state";
 import { SettingsModelsBaseView } from "./SettingsModelsBase.view";
 
 type SettingsModelsBaseProps = {
   icon: string;
-  modelType: `chat` | `image` | `speech-recognition`;
+  modelType: AiModelType;
   settingsField: `llmChatModel` | `llmImageModel` | `llmSpeechRecognitionModel`;
   title: string;
 };

@@ -110,6 +110,8 @@ export const en = {
   settings: {
     balance: `Balance`,
     fogBackground: `Fog`,
+    imageQuality: `Image quality`,
+    imageQualityValue: { auto: `Auto`, hd: `HD`, high: `High`, low: `Low`, medium: `Medium`, standard: `Standard` },
     language: `Language`,
     modelsChat: `Text`,
     modelsGroup: `Models`,

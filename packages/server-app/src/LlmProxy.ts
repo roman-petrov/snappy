@@ -44,7 +44,7 @@ export const LlmProxy = ({ ai, balance }: { ai: Ai; balance: Balance }) => {
       return entry;
     }
 
-    const out = await entry.process(body.prompt, { size: body.size });
+    const out = await entry.process(body.prompt, { quality: body.quality, size: body.size });
     await balance.debitForLlm(userId, out.cost, { call: `image`, model: body.model });
 
     return { bytes: out.bytes, status: `ok` };

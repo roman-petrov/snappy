@@ -1,4 +1,4 @@
-import type { ImageGenerationOptions } from "@snappy/domain";
+import type { AiImageQuality, ImageGenerationOptions } from "@snappy/domain";
 
 import { type AgentHostTools, Agents } from "@snappy/agents";
 import { _ } from "@snappy/core";
@@ -36,7 +36,11 @@ export const useChatState = () => {
   const { agentId: routeAgentId } = useParams<{ agentId: string }>();
   const agentId = routeAgentId ?? ``;
   const [phase, setPhase] = useState<ChatPhase>(`booting`);
-  const [llm, setLlm] = useState<undefined | { chat: string; image: string; speech: string }>(undefined);
+
+  const [llm, setLlm] = useState<
+    undefined | { chat: string; image: string; imageQuality: AiImageQuality; speech: string }
+  >(undefined);
+
   const [maxImagePromptLength, setMaxImagePromptLength] = useState(0);
   const [maxSpeechFileMegaBytes, setMaxSpeechFileMegaBytes] = useState(0);
 
@@ -59,7 +63,7 @@ export const useChatState = () => {
           ? undefined
           : llmOk(
               balanceLow,
-              async () => api.llmImage({ model: llm.image, prompt, size: options.size }),
+              async () => api.llmImage({ model: llm.image, prompt, quality: llm.imageQuality, size: options.size }),
               r => r.bytes,
             ),
       speechRecognition: async (file: File) =>
@@ -87,6 +91,7 @@ export const useChatState = () => {
       setLlm({
         chat: llmSettingsResponse.llmChatModel,
         image: llmSettingsResponse.llmImageModel,
+        imageQuality: llmSettingsResponse.llmImageQuality,
         speech: llmSettingsResponse.llmSpeechRecognitionModel,
       });
       setMaxImagePromptLength(llmSettingsResponse.maxImagePromptLength);

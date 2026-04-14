@@ -1,6 +1,4 @@
-import { t } from "../../core";
-import { SettingsModelsBase } from "./SettingsModelsBase";
+import { useSettingsModelsImageState } from "./SettingsModelsImage.state";
+import { SettingsModelsImageView } from "./SettingsModelsImage.view";
 
-export const SettingsModelsImage = () => (
-  <SettingsModelsBase icon="🎨" modelType="image" settingsField="llmImageModel" title={t(`settings.modelsImage`)} />
-);
+export const SettingsModelsImage = () => <SettingsModelsImageView {...useSettingsModelsImageState()} />;

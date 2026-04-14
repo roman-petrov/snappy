@@ -789,6 +789,7 @@ export const UserSettingsScalarFieldEnum = {
   userId: 'userId',
   llmChatModel: 'llmChatModel',
   llmImageModel: 'llmImageModel',
+  llmImageQuality: 'llmImageQuality',
   llmSpeechRecognitionModel: 'llmSpeechRecognitionModel'
 } as const
 

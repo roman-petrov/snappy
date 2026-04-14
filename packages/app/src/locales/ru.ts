@@ -116,6 +116,15 @@ export const ru = {
   settings: {
     balance: `Баланс`,
     fogBackground: `Туман`,
+    imageQuality: `Качество изображения`,
+    imageQualityValue: {
+      auto: `Авто`,
+      hd: `HD`,
+      high: `Высокое`,
+      low: `Низкое`,
+      medium: `Среднее`,
+      standard: `Стандарт`,
+    },
     language: `Язык`,
     modelsChat: `Текст`,
     modelsGroup: `Модели`,

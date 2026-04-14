@@ -1,3 +1,5 @@
+import type { AiImageQuality, AiImageSize } from "@snappy/domain";
+
 export type ApiAuthBody = { email?: string; password?: string };
 
 export type ApiAuthMeErrorCode = `unauthorized`;
@@ -32,11 +34,7 @@ export type ApiLlmChatOk = Extract<ApiLlmChatResult, { status: `ok` }>;
 
 export type ApiLlmChatResult = { status: `badRequest` } | { status: `balanceBlocked` } | { status: `ok`; text: string };
 
-export type ApiLlmImageBody = {
-  model: string;
-  prompt: string;
-  size: `256x256` | `512x512` | `1024x1024` | `1024x1792` | `1792x1024`;
-};
+export type ApiLlmImageBody = { model: string; prompt: string; quality?: AiImageQuality; size: AiImageSize };
 
 export type ApiLlmImageOk = Extract<ApiLlmImageResult, { status: `ok` }>;
 
@@ -94,6 +92,7 @@ export type ApiStatusOk = `ok`;
 export type ApiUserLlmSettingsBody = {
   llmChatModel?: string;
   llmImageModel?: string;
+  llmImageQuality?: AiImageQuality;
   llmSpeechRecognitionModel?: string;
 };
 
@@ -101,6 +100,7 @@ export type ApiUserLlmSettingsResult =
   | {
       llmChatModel: string;
       llmImageModel: string;
+      llmImageQuality: AiImageQuality;
       llmSpeechRecognitionModel: string;
       maxImagePromptLength: number;
       maxSpeechFileMegaBytes: number;

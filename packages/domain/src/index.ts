@@ -1,6 +1,12 @@
-export type AiImageSize = `256x256` | `512x512` | `1024x1024` | `1024x1792` | `1792x1024`;
+export { AiConstants } from "./AiConstants";
 
-export type ImageGenerationOptions = { size: AiImageSize };
+import type { AiConstants } from "./AiConstants";
+
+export type AiImageQuality = (typeof AiConstants.imageQuality)[number];
+
+export type AiImageSize = (typeof AiConstants.imageSize)[number];
+
+export type ImageGenerationOptions = { quality?: AiImageQuality; size: AiImageSize };
 
 export const AiErrors = { unavailable: `llmUnavailable` } as const;
 

@@ -15,11 +15,12 @@ export type OpenAiImageModelDefinition = {
 export const OpenAiImageModel =
   ({ b64JsonResponse, cost, name }: OpenAiImageModelDefinition) =>
   (client: InstanceType<typeof openai>): AiGenericImageModel => {
-    const process: AiGenericImageModel[`process`] = async (prompt, { size }) => {
+    const process: AiGenericImageModel[`process`] = async (prompt, { quality, size }) => {
       const raw = await client.images.generate({
         model: name,
         n: 1,
         prompt,
+        ...(quality === undefined ? {} : { quality }),
         size,
         ...(b64JsonResponse ? { response_format: `b64_json` as const } : {}),
       });
