@@ -1,8 +1,8 @@
 declare const __StaticFormField: {
-  readonly body: "body";
-  readonly bodyEnd: "body-end";
   readonly card: "card";
   readonly head: "head";
   readonly label: "label";
+  readonly body: "body";
+  readonly bodyEnd: "bodyEnd";
 };
 export default __StaticFormField;

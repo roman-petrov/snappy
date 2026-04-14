@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
   ({
     en: {
+      description: `Meeting recording → structured notes, decisions, actions`,
       emoji: `📋`,
-      labels: { description: `Meeting recording → structured notes, decisions, actions`, title: `Meeting notes` },
       prompt: `You receive an automatic transcript of a meeting (possibly multiple speakers; diarization may be imperfect). Produce structured meeting notes that follow every bullet in the parameter list. If speakers are unclear, label them Speaker A / Speaker B or use names from the optional context. Use sections in order: Overview; Decisions; Agreements & action items (what / who / deadline when mentioned); Open questions; Risks (if any). Output only the notes—no preamble.`,
+      title: `Meeting notes`,
       uiPlan: {
         fields: [
           {
@@ -63,14 +64,14 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             prompt: `Context (names, project, goal):`,
           },
         ],
-        title: `📋 Meeting notes`,
       },
     },
     group: `audio`,
     ru: {
+      description: `Запись встречи → структура, итоги, договорённости`,
       emoji: `📋`,
-      labels: { description: `Запись встречи → структура, итоги, договорённости`, title: `Протокол встречи` },
       prompt: `Ниже автоматическая расшифровка встречи (возможны несколько спикеров; разметка по голосам может быть неточной). Составь структурированный протокол, строго следуя каждому пункту параметров. Если спикеры неочевидны — обозначь Участник A / B или используй имена из контекста. Секции по порядку: Краткое содержание; Принятые решения; Договорённости и действия (что / кто / срок, если звучало); Открытые вопросы; Риски (если есть). В ответе только протокол, без вступления.`,
+      title: `Протокол встречи`,
       uiPlan: {
         fields: [
           {
@@ -126,7 +127,6 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             prompt: `Контекст (имена, проект, цель):`,
           },
         ],
-        title: `📋 Протокол встречи`,
       },
     },
   }) as const;

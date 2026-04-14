@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Clarity, length, tone, emoji, markup`,
       emoji: `✏️`,
-      labels: { description: `Clarity, length, tone, emoji, markup`, title: `Improve text` },
       prompt: `Improve the passage under "Text to improve:" below: fix errors and unclear wording, then apply every bullet below exactly. Output only the improved text—no title, preamble, headings, or questions.`,
+      title: `Improve text`,
       uiPlan: {
         fields: [
           {
@@ -96,14 +97,14 @@ export const Data: Meta = () =>
             ],
           },
         ],
-        title: `✏️ Improve text`,
       },
     },
     group: `text`,
     ru: {
+      description: `Ясность, длина, тон, эмодзи, разметка`,
       emoji: `✨`,
-      labels: { description: `Ясность, длина, тон, эмодзи, разметка`, title: `Улучшение текста` },
       prompt: `Улучши текст под строкой «Текст для улучшения:» ниже: исправь ошибки и неясные формулировки, затем выполни строго каждый пункт списка ниже. В ответе — только улучшенный текст: без заголовков, вступлений и вопросов.`,
+      title: `Улучшение текста`,
       uiPlan: {
         fields: [
           {
@@ -192,7 +193,6 @@ export const Data: Meta = () =>
             ],
           },
         ],
-        title: `✨ Улучшение текста`,
       },
     },
   }) as const;

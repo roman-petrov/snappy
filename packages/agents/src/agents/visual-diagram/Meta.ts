@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Chart image from your numbers — rich styling`,
       emoji: `📈`,
-      labels: { description: `Chart image from your numbers — rich styling`, title: `Diagram` },
       prompt: `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed. End: no watermark. Reply with that string only—no other text.`,
+      title: `Diagram`,
       uiPlan: {
         fields: [
           {
@@ -142,14 +143,14 @@ export const Data: Meta = () =>
             ],
           },
         ],
-        title: `📈 Diagram`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Диаграмма по числам — много настроек`,
       emoji: `📊`,
-      labels: { description: `Диаграмма по числам — много настроек`, title: `Диаграмма` },
       prompt: `Ты составляешь промпты **для генерации изображения**: одна картинка с диаграммой (промпт получит модель картинки). Возьми **данные** из текста (обязательно) и каждый пункт табов: тип графика, 2D/3D, **палитру по названию из вкладок**, стиль, фон, легенду, плотность. Цифры только из ввода пользователя. Читаемые оси. В конце: без водяных знаков. Верни только эту строку — без другого текста.`,
+      title: `Диаграмма`,
       uiPlan: {
         fields: [
           {
@@ -256,7 +257,6 @@ export const Data: Meta = () =>
             ],
           },
         ],
-        title: `📊 Диаграмма`,
       },
     },
   }) as const;

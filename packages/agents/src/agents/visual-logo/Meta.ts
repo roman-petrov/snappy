@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Logo mark — structured options, then generate`,
       emoji: `🏷️`,
-      labels: { description: `Logo mark — structured options, then generate`, title: `Logo` },
       prompt: `You build image-generation prompts. From the **brand** line (required text), every tab below, and optional tagline line, write **one** detailed prompt **for image generation**: a **single logo artwork** on a simple background (it will be sent to the image model). Reflect industry, mark type, complexity, **palette by tab name**, style, and layout. Demand legibility at small sizes. End: no watermark; no laptop/phone mockups—logo only. Reply with that string only—no other text.`,
+      title: `Logo`,
       uiPlan: {
         fields: [
           {
@@ -160,14 +161,14 @@ export const Data: Meta = () =>
             prompt: `Optional tagline text under the logo (one short line, or empty):`,
           },
         ],
-        title: `🏷️ Logo`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Логотип — структурированные опции`,
       emoji: `🎨`,
-      labels: { description: `Логотип — структурированные опции`, title: `Логотип` },
       prompt: `Собери **один** подробный промпт **для генерации изображения**: один **логотип** на простом фоне (промпт получит модель картинки). Возьми **название** (обязательное поле), тип знака, отрасль, **палитру из вкладок**, стиль, макет, фон превью. Опциональный слоган — вписать в композицию если есть. Читаемость в мелком размере. Без водяных знаков; без мокапов. Верни только эту строку — без другого текста.`,
+      title: `Логотип`,
       uiPlan: {
         fields: [
           {
@@ -272,7 +273,6 @@ export const Data: Meta = () =>
             prompt: `Опциональный слоган под знаком (одна короткая строка или пусто):`,
           },
         ],
-        title: `🎨 Логотип`,
       },
     },
   }) as const;

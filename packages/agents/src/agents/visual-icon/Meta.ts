@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = ({ maxImagePromptLength }) =>
   ({
     en: {
+      description: `One icon — metaphor, style, palette, 2D/3D`,
       emoji: `🎯`,
-      labels: { description: `One icon — metaphor, style, palette, 2D/3D`, title: `Icon` },
       prompt: `You are an art-director for a single app icon asset. Read the **Metaphor & description** line as the creative brief. **Before** you compose the final output, analyze the metaphor in depth (keep this reasoning internal—do not output it): identify the abstract idea and what it must communicate; list concrete subject(s), props, and symbols; enumerate metaphor **attributes** and **properties** (e.g. stability vs motion, openness vs enclosure, warmth vs cold, precision vs softness, direction, scale, balance) and note how each should read **visually**; resolve ambiguities by choosing one coherent reading. Map every important attribute to drawable decisions: silhouette logic, focal hierarchy, secondary shapes, implied motion or gaze, use of negative space, and what reads at a glance. Merge that resolved brief with every bullet below (dimension, style, palette, edge intent, corners, padding, tile, detail). Then write **one** exceptionally detailed prompt **for image generation** (it will be sent to the image model). That prompt must **thoroughly describe the metaphor for the image model**: translate the abstract idea into explicit pictorial instructions—what appears, how elements relate, what each part signifies—so a text-to-image model can render the idea without guessing; do not rely on a bare label alone. Also spell out silhouette or stroke logic, color roles and approximate hues, lighting and shadows for the chosen dimension, material feel (matte, glass, plastic, paper), composition (exactly **one** icon centered in the square frame, generous safe margin, readable at small sizes), background treatment, and edge character (razor-clean for vector workflows versus soft painted pixels). Describe the shot as **one** finished square icon filling the frame—hero asset only. That prompt **must explicitly instruct** the image model: **no** text, letters, numbers, captions, watermarks, logos-as-type, or any typography in the image—**pictorial icon artwork only**. It **must also explicitly instruct** scaling the subject to **use as much of the available square area as the chosen padding and composition allow**, **without stretching**: maximize footprint while **preserving the subject’s aspect ratio**. **Hard limit: the final string must be at most ${maxImagePromptLength} characters (counting spaces); compress wording and drop optional flourishes if needed to stay within this cap.** Reply with that full string only—no other text.`,
+      title: `Icon`,
       uiPlan: {
         fields: [
           {
@@ -292,14 +293,14 @@ export const Data: Meta = ({ maxImagePromptLength }) =>
             ],
           },
         ],
-        title: `🎯 Icon`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Одна иконка — метафора, стиль, палитра, 2D/3D`,
       emoji: `🔷`,
-      labels: { description: `Одна иконка — метафора, стиль, палитра, 2D/3D`, title: `Иконка` },
       prompt: `Ты арт-директор по одному ассету иконки приложения. Прочитай строку **«Метафора и описание»** как бриф. **Перед** финальным текстом глубоко разбери метафору (рассуждай внутри себя — в ответ не выводи): абстрактная идея и что она должна передать; конкретные предметы, реквизит и символы; **атрибуты и свойства** метафоры (например устойчивость и движение, открытость и замкнутость, тепло и холод, точность и мягкость, направление, масштаб, баланс) и как каждое свойство должно **выглядеть** на картинке; при неоднозначности выбери одну согласованную трактовку. Сопоставь важные свойства с решениями по рисунку: логика силуэта, фокус внимания, второстепенные формы, подразумеваемое движение или направление взгляда, негативное пространство, что читается с первого взгляда. Соедини это с каждым пунктом ниже (измерение, стиль, палитра, края, углы, поля, плитка, детализация). Затем составь **один** исключительно подробный промпт **для генерации изображения** (его получит модель картинки). В этом промпте **тщательно опиши метафору для модели изображения**: переведи абстрактную идею в явные зрительные инструкции — что именно изображено, как элементы связаны, что означает каждая часть — чтобы модели по тексту не приходилось угадывать; не ограничивайся одним ярлыком. Дополнительно распиши логику силуэта или штриха, роли цветов и оттенков, свет и тени под выбранную размерность, материал (матовое, стекло, пластик, бумага), композицию (ровно **одна** иконка по центру квадратного кадра, поля безопасности, читаемость в малом размере), фон и характер краёв (идеально чистые для векторного контура или мягкая растровая живопись). Опиши кадр как **одну** готовую квадратную иконку на весь кадр — финальный герой-ассет. В этот промпт **обязательно включи явные инструкции для модели изображения**: **не** добавлять в картинку текст, буквы, цифры, подписи, водяные знаки, «логотипы» из типографики — **только графическое изображение иконки**. **Также явно предпиши**: масштабировать субъект так, чтобы он занимал **максимум доступной площади** в квадрате в рамках выбранных полей и композиции, **без растягивания** — **сохранять пропорции** субъекта. **Жёсткое ограничение: итоговая строка — не более ${maxImagePromptLength} символов, пробелы считаются; сожми формулировки и убери второстепенное, чтобы уложиться в лимит.** Верни только эту полную строку — без другого текста.`,
+      title: `Иконка`,
       uiPlan: {
         fields: [
           {
@@ -576,7 +577,6 @@ export const Data: Meta = ({ maxImagePromptLength }) =>
             ],
           },
         ],
-        title: `🔷 Иконка`,
       },
     },
   }) as const;

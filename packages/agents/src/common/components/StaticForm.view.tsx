@@ -11,7 +11,6 @@ import { StaticFormField } from "./StaticFormField";
 export const StaticFormView = ({ answers, disabled, pickFile, plan, setField, submit }: StaticFormViewProps) => (
   <Card>
     <div className={styles.root}>
-      <h3 className={styles.title}>{plan.title}</h3>
       {plan.fields.map(field => {
         const value = answers[field.id];
         const onChange = (v: boolean | File | number | string | string[] | undefined) => setField(field.id, v);

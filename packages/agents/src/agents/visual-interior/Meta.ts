@@ -5,12 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Room render for renovation planning — style, palette, light, staging`,
       emoji: `🛋️`,
-      labels: {
-        description: `Room render for renovation planning — style, palette, light, staging`,
-        title: `Interior`,
-      },
       prompt: `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; watermarks; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition. Reply with that string only—no other text.`,
+      title: `Interior`,
       uiPlan: {
         fields: [
           {
@@ -289,14 +287,14 @@ export const Data: Meta = () =>
             prompt: `Optional furniture, material, or layout note (one short line):`,
           },
         ],
-        title: `🛋️ Interior`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Визуализация комнаты под ремонт — стиль, палитра, свет, наполнение`,
       emoji: `🛋️`,
-      labels: { description: `Визуализация комнаты под ремонт — стиль, палитра, свет, наполнение`, title: `Интерьер` },
       prompt: `Собери **один** промпт для генерации изображения. Каждый пункт ниже — жёсткое условие. Цель: **одна визуализация интерьера** для планирования ремонта — фотореализм или качественный интерьерный 3D-рендер. Исключить: планы этажей, чертежи, вид сверху, изометрические «разрезы домика», только фасад снаружи. Собери тип комнаты, стиль, **палитру строго по подписи выбранной вкладки**, степень заполнения мебелью, материал пола, свет, кадр. Строку уточнения вплети в предметы или планировку — не противоречь вкладкам. Запрет: люди и животные, если уточнение явно не просит; водяные знаки; читаемые бренды на предметах; постеры со словами — только абстрактное искусство или фактура. Требуй читаемые материалы, правдоподобный масштаб, чистую композицию. Верни только эту строку — без другого текста.`,
+      title: `Интерьер`,
       uiPlan: {
         fields: [
           {
@@ -575,7 +573,6 @@ export const Data: Meta = () =>
             prompt: `Уточнение: мебель, материал или планировка (одна короткая строка):`,
           },
         ],
-        title: `🛋️ Интерьер`,
       },
     },
   }) as const;

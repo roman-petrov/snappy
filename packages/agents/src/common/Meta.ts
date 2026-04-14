@@ -5,9 +5,10 @@ export type AgentMetaPayload = { en: MetaLocalePack; group: AgentGroupId; ru: Me
 export type Meta = (parameters: MetaParameters) => AgentMetaPayload;
 
 export type MetaLocalePack = {
+  description: string;
   emoji: string;
-  labels: { description: string; title: string };
   prompt: string;
+  title: string;
   uiPlan: StaticFormPlan;
 };
 
@@ -30,6 +31,6 @@ export type StaticFormField =
     }
   | { default?: string[]; id: string; kind: `tabs_multi`; label: string; options: StaticTabOption[] };
 
-export type StaticFormPlan = { fields: readonly StaticFormField[]; title: string };
+export type StaticFormPlan = { fields: readonly StaticFormField[] };
 
 export type StaticTabOption = { label: string; prompt?: string; value: string };

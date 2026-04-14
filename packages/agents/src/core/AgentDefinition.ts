@@ -13,7 +13,7 @@ export const AgentDefinition = (
   const localize = (locale: AgentLocale) => {
     const block = locale === `ru` ? meta.ru : meta.en;
 
-    return { description: block.labels.description, emoji: block.emoji, title: block.labels.title };
+    return { description: block.description, emoji: block.emoji, title: block.title };
   };
 
   const mount = (input: AgentMountInput) => {
@@ -28,7 +28,7 @@ export const AgentDefinition = (
 
     const mountedView = () => createElement(chromeView, chrome);
 
-    return { title: block.labels.title, View: mountedView };
+    return { title: block.title, View: mountedView };
   };
 
   return { group: meta.group, localize, mount };

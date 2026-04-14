@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Portrait or character — rich options, then generate`,
       emoji: `🧑‍🎨`,
-      labels: { description: `Portrait or character — rich options, then generate`, title: `Avatar` },
       prompt: `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. End: no watermark; no random text on image unless detail asks for text. Reply with that string only—no other text.`,
+      title: `Avatar`,
       uiPlan: {
         fields: [
           {
@@ -161,14 +162,14 @@ export const Data: Meta = () =>
             prompt: `Optional detail (one line — hair, accessory, team, etc.):`,
           },
         ],
-        title: `🧑‍🎨 Avatar`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Портрет или персонаж — детальные настройки`,
       emoji: `🖼️`,
-      labels: { description: `Портрет или персонаж — детальные настройки`, title: `Аватар` },
       prompt: `Ты составляешь промпты для генерации. По сообщению, опциональной строке уточнения и каждому пункту ниже напиши **один** подробный промпт **для генерации изображения** (его получит модель картинки). Собери тип субъекта, настроение, кадр, стиль, **именно выбранную палитру из табов**, фон, свет. Уточнение в одну строку — вписать в образ. В конце: без водяных знаков; без лишнего текста на картинке. Верни только эту строку — без другого текста.`,
+      title: `Аватар`,
       uiPlan: {
         fields: [
           {
@@ -298,7 +299,6 @@ export const Data: Meta = () =>
             prompt: `Уточнение (одна строка — волосы, аксессуар, команда и т.д.):`,
           },
         ],
-        title: `🖼️ Аватар`,
       },
     },
   }) as const;

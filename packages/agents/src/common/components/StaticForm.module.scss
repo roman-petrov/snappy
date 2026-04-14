@@ -9,12 +9,6 @@
   padding: space.md();
 }
 
-.title {
-  @include typography.h3;
-
-  margin: 0;
-}
-
 .file-pick {
   display: flex;
   flex-direction: column;

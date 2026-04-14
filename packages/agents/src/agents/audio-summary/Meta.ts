@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
   ({
     en: {
+      description: `Transcribe audio and get a tailored summary`,
       emoji: `🎧`,
-      labels: { description: `Transcribe audio and get a tailored summary`, title: `Audio summary` },
       prompt: `You receive an automatic speech-to-text transcript below. Write a summary that follows every bullet in the parameter list exactly. Output only the summary—no preamble, title, or questions.`,
+      title: `Audio summary`,
       uiPlan: {
         fields: [
           {
@@ -65,14 +66,14 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             prompt: `Context:`,
           },
         ],
-        title: `🎧 Audio summary`,
       },
     },
     group: `audio`,
     ru: {
+      description: `Транскрипт аудио и резюме по вашим правилам`,
       emoji: `🎧`,
-      labels: { description: `Транскрипт аудио и резюме по вашим правилам`, title: `Резюме аудио` },
       prompt: `Ниже автоматический текст расшифровки речи. Сделай резюме, строго выполняя каждый пункт параметров из списка. В ответе — только резюме: без вступления, заголовка «Резюме» и вопросов.`,
+      title: `Резюме аудио`,
       uiPlan: {
         fields: [
           {
@@ -130,7 +131,6 @@ export const Data: Meta = ({ maxSpeechFileMegaBytes }) =>
             prompt: `Контекст:`,
           },
         ],
-        title: `🎧 Резюме аудио`,
       },
     },
   }) as const;

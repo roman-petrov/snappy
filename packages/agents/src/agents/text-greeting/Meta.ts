@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Occasion, audience, tone, markup — ready greeting`,
       emoji: `🎉`,
-      labels: { description: `Occasion, audience, tone, markup — ready greeting`, title: `Greeting` },
       prompt: `Write a greeting. Apply every bullet below exactly. When Name, Interests, or Extra context lines appear in the list, take names, hobbies, and facts only from those lines. Deliver the greeting text alone: continuous wishes and wording from the bullets, structured as a ready-to-send message that opens with the greeting or address from the settings.`,
+      title: `Greeting`,
       uiPlan: {
         fields: [
           {
@@ -294,14 +295,14 @@ export const Data: Meta = () =>
             prompt: `Extra context: anchor every detail you add in what this line states; build only on facts written here.`,
           },
         ],
-        title: `🎉 Greeting`,
       },
     },
     group: `text`,
     ru: {
+      description: `Повод, адресат, тон, разметка — готовое поздравление`,
       emoji: `🎊`,
-      labels: { description: `Повод, адресат, тон, разметка — готовое поздравление`, title: `Поздравление` },
       prompt: `Напиши поздравление. Выполни строго каждый пункт списка ниже. Если в списке есть поля «Имя», «Увлечения», «Дополнительно» — бери имена, увлечения и факты только из этих строк. В ответе — только текст поздравления: цельное сообщение с пожеланиями по всем пунктам, готовое к отправке; начинай сразу с поздравления или обращения по настройкам.`,
+      title: `Поздравление`,
       uiPlan: {
         fields: [
           {
@@ -592,7 +593,6 @@ export const Data: Meta = () =>
             prompt: `Дополнительно: опирайся на факты и детали, которые явно указаны в этой строке; развивай только то, что из неё следует.`,
           },
         ],
-        title: `🎊 Поздравление`,
       },
     },
   }) as const;

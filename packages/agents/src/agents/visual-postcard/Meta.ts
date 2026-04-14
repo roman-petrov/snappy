@@ -5,9 +5,10 @@ import type { Meta } from "../../common/Meta";
 export const Data: Meta = () =>
   ({
     en: {
+      description: `Greeting card front — rich art options`,
       emoji: `💌`,
-      labels: { description: `Greeting card front — rich art options`, title: `Postcard` },
       prompt: `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border. End: no watermark. Reply with that string only—no other text.`,
+      title: `Postcard`,
       uiPlan: {
         fields: [
           {
@@ -163,14 +164,14 @@ export const Data: Meta = () =>
             prompt: `Optional motif or symbol to weave in (one line):`,
           },
         ],
-        title: `💌 Postcard`,
       },
     },
     group: `visual`,
     ru: {
+      description: `Открытка — много вариантов оформления`,
       emoji: `💌`,
-      labels: { description: `Открытка — много вариантов оформления`, title: `Открытка` },
       prompt: `Собери **один** подробный промпт **для генерации изображения**: **лицевая сторона открытки** (иллюстрация); промпт получит модель картинки. Учти повод, настроение, формат, стиль, **палитру из вкладок**, орнамент, правило про текст на картинке. Опциональная строка — вплести мотив. Без водяных знаков. Верни только эту строку — без другого текста.`,
+      title: `Открытка`,
       uiPlan: {
         fields: [
           {
@@ -302,7 +303,6 @@ export const Data: Meta = () =>
             prompt: `Дополнительный мотив или символ (одна строка, необязательно):`,
           },
         ],
-        title: `💌 Открытка`,
       },
     },
   }) as const;
