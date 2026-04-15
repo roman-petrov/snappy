@@ -9,7 +9,7 @@ export type OpenAiSpeechRecognitionModelDefinition = {
 
 export const OpenAiSpeechRecognitionModel =
   ({ cost, name }: OpenAiSpeechRecognitionModelDefinition) =>
-  (client: InstanceType<typeof OpenAI>): AiGenericSpeechRecognitionModel => {
+  (client: OpenAI): AiGenericSpeechRecognitionModel => {
     const process: AiGenericSpeechRecognitionModel[`process`] = async input => {
       const file = await toFile(Buffer.from(input.bytes), input.fileName, { type: input.mimeType });
       const transcription = await client.audio.transcriptions.create({ file, model: name, response_format: `json` });

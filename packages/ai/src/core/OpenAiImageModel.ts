@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable functional/no-promise-reject */
 import type { AiImageSize } from "@snappy/domain";
-import type openai from "openai";
+import type { OpenAI } from "openai";
 
 import type { AiGenericImageModel } from "../Types";
 
@@ -14,7 +14,7 @@ export type OpenAiImageModelDefinition = {
 
 export const OpenAiImageModel =
   ({ b64JsonResponse, cost, name }: OpenAiImageModelDefinition) =>
-  (client: InstanceType<typeof openai>): AiGenericImageModel => {
+  (client: OpenAI): AiGenericImageModel => {
     const process: AiGenericImageModel[`process`] = async (prompt, { quality, size }) => {
       const raw = await client.images.generate({
         model: name,

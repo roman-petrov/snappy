@@ -2,6 +2,7 @@
 // cspell:word wght
 import type { Plugin } from "vite";
 
+import { _ } from "@snappy/core";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -25,7 +26,7 @@ export const pluginFontPreload = (): Plugin => ({
 
     const isWoff2Asset = (chunk: { fileName?: string; type: string }, subset: string) =>
       chunk.type === `asset` &&
-      typeof chunk.fileName === `string` &&
+      _.isString(chunk.fileName) &&
       chunk.fileName.includes(subset) &&
       chunk.fileName.endsWith(`.woff2`);
 
@@ -40,7 +41,7 @@ export const pluginFontPreload = (): Plugin => ({
       .map(subset => {
         const entry = chunks.find(chunk => isWoff2Asset(chunk as { fileName?: string; type: string }, subset));
 
-        return entry !== undefined && typeof (entry as { fileName: string }).fileName === `string`
+        return entry !== undefined && _.isString((entry as { fileName: string }).fileName)
           ? (entry as { fileName: string }).fileName
           : undefined;
       })

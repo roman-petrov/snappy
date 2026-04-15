@@ -119,17 +119,15 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
               if (run.shutdown !== undefined) {
                 const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
 
-                return typeof shutdownResult === `object` ? shutdownResult.exitCode : shutdownResult;
+                return _.isObject(shutdownResult) ? shutdownResult.exitCode : shutdownResult;
               }
 
               return code;
             })()
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
-  const exitCode = typeof rawResult === `object` ? rawResult.exitCode : rawResult;
-
-  const message =
-    typeof rawResult === `object` ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
+  const exitCode = _.isObject(rawResult) ? rawResult.exitCode : rawResult;
+  const message = _.isObject(rawResult) ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
   if (!mcp && !verbose) {
     const seconds = Math.round((_.now() - start) / _.second);
@@ -140,7 +138,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     }
   }
 
-  if (!mcp && exitCode !== 0 && typeof rawResult === `object`) {
+  if (!mcp && exitCode !== 0 && _.isObject(rawResult)) {
     Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
     if (rawResult.stderr.length > 0) {
       Console.error(rawResult.stderr);

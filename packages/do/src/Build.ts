@@ -1,5 +1,6 @@
 // cspell:word gradlew
 /* eslint-disable functional/no-expression-statements */
+import { _ } from "@snappy/core";
 import { Process } from "@snappy/node";
 import fs from "node:fs";
 import { join } from "node:path";
@@ -14,8 +15,7 @@ const faviconPath = (root: string) => join(root, `packages`, `ui`, `src`, `asset
 
 export type BuildOptions = { capture?: true };
 
-const exitCode = (r: number | { exitCode: number; stderr: string; stdout: string }) =>
-  typeof r === `object` ? r.exitCode : r;
+const exitCode = (r: number | { exitCode: number; stderr: string; stdout: string }) => (_.isObject(r) ? r.exitCode : r);
 
 const runSpawn = async (cwd: string, argv: string[], capture: boolean) =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});

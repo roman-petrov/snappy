@@ -53,7 +53,7 @@ const toggleBulletLine = (field: Extract<StaticFormField, { kind: `toggle` }>, l
 };
 
 const tabsMultiBulletLines = (field: Extract<StaticFormField, { kind: `tabs_multi` }>, raw: unknown): string[] => {
-  const selected = new Set(Array.isArray(raw) ? raw.filter(_.isString) : []);
+  const selected = new Set(_.isArray(raw) ? raw.filter(_.isString) : []);
 
   return field.options
     .filter(option => selected.has(option.value))

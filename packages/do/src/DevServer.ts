@@ -3,7 +3,7 @@
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
 import { Cert } from "@snappy/node";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
@@ -65,8 +65,9 @@ export const DevServer = () => {
       { analyzeFileName: `dev` },
     );
 
-    const resolved =
-      typeof configBuilder === `function` ? configBuilder({ command: `serve`, mode: `development` }) : configBuilder;
+    const resolved = _.isFunction(configBuilder)
+      ? configBuilder({ command: `serve`, mode: `development` })
+      : configBuilder;
 
     const config = await Promise.resolve(resolved);
 

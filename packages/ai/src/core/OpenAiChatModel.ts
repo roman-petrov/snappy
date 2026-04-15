@@ -1,5 +1,5 @@
 /* eslint-disable functional/no-promise-reject */
-import type openai from "openai";
+import type { OpenAI } from "openai";
 
 import type { AiGenericChatModel } from "../Types";
 
@@ -7,7 +7,7 @@ export type OpenAiChatModelDefinition = { cost: (promptTok: number, completionTo
 
 export const OpenAiChatModel =
   ({ cost, name }: OpenAiChatModelDefinition) =>
-  (client: InstanceType<typeof openai>): AiGenericChatModel => {
+  (client: OpenAI): AiGenericChatModel => {
     const process: AiGenericChatModel[`process`] = async prompt => {
       const completionResponse = await client.chat.completions.create({
         messages: [{ content: prompt, role: `user` }],
