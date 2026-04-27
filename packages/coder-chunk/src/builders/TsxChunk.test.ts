@@ -51,4 +51,52 @@ describe(`TsxChunk`, () => {
       ]
     `);
   });
+
+  it(`extracts imports and exported components`, () => {
+    expect(
+      TsxChunk.build({
+        path: `component.tsx`,
+        source: `import { useMemo } from "react";\nexport function View() { return <main>{useMemo(() => "ok", [])}</main>; }`,
+      }),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "endLine": 1,
+          "path": "component.tsx",
+          "startLine": 1,
+          "text": "import { useMemo } from "react";",
+        },
+        {
+          "endLine": 2,
+          "path": "component.tsx",
+          "startLine": 2,
+          "text": "export function View() { return <main>{useMemo(() => "ok", [])}</main>; }",
+        },
+      ]
+    `);
+  });
+
+  it(`extracts generic function and exported arrow component`, () => {
+    expect(
+      TsxChunk.build({
+        path: `generic.tsx`,
+        source: `function pick<T>(value: T): T { return value; }\nexport const Item = () => <article>{pick("ok")}</article>;`,
+      }),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "endLine": 1,
+          "path": "generic.tsx",
+          "startLine": 1,
+          "text": "function pick<T>(value: T): T { return value; }",
+        },
+        {
+          "endLine": 2,
+          "path": "generic.tsx",
+          "startLine": 2,
+          "text": "export const Item = () => <article>{pick("ok")}</article>;",
+        },
+      ]
+    `);
+  });
 });

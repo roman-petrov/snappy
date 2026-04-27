@@ -51,4 +51,78 @@ describe(`TsChunk`, () => {
         ]
       `);
   });
+
+  it(`extracts top-level export statements`, () => {
+    expect(TsChunk.build({ path: `index.ts`, source: `export * from "./a";\nexport * from "./b";` }))
+      .toMatchInlineSnapshot(`
+        [
+          {
+            "endLine": 1,
+            "path": "index.ts",
+            "startLine": 1,
+            "text": "export * from "./a";",
+          },
+          {
+            "endLine": 2,
+            "path": "index.ts",
+            "startLine": 2,
+            "text": "export * from "./b";",
+          },
+        ]
+      `);
+  });
+
+  it(`extracts top-level imports and exported declarations`, () => {
+    expect(
+      TsChunk.build({
+        path: `api.ts`,
+        source: `import type { User } from "./types";\nexport const run = (user: User) => user.id;`,
+      }),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "endLine": 1,
+          "path": "api.ts",
+          "startLine": 1,
+          "text": "import type { User } from "./types";",
+        },
+        {
+          "endLine": 2,
+          "path": "api.ts",
+          "startLine": 2,
+          "text": "export const run = (user: User) => user.id;",
+        },
+      ]
+    `);
+  });
+
+  it(`extracts enums namespaces and module declarations`, () => {
+    expect(
+      TsChunk.build({
+        path: `shapes.ts`,
+        source: `enum Kind { A = "a" }\nnamespace Api { export type Id = string; }\ndeclare module "x" { export const ok: true; }`,
+      }),
+    ).toMatchInlineSnapshot(`
+      [
+        {
+          "endLine": 1,
+          "path": "shapes.ts",
+          "startLine": 1,
+          "text": "enum Kind { A = "a" }",
+        },
+        {
+          "endLine": 2,
+          "path": "shapes.ts",
+          "startLine": 2,
+          "text": "export type Id = string;",
+        },
+        {
+          "endLine": 3,
+          "path": "shapes.ts",
+          "startLine": 3,
+          "text": "module "x" { export const ok: true; }",
+        },
+      ]
+    `);
+  });
 });

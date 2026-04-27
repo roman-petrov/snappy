@@ -42,7 +42,7 @@ try {
   let lastIndexedPath: string | undefined;
   const indexStartedAt = performance.now();
   try {
-    await db.sync({
+    const { filesSkipped } = await db.sync({
       onProgress: progress => {
         if (progress.kind === `file`) {
           lastIndexedPath = progress.path;
@@ -55,6 +55,12 @@ try {
         }
       },
     });
+    if (filesSkipped.length > 0) {
+      Console.errorLine(Theme.error(t(`startup.skippedFilesError`, { count: String(filesSkipped.length) })));
+      Console.errorLine(filesSkipped.map(filePath => Theme.error(filePath)).join(`\n`));
+      db.close();
+      process.exit(1);
+    }
   } catch (error) {
     Progress.finishIndexerProgressLine(
       `${Theme.warning(t(`startup.indexingFailed`))} ${Theme.dim(`— ${t(`startup.continueWithoutFreshIndex`)}`)}`,

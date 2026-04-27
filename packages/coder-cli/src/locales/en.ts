@@ -22,6 +22,7 @@ export const en = {
     indexingStart: `Index`,
     indexingStatus: `Updating code index`,
     ready: `Index ready`,
+    skippedFilesError: `Found files without chunks ({count}):`,
     unchanged: `unchanged`,
     updated: `updated`,
   },

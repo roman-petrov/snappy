@@ -22,6 +22,7 @@ export const ru = {
     indexingStart: `Индекс`,
     indexingStatus: `Обновляю индекс кода`,
     ready: `Индекс готов`,
+    skippedFilesError: `Найдены файлы без чанков ({count}):`,
     unchanged: `без изменений`,
     updated: `обновлено`,
   },

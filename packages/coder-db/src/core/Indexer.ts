@@ -40,6 +40,13 @@ export type IndexProgress =
 
 export type SyncOptions = { onProgress?: (progress: IndexProgress) => void };
 
+export type SyncResult = {
+  chunkTotal: number;
+  filesIndexed: number;
+  filesSkipped: string[];
+  filesSkippedUnchanged: number;
+};
+
 type EmbeddedBatch = { path: string; rows: VectorStoreChunk[]; totalChunks: number };
 
 type IndexedJob = { chunks: ReturnType<typeof CoderChunk.build>; digest: string; path: string; totalChunks: number };
@@ -126,6 +133,7 @@ export const Indexer =
     const changedJobs: IndexedJob[] = [];
     const filesTotal = paths.length;
     let filesSkippedUnchanged = 0;
+    const filesSkipped: string[] = [];
     for (const relativePath of paths) {
       const abs = path.join(projectRoot, relativePath.split(`/`).join(path.sep));
       const stats = await stat(abs).catch((): undefined => undefined);
@@ -148,6 +156,7 @@ export const Indexer =
 
       const chunks = CoderChunk.build(relativePath, text).filter(chunk => chunk.text.trim().length > 0);
       if (chunks.length === 0) {
+        filesSkipped.push(relativePath);
         continue;
       }
 
@@ -355,7 +364,7 @@ export const Indexer =
       kind: `done`,
     });
 
-    return { chunkTotal, filesIndexed: changedJobs.length, filesSkippedUnchanged };
+    return { chunkTotal, filesIndexed: changedJobs.length, filesSkipped, filesSkippedUnchanged } satisfies SyncResult;
   };
 
 export type Indexer = ReturnType<typeof Indexer>;
