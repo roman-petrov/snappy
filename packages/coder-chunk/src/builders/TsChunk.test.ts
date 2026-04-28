@@ -116,14 +116,14 @@ describe(`TsChunk`, () => {
       `);
     });
 
-    it(`extracts non-exported const arrow as arrow expression chunk`, () => {
+    it(`extracts non-exported const arrow as lexical declaration chunk`, () => {
       expect(build({ path: `local.ts`, source: `const run = (value: number) => value + 1;` })).toMatchInlineSnapshot(`
         [
           {
             "endLine": 1,
             "path": "local.ts",
             "startLine": 1,
-            "text": "(value: number) => value + 1",
+            "text": "const run = (value: number) => value + 1;",
           },
         ]
       `);
@@ -143,30 +143,35 @@ describe(`TsChunk`, () => {
         `);
     });
 
-    it(`does not extract const function expression`, () => {
+    it(`extracts const function expression as lexical declaration chunk`, () => {
       expect(build({ path: `fn.ts`, source: `const run = function (value: number) { return value + 1; };` }))
-        .toMatchInlineSnapshot(`[]`);
+        .toMatchInlineSnapshot(`
+          [
+            {
+              "endLine": 1,
+              "path": "fn.ts",
+              "startLine": 1,
+              "text": "const run = function (value: number) { return value + 1; };",
+            },
+          ]
+        `);
     });
 
     it(`keeps class as one chunk and skips nested methods`, () => {
-      expect(
-        build({
-          path: `class.ts`,
-          source: `class Service {\n  run() { return 1; }\n  stop() { return 2; }\n}`,
-        }),
-      ).toMatchInlineSnapshot(`
-        [
-          {
-            "endLine": 4,
-            "path": "class.ts",
-            "startLine": 1,
-            "text": "class Service {
-          run() { return 1; }
-          stop() { return 2; }
-        }",
-          },
-        ]
-      `);
+      expect(build({ path: `class.ts`, source: `class Service {\n  run() { return 1; }\n  stop() { return 2; }\n}` }))
+        .toMatchInlineSnapshot(`
+          [
+            {
+              "endLine": 4,
+              "path": "class.ts",
+              "startLine": 1,
+              "text": "class Service {
+            run() { return 1; }
+            stop() { return 2; }
+          }",
+            },
+          ]
+        `);
     });
 
     it(`extracts enums namespaces and module declarations`, () => {
@@ -211,13 +216,13 @@ describe(`TsChunk`, () => {
             "endLine": 1,
             "path": "Math.ts",
             "startLine": 1,
-            "text": "(a: number, b: number) => a + b",
+            "text": "const add = (a: number, b: number) => a + b;",
           },
           {
             "endLine": 2,
             "path": "Math.ts",
             "startLine": 2,
-            "text": "(a: number, b: number) => a - b",
+            "text": "const subtract = (a: number, b: number) => a - b;",
           },
           {
             "endLine": 4,
