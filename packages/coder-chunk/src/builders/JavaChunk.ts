@@ -1,10 +1,8 @@
-import java from "tree-sitter-java";
-
 import { TreeSitterChunk } from "../factory/TreeSitterChunk";
-import { TreeSitter } from "../TreeSitter";
 
 export const JavaChunk = TreeSitterChunk({
   extensions: [`.java`],
+  language: `java`,
   nodes: new Set([
     `annotation_type_declaration`,
     `class_declaration`,
@@ -14,5 +12,4 @@ export const JavaChunk = TreeSitterChunk({
     `method_declaration`,
     `record_declaration`,
   ]),
-  parser: TreeSitter.parser(`.java`, java),
 });

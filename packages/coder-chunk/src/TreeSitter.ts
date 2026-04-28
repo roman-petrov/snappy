@@ -1,26 +1,46 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 import { _ } from "@snappy/core";
-import treeSitterParser from "tree-sitter";
+import { createRequire } from "node:module";
+import { Language, Parser } from "web-tree-sitter";
 
-const parserCache: Record<string, treeSitterParser | undefined> = {};
+const require = createRequire(import.meta.url);
 
-const parser = (extension: string, language: unknown) => {
-  const cached = parserCache[extension];
+await Parser.init();
+
+const languages = [`css`, `java`, `javascript`, `json`, `tsx`, `typescript`] as const;
+
+export type TreeSitterLanguage = (typeof languages)[number];
+
+const languageParsers = _.fromEntries(
+  await Promise.all(
+    languages.map(
+      async language =>
+        [
+          language,
+          await Language.load(
+            require.resolve(
+              `${
+                language === `tsx` || language === `typescript` ? `tree-sitter-typescript` : `tree-sitter-${language}`
+              }/tree-sitter-${language}.wasm`,
+            ),
+          ),
+        ] as const,
+    ),
+  ),
+);
+
+const parserCache: Partial<Record<TreeSitterLanguage, Parser>> = {};
+
+export const TreeSitter = (language: TreeSitterLanguage) => {
+  const cached = parserCache[language];
   if (cached !== undefined) {
     return cached;
   }
 
-  const isParserLanguage = (value: unknown): value is treeSitterParser.Language => _.isObject(value);
-  if (!isParserLanguage(language)) {
-    return undefined;
-  }
+  const parser = new Parser();
+  parser.setLanguage(languageParsers[language]);
+  parserCache[language] = parser;
 
-  const parserInstance = new treeSitterParser();
-  parserInstance.setLanguage(language);
-  parserCache[extension] = parserInstance;
-
-  return parserInstance;
+  return parser;
 };
-
-export const TreeSitter = { parser };

@@ -1,14 +1,14 @@
-import type parser from "tree-sitter";
+import type { TreeSitterLanguage } from "../TreeSitter";
 
 import { TreeSitterChunk } from "./TreeSitterChunk";
 
-type TreeSitterFixedChunkInput<T extends string> = {
+export type TreeSitterFixedChunkInput = {
   additionalNodes?: readonly string[];
-  extension: T;
-  parser: parser | undefined;
+  extensions: readonly string[];
+  language: TreeSitterLanguage;
 };
 
 export const TreeSitterFixedChunk =
-  <T extends string>(nodes: readonly string[]) =>
-  ({ additionalNodes = [], extension, parser }: TreeSitterFixedChunkInput<T>) =>
-    TreeSitterChunk({ extensions: [extension], nodes: new Set([...nodes, ...additionalNodes]), parser });
+  (nodes: readonly string[]) =>
+  ({ additionalNodes = [], extensions, language }: TreeSitterFixedChunkInput) =>
+    TreeSitterChunk({ extensions, language, nodes: new Set([...nodes, ...additionalNodes]) });

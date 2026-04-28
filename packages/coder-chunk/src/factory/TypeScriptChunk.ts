@@ -1,6 +1,6 @@
 import { TreeSitterFixedChunk } from "./TreeSitterFixedChunk";
 
-export const TypeScriptChunk = TreeSitterFixedChunk<`.ts` | `.tsx`>([
+export const TypeScriptChunk = TreeSitterFixedChunk([
   `arrow_function`,
   `class_declaration`,
   `enum_declaration`,

@@ -1,6 +1,6 @@
 import { TreeSitterFixedChunk } from "./TreeSitterFixedChunk";
 
-export const JavaScriptChunk = TreeSitterFixedChunk<`.js` | `.jsx`>([
+export const JavaScriptChunk = TreeSitterFixedChunk([
   `arrow_function`,
   `class_declaration`,
   `export_statement`,
