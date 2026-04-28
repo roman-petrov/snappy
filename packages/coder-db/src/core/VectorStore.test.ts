@@ -1,5 +1,6 @@
 // cspell:word nprobes
 /* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable @typescript-eslint/require-await */
 import { _ } from "@snappy/core";
 import { describe, expect, it, vi } from "vitest";
@@ -12,6 +13,7 @@ const mocks = vi.hoisted(() => {
     closed: false,
     countRows: 0,
     createIndexCalls: [] as string[],
+    createIndexOptions: [] as unknown[],
     createTableSeedRows: [] as VectorStoreChunk[][],
     deleteWhereClauses: [] as string[],
     dropTableCalls: [] as string[],
@@ -31,8 +33,9 @@ const mocks = vi.hoisted(() => {
       state.tableAddCalls.push(rows);
     }),
     countRows: vi.fn(async () => state.countRows),
-    createIndex: vi.fn(async (field: string) => {
+    createIndex: vi.fn(async (field: string, options?: unknown) => {
       state.createIndexCalls.push(field);
+      state.createIndexOptions.push(options);
     }),
     delete: vi.fn(async (whereClause: string) => {
       state.deleteWhereClauses.push(whereClause);
@@ -86,6 +89,7 @@ const mocks = vi.hoisted(() => {
     state.closed = false;
     state.countRows = 0;
     state.createIndexCalls = [];
+    state.createIndexOptions = [];
     state.createTableSeedRows = [];
     state.deleteWhereClauses = [];
     state.dropTableCalls = [];
@@ -104,7 +108,10 @@ const mocks = vi.hoisted(() => {
   return { connection, reset, state };
 });
 
-vi.mock(`@lancedb/lancedb`, () => ({ connect: vi.fn(async () => mocks.connection) }));
+vi.mock(`@lancedb/lancedb`, () => ({
+  connect: vi.fn(async () => mocks.connection),
+  Index: { ivfPq: (options: unknown) => ({ kind: `ivfPq`, options }) },
+}));
 
 const makeChunk = (index: number, path = `a.ts`): VectorStoreChunk => ({
   chunkIndex: index,
@@ -246,7 +253,28 @@ describe(`reindex`, () => {
     await store.reindex();
 
     expect(mocks.state.createIndexCalls).toStrictEqual([`vector`]);
+    expect(mocks.state.createIndexOptions).toHaveLength(1);
     expect(mocks.state.optimizeCalls).toBe(0);
+  });
+
+  it(`creates vector index with bounded partition count`, async () => {
+    mocks.reset();
+    mocks.state.tableNames = [`code_chunks`];
+    mocks.state.countRows = Constants.lanceDb.minRowsForVectorIndex * 10;
+    const store = await VectorStore(`mem://db`);
+
+    await store.reindex();
+
+    expect(mocks.state.createIndexCalls).toStrictEqual([`vector`]);
+
+    const options = mocks.state.createIndexOptions[0] as {
+      config?: { kind: string; options?: { numPartitions?: number } };
+    };
+
+    expect(options.config?.kind).toBe(`ivfPq`);
+    expect(options.config?.options?.numPartitions).toBe(
+      Math.floor((Constants.lanceDb.minRowsForVectorIndex * 10) / Constants.lanceDb.indexRowsPerPartition),
+    );
   });
 
   it(`runs optimize when vector index already exists`, async () => {

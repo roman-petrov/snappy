@@ -25,6 +25,12 @@ export const Constants = {
   lanceDb: {
     /** Multiplier for coalesced write flush size in replace flow. */
     coalescedWriteMultiplier: 16,
+    /** Hard cap for IVF partitions to avoid many empty buckets on medium datasets. */
+    indexMaxPartitions: 32,
+    /** Lower bound for IVF partitions once index building is enabled. */
+    indexMinPartitions: 8,
+    /** Target rows per one IVF partition. */
+    indexRowsPerPartition: 512,
     /** Minimum row count before building the IVF-PQ vector index. */
     minRowsForVectorIndex: 512,
     /** IVF partitions to probe per query when an ANN index exists (`VectorQuery#nprobes`). */

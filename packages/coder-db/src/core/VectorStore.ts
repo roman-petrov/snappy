@@ -8,7 +8,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { connect, type Table } from "@lancedb/lancedb";
+import { connect, Index, type Table } from "@lancedb/lancedb";
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
@@ -158,7 +158,11 @@ export const VectorStore = async (uri: string) => {
       return;
     }
 
-    await table.createIndex(`vector`);
+    const numberPartitions = Math.max(
+      Constants.lanceDb.indexMinPartitions,
+      Math.min(Constants.lanceDb.indexMaxPartitions, Math.floor(rowCount / Constants.lanceDb.indexRowsPerPartition)),
+    );
+    await table.createIndex(`vector`, { config: Index.ivfPq({ numPartitions: numberPartitions }) });
   };
 
   return { add, clean, close, reindex, remove, replace, search };
