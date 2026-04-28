@@ -20,18 +20,8 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
-  _avg: UserAvgAggregateOutputType | null
-  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
-}
-
-export type UserAvgAggregateOutputType = {
-  balance: runtime.Decimal | null
-}
-
-export type UserSumAggregateOutputType = {
-  balance: runtime.Decimal | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -42,7 +32,6 @@ export type UserMinAggregateOutputType = {
   image: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  balance: runtime.Decimal | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -53,7 +42,6 @@ export type UserMaxAggregateOutputType = {
   image: string | null
   createdAt: Date | null
   updatedAt: Date | null
-  balance: runtime.Decimal | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -64,18 +52,9 @@ export type UserCountAggregateOutputType = {
   image: number
   createdAt: number
   updatedAt: number
-  balance: number
   _all: number
 }
 
-
-export type UserAvgAggregateInputType = {
-  balance?: true
-}
-
-export type UserSumAggregateInputType = {
-  balance?: true
-}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -85,7 +64,6 @@ export type UserMinAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
-  balance?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -96,7 +74,6 @@ export type UserMaxAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
-  balance?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -107,7 +84,6 @@ export type UserCountAggregateInputType = {
   image?: true
   createdAt?: true
   updatedAt?: true
-  balance?: true
   _all?: true
 }
 
@@ -149,18 +125,6 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: UserAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: UserSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -191,8 +155,6 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
-  _avg?: UserAvgAggregateInputType
-  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -205,10 +167,7 @@ export type UserGroupByOutputType = {
   image: string | null
   createdAt: Date
   updatedAt: Date
-  balance: runtime.Decimal
   _count: UserCountAggregateOutputType | null
-  _avg: UserAvgAggregateOutputType | null
-  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -239,9 +198,9 @@ export type UserWhereInput = {
   image?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  balance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
+  userBalance?: Prisma.XOR<Prisma.UserBalanceNullableScalarRelationFilter, Prisma.UserBalanceWhereInput> | null
   balanceHistory?: Prisma.BalanceHistoryListRelationFilter
   userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }
@@ -254,9 +213,9 @@ export type UserOrderByWithRelationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
   sessions?: Prisma.SessionOrderByRelationAggregateInput
   accounts?: Prisma.AccountOrderByRelationAggregateInput
+  userBalance?: Prisma.UserBalanceOrderByWithRelationInput
   balanceHistory?: Prisma.BalanceHistoryOrderByRelationAggregateInput
   userSettings?: Prisma.UserSettingsOrderByWithRelationInput
 }
@@ -272,9 +231,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   image?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
-  balance?: Prisma.DecimalFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionListRelationFilter
   accounts?: Prisma.AccountListRelationFilter
+  userBalance?: Prisma.XOR<Prisma.UserBalanceNullableScalarRelationFilter, Prisma.UserBalanceWhereInput> | null
   balanceHistory?: Prisma.BalanceHistoryListRelationFilter
   userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
 }, "id" | "email">
@@ -287,12 +246,9 @@ export type UserOrderByWithAggregationInput = {
   image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
-  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
-  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -306,7 +262,6 @@ export type UserScalarWhereWithAggregatesInput = {
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
-  balance?: Prisma.DecimalWithAggregatesFilter<"User"> | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCreateInput = {
@@ -317,9 +272,9 @@ export type UserCreateInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
@@ -332,9 +287,9 @@ export type UserUncheckedCreateInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
@@ -347,9 +302,9 @@ export type UserUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
@@ -362,9 +317,9 @@ export type UserUncheckedUpdateInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -377,7 +332,6 @@ export type UserCreateManyInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -388,7 +342,6 @@ export type UserUpdateManyMutationInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -399,7 +352,6 @@ export type UserUncheckedUpdateManyInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -410,11 +362,6 @@ export type UserCountOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
-}
-
-export type UserAvgOrderByAggregateInput = {
-  balance?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -425,7 +372,6 @@ export type UserMaxOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -436,11 +382,6 @@ export type UserMinOrderByAggregateInput = {
   image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  balance?: Prisma.SortOrder
-}
-
-export type UserSumOrderByAggregateInput = {
-  balance?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -462,42 +403,6 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
-}
-
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
-}
-
-export type UserCreateNestedOneWithoutBalanceHistoryInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutBalanceHistoryNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
-  upsert?: Prisma.UserUpsertWithoutBalanceHistoryInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBalanceHistoryInput, Prisma.UserUpdateWithoutBalanceHistoryInput>, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
-}
-
-export type UserCreateNestedOneWithoutUserSettingsInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
-export type UserUpdateOneRequiredWithoutUserSettingsNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
-  upsert?: Prisma.UserUpsertWithoutUserSettingsInput
-  connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserSettingsInput, Prisma.UserUpdateWithoutUserSettingsInput>, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
 }
 
 export type UserCreateNestedOneWithoutSessionsInput = {
@@ -528,148 +433,46 @@ export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
 }
 
-export type UserCreateWithoutBalanceHistoryInput = {
-  id: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+export type UserCreateNestedOneWithoutUserBalanceInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserBalanceInput, Prisma.UserUncheckedCreateWithoutUserBalanceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserBalanceInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUncheckedCreateWithoutBalanceHistoryInput = {
-  id: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+export type UserUpdateOneRequiredWithoutUserBalanceNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserBalanceInput, Prisma.UserUncheckedCreateWithoutUserBalanceInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserBalanceInput
+  upsert?: Prisma.UserUpsertWithoutUserBalanceInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserBalanceInput, Prisma.UserUpdateWithoutUserBalanceInput>, Prisma.UserUncheckedUpdateWithoutUserBalanceInput>
 }
 
-export type UserCreateOrConnectWithoutBalanceHistoryInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+export type UserCreateNestedOneWithoutBalanceHistoryInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpsertWithoutBalanceHistoryInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
-  where?: Prisma.UserWhereInput
+export type UserUpdateOneRequiredWithoutBalanceHistoryNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBalanceHistoryInput
+  upsert?: Prisma.UserUpsertWithoutBalanceHistoryInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBalanceHistoryInput, Prisma.UserUpdateWithoutBalanceHistoryInput>, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
 }
 
-export type UserUpdateToOneWithWhereWithoutBalanceHistoryInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
+export type UserCreateNestedOneWithoutUserSettingsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserUpdateWithoutBalanceHistoryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutBalanceHistoryInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
-}
-
-export type UserCreateWithoutUserSettingsInput = {
-  id: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
-  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
-}
-
-export type UserUncheckedCreateWithoutUserSettingsInput = {
-  id: string
-  name: string
-  email: string
-  emailVerified?: boolean
-  image?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
-  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
-  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
-}
-
-export type UserCreateOrConnectWithoutUserSettingsInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
-}
-
-export type UserUpsertWithoutUserSettingsInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
-  where?: Prisma.UserWhereInput
-}
-
-export type UserUpdateToOneWithWhereWithoutUserSettingsInput = {
-  where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
-}
-
-export type UserUpdateWithoutUserSettingsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
-  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
-}
-
-export type UserUncheckedUpdateWithoutUserSettingsInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
-  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
-  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
+export type UserUpdateOneRequiredWithoutUserSettingsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutUserSettingsInput
+  upsert?: Prisma.UserUpsertWithoutUserSettingsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserSettingsInput, Prisma.UserUpdateWithoutUserSettingsInput>, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -680,8 +483,8 @@ export type UserCreateWithoutSessionsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
@@ -694,8 +497,8 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
@@ -724,8 +527,8 @@ export type UserUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
@@ -738,8 +541,8 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -752,8 +555,8 @@ export type UserCreateWithoutAccountsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
 }
@@ -766,8 +569,8 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  balance?: runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
 }
@@ -796,8 +599,8 @@ export type UserUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
 }
@@ -810,10 +613,226 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  balance?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserBalanceInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserBalanceInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserBalanceInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserBalanceInput, Prisma.UserUncheckedCreateWithoutUserBalanceInput>
+}
+
+export type UserUpsertWithoutUserBalanceInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserBalanceInput, Prisma.UserUncheckedUpdateWithoutUserBalanceInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserBalanceInput, Prisma.UserUncheckedCreateWithoutUserBalanceInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserBalanceInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserBalanceInput, Prisma.UserUncheckedUpdateWithoutUserBalanceInput>
+}
+
+export type UserUpdateWithoutUserBalanceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserBalanceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutBalanceHistoryInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
+  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutBalanceHistoryInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
+  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutBalanceHistoryInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+}
+
+export type UserUpsertWithoutBalanceHistoryInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBalanceHistoryInput, Prisma.UserUncheckedCreateWithoutBalanceHistoryInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBalanceHistoryInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBalanceHistoryInput, Prisma.UserUncheckedUpdateWithoutBalanceHistoryInput>
+}
+
+export type UserUpdateWithoutBalanceHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBalanceHistoryInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutUserSettingsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutUserSettingsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutUserSettingsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+}
+
+export type UserUpsertWithoutUserSettingsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutUserSettingsInput, Prisma.UserUncheckedCreateWithoutUserSettingsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutUserSettingsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutUserSettingsInput, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
+}
+
+export type UserUpdateWithoutUserSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutUserSettingsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -873,9 +892,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  balance?: boolean
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  userBalance?: boolean | Prisma.User$userBalanceArgs<ExtArgs>
   balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
   userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -889,7 +908,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  balance?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -900,7 +918,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  balance?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -911,13 +928,13 @@ export type UserSelectScalar = {
   image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  balance?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt" | "balance", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  userBalance?: boolean | Prisma.User$userBalanceArgs<ExtArgs>
   balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
   userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -930,6 +947,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     sessions: Prisma.$SessionPayload<ExtArgs>[]
     accounts: Prisma.$AccountPayload<ExtArgs>[]
+    userBalance: Prisma.$UserBalancePayload<ExtArgs> | null
     balanceHistory: Prisma.$BalanceHistoryPayload<ExtArgs>[]
     userSettings: Prisma.$UserSettingsPayload<ExtArgs> | null
   }
@@ -941,7 +959,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     image: string | null
     createdAt: Date
     updatedAt: Date
-    balance: runtime.Decimal
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -1338,6 +1355,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userBalance<T extends Prisma.User$userBalanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userBalanceArgs<ExtArgs>>): Prisma.Prisma__UserBalanceClient<runtime.Types.Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   balanceHistory<T extends Prisma.User$balanceHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$balanceHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BalanceHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userSettings<T extends Prisma.User$userSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userSettingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1376,7 +1394,6 @@ export interface UserFieldRefs {
   readonly image: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
-  readonly balance: Prisma.FieldRef<"User", 'Decimal'>
 }
     
 
@@ -1815,6 +1832,25 @@ export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
+ * User.userBalance
+ */
+export type User$userBalanceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserBalance
+   */
+  select?: Prisma.UserBalanceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserBalance
+   */
+  omit?: Prisma.UserBalanceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserBalanceInclude<ExtArgs> | null
+  where?: Prisma.UserBalanceWhereInput
 }
 
 /**

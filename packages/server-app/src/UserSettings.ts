@@ -1,17 +1,17 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Db } from "@snappy/db";
-import type { ApiUserLlmSettingsBody, ApiUserLlmSettingsResult } from "@snappy/server-api";
+import type { DbUserSettings } from "@snappy/db";
+import type { ApiUserSettingsBody, ApiUserSettingsResult } from "@snappy/server-api";
 
 import { type Ai, AiConstants, type AiImageQuality } from "@snappy/ai";
 
 import { HttpError } from "./HttpError";
 
-export type UserSettingsConfig = { ai: Ai; user: Db[`user`] };
+export type UserSettingsConfig = { ai: Ai; userSettings: DbUserSettings };
 
-export const UserSettings = ({ ai, user }: UserSettingsConfig) => {
+export const UserSettings = ({ ai, userSettings }: UserSettingsConfig) => {
   const required = <T>(value: T | undefined): T => value ?? HttpError.badRequest();
   const imageQualitySet = new Set<string>(AiConstants.imageQuality);
-  const { defaults, maxImagePromptLength, maxSpeechFileMegaBytes, models } = ai;
+  const { defaults, models } = ai;
   const defaultImageQuality = defaults.imageQuality;
 
   const isImageQuality = (value: null | string | undefined): value is AiImageQuality =>
@@ -40,20 +40,18 @@ export const UserSettings = ({ ai, user }: UserSettingsConfig) => {
   const fallbackModel = (value: null | string | undefined, names: Set<string>, fallback: string) =>
     value !== undefined && value !== null && names.has(value) ? value : fallback;
 
-  const get = async (userId: string): Promise<ApiUserLlmSettingsResult> => {
-    const row = await user.findSettingsByUserId(userId);
+  const get = async (userId: string): Promise<ApiUserSettingsResult> => {
+    const row = await userSettings.findByUserId(userId);
 
     return {
       llmChatModel: fallbackModel(row?.llmChatModel, chatNames, chat),
       llmImageModel: fallbackModel(row?.llmImageModel, imageNames, image),
       llmImageQuality: isImageQuality(row?.llmImageQuality) ? row.llmImageQuality : defaultImageQuality,
       llmSpeechRecognitionModel: fallbackModel(row?.llmSpeechRecognitionModel, speechNames, speech),
-      maxImagePromptLength,
-      maxSpeechFileMegaBytes,
     };
   };
 
-  const set = async (userId: string, body: ApiUserLlmSettingsBody): Promise<ApiUserLlmSettingsResult> => {
+  const set = async (userId: string, body: ApiUserSettingsBody): Promise<ApiUserSettingsResult> => {
     if (
       (body.llmChatModel !== undefined && !chatNames.has(body.llmChatModel)) ||
       (body.llmImageModel !== undefined && !imageNames.has(body.llmImageModel)) ||
@@ -72,7 +70,7 @@ export const UserSettings = ({ ai, user }: UserSettingsConfig) => {
       return get(userId);
     }
 
-    await user.updateLlmModels(userId, body);
+    await userSettings.updateLlmModels(userId, body);
 
     return get(userId);
   };

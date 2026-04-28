@@ -52,12 +52,13 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
-  BalanceHistory: 'BalanceHistory',
-  PaymentLog: 'PaymentLog',
-  UserSettings: 'UserSettings',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  UserBalance: 'UserBalance',
+  BalanceHistory: 'BalanceHistory',
+  PaymentLog: 'PaymentLog',
+  UserSettings: 'UserSettings'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -83,52 +84,10 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  balance: 'balance'
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-export const BalanceHistoryScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  userId: 'userId',
-  kind: 'kind',
-  amountRub: 'amountRub',
-  balanceAfter: 'balanceAfter',
-  meta: 'meta'
-} as const
-
-export type BalanceHistoryScalarFieldEnum = (typeof BalanceHistoryScalarFieldEnum)[keyof typeof BalanceHistoryScalarFieldEnum]
-
-
-export const PaymentLogScalarFieldEnum = {
-  id: 'id',
-  createdAt: 'createdAt',
-  type: 'type',
-  userId: 'userId',
-  yooKassaPaymentId: 'yooKassaPaymentId',
-  amount: 'amount',
-  currency: 'currency',
-  status: 'status',
-  idempotenceKey: 'idempotenceKey',
-  errorMessage: 'errorMessage',
-  paymentMethodId: 'paymentMethodId'
-} as const
-
-export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof typeof PaymentLogScalarFieldEnum]
-
-
-export const UserSettingsScalarFieldEnum = {
-  userId: 'userId',
-  llmChatModel: 'llmChatModel',
-  llmImageModel: 'llmImageModel',
-  llmImageQuality: 'llmImageQuality',
-  llmSpeechRecognitionModel: 'llmSpeechRecognitionModel'
-} as const
-
-export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
 
 
 export const SessionScalarFieldEnum = {
@@ -174,6 +133,55 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const UserBalanceScalarFieldEnum = {
+  userId: 'userId',
+  amount: 'amount'
+} as const
+
+export type UserBalanceScalarFieldEnum = (typeof UserBalanceScalarFieldEnum)[keyof typeof UserBalanceScalarFieldEnum]
+
+
+export const BalanceHistoryScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  userId: 'userId',
+  kind: 'kind',
+  amountRub: 'amountRub',
+  balanceAfter: 'balanceAfter',
+  meta: 'meta'
+} as const
+
+export type BalanceHistoryScalarFieldEnum = (typeof BalanceHistoryScalarFieldEnum)[keyof typeof BalanceHistoryScalarFieldEnum]
+
+
+export const PaymentLogScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  type: 'type',
+  userId: 'userId',
+  yooKassaPaymentId: 'yooKassaPaymentId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  idempotenceKey: 'idempotenceKey',
+  errorMessage: 'errorMessage',
+  paymentMethodId: 'paymentMethodId'
+} as const
+
+export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof typeof PaymentLogScalarFieldEnum]
+
+
+export const UserSettingsScalarFieldEnum = {
+  userId: 'userId',
+  llmChatModel: 'llmChatModel',
+  llmImageModel: 'llmImageModel',
+  llmImageQuality: 'llmImageQuality',
+  llmSpeechRecognitionModel: 'llmSpeechRecognitionModel'
+} as const
+
+export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
 
 
 export const SortOrder = {

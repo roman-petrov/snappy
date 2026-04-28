@@ -22,7 +22,7 @@ export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, tit
   }, [ids, settingsField, settingsResponse]);
 
   const onSelect = async (next: string) => {
-    const settingsSetResponse = await api.userLlmSettingsSet({ [settingsField]: next });
+    const settingsSetResponse = await api.userSettingsSet({ [settingsField]: next });
     setValue(settingsSetResponse[settingsField]);
   };
 

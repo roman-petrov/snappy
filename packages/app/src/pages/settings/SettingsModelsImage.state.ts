@@ -24,12 +24,12 @@ export const useSettingsModelsImageState = () => {
   }, [ids, settingsResponse]);
 
   const onModelSelect = async (next: string) => {
-    const response = await api.userLlmSettingsSet({ llmImageModel: next });
+    const response = await api.userSettingsSet({ llmImageModel: next });
     setModelValue(response.llmImageModel);
   };
 
   const onQualitySelect = async (next: AiImageQuality) => {
-    const response = await api.userLlmSettingsSet({ llmImageQuality: next });
+    const response = await api.userSettingsSet({ llmImageQuality: next });
     setQualityValue(response.llmImageQuality);
   };
 

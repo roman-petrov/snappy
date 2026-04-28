@@ -15,7 +15,7 @@ export const useSettingsState = () => {
   const locale = useStoreValue($locale);
 
   useAsyncEffect(async () => {
-    const [bal, llm] = await Promise.all([api.balanceGet(), api.userLlmSettingsGet()]);
+    const [bal, llm] = await Promise.all([api.balanceGet(), api.userSettingsGet()]);
     setBalanceEnd(`${i.price(bal.balance)} ›`);
     setLlmChatEnd(`${llm.llmChatModel} ›`);
     setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality} ›`);

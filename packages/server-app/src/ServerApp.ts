@@ -26,13 +26,13 @@ export const ServerApp = async ({
   const betterAuth = BetterAuth({ prisma: db.prisma });
   const payment = Payment({ credentials: { secretKey: yooKassaSecretKey, shopId: yooKassaShopId }, type: `yoo-kassa` });
   const paymentLog = PaymentLog(db.paymentLog);
-  const balance = Balance({ balanceMinRub, user: db.user });
+  const balance = Balance({ balanceMinRub, userBalance: db.userBalance });
   const balancePayment = BalancePayment({ balance, balancePaymentMaxRub, balancePaymentMinRub, payment, paymentLog });
   const ai = await Ai({ aiTunnelKey, locale: `en` });
   const aiTunnelProxy = AiTunnelProxy({ aiTunnelKey, balance });
-  const userLlmSettings = UserSettings({ ai, user: db.user });
+  const userSettings = UserSettings({ ai, userSettings: db.userSettings });
 
-  return { aiTunnelProxy, balance, balancePayment, betterAuth, db, userLlmSettings };
+  return { aiTunnelProxy, balance, balancePayment, betterAuth, db, userSettings };
 };
 
 export type ServerApp = Awaited<ReturnType<typeof ServerApp>>;

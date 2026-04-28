@@ -14,18 +14,16 @@ export type ApiOkResult = { status: ApiStatusOk };
 
 export type ApiStatusOk = `ok`;
 
-export type ApiUserLlmSettingsBody = {
+export type ApiUserSettingsBody = {
   llmChatModel?: string;
   llmImageModel?: string;
   llmImageQuality?: AiImageQuality;
   llmSpeechRecognitionModel?: string;
 };
 
-export type ApiUserLlmSettingsResult = {
+export type ApiUserSettingsResult = {
   llmChatModel: string;
   llmImageModel: string;
   llmImageQuality: AiImageQuality;
   llmSpeechRecognitionModel: string;
-  maxImagePromptLength: number;
-  maxSpeechFileMegaBytes: number;
 };

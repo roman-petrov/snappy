@@ -6,8 +6,8 @@ import type {
   ApiBalancePaymentUrlBody,
   ApiBalancePaymentUrlErrorCode,
   ApiBalanceResult,
-  ApiUserLlmSettingsBody,
-  ApiUserLlmSettingsResult,
+  ApiUserSettingsBody,
+  ApiUserSettingsResult,
 } from "./Types";
 
 import { Endpoints } from "./Endpoints";
@@ -55,13 +55,13 @@ export const ServerApi = (client: Config) => {
       amount: body.amount,
     });
 
-  const userLlmSettingsGet = async () =>
-    request<ApiUserLlmSettingsResult, never>(`${base}${Endpoints.user.llmSettings}`, { method: `GET` });
+  const userSettingsGet = async () =>
+    request<ApiUserSettingsResult, never>(`${base}${Endpoints.user.settings}`, { method: `GET` });
 
-  const userLlmSettingsSet = async (body: ApiUserLlmSettingsBody) =>
-    postJson<ApiUserLlmSettingsResult, never>(`${base}${Endpoints.user.llmSettings}`, body);
+  const userSettingsSet = async (body: ApiUserSettingsBody) =>
+    postJson<ApiUserSettingsResult, never>(`${base}${Endpoints.user.settings}`, body);
 
-  return { balanceGet, balancePaymentUrl, userLlmSettingsGet, userLlmSettingsSet };
+  return { balanceGet, balancePaymentUrl, userSettingsGet, userSettingsSet };
 };
 
 export type ServerApi = ReturnType<typeof ServerApi>;

@@ -4,4 +4,6 @@ export * from "./DbBalanceHistory";
 
 export * from "./DbPaymentLog";
 
-export * from "./DbUser";
+export * from "./DbUserBalance";
+
+export * from "./DbUserSettings";

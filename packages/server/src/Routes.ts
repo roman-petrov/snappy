@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { type ApiBalancePaymentUrlBody, type ApiUserLlmSettingsBody, Endpoints } from "@snappy/server-api";
+import { type ApiBalancePaymentUrlBody, type ApiUserSettingsBody, Endpoints } from "@snappy/server-api";
 import { AiTunnelRoute, type ServerApp } from "@snappy/server-app";
 
 import type { RequestWithUserId } from "./Middleware";
@@ -88,13 +88,13 @@ export const Routes = [
     ),
   ),
   get(
-    Endpoints.user.llmSettings,
-    withUserId(async (api, userId) => api.userLlmSettings.get(userId)),
+    Endpoints.user.settings,
+    withUserId(async (api, userId) => api.userSettings.get(userId)),
     id,
   ),
   post(
-    Endpoints.user.llmSettings,
-    withUserIdAndBody(async (api, userId, b) => api.userLlmSettings.set(userId, b), body<ApiUserLlmSettingsBody>),
+    Endpoints.user.settings,
+    withUserIdAndBody(async (api, userId, b) => api.userSettings.set(userId, b), body<ApiUserSettingsBody>),
     id,
   ),
   post(

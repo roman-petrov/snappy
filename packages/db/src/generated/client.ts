@@ -47,21 +47,6 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
- * Model BalanceHistory
- * 
- */
-export type BalanceHistory = Prisma.BalanceHistoryModel
-/**
- * Model PaymentLog
- * 
- */
-export type PaymentLog = Prisma.PaymentLogModel
-/**
- * Model UserSettings
- * 
- */
-export type UserSettings = Prisma.UserSettingsModel
-/**
  * Model Session
  * 
  */
@@ -76,3 +61,23 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model UserBalance
+ * 
+ */
+export type UserBalance = Prisma.UserBalanceModel
+/**
+ * Model BalanceHistory
+ * 
+ */
+export type BalanceHistory = Prisma.BalanceHistoryModel
+/**
+ * Model PaymentLog
+ * 
+ */
+export type PaymentLog = Prisma.PaymentLogModel
+/**
+ * Model UserSettings
+ * 
+ */
+export type UserSettings = Prisma.UserSettingsModel

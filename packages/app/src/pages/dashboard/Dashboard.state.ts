@@ -353,20 +353,20 @@ export const useDashboardState = () => {
 
   useAsyncEffect(async () => {
     setPhase(`booting`);
-    const [balanceResponse, llmSettingsResponse, aiLoaded] = await Promise.all([
+    const [balanceResponse, settingsResponse, aiLoaded] = await Promise.all([
       api.balanceGet(),
-      api.userLlmSettingsGet(),
+      api.userSettingsGet(),
       Ai({ locale: Locale.effective(), url: `${globalThis.location.origin}/api/ai-tunnel/v1` }),
     ]);
     setSnappyAi(aiLoaded);
     setLlm({
-      chat: llmSettingsResponse.llmChatModel,
-      image: llmSettingsResponse.llmImageModel,
-      imageQuality: llmSettingsResponse.llmImageQuality,
-      speech: llmSettingsResponse.llmSpeechRecognitionModel,
+      chat: settingsResponse.llmChatModel,
+      image: settingsResponse.llmImageModel,
+      imageQuality: settingsResponse.llmImageQuality,
+      speech: settingsResponse.llmSpeechRecognitionModel,
     });
-    setMaxImagePromptLength(llmSettingsResponse.maxImagePromptLength);
-    setMaxSpeechFileMegaBytes(llmSettingsResponse.maxSpeechFileMegaBytes);
+    setMaxImagePromptLength(aiLoaded.maxImagePromptLength);
+    setMaxSpeechFileMegaBytes(aiLoaded.maxSpeechFileMegaBytes);
 
     if (balanceResponse.balance <= 0) {
       setPhase(`blocked`);
