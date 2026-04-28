@@ -16,7 +16,7 @@
     "@snappy/theme": "workspace:*",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-router-dom": "^7.14.1"
+    "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",

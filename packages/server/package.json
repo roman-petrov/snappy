@@ -13,7 +13,7 @@
     "@snappy/server-app": "workspace:*",
     "@snappy/ui": "workspace:*",
     "better-auth": "^1.6.9",
-    "fastify": "^5.8.4"
+    "fastify": "^5.8.5"
   },
   "devDependencies": {
     "vitest": "^4.1.4"

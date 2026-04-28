@@ -10,6 +10,6 @@
     "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",
     "@snappy/server-app": "workspace:*",
-    "fastify": "^5.8.4"
+    "fastify": "^5.8.5"
   }
 }
