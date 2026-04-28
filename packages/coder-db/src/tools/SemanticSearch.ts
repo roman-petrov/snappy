@@ -18,7 +18,7 @@ export type SemanticSearchResult =
 
 export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
   AgentTool({
-    description: `Find relevant code by meaning, not exact words. Use this for high-level questions ("how this works", "where behavior is implemented", "repo overview"), cross-cutting flows across multiple files, or when symbol names are unknown.`,
+    description: `Find relevant code by meaning, not exact words. Use this for high-level questions ("how this works", "where behavior is implemented", "repo overview"), cross-cutting flows across multiple files, or when symbol names are unknown. Query-writing rules: ask a full natural-language question (not keywords), include target behavior and execution context (where/when/in which layer), and include constraints or comparison intent when relevant. Prefer complete intent-focused queries over short keyword fragments.`,
     formatCall: ({ query }, status, locale) =>
       locale === `ru`
         ? status === `running`
@@ -29,26 +29,24 @@ export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
           : `Searched semantic: "${query}"`,
     run: async ({ query, topK }) => {
       const result = await search({ query, topK: topK ?? Constants.search.defaultK });
-      if (result.kind === `no_index`) {
-        return `No vector index loaded. Run: coder index`;
-      }
-      if (result.kind === `no_results`) {
-        return `No results for query.`;
-      }
 
-      const lines = result.hits.map(
-        (hit, index) =>
-          `${String(index + 1)}. ${hit.path}:${String(hit.startLine)}-${String(hit.endLine)} (distance ${String(hit.distance ?? 0)})\n${hit.text.slice(0, Constants.search.snippetMaxChars)}`,
-      );
-
-      return lines.join(`\n\n---\n\n`);
+      return result.kind === `no_index`
+        ? `No vector index loaded. Run: coder index`
+        : result.kind === `no_results`
+          ? `No results for query.`
+          : result.hits
+              .map(
+                (hit, index) =>
+                  `${String(index + 1)}. ${hit.path}:${String(hit.startLine)}-${String(hit.endLine)} (distance ${String(hit.distance ?? 0)})\n${hit.text.slice(0, Constants.search.snippetMaxChars)}`,
+              )
+              .join(`\n\n---\n\n`);
     },
     schema: z.object({
       query: z
         .string()
         .min(1)
         .describe(
-          `Natural-language question about intent or behavior. Prefer concrete queries like "How does auth session validation work?" over isolated keywords.`,
+          `Natural-language question about intent or behavior. Write a specific, context-rich query with domain + action + scope (where/when). Good: "Where is request authorization validated before handler execution?", "How is search ranking adjusted between source code and documentation?". Bad: "authorization", "ranking".`,
         ),
       topK: z
         .number()
