@@ -16,3 +16,7 @@ selfsigned
 ollama
 topup
 lancedb
+rerank
+reranker
+clusterize
+nprobes

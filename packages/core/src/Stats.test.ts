@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { Stats } from "./Stats";
 
-const { max, sum } = Stats;
+const { max, mean, sum } = Stats;
 
 describe(`max`, () => {
   it(`returns undefined for an empty array`, () => {
@@ -15,6 +15,17 @@ describe(`max`, () => {
 
   it(`works for all-negative arrays`, () => {
     expect(max([-10, -3, -7])).toBe(-3);
+  });
+});
+
+describe(`mean`, () => {
+  it(`returns undefined for an empty array`, () => {
+    expect(mean([])).toBeUndefined();
+  });
+
+  it(`returns arithmetic mean`, () => {
+    expect(mean([1, 2, 3, 4])).toBe(2.5);
+    expect(mean([10])).toBe(10);
   });
 });
 

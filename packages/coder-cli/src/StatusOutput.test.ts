@@ -7,7 +7,17 @@ const mocks = vi.hoisted(() => ({
   },
 }));
 
-const escape = (value: string) => value.replaceAll(`\r`, String.raw`\r`).replaceAll(`\n`, String.raw`\n`);
+const escape = (value: string) =>
+  value
+    .replaceAll(`\r`, String.raw`\r`)
+    .replaceAll(`\n`, String.raw`\n`)
+    .split(``)
+    .map(char => {
+      const code = char.codePointAt(0) ?? 0;
+
+      return code === 0x1b || code >= 0x20 ? char : `?`;
+    })
+    .join(``);
 
 vi.mock(`@snappy/node`, () => ({
   Console: {
@@ -56,6 +66,7 @@ const committedMessages = () =>
     .map(entry => entry.slice(4))
     .filter(text => text !== ``);
 
+const committedMessagesWithoutIcon = () => committedMessages().map(text => text.replace(/^[^0-9A-Za-z]+\s/u, ``));
 const isSeparatorEvent = (entry: string) => entry === `LOG ` || entry === String.raw`WRITE \n`;
 
 const assertSingleEmptyLineBetweenCommitted = () => {
@@ -109,6 +120,36 @@ const cleanupStatusOutput = () => {
 };
 
 describe(`terminalStatusOutput`, () => {
+  it(`keeps spinner spinning for wrapped long status text`, () => {
+    setupStatusOutput();
+    const columnsDescriptor = Object.getOwnPropertyDescriptor(process.stdout, `columns`);
+    Object.defineProperty(process.stdout, `columns`, { configurable: true, value: 12 });
+    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    try {
+      output.start();
+      output.onToolEvent({ callId: `1`, label: `Very long tool label`, status: `running` });
+      vi.advanceTimersByTime(240);
+      output.onToolEvent({ callId: `1`, label: `Very long tool label`, status: `completed` });
+      output.succeed();
+
+      const transientWrites = mocks.events
+        .filter(entry => entry.startsWith(String.raw`WRITE \r`) && !entry.includes(String.raw`\u001B[2K`))
+        .map(entry => entry.slice(String.raw`WRITE \r`.length));
+
+      expect(transientWrites.length).toBeGreaterThan(0);
+      expect(transientWrites.some(text => text.length > 12)).toBe(true);
+      expect(transientWrites.filter(text => text.includes(`Very long tool label`)).length).toBeGreaterThan(1);
+      expect(committedMessages().some(text => text.includes(`Very long tool label`))).toBe(true);
+    } finally {
+      if (columnsDescriptor === undefined) {
+        Object.defineProperty(process.stdout, `columns`, { configurable: true, value: undefined });
+      } else {
+        Object.defineProperty(process.stdout, `columns`, columnsDescriptor);
+      }
+      cleanupStatusOutput();
+    }
+  });
+
   it(`renders assistant flow snapshot`, () => {
     setupStatusOutput();
     const output = StatusOutput({ t: makeLocaleT(`en`) });
@@ -120,12 +161,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`, `assistant text`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`, `assistant text`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -158,7 +198,6 @@ describe(`terminalStatusOutput`, () => {
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -167,14 +206,12 @@ describe(`terminalStatusOutput`, () => {
         WRITE \\r⠋ Search project
         CURSOR 0
         WRITE \\r⠙ Search project
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Search project
         WRITE \\n
         CURSOR 0
         WRITE \\r⠙ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -183,14 +220,12 @@ describe(`terminalStatusOutput`, () => {
         WRITE \\n
         CURSOR 0
         WRITE \\r⠙ Read file
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Read file
         WRITE \\n
         CURSOR 0
         WRITE \\r⠙ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought"
@@ -215,12 +250,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`, `✓ Semantic search`, `✓ Thought`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`, `Semantic search`, `Thought`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -229,14 +263,12 @@ describe(`terminalStatusOutput`, () => {
         WRITE \\r⠋ Semantic search
         CURSOR 0
         WRITE \\r⠋ Semantic search
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Semantic search
         WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought"
@@ -262,12 +294,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought"
@@ -290,12 +321,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`, `boom`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`, `boom`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -304,7 +334,6 @@ describe(`terminalStatusOutput`, () => {
         WRITE \\r⠋ Run tool
         CURSOR 0
         WRITE \\r⠙ Run tool
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         ERR boom"
@@ -327,12 +356,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`, `Understood!`, `✓ Searched semantic`, `✓ Thought`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`, `Understood!`, `Searched semantic`, `Thought`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought
@@ -341,14 +369,12 @@ describe(`terminalStatusOutput`, () => {
         WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Searched semantic
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Searched semantic
         WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought"
@@ -373,12 +399,11 @@ describe(`terminalStatusOutput`, () => {
       assertNoAdjacentSeparators();
       assertSingleEmptyLineBetweenCommitted();
 
-      expect(committedMessages()).toStrictEqual([`✓ Thought`]);
+      expect(committedMessagesWithoutIcon()).toStrictEqual([`Thought`]);
       expect(snapshotLog()).toMatchInlineSnapshot(`
         "WRITE \\n
         CURSOR 0
         WRITE \\r⠋ Thinking...
-        WRITE \\r[2K
         CURSOR 0
         CLEAR 0
         LOG ✓ Thought

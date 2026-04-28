@@ -200,7 +200,7 @@ describe(`search`, () => {
     mocks.reset();
     const store = await VectorStore(`mem://db`);
 
-    await expect(store.search([1, 2], 3)).resolves.toStrictEqual([]);
+    await expect(store.search([1, 2], { limit: 3 })).resolves.toStrictEqual([]);
   });
 
   it(`maps _distance to distance and applies query options`, async () => {
@@ -210,7 +210,7 @@ describe(`search`, () => {
       { _distance: 0.42, chunkIndex: 0, digest: `d0`, endLine: 2, path: `a.ts`, startLine: 1, text: `x` },
     ];
     const store = await VectorStore(`mem://db`);
-    const result = await store.search([9, 9], 5);
+    const result = await store.search([9, 9], { limit: 5 });
 
     expect(result).toStrictEqual([
       { chunkIndex: 0, digest: `d0`, distance: 0.42, endLine: 2, path: `a.ts`, startLine: 1, text: `x` },
@@ -220,6 +220,17 @@ describe(`search`, () => {
     expect(mocks.state.limitValues).toStrictEqual([5]);
     expect(mocks.state.selectFields[0]).toContain(`_distance`);
     expect(mocks.state.selectFields[0]).toContain(`path`);
+  });
+
+  it(`uses custom nprobes when provided`, async () => {
+    mocks.reset();
+    mocks.state.tableNames = [`code_chunks`];
+    const store = await VectorStore(`mem://db`);
+
+    await store.search([2, 3], { limit: 4, nprobes: 33 });
+
+    expect(mocks.state.nprobesValues).toStrictEqual([33]);
+    expect(mocks.state.limitValues).toStrictEqual([4]);
   });
 });
 

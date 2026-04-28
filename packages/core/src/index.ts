@@ -27,3 +27,5 @@ export * from "./Timer";
 export * from "./Translate";
 
 export type * from "./Types";
+
+export * from "./Vector";

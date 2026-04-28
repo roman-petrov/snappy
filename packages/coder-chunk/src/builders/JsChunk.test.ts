@@ -99,34 +99,34 @@ describe(`JsChunk`, () => {
     });
 
     it(`extracts const function expression as lexical declaration`, () => {
-      expect(build({ path: `fn.js`, source: `const run = function (value) { return value + 1; };` })).toMatchInlineSnapshot(`
-        [
-          {
-            "endLine": 1,
-            "path": "fn.js",
-            "startLine": 1,
-            "text": "const run = function (value) { return value + 1; };",
-          },
-        ]
-      `);
+      expect(build({ path: `fn.js`, source: `const run = function (value) { return value + 1; };` }))
+        .toMatchInlineSnapshot(`
+          [
+            {
+              "endLine": 1,
+              "path": "fn.js",
+              "startLine": 1,
+              "text": "const run = function (value) { return value + 1; };",
+            },
+          ]
+        `);
     });
 
     it(`keeps class as one chunk and skips nested methods`, () => {
-      expect(
-        build({ path: `class.js`, source: `class A {\n  one() { return 1; }\n  two() { return 2; }\n}` }),
-      ).toMatchInlineSnapshot(`
-        [
-          {
-            "endLine": 4,
-            "path": "class.js",
-            "startLine": 1,
-            "text": "class A {
-          one() { return 1; }
-          two() { return 2; }
-        }",
-          },
-        ]
-      `);
+      expect(build({ path: `class.js`, source: `class A {\n  one() { return 1; }\n  two() { return 2; }\n}` }))
+        .toMatchInlineSnapshot(`
+          [
+            {
+              "endLine": 4,
+              "path": "class.js",
+              "startLine": 1,
+              "text": "class A {
+            one() { return 1; }
+            two() { return 2; }
+          }",
+            },
+          ]
+        `);
     });
 
     it(`extracts export default class declaration`, () => {

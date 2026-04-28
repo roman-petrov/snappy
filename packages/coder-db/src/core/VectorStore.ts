@@ -25,6 +25,8 @@ const chunkColumnsSchema = z.object({
 
 export type ReplaceWriteJob = { path: string; rows: VectorStoreChunk[] };
 
+export type VectorSearchOptions = { limit: number; nprobes?: number };
+
 export type VectorSearchRow = VectorStoreChunkColumns & { distance?: number };
 
 export type VectorStoreChunk = VectorStoreChunkColumns & { vector: number[] };
@@ -127,7 +129,7 @@ export const VectorStore = async (uri: string) => {
     return result;
   };
 
-  const search = async (vector: number[], limit: number) => {
+  const search = async (vector: number[], { limit, nprobes = Constants.lanceDb.queryNprobes }: VectorSearchOptions) => {
     if (table === undefined) {
       return [];
     }
@@ -136,7 +138,7 @@ export const VectorStore = async (uri: string) => {
       (await table
         .vectorSearch(vector)
         .select([..._.keys(chunkColumnsSchema.shape), `_distance`])
-        .nprobes(Constants.lanceDb.queryNprobes)
+        .nprobes(nprobes)
         .limit(limit)
         .toArray()) as (VectorStoreChunkColumns & { _distance?: number })[]
     ).map(({ _distance: distance, ...hit }) => ({ ...hit, distance }));

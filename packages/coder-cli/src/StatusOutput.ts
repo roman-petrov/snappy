@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data, functional/no-expression-statements */
+import { _ } from "@snappy/core";
 import { Console } from "@snappy/node";
 import { clearLine, cursorTo } from "node:readline";
 
@@ -26,33 +27,61 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     needsSeparatorBeforeNextMessage: false,
     processing: true,
     timer: undefined as ReturnType<typeof setInterval> | undefined,
-    transientTextLength: 0,
-    transientVisible: false,
-    transientWrittenLabel: undefined as string | undefined,
+    transient: { label: undefined as string | undefined, lineCount: 1, plainText: ``, visible: false },
   };
 
-  const writeTransient = (text: string) => {
-    const padding = state.transientTextLength > text.length ? ` `.repeat(state.transientTextLength - text.length) : ``;
+  const transientLineCount = (textLength: number) => {
+    const { columns } = process.stdout;
+    if (!_.isNumber(columns) || columns <= 0) {
+      return 1;
+    }
+
+    return Math.max(Math.ceil(textLength / columns), 1);
+  };
+
+  const moveToTransientStart = () => {
+    if (state.transient.lineCount <= 1) {
+      cursorTo(process.stdout, 0);
+
+      return;
+    }
+    process.stdout.write(`\u001B[${String(state.transient.lineCount - 1)}A`);
     cursorTo(process.stdout, 0);
+  };
+
+  const clearTransientLines = () => {
+    moveToTransientStart();
+    for (let index = 0; index < state.transient.lineCount; index += 1) {
+      clearLine(process.stdout, 0);
+      if (index < state.transient.lineCount - 1) {
+        process.stdout.write(`\u001B[1B`);
+      }
+    }
+    if (state.transient.lineCount > 1) {
+      process.stdout.write(`\u001B[${String(state.transient.lineCount - 1)}A`);
+      cursorTo(process.stdout, 0);
+    }
+  };
+
+  const writeTransient = ({ plain, text }: { plain: string; text: string }) => {
+    const previousLength = state.transient.plainText.length;
+    const padding = previousLength > plain.length ? ` `.repeat(previousLength - plain.length) : ``;
+    moveToTransientStart();
     process.stdout.write(`\r${text}${padding}`);
-    state.transientTextLength = text.length;
+    state.transient.plainText = plain;
+    state.transient.lineCount = transientLineCount(plain.length);
     state.lastOutputWasSeparator = false;
   };
 
-  const hardClearTransientLine = () => {
-    process.stdout.write(`\r\u001B[2K`);
-  };
-
   const clearTransient = () => {
-    if (!state.transientVisible) {
+    if (!state.transient.visible) {
       return;
     }
-    hardClearTransientLine();
-    cursorTo(process.stdout, 0);
-    clearLine(process.stdout, 0);
-    state.transientVisible = false;
-    state.transientTextLength = 0;
-    state.transientWrittenLabel = undefined;
+    clearTransientLines();
+    state.transient.visible = false;
+    state.transient.label = undefined;
+    state.transient.lineCount = 1;
+    state.transient.plainText = ``;
   };
 
   const writeSeparator = () => {
@@ -113,7 +142,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     if (normalizedText.trim() === ``) {
       return;
     }
-    const hadTransient = state.transientVisible;
+    const hadTransient = state.transient.visible;
     clearTransient();
     if (!hadTransient && !skipSeparator) {
       consumePendingSeparator(`commit`);
@@ -170,22 +199,15 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
       return;
     }
 
-    const previousLabel = state.transientWrittenLabel;
+    const previousLabel = state.transient.label;
     const frame = spinnerFrames[state.frame % spinnerFrames.length] ?? spinnerFrames[0];
-    if (
-      state.transientVisible &&
-      previousLabel === label &&
-      frame === spinnerFrames[(state.frame - 1) % spinnerFrames.length]
-    ) {
-      return;
-    }
-    if (!state.transientVisible || previousLabel !== label) {
+    if (!state.transient.visible || previousLabel !== label) {
       consumePendingSeparator(`transient`);
       state.needsSeparatorBeforeNextMessage = true;
     }
-    writeTransient(Theme.toolRunning({ frame, text: label }));
-    state.transientVisible = true;
-    state.transientWrittenLabel = label;
+    writeTransient({ plain: `${frame} ${label}`, text: Theme.toolRunning({ frame, text: label }) });
+    state.transient.visible = true;
+    state.transient.label = label;
   };
 
   const startSpinner = () => {
@@ -205,7 +227,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
   };
 
   const completeThinkingIfActive = () => {
-    if (!state.processing || state.transientWrittenLabel !== t(`status.thinking`)) {
+    if (!state.processing || state.transient.label !== t(`status.thinking`)) {
       return;
     }
     commitBlock(Theme.toolCompleted(t(`status.thought`)));
@@ -277,7 +299,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     }
     completeThinkingIfActive();
     if (!state.assistantStreamActive) {
-      const hadTransient = state.transientVisible;
+      const hadTransient = state.transient.visible;
       clearTransient();
       if (!hadTransient) {
         consumePendingSeparator(`commit`);
@@ -305,7 +327,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     if (state.finalized) {
       return;
     }
-    const hadTransient = state.transientVisible;
+    const hadTransient = state.transient.visible;
     state.processing = false;
     state.finalized = true;
     closeAssistantStream();

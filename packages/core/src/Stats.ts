@@ -11,4 +11,13 @@ const stats = (reducer: (previous: number, current: number) => number) => (value
 const max = stats((previous, current) => Math.max(previous, current));
 const sum = stats((previous, current) => previous + current);
 
-export const Stats = { max, sum };
+const mean = (values: number[]) => {
+  if (values.length === 0) {
+    return undefined;
+  }
+  const total = sum(values);
+
+  return total === undefined ? undefined : total / values.length;
+};
+
+export const Stats = { max, mean, sum };
