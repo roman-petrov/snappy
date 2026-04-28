@@ -30,14 +30,17 @@ export const OpenAiChatModel =
 
       const messages = [
         {
-          content: StructuredPrompt.create({
-            language_policy: [
-              `Mandatory language for this session: ${languageName} (locale: ${locale}).`,
-              `Use only this language in all assistant messages.`,
-              `Use only this language in tool calls, including function arguments and any tool-facing text.`,
-              `Do not mix languages unless the user explicitly asks for multilingual output.`,
-            ].join(`\n`),
-          }),
+          content: StructuredPrompt([
+            [
+              `language_policy`,
+              [
+                `Mandatory language for this session: ${languageName} (locale: ${locale}).`,
+                `Use only this language in all assistant messages.`,
+                `Use only this language in tool calls, including function arguments and any tool-facing text.`,
+                `Do not mix languages unless the user explicitly asks for multilingual output.`,
+              ].join(`\n`),
+            ],
+          ] as const),
           role: `system` as const,
         },
         ...sourceMessages,

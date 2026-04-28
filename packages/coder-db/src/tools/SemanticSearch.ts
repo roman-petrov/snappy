@@ -18,7 +18,7 @@ export type SemanticSearchResult =
 
 export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
   AgentTool({
-    description: `Search indexed codebase by natural-language query and return the most relevant snippets.`,
+    description: `Find relevant code by meaning, not exact words. Use this for high-level questions ("how this works", "where behavior is implemented", "repo overview"), cross-cutting flows across multiple files, or when symbol names are unknown.`,
     formatCall: ({ query }, status, locale) =>
       locale === `ru`
         ? status === `running`
@@ -44,7 +44,12 @@ export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
       return lines.join(`\n\n---\n\n`);
     },
     schema: z.object({
-      query: z.string().min(1).describe(`Natural-language query used to find semantically relevant code.`),
+      query: z
+        .string()
+        .min(1)
+        .describe(
+          `Natural-language question about intent or behavior. Prefer concrete queries like "How does auth session validation work?" over isolated keywords.`,
+        ),
       topK: z
         .number()
         .int()

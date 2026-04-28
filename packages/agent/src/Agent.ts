@@ -66,7 +66,7 @@ export const Agent = (createAdapter: (context: AgentContext) => AgentAdapter, lo
 
         try {
           let messages: AiChatMessage[] = [
-            { content: StructuredPrompt.create(systemPrompt), role: `system` },
+            { content: StructuredPrompt(systemPrompt), role: `system` },
             ...initialMessages,
           ];
 
