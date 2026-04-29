@@ -6,15 +6,7 @@ import { ToolSchema, type WorkspaceAgentTool } from "../core";
 export const GrepTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `Find text matches in workspace files limited by an optional glob scope.`,
-    formatCall: ({ glob, pattern }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Ищу "${pattern}" в ${glob}`
-          : `Нашел "${pattern}" в ${glob}`
-        : status === `running`
-          ? `Searching "${pattern}" in ${glob}`
-          : `Searched "${pattern}" in ${glob}`,
-    run: async input => {
+    execute: async input => {
       const result = await workspace.grep(input);
 
       return `error` in result
@@ -29,7 +21,15 @@ export const GrepTool: WorkspaceAgentTool = workspace =>
           ? `No matches for pattern in ${result.result.scopeGlob}.`
           : result.result.files.join(`\n`);
     },
-    schema: z.object({
+    formatCall: ({ glob, pattern }, status, locale) =>
+      locale === `ru`
+        ? status === `running`
+          ? `Ищу "${pattern}" в ${glob}`
+          : `Нашел "${pattern}" в ${glob}`
+        : status === `running`
+          ? `Searching "${pattern}" in ${glob}`
+          : `Searched "${pattern}" in ${glob}`,
+    inputSchema: z.object({
       caseInsensitive: z.boolean().optional().describe(`Enable case-insensitive search when true.`),
       glob: ToolSchema.glob(workspace.limits.globPatternMaxChars),
       maxHits: z

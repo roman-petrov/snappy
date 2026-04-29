@@ -1,17 +1,19 @@
 /* eslint-disable unicorn/filename-case */
 /* eslint-disable functional/no-expression-statements */
-import { $locale, $theme, type Locale, renderApp, type ResolvedLocale, type Theme } from "@snappy/ui";
+import type { Locale } from "@snappy/intl";
+
+import { $locale, $theme, type Language, renderApp, type Theme } from "@snappy/ui";
 
 import { Landing } from "./components/Landing";
 import { localeData } from "./locales";
 
-export const getMeta = (locale: ResolvedLocale) => {
+export const getMeta = (locale: Locale) => {
   const { meta } = localeData[locale];
 
   return { ...meta, htmlLang: locale };
 };
 
-export const render = (locale: Locale = `system`, theme: Theme = `system`) => {
+export const render = (locale: Language = `system`, theme: Theme = `system`) => {
   $locale.set(locale);
   $theme.set(theme);
 

@@ -1,41 +1,8 @@
-@use "pkg:@snappy/theme/typography";
+@use "sass:meta";
+@use "pkg:@snappy/theme/tokens/typography" as typography;
 
-.body {
-  @include typography.body;
-}
-
-.display {
-  @include typography.display;
-}
-
-.h1 {
-  @include typography.h1;
-}
-
-.h2 {
-  @include typography.h2;
-}
-
-.h3 {
-  @include typography.h3;
-}
-
-.large {
-  @include typography.large;
-}
-
-.caption {
-  @include typography.caption;
-}
-
-.caption-bold {
-  @include typography.caption-bold;
-}
-
-.button {
-  @include typography.button;
-}
-
-.button-large {
-  @include typography.button-large;
+@each $name, $mixin in meta.module-mixins("typography") {
+  .#{$name} {
+    @include meta.apply($mixin);
+  }
 }

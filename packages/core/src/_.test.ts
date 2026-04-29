@@ -12,12 +12,14 @@ const {
   gen,
   hex,
   kb,
+  kebabCase,
   keys,
   list,
   mb,
   noop,
   pascalCase,
   round,
+  sentenceCase,
   singleAction,
 } = _;
 
@@ -162,17 +164,20 @@ describe(`mb`, () => {
 });
 
 describe(`camelCase`, () => {
-  it(`converts hyphenated string to camelCase`, () => {
+  it(`converts kebab-case to camelCase`, () => {
     expect(camelCase(`foo-bar-baz`)).toBe(`fooBarBaz`);
   });
 
-  it(`returns input unchanged when it has no hyphens (already camelCase or single word)`, () => {
+  it(`returns camelCase input unchanged`, () => {
     expect(camelCase(`fooBarBaz`)).toBe(`fooBarBaz`);
+  });
+
+  it(`returns single word unchanged`, () => {
     expect(camelCase(`word`)).toBe(`word`);
   });
 
-  it(`single hyphen: second part becomes capitalized`, () => {
-    expect(camelCase(`first-name`)).toBe(`firstName`);
+  it(`converts two-part kebab-case`, () => {
+    expect(camelCase(`foo-bar`)).toBe(`fooBar`);
   });
 
   it(`empty input yields empty string`, () => {
@@ -180,21 +185,70 @@ describe(`camelCase`, () => {
   });
 });
 
+describe(`kebabCase`, () => {
+  it(`converts PascalCase to kebab-case`, () => {
+    expect(kebabCase(`FooBarBaz`)).toBe(`foo-bar-baz`);
+  });
+
+  it(`converts camelCase to kebab-case`, () => {
+    expect(kebabCase(`fooBarBaz`)).toBe(`foo-bar-baz`);
+  });
+
+  it(`normalizes spaces and underscores`, () => {
+    expect(kebabCase(`foo_bar baz`)).toBe(`foo-bar-baz`);
+  });
+
+  it(`returns kebab-case input unchanged`, () => {
+    expect(kebabCase(`foo-bar`)).toBe(`foo-bar`);
+  });
+
+  it(`empty input yields empty string`, () => {
+    expect(kebabCase(``)).toBe(``);
+  });
+});
+
+describe(`sentenceCase`, () => {
+  it(`converts kebab-case to sentence case`, () => {
+    expect(sentenceCase(`foo-bar-baz`)).toBe(`Foo bar baz`);
+  });
+
+  it(`capitalizes single word`, () => {
+    expect(sentenceCase(`word`)).toBe(`Word`);
+  });
+
+  it(`empty input yields empty string`, () => {
+    expect(sentenceCase(``)).toBe(``);
+  });
+
+  it(`aligns with kebabCase for mixed case and separators`, () => {
+    expect(sentenceCase(`FooBarBaz`)).toBe(`Foo bar baz`);
+    expect(sentenceCase(`foo_bar baz`)).toBe(`Foo bar baz`);
+  });
+
+  it(`collapses repeated hyphens into single spaces`, () => {
+    expect(sentenceCase(`foo--bar`)).toBe(`Foo bar`);
+  });
+
+  it(`trims and collapses surrounding and repeated whitespace`, () => {
+    expect(sentenceCase(`  foo  bar  `)).toBe(`Foo bar`);
+  });
+});
+
 describe(`pascalCase`, () => {
-  it(`converts hyphenated string to PascalCase`, () => {
+  it(`converts kebab-case to PascalCase`, () => {
     expect(pascalCase(`foo-bar-baz`)).toBe(`FooBarBaz`);
   });
 
-  it(`capitalizes first letter of camelCase input`, () => {
+  it(`capitalizes camelCase input`, () => {
     expect(pascalCase(`fooBarBaz`)).toBe(`FooBarBaz`);
   });
 
-  it(`single word: first letter uppercase`, () => {
+  it(`capitalizes single word`, () => {
     expect(pascalCase(`word`)).toBe(`Word`);
   });
 
-  it(`single hyphen: both parts capitalized`, () => {
-    expect(pascalCase(`first-name`)).toBe(`FirstName`);
+  it(`converts two-part kebab-case`, () => {
+    expect(pascalCase(`foo-bar`)).toBe(`FooBar`);
   });
 
   it(`empty input yields empty string`, () => {

@@ -1,0 +1,27 @@
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/space";
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  min-width: 0;
+}
+
+.label-wrap {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  padding: space.xs() space.sm();
+  border-inline-start: 3px solid color.primary();
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  align-items: stretch;
+  width: 100%;
+  min-width: 0;
+}

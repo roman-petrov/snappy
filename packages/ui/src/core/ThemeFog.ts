@@ -26,7 +26,6 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
     }
 
     const element = document.createElement(`div`);
-    element.setAttribute(`aria-hidden`, `true`);
     element.className = hostClass;
     document.body.prepend(element);
     fogHost = element;
@@ -48,7 +47,6 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
     }
 
     const canvas = document.createElement(`canvas`);
-    canvas.setAttribute(`aria-hidden`, `true`);
     const motion = { blurFactor: 0.5, speed: 2, zoom: 2 };
 
     const options = {

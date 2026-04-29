@@ -1,6 +1,7 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/tokens";
-@use "pkg:@snappy/theme/typography";
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/tokens/typography";
 
 html {
   scroll-behavior: smooth;
@@ -13,18 +14,19 @@ html {
 body {
   @include typography.body;
 
-  position: relative;
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
+  min-height: 100dvh;
   margin: 0;
   color: color.text();
-  background: color.bg();
+  background: color.surface();
   transition:
     color tokens.ease(),
     background-color tokens.ease();
 }
 
 ::selection {
-  color: color.on-primary();
+  color: color.text();
   background: color.primary();
 }
 
@@ -40,6 +42,10 @@ button {
   border: none;
 }
 
-a {
+:where(a:any-link) {
   text-decoration: none;
+}
+
+:where(a:visited) {
+  color: inherit;
 }

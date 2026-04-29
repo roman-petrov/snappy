@@ -6,15 +6,7 @@ import { ToolSchema, type WorkspaceAgentTool } from "../core";
 export const GlobTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `Find files and directories in workspace by glob pattern.`,
-    formatCall: ({ pattern }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Ищу по glob: ${pattern}`
-          : `Нашел по glob: ${pattern}`
-        : status === `running`
-          ? `Globbing: ${pattern}`
-          : `Globbed: ${pattern}`,
-    run: async input => {
+    execute: async input => {
       const result = await workspace.glob(input);
 
       return `error` in result
@@ -27,5 +19,13 @@ export const GlobTool: WorkspaceAgentTool = workspace =>
           ? `No paths matched.`
           : result.result;
     },
-    schema: z.object({ pattern: ToolSchema.glob(workspace.limits.globPatternMaxChars) }),
+    formatCall: ({ pattern }, status, locale) =>
+      locale === `ru`
+        ? status === `running`
+          ? `Ищу по glob: ${pattern}`
+          : `Нашел по glob: ${pattern}`
+        : status === `running`
+          ? `Globbing: ${pattern}`
+          : `Globbed: ${pattern}`,
+    inputSchema: z.object({ pattern: ToolSchema.glob(workspace.limits.globPatternMaxChars) }),
   });

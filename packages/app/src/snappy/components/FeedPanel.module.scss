@@ -1,0 +1,5 @@
+@use "pkg:@snappy/theme/tokens/space";
+
+.body {
+  padding: space.md();
+}

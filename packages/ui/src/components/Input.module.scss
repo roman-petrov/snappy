@@ -1,10 +1,13 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/surface";
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
-@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/tokens/typography";
 
 .root {
   margin-bottom: space.md();
@@ -31,7 +34,7 @@
   left: space.md();
   padding: 0;
   line-height: 1.5;
-  color: color.text-muted();
+  color: color.text();
   pointer-events: none;
   background: transparent;
   border-radius: 0;
@@ -42,17 +45,16 @@
     color tokens.ease(),
     font-size tokens.ease(),
     padding tokens.ease(),
-    border-radius tokens.ease();
+    border-radius tokens.ease(),
+    background-color tokens.ease();
 }
 
 .input-surface {
+  @include surface.surface;
+  @include elevation.e1;
+
   position: relative;
-  background: color.input();
-  border: 1px solid color.border();
   border-radius: radius.sm();
-  transition:
-    border-color tokens.ease(),
-    box-shadow tokens.ease();
 
   .input-slot {
     .input,
@@ -62,36 +64,34 @@
   }
 
   &:focus-within {
-    background: color.input-focus();
-    border-color: color.primary();
-    box-shadow: shadow.focus();
+    @include surface.primary;
+    @include elevation.e2;
   }
 
   &:focus-within,
   &.has-value {
     .floating-label {
+      @include surface.primary;
       @include typography.caption-sm;
 
       top: 0;
       padding: 0 0.25em;
       border-radius: radius.xs();
-      transform: translateY(calc(-50% - 1px));
+      transform: translateY(calc(-50% - r(1)));
+      transition:
+        top tokens.ease(),
+        transform tokens.ease(),
+        color tokens.ease(),
+        font-size tokens.ease(),
+        padding tokens.ease(),
+        border-radius tokens.ease(),
+        background-color tokens.ease();
     }
 
     .input-slot .input,
     .input-slot .input-inside-wrap {
       padding-top: space.sm();
     }
-  }
-
-  &.has-value:not(:focus-within) .floating-label {
-    color: color.text();
-    background: color.surface();
-  }
-
-  &:focus-within .floating-label {
-    color: color.on-primary();
-    background: color.primary();
   }
 }
 
@@ -110,7 +110,7 @@
 }
 
 .input::placeholder {
-  color: color.text-muted();
+  color: color.text();
 }
 
 .input-inside-wrap {
@@ -125,7 +125,6 @@
 .input-inside-wrap:focus {
   outline: none;
   border-color: transparent;
-  box-shadow: none;
 }
 
 .suffix {
@@ -133,5 +132,5 @@
   @include primitives.square(tokens.field-height());
 
   flex-shrink: 0;
-  border-inline-start: 1px solid color.border();
+  border-inline-start: 1px solid color.outline();
 }

@@ -1,20 +1,10 @@
-/* jscpd:ignore-start */
-import type { AiLocale } from "@snappy/ai";
+import type { Locale } from "@snappy/intl";
 
 import { Translate } from "@snappy/core";
 
 import { en } from "./en";
 import { ru } from "./ru";
 
-const localeData = { en, ru } as const;
+export const t = (locale: Locale) => Translate.makeT({ en, ru } as const, () => locale);
 
-export type LocaleKey = keyof typeof localeData;
-
-export { localeData };
-
-export const makeT = (getLocale: () => LocaleKey) => Translate.makeT(localeData, getLocale);
-
-export type TFunction = ReturnType<typeof makeT>;
-
-export const t = (locale: AiLocale) => makeT(() => locale);
-/* jscpd:ignore-end */
+export type TFunction = ReturnType<typeof t>;

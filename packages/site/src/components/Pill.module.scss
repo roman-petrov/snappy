@@ -1,30 +1,18 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/tokens/space";
 
 .pill {
   display: grid;
   grid-template-columns: auto 1fr;
   overflow: hidden;
-  border: 1px solid color.primary-border();
-  border-radius: radius.md();
-  transition: tokens.transition();
-
-  @include hover {
-    border-color: color.primary();
-  }
 }
 
 .pill-left {
   padding: space.sm() space.md();
-  background: color.accent-soft();
 }
 
 .pill-right {
   padding: space.sm() space.md();
-  background: color.primary-ghost();
 }
 
 @include mobile {

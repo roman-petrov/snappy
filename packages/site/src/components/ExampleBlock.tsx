@@ -1,4 +1,5 @@
-import { Text } from "@snappy/ui";
+import { _ } from "@snappy/core";
+import { $, Text } from "@snappy/ui";
 
 import styles from "./ExampleBlock.module.scss";
 
@@ -12,16 +13,16 @@ export type ExampleBlockProps = {
 
 export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: ExampleBlockProps) => (
   <div className={styles.block}>
-    <Text as="p" cn={styles.label} color="accent" text={label} typography="captionBold" />
+    <Text as="p" cn={styles.label} text={label} typography="h3" />
     <div className={styles.row}>
-      <div className={`${styles.panel} ${styles.before}`}>
-        <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel} typography="caption" />
+      <div className={_.cn(styles.panel, $.surface(`error`), $.elevation(`e2`))}>
+        <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel.toUpperCase()} typography="caption" />
         <Text as="p" text={before} typography="large" />
       </div>
-      <Text aria-hidden="true" as="span" cn={styles.arrow} color="accent" text="→" typography="h2" />
-      <div className={`${styles.panel} ${styles.after}`}>
-        <Text as="span" cn={styles.panelTitle} color="accent" text={afterLabel} typography="caption" />
-        <Text as="span" cn={styles.panelContent} html text={after} typography="large" />
+      <Text as="span" cn={styles.arrow} text="→" typography="h2" />
+      <div className={_.cn(styles.panel, $.surface(`success`), $.elevation(`e2`))}>
+        <Text as="span" cn={styles.panelTitle} color="success" text={afterLabel.toUpperCase()} typography="caption" />
+        <Text as="span" html text={after} typography="large" />
       </div>
     </div>
   </div>

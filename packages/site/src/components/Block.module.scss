@@ -1,33 +1,12 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/core" as core;
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
 
 .list {
   display: grid;
-  gap: space.sm();
-  padding: 0;
+  gap: space.md();
   margin: 0;
   list-style: none;
-}
-
-.row {
-  position: relative;
-  padding: space.sm() 0;
-}
-
-.row::after {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 1px;
-  content: "";
-  background: color.divider();
-}
-
-.list dd:last-child::after,
-.list > .row:last-child::after {
-  display: none;
 }
 
 .row-with-icon {
@@ -38,13 +17,9 @@
 }
 
 .row-with-icon .icon {
-  @include typography.h1;
-
   grid-row: 1;
   grid-column: 1;
   align-self: center;
-  font-weight: 400;
-  line-height: 1;
 }
 
 .row-with-icon dt,
@@ -56,14 +31,8 @@
   margin: 0;
 }
 
-@include core.mobile {
+@include mobile {
   .row-with-icon {
     gap: space.sm() space.sm();
-  }
-
-  .row-with-icon .icon {
-    @include typography.h2;
-
-    font-weight: 400;
   }
 }

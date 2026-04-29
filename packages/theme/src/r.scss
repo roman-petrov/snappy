@@ -1,0 +1,39 @@
+@use "sass:math";
+@use "sass:list";
+@use "sass:meta";
+
+@function rem-value($size) {
+  @if meta.type-of($size) != number {
+    @error "r: expected number, got #{meta.type-of($size)}";
+  }
+
+  @if $size == 0 {
+    @return 0;
+  }
+
+  @if math.unit($size) != "" {
+    @error "r: expected unitless number (pixel magnitude), got #{$size}";
+  }
+
+  @return math.div($size, 16) * 1rem;
+}
+
+@function r($values) {
+  $items: $values;
+
+  @if meta.type-of($values) != list {
+    $items: ($values);
+  }
+
+  $result: ();
+
+  @each $value in $items {
+    $result: list.append($result, rem-value($value), space);
+  }
+
+  @if list.length($result) == 1 {
+    @return list.nth($result, 1);
+  }
+
+  @return $result;
+}

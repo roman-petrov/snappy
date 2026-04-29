@@ -1,0 +1,8 @@
+@use "sass:meta";
+@use "pkg:@snappy/theme/elevation" as elevation;
+
+@each $name, $mixin in meta.module-mixins("elevation") {
+  .#{$name} {
+    @include meta.apply($mixin);
+  }
+}

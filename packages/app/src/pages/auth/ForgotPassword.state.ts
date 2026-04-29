@@ -12,7 +12,7 @@ export const useForgotPasswordState = () => {
     void wrapSubmit(async () => {
       const result = await Auth.requestPasswordReset(email.trim());
       if (result.status !== `ok`) {
-        setError({ key: `forgotPage.errors.${result.status}` });
+        setError({ key: `auth.forgotPassword.errors.${result.status}` });
 
         return;
       }

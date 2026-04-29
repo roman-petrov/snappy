@@ -1,0 +1,61 @@
+@use "sass:map";
+@use "sass:string";
+@use "primary-color" as primary-color;
+
+@function -var($name) {
+  @return --color-#{$name};
+}
+
+@function -oklch($body) {
+  @return string.unquote("oklch(#{$body})");
+}
+
+$-neutral-hue: 268deg;
+$-semantic-hue: (
+  error: 29deg,
+  warning: 82deg,
+  success: 155deg,
+  info: 252deg,
+);
+$-palette-by-mode: (
+  light: (
+    text: -oklch("24% 0.012 #{$-neutral-hue}"),
+    surface-tint: -oklch("98.5% 0.004 #{$-neutral-hue}"),
+    outline-tint: -oklch("81% 0.024 #{$-neutral-hue}"),
+    primary-tail: "l c h",
+    semantic-tail: "l c",
+  ),
+  dark: (
+    text: -oklch("95% 0.01 #{$-neutral-hue}"),
+    surface-tint: -oklch("17% 0.018 #{$-neutral-hue}"),
+    outline-tint: -oklch("44% 0.035 #{$-neutral-hue}"),
+    primary-tail: "min(0.92, calc(l + 0.14)) min(0.14, calc(c * 1.05)) h",
+    semantic-tail: "min(0.87, calc(l + 0.12)) c",
+  ),
+);
+
+@mixin palette($isDark: false) {
+  $primary-color: primary-color.$value;
+  $p: null;
+
+  @if $isDark {
+    $p: map.get($-palette-by-mode, dark);
+  } @else {
+    $p: map.get($-palette-by-mode, light);
+  }
+
+  $text: map.get($p, text);
+  $surface-tint: map.get($p, surface-tint);
+  $outline-tint: map.get($p, outline-tint);
+  $primary-tail: map.get($p, primary-tail);
+  $semantic-tail: map.get($p, semantic-tail);
+
+  #{-var(text)}: #{$text};
+  #{-var(surface)}: color-mix(in oklch, #{$surface-tint} 90%, #{$primary-color} 10%);
+  #{-var(outline)}: color-mix(in oklch, #{$outline-tint} 90%, #{$primary-color} 10%);
+  #{-var(primary)}: -oklch("from #{$primary-color} #{$primary-tail}");
+
+  @each $name, $hue in $-semantic-hue {
+    #{-var($name)}: -oklch("from #{$primary-color} #{$semantic-tail} #{$hue}");
+  }
+}

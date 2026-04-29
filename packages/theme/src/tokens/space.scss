@@ -1,5 +1,27 @@
+@use "pkg:@snappy/theme/core" as *;
+
+$values: (
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  "2xl": 48,
+  "3xl": 96,
+);
+
+@function -var($segment) {
+  @return --space-#{$segment};
+}
+
+@mixin root {
+  @each $name, $px in $values {
+    #{-var($name)}: #{r($px)};
+  }
+}
+
 @function -space($name) {
-  @return var(--space-#{$name});
+  @return var(#{-var($name)});
 }
 
 @function xs() {

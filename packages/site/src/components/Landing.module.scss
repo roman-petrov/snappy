@@ -1,6 +1,6 @@
-@use "pkg:@snappy/theme/core" as core;
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .main {
   max-width: tokens.content-width();
@@ -8,7 +8,7 @@
   margin-inline: auto;
 }
 
-@include core.mobile {
+@include mobile {
   .main {
     padding-inline: space.md();
   }

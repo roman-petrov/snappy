@@ -1,12 +1,12 @@
-@use "pkg:@snappy/theme/core" as core;
-@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
 
 .section {
   padding-block: space.xl();
   scroll-margin-top: space.x2xl();
 }
 
-@include core.mobile {
+@include mobile {
   .section {
     padding-block: space.lg();
   }

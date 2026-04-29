@@ -1,0 +1,8 @@
+@use "sass:meta";
+@use "pkg:@snappy/theme/tap" as tap;
+
+@each $name, $mixin in meta.module-mixins("tap") {
+  .#{$name} {
+    @include meta.apply($mixin);
+  }
+}

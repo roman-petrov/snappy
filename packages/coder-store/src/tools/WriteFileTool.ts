@@ -6,15 +6,7 @@ import type { WorkspaceAgentTool } from "../core";
 export const WriteFileTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `Create a text file or overwrite an existing one in the workspace.`,
-    formatCall: ({ path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Записываю: ${path}`
-          : `Записал: ${path}`
-        : status === `running`
-          ? `Writing: ${path}`
-          : `Wrote: ${path}`,
-    run: async input => {
+    execute: async input => {
       const result = await workspace.writeFile(input);
 
       return `error` in result
@@ -25,7 +17,15 @@ export const WriteFileTool: WorkspaceAgentTool = workspace =>
             : `Failed to write file.`
         : `Wrote ${input.path}.`;
     },
-    schema: z.object({
+    formatCall: ({ path }, status, locale) =>
+      locale === `ru`
+        ? status === `running`
+          ? `Записываю: ${path}`
+          : `Записал: ${path}`
+        : status === `running`
+          ? `Writing: ${path}`
+          : `Wrote: ${path}`,
+    inputSchema: z.object({
       content: z.string().describe(`Full text content to write into the file.`),
       path: z.string().min(1).describe(`File path relative to workspace root.`),
     }),

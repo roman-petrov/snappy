@@ -1,0 +1,19 @@
+{
+  "name": "@snappy/snappy-presets",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/agent": "workspace:*",
+    "@snappy/ai": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/intl": "workspace:*",
+    "@snappy/snappy-sdk": "workspace:*",
+    "@snappy/snappy-skills": "workspace:*",
+    "zod": "^4.3.6"
+  }
+}

@@ -1,0 +1,32 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+  align-items: stretch;
+  padding: space.sm();
+  overflow: hidden;
+  transition: opacity tokens.ease();
+}
+
+.action {
+  width: 100%;
+  transform-origin: top right;
+  animation: action-in 280ms cubic-bezier(0.18, 0.88, 0.22, 1.12) both;
+  animation-delay: calc(var(--action-index, 0) * 54ms);
+}
+
+@keyframes action-in {
+  0% {
+    opacity: 0;
+    transform: translateX(#{r(12)}) translateY(#{r(-3.2)}) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

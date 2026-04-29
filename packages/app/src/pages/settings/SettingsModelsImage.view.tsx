@@ -15,32 +15,32 @@ export const SettingsModelsImageView = ({
   qualityOptions,
   qualityValue,
 }: SettingsModelsImageViewProps) => (
-  <Page back title={t(`settings.modelsImage`)}>
+  <Page back title={t(`settings.models.image.title`)}>
     <SettingsCards>
-      <SettingsCard title={t(`settings.modelsImage`)}>
+      <SettingsCard title={t(`settings.models.image.title`)}>
         {modelOptions.map((option, index) => (
           <div key={option.value}>
             {index > 0 && <SettingsCardSeparator />}
             <SettingsCardRow
-              ariaPressed={modelValue === option.value}
               end={modelValue === option.value ? `✓` : undefined}
               icon={option.icon}
               onClick={async () => onModelSelect(option.value)}
+              pressed={modelValue === option.value}
               text={option.label}
             />
           </div>
         ))}
       </SettingsCard>
-      <SettingsCard title={t(`settings.imageQuality`)}>
+      <SettingsCard title={t(`settings.models.image.quality`)}>
         {qualityOptions.map((value, index) => (
           <div key={value}>
             {index > 0 && <SettingsCardSeparator />}
             <SettingsCardRow
-              ariaPressed={qualityValue === value}
               end={qualityValue === value ? `✓` : undefined}
-              icon="✨"
+              icon="stars"
               onClick={() => onQualitySelect(value)}
-              text={t(`settings.imageQualityValue.${value}`)}
+              pressed={qualityValue === value}
+              text={t(`settings.models.image.qualityValue.${value}`)}
             />
           </div>
         ))}

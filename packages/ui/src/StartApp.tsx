@@ -10,28 +10,33 @@ import { renderToString } from "react-dom/server";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, StaticRouter } from "react-router-dom";
 
 import { App } from "./App";
-import { Locale, Theme } from "./core";
-import "@snappy/theme/styles";
+import { Language, Theme } from "./core";
+import "@snappy/theme/styles/index";
 
 export type CreateRouter = (basename: string) => ReturnType<typeof createBrowserRouter>;
 
-export type RenderAppOptions = { base?: string; disableTextSelection?: boolean; location?: string };
+export type RenderAppOptions = {
+  base?: string;
+  disableLinkSelection?: boolean;
+  disableTextSelection?: boolean;
+  location?: string;
+};
 
 export type StartAppContent = CreateRouter | ReactNode;
 
-export type StartAppOptions = { base?: string; disableTextSelection?: boolean };
+export type StartAppOptions = { base?: string; disableLinkSelection?: boolean; disableTextSelection?: boolean };
 
+const mountSelector = `#root`;
 let remount: (() => void) | undefined;
 
 export const startApp = async (
-  selector: string,
   content: StartAppContent,
-  { base = ``, disableTextSelection = false }: StartAppOptions = {},
+  { base = ``, disableLinkSelection = false, disableTextSelection = false }: StartAppOptions = {},
 ) => {
   Theme.init();
-  Locale.init({ onRemount: () => remount?.() });
+  Language.init({ onRemount: () => remount?.() });
 
-  const container = document.querySelector(selector);
+  const container = document.querySelector(mountSelector);
   if (!(container instanceof HTMLElement)) {
     return;
   }
@@ -48,6 +53,7 @@ export const startApp = async (
           }
         />
       }
+      disableLinkSelection={disableLinkSelection}
       disableTextSelection={disableTextSelection}
     />
   );
@@ -68,10 +74,10 @@ export const startApp = async (
 
 export const renderApp = (
   app: ReactNode,
-  { base = ``, disableTextSelection = false, location = `/` }: RenderAppOptions = {},
+  { base = ``, disableLinkSelection = false, disableTextSelection = false, location = `/` }: RenderAppOptions = {},
 ) =>
   renderToString(
-    <App disableTextSelection={disableTextSelection}>
+    <App disableLinkSelection={disableLinkSelection} disableTextSelection={disableTextSelection}>
       <StaticRouter basename={base} location={location}>
         {app}
       </StaticRouter>

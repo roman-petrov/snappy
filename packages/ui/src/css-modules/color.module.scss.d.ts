@@ -1,12 +1,11 @@
 declare const __Color: {
-  readonly accent: "accent";
-  readonly onAccent: "onAccent";
+  readonly primary: "primary";
   readonly error: "error";
-  readonly warning: "warning";
-  readonly success: "success";
   readonly info: "info";
-  readonly heading: "heading";
-  readonly body: "body";
-  readonly muted: "muted";
+  readonly success: "success";
+  readonly warning: "warning";
+  readonly surface: "surface";
+  readonly text: "text";
+  readonly outline: "outline";
 };
 export default __Color;

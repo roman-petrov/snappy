@@ -1,0 +1,68 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/primitives";
+
+.badge {
+  display: inline-flex;
+  gap: space.xs();
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: space.sm();
+  vertical-align: middle;
+}
+
+.badge-running {
+  animation: badge-running-pulse 2s ease-in-out infinite;
+}
+
+.status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.message {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.spinner {
+  @include primitives.circle(r(14));
+
+  border: 2px solid color.primary();
+  border-top-color: transparent;
+  animation: spin 0.75s linear infinite;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: r(16);
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes badge-running-pulse {
+  0%,
+  100% {
+    box-shadow:
+      elevation.level(2),
+      0 0 0 0 color.primary();
+  }
+
+  50% {
+    box-shadow:
+      elevation.level(2),
+      0 0 0 r(5) color.primary();
+  }
+}

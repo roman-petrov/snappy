@@ -5,7 +5,6 @@ import styles from "./TextArea.module.scss";
 export type TextAreaViewProps = ReturnType<typeof useTextAreaState>;
 
 export const TextAreaView = ({
-  ariaBusy = false,
   blur,
   disabled = false,
   focus,
@@ -16,7 +15,6 @@ export const TextAreaView = ({
   value,
 }: TextAreaViewProps) => (
   <textarea
-    aria-busy={ariaBusy}
     className={styles.root}
     disabled={disabled}
     onBlur={blur}

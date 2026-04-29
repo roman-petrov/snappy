@@ -13,14 +13,14 @@ export const useResetPasswordState = () => {
 
   const submit = () => {
     if (!Password.valid(password)) {
-      setError({ key: `resetPage.passwordRule`, params: { min: Password.minLength } });
+      setError({ key: `auth.resetPassword.passwordRule`, params: { min: Password.minLength } });
 
       return;
     }
     void wrapSubmit(async () => {
       const result = await Auth.resetPassword(token, password);
       if (result.status !== `ok`) {
-        setError({ key: `resetPage.errors.${result.status}` });
+        setError({ key: `auth.resetPassword.errors.${result.status}` });
 
         return;
       }

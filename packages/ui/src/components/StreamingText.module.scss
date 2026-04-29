@@ -1,0 +1,43 @@
+@use "pkg:@snappy/theme/tokens/color";
+
+.text {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+}
+
+.chunk {
+  animation: chunk-fade-in 0.22s ease-out forwards;
+}
+
+@keyframes chunk-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.12em;
+  vertical-align: text-bottom;
+  background: color.primary();
+  animation: cursor-blink 0.2s steps(1, end) infinite;
+}
+
+@keyframes cursor-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.45;
+  }
+}

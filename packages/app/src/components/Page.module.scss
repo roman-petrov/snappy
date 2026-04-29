@@ -1,5 +1,5 @@
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/core" as *;
 
 .section {
   display: flex;
@@ -20,8 +20,8 @@
   margin: 0;
 }
 
-@include core.mobile {
+@include mobile {
   .section {
-    padding-top: space.sm();
+    padding-top: space.lg();
   }
 }

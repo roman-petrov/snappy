@@ -1,0 +1,32 @@
+diff --git a/dist/index.js b/dist/index.js
+index 7836e4dacf7a3a42dbe6b237cdc3f2c547e01c75..c4402bbf7d08563320fc93ec464b825fa59d30e4 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -122,8 +122,11 @@ var parseCss = async (file, fileName, config) => {
+         }
+       );
+     });
+-    const splitted = result.css.toString().split(SPLIT_STR);
+-    return { localStyle: splitted[1] || "", globalStyle: splitted[0] };
++    const cssText = result.css.toString();
++    const splitAt = cssText.indexOf(SPLIT_STR);
++    const localStyle = splitAt === -1 ? "" : cssText.slice(splitAt + SPLIT_STR.length);
++    const globalStyle = splitAt === -1 ? cssText : cssText.slice(0, splitAt);
++    return { localStyle, globalStyle };
+   } else {
+     const finalImporters = [];
+     if (options.importers) {
+@@ -208,8 +211,11 @@ var parseCss = async (file, fileName, config) => {
+       syntax: fileName.endsWith(".sass") ? "indented" : "scss"
+     };
+     const result = await sass.compileStringAsync(data, sassOptions);
+-    const splitted = result.css.toString().split(SPLIT_STR);
+-    return { localStyle: splitted[1] || "", globalStyle: splitted[0] };
++    const cssText = result.css.toString();
++    const splitAt = cssText.indexOf(SPLIT_STR);
++    const localStyle = splitAt === -1 ? "" : cssText.slice(splitAt + SPLIT_STR.length);
++    const globalStyle = splitAt === -1 ? cssText : cssText.slice(0, splitAt);
++    return { localStyle, globalStyle };
+   }
+ };
+ var getData = (data, filename, additionalData) => {

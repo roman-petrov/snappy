@@ -76,6 +76,9 @@
   // Markdown
   "markdown.validate.enabled": true,
 
+  // Stylelint
+  "stylelint.validate": ["css", "scss"],
+
   // TypeScript
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "typescript.referencesCodeLens.enabled": true,

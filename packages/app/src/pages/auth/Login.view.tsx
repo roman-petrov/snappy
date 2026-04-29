@@ -4,18 +4,17 @@ import type { useLoginState } from "./Login.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm } from "./AuthForm";
-import { FormErrorAndActions } from "./components";
+import { AuthForm, FormErrorAndActions } from "./components";
 
 export type LoginViewProps = ReturnType<typeof useLoginState>;
 
 export const LoginView = ({ email, error, loading, password, setEmail, setPassword, submit }: LoginViewProps) => (
-  <AuthForm submit={submit} title={t(`loginPage.login`)}>
-    <Input autoComplete="email" label={t(`loginPage.email`)} onChange={setEmail} required type="email" value={email} />
+  <AuthForm submit={submit} title={t(`auth.login.title`)}>
+    <Input autoComplete="email" label={t(`auth.login.email`)} onChange={setEmail} required type="email" value={email} />
     <PasswordInput
       autoComplete="current-password"
       disabled={loading}
-      label={t(`loginPage.password`)}
+      label={t(`auth.login.password`)}
       onChange={setPassword}
       required
       value={password}
@@ -24,11 +23,11 @@ export const LoginView = ({ email, error, loading, password, setEmail, setPasswo
       <Button
         disabled={loading}
         submit
-        text={loading ? t(`loginPage.submitting`) : t(`loginPage.logIn`)}
+        text={loading ? t(`auth.login.submitting`) : t(`auth.login.submit`)}
         type="primary"
       />
-      <Button link={Routes.forgotPassword} text={t(`loginPage.forgotPassword`)} />
-      <Button link={Routes.register} text={t(`loginPage.registerLink`)} />
+      <Button link={Routes.forgotPassword} text={t(`auth.login.forgotPassword`)} />
+      <Button link={Routes.register} text={t(`auth.login.registerLink`)} />
     </FormErrorAndActions>
   </AuthForm>
 );

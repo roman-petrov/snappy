@@ -6,15 +6,7 @@ import type { WorkspaceAgentTool } from "../core";
 export const ReadFileTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `Read text file content from the workspace.`,
-    formatCall: ({ path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Читаю: ${path}`
-          : `Прочитал: ${path}`
-        : status === `running`
-          ? `Reading: ${path}`
-          : `Read: ${path}`,
-    run: async input => {
+    execute: async input => {
       const result = await workspace.readFile(input);
 
       return `error` in result
@@ -25,7 +17,15 @@ export const ReadFileTool: WorkspaceAgentTool = workspace =>
             : `Failed to read file.`
         : result.result;
     },
-    schema: z.object({
+    formatCall: ({ path }, status, locale) =>
+      locale === `ru`
+        ? status === `running`
+          ? `Читаю: ${path}`
+          : `Прочитал: ${path}`
+        : status === `running`
+          ? `Reading: ${path}`
+          : `Read: ${path}`,
+    inputSchema: z.object({
       maxChars: z
         .number()
         .int()

@@ -1,21 +1,17 @@
+import { _ } from "@snappy/core";
+
+import { $ } from "../$";
 import styles from "./Alert.module.scss";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
 
-export type AlertVariant = `error` | `info` | `success` | `warning`;
+export type AlertProps = { text: string; type: AlertType };
 
-const variantIcon: Record<AlertVariant, Icon> = {
-  error: `alert-error`,
-  info: `alert-info`,
-  success: `alert-success`,
-  warning: `alert-warning`,
-};
+export type AlertType = `error` | `info` | `success` | `warning`;
 
-export type AlertProps = { text: string; variant: AlertVariant };
-
-export const Alert = ({ text, variant }: AlertProps) => (
-  <div className={`${styles.root} ${styles[variant]}`} role="alert">
-    <Icon name={variantIcon[variant]} />
-    <Text as="p" cn={styles.text} color={variant} text={text} typography="caption" />
+export const Alert = ({ text, type }: AlertProps) => (
+  <div className={_.cn(styles.root, $.surface(type), $.elevation(`e2`), $.radius(`sm`))}>
+    <Icon name={({ error: `cancel`, info: `info`, success: `check`, warning: `warning` } as const)[type]} />
+    <Text as="p" cn={styles.text} color={type} text={text} typography="caption" />
   </div>
 );

@@ -2,18 +2,6 @@
   @return var(--ease);
 }
 
-@function ease-slow() {
-  @return var(--ease-slow);
-}
-
-@function transition() {
-  @return var(--transition);
-}
-
-@function icon-size() {
-  @return var(--icon-size);
-}
-
 @function field-height() {
   @return var(--field-height);
 }
@@ -26,24 +14,8 @@
   @return var(--content-narrow);
 }
 
-@function layout-column() {
-  @return var(--layout-column);
-}
-
-@function layout-column-wide() {
-  @return var(--layout-column-wide);
-}
-
-@function icon-button-size() {
-  @return var(--icon-button-size);
-}
-
 @function icon-button-touch-size() {
   @return var(--icon-button-touch-size);
-}
-
-@function touch-min() {
-  @return var(--touch-target-min);
 }
 
 @function accent-edge() {
@@ -52,12 +24,4 @@
 
 @function focus-offset() {
   @return var(--focus-offset);
-}
-
-@function focus-ring() {
-  @return var(--focus-ring);
-}
-
-@function logo-text-shadow() {
-  @return var(--logo-text-shadow);
 }

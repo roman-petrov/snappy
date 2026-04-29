@@ -8,7 +8,7 @@ export type FormErrorAndActionsProps = { children: ReactNode; error: string };
 
 export const FormErrorAndActions = ({ children, error }: FormErrorAndActionsProps) => (
   <>
-    {error === `` ? undefined : <Alert text={error} variant="error" />}
+    {error === `` ? undefined : <Alert text={error} type="error" />}
     <FormActions>{children}</FormActions>
   </>
 );

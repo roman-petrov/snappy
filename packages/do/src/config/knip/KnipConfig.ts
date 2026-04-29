@@ -14,6 +14,15 @@ const config: KnipConfig = {
       ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`, `@snappy/coder-cli`],
     },
     "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
+    "packages/coder-chunk": {
+      ignoreDependencies: [
+        `tree-sitter-css`,
+        `tree-sitter-java`,
+        `tree-sitter-javascript`,
+        `tree-sitter-json`,
+        `tree-sitter-typescript`,
+      ],
+    },
     "packages/do": {
       entry: [`src/main.*.ts`, `src/NodeLoader.js`],
       ignoreDependencies: [
@@ -29,7 +38,7 @@ const config: KnipConfig = {
       ],
     },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
-    "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`] },
+    "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`, `material-symbols`] },
   },
 };
 

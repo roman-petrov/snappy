@@ -1,5 +1,7 @@
 export * from "./Settings";
 
+export * from "./SettingsAiTunnel";
+
 export * from "./SettingsLanguage";
 
 export * from "./SettingsModelsChat";

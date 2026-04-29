@@ -1,12 +1,12 @@
 import { useStoreValue } from "@snappy/store";
 
-import { $locale, Locale, t } from "..";
+import { $locale, Language, t } from "..";
 import { IconButton } from "./IconButton";
 
 export const IconButtonLocale = () => (
   <IconButton
     icon={{ emoji: useStoreValue($locale) === `ru` ? `🇷🇺` : `🇺🇸` }}
-    onClick={Locale.toggle}
+    onClick={Language.toggle}
     tip={t(`localeSwitcher`)}
   />
 );

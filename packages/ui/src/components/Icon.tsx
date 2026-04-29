@@ -1,23 +1,24 @@
-import { Html } from "@snappy/browser";
+import type { MaterialSymbol } from "material-symbols";
+
 import { _ } from "@snappy/core";
 
-import { $, type Color } from "../$";
-import { Icons } from "../assets";
+import { $, type Color, type IconSize } from "../$";
 import styles from "./Icon.module.scss";
 
-export type Icon = keyof typeof Icons | { emoji: string };
+export type Icon = MaterialSymbol | { emoji: string };
 
-export type IconProps = { cn?: string; color?: Color; name: Icon };
+export type IconProps = { cn?: string; color?: Color; name: Icon; size?: IconSize };
 
-export const Icon = ({ cn = ``, color, name }: IconProps) =>
-  _.isString(name) ? (
-    <span
-      aria-hidden
-      className={_.cn(styles.root, color === undefined ? `` : $.color(color), cn)}
-      {...Html.text(Icons[name])}
-    />
-  ) : (
-    <span aria-hidden className={_.cn(styles.root, styles.rootEmoji, color === undefined ? `` : $.color(color), cn)}>
-      {name.emoji}
-    </span>
-  );
+export const Icon = ({ cn, color, name, size = `md` }: IconProps) => (
+  <span
+    className={_.cn(
+      styles.root,
+      $.iconSize(size),
+      _.isString(name) ? styles.material : styles.emoji,
+      color === undefined ? `` : $.color(color),
+      cn,
+    )}
+  >
+    {_.isString(name) ? name : name.emoji}
+  </span>
+);

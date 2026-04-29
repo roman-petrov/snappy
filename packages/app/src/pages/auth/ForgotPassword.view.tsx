@@ -4,25 +4,24 @@ import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm } from "./AuthForm";
-import { FormErrorAndActions, MessageWithLink } from "./components";
+import { AuthForm, FormErrorAndActions, MessageWithLink } from "./components";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;
 
 export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, submit }: ForgotPasswordViewProps) => (
-  <AuthForm lead={t(`forgotPage.lead`)} submit={submit} title={t(`forgotPage.title`)}>
+  <AuthForm lead={t(`auth.forgotPassword.lead`)} submit={submit} title={t(`auth.forgotPassword.title`)}>
     {screen === `sent` ? (
       <MessageWithLink
-        lead={t(`forgotPage.checkEmailLead`)}
-        linkText={t(`forgotPage.backToLogin`)}
+        lead={t(`auth.forgotPassword.checkEmailLead`)}
+        linkText={t(`auth.forgotPassword.backToLogin`)}
         linkTo={Routes.login}
-        title={t(`forgotPage.checkEmail`)}
+        title={t(`auth.forgotPassword.checkEmail`)}
       />
     ) : (
       <>
         <Input
           autoComplete="email"
-          label={t(`forgotPage.email`)}
+          label={t(`auth.forgotPassword.email`)}
           onChange={setEmail}
           required
           type="email"
@@ -32,10 +31,10 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
           <Button
             disabled={loading}
             submit
-            text={loading ? t(`forgotPage.submitting`) : t(`forgotPage.submit`)}
+            text={loading ? t(`auth.forgotPassword.submitting`) : t(`auth.forgotPassword.submit`)}
             type="primary"
           />
-          <Button link={Routes.login} text={t(`loginPage.login`)} />
+          <Button link={Routes.login} text={t(`auth.login.title`)} />
         </FormErrorAndActions>
       </>
     )}

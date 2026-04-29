@@ -1,9 +1,22 @@
-@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+
+.nav {
+  display: flex;
+  gap: space.lg();
+  align-items: center;
+}
 
 .site-header {
-  @include core.mobile {
-    nav a {
+  @include mobile {
+    .nav a {
       display: none;
     }
+  }
+}
+
+@include mobile {
+  .nav {
+    gap: space.md();
   }
 }

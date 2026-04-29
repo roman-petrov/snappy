@@ -4,8 +4,7 @@ import type { useRegisterState } from "./Register.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm } from "./AuthForm";
-import { FormErrorAndActions } from "./components";
+import { AuthForm, FormErrorAndActions } from "./components";
 import styles from "./Register.module.scss";
 
 export type RegisterViewProps = ReturnType<typeof useRegisterState>;
@@ -25,10 +24,10 @@ export const RegisterView = ({
   submit,
   submitDisabled,
 }: RegisterViewProps) => (
-  <AuthForm submit={submit} title={t(`registerPage.title`)}>
+  <AuthForm submit={submit} title={t(`auth.register.title`)}>
     <Input
       autoComplete="email"
-      label={t(`registerPage.email`)}
+      label={t(`auth.register.email`)}
       onChange={setEmail}
       required
       type="email"
@@ -38,7 +37,7 @@ export const RegisterView = ({
       <PasswordInput
         autoComplete="new-password"
         disabled={loading}
-        label={t(`registerPage.password`)}
+        label={t(`auth.register.password`)}
         minLength={minLength}
         onChange={setPassword}
         required
@@ -46,7 +45,7 @@ export const RegisterView = ({
       />
       <PasswordStrength
         disabled={loading}
-        generateLabel={t(`registerPage.generatePassword`)}
+        generateLabel={t(`auth.register.generatePassword`)}
         onGeneratePassword={generatePassword}
         requirementResults={requirementResults.map(r => ({
           label: r.params === undefined ? t(r.labelKey) : t(r.labelKey, r.params),
@@ -54,13 +53,13 @@ export const RegisterView = ({
         }))}
         strength={strength}
         strengthBarWidth={strengthBarWidth}
-        strengthLabel={`${t(`registerPage.strength`)}:`}
+        strengthLabel={`${t(`auth.register.strength`)}:`}
         strengthText={
           strength === `weak`
-            ? t(`registerPage.strengthWeak`)
+            ? t(`auth.register.strengthWeak`)
             : strength === `medium`
-              ? t(`registerPage.strengthMedium`)
-              : t(`registerPage.strengthStrong`)
+              ? t(`auth.register.strengthMedium`)
+              : t(`auth.register.strengthStrong`)
         }
       />
     </div>
@@ -68,10 +67,10 @@ export const RegisterView = ({
       <Button
         disabled={submitDisabled}
         submit
-        text={loading ? t(`registerPage.submitting`) : t(`registerPage.submit`)}
+        text={loading ? t(`auth.register.submitting`) : t(`auth.register.submit`)}
         type="primary"
       />
-      <Button link={Routes.login} text={t(`loginPage.login`)} />
+      <Button link={Routes.login} text={t(`auth.login.title`)} />
     </FormErrorAndActions>
   </AuthForm>
 );

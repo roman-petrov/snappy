@@ -4,7 +4,6 @@ import { useTextAreaState } from "./TextArea.state";
 import { TextAreaView } from "./TextArea.view";
 
 export type TextAreaProps = {
-  ariaBusy?: boolean;
   collapsed?: boolean;
   disabled?: boolean;
   maxLines: number;

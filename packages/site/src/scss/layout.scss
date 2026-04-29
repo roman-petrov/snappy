@@ -1,1 +1,3 @@
-$feature-grid-min-track: 18.75rem;
+@use "pkg:@snappy/theme/core" as *;
+
+$feature-grid-min-track: r(300);

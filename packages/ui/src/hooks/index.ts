@@ -6,6 +6,8 @@ export * from "./useEffectOnce";
 
 export * from "./useGo";
 
+export * from "./useHasTouchInput";
+
 export * from "./useIsMobile";
 
 export * from "./useMediaQuery";

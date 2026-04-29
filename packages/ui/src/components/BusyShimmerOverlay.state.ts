@@ -19,7 +19,7 @@ export const useBusyShimmerOverlayState = ({ accentColor, speed = 1 }: BusyShimm
     }
     const color = accentColor ?? accentByTheme[Theme.effective()];
     const canvas = document.createElement(`canvas`);
-    canvas.setAttribute(`aria-hidden`, `true`);
+
     const stop = WebGl.runLoop({ canvas, shader: BusyShimmerShader }, webgl => {
       webgl.canvas.style.display = `block`;
       webgl.canvas.style.position = `absolute`;

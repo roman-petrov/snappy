@@ -14,17 +14,21 @@ const hrefDeep = (node: Record<string, unknown> | string): Record<string, unknow
       );
 
 const segment = {
-  balance: { low: `balance/low`, topUp: `balance/top-up` },
+  agent: `agent`,
+  balance: { topUp: `balance/top-up` },
+  feed: `feed`,
   forgotPassword: `forgot-password`,
   login: `login`,
   register: `register`,
   resetPassword: `reset-password`,
   settings: {
+    aiTunnel: `settings/ai-tunnel`,
     language: `settings/language`,
     models: { chat: `settings/models/chat`, image: `settings/models/image`, speech: `settings/models/speech` },
     root: `settings`,
     theme: `settings/theme`,
   },
+  snappy: `snappy`,
   wildcard: `*`,
 } as const;
 
@@ -50,32 +54,32 @@ type HrefTree<T> = { readonly [K in keyof T]: T[K] extends string ? string : Hre
 
 type RouterOnlyKey = `chat` | `wildcard`;
 
-type RoutesShape = AllNestedPaths & FlatRoutePaths & { readonly home: `/`; readonly segment: typeof segment };
+type RoutesShape = AllNestedPaths &
+  Omit<FlatRoutePaths, `agent`> & {
+    readonly agent: (id: string) => string;
+    readonly home: `/`;
+    readonly segment: typeof segment;
+  };
 
 const routerOnlyKey = (key: string): key is RouterOnlyKey => key === `chat` || key === `wildcard`;
 
 const branches = _.fromEntries(
   _.keys(segment).flatMap(key => {
     const value = segment[key];
-    if (!isRecord(value)) {
-      return [];
-    }
 
-    return [[key, hrefDeep(value)]];
+    return isRecord(value) ? [[key, hrefDeep(value)]] : [];
   }),
 );
 
 const flatNav = _.fromEntries(
   _.keys(segment).flatMap(key => {
     const value = segment[key];
-    if (!_.isString(value) || routerOnlyKey(key) || value.includes(`:`)) {
-      return [];
-    }
 
-    return [[key, toHref(value)]];
+    return _.isString(value) && !routerOnlyKey(key) && !value.includes(`:`) ? [[key, toHref(value)]] : [];
   }),
 );
 
-const routesBuilt = { home: `/`, segment, ...branches, ...flatNav };
+const agent = (id: string) => `${toHref(segment.agent)}/${encodeURIComponent(id)}`;
+const routesBuilt = { home: `/`, segment, ...branches, ...flatNav, agent };
 
 export const Routes = routesBuilt as unknown as RoutesShape;

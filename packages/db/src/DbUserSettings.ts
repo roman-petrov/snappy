@@ -10,6 +10,8 @@ export const DbUserSettings = (prisma: PrismaClient) => {
   const updateLlmModels = async (
     userId: string,
     patch: {
+      aiTunnelDirect?: boolean;
+      aiTunnelKey?: string;
       llmChatModel?: string;
       llmImageModel?: string;
       llmImageQuality?: AiImageQuality;
@@ -17,6 +19,8 @@ export const DbUserSettings = (prisma: PrismaClient) => {
     },
   ): Promise<void> => {
     const modelPatch = {
+      ...(patch.aiTunnelDirect === undefined ? {} : { aiTunnelDirect: patch.aiTunnelDirect }),
+      ...(patch.aiTunnelKey === undefined ? {} : { aiTunnelKey: patch.aiTunnelKey }),
       ...(patch.llmChatModel === undefined ? {} : { llmChatModel: patch.llmChatModel }),
       ...(patch.llmImageModel === undefined ? {} : { llmImageModel: patch.llmImageModel }),
       ...(patch.llmImageQuality === undefined ? {} : { llmImageQuality: patch.llmImageQuality }),

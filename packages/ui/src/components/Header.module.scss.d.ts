@@ -1,6 +1,5 @@
 declare const __Header: {
-  readonly header: "header";
   readonly inner: "inner";
-  readonly nav: "nav";
+  readonly trailing: "trailing";
 };
 export default __Header;

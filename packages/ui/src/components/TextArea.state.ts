@@ -7,7 +7,6 @@ import { ReactRef } from "../core/ReactRef";
 const parsePx = (value: string) => Number.parseFloat(value);
 
 export const useTextAreaState = ({
-  ariaBusy,
   collapsed = false,
   maxLines,
   onBlur,
@@ -76,5 +75,5 @@ export const useTextAreaState = ({
     };
   }, [collapsed, maxLines, value]);
 
-  return { ...rest, ariaBusy, blur, focus, onChange, readOnly, ref: mergedRef, value };
+  return { ...rest, blur, focus, onChange, readOnly, ref: mergedRef, value };
 };

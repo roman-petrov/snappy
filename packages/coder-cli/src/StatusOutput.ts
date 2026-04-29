@@ -5,16 +5,12 @@ import { _ } from "@snappy/core";
 import { Console } from "@snappy/node";
 import { clearLine, cursorTo } from "node:readline";
 
-import type { TFunction } from "./locales";
-
 import { Theme } from "./Theme";
 
 const spinnerFrames = [`⠋`, `⠙`, `⠹`, `⠸`, `⠼`, `⠴`, `⠦`, `⠧`, `⠇`, `⠏`] as const;
 const spinnerIntervalMs = 80;
 
-export type StatusOutputConfig = { t: TFunction };
-
-export const StatusOutput = ({ t }: StatusOutputConfig) => {
+export const StatusOutput = () => {
   const tools = new Map<string, string>();
   const completedToolCalls = new Set<string>();
 
@@ -26,6 +22,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     lastOutputWasSeparator: false,
     needsSeparatorBeforeNextMessage: false,
     processing: true,
+    thinkingLabel: undefined as string | undefined,
     timer: undefined as ReturnType<typeof setInterval> | undefined,
     transient: { label: undefined as string | undefined, lineCount: 1, plainText: ``, visible: false },
   };
@@ -188,7 +185,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
       return toolLabel;
     }
 
-    return state.processing ? t(`status.thinking`) : undefined;
+    return state.thinkingLabel;
   };
 
   const renderTransient = () => {
@@ -226,21 +223,39 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     clearTransient();
   };
 
-  const completeThinkingIfActive = () => {
-    if (!state.processing || state.transient.label !== t(`status.thinking`)) {
+  const completeThinkingIfActive = (label: string) => {
+    if (!state.processing || state.thinkingLabel === undefined) {
       return;
     }
-    commitBlock(Theme.toolCompleted(t(`status.thought`)));
+    state.thinkingLabel = undefined;
+    commitBlock(Theme.toolCompleted(label));
+    renderTransient();
   };
 
   const start = () => {
     state.finalized = false;
     state.processing = true;
+    state.thinkingLabel = undefined;
     state.needsSeparatorBeforeNextMessage = true;
     state.frame = 0;
     tools.clear();
     completedToolCalls.clear();
     startSpinner();
+  };
+
+  const onThinkingEvent = ({ label, status }: { label: string; status: `completed` | `running` }) => {
+    if (state.finalized) {
+      return;
+    }
+    closeAssistantStream();
+    if (status === `running`) {
+      state.thinkingLabel = label;
+      renderTransient();
+      startSpinner();
+
+      return;
+    }
+    completeThinkingIfActive(label);
   };
 
   const onToolEvent = ({
@@ -258,9 +273,6 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     if (status === `running`) {
       if (completedToolCalls.has(callId)) {
         return;
-      }
-      if (tools.size === 0) {
-        completeThinkingIfActive();
       }
       closeAssistantStream();
       tools.set(callId, label);
@@ -289,7 +301,6 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
       return;
     }
     closeAssistantStream(text);
-    completeThinkingIfActive();
     commitBlock(text);
   };
 
@@ -297,7 +308,6 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     if (state.finalized || chunk === ``) {
       return;
     }
-    completeThinkingIfActive();
     if (!state.assistantStreamActive) {
       const hadTransient = state.transient.visible;
       clearTransient();
@@ -317,7 +327,6 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     if (state.finalized) {
       return;
     }
-    completeThinkingIfActive();
     state.processing = false;
     state.finalized = true;
     stopSpinner();
@@ -336,7 +345,7 @@ export const StatusOutput = ({ t }: StatusOutputConfig) => {
     clearTransient();
   };
 
-  return { assistantDelta, assistantMessage, fail, onToolEvent, start, succeed };
+  return { assistantDelta, assistantMessage, fail, onThinkingEvent, onToolEvent, start, succeed };
 };
 
 export type StatusOutput = ReturnType<typeof StatusOutput>;

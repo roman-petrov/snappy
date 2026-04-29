@@ -6,6 +6,6 @@ export type LinkProps = Omit<TapProps, `children` | `cn`> & { muted?: boolean; t
 
 export const Link = ({ muted = false, text, ...tapProps }: LinkProps) => (
   <Tap {...tapProps} cn={muted ? styles.muted : styles.accent}>
-    <Text color={muted ? `muted` : `accent`} text={text} typography="caption" />
+    <Text color={muted ? undefined : `primary`} text={text} typography="caption" />
   </Tap>
 );

@@ -14,10 +14,10 @@ export const HeaderContentView = ({ balanceVisible, logoutOnClick }: HeaderConte
     <SystemButtons />
     {balanceVisible ? <BalanceTap /> : undefined}
     {logoutOnClick === undefined ? undefined : (
-      <IconButton icon={{ emoji: `⚙` }} link={Routes.settings.root} tip={t(`settings.title`)} />
+      <IconButton icon="settings" link={Routes.settings.root} tip={t(`settings.root.title`)} />
     )}
     {logoutOnClick === undefined ? undefined : (
-      <IconButton icon={{ emoji: `➜` }} onClick={logoutOnClick} tip={t(`logout`)} />
+      <IconButton icon="logout" onClick={logoutOnClick} tip={t(`common.logout`)} />
     )}
   </div>
 );

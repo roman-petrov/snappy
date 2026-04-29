@@ -1,6 +1,6 @@
 export * from "./App";
 
-export { Cookie } from "./core/Cookie";
+export * from "./core/Cookie";
 
 export * from "./ServerCache";
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Locale, Theme } from "@snappy/ui";
+import { Language, Theme } from "@snappy/ui";
 
 export const Cookie = (value?: string, acceptLanguage?: string) => {
   const parse = (key: string) =>
@@ -11,9 +11,9 @@ export const Cookie = (value?: string, acceptLanguage?: string) => {
           .find(s => s.startsWith(`${key}=`))
           ?.split(`=`)[1];
 
-  const locale = Locale.resolve(
-    (parse(Locale.key) ?? (acceptLanguage?.toLowerCase().startsWith(`ru`) === true ? `ru` : `en`)) as
-      | Locale
+  const locale = Language.resolve(
+    (parse(Language.key) ?? (acceptLanguage?.toLowerCase().startsWith(`ru`) === true ? `ru` : `en`)) as
+      | Language
       | undefined,
   );
 

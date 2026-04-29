@@ -1,6 +1,6 @@
-@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens/space";
 
 .steps {
   display: grid;
@@ -21,6 +21,6 @@
   @include primitives.grid-center;
   @include primitives.circle(space.xl());
 
-  color: color.on-primary();
+  color: color.text();
   background: color.primary();
 }

@@ -8,14 +8,13 @@ import { Vibrate } from "../core/Vibrate";
 import { useGo } from "../hooks/useGo";
 
 export const useTapState = ({
-  ariaBusy,
-  ariaPressed,
   children,
   cn = ``,
   disabled = false,
   keepFocus = false,
   link,
   onClick,
+  pressed,
   submit = false,
   tip,
   vibrate,
@@ -64,9 +63,6 @@ export const useTapState = ({
   const onMouseDown = keepFocus ? (event: { preventDefault: () => void }) => event.preventDefault() : undefined;
 
   return {
-    ariaBusy,
-    ariaLabel: tip,
-    ariaPressed,
     buttonOnClick,
     children,
     cn,
@@ -76,6 +72,7 @@ export const useTapState = ({
     linkTarget,
     onLinkClick,
     onMouseDown,
+    pressed,
     renderAsLink,
     submit,
     title: tip,

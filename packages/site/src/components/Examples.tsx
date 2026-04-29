@@ -1,4 +1,4 @@
-import { t } from "../core";
+import { t } from "../locales";
 import { ExampleBlock } from "./ExampleBlock";
 import { Section } from "./Section";
 

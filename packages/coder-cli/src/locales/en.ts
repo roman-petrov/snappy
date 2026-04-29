@@ -26,5 +26,4 @@ export const en = {
     unchanged: `unchanged`,
     updated: `updated`,
   },
-  status: { thinking: `Thinking...`, thought: `Thought` },
 } as const;

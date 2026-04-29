@@ -1,0 +1,26 @@
+@use "pkg:@snappy/theme/tokens/color";
+@use "surface-core";
+
+@mixin surface {
+  @include surface-core.compose(color.surface(), color.text());
+}
+
+@mixin primary {
+  @include surface-core.compose(color.primary(), color.text());
+}
+
+@mixin error {
+  @include surface-core.compose(color.error(), color.text());
+}
+
+@mixin info {
+  @include surface-core.compose(color.info(), color.text());
+}
+
+@mixin success {
+  @include surface-core.compose(color.success(), color.text());
+}
+
+@mixin warning {
+  @include surface-core.compose(color.warning(), color.text());
+}

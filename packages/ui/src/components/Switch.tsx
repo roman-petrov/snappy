@@ -1,32 +1,8 @@
-/* eslint-disable functional/no-expression-statements */
+import type { TapProps } from "./Tap";
 
-import { SwitchDisplay } from "./SwitchDisplay";
-import { Tap, type TapProps } from "./Tap";
+import { useSwitchState } from "./Switch.state";
+import { SwitchView } from "./Switch.view";
 
-export type SwitchProps = Omit<TapProps, `children`> & {
-  checked?: boolean;
-  label: string;
-  onChange?: (checked: boolean) => void;
-};
+export type SwitchProps = Omit<TapProps, `children`> & { checked?: boolean; onChange?: (checked: boolean) => void };
 
-export const Switch = ({ checked = false, label, onChange, ...tapProps }: SwitchProps) => {
-  const { disabled, onClick } = tapProps;
-
-  return (
-    <Tap
-      {...tapProps}
-      ariaPressed={checked}
-      onClick={() => {
-        if (onClick !== undefined) {
-          onClick();
-        }
-        if (onChange !== undefined) {
-          onChange(!checked);
-        }
-      }}
-      tip={label}
-    >
-      <SwitchDisplay checked={checked} disabled={disabled} />
-    </Tap>
-  );
-};
+export const Switch = (props: SwitchProps) => <SwitchView {...useSwitchState(props)} />;

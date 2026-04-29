@@ -1,6 +1,6 @@
-@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/core" as *;
 
-@include core.mobile {
+@include mobile {
   .top {
     padding-top: env(safe-area-inset-top, 0);
   }

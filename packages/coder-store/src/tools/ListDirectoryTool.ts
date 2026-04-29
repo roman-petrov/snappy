@@ -6,6 +6,15 @@ import type { WorkspaceAgentTool } from "../core";
 export const ListDirectoryTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `List files and folders in a workspace directory.`,
+    execute: async input => {
+      const result = await workspace.listDirectory(input);
+
+      return `error` in result
+        ? result.error === `path_traversal`
+          ? `Path is outside workspace root.`
+          : `Failed to list directory.`
+        : result.result;
+    },
     formatCall: ({ path }, status, locale) => {
       const value = path ?? `.`;
 
@@ -17,16 +26,7 @@ export const ListDirectoryTool: WorkspaceAgentTool = workspace =>
           ? `Listing: ${value}`
           : `Listed: ${value}`;
     },
-    run: async input => {
-      const result = await workspace.listDirectory(input);
-
-      return `error` in result
-        ? result.error === `path_traversal`
-          ? `Path is outside workspace root.`
-          : `Failed to list directory.`
-        : result.result;
-    },
-    schema: z.object({
+    inputSchema: z.object({
       path: z
         .string()
         .optional()

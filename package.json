@@ -16,5 +16,8 @@
     "@knip/mcp": "^0.0.27",
     "actions-up": "^1.13.0",
     "vitest": "^4.1.4"
+  },
+  "patchedDependencies": {
+    "vite-plugin-sass-dts@1.3.37": "patches/vite-plugin-sass-dts@1.3.37.patch"
   }
 }

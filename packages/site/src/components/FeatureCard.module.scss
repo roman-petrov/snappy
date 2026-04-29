@@ -1,28 +1,19 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
-@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .feature {
   max-width: tokens.content-narrow();
   padding: space.lg();
-  transition: tokens.transition();
 }
 
 .feature-icon {
-  @include typography.h1;
   @include primitives.inline-row-center;
 
   min-width: space.x2xl();
   padding: space.sm() space.md();
   margin-block-end: space.md();
-  font-weight: 400;
-  line-height: 1;
-  background: color.accent-soft();
-  border-radius: radius.sm();
 }
 
 @include mobile {

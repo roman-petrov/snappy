@@ -1,15 +1,6 @@
-@use "pkg:@snappy/theme/core" as core;
-@use "pkg:@snappy/theme/overlay";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
-
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-
-  @include overlay.top(false);
-}
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .inner {
   display: grid;
@@ -21,19 +12,19 @@
   margin-inline: auto;
 }
 
-.nav {
+.trailing {
   display: flex;
   gap: space.lg();
   align-items: center;
   justify-self: end;
 }
 
-@include core.mobile {
+@include mobile {
   .inner {
     padding-inline: space.md();
   }
 
-  .nav {
+  .trailing {
     gap: space.md();
   }
 }

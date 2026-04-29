@@ -1,0 +1,82 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.action-row {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  padding: space.xs();
+}
+
+.page-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-height: calc(100dvh - #{r(128)});
+}
+
+.splash {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+
+.session {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.feed {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: space.sm() space.sm() calc(#{space.sm()} + #{r(92)});
+  overflow: hidden auto;
+}
+
+.composer {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-inline: space.lg();
+  padding-top: space.xs();
+  padding-bottom: max(space.sm(), env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  animation: snappy-composer-dock 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.composer-inner {
+  width: 100%;
+  max-width: tokens.content-width();
+  margin-inline: auto;
+  pointer-events: auto;
+}
+
+@include mobile {
+  .composer {
+    padding-inline: space.sm();
+  }
+}
+
+@keyframes snappy-composer-dock {
+  from {
+    opacity: 0.65;
+    transform: translateY(-35%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

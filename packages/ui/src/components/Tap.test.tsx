@@ -70,7 +70,6 @@ describe(`tap`, () => {
         <a
           class="_root_fa81c3"
           href="/foo"
-          role="link"
         >
           Go
         </a>
@@ -87,7 +86,6 @@ describe(`tap`, () => {
         <a
           class="_root_fa81c3"
           href="https://example.com"
-          role="link"
         >
           External
         </a>
@@ -107,7 +105,6 @@ describe(`tap`, () => {
           class="_root_fa81c3"
           href="https://x.com"
           rel="noopener"
-          role="link"
           target="_blank"
         >
           Link
@@ -180,12 +177,6 @@ describe(`tap`, () => {
     expect(navigate).toHaveBeenCalledWith(`/foo`);
   });
 
-  it(`passes ariaBusy through`, () => {
-    const { container } = renderTap(<Tap ariaBusy>Loading</Tap>);
-
-    expect(container.querySelector(`button`)?.getAttribute(`aria-busy`)).toBe(`true`);
-  });
-
   it(`applies disabled to button`, () => {
     const { container } = renderTap(<Tap disabled>Click</Tap>);
 
@@ -202,7 +193,7 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`applies aria-disabled to link when disabled`, () => {
+  it(`applies data-disabled to link when disabled`, () => {
     bridgeState.available = false;
     const { container } = renderTap(
       <Tap disabled link="/x">
@@ -213,10 +204,9 @@ describe(`tap`, () => {
     expect(container).toMatchInlineSnapshot(`
       <div>
         <a
-          aria-disabled="true"
           class="_root_fa81c3"
+          data-disabled="true"
           href="/x"
-          role="link"
         >
           Link
         </a>
@@ -260,9 +250,9 @@ describe(`tap`, () => {
     expect(hapticImpact).toHaveBeenCalledTimes(1);
   });
 
-  it(`passes tip to aria and title`, () => {
+  it(`passes tip to title and data-pressed`, () => {
     const { container } = renderTap(
-      <Tap ariaPressed tip="Close dialog">
+      <Tap pressed tip="Close dialog">
         X
       </Tap>,
     );
@@ -270,9 +260,8 @@ describe(`tap`, () => {
     expect(container).toMatchInlineSnapshot(`
       <div>
         <button
-          aria-label="Close dialog"
-          aria-pressed="true"
           class="_root_fa81c3"
+          data-pressed="true"
           title="Close dialog"
           type="button"
         >
@@ -282,7 +271,7 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`omits aria-label and title when tip is not set`, () => {
+  it(`omits title when tip is not set`, () => {
     const { container } = renderTap(<Tap>X</Tap>);
 
     expect(container).toMatchInlineSnapshot(`

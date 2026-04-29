@@ -1,7 +1,7 @@
-@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens/space";
 
 .root {
   display: flex;
-  gap: space.xs();
+  gap: space.sm();
   align-items: center;
 }

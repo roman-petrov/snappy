@@ -1,8 +1,8 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/space";
 
 .separator {
   height: 1px;
   margin: 0 space.md();
-  background: color.border();
+  border-top: 1px solid color.outline();
 }

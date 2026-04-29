@@ -1,5 +1,24 @@
+@use "pkg:@snappy/theme/core" as *;
+
+$values: (
+  xs: 4,
+  sm: 6,
+  md: 12,
+  lg: 20,
+);
+
+@function -var($segment) {
+  @return --radius-#{$segment};
+}
+
+@mixin root {
+  @each $name, $px in $values {
+    #{-var($name)}: #{r($px)};
+  }
+}
+
 @function -radius($name) {
-  @return var(--radius-#{$name});
+  @return var(#{-var($name)});
 }
 
 @function xs() {

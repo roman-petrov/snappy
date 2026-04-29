@@ -56,14 +56,14 @@ describe(`ScssChunk`, () => {
   });
 
   it(`extracts chunks for scss use directives`, () => {
-    expect(ScssChunk.build({ path: `styles.scss`, source: `@use "pkg:@snappy/theme/styles" as *;` }))
+    expect(ScssChunk.build({ path: `styles.scss`, source: `@use "pkg:@snappy/theme/styles/index" as *;` }))
       .toMatchInlineSnapshot(`
         [
           {
             "endLine": 1,
             "path": "styles.scss",
             "startLine": 1,
-            "text": "@use "pkg:@snappy/theme/styles" as *;",
+            "text": "@use "pkg:@snappy/theme/styles/index" as *;",
           },
         ]
       `);
@@ -102,7 +102,7 @@ describe(`ScssChunk`, () => {
     expect(
       ScssChunk.build({
         path: `theme.scss`,
-        source: `@use "pkg:@snappy/theme/color";\n@use "pkg:@snappy/theme/tokens";\n.button { color: color-mix(in srgb, red 50%, blue); }`,
+        source: `@use "pkg:@snappy/theme/tokens/color";\n@use "pkg:@snappy/theme/tokens/tokens";\n.button { color: color-mix(in srgb, red 50%, blue); }`,
       }),
     ).toMatchInlineSnapshot(`
       [
@@ -110,14 +110,14 @@ describe(`ScssChunk`, () => {
           "endLine": 2,
           "path": "theme.scss",
           "startLine": 1,
-          "text": "@use "pkg:@snappy/theme/color";
+          "text": "@use "pkg:@snappy/theme/tokens/color";
       @use",
         },
         {
           "endLine": 3,
           "path": "theme.scss",
           "startLine": 2,
-          "text": ""pkg:@snappy/theme/tokens";
+          "text": ""pkg:@snappy/theme/tokens/tokens";
       .button { color: color-mix(in srgb, red 50%, blue); }",
         },
       ]

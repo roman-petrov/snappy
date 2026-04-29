@@ -1,0 +1,81 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/elevation" as elevation;
+@use "pkg:@snappy/theme/glass";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/surface";
+
+@mixin -on-interactive {
+  @include hover {
+    @content;
+  }
+
+  @include pressed {
+    @content;
+  }
+}
+
+@mixin soft {
+  @include surface.surface;
+  @include elevation.e1;
+
+  @include -on-interactive {
+    @include surface.primary;
+    @include elevation.e2;
+  }
+}
+
+@mixin accent {
+  @include surface.primary;
+  @include elevation.e2;
+
+  @include -on-interactive {
+    @include surface.primary;
+    @include elevation.e3;
+  }
+}
+
+@mixin menu {
+  @include glass.reset;
+
+  @include -on-interactive {
+    @include surface.primary;
+
+    color: color.primary();
+  }
+
+  color: color.text();
+  border-radius: radius.lg();
+  transition: color var(--ease);
+}
+
+@mixin icon {
+  @include glass.reset;
+
+  @include -on-interactive {
+    &::before {
+      @include surface.primary;
+      @include elevation.e2;
+
+      opacity: 1;
+    }
+  }
+
+  color: color.text();
+  transition: color var(--ease);
+
+  &::before {
+    @include glass.reset;
+
+    border: 1px solid transparent;
+    opacity: 0;
+    transition:
+      opacity var(--ease),
+      background-color var(--ease),
+      border-color var(--ease),
+      box-shadow var(--ease),
+      backdrop-filter var(--ease),
+      -webkit-backdrop-filter var(--ease);
+  }
+}

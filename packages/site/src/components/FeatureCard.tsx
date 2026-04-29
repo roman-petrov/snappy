@@ -1,15 +1,16 @@
-import { Card, Text } from "@snappy/ui";
+import { _ } from "@snappy/core";
+import { $, Card, type CardProps, Icon, Text } from "@snappy/ui";
 
 import styles from "./FeatureCard.module.scss";
 
-export type FeatureCardProps = { description: string; icon: string; title: string };
+export type FeatureCardProps = Omit<CardProps, `children`> & { description: string; icon: string; title: string };
 
-export const FeatureCard = ({ description, icon, title }: FeatureCardProps) => (
-  <Card cn={styles.feature}>
-    <span aria-hidden className={styles.featureIcon}>
-      {icon}
+export const FeatureCard = ({ cn, description, icon, title, ...props }: FeatureCardProps) => (
+  <Card {...props} cn={_.cn(styles.feature, cn)}>
+    <span className={_.cn(styles.featureIcon, $.surface(`primary`), $.elevation(`e2`), $.radius(`sm`))}>
+      <Icon name={{ emoji: icon }} size="xl" />
     </span>
-    <Text as="h3" color="heading" text={title} typography="h3" />
-    <Text color="muted" text={description} typography="large" />
+    <Text as="h3" text={title} typography="h3" />
+    <Text text={description} typography="large" />
   </Card>
 );

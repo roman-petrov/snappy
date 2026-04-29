@@ -10,8 +10,23 @@ export type DomSubscribe<TReturn = Action> = <
   options?: AddEventListenerOptions | boolean,
 ) => TReturn;
 
-type Elements = Document | Element | MediaQueryList | null | undefined | Window;
+type Elements =
+  | Document
+  | Element
+  | IDBOpenDBRequest
+  | IDBRequest
+  | IDBTransaction
+  | MediaQueryList
+  | null
+  | undefined
+  | Window;
 
-type Events = DocumentEventMap & HTMLElementEventMap & MediaQueryListEventMap & WindowEventMap;
+type Events = DocumentEventMap &
+  HTMLElementEventMap &
+  IDBOpenDBRequestEventMap &
+  IDBRequestEventMap &
+  IDBTransactionEventMap &
+  MediaQueryListEventMap &
+  WindowEventMap;
 
 type Types = keyof Events;

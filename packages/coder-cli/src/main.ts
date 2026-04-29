@@ -4,7 +4,9 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 import "dotenv/config";
-import { Ai, type AiLocale } from "@snappy/ai";
+import type { Locale } from "@snappy/intl";
+
+import { Ai } from "@snappy/ai";
 import { Coder } from "@snappy/coder";
 import { CoderDb } from "@snappy/coder-db";
 import { CoderStore } from "@snappy/coder-store";
@@ -20,7 +22,7 @@ import { Repl } from "./Repl";
 import { Theme } from "./Theme";
 
 try {
-  const locale: AiLocale = `ru`;
+  const locale: Locale = `ru`;
   const projectRoot = process.cwd();
   const dbDir = path.join(projectRoot, `.snappy/coder/lancedb`);
 
@@ -30,14 +32,22 @@ try {
   const dbDirResolved = path.resolve(dbDir);
   const aiTunnelKey = process.env[`AI_TUNNEL_API_KEY`] ?? ``;
   const t = makeLocaleT(locale);
-  const ai = await Ai({ aiTunnelKey, locale });
-  const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models, t });
-  const db = await CoderDb({ dbDir: dbDirResolved, embeddingModel, ignore: Ignore, projectRoot: projectRootResolved });
+  const ai = await Ai({ aiTunnelKey });
+  const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models.list(), t });
+
+  const db = await CoderDb({
+    aiEmbeddings: ai.embeddings,
+    dbDir: dbDirResolved,
+    embeddingModel,
+    ignore: Ignore,
+    projectRoot: projectRootResolved,
+  });
+
   const store = CoderStore({ ignore: Ignore, projectRoot: projectRootResolved });
   const tools = { ...db.tools, ...store.tools };
   const coder = (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) => Coder({ ...props, locale, tools });
   Console.logLine(
-    `${Theme.indexStart(t(`startup.indexingStart`))} ${Theme.dim(t(`startup.indexingStatus`))} ${Theme.dim(`(${embeddingModel.source} ${embeddingModel.name})`)}…`,
+    `${Theme.indexStart(t(`startup.indexingStart`))} ${Theme.dim(t(`startup.indexingStatus`))} ${Theme.dim(`(${embeddingModel})`)}…`,
   );
   let lastIndexedPath: string | undefined;
   const indexStartedAt = performance.now();
@@ -71,7 +81,7 @@ try {
     Console.errorLine(Theme.error(error instanceof Error ? error.message : String(error)));
   }
 
-  await Repl.run({ chatModel, coder, projectRoot: projectRootResolved, t });
+  await Repl.run({ ai, chatModel, coder, projectRoot: projectRootResolved, t });
   db.close();
   process.exit(0);
 } catch (error) {

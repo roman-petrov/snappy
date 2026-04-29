@@ -1,13 +1,12 @@
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/tokens";
-@use "./scss/tabs" as button;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .tabs {
   position: relative;
   width: 100%;
   min-width: 0;
-  padding: 0;
   overflow: visible;
 }
 
@@ -25,12 +24,11 @@
 }
 
 .indicator {
-  @include button.active-surface;
-
   position: absolute;
   top: 0;
   left: 0;
   min-width: 0;
+  background: color.primary();
   border-radius: radius.sm();
   transition:
     left tokens.ease(),

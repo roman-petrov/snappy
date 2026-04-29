@@ -1,38 +1,7 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/core" as core;
-@use "pkg:@snappy/theme/shadow";
-@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/tokens/space";
 
 .block {
   display: grid;
   gap: space.sm();
   padding: space.md();
-}
-
-.block-title {
-  @include typography.body-bold;
-
-  margin: 0;
-  color: color.text();
-}
-
-.block-lead {
-  @include typography.body-sm;
-
-  margin: 0;
-  color: color.text-muted();
-}
-
-.error {
-  @include typography.caption;
-
-  margin: 0;
-  color: color.error();
-}
-
-@include core.mobile {
-  .block {
-    box-shadow: shadow.sm();
-  }
 }

@@ -1,7 +1,5 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/tokens/space";
 
 .root {
   @include primitives.stack-row;
@@ -9,27 +7,6 @@
   gap: space.sm();
   padding: space.sm() space.md();
   margin-top: space.xs();
-  border-radius: radius.sm();
-}
-
-.root.error {
-  color: color.error();
-  background: color.error-ghost();
-}
-
-.root.warning {
-  color: color.warning();
-  background: color.warning-ghost();
-}
-
-.root.success {
-  color: color.success();
-  background: color.success-ghost();
-}
-
-.root.info {
-  color: color.primary();
-  background: color.primary-ghost();
 }
 
 .text {

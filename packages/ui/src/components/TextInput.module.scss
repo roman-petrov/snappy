@@ -1,12 +1,13 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/shadow";
-@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/tokens";
 
-$-icon-gap: calc(#{tokens.icon-button-touch-size()} - #{tokens.icon-button-size()});
-$-icon-halo: calc((#{tokens.icon-button-touch-size()} - #{tokens.icon-button-size()}) / 2);
-$-text-to-touch: 0.125rem;
-$-edge: 3px;
+$-icon-gap: calc(#{tokens.icon-button-touch-size()} - #{icon-size.md()});
+$-icon-halo: calc((#{tokens.icon-button-touch-size()} - #{icon-size.md()}) / 2);
+$-text-to-touch: r(2);
+$-edge: r(3);
 $-text-line-height: 1.2;
 $-icon-inset-x: calc(#{$-edge} + #{$-icon-halo});
 $-text-inset-y: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2 - #{$-text-line-height} * 1em) / 2);
@@ -21,35 +22,35 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
 
 .wrap-focused {
   .input-wrap {
-    background: color.surface();
+    @include surface.primary;
+    @include elevation.e2;
   }
 
   .input-wrap-recording {
-    background: color.error-ghost();
+    @include surface.error;
+    @include elevation.e2;
   }
 }
 
 .input-wrap {
+  @include surface.surface;
+  @include elevation.e1;
+
   display: flex;
   gap: $-icon-gap;
   align-items: center;
   padding: 0 $-icon-inset-x;
   overflow: visible;
+  border-radius: $-pill-radius;
 
   > :not(.text-area-wrap) {
     flex-shrink: 0;
   }
-
-  background: color.input();
-  border: 1px solid color.border();
-  border-radius: $-pill-radius;
-  box-shadow: shadow.sm();
-  transition: background-color tokens.ease-slow();
 }
 
 .input-wrap-recording {
-  background: color.error-ghost();
-  border-color: color-mix(in srgb, color.error() 35%, color.border());
+  @include surface.error;
+  @include elevation.e2;
 }
 
 .text-area-wrap {
@@ -66,5 +67,6 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
 .action-wrap {
   display: flex;
   flex-shrink: 0;
+  gap: $-icon-gap;
   align-items: center;
 }

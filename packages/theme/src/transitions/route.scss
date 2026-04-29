@@ -1,3 +1,4 @@
+@use "pkg:@snappy/theme/core" as *;
 @use "./transition";
 
 @keyframes view-transition-route-old {
@@ -9,7 +10,7 @@
 
   to {
     opacity: 0;
-    filter: blur(10px);
+    filter: blur(r(10));
     transform: scale(0.985);
   }
 }
@@ -17,7 +18,7 @@
 @keyframes view-transition-route-new {
   from {
     opacity: 0;
-    filter: blur(10px);
+    filter: blur(r(10));
     transform: scale(1.015);
   }
 

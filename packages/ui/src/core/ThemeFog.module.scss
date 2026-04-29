@@ -1,10 +1,10 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/space";
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/space";
 
 .host {
   position: fixed;
   inset: 0;
-  z-index: -1;
   pointer-events: none;
 }
 
@@ -16,7 +16,7 @@
 
 .grid::before {
   background:
-    linear-gradient(color.grid() 1px, transparent 1px), linear-gradient(90deg, color.grid() 1px, transparent 1px);
+    linear-gradient(color.outline() 1px, transparent 1px), linear-gradient(90deg, color.outline() 1px, transparent 1px);
   background-size: space.x3xl() space.x3xl();
 }
 

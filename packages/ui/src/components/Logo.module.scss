@@ -1,27 +1,27 @@
-@use "pkg:@snappy/theme/color";
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .logo {
   @include primitives.inline-row;
+  @include focus($radius: radius.xs());
 
   gap: space.sm();
-
-  @include focus($radius: radius.xs());
 }
 
 .logo-icon {
-  @include primitives.square(tokens.icon-size());
+  @include primitives.square(icon-size.md());
 }
 
 .logo-text {
-  font-size: tokens.icon-size();
+  font-size: icon-size.md();
   font-weight: normal;
   line-height: 1;
   color: color.primary();
   letter-spacing: -0.03em;
-  text-shadow: tokens.logo-text-shadow();
 }

@@ -1,4 +1,4 @@
-import { t } from "../core";
+import { t } from "../locales";
 import { Block, Dl } from "./Block";
 import { Section } from "./Section";
 
@@ -11,7 +11,7 @@ export const Who = () => (
         { icon: `📄`, key: `who.ads` as const },
         { icon: `🎓`, key: `who.study` as const },
       ].map(({ icon, key }) => (
-        <Block description={t(`${key}.desc`)} icon={icon} key={key} title={t(`${key}.title`)} withDivider />
+        <Block description={t(`${key}.desc`)} icon={icon} key={key} title={t(`${key}.title`)} />
       ))}
     </Dl>
   </Section>

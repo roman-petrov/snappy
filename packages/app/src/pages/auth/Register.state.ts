@@ -8,17 +8,17 @@ export type RegisterRequirementResult = { labelKey: string; met: boolean; params
 export const useRegisterState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
-  const { error, loading, onSubmit, setError } = useAuthSubmit(`registerPage`);
+  const { error, loading, onSubmit, setError } = useAuthSubmit(`auth.register`);
   const strength = Password.strength(password);
 
   const requirementResults: RegisterRequirementResult[] = [
     {
-      labelKey: `registerPage.requirementMin`,
+      labelKey: `auth.register.requirementMin`,
       met: (Password.requirementChecks[0]?.check ?? (() => false))(password),
       params: { min: Password.minLength },
     },
     {
-      labelKey: `registerPage.requirementLetters`,
+      labelKey: `auth.register.requirementLetters`,
       met: (Password.requirementChecks[1]?.check ?? (() => false))(password),
     },
   ];
@@ -30,7 +30,7 @@ export const useRegisterState = () => {
 
   const submit = () => {
     if (!meetsMinLength) {
-      setError({ key: `registerPage.passwordRule`, params: { min: Password.minLength } });
+      setError({ key: `auth.register.passwordRule`, params: { min: Password.minLength } });
 
       return;
     }

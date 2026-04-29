@@ -7,9 +7,6 @@ import styles from "./Tap.module.scss";
 export type TapViewProps = ReturnType<typeof useTapState>;
 
 export const TapView = ({
-  ariaBusy,
-  ariaLabel,
-  ariaPressed,
   buttonOnClick,
   children,
   cn,
@@ -19,16 +16,15 @@ export const TapView = ({
   linkTarget,
   onLinkClick,
   onMouseDown,
+  pressed,
   renderAsLink,
   submit,
   title,
 }: TapViewProps) => {
   const common = {
-    "aria-busy": ariaBusy,
-    "aria-label": ariaLabel,
-    "aria-pressed": ariaPressed,
     children,
     "className": _.cn(styles.root, cn),
+    "data-pressed": pressed ? `true` : undefined,
     onMouseDown,
     title,
   };
@@ -37,11 +33,10 @@ export const TapView = ({
     return (
       <a
         {...common}
-        aria-disabled={disabled || undefined}
+        data-disabled={disabled ? `true` : undefined}
         href={linkHref}
         onClick={onLinkClick}
         rel={linkRelationship}
-        role="link"
         target={linkTarget}
       />
     );

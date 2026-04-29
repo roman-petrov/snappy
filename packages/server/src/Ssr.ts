@@ -4,8 +4,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-promise-reject */
-
-import type { ResolvedLocale, Theme } from "@snappy/ui";
+import type { Locale } from "@snappy/intl";
+import type { Theme } from "@snappy/ui";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";
@@ -68,7 +68,7 @@ export const Ssr = () => {
   const prewarmSsr = async (
     clientRoot: string,
     cache: ServerCache,
-    locales: readonly [ResolvedLocale, ...ResolvedLocale[]],
+    locales: readonly [Locale, ...Locale[]],
   ): Promise<void> => {
     const { entry, template } = await loadTemplateAndEntry(clientRoot);
     for (const locale of locales) {

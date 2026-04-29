@@ -1,25 +1,22 @@
 import type { ReactNode } from "react";
 
-import { _ } from "@snappy/core";
-import { Text } from "@snappy/ui";
+import { Icon, Text } from "@snappy/ui";
 
 import styles from "./Block.module.scss";
 
-export type BlockProps = { description: string; icon?: string; title: string; withDivider?: boolean };
+export type BlockProps = { description: string; icon?: string; title: string };
 
-export const Block = ({ description, icon, title, withDivider = false }: BlockProps) =>
+export const Block = ({ description, icon, title }: BlockProps) =>
   icon === undefined ? (
     <>
-      <Text as="dt" color="heading" text={title} typography="h3" />
-      <Text as="dd" cn={withDivider ? styles.row : undefined} color="muted" text={description} typography="large" />
+      <Text as="dt" text={title} typography="h3" />
+      <Text as="dd" text={description} typography="large" />
     </>
   ) : (
-    <div className={_.cn(withDivider && styles.row, styles.rowWithIcon)}>
-      <span aria-hidden className={styles.icon}>
-        {icon}
-      </span>
-      <Text as="dt" color="heading" text={title} typography="h3" />
-      <Text as="dd" color="muted" text={description} typography="large" />
+    <div className={styles.rowWithIcon}>
+      <Icon cn={styles.icon} name={{ emoji: icon }} size="lg" />
+      <Text as="dt" text={title} typography="h3" />
+      <Text as="dd" text={description} typography="large" />
     </div>
   );
 

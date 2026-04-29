@@ -1,8 +1,7 @@
-@use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/core" as core;
+@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/space";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
 
 .block {
   margin-block-end: space.lg();
@@ -16,8 +15,6 @@
   display: inline-block;
   padding: space.sm() space.sm();
   margin: 0 0 space.sm();
-  border: 1px solid color.primary-border();
-  border-radius: radius.sm();
 }
 
 .row {
@@ -31,38 +28,22 @@
   min-height: space.x3xl();
   padding: space.md() space.lg();
   border-inline-start: space.xs() solid;
-  border-radius: 0 radius.sm() radius.sm() 0;
-}
-
-.panel-content {
-  margin: 0;
 }
 
 .panel p {
   margin: 0;
 }
 
-.before {
-  background: color.error-ghost();
-  border-color: color.error();
-}
-
-.after {
-  background: color.primary-ghost();
-  border-color: color.primary();
-}
-
 .panel-title {
   display: block;
   margin-block-end: space.sm();
-  text-transform: uppercase;
 }
 
 .arrow {
   @include primitives.grid-center;
 }
 
-@include core.mobile {
+@include mobile {
   .row {
     grid-template-columns: 1fr;
     gap: space.md();

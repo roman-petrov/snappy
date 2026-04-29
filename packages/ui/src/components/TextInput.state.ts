@@ -2,10 +2,10 @@ import { useRef, useState } from "react";
 
 import type { TextInputProps } from "./TextInput";
 
-import { Locale } from "../core";
+import { Language } from "../core";
 import { useIsMobile, useSpeechRecognition } from "../hooks";
 
-export const useTextInputState = ({ maxLines: maxLinesProp, onChange, ...rest }: TextInputProps) => {
+export const useTextInputState = ({ afterMic, maxLines: maxLinesProp, onChange, ...textAreaRest }: TextInputProps) => {
   const { listening, speechSupported, start, stop } = useSpeechRecognition();
   const isMobile = useIsMobile();
   const maxLines = maxLinesProp ?? (isMobile ? 4 : 8);
@@ -19,13 +19,14 @@ export const useTextInputState = ({ maxLines: maxLinesProp, onChange, ...rest }:
       return;
     }
 
-    start({ lang: Locale.effective(), onText: onChange });
+    start({ lang: Language.locale(), onText: onChange });
   };
 
-  const micDisabled = rest.disabled === true || !speechSupported;
+  const micDisabled = textAreaRest.disabled === true || !speechSupported;
 
   return {
-    ...rest,
+    afterMic,
+    ...textAreaRest,
     focused,
     listening,
     maxLines,

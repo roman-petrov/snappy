@@ -1,65 +1,18 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
-@use "pkg:@snappy/theme/space";
-@use "pkg:@snappy/theme/tokens";
-@use "pkg:@snappy/theme/typography";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/tokens/typography";
 
 .root {
   @include typography.button;
   @include primitives.inline-row-center;
+  @include focus;
 
   gap: space.sm();
   height: tokens.field-height();
   padding: space.sm() space.lg();
   white-space: nowrap;
-  border-radius: radius.md();
-  transition:
-    tokens.transition(),
-    background-color tokens.ease(),
-    border-color tokens.ease(),
-    color tokens.ease();
-
-  &.default {
-    color: color.primary();
-    background: transparent;
-    border: 2px dotted color.primary();
-
-    @include hover {
-      background: color.accent-soft();
-      border-color: color.primary();
-      border-style: solid;
-    }
-
-    @include pressed {
-      background: color.accent-soft();
-      border-color: color.primary();
-      border-style: solid;
-    }
-  }
-
-  &.primary {
-    color: color.on-primary();
-    background: color.primary();
-
-    @include hover {
-      background: color.primary-hover();
-      box-shadow:
-        shadow.accent(),
-        0 0 0 1px color.primary-border();
-    }
-
-    @include pressed {
-      background: color.primary-hover();
-      box-shadow:
-        shadow.accent(),
-        0 0 0 1px color.primary-border();
-    }
-  }
-
-  @include focus;
 
   &.large {
     @include typography.button-large;
@@ -69,6 +22,5 @@
 
   &:disabled {
     opacity: 0.6;
-    transform: none;
   }
 }

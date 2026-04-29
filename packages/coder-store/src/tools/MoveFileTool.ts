@@ -6,15 +6,7 @@ import type { WorkspaceAgentTool } from "../core";
 export const MoveFileTool: WorkspaceAgentTool = workspace =>
   AgentTool({
     description: `Move a file or folder to another directory in the workspace.`,
-    formatCall: ({ directoryPath, path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Перемещаю: ${path} -> ${directoryPath}`
-          : `Переместил: ${path} -> ${directoryPath}`
-        : status === `running`
-          ? `Moving: ${path} -> ${directoryPath}`
-          : `Moved: ${path} -> ${directoryPath}`,
-    run: async input => {
+    execute: async input => {
       const result = await workspace.moveFile(input);
 
       return `error` in result
@@ -25,7 +17,15 @@ export const MoveFileTool: WorkspaceAgentTool = workspace =>
             : `Failed to move path.`
         : `Moved ${input.path} to ${input.directoryPath}.`;
     },
-    schema: z.object({
+    formatCall: ({ directoryPath, path }, status, locale) =>
+      locale === `ru`
+        ? status === `running`
+          ? `Перемещаю: ${path} -> ${directoryPath}`
+          : `Переместил: ${path} -> ${directoryPath}`
+        : status === `running`
+          ? `Moving: ${path} -> ${directoryPath}`
+          : `Moved: ${path} -> ${directoryPath}`,
+    inputSchema: z.object({
       directoryPath: z.string().min(1).describe(`Target directory path relative to workspace root.`),
       path: z.string().min(1).describe(`Source file or directory path relative to workspace root.`),
     }),

@@ -7,7 +7,7 @@ export type TitleProps = { as?: `h1` | `h2`; cn?: string; lead?: string; level?:
 
 export const Title = ({ as = `h1`, cn = ``, lead, level = 2, title }: TitleProps) => (
   <>
-    <Text as={as} cn={_.cn(styles.root, cn)} color="heading" text={title} typography={level === 1 ? `h1` : `h2`} />
-    {lead !== undefined && <Text cn={styles.lead} color="muted" text={lead} typography="large" />}
+    <Text as={as} cn={_.cn(styles.root, cn)} text={title} typography={level === 1 ? `h1` : `h2`} />
+    {lead !== undefined && <Text cn={styles.lead} text={lead} typography="large" />}
   </>
 );

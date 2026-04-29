@@ -1,4 +1,4 @@
-import { t } from "../core";
+import { t } from "../locales";
 import { Block, Dl } from "./Block";
 import { Section } from "./Section";
 
@@ -7,7 +7,7 @@ export const Faq = () => (
     <Dl>
       {([`faq.free`, `faq.registration`, `faq.languages`, `faq.privacy`, `faq.length`, `faq.difference`] as const).map(
         key => (
-          <Block description={t(`${key}.a`)} key={key} title={t(`${key}.q`)} withDivider />
+          <Block description={t(`${key}.a`)} key={key} title={t(`${key}.q`)} />
         ),
       )}
     </Dl>

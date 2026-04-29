@@ -1,4 +1,5 @@
-import type { ResolvedLocale, Theme } from "@snappy/ui";
+import type { Locale } from "@snappy/intl";
+import type { Theme } from "@snappy/ui";
 
 const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 const dataThemePlaceholder = /data-theme="[^"]*"/u;
@@ -6,8 +7,8 @@ const dataThemePlaceholder = /data-theme="[^"]*"/u;
 export type SiteMeta = { description: string; htmlLang: string; keywords: string; title: string };
 
 export type SsrEntry = {
-  getMeta: (locale: ResolvedLocale) => SiteMeta;
-  render: (locale: ResolvedLocale, theme: Theme | undefined) => string;
+  getMeta: (locale: Locale) => SiteMeta;
+  render: (locale: Locale, theme: Theme | undefined) => string;
 };
 
 const escapeAttribute = (s: string) =>
@@ -31,7 +32,7 @@ const injectTheme = (html: string, theme: Theme | undefined): string => {
     : withTheme;
 };
 
-const build = (locale: ResolvedLocale, theme: Theme | undefined, template: string, entry: SsrEntry) => {
+const build = (locale: Locale, theme: Theme | undefined, template: string, entry: SsrEntry) => {
   const withMeta = injectMeta(template, entry.getMeta(locale));
   const withRoot = withMeta.replace(rootPlaceholder, `<div id="root">${entry.render(locale, theme)}</div>`);
 
@@ -40,7 +41,7 @@ const build = (locale: ResolvedLocale, theme: Theme | undefined, template: strin
 
 const htmlLangPlaceholder = /lang="[^"]*"/u;
 
-const prepareAppIndex = (html: string, locale: ResolvedLocale, theme: Theme | undefined) =>
+const prepareAppIndex = (html: string, locale: Locale, theme: Theme | undefined) =>
   injectTheme(html.replace(htmlLangPlaceholder, `lang="${locale}"`), theme);
 
 export const SiteSsr = { build, prepareAppIndex };

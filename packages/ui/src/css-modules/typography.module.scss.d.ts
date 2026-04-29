@@ -1,5 +1,7 @@
 declare const __Typography: {
   readonly body: "body";
+  readonly bodySm: "bodySm";
+  readonly bodyBold: "bodyBold";
   readonly display: "display";
   readonly h1: "h1";
   readonly h2: "h2";
@@ -7,6 +9,7 @@ declare const __Typography: {
   readonly large: "large";
   readonly caption: "caption";
   readonly captionBold: "captionBold";
+  readonly captionSm: "captionSm";
   readonly button: "button";
   readonly buttonLarge: "buttonLarge";
 };

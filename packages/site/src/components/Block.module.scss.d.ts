@@ -1,6 +1,5 @@
 declare const __Block: {
   readonly list: "list";
-  readonly row: "row";
   readonly rowWithIcon: "rowWithIcon";
   readonly icon: "icon";
 };

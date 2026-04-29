@@ -1,3 +1,5 @@
+import type { Icon as UiIcon } from "@snappy/ui";
+
 import { Fragment } from "react";
 
 import { SettingsCard } from "./SettingsCard";
@@ -5,7 +7,7 @@ import { SettingsCardRow } from "./SettingsCardRow";
 import { SettingsCards } from "./SettingsCards";
 import { SettingsCardSeparator } from "./SettingsCardSeparator";
 
-export type SettingsOption<T extends string> = { icon: string; label: string; value: T };
+export type SettingsOption<T extends string> = { icon: UiIcon; label: string; value: T };
 
 export type SettingsOptionListProps<T extends string> = {
   onSelect: (value: T) => void;
@@ -20,10 +22,10 @@ export const SettingsOptionList = <T extends string>({ onSelect, options, value 
         <Fragment key={opt.value}>
           {index > 0 && <SettingsCardSeparator />}
           <SettingsCardRow
-            ariaPressed={value === opt.value}
             end={value === opt.value ? `✓` : undefined}
             icon={opt.icon}
             onClick={() => onSelect(opt.value)}
+            pressed={value === opt.value}
             text={opt.label}
           />
         </Fragment>

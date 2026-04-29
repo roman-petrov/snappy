@@ -9,11 +9,11 @@ import { FormErrorAndActions } from "../auth/components";
 export type TopUpViewProps = ReturnType<typeof useTopUpState>;
 
 export const TopUpView = ({ amountText, error, loading, setAmountText, submit }: TopUpViewProps) => (
-  <Page back title={t(`balance.topUpTitle`)}>
-    <p>{t(`balance.topUpLead`)}</p>
+  <Page back title={t(`balance.topUp.title`)}>
+    <p>{t(`balance.topUp.lead`)}</p>
     <Input
       disabled={loading}
-      label={t(`balance.amountLabel`)}
+      label={t(`balance.topUp.amountLabel`)}
       onChange={setAmountText}
       type="text"
       value={amountText}
@@ -22,7 +22,7 @@ export const TopUpView = ({ amountText, error, loading, setAmountText, submit }:
       <Button
         disabled={loading}
         onClick={submit}
-        text={loading ? t(`balance.topUpSubmitting`) : t(`balance.topUpSubmit`)}
+        text={loading ? t(`balance.topUp.submitting`) : t(`balance.topUp.submit`)}
         type="primary"
       />
     </FormErrorAndActions>

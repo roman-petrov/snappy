@@ -7,13 +7,13 @@ import { SettingsOptionList } from "./components";
 export type SettingsLanguageViewProps = ReturnType<typeof useSettingsLanguageState>;
 
 export const SettingsLanguageView = (props: SettingsLanguageViewProps) => (
-  <Page back title={t(`settings.language`)}>
+  <Page back title={t(`settings.language.title`)}>
     <SettingsOptionList
       {...props}
       options={[
-        { icon: `🇷🇺`, label: t(`settingsLanguage.ru`), value: `ru` },
-        { icon: `🇬🇧`, label: t(`settingsLanguage.en`), value: `en` },
-        { icon: `⚙️`, label: t(`settingsLanguage.system`), value: `system` },
+        { icon: { emoji: `🇷🇺` }, label: t(`settings.language.ru`), value: `ru` },
+        { icon: { emoji: `🇬🇧` }, label: t(`settings.language.en`), value: `en` },
+        { icon: `settings`, label: t(`settings.language.system`), value: `system` },
       ]}
     />
   </Page>

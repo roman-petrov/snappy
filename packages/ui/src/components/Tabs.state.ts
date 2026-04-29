@@ -22,7 +22,7 @@ export const useTabsState = <T extends string>({
     const root = tabsRef.current;
 
     const syncIndicator = () => {
-      const selected = root.querySelector(`[aria-pressed="true"]`);
+      const selected = root.querySelector(`[data-pressed="true"]`);
 
       if (!(selected instanceof HTMLElement)) {
         return;

@@ -10,10 +10,13 @@ type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`
 
 const typographyTag: Record<Typography, TextTag> = {
   body: `p`,
+  bodyBold: `p`,
+  bodySm: `p`,
   button: `span`,
   buttonLarge: `span`,
   caption: `span`,
   captionBold: `span`,
+  captionSm: `span`,
   display: `h1`,
   h1: `h1`,
   h2: `h2`,
@@ -31,7 +34,7 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
   typography?: Typography;
 };
 
-export const Text = ({ as, cn = ``, color = `body`, html = false, text, typography = `body`, ...rest }: TextProps) => {
+export const Text = ({ as, cn = ``, color = `text`, html = false, text, typography = `body`, ...rest }: TextProps) => {
   const Tag = as ?? typographyTag[typography];
   const typographyClass = $.typography(typography);
   const colorClass = $.color(color);

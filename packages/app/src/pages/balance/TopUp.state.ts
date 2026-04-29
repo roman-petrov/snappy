@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { api } from "../../core";
+import { trpc } from "../../core";
 import { useAsyncSubmit } from "../../hooks";
 
 export const useTopUpState = () => {
@@ -10,23 +10,23 @@ export const useTopUpState = () => {
   const submit = () => {
     const amount = Number(amountText.replace(`,`, `.`));
     if (!Number.isFinite(amount) || amount <= 0) {
-      setError({ key: `balance.topUpErrors.invalid` });
+      setError({ key: `balance.topUp.errors.invalid` });
 
       return;
     }
     void wrapSubmit(async () => {
-      const result = await api.balancePaymentUrl({ amount });
+      const result = await trpc.balance.paymentUrl.mutate({ amount });
       if (result.status === `ok`) {
         window.location.assign(result.url);
 
         return;
       }
       if (result.status === `invalidAmount`) {
-        setError({ key: `balance.topUpErrors.invalidAmount` });
+        setError({ key: `balance.topUp.errors.invalidAmount` });
 
         return;
       }
-      setError({ key: `balance.topUpErrors.payment` });
+      setError({ key: `balance.topUp.errors.payment` });
     });
   };
 

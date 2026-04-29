@@ -9,7 +9,7 @@ export const Steps = ({ items }: StepsProps) => (
     {items.map((item, index) => (
       <li key={item}>
         <span className={styles.marker}>
-          <Text as="span" color="onAccent" text={String(index + 1)} typography="captionBold" />
+          <Text as="span" text={String(index + 1)} typography="captionBold" />
         </span>
         <Text as="span" text={item} typography="large" />
       </li>

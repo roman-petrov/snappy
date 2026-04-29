@@ -1,14 +1,28 @@
-@use "pkg:@snappy/theme/color";
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/core" as *;
 
-@mixin card {
-  background: linear-gradient(
-    145deg,
-    color-mix(in srgb, color.surface() 86%, transparent) 0%,
-    color-mix(in srgb, color.surface() 62%, transparent) 18%,
-    color-mix(in srgb, color.surface() 76%, transparent) 38%,
-    color-mix(in srgb, color.surface() 54%, transparent) 60%,
-    color-mix(in srgb, color.surface() 70%, transparent) 82%,
-    color-mix(in srgb, color.surface() 58%, transparent) 100%
+$-blur: r(22);
+$-contrast: 1.06;
+$-fill: 0.41;
+$-outline: 0.4;
+$-saturate: 1.18;
+$-rim-white: 0.66;
+$-rim-tone: 0.34;
+
+@mixin -paint($background, $border-color, $backdrop) {
+  background-color: $background;
+  border: 1px solid $border-color;
+  backdrop-filter: $backdrop;
+}
+
+@mixin reset {
+  @include -paint(transparent, transparent, none);
+}
+
+@mixin simple($tone) {
+  @include -paint(
+    color-mix(in srgb, $tone calc(100% * $-fill), transparent),
+    color-mix(in srgb, #ffffff calc(100% * $-rim-white), $tone calc(100% * $-rim-tone)),
+    blur($-blur) saturate($-saturate) contrast($-contrast)
   );
-  backdrop-filter: blur(16px) saturate(1.45) contrast(1.02);
 }

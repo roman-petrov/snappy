@@ -1,8 +1,12 @@
+import type { Color } from "../$";
+import type { Icon } from "./Icon";
 import type { TextAreaProps } from "./TextArea";
 
 import { useTextInputState } from "./TextInput.state";
 import { TextInputView } from "./TextInput.view";
 
-export type TextInputProps = Omit<TextAreaProps, `maxLines`> & { maxLines?: number };
+export type TextInputAfterMic = { color?: Color; disabled?: boolean; icon: Icon; onClick: () => void; tip: string };
+
+export type TextInputProps = Omit<TextAreaProps, `maxLines`> & { afterMic?: TextInputAfterMic; maxLines?: number };
 
 export const TextInput = (props: TextInputProps) => <TextInputView {...useTextInputState(props)} />;

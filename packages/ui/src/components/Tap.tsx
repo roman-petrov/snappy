@@ -8,14 +8,13 @@ import { TapView } from "./Tap.view";
 export type TapLinkExternal = { href: string; rel?: string; target?: string };
 
 export type TapProps = {
-  ariaBusy?: boolean;
-  ariaPressed?: boolean;
   children: ReactNode;
   cn?: string;
   disabled?: boolean;
   keepFocus?: boolean;
   link?: string | TapLinkExternal;
   onClick?: () => void;
+  pressed?: boolean;
   submit?: boolean;
   tip?: string;
   vibrate?: Vibrate;

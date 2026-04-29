@@ -27,6 +27,6 @@
     "verbatimModuleSyntax": true,
     "types": ["vite/client", "bun"]
   },
-  "exclude": [".jscpd", "**/dist/**", "**/node_modules/**"],
+  "exclude": [".jscpd", "**/dist/**", "**/migration-source/**", "**/node_modules/**"],
   "include": ["./**/*.*"]
 }

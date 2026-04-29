@@ -1,0 +1,38 @@
+@use "pkg:@snappy/theme/core" as *;
+
+$values: (
+  sm: 16,
+  md: 24,
+  lg: 32,
+  xl: 40,
+);
+
+@function -var($segment) {
+  @return --icon-size-#{$segment};
+}
+
+@mixin root {
+  @each $name, $px in $values {
+    #{-var($name)}: #{r($px)};
+  }
+}
+
+@function -icon-size($name) {
+  @return var(#{-var($name)});
+}
+
+@function sm() {
+  @return -icon-size("sm");
+}
+
+@function md() {
+  @return -icon-size("md");
+}
+
+@function lg() {
+  @return -icon-size("lg");
+}
+
+@function xl() {
+  @return -icon-size("xl");
+}

@@ -4,8 +4,7 @@ import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm } from "./AuthForm";
-import { FormErrorAndActions, MessageWithLink } from "./components";
+import { AuthForm, FormErrorAndActions, MessageWithLink } from "./components";
 
 export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
 
@@ -18,13 +17,13 @@ export const ResetPasswordView = ({
   setPassword,
   submit,
 }: ResetPasswordViewProps) => (
-  <AuthForm submit={submit} title={t(`resetPage.title`)}>
+  <AuthForm submit={submit} title={t(`auth.resetPassword.title`)}>
     {screen === `form` ? (
       <>
         <PasswordInput
           autoComplete="new-password"
           disabled={loading}
-          label={t(`resetPage.passwordLabel`, { min: minLength })}
+          label={t(`auth.resetPassword.passwordLabel`, { min: minLength })}
           minLength={minLength}
           onChange={setPassword}
           required
@@ -34,17 +33,17 @@ export const ResetPasswordView = ({
           <Button
             disabled={loading}
             submit
-            text={loading ? t(`resetPage.submitting`) : t(`resetPage.submit`)}
+            text={loading ? t(`auth.resetPassword.submitting`) : t(`auth.resetPassword.submit`)}
             type="primary"
           />
         </FormErrorAndActions>
       </>
     ) : (
       <MessageWithLink
-        lead={screen === `invalid` ? t(`resetPage.invalidLinkLead`) : t(`resetPage.doneLead`)}
-        linkText={screen === `invalid` ? t(`resetPage.requestAgain`) : t(`loginPage.login`)}
+        lead={screen === `invalid` ? t(`auth.resetPassword.invalidLinkLead`) : t(`auth.resetPassword.doneLead`)}
+        linkText={screen === `invalid` ? t(`auth.resetPassword.requestAgain`) : t(`auth.login.title`)}
         linkTo={screen === `invalid` ? Routes.forgotPassword : Routes.login}
-        title={screen === `invalid` ? t(`resetPage.invalidLink`) : t(`resetPage.done`)}
+        title={screen === `invalid` ? t(`auth.resetPassword.invalidLink`) : t(`auth.resetPassword.done`)}
       />
     )}
   </AuthForm>

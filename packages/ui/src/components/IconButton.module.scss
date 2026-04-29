@@ -1,94 +1,26 @@
-@use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/tokens";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .root {
   @include primitives.inline-row-center;
-  @include primitives.square(tokens.icon-button-size());
+  @include focus($radius: calc(#{tokens.icon-button-touch-size()} * 0.5));
 
   position: relative;
-  padding: 0;
-  color: color.text-muted();
-  transition: color tokens.ease();
 
   &::before {
+    @include primitives.circle(tokens.icon-button-touch-size());
+
     position: absolute;
     top: 50%;
     left: 50%;
     pointer-events: none;
     content: "";
-    background: transparent;
     transform: translate(-50%, -50%);
-    transition: background-color tokens.ease();
-
-    @include primitives.circle(tokens.icon-button-touch-size());
   }
 
   > span {
-    @include primitives.inline-row-center;
-    @include primitives.square(tokens.icon-button-size());
-
     position: relative;
-    font-size: tokens.icon-button-size();
-
-    &.emoji {
-      font-size: 1.375rem;
-      line-height: 1;
-    }
-
-    > svg {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  &:focus-visible::before {
-    background: color.accent-soft();
-  }
-
-  @include hover {
-    color: color.primary();
-
-    &::before {
-      background: color.accent-soft();
-    }
-  }
-
-  @include pressed {
-    color: color.primary();
-
-    &::before {
-      background: color.accent-soft();
-    }
-  }
-
-  &.filled {
-    color: color.on-primary();
-
-    &::before {
-      background: color.primary();
-    }
-
-    &:focus-visible::before {
-      background: color.primary-hover();
-    }
-
-    @include hover {
-      color: color.on-primary();
-
-      &::before {
-        background: color.primary-hover();
-      }
-    }
-
-    @include pressed {
-      color: color.on-primary();
-
-      &::before {
-        background: color.primary-hover();
-      }
-    }
   }
 }

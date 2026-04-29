@@ -12,6 +12,8 @@ export * from "./Html";
 
 export * from "./MediaQuery";
 
+export * from "./Share";
+
 export * from "./speech";
 
 export * from "./WebGl";

@@ -1,202 +1,424 @@
+// cspell:word aitunnel
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type { FastifyReply, FastifyRequest } from "fastify";
-
-import { PassThrough } from "node:stream";
+import { HttpStatus } from "@snappy/core";
+import fastifyFactory, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
+import { Readable, type Transform } from "node:stream";
+import { finished } from "node:stream/promises";
+import { setImmediate } from "node:timers/promises";
 import { describe, expect, it, vi } from "vitest";
 
-import type { Balance } from "./Balance";
+import type { ServerApp } from "./ServerApp";
 
 import { AiTunnelProxy } from "./AiTunnelProxy";
+import { SessionUserId } from "./SessionUserId";
 
-const request = (
-  body: unknown,
-  { headers = {}, raw = {} }: { headers?: Record<string, string>; raw?: unknown } = {},
-): FastifyRequest => ({ body, headers, raw }) as unknown as FastifyRequest;
-
-const reply = () => {
-  const raw = new PassThrough() as PassThrough & { writeHead: ReturnType<typeof vi.fn> };
-  Object.defineProperty(raw, `writeHead`, { value: vi.fn(), writable: true });
-  const value = { headers: vi.fn(), hijack: vi.fn(), raw, send: vi.fn(), status: vi.fn() };
-  value.status.mockReturnValue(value);
-  value.headers.mockReturnValue(value);
-
-  return value as unknown as FastifyReply & {
-    headers: ReturnType<typeof vi.fn>;
-    hijack: ReturnType<typeof vi.fn>;
-    raw: PassThrough & { writeHead: ReturnType<typeof vi.fn> };
-    send: ReturnType<typeof vi.fn>;
-    status: ReturnType<typeof vi.fn>;
+type RegisterOptions = {
+  preHandler?: (request: FastifyRequest, reply: FastifyReply, done: () => undefined) => Promise<unknown> | undefined;
+  replyOptions?: {
+    onResponse?: (request: FastifyRequest, reply: FastifyReply, upstream: unknown) => void;
+    rewriteRequestHeaders?: (
+      request: FastifyRequest,
+      headers: Record<string, string | string[] | undefined>,
+    ) => Record<string, string | string[] | undefined>;
   };
 };
 
-const balance = ({ blocked = false }: { blocked?: boolean } = {}): Balance =>
-  ({
-    debitForLlm: vi.fn().mockResolvedValue(undefined),
-    isLlmBlocked: vi.fn().mockResolvedValue(blocked),
-  }) as unknown as Balance;
+type ReplyHooksForTests = {
+  onResponse: (
+    request: FastifyRequest,
+    reply: FastifyReply,
+    upstreamResponse: { headers: Record<string, string | string[] | undefined>; stream?: null | Readable },
+  ) => void;
+  rewriteRequestHeaders: (
+    request: FastifyRequest,
+    headers: Record<string, string | string[] | undefined>,
+  ) => Record<string, string | string[] | undefined>;
+};
 
-describe(`aiTunnelProxy`, () => {
-  it(`returns notFound for unknown route`, async () => {
-    const proxy = AiTunnelProxy({ aiTunnelKey: `key`, balance: balance() });
-    const response = reply();
-
-    await proxy(`u1`, `unknown`, request({}), response);
-
-    expect(response.status).toHaveBeenCalledWith(404);
-    expect(response.send).toHaveBeenCalledWith({ status: `notFound` });
-
-    vi.restoreAllMocks();
+const { httpProxyMock } = vi.hoisted(() => {
+  const register = vi.fn((app: FastifyInstance, options: RegisterOptions) => {
+    app.all(`/*`, async (request, reply) => {
+      const preHandlerDone = () => undefined;
+      await options.preHandler?.(request, reply, preHandlerDone);
+      if (reply.sent) {
+        return;
+      }
+      void reply.send({ passthrough: true });
+    });
   });
 
-  it(`returns balanceBlocked and does not call fetch`, async () => {
-    const blockedBalance = balance({ blocked: true });
-    const fetchSpy = vi.spyOn(globalThis, `fetch`);
-    const proxy = AiTunnelProxy({ aiTunnelKey: `key`, balance: blockedBalance });
-    const response = reply();
+  return { httpProxyMock: register };
+});
 
-    await proxy(`u2`, `chat/completions`, request({ model: `gpt-x` }), response);
+vi.mock(`@fastify/http-proxy`, () => ({ default: httpProxyMock }));
 
-    expect(response.status).toHaveBeenCalledWith(200);
-    expect(response.send).toHaveBeenCalledWith({ status: `balanceBlocked` });
-    expect(fetchSpy).not.toHaveBeenCalled();
-    expect(blockedBalance.debitForLlm).not.toHaveBeenCalled();
+vi.mock(`./SessionUserId`, () => ({ SessionUserId: vi.fn() }));
 
-    vi.restoreAllMocks();
+vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: `test-ai-tunnel-key` } }));
+
+const lastReplyHooks = (): ReplyHooksForTests => {
+  const registered = httpProxyMock.mock.calls.at(-1)?.[1];
+  const hooks = registered?.replyOptions;
+
+  return hooks as unknown as ReplyHooksForTests;
+};
+
+type ReplyProbe = {
+  readonly payloads: unknown[];
+  readonly raw: Record<string, never>;
+  readonly send: (payload?: unknown) => ReplyProbe;
+  readonly sent: boolean;
+  readonly status: (code: number) => ReplyProbe;
+  readonly statusCode: number;
+};
+
+const replyProbe = (): ReplyProbe => {
+  const payloads: unknown[] = [];
+  let sent = false;
+  let statusCode = 200;
+
+  const reply: ReplyProbe = {
+    payloads,
+    raw: {},
+    send(payload?: unknown) {
+      sent = true;
+      if (payload !== undefined) {
+        payloads.push(payload);
+      }
+
+      return reply;
+    },
+    get sent() {
+      return sent;
+    },
+    status(code: number) {
+      statusCode = code;
+
+      return reply;
+    },
+    get statusCode() {
+      return statusCode;
+    },
+  };
+
+  return reply;
+};
+
+const drainTransform = async (stream: Transform) => {
+  stream.resume();
+  await finished(stream);
+};
+
+const mockApi = () =>
+  ({ balance: { debitForLlm: vi.fn(), isLlmBlocked: vi.fn() }, betterAuth: {} }) as unknown as ServerApp;
+
+const resetMocks = () => {
+  httpProxyMock.mockClear();
+  vi.mocked(SessionUserId).mockReset();
+};
+
+const proxyWithReplyHooks = async () => {
+  resetMocks();
+  const app = fastifyFactory();
+  const api = mockApi();
+  await AiTunnelProxy(app, api);
+
+  return { api, ...lastReplyHooks() };
+};
+
+describe(`AiTunnelProxy`, () => {
+  describe(`preHandler`, () => {
+    it(`returns 401 when there is no session user`, async () => {
+      resetMocks();
+      vi.mocked(SessionUserId).mockResolvedValue(undefined);
+      const app = fastifyFactory();
+      const api = mockApi();
+      await AiTunnelProxy(app, api);
+      const response = await app.inject({ method: `GET`, url: `/api/ai-tunnel/x` });
+
+      expect(response.statusCode).toBe(HttpStatus.unauthorized);
+      expect(response.json()).toStrictEqual({ status: `unauthorized` });
+    });
+
+    it(`returns balanceBlocked when LLM usage is blocked by balance`, async () => {
+      resetMocks();
+      vi.mocked(SessionUserId).mockResolvedValue(`user-1`);
+      const app = fastifyFactory();
+      const api = mockApi();
+      vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(true);
+      await AiTunnelProxy(app, api);
+      const response = await app.inject({ method: `GET`, url: `/api/ai-tunnel/x` });
+
+      expect(response.statusCode).toBe(HttpStatus.ok);
+      expect(response.json()).toStrictEqual({ status: `balanceBlocked` });
+      expect(api.balance.isLlmBlocked).toHaveBeenCalledWith(`user-1`);
+    });
+
+    it(`continues the request when user is present and not blocked`, async () => {
+      resetMocks();
+      vi.mocked(SessionUserId).mockResolvedValue(`user-1`);
+      const app = fastifyFactory();
+      const api = mockApi();
+      vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(false);
+      await AiTunnelProxy(app, api);
+      const response = await app.inject({ method: `GET`, url: `/api/ai-tunnel/x` });
+
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toStrictEqual({ passthrough: true });
+    });
   });
 
-  it(`proxies json chat response and debits by usage cost`, async () => {
-    const usedBalance = balance();
+  describe(`rewriteRequestHeaders`, () => {
+    it(`forwards authorization with tunnel key, sets upstream host, drops cookie and host`, async () => {
+      const { rewriteRequestHeaders } = await proxyWithReplyHooks();
 
-    const fetchSpy = vi
-      .spyOn(globalThis, `fetch`)
-      .mockResolvedValue(
-        Response.json(
-          { id: `chat-1`, usage: { cost_rub: 1.25 } },
-          { headers: { "Content-Encoding": `gzip`, "Content-Type": `application/json`, "X-Test": `ok` }, status: 201 },
-        ),
+      const result = rewriteRequestHeaders({} as FastifyRequest, {
+        "authorization": `Bearer user-token`,
+        "cookie": `a=b`,
+        "host": `localhost:3000`,
+        "x-custom": `1`,
+      });
+
+      expect(result).toStrictEqual({
+        "authorization": `Bearer test-ai-tunnel-key`,
+        "host": `api.aitunnel.ru`,
+        "x-custom": `1`,
+      });
+      expect(result[`cookie`]).toBeUndefined();
+    });
+  });
+
+  describe(`onResponse without body stream`, () => {
+    it(`sends empty reply when body stream is missing`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const reply = replyProbe();
+
+      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `application/json` },
+      });
+
+      expect(reply.sent).toBe(true);
+      expect(reply.payloads).toStrictEqual([]);
+      expect(api.balance.debitForLlm).not.toHaveBeenCalled();
+    });
+  });
+
+  describe(`onResponse billing (JSON body)`, () => {
+    it(`debits once with cost_rub, call URL and optional model`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const stream = Readable.from([Buffer.from(JSON.stringify({ model: `gpt-x`, usage: { cost_rub: 12.5 } }))]);
+      const reply = replyProbe();
+
+      onResponse(
+        { url: `/api/ai-tunnel/chat`, userId: `user-9` } as FastifyRequest & { userId: string },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` }, stream },
       );
 
-    const proxy = AiTunnelProxy({ aiTunnelKey: `token-123`, balance: usedBalance });
-    const response = reply();
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
-    await proxy(`u3`, `chat/completions`, request({ model: `chat-pro`, stream: false }), response);
-
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-
-    const [, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
-
-    expect((init.headers as Headers).get(`Authorization`)).toBe(`Bearer token-123`);
-    expect(response.status).toHaveBeenCalledWith(201);
-
-    expect(response.headers).toHaveBeenCalledWith({ "content-type": `application/json`, "x-test": `ok` });
-    expect(response.send).toHaveBeenCalledWith({ id: `chat-1`, usage: { cost_rub: 1.25 } });
-
-    expect(usedBalance.debitForLlm).toHaveBeenCalledWith(`u3`, 1.25, { call: `chat`, model: `chat-pro` });
-
-    vi.restoreAllMocks();
-  });
-
-  it(`streams chat response and debits only once from sse payload`, async () => {
-    const usedBalance = balance();
-
-    const sse =
-      `data: {"id":"a","usage":{"cost_rub":2}}\n\n` +
-      `data: {"id":"b","usage":{"cost_rub":9}}\n\n` +
-      `data: [DONE]\n\n`;
-
-    const body = new ReadableStream<Uint8Array>({
-      start(controller) {
-        controller.enqueue(new TextEncoder().encode(sse));
-        controller.close();
-      },
-    });
-    vi.spyOn(globalThis, `fetch`).mockResolvedValue(
-      new Response(body, { headers: { "Content-Type": `text/event-stream` }, status: 200 }),
-    );
-    const proxy = AiTunnelProxy({ aiTunnelKey: `token-123`, balance: usedBalance });
-    const response = reply();
-
-    await proxy(`u4`, `chat/completions`, request({ model: `gpt-4.1`, stream: true }), response);
-    await new Promise<void>(resolve => {
-      setTimeout(() => resolve(), 0);
+      expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`user-9`, 12.5, {
+        call: `/api/ai-tunnel/chat`,
+        model: `gpt-x`,
+      });
+      expect(reply.payloads[0]).toStrictEqual({ model: `gpt-x`, usage: { cost_rub: 12.5 } });
     });
 
-    expect(response.hijack).toHaveBeenCalledTimes(1);
-    expect(response.raw.writeHead).toHaveBeenCalledWith(200, { "content-type": `text/event-stream` });
-    expect(usedBalance.debitForLlm).toHaveBeenCalledTimes(1);
-    expect(usedBalance.debitForLlm).toHaveBeenCalledWith(`u4`, 2, { call: `chat`, model: `gpt-4.1` });
+    it(`uses empty model when absent`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const body = { usage: { cost_rub: 3 } };
+      const stream = Readable.from([Buffer.from(JSON.stringify(body))]);
+      const reply = replyProbe();
 
-    vi.restoreAllMocks();
-  });
-
-  it(`proxies image generation response and debits as image call`, async () => {
-    const usedBalance = balance();
-    vi.spyOn(globalThis, `fetch`).mockResolvedValue(
-      Response.json(
-        { data: [{ url: `https://img` }], usage: { cost_rub: 3.5 } },
-        { headers: { "Content-Type": `application/json` }, status: 200 },
-      ),
-    );
-
-    const proxy = AiTunnelProxy({ aiTunnelKey: `token-123`, balance: usedBalance });
-    const response = reply();
-
-    await proxy(`u5`, `images/generations`, request({ model: `gpt-image-1`, prompt: `cat` }), response);
-
-    expect(response.status).toHaveBeenCalledWith(200);
-    expect(response.send).toHaveBeenCalledWith({ data: [{ url: `https://img` }], usage: { cost_rub: 3.5 } });
-    expect(usedBalance.debitForLlm).toHaveBeenCalledWith(`u5`, 3.5, { call: `image`, model: `gpt-image-1` });
-
-    vi.restoreAllMocks();
-  });
-
-  it(`does not debit when image response has no usage cost`, async () => {
-    const usedBalance = balance();
-    vi.spyOn(globalThis, `fetch`).mockResolvedValue(
-      Response.json({ data: [{ b64_json: `abc` }] }, { headers: { "Content-Type": `application/json` }, status: 200 }),
-    );
-
-    const proxy = AiTunnelProxy({ aiTunnelKey: `token-123`, balance: usedBalance });
-    const response = reply();
-
-    await proxy(`u6`, `images/generations`, request({ model: `gpt-image-1`, prompt: `cat` }), response);
-
-    expect(usedBalance.debitForLlm).not.toHaveBeenCalled();
-
-    vi.restoreAllMocks();
-  });
-
-  it(`proxies speech transcription and forwards multipart content-type`, async () => {
-    const usedBalance = balance();
-    const rawBody = { stream: `binary` };
-
-    const fetchSpy = vi
-      .spyOn(globalThis, `fetch`)
-      .mockResolvedValue(
-        Response.json(
-          { text: `hello`, usage: { cost_rub: 0.75 } },
-          { headers: { "Content-Type": `application/json`, "X-Trace": `1` }, status: 202 },
-        ),
+      onResponse(
+        { url: `/api/z`, userId: `u` } as FastifyRequest & { userId: string },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` }, stream },
       );
 
-    const proxy = AiTunnelProxy({ aiTunnelKey: `token-123`, balance: usedBalance });
-    const response = reply();
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
-    await proxy(
-      `u7`,
-      `audio/transcriptions`,
-      request(undefined, { headers: { "content-type": `multipart/form-data; boundary=abc` }, raw: rawBody }),
-      response,
-    );
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u`, 3, { call: `/api/z`, model: `` });
+    });
 
-    const [, init] = fetchSpy.mock.calls[0] as [string, RequestInit];
+    it(`does not debit when JSON lacks billing shape but still sends parsed body`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const parsed = { choices: [] };
+      const stream = Readable.from([Buffer.from(JSON.stringify(parsed))]);
+      const reply = replyProbe();
 
-    expect(init.body).toBe(rawBody as unknown as BodyInit);
-    expect((init.headers as Headers).get(`Content-Type`)).toBe(`multipart/form-data; boundary=abc`);
-    expect(response.status).toHaveBeenCalledWith(202);
-    expect(response.headers).toHaveBeenCalledWith({ "content-type": `application/json`, "x-trace": `1` });
-    expect(usedBalance.debitForLlm).toHaveBeenCalledWith(`u7`, 0.75, { call: `speechRecognition`, model: `` });
+      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `application/json` },
+        stream,
+      });
 
-    vi.restoreAllMocks();
+      await expect.poll(() => reply.payloads.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).not.toHaveBeenCalled();
+      expect(reply.payloads[0]).toStrictEqual(parsed);
+    });
+
+    it(`sends raw buffer when body is not valid JSON`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const raw = Buffer.from(`not-json`);
+      const stream = Readable.from([raw]);
+      const reply = replyProbe();
+
+      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `application/json` },
+        stream,
+      });
+
+      await expect.poll(() => reply.payloads.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).not.toHaveBeenCalled();
+      expect(reply.payloads[0]).toStrictEqual(raw);
+    });
+
+    it(`responds with upstreamError on stream error`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+
+      const stream = new Readable({
+        read: () => {
+          stream.destroy(new Error(`upstream`));
+        },
+      });
+
+      const reply = replyProbe();
+
+      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `application/json` },
+        stream,
+      });
+
+      await expect
+        .poll(() => ({ code: reply.statusCode, payloads: reply.payloads.length }))
+        .toMatchObject({ code: HttpStatus.badGateway, payloads: 1 });
+
+      expect(reply.statusCode).toBe(HttpStatus.badGateway);
+      expect(reply.payloads[0]).toStrictEqual({ status: `upstreamError` });
+      expect(api.balance.debitForLlm).not.toHaveBeenCalled();
+    });
+  });
+
+  describe(`onResponse billing (SSE)`, () => {
+    it(`debits on first data line with usage payload`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const line = `data: ${JSON.stringify({ usage: { cost_rub: 7 } })}\n`;
+      const stream = Readable.from([Buffer.from(line)]);
+      const reply = replyProbe();
+
+      onResponse(
+        { url: `/api/sse`, userId: `u1` } as FastifyRequest & { userId: string },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream; charset=utf-8` }, stream },
+      );
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u1`, 7, { call: `/api/sse`, model: `` });
+    });
+
+    it(`debits on first billable line after a non-billable data JSON line`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const skip = `data: ${JSON.stringify({ choices: [] })}\n`;
+      const bill = `data: ${JSON.stringify({ usage: { cost_rub: 1 } })}\n`;
+      const stream = Readable.from([Buffer.from(skip + bill)]);
+      const reply = replyProbe();
+
+      onResponse({ url: `/t`, userId: `u2` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `text/event-stream` },
+        stream,
+      });
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u2`, 1, { call: `/t`, model: `` });
+    });
+
+    it(`ignores [DONE] and empty data payloads`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const stream = Readable.from([Buffer.from(`data: [DONE]\n\ndata: \n`)]);
+      const reply = replyProbe();
+
+      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `text/event-stream` },
+        stream,
+      });
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect
+        .poll(async () => {
+          await setImmediate();
+
+          return vi.mocked(api.balance.debitForLlm).mock.calls.length;
+        })
+        .toBe(0);
+    });
+
+    it(`handles usage line split across chunks`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const json = JSON.stringify({ model: `m`, usage: { cost_rub: 4 } });
+      const stream = Readable.from([Buffer.from(`data: ${json.slice(0, 8)}`), Buffer.from(`${json.slice(8)}\n`)]);
+      const reply = replyProbe();
+
+      onResponse(
+        { url: `/chunk`, userId: `u3` } as FastifyRequest & { userId: string },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream` }, stream },
+      );
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u3`, 4, { call: `/chunk`, model: `m` });
+    });
+
+    it(`does not debit on non-JSON data line content`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const stream = Readable.from([Buffer.from(`data: hello\n`)]);
+      const reply = replyProbe();
+
+      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `text/event-stream` },
+        stream,
+      });
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect
+        .poll(async () => {
+          await setImmediate();
+
+          return vi.mocked(api.balance.debitForLlm).mock.calls.length;
+        })
+        .toBe(0);
+    });
+
+    it(`skips lines without data: prefix`, async () => {
+      const { api, onResponse } = await proxyWithReplyHooks();
+      const stream = Readable.from([Buffer.from(`: comment\n\ndata: ${JSON.stringify({ usage: { cost_rub: 2 } })}\n`)]);
+      const reply = replyProbe();
+
+      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
+        headers: { "content-type": `text/event-stream` },
+        stream,
+      });
+
+      await drainTransform(reply.payloads[0] as Transform);
+
+      await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
+
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u`, 2, { call: `/t`, model: `` });
+    });
   });
 });

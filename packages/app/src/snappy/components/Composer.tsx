@@ -1,0 +1,14 @@
+import { TextInput, type TextInputProps } from "@snappy/ui";
+
+import { t } from "../../core";
+
+export type ComposerProps = Omit<TextInputProps, `afterMic` | `placeholder`> & { onSend: () => void };
+
+export const Composer = ({ onSend, value, ...rest }: ComposerProps) => (
+  <TextInput
+    {...rest}
+    afterMic={{ disabled: value.trim() === ``, icon: `send`, onClick: onSend, tip: t(`snappy.composer.send`) }}
+    placeholder={t(`snappy.composer.placeholder`)}
+    value={value}
+  />
+);

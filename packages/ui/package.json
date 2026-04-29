@@ -5,8 +5,7 @@
   "private": true,
   "main": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./scss/card": "./src/scss/card.scss"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "@snappy/browser": "workspace:*",
@@ -14,6 +13,7 @@
     "@snappy/intl": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
+    "material-symbols": "^0.44.6",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-router-dom": "^7.14.2"

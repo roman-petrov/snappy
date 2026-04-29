@@ -15,10 +15,22 @@ import { Time } from "./Time";
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf8`);
 const camelCase = (s: string) => s.replaceAll(/-(?<c>[a-z])/gu, (_, c: string) => c.toUpperCase());
 
+const kebabCase = (s: string) =>
+  s
+    .replaceAll(/(?<=[0-9a-z])(?=[A-Z])/gu, `-`)
+    .replaceAll(/[\s_]+/gu, `-`)
+    .toLowerCase();
+
 const pascalCase = (s: string) => {
   const c = camelCase(s);
 
   return c.length === 0 ? `` : (c[0] ?? ``).toUpperCase() + c.slice(1);
+};
+
+const sentenceCase = (s: string) => {
+  const spaced = kebabCase(s).replaceAll(`-`, ` `).replaceAll(/\s+/gu, ` `).trim();
+
+  return spaced.length === 0 ? `` : (spaced[0] ?? ``).toUpperCase() + spaced.slice(1).toLowerCase();
 };
 
 const isArray = (value: unknown): value is unknown[] => Array.isArray(value);
@@ -100,11 +112,13 @@ export const _ = {
   isObject,
   isString,
   kb,
+  kebabCase,
   list,
   mb,
   noop,
   pascalCase,
   round,
+  sentenceCase,
   singleAction,
   timeBuild: Time.build,
   timeGet: Time.get,

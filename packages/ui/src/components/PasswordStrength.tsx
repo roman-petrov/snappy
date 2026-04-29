@@ -1,5 +1,6 @@
 import { _ } from "@snappy/core";
 
+import { $, type Surface } from "../$";
 import { Button } from "./Button";
 import styles from "./PasswordStrength.module.scss";
 import { Text } from "./Text";
@@ -17,6 +18,12 @@ export type PasswordStrengthProps = {
 
 export type PasswordStrengthRequirementResult = { label: string; met: boolean };
 
+const strengthSurface: Record<PasswordStrengthProps[`strength`], Surface> = {
+  medium: `warning`,
+  strong: `success`,
+  weak: `error`,
+};
+
 export const PasswordStrength = ({
   disabled = false,
   generateLabel,
@@ -30,13 +37,21 @@ export const PasswordStrength = ({
   <>
     <div className={styles.requirements}>
       {requirementResults.map(({ label, met }) => (
-        <Text color={met ? `accent` : undefined} key={label} text={`${met ? `✓ ` : ``}${label}`} typography="caption" />
+        <Text
+          color={met ? `primary` : undefined}
+          key={label}
+          text={`${met ? `✓ ` : ``}${label}`}
+          typography="caption"
+        />
       ))}
     </div>
     <div className={styles.strengthRow}>
       <Text cn={styles.strengthLabel} text={strengthLabel} typography="caption" />
-      <div className={styles.strengthBar}>
-        <div className={_.cn(styles.strengthFill, styles[strength])} style={{ width: strengthBarWidth }} />
+      <div className={_.cn(styles.strengthBar, $.surface(`surface`), $.elevation(`e1`), $.radius(`xs`))}>
+        <div
+          className={_.cn(styles.strengthFill, $.surface(strengthSurface[strength]), $.elevation(`e1`), $.radius(`xs`))}
+          style={{ width: strengthBarWidth }}
+        />
       </div>
       <Text cn={styles.strengthText} text={strengthText} typography="caption" />
     </div>

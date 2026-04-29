@@ -4,4 +4,4 @@ import { startApp } from "@snappy/ui";
 
 import { Landing } from "./components";
 
-await startApp(`#root`, <Landing />);
+await startApp(<Landing />);

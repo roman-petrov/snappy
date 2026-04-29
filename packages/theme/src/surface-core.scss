@@ -1,0 +1,14 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/glass";
+
+@mixin compose($tone, $text) {
+  @include glass.simple($tone);
+
+  color: $text;
+  transition:
+    background-color var(--ease),
+    border-color var(--ease),
+    box-shadow var(--ease),
+    color var(--ease),
+    opacity var(--ease);
+}

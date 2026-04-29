@@ -3,9 +3,13 @@
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
-let currentLocale: string | undefined;
+import type { Locale } from "./Locale";
 
-const normalizeLocale = (raw: string): string => {
+export type * from "./Locale";
+
+let currentLocale: Locale | undefined;
+
+const normalizeLocale = (raw: string) => {
   const trimmed = raw.trim();
   if (trimmed === ``) {
     return `en-US`;
@@ -21,12 +25,12 @@ const normalizeLocale = (raw: string): string => {
   return trimmed;
 };
 
-const setLocale = (value: string) => {
-  currentLocale = normalizeLocale(value);
+const setLocale = (value: Locale) => {
+  currentLocale = normalizeLocale(value) === `ru-RU` ? `ru` : `en`;
 };
 
-const getLocale = (): string => normalizeLocale(currentLocale ?? `en-US`);
-const resolveLocale = (locale?: string) => (locale === undefined ? getLocale() : normalizeLocale(locale));
+const getLocale = () => currentLocale ?? `en`;
+const resolveLocale = (locale?: Locale) => normalizeLocale(locale ?? getLocale());
 const dateFormats = { default: { dateStyle: `short` } } as const;
 const numberFormats = { default: {} } as const;
 const priceFormats = { default: { currency: `RUB`, style: `currency` } } as const;
@@ -44,16 +48,16 @@ export type PriceFormat = keyof typeof priceFormats;
 
 export type TimeFormat = keyof typeof timeFormats;
 
-const date = (value: number, format: DateFormat = `default`, locale?: string) =>
+const date = (value: number, format: DateFormat = `default`, locale?: Locale) =>
   new Intl.DateTimeFormat(resolveLocale(locale), dateFormats[format]).format(value);
 
-const time = (value: number, format: TimeFormat = `default`, locale?: string): string =>
+const time = (value: number, format: TimeFormat = `default`, locale?: Locale) =>
   new Intl.DateTimeFormat(resolveLocale(locale), timeFormats[format]).format(value);
 
-const number = (value: number, format: NumberFormat = `default`, locale?: string) =>
+const number = (value: number, format: NumberFormat = `default`, locale?: Locale) =>
   new Intl.NumberFormat(resolveLocale(locale), numberFormats[format]).format(value);
 
-const price = (value: number, format: PriceFormat = `default`, locale?: string) =>
+const price = (value: number, format: PriceFormat = `default`, locale?: Locale) =>
   new Intl.NumberFormat(resolveLocale(locale), priceFormats[format]).format(value);
 
 export const i = { date, getLocale, number, price, setLocale, time };
