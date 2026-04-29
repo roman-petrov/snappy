@@ -4,8 +4,8 @@ import type { StartProps } from "./Start";
 
 export const useStartState = ({
   disabled = false,
-  onReject,
-  onResolve,
+  onCancel,
+  onStart,
   options,
   placeholder,
   selectedOptions: selectedOptionsProp,
@@ -15,13 +15,13 @@ export const useStartState = ({
 
   const submit = () => {
     const label = customStarterInput.trim() === `` ? selectedOptions : customStarterInput.trim();
-    onResolve({ label });
+    onStart(label);
   };
 
   return {
     customStarterInput,
     disabled,
-    onReject,
+    onCancel,
     options,
     placeholder,
     selectedOptions,

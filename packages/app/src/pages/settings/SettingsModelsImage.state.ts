@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import type { SettingsOption } from "./components";
 
-import { api } from "../../core";
+import { trpc } from "../../core";
 import { useSettingsModelIds } from "./hooks";
 
 export const useSettingsModelsImageState = () => {
@@ -24,12 +24,12 @@ export const useSettingsModelsImageState = () => {
   }, [ids, settingsResponse]);
 
   const onModelSelect = async (next: string) => {
-    const response = await api.userSettingsSet({ llmImageModel: next });
+    const response = await trpc.user.settings.set.mutate({ llmImageModel: next });
     setModelValue(response.llmImageModel);
   };
 
   const onQualitySelect = async (next: AiImageQuality) => {
-    const response = await api.userSettingsSet({ llmImageQuality: next });
+    const response = await trpc.user.settings.set.mutate({ llmImageQuality: next });
     setQualityValue(response.llmImageQuality);
   };
 

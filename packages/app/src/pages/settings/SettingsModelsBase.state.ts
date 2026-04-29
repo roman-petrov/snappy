@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import type { SettingsModelsBaseProps } from "./SettingsModelsBase";
 
-import { api } from "../../core";
+import { trpc } from "../../core";
 import { useSettingsModelIds } from "./hooks";
 
 export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, title }: SettingsModelsBaseProps) => {
@@ -22,7 +22,7 @@ export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, tit
   }, [ids, settingsField, settingsResponse]);
 
   const onSelect = async (next: string) => {
-    const settingsSetResponse = await api.userSettingsSet({ [settingsField]: next });
+    const settingsSetResponse = await trpc.user.settings.set.mutate({ [settingsField]: next });
     setValue(settingsSetResponse[settingsField]);
   };
 

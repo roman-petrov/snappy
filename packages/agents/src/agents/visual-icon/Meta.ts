@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [
@@ -73,9 +73,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `🎯`,
       group: `visual`,
-      prompt: `You are an art-director for a single app icon asset. Read the **Metaphor & description** line as the creative brief. **Before** you compose the final output, analyze the metaphor in depth (keep this reasoning internal—do not output it): identify the abstract idea and what it must communicate; list concrete subject(s), props, and symbols; enumerate metaphor **attributes** and **properties** (e.g. stability vs motion, openness vs enclosure, warmth vs cold, precision vs softness, direction, scale, balance) and note how each should read **visually**; resolve ambiguities by choosing one coherent reading. Map every important attribute to drawable decisions: silhouette logic, focal hierarchy, secondary shapes, implied motion or gaze, use of negative space, and what reads at a glance. Merge that resolved brief with every bullet below (dimension, style, palette, edge intent, corners, padding, tile, detail). Then write **one** exceptionally detailed prompt **for image generation** (it will be sent to the image model). That prompt must **thoroughly describe the metaphor for the image model**: translate the abstract idea into explicit pictorial instructions—what appears, how elements relate, what each part signifies—so a text-to-image model can render the idea without guessing; do not rely on a bare label alone. Also spell out silhouette or stroke logic, color roles and approximate hues, lighting and shadows for the chosen dimension, material feel (matte, glass, plastic, paper), composition (exactly **one** icon centered in the square frame, generous safe margin, readable at small sizes), background treatment, and edge character (razor-clean for vector workflows versus soft painted pixels). Describe the shot as **one** finished square icon filling the frame—hero asset only. That prompt **must explicitly instruct** the image model: **no** text, letters, numbers, captions, watermarks, logos-as-type, or any typography in the image—**pictorial icon artwork only**. It **must also explicitly instruct** scaling the subject to **use as much of the available square area as the chosen padding and composition allow**, **without stretching**: maximize footprint while **preserving the subject’s aspect ratio**. **Hard limit: the final string must be at most ${parameters.maxImagePromptLength} characters (counting spaces); compress wording and drop optional flourishes if needed to stay within this cap.** Reply with that full string only—no other text.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             id: `concept`,
@@ -360,6 +358,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You are an art-director for a single app icon asset. Read the **Metaphor & description** line as the creative brief. **Before** you compose the final output, analyze the metaphor in depth (keep this reasoning internal—do not output it): identify the abstract idea and what it must communicate; list concrete subject(s), props, and symbols; enumerate metaphor **attributes** and **properties** (e.g. stability vs motion, openness vs enclosure, warmth vs cold, precision vs softness, direction, scale, balance) and note how each should read **visually**; resolve ambiguities by choosing one coherent reading. Map every important attribute to drawable decisions: silhouette logic, focal hierarchy, secondary shapes, implied motion or gaze, use of negative space, and what reads at a glance. Merge that resolved brief with every bullet below (dimension, style, palette, edge intent, corners, padding, tile, detail). Then write **one** exceptionally detailed prompt **for image generation** (it will be sent to the image model). That prompt must **thoroughly describe the metaphor for the image model**: translate the abstract idea into explicit pictorial instructions—what appears, how elements relate, what each part signifies—so a text-to-image model can render the idea without guessing; do not rely on a bare label alone. Also spell out silhouette or stroke logic, color roles and approximate hues, lighting and shadows for the chosen dimension, material feel (matte, glass, plastic, paper), composition (exactly **one** icon centered in the square frame, generous safe margin, readable at small sizes), background treatment, and edge character (razor-clean for vector workflows versus soft painted pixels). Describe the shot as **one** finished square icon filling the frame—hero asset only. That prompt **must explicitly instruct** the image model: **no** text, letters, numbers, captions, watermarks, logos-as-type, or any typography in the image—**pictorial icon artwork only**. It **must also explicitly instruct** scaling the subject to **use as much of the available square area as the chosen padding and composition allow**, **without stretching**: maximize footprint while **preserving the subject’s aspect ratio**. **Hard limit: the final string must be at most ${parameters.maxImagePromptLength} characters (counting spaces); compress wording and drop optional flourishes if needed to stay within this cap.** Reply with that full string only—no other text.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

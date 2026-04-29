@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [
@@ -73,9 +73,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `🛋️`,
       group: `visual`,
-      prompt: `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; watermarks; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition. Reply with that string only—no other text.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             default: `living`,
@@ -358,6 +356,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; watermarks; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition. Reply with that string only—no other text.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

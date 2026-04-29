@@ -1,0 +1,41 @@
+@use "pkg:@snappy/theme/color";
+
+.text {
+  position: relative;
+  display: block;
+  flex: 1;
+  line-height: 1.35;
+  white-space: pre-wrap;
+  word-break: break-word;
+  min-width: 0;
+  color: inherit;
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.5em;
+  height: 1em;
+  margin-left: 0.12em;
+  vertical-align: text-bottom;
+  border: 1px solid color.primary-border();
+  border-radius: 1px;
+  background: color.primary-hover();
+  box-shadow:
+    0 0 0 1px color.on-primary(),
+    0 0 0 2px color.primary-border(),
+    0 0 8px color.primary();
+  animation: cursorBlink 0.2s steps(1, end) infinite;
+}
+
+@keyframes cursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+    background: color.primary();
+  }
+
+  50% {
+    opacity: 0.45;
+    background: color.on-primary();
+  }
+}

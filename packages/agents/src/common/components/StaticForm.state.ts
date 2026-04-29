@@ -102,7 +102,7 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
   }),
 };
 
-export const useStaticFormState = ({ disabled = false, onReject, onResolve, plan }: StaticFormProps) => {
+export const useStaticFormState = ({ disabled = false, onCancel, onSubmit, plan }: StaticFormProps) => {
   const [answers, setAnswers] = useState<StaticFormAnswers>(() => {
     const initial: StaticFormAnswers = {};
 
@@ -126,8 +126,8 @@ export const useStaticFormState = ({ disabled = false, onReject, onResolve, plan
       return next;
     });
 
-  const submit = () => onResolve(answersRef.current);
-  const cancel = onReject;
+  const submit = () => onSubmit(answersRef.current);
+  const cancel = onCancel;
 
   const fieldView = <TKind extends FieldKind>(field: FieldByKind<TKind>) => {
     const config = fieldByKind[field.kind];

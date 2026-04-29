@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "@snappy/agent": "workspace:*",
-    "@snappy/ai": "workspace:*",
     "@snappy/core": "workspace:*"
   }
 }

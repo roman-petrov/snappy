@@ -1,22 +1,27 @@
-import type { ApiUserSettingsResult } from "@snappy/server-api";
+import type { AiModelType } from "@snappy/ai";
 
-import { Ai, type AiModelType } from "@snappy/ai";
-import { Locale, useAsyncEffect } from "@snappy/ui";
+import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { api } from "../../../core";
+import { aiForModelsList, trpc } from "../../../core";
 
 export const useSettingsModelIds = (modelType: AiModelType) => {
   const [ids, setIds] = useState<string[]>([]);
-  const [settingsResponse, setSettingsResponse] = useState<ApiUserSettingsResult | undefined>(undefined);
+
+  const [settingsResponse, setSettingsResponse] = useState<
+    Awaited<ReturnType<typeof trpc.user.settings.get.query>> | undefined
+  >(undefined);
 
   useAsyncEffect(async () => {
-    const [ai, nextSettingsResponse] = await Promise.all([
-      Ai({ locale: Locale.effective(), url: `${globalThis.location.origin}/api/ai-tunnel/v1` }),
-      api.userSettingsGet(),
-    ]);
+    const nextSettingsResponse = await trpc.user.settings.get.query();
+    const ai = await aiForModelsList(nextSettingsResponse);
 
-    setIds(ai.models.filter(model => model.type === modelType).map(model => model.name));
+    setIds(
+      ai.models
+        .list()
+        .filter(model => model.type === modelType)
+        .map(model => model.name),
+    );
     setSettingsResponse(nextSettingsResponse);
   }, [modelType]);
 

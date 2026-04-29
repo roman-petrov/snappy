@@ -18,7 +18,25 @@ export type SemanticSearchResult =
 
 export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
   AgentTool({
-    description: `Find relevant code by meaning, not exact words. Use this for high-level questions ("how this works", "where behavior is implemented", "repo overview"), cross-cutting flows across multiple files, or when symbol names are unknown. Query-writing rules: ask a full natural-language question (not keywords), include target behavior and execution context (where/when/in which layer), and include constraints or comparison intent when relevant. Prefer complete intent-focused queries over short keyword fragments.`,
+    description: [
+      [`goal`, `Find relevant code by meaning, not exact words.`],
+      [
+        `when_to_use`,
+        `Use this for high-level questions ("how this works", "where behavior is implemented", "repo overview"), cross-cutting flows across multiple files, or when symbol names are unknown.`,
+      ],
+      [
+        `ranking`,
+        `Results are ranked best-first: item #1 is usually the strongest hit, later items are progressively weaker.`,
+      ],
+      [
+        `distance`,
+        `The shown distance is an ANN distance signal (lower is generally better), but final rank is a combined ranking and not distance-only.`,
+      ],
+      [
+        `query_rules`,
+        `Ask a full natural-language question (not keywords), include target behavior and execution context (where/when/in which layer), and include constraints or comparison intent when relevant. Prefer complete intent-focused queries over short keyword fragments.`,
+      ],
+    ],
     formatCall: ({ query }, status, locale) =>
       locale === `ru`
         ? status === `running`

@@ -1,0 +1,13 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/space";
+
+.root {
+  display: flex;
+  gap: space.xs();
+  align-items: center;
+  padding: space.xs() space.sm();
+  border: 1px solid color.border();
+  border-radius: radius.sm();
+  background: color.surface();
+}

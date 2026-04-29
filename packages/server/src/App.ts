@@ -1,40 +1,25 @@
 /* eslint-disable functional/no-expression-statements */
-import type { ServerApp } from "@snappy/server-app";
 import type { IncomingMessage, Server, ServerResponse } from "node:http";
 
 import fastifyCookie from "@fastify/cookie";
-import fastifyCors from "@fastify/cors";
-import { Config } from "@snappy/config";
-import { _ } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
+import { AiTunnelProxy, type ServerApp, SessionUserId } from "@snappy/server-app";
+import { TrpcRouter } from "@snappy/trpc";
+import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
 import { fromNodeHeaders } from "better-auth/node";
-import fastify, { type FastifyInstance } from "fastify";
+import fastify from "fastify";
 
-import { registerJsonBodyParser } from "./JsonBody";
-import { Router } from "./Router";
-import { Routes } from "./Routes";
-
-export type CreateAppOptions = {
-  allowCorsOrigin?: boolean;
+export type AppConfig = {
   api: ServerApp;
   serverFactory?: (handler: (request: IncomingMessage, response: ServerResponse) => void) => Server;
 };
 
-const createApp = async ({ allowCorsOrigin = false, api, serverFactory }: CreateAppOptions) => {
+export const App = async ({ api, serverFactory }: AppConfig) => {
   const bodyLimitMegaBytes = 50;
   const bodyLimit = _.mb(bodyLimitMegaBytes);
-  const app = fastify({ bodyLimit, logger: false, serverFactory }) as FastifyInstance;
-  registerJsonBodyParser(app);
+  const app = fastify({ bodyLimit, routerOptions: { maxParamLength: 5000 }, serverFactory });
 
   await app.register(fastifyCookie);
-  if (allowCorsOrigin) {
-    await app.register(fastifyCors, {
-      allowedHeaders: [`Content-Type`, `Authorization`, `X-Requested-With`],
-      credentials: true,
-      maxAge: 86_400,
-      methods: [`GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`],
-      origin: Config.origin,
-    });
-  }
 
   app.route({
     handler: async (request, reply) => {
@@ -56,9 +41,20 @@ const createApp = async ({ allowCorsOrigin = false, api, serverFactory }: Create
     url: `/api/auth/*`,
   });
 
-  Router.bind(app, { api, routes: Routes });
+  await AiTunnelProxy(app, api);
+
+  await app.register(fastifyTRPCPlugin<TrpcRouter>, {
+    prefix: `/api/trpc`,
+    trpcOptions: {
+      createContext: async ({ req }) => ({ api, userId: await SessionUserId(api, req.headers) }),
+      router: TrpcRouter(api),
+    },
+  });
+
+  app.post(`/api/webhooks/yookassa`, async (request, reply) => {
+    await api.balancePayment.webhook(request.body);
+    await reply.status(HttpStatus.ok).send();
+  });
 
   return app;
 };
-
-export const App = { createApp };

@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [
@@ -84,9 +84,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `🎉`,
       group: `text`,
-      prompt: `Write a greeting. Apply every bullet below exactly. When Name, Interests, or Extra context lines appear in the list, take names, hobbies, and facts only from those lines. Deliver the greeting text alone: continuous wishes and wording from the bullets, structured as a ready-to-send message that opens with the greeting or address from the settings.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             default: `birthday`,
@@ -409,6 +407,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `Write a greeting. Apply every bullet below exactly. When Name, Interests, or Extra context lines appear in the list, take names, hobbies, and facts only from those lines. Deliver the greeting text alone: continuous wishes and wording from the bullets, structured as a ready-to-send message that opens with the greeting or address from the settings.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

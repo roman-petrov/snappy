@@ -13,6 +13,7 @@ export const InputView = ({
   id,
   label,
   minLength,
+  onBlur,
   onChange,
   onFocus,
   required = false,
@@ -30,6 +31,7 @@ export const InputView = ({
       disabled={disabled}
       id={id}
       minLength={minLength}
+      onBlur={onBlur}
       onChange={event_ => onChange(event_.target.value)}
       onFocus={onFocus}
       required={required}

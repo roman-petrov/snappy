@@ -9,7 +9,7 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/only-throw-error */
-import type { AiModel } from "@snappy/ai";
+import type { Ai } from "@snappy/ai";
 
 import { CoderChunk } from "@snappy/coder-chunk";
 import { _, type Action, Json } from "@snappy/core";
@@ -27,8 +27,9 @@ const hashUtf8 = (text: string) => createHash(`sha256`).update(text, `utf8`).dig
 const manifestAbsolutePath = (dbDir: string) => path.join(dbDir, manifestFileName);
 
 export type IndexerConfig = {
+  aiEmbeddings: Ai[`embeddings`];
   dbDir: string;
-  embeddingModel: Extract<AiModel, { type: `embedder` }>;
+  embeddingModel: string;
   ignore: CoderIgnore;
   projectRoot: string;
   store: VectorStore;
@@ -108,16 +109,16 @@ const takeBatch = (queue: QueueItem[], start: number, batchChunkCount: number) =
 };
 
 export const Indexer =
-  ({ dbDir, embeddingModel, ignore, projectRoot, store }: IndexerConfig) =>
+  ({ aiEmbeddings, dbDir, embeddingModel, ignore, projectRoot, store }: IndexerConfig) =>
   async ({ onProgress }: SyncOptions = {}) => {
     const paths = await ignore.list({ cwd: projectRoot }).then(list => list.toSorted());
     const pathsSet = new Set(paths);
     const loadedManifest = await loadManifest(dbDir);
     let manifest: IndexManifestRecord = loadedManifest.files;
-    if (loadedManifest.embeddingModelName !== embeddingModel.name) {
+    if (loadedManifest.embeddingModelName !== embeddingModel) {
       await store.clean();
       manifest = {};
-      await saveManifest(dbDir, { embeddingModelName: embeddingModel.name, files: manifest });
+      await saveManifest(dbDir, { embeddingModelName: embeddingModel, files: manifest });
     }
 
     let lanceNeedsReindex = false;
@@ -192,7 +193,7 @@ export const Indexer =
 
       if (writesSinceManifestSave >= Constants.indexing.writesUntilManifestFlush) {
         writesSinceManifestSave = 0;
-        const nextManifest: IndexManifestState = { embeddingModelName: embeddingModel.name, files: manifest };
+        const nextManifest: IndexManifestState = { embeddingModelName: embeddingModel, files: manifest };
         await saveManifest(dbDir, nextManifest);
       }
     };
@@ -293,7 +294,10 @@ export const Indexer =
                 continue;
               }
 
-              const { vectors } = await embeddingModel.process(batch.map(item => item.chunk.text));
+              const { vectors } = await aiEmbeddings.create({
+                input: batch.map(item => item.chunk.text),
+                model: embeddingModel,
+              });
               if (vectors.length !== batch.length) {
                 throw new Error(`coder_index_embed_length`);
               }
@@ -354,7 +358,7 @@ export const Indexer =
       await store.reindex();
     }
 
-    const nextManifest: IndexManifestState = { embeddingModelName: embeddingModel.name, files: manifest };
+    const nextManifest: IndexManifestState = { embeddingModelName: embeddingModel, files: manifest };
     await saveManifest(dbDir, nextManifest);
     onProgress?.({
       chunkCount: chunkTotal,

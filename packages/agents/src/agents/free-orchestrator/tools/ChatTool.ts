@@ -1,12 +1,11 @@
 import { AgentTool } from "@snappy/agent";
-import { _ } from "@snappy/core";
 import { z } from "zod";
 
 import type { FreeOrchestratorAgentTool } from "../Types";
 
-export const ChatTool: FreeOrchestratorAgentTool = ({ agentContext, input, storage }) =>
+export const ChatTool: FreeOrchestratorAgentTool = ({ agentContext, ai, config, isStopped, storage }) =>
   AgentTool({
-    description: `Generate text with host chat model and save it into Storage.`,
+    description: `Generate text with configured chat model and save it into Storage.`,
     formatCall: ({ fileName }, status, locale) =>
       locale === `ru`
         ? status === `running`
@@ -16,9 +15,14 @@ export const ChatTool: FreeOrchestratorAgentTool = ({ agentContext, input, stora
           ? `Generating text: ${fileName}`
           : `Generated text: ${fileName}`,
     run: async ({ fileName, prompt }) => {
-      const { hostTools, isStopped } = input;
-      const out = await hostTools.chat(prompt);
-      const text = _.isString(out) ? out : out.content;
+      const session = await ai.chat.completions.create({ model: config.models.chat, prompt });
+      let text = ``;
+      for await (const part of session.stream) {
+        if (part.type === `text`) {
+          text += part.text;
+        }
+      }
+      await session.cost();
       if (text.trim() === `` || agentContext.isStopped() || isStopped()) {
         return { error: `Text was not generated.` };
       }

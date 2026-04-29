@@ -4,9 +4,9 @@ import { z } from "zod";
 
 import type { FreeOrchestratorAgentTool } from "../Types";
 
-export const ImageTool: FreeOrchestratorAgentTool = ({ agentContext, input, storage }) =>
+export const ImageTool: FreeOrchestratorAgentTool = ({ agentContext, ai, config, isStopped, storage }) =>
   AgentTool({
-    description: `Generate an image with host image model and save it into Storage.`,
+    description: `Generate an image with configured image model and save it into Storage.`,
     formatCall: ({ fileName }, status, locale) =>
       locale === `ru`
         ? status === `running`
@@ -16,8 +16,14 @@ export const ImageTool: FreeOrchestratorAgentTool = ({ agentContext, input, stor
           ? `Generating image: ${fileName}`
           : `Generated image: ${fileName}`,
     run: async ({ fileName, prompt, size }) => {
-      const { hostTools, isStopped } = input;
-      const bytes = await hostTools.image(prompt, { size: size ?? `1024x1024` });
+      const out = await ai.images.generate({
+        model: config.models.image,
+        prompt,
+        quality: config.models.imageQuality,
+        size: size ?? `1024x1024`,
+      });
+
+      const { bytes } = out;
       if (bytes.length === 0 || agentContext.isStopped() || isStopped()) {
         return { error: `Image was not generated.` };
       }

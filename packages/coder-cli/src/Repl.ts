@@ -1,6 +1,5 @@
-/* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data, functional/no-expression-statements, functional/no-loop-statements, functional/no-promise-reject, functional/no-try-statements, no-await-in-loop, no-continue */
-import type { AiChatMessage, AiModel } from "@snappy/ai";
+import type { Ai, AiChatMessage } from "@snappy/ai";
 import type { Coder } from "@snappy/coder";
 
 import { Console } from "@snappy/node";
@@ -14,15 +13,15 @@ import { Theme } from "./Theme";
 const hideCursor = `\u001B[?25l`;
 const showCursor = `\u001B[?25h`;
 
-type ToolCallEvent = Parameters<NonNullable<Parameters<typeof Coder>[0][`onToolCallEvent`]>>[0];
-
 const run = async ({
+  ai,
   chatModel,
   coder,
   projectRoot,
   t,
 }: {
-  chatModel: Extract<AiModel, { type: `chat` }>;
+  ai: Ai;
+  chatModel: string;
   coder: (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) => ReturnType<typeof Coder>;
   projectRoot: string;
   t: TFunction;
@@ -69,81 +68,54 @@ const run = async ({
 
       session.push({ content: trimmed, role: `user` });
 
-      await new Promise<void>((resolve, reject) => {
-        const output = StatusOutput({ t });
-        let settled = false;
+      await (async () => {
+        const output = StatusOutput();
+        try {
+          const engine = coder({ ai, chatModel });
 
-        const resolveOnce = () => {
-          if (settled) {
-            return;
+          output.start();
+          const agentRun = engine.start(session);
+          for await (const part of agentRun) {
+            switch (part.type) {
+              case `text`: {
+                let text = ``;
+                for await (const chunk of part.chunks) {
+                  output.assistantDelta(chunk);
+                  text += chunk;
+                }
+                output.assistantMessage(text.trimEnd());
+                break;
+              }
+              case `thinking`: {
+                output.onThinkingEvent({ label: part.label, status: `running` });
+                const { label } = await part.finished;
+                output.onThinkingEvent({ label, status: `completed` });
+                break;
+              }
+              case `tool`: {
+                output.onToolEvent({ callId: part.callId, label: part.label, status: `running` });
+                const { label } = await part.finished;
+                output.onToolEvent({ callId: part.callId, label, status: `completed` });
+                break;
+              }
+              default: {
+                break;
+              }
+            }
           }
-          settled = true;
+          const result = await agentRun.done;
+          session.length = 0;
+          session.push(...result.messages.filter(message => message.role !== `system`));
+          if (result.reason === `failed`) {
+            throw result.error instanceof Error ? result.error : new Error(String(result.error));
+          }
           output.succeed();
-          resolve();
-        };
-
-        const rejectOnce = (error: unknown) => {
-          if (settled) {
-            return;
-          }
-          settled = true;
+        } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
           output.fail(message);
-          reject(error instanceof Error ? error : new Error(message));
-        };
-
-        const handleToolCallEvent = ({ callId, label, status }: ToolCallEvent) =>
-          settled ? undefined : output.onToolEvent({ callId, label, status });
-
-        const chatModelWithStreamOutput: typeof chatModel = {
-          ...chatModel,
-          process: async input => {
-            const { done, stream } = await chatModel.process(input);
-
-            const doneWithOutput = (async () => {
-              for await (const delta of stream) {
-                if (!settled) {
-                  output.assistantDelta(delta);
-                }
-              }
-
-              return done;
-            })();
-
-            return { done: doneWithOutput, stream };
-          },
-        };
-
-        const engine = coder({
-          chatModel: chatModelWithStreamOutput,
-          observeSessionMessages: snap => {
-            session.length = 0;
-            session.push(...snap);
-          },
-          onAssistantMessage: message => {
-            if (settled || message.role !== `assistant`) {
-              return;
-            }
-            output.assistantMessage(message.content);
-          },
-          onStop: (reason, error) => {
-            if (reason === `failed`) {
-              rejectOnce(error);
-
-              return;
-            }
-            resolveOnce();
-          },
-          onToolCallEvent: handleToolCallEvent,
-        });
-
-        output.start();
-        try {
-          engine.start(session);
-        } catch (error) {
-          rejectOnce(error);
+          throw error;
         }
-      }).catch(() => {
+      })().catch(() => {
         const last = session.at(-1);
         if (last?.role === `user`) {
           session.pop();

@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import type { AgentCard, AgentGroupId, AgentLocale, AgentModule } from "./Types";
+import type { AgentCard, AgentDefinition, AgentGroupId, AgentLocale } from "./Types";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention -- this is an entry point
-const modules = import.meta.glob<{ Agent: AgentModule }>(`./agents/*/Agent.ts`, { eager: true });
+const modules = import.meta.glob<{ Agent: (locale: AgentLocale) => Omit<AgentDefinition, `id`> }>(
+  `./agents/*/Agent.ts`,
+  { eager: true },
+);
 
 const list = () =>
   Object.entries(modules)
@@ -12,7 +15,7 @@ const list = () =>
 const groupOrder: AgentGroupId[] = [`text`, `audio`, `visual`, `lab`];
 const cards = (locale: AgentLocale) => list().map(({ entry, id }) => ({ ...entry(locale).meta, id }));
 
-const create = (agentId: string, locale: AgentLocale) => {
+const byId = (agentId: string, locale: AgentLocale) => {
   const resolvedId = agentId.trim() === `` ? list()[0]?.id : agentId.trim();
   if (resolvedId === undefined) {
     return undefined;
@@ -23,7 +26,7 @@ const create = (agentId: string, locale: AgentLocale) => {
     return undefined;
   }
 
-  return agentModule(locale);
+  return { ...agentModule(locale), id: resolvedId };
 };
 
 const byGroup = (items: readonly AgentCard[]) => {
@@ -38,4 +41,4 @@ const byGroup = (items: readonly AgentCard[]) => {
   );
 };
 
-export const Agents = { byGroup, cards, create, groupOrder };
+export const Agents = { byGroup, byId, cards, groupOrder };

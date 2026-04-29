@@ -8,7 +8,7 @@ import styles from "./Start.module.scss";
 export const StartView = ({
   customStarterInput,
   disabled,
-  onReject,
+  onCancel,
   options,
   placeholder,
   selectedOptions,
@@ -30,6 +30,6 @@ export const StartView = ({
       value={customStarterInput}
     />
     <Button disabled={disabled} onClick={submit} text={t(`chat.continue`)} type="primary" />
-    <Button disabled={disabled} onClick={onReject} text={t(`chat.cancel`)} />
+    <Button disabled={disabled} onClick={onCancel} text={t(`chat.cancel`)} />
   </section>
 );

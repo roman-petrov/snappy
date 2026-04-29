@@ -8,6 +8,7 @@ export type InputProps = {
   disabled?: boolean;
   label: string;
   minLength?: number;
+  onBlur?: () => void;
   onChange: (value: string) => void;
   required?: boolean;
   suffix?: ReactNode;

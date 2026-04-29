@@ -2,7 +2,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Config } from "@snappy/config";
 import { _, HttpStatus } from "@snappy/core";
 import { Cert } from "@snappy/node";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
@@ -49,8 +48,8 @@ const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name,
 
 export const DevServer = () => {
   const start = async () => {
-    const appContext = await ServerApp(Config);
-    const apiApp = await App.createApp({ api: appContext });
+    const appContext = await ServerApp();
+    const apiApp = await App({ api: appContext });
     const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
     const apiPort = Number(new URL(apiAddr).port);
     const app = express();
@@ -139,7 +138,7 @@ export const DevServer = () => {
     app.use(`/packages/app`, express.static(join(appDir, `public`)));
     app.use(vite.middlewares);
 
-    server.listen(portHttps, `0.0.0.0`);
+    server.listen({ host: `::`, ipv6Only: false, port: portHttps });
   };
 
   return { start };

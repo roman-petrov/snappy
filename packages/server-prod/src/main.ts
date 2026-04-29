@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Cert } from "@snappy/node";
 import { App, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
@@ -20,14 +19,13 @@ const portHttps = 443;
 const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
-const appContext = await ServerApp(Config);
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,
 };
 
-const app = await App.createApp({
-  api: appContext,
+const app = await App({
+  api: await ServerApp(),
   serverFactory: handler => {
     handlerRef.current = handler;
 

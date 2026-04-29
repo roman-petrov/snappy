@@ -26,5 +26,4 @@ export const ru = {
     unchanged: `без изменений`,
     updated: `обновлено`,
   },
-  status: { thinking: `Думаю...`, thought: `Мысль` },
 } as const;

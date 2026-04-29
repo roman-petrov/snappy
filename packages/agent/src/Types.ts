@@ -1,24 +1,30 @@
-import type { AiChatMessage, AiChatTool } from "@snappy/ai";
+import type { Ai, AiChatMessage } from "@snappy/ai";
 import type { StructuredPrompt } from "@snappy/core";
 
-import type { AgentToolCallStatus, AgentToolGroup } from "./AgentTool";
-
-export type AgentAdapter = {
-  chat: (messages: AiChatMessage[], tools: AiChatTool[]) => Promise<AiChatMessage | undefined>;
-  maxRounds: number;
-  observeSessionMessages?: (messages: AiChatMessage[]) => Promise<void> | void;
-  onAssistantMessage?: (message: AiChatMessage) => Promise<void> | void;
-  onStop: (reason: AgentStopReason, error?: unknown) => Promise<void> | void;
-  onToolCallEvent?: (event: AgentToolCallEvent) => Promise<void> | void;
-  tools: Record<string, AgentToolGroup>;
-};
+import type { AgentToolGroup } from "./AgentTool";
 
 export type AgentContext = { isStopped: () => boolean };
 
-export type AgentLocale = string;
+export type AgentCreateInput = {
+  ai: Ai;
+  chatModel: string;
+  locale: AgentLocale;
+  maxRounds: number;
+  systemPrompt: StructuredPrompt;
+  tools: Record<string, AgentToolGroup>;
+};
 
-export type AgentStartInput = { initialMessages: AiChatMessage[]; systemPrompt: StructuredPrompt };
+export type AgentLocale = `en` | `ru`;
+
+export type AgentRun = AsyncIterable<AgentStreamPart> & {
+  done: Promise<{ error?: unknown; messages: AiChatMessage[]; reason: AgentStopReason }>;
+  stop: () => void;
+};
 
 export type AgentStopReason = `failed` | `stopped` | `success`;
 
-export type AgentToolCallEvent = { callId: string; label: string; status: AgentToolCallStatus; toolName: string };
+export type AgentStreamPart =
+  | { callId: string; finished: Promise<{ label: string }>; label: string; type: `tool` }
+  | { chunks: AsyncIterable<string>; type: `text` }
+  | { error?: unknown; messages: AiChatMessage[]; reason: AgentStopReason; type: `run` }
+  | { finished: Promise<{ label: string }>; label: string; type: `thinking` };

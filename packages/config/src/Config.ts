@@ -12,17 +12,20 @@ const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 500_000;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
-const jwtSecret = env[`JWT_SECRET`] ?? ``;
+const betterAuthJwtSecret = env[`JWT_SECRET`] ?? ``;
 const aiTunnelKey = env[`AI_TUNNEL_API_KEY`] ?? ``;
-const origin = env.NODE_ENV === `production` ? `https://snappy-ai.ru` : `https://localhost`;
+const isProduction = env.NODE_ENV === `production`;
+const origin = isProduction ? `https://snappy-ai.ru` : `https://localhost`;
+const betterAuthTrustedOrigins = [...new Set([origin, ...(isProduction ? [] : ([`https://home.local`] as const))])];
 
 export const Config = {
   aiTunnelKey,
   balanceMinRub,
   balancePaymentMaxRub,
   balancePaymentMinRub,
+  betterAuthJwtSecret,
+  betterAuthTrustedOrigins,
   dbUrl,
-  jwtSecret,
   origin,
   yooKassaSecretKey,
   yooKassaShopId,

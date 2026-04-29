@@ -1,1 +1,0 @@
-const openAiBaseUrlDefault = `https://api.aitunnel.ru/v1`;const publicModelsUrl = `https://api.aitunnel.ru/public/aitunnel/models`;const openAi = (baseUrl?: string) => (baseUrl === undefined ? openAiBaseUrlDefault : baseUrl.replace(/\/$/u, ``));export const AiTunnelUrls = { openAi, openAiBaseUrlDefault, publicModelsUrl };

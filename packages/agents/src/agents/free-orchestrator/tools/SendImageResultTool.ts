@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import type { FreeOrchestratorAgentTool } from "../Types";
 
-export const SendImageResultTool: FreeOrchestratorAgentTool = ({ input, storage }) =>
+export const SendImageResultTool: FreeOrchestratorAgentTool = ({ publishImage, storage }) =>
   AgentTool({
     description: `Publish an image from Storage to the chat feed after prompt verification.`,
     formatCall: ({ fileName }, status, locale) =>
@@ -29,7 +29,7 @@ export const SendImageResultTool: FreeOrchestratorAgentTool = ({ input, storage 
       if (entry.generationPrompt.trim() !== generationPrompt.trim()) {
         return { error: `generationPrompt does not match the prompt stored for this file.` };
       }
-      input.feed.append({ generationPrompt: entry.generationPrompt, src: DataUrl.png(entry.value), type: `image` });
+      publishImage({ generationPrompt: entry.generationPrompt, src: DataUrl.png(entry.value) });
 
       return `Result was sent to chat.`;
     },

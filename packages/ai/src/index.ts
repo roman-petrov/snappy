@@ -1,7 +1,7 @@
 export * from "./Ai";
 
-export * from "./ai-tunnel";
-
 export * from "./AiConstants";
+
+export * from "./SystemPrompt";
 
 export type * from "./Types";

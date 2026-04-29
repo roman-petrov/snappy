@@ -1,4 +1,6 @@
-export * from "./Api";
+export { agentAiFromSettings, aiForModelsList, type UserSettingsForAi } from "./AgentAiFromSettings";
+
+export { trpc } from "./Api";
 
 export * from "./Auth";
 

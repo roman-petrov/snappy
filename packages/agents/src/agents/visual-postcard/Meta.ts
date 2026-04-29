@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [``, `Greeting card front — rich art options`, `Открытка — много вариантов оформления`],
@@ -63,9 +63,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `💌`,
       group: `visual`,
-      prompt: `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border. End: no watermark. Reply with that string only—no other text.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             default: `birthday`,
@@ -317,6 +315,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border. End: no watermark. Reply with that string only—no other text.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

@@ -55,7 +55,6 @@ vi.mock(`node:readline`, () => ({
   },
 }));
 
-import { t as makeLocaleT } from "./locales";
 import { StatusOutput } from "./StatusOutput";
 
 const snapshotLog = () => mocks.events.join(`\n`);
@@ -104,6 +103,12 @@ const assertNoAdjacentSeparators = () => {
   }
 };
 
+const startThinking = (output: ReturnType<typeof StatusOutput>) =>
+  output.onThinkingEvent({ label: `Thinking...`, status: `running` });
+
+const finishThinking = (output: ReturnType<typeof StatusOutput>) =>
+  output.onThinkingEvent({ label: `Thought`, status: `completed` });
+
 const setupStatusOutput = () => {
   vi.useFakeTimers();
   mocks.events.length = 0;
@@ -124,9 +129,11 @@ describe(`terminalStatusOutput`, () => {
     setupStatusOutput();
     const columnsDescriptor = Object.getOwnPropertyDescriptor(process.stdout, `columns`);
     Object.defineProperty(process.stdout, `columns`, { configurable: true, value: 12 });
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.onToolEvent({ callId: `1`, label: `Very long tool label`, status: `running` });
       vi.advanceTimersByTime(240);
       output.onToolEvent({ callId: `1`, label: `Very long tool label`, status: `completed` });
@@ -152,9 +159,11 @@ describe(`terminalStatusOutput`, () => {
 
   it(`renders assistant flow snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.assistantMessage(`assistant text`);
       output.succeed();
 
@@ -179,14 +188,20 @@ describe(`terminalStatusOutput`, () => {
 
   it(`renders mixed tool and assistant flow snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
 
       output.onToolEvent({ callId: `1`, label: `Search project`, status: `running` });
       vi.advanceTimersByTime(120);
       output.onToolEvent({ callId: `1`, label: `Search project`, status: `completed` });
+      startThinking(output);
+      finishThinking(output);
       output.assistantMessage(`First answer block`);
+      startThinking(output);
+      finishThinking(output);
       output.onToolEvent({ callId: `2`, label: `Read file`, status: `running` });
       output.onToolEvent({ callId: `2`, label: `Read file`, status: `completed` });
       output.succeed();
@@ -237,14 +252,18 @@ describe(`terminalStatusOutput`, () => {
 
   it(`deduplicates repeated tool events snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
 
       output.onToolEvent({ callId: `dup`, label: `Semantic search`, status: `running` });
       output.onToolEvent({ callId: `dup`, label: `Semantic search`, status: `running` });
       output.onToolEvent({ callId: `dup`, label: `Semantic search`, status: `completed` });
       output.onToolEvent({ callId: `dup`, label: `Semantic search`, status: `completed` });
+      startThinking(output);
+      finishThinking(output);
       output.succeed();
 
       assertNoAdjacentSeparators();
@@ -280,9 +299,11 @@ describe(`terminalStatusOutput`, () => {
 
   it(`ignores late events after success snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.assistantMessage(``);
       output.succeed();
 
@@ -310,9 +331,11 @@ describe(`terminalStatusOutput`, () => {
 
   it(`renders fail flow snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.onToolEvent({ callId: `1`, label: `Run tool`, status: `running` });
       vi.advanceTimersByTime(120);
 
@@ -345,12 +368,18 @@ describe(`terminalStatusOutput`, () => {
 
   it(`trims trailing newlines snapshot`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.assistantMessage(`Understood!\n\n`);
+      startThinking(output);
+      finishThinking(output);
       output.onToolEvent({ callId: `1`, label: `Searched semantic`, status: `running` });
       output.onToolEvent({ callId: `1`, label: `Searched semantic`, status: `completed` });
+      startThinking(output);
+      finishThinking(output);
       output.succeed();
 
       assertNoAdjacentSeparators();
@@ -386,9 +415,11 @@ describe(`terminalStatusOutput`, () => {
 
   it(`streams assistant deltas progressively without duplicate final text`, () => {
     setupStatusOutput();
-    const output = StatusOutput({ t: makeLocaleT(`en`) });
+    const output = StatusOutput();
     try {
       output.start();
+      startThinking(output);
+      finishThinking(output);
       output.assistantDelta(`Hello`);
       vi.advanceTimersByTime(240);
       output.assistantDelta(` world`);

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-
 import { describe, expect, it, vi } from "vitest";
 
 import { PaymentLog } from "./PaymentLog";

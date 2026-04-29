@@ -1,8 +1,11 @@
+import type { StructuredPrompt } from "@snappy/core";
 import type { z } from "zod";
 
+import type { AgentLocale } from "./Types";
+
 export type AgentTool<TSchema extends z.ZodType = z.ZodType> = {
-  description: string;
-  formatCall: (args: z.infer<TSchema>, status: AgentToolCallStatus, locale: string) => string;
+  description: string | StructuredPrompt;
+  formatCall: (args: z.infer<TSchema>, status: AgentToolCallStatus, locale: AgentLocale) => string;
   run: (args: z.infer<TSchema>) => Promise<AgentToolRunResult>;
   schema: TSchema;
 };

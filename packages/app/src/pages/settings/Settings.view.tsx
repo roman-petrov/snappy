@@ -10,6 +10,7 @@ import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } f
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
 export const SettingsView = ({
+  aiTunnelEnd,
   balanceEnd,
   fog,
   llmChatEnd,
@@ -44,6 +45,8 @@ export const SettingsView = ({
         />
       </SettingsCard>
       <SettingsCard title={t(`settings.modelsGroup`)}>
+        <SettingsCardRow end={aiTunnelEnd} icon="🔐" link={Routes.settings.aiTunnel} text={t(`settings.aiTunnel`)} />
+        <SettingsCardSeparator />
         <SettingsCardRow
           end={llmChatEnd}
           icon="💬"

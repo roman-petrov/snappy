@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   parameters =>
     ({
       "meta.description": [
@@ -36,9 +36,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `🎧`,
       group: `audio`,
-      prompt: `You receive an automatic speech-to-text transcript below. Write a summary that follows every bullet in the parameter list exactly. Output only the summary—no preamble, title, or questions.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
@@ -120,6 +118,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You receive an automatic speech-to-text transcript below. Write a summary that follows every bullet in the parameter list exactly. Output only the summary—no preamble, title, or questions.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

@@ -2,12 +2,13 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { Layout } from "./Layout";
 import {
-  Dashboard,
+  ChatWorkspace,
   ForgotPassword,
   Login,
   Register,
   ResetPassword,
   Settings,
+  SettingsAiTunnel,
   SettingsLanguage,
   SettingsModelsChat,
   SettingsModelsImage,
@@ -22,7 +23,13 @@ export const Router = (basename: string) =>
     [
       {
         children: [
-          { element: <Dashboard />, index: true },
+          {
+            children: [
+              { element: undefined, index: true },
+              { element: undefined, path: Routes.segment.feed },
+            ],
+            element: <ChatWorkspace />,
+          },
           { element: <BalanceLow />, path: Routes.segment.balance.low },
           { element: <TopUp />, path: Routes.segment.balance.topUp },
           { element: <Login />, path: Routes.segment.login },
@@ -30,6 +37,7 @@ export const Router = (basename: string) =>
           { element: <ForgotPassword />, path: Routes.segment.forgotPassword },
           { element: <ResetPassword />, path: Routes.segment.resetPassword },
           { element: <Settings />, path: Routes.segment.settings.root },
+          { element: <SettingsAiTunnel />, path: Routes.segment.settings.aiTunnel },
           { element: <SettingsTheme />, path: Routes.segment.settings.theme },
           { element: <SettingsLanguage />, path: Routes.segment.settings.language },
           { element: <SettingsModelsChat />, path: Routes.segment.settings.models.chat },

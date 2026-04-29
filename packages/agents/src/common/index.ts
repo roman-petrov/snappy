@@ -1,5 +1,3 @@
 export * from "./components";
 
-export type * from "./Meta";
-
-export * from "./UserMessage";
+export * from "./static-agent";

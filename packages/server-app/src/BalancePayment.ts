@@ -2,9 +2,12 @@
 import type { PaymentProvider } from "@snappy/payment";
 
 import { _ } from "@snappy/core";
+import { z } from "zod";
 
 import type { Balance } from "./Balance";
 import type { PaymentLog } from "./PaymentLog";
+
+import { TrpcAuth } from "./Trpc";
 
 export const BalancePayment = ({
   balance,
@@ -86,17 +89,21 @@ export const BalancePayment = ({
   const webhook = async (body: unknown) => {
     const parsed = payment.parseWebhook(body);
     if (!parsed.ok) {
-      return { status: `ok` as const };
+      return;
     }
 
     await (parsed.kind === `payment-succeeded` ? handlePaymentSucceeded : handlePaymentCanceled)(
       parsed.providerPaymentId,
     );
-
-    return { status: `ok` as const };
   };
 
-  return { paymentUrl, webhook };
+  const trpc = {
+    paymentUrl: TrpcAuth.input(z.object({ amount: z.number().optional() })).mutation(async ({ ctx, input }) =>
+      paymentUrl(ctx.userId, input.amount ?? 0),
+    ),
+  };
+
+  return { trpc, webhook };
 };
 
 export type BalancePayment = ReturnType<typeof BalancePayment>;

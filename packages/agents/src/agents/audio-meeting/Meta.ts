@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   parameters =>
     ({
       "meta.description": [
@@ -37,9 +37,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `📋`,
       group: `audio`,
-      prompt: `You receive an automatic transcript of a meeting (possibly multiple speakers; diarization may be imperfect). Produce structured meeting notes that follow every bullet in the parameter list. If speakers are unclear, label them Speaker A / Speaker B or use names from the optional context. Use sections in order: Overview; Decisions; Agreements & action items (what / who / deadline when mentioned); Open questions; Risks (if any). Output only the notes—no preamble.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
@@ -103,6 +101,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You receive an automatic transcript of a meeting (possibly multiple speakers; diarization may be imperfect). Produce structured meeting notes that follow every bullet in the parameter list. If speakers are unclear, label them Speaker A / Speaker B or use names from the optional context. Use sections in order: Overview; Decisions; Agreements & action items (what / who / deadline when mentioned); Open questions; Risks (if any). Output only the notes—no preamble.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

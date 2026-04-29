@@ -1,74 +1,53 @@
+/* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/immutable-data */
-import type { AiChatMessage, AiChatTool } from "@snappy/ai";
+/* eslint-disable functional/no-loop-statements */
+import { Ai } from "@snappy/ai";
+import { DataUrl } from "@snappy/browser";
 
-import { type AgentAdapter, Agent as createAgentLoop } from "@snappy/agent";
-import { _ } from "@snappy/core";
+import type { AgentDefinition, AgentRegenerateInput } from "../../Types";
 
-import type { AgentModule, AgentStartInput } from "../../Types";
+import { FreeOrchestratorComponent } from "./FreeOrchestratorComponent";
 
-import { scenarios } from "./Scenarios";
-import { Start } from "./Start";
-import { Storage } from "./Storage";
-import { System } from "./System";
-import { Tools } from "./Tools";
+export const Agent = (locale: `en` | `ru`): Omit<AgentDefinition, `id`> => {
+  const regenerate = async ({ aiConfig, artifact, locale }: AgentRegenerateInput) => {
+    const ai = await Ai({ ...aiConfig.options, locale });
+    if (artifact.type === `image`) {
+      const result = await ai.images.generate({
+        model: aiConfig.models.image,
+        prompt: artifact.generationPrompt,
+        quality: aiConfig.models.imageQuality,
+        size: `1024x1024`,
+      });
 
-export const Agent: AgentModule = locale => ({
-  meta: {
-    description:
-      locale === `ru`
-        ? `Динамический агент с инструментами и пошаговой генерацией формы во время работы.`
-        : `Dynamic tool-based agent with runtime form generation.`,
-    emoji: `🧪`,
-    group: `lab` as const,
-    title: locale === `ru` ? `Свободный оркестратор` : `Free orchestrator`,
-  },
-  start: (input: AgentStartInput) => {
-    const stopRun = { current: undefined as (() => void) | undefined };
+      return { src: DataUrl.png(result.bytes) };
+    }
+    const session = await ai.chat.completions.create({
+      model: aiConfig.models.chat,
+      prompt: artifact.generationPrompt,
+    });
 
-    const run = async () => {
-      const starter = await input.hostTools.ask({ component: Start, props: { options: scenarios(locale) } });
-
-      if (input.isStopped()) {
-        await input.onDone({ failed: false });
-
-        return;
+    let html = ``;
+    for await (const part of session.stream) {
+      if (part.type === `text`) {
+        html += part.text;
       }
-      const scenarioLabel = starter.label.trim();
-      const text = `Starter task message: "${scenarioLabel}". Begin the analysis and intake phase: clarify only what is needed via showStaticForm before generation, general to specific.`;
-      const storage = Storage();
-      const initialMessages: AiChatMessage[] = [{ content: text, role: `user` }];
+    }
+    await session.cost();
 
-      const engine = createAgentLoop(
-        (context): AgentAdapter => ({
-          chat: async (messages: AiChatMessage[], tools: AiChatTool[]) => {
-            if (context.isStopped()) {
-              return undefined;
-            }
-            const out = await input.hostTools.chat({ messages, toolChoice: `auto`, tools });
+    return { html };
+  };
 
-            return _.isString(out) ? undefined : out;
-          },
-          maxRounds: 8,
-          onStop: async (reason, error) => {
-            if (reason === `failed` && error !== undefined) {
-              const html = error instanceof Error ? error.message : `unknown_error`;
-              if (html.trim() !== ``) {
-                input.feed.append({ generationPrompt: html, html, type: `text` });
-              }
-            }
-            await input.onDone({ failed: reason === `failed` });
-          },
-          tools: Tools.list({ agentContext: context, input, storage }),
-        }),
-        locale,
-      );
-
-      stopRun.current = engine.start({ initialMessages, systemPrompt: System.prompt });
-    };
-
-    void run();
-
-    return () => stopRun.current?.();
-  },
-});
+  return {
+    component: FreeOrchestratorComponent,
+    headless: { regenerate },
+    meta: {
+      description:
+        locale === `ru`
+          ? `Динамический агент с инструментами и пошаговой генерацией формы во время работы.`
+          : `Dynamic tool-based agent with runtime form generation.`,
+      emoji: `🧪`,
+      group: `lab`,
+      title: locale === `ru` ? `Свободный оркестратор` : `Free orchestrator`,
+    },
+  };
+};

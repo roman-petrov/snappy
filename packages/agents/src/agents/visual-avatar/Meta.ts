@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [
@@ -65,9 +65,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `🧑‍🎨`,
       group: `visual`,
-      prompt: `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. End: no watermark; no random text on image unless detail asks for text. Reply with that string only—no other text.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             default: `human_adult`,
@@ -325,6 +323,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. End: no watermark; no random text on image unless detail asks for text. Reply with that string only—no other text.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

@@ -17,7 +17,6 @@
     "@cspell/dict-ru_ru": "^2.3.2",
     "@eslint/js": "^9.39.2",
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",

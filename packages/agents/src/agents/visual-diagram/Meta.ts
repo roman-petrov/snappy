@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [``, `Chart image from your numbers — rich styling`, `Диаграмма по числам — много настроек`],
@@ -58,9 +58,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `📈`,
       group: `visual`,
-      prompt: `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed. End: no watermark. Reply with that string only—no other text.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             id: `data`,
@@ -279,6 +277,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed. End: no watermark. Reply with that string only—no other text.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { api } from "../../core";
+import { trpc } from "../../core";
 import { useAsyncSubmit } from "../../hooks";
 
 export const useTopUpState = () => {
@@ -15,7 +15,7 @@ export const useTopUpState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await api.balancePaymentUrl({ amount });
+      const result = await trpc.balance.paymentUrl.mutate({ amount });
       if (result.status === `ok`) {
         window.location.assign(result.url);
 

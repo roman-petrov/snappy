@@ -15,11 +15,13 @@ const hrefDeep = (node: Record<string, unknown> | string): Record<string, unknow
 
 const segment = {
   balance: { low: `balance/low`, topUp: `balance/top-up` },
+  feed: `feed`,
   forgotPassword: `forgot-password`,
   login: `login`,
   register: `register`,
   resetPassword: `reset-password`,
   settings: {
+    aiTunnel: `settings/ai-tunnel`,
     language: `settings/language`,
     models: { chat: `settings/models/chat`, image: `settings/models/image`, speech: `settings/models/speech` },
     root: `settings`,

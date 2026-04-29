@@ -1,8 +1,8 @@
 // cspell:disable
 /* jscpd:ignore-start */
-import { Meta } from "../../common/Meta";
+import { StaticAgentMeta } from "../../common/static-agent";
 
-export const Data = Meta(
+export const Data = StaticAgentMeta(
   () =>
     ({
       "meta.description": [``, `Clarity, length, tone, emoji, markup`, `Ясность, длина, тон, эмодзи, разметка`],
@@ -29,9 +29,7 @@ export const Data = Meta(
       description: i18n(`meta.description`),
       emoji: `✏️`,
       group: `text`,
-      prompt: `Improve the passage under "Text to improve:" below: fix errors and unclear wording, then apply every bullet below exactly. Output only the improved text—no title, preamble, headings, or questions.`,
-      title: i18n(`meta.title`),
-      uiPlan: {
+      plan: {
         fields: [
           {
             id: `source`,
@@ -124,6 +122,8 @@ export const Data = Meta(
           },
         ],
       },
+      prompt: `Improve the passage under "Text to improve:" below: fix errors and unclear wording, then apply every bullet below exactly. Output only the improved text—no title, preamble, headings, or questions.`,
+      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

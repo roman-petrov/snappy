@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import type { FreeOrchestratorAgentTool } from "../Types";
 
-export const SendTextResultTool: FreeOrchestratorAgentTool = ({ input, storage }) =>
+export const SendTextResultTool: FreeOrchestratorAgentTool = ({ publishText, storage }) =>
   AgentTool({
     description: `Publish text from Storage to the chat feed after prompt verification.`,
     formatCall: ({ fileName }, status, locale) =>
@@ -29,7 +29,7 @@ export const SendTextResultTool: FreeOrchestratorAgentTool = ({ input, storage }
         return { error: `generationPrompt does not match the request stored for this file.` };
       }
 
-      input.feed.append({ generationPrompt: entry.generationPrompt, html: entry.value, type: `text` });
+      publishText({ generationPrompt: entry.generationPrompt, html: entry.value });
 
       return `Result was sent to chat.`;
     },

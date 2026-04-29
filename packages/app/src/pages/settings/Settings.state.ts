@@ -3,9 +3,10 @@ import { useStoreValue } from "@snappy/store";
 import { $fog, $locale, $theme, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { api } from "../../core";
+import { t, trpc } from "../../core";
 
 export const useSettingsState = () => {
+  const [aiTunnelEnd, setAiTunnelEnd] = useState(`›`);
   const [balanceEnd, setBalanceEnd] = useState(`›`);
   const [llmChatEnd, setLlmChatEnd] = useState(`›`);
   const [llmImageEnd, setLlmImageEnd] = useState(`›`);
@@ -15,13 +16,14 @@ export const useSettingsState = () => {
   const locale = useStoreValue($locale);
 
   useAsyncEffect(async () => {
-    const [bal, llm] = await Promise.all([api.balanceGet(), api.userSettingsGet()]);
-    setBalanceEnd(`${i.price(bal.balance)} ›`);
+    const [balance, llm] = await Promise.all([trpc.user.balance.query(), trpc.user.settings.get.query()]);
+    setAiTunnelEnd(`${llm.aiTunnelDirect ? t(`settings.aiTunnelModeDirect`) : t(`settings.aiTunnelModeProxy`)} ›`);
+    setBalanceEnd(`${i.price(balance)} ›`);
     setLlmChatEnd(`${llm.llmChatModel} ›`);
     setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality} ›`);
     setLlmSpeechEnd(`${llm.llmSpeechRecognitionModel} ›`);
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  return { balanceEnd, fog, llmChatEnd, llmImageEnd, llmSpeechEnd, locale, theme, toggleFog };
+  return { aiTunnelEnd, balanceEnd, fog, llmChatEnd, llmImageEnd, llmSpeechEnd, locale, theme, toggleFog };
 };

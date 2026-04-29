@@ -6,6 +6,8 @@ export * from "./Button";
 
 export * from "./Card";
 
+export * from "./FeedCard";
+
 export * from "./FileSelect";
 
 export * from "./Header";
@@ -20,6 +22,8 @@ export * from "./IconButtonLocale";
 
 export * from "./IconButtonTheme";
 
+export * from "./ImageCard";
+
 export * from "./Input";
 
 export * from "./Link";
@@ -31,6 +35,8 @@ export * from "./PasswordInput";
 export * from "./PasswordStrength";
 
 export * from "./SafeArea";
+
+export * from "./StreamingText";
 
 export * from "./Switch";
 
@@ -47,6 +53,8 @@ export * from "./Tap";
 export * from "./Text";
 
 export * from "./TextArea";
+
+export * from "./TextCard";
 
 export * from "./TextInput";
 

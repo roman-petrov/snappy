@@ -130,6 +130,8 @@ model UserSettings {
   llmImageModel             String?
   llmImageQuality           String?
   llmSpeechRecognitionModel String?
+  aiTunnelKey               String  @default("")
+  aiTunnelDirect            Boolean @default(false)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

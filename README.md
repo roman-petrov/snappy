@@ -15,12 +15,27 @@
 - 🐘 [pgAdmin](https://www.pgadmin.org/download/)
 - 📱 [Android SDK](https://developer.android.com/tools/releases/platform-tools)
 
+## 🔄 Workflow
+
+- 📦 `!install.bat`: Install global tools.
+- ⚙️ `!setup.bat`: Set up project dependencies.
+- ✅ `!check.bat`: Run all CI checks.
+- 🧹 `!cleanup.bat`: Clean up repository.
+- 📦 `!upgrade.bat`: Upgrade dependencies interactively.
+- 🔄 `!upgrade_actions.bat`: Upgrade GitHub Actions.
+
+## 📱 Android Debug
+
+The Android Debug build loads `https://home.local/app`. The dev machine must be named **home** (computer/hostname) so it
+is reachable at **home.local**.
+
 ## 🛠️ Technologies
 
 - 🟦 [TypeScript](https://www.typescriptlang.org/)
 - ⚡ [Vite](https://vite.dev/)
 - ⚛️ [React](https://react.dev/)
 - 🔐 [Better Auth](https://www.better-auth.com/)
+- 🔗 [tRPC](https://trpc.io/)
 - 🧬 [Prisma](https://www.prisma.io/)
 - 🍞 [Bun](https://bun.sh/)
 - 🧪 [Vitest](https://vitest.dev/)
@@ -39,21 +54,8 @@
 - 🧠 [Hermes Agent](https://hermes-agent.nousresearch.com/) — Autonomous agent with memory
   ([GitHub](https://github.com/NousResearch/Hermes-Agent)).
 - 💻 [OpenCode](https://opencode.ai/) — Open-source coding agent ([GitHub](https://github.com/sst/opencode)).
+- 🧪 [n0x](https://n0xth.vercel.app/) — The full AI stack in one browser tab ([GitHub](https://github.com/ixchio/n0x)).
 - 🧩 **Claude Code** — Community research mirror ([GitHub](https://github.com/yasasbanukaofficial/claude-code)).
-
-## 📱 Android Debug
-
-The Android Debug build loads `https://home.local/app`. The dev machine must be named **home** (computer/hostname) so it
-is reachable at **home.local**.
-
-## 🔄 Workflow
-
-- 📦 `!install.bat`: Install global tools.
-- ⚙️ `!setup.bat`: Set up project dependencies.
-- ✅ `!check.bat`: Run all CI checks.
-- 🧹 `!cleanup.bat`: Clean up repository.
-- 📦 `!upgrade.bat`: Upgrade dependencies interactively.
-- 🔄 `!upgrade_actions.bat`: Upgrade GitHub Actions.
 
 ## 🇷🇺 Russian model providers
 
