@@ -1,3 +1,4 @@
+/* eslint-disable functional/prefer-tacit */
 /* eslint-disable init-declarations */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import {
@@ -62,7 +63,7 @@ export const useDashboardState = () => {
 
   const [maxImagePromptLength, setMaxImagePromptLength] = useState(0);
   const [maxSpeechFileMegaBytes, setMaxSpeechFileMegaBytes] = useState(0);
-  const chatFeed = useMemo(ChatFeed, []);
+  const chatFeed = useMemo(() => ChatFeed(), []);
   const stopRequestedRef = useRef(false);
   const stopAgentRef = useRef<Action | undefined>(undefined);
 

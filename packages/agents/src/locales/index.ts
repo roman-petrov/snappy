@@ -13,5 +13,5 @@ export { localeData };
 
 export const makeT = (getLocale: () => LocaleKey) => Translate.makeT(localeData, getLocale);
 
-export const t = makeT(() => Locale.effective() as LocaleKey);
+export const t = makeT(() => Locale.effective());
 /* jscpd:ignore-end */

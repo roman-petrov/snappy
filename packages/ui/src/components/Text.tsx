@@ -38,11 +38,11 @@ export const Text = ({ as, cn = ``, color = `body`, html = false, text, typograp
   const className = _.cn(typographyClass, colorClass, cn);
 
   if (html) {
-    return <Tag className={className} {...Html.text(text)} {...(rest as React.HTMLAttributes<HTMLElement>)} />;
+    return <Tag className={className} {...Html.text(text)} {...rest} />;
   }
 
   return (
-    <Tag className={className} {...(rest as React.HTMLAttributes<HTMLElement>)}>
+    <Tag className={className} {...rest}>
       {text}
     </Tag>
   );

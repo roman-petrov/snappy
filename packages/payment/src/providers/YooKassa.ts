@@ -32,8 +32,6 @@ type RawPayment = {
   status: string;
 };
 
-type YooKassaWebhookEventName = `payment.canceled` | `payment.succeeded`;
-
 export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaConfig): PaymentProvider => {
   const paymentStatusMap: Record<string, PaymentStatus> = {
     canceled: `canceled`,
@@ -197,7 +195,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaConfig): Paym
       return PaymentResponse.failure({ code: `invalid-webhook-payload` });
     }
 
-    const kind = (event as YooKassaWebhookEventName) === `payment.succeeded` ? `payment-succeeded` : `payment-canceled`;
+    const kind = event === `payment.succeeded` ? `payment-succeeded` : `payment-canceled`;
 
     return PaymentResponse.success({ kind, providerPaymentId: id });
   };
