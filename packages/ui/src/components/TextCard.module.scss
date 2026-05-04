@@ -1,7 +1,7 @@
 @use "pkg:@snappy/theme/color";
 @use "pkg:@snappy/theme/typography";
 
-.richText {
+.rich-text {
   @include typography.body;
 
   margin: 0;

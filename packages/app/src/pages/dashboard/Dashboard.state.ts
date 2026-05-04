@@ -60,6 +60,7 @@ export const useDashboardState = () => {
   return {
     agentRunning,
     agentScreen,
+    pageTitle: agentScreen === undefined ? undefined : selectedAgent!.meta.title,
     onFeed: async () => go(Routes.feed),
     onPickAgent,
     onStop: () => setSelectedAgentId(``),

@@ -15,9 +15,10 @@ const AgentScreen = ({
   onFeed,
   onPickAgent,
   onStop,
+  pageTitle,
   presets,
-}: Pick<DashboardViewProps, `agentScreen` | `onFeed` | `onPickAgent` | `onStop` | `presets`>) => (
-  <Page>
+}: Pick<DashboardViewProps, `agentScreen` | `onFeed` | `onPickAgent` | `onStop` | `pageTitle` | `presets`>) => (
+  <Page title={pageTitle}>
     <div className={styles.root}>
       <div className={styles.actionRow}>
         <Button onClick={onFeed} text={t(`chat.feedRoute`)} />
@@ -39,6 +40,13 @@ const AgentScreen = ({
   </Page>
 );
 
-export const DashboardView = ({ agentScreen, onFeed, onPickAgent, onStop, presets }: DashboardViewProps) => (
-  <AgentScreen agentScreen={agentScreen} onFeed={onFeed} onPickAgent={onPickAgent} onStop={onStop} presets={presets} />
+export const DashboardView = ({ agentScreen, onFeed, onPickAgent, onStop, pageTitle, presets }: DashboardViewProps) => (
+  <AgentScreen
+    agentScreen={agentScreen}
+    onFeed={onFeed}
+    onPickAgent={onPickAgent}
+    onStop={onStop}
+    pageTitle={pageTitle}
+    presets={presets}
+  />
 );

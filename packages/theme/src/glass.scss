@@ -1,4 +1,6 @@
 @use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
 
 @mixin card {
   background: linear-gradient(
@@ -11,4 +13,12 @@
     color-mix(in srgb, color.surface() 58%, transparent) 100%
   );
   backdrop-filter: blur(16px) saturate(1.45) contrast(1.02);
+}
+
+@mixin panel {
+  @include card;
+
+  border: 1px solid color-mix(in srgb, color.border() 72%, transparent);
+  border-radius: radius.lg();
+  box-shadow: shadow.md();
 }

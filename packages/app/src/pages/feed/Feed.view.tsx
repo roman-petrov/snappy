@@ -23,20 +23,16 @@ export const FeedView = ({ artifacts, regenerateArtifact, regeneratingMessageIds
             item.type === `image` ? (
               <ImageCard
                 busy={regeneratingMessageIds.has(item.id)}
-                copyLabel={t(`dashboard.copy`)}
                 key={item.id}
                 onRegenerate={async () => regenerateArtifact({ kind: `image`, messageId: item.id })}
-                regenerateLabel={t(`chat.feed.regenerate`)}
                 src={item.src}
               />
             ) : (
               <TextCard
                 busy={regeneratingMessageIds.has(item.id)}
-                copyLabel={t(`dashboard.copy`)}
                 html={item.html}
                 key={item.id}
                 onRegenerate={async () => regenerateArtifact({ kind: `text`, messageId: item.id })}
-                regenerateLabel={t(`chat.feed.regenerate`)}
               />
             ),
           )}

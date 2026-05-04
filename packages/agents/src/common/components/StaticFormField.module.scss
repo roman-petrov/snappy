@@ -1,23 +1,20 @@
 @use "pkg:@snappy/theme/color";
-@use "pkg:@snappy/theme/radius";
-@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/glass" as glass;
 @use "pkg:@snappy/theme/space";
 @use "pkg:@snappy/theme/typography";
 
 .card {
+  @include glass.panel;
+
   box-sizing: border-box;
   min-width: 0;
   overflow: hidden;
-  background: color.surface();
-  border: 1px solid color.border();
-  border-radius: radius.md();
-  box-shadow: shadow.sm();
 }
 
 .head {
   padding: space.sm() space.md();
-  background: color-mix(in srgb, color.primary() 9%, color.surface-active());
-  border-bottom: 1px solid color-mix(in srgb, color.border() 65%, transparent);
+  background: color-mix(in srgb, color.primary() 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, color.border() 55%, transparent);
 }
 
 .label {

@@ -4,11 +4,11 @@
   position: relative;
   display: block;
   flex: 1;
-  line-height: 1.35;
-  white-space: pre-wrap;
-  word-break: break-word;
   min-width: 0;
+  line-height: 1.35;
   color: inherit;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 .cursor {
@@ -17,25 +17,25 @@
   height: 1em;
   margin-left: 0.12em;
   vertical-align: text-bottom;
+  background: color.primary-hover();
   border: 1px solid color.primary-border();
   border-radius: 1px;
-  background: color.primary-hover();
   box-shadow:
     0 0 0 1px color.on-primary(),
     0 0 0 2px color.primary-border(),
     0 0 8px color.primary();
-  animation: cursorBlink 0.2s steps(1, end) infinite;
+  animation: cursor-blink 0.2s steps(1, end) infinite;
 }
 
-@keyframes cursorBlink {
+@keyframes cursor-blink {
   0%,
   100% {
-    opacity: 1;
     background: color.primary();
+    opacity: 1;
   }
 
   50% {
-    opacity: 0.45;
     background: color.on-primary();
+    opacity: 0.45;
   }
 }

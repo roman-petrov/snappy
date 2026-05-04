@@ -1,0 +1,13 @@
+@use "pkg:@snappy/theme/space";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+}
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+}

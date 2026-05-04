@@ -9,19 +9,22 @@ export const useStatusTextState = ({ finished, text, ...textProps }: StatusTextP
 
   useEffect(() => {
     let mounted = true;
-    void finished
-      .then(({ label }) => {
-        if (!mounted) {
-          return;
-        }
-        setState({ status: `done`, text: label });
 
-        return label;
+    void finished
+      .then(() => {
+        if (!mounted) {
+          return undefined;
+        }
+
+        setState({ status: `done`, text: `` });
+
+        return undefined;
       })
       .catch(() => {
         if (!mounted) {
           return;
         }
+
         setState(current => ({ ...current, status: `error` }));
       });
 
@@ -30,10 +33,5 @@ export const useStatusTextState = ({ finished, text, ...textProps }: StatusTextP
     };
   }, [finished]);
 
-  return {
-    icon: state.status === `running` ? undefined : state.status === `error` ? `❌` : `✅`,
-    isRunning: state.status === `running`,
-    message: state.text,
-    textProps,
-  };
+  return { message: state.text, status: state.status, textProps };
 };

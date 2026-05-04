@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/filename-case */
 export const en = {
+  feedCard: { copy: `Copy`, regenerate: `Regenerate` },
   localeSwitcher: `Switch to Russian`,
   passwordInput: { hidePassword: `Hide password`, showPassword: `Show password` },
   textInput: {

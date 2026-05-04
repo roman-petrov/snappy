@@ -2,19 +2,18 @@ import { Agent as AgentRuntime } from "@snappy/agent";
 import { Ai, type AiChatMessage } from "@snappy/ai";
 import { useEffect, useRef, useState } from "react";
 
+import type { AgentFeedEntry, AgentFeedItem } from "../../common/components/agent-feed";
 import type { StaticFormPlan } from "../../core";
-import type { AgentArtifact, AgentComponentProps } from "../../Types";
+import type { AgentComponentProps } from "../../Types";
 
 import { scenarios } from "./Scenarios";
 import { Storage } from "./Storage";
 import { System } from "./System";
 import { Tools } from "./Tools";
 
-export type FreeOrchestratorActivityEntry =
-  | { chunks: AsyncIterable<string>; tool: `chat`; type: `stream` }
-  | { finished: Promise<{ label: string }>; text: string; type: `status` };
+export type FreeOrchestratorActivityEntry = AgentFeedEntry;
 
-type FreeOrchestratorActivityItem = { entry: FreeOrchestratorActivityEntry; key: number };
+type FreeOrchestratorActivityItem = AgentFeedItem;
 
 type PendingForm = {
   cancel: (error: Error) => void;
@@ -30,7 +29,6 @@ export const useFreeOrchestratorComponentState = ({
   onRunningChange,
 }: AgentComponentProps) => {
   const [entries, setEntries] = useState<FreeOrchestratorActivityItem[]>([]);
-  const [artifacts, setArtifacts] = useState<AgentArtifact[]>([]);
   const [pendingForm, setPendingForm] = useState<PendingForm | undefined>(undefined);
   const [starterOpen, setStarterOpen] = useState(true);
   const [starterLabel, setStarterLabel] = useState<string | undefined>(undefined);
@@ -41,7 +39,7 @@ export const useFreeOrchestratorComponentState = ({
   const onArtifactsRef = useRef(onArtifacts);
   const onRunningChangeRef = useRef(onRunningChange);
 
-  const addEntry = (entry: FreeOrchestratorActivityEntry) => {
+  const addEntry = (entry: AgentFeedEntry) => {
     const key = entryKeyRef.current;
     entryKeyRef.current += 1;
     setEntries(previous => [...previous, { entry, key }]);
@@ -73,13 +71,13 @@ export const useFreeOrchestratorComponentState = ({
 
     const publishText = (item: { generationPrompt: string; html: string }) => {
       const artifact = { ...item, agentId: `free-orchestrator`, id: crypto.randomUUID(), type: `text` } as const;
-      setArtifacts(previous => [...previous, artifact]);
+      addEntry({ artifact, type: `artifact` });
       void onArtifactsRef.current([artifact]);
     };
 
     const publishImage = (item: { generationPrompt: string; src: string }) => {
       const artifact = { ...item, agentId: `free-orchestrator`, id: crypto.randomUUID(), type: `image` } as const;
-      setArtifacts(previous => [...previous, artifact]);
+      addEntry({ artifact, type: `artifact` });
       void onArtifactsRef.current([artifact]);
     };
 
@@ -157,9 +155,10 @@ export const useFreeOrchestratorComponentState = ({
   }, [aiConfig, locale, starterLabel]);
 
   return {
-    artifacts,
     entries,
-    finishVisible: !running && (!starterOpen || artifacts.length > 0),
+    finishVisible:
+      !running &&
+      (!starterOpen || entries.some(({ entry }) => entry.type === `artifact`)),
     locale,
     onFinish: onRequestClose,
     onFormCancel: () =>

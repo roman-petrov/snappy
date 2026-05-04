@@ -1,0 +1,99 @@
+@use "pkg:@snappy/theme/color";
+@use "pkg:@snappy/theme/radius";
+@use "pkg:@snappy/theme/shadow";
+@use "pkg:@snappy/theme/space";
+
+.badge {
+  box-sizing: border-box;
+  display: inline-flex;
+  gap: space.xs();
+  align-items: center;
+  width: fit-content;
+  max-width: 100%;
+  padding: space.xs() space.sm();
+  vertical-align: middle;
+  border: 1px solid transparent;
+  border-radius: radius.lg();
+  box-shadow: shadow.md();
+  backdrop-filter: blur(14px) saturate(1.35) contrast(1.03);
+}
+
+.badge-running {
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, color.primary() 30%, color.surface() 70%) 0%,
+    color-mix(in srgb, color.primary() 16%, color.surface() 84%) 100%
+  );
+  border-color: color-mix(in srgb, color.primary() 48%, color.border());
+  animation: badge-running-pulse 2s ease-in-out infinite;
+
+  .message {
+    color: color-mix(in srgb, color.primary() 42%, color.text());
+    font-weight: 600;
+  }
+}
+
+.badge-error {
+  background: linear-gradient(
+    155deg,
+    color-mix(in srgb, color.error() 26%, color.surface() 74%) 0%,
+    color-mix(in srgb, color.error() 12%, color.surface() 88%) 100%
+  );
+  border-color: color-mix(in srgb, color.error() 42%, color.border());
+
+  .message {
+    color: color-mix(in srgb, color.error() 38%, color.text());
+    font-weight: 600;
+  }
+}
+
+.status {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+.message {
+  flex: 0 1 auto;
+  min-width: 0;
+  line-height: 1.35;
+}
+
+.spinner {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  border: 2px solid color-mix(in srgb, color.primary() 55%, color.surface());
+  border-top-color: color.primary();
+  border-radius: 999px;
+  animation: spin 0.75s linear infinite;
+}
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  line-height: 1.2;
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes badge-running-pulse {
+  0%,
+  100% {
+    box-shadow:
+      shadow.md(),
+      0 0 0 0 color-mix(in srgb, color.primary() 28%, transparent);
+  }
+
+  50% {
+    box-shadow:
+      shadow.md(),
+      0 0 0 5px color-mix(in srgb, color.primary() 14%, transparent);
+  }
+}

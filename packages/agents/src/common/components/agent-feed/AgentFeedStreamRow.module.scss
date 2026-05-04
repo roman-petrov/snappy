@@ -1,0 +1,11 @@
+@use "pkg:@snappy/theme/glass" as glass;
+@use "pkg:@snappy/theme/space";
+
+.root {
+  @include glass.panel;
+
+  display: flex;
+  gap: space.xs();
+  align-items: center;
+  padding: space.sm() space.md();
+}
