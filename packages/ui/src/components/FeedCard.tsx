@@ -18,13 +18,13 @@ export const FeedCard = ({ busy = false, children, onCopy, onRegenerate }: FeedC
       {children}
       {busy ? <BusyShimmerOverlay /> : undefined}
     </div>
-    {onCopy === undefined && onRegenerate === undefined ? undefined : (
+    {!busy && (onCopy !== undefined || onRegenerate !== undefined) ? (
       <div className={styles.actions}>
         {onCopy === undefined ? undefined : <Button onClick={onCopy} text={t(`feedCard.copy`)} />}
         {onRegenerate === undefined ? undefined : (
-          <Button disabled={busy} onClick={onRegenerate} text={t(`feedCard.regenerate`)} />
+          <Button onClick={onRegenerate} text={t(`feedCard.regenerate`)} />
         )}
       </div>
-    )}
+    ) : undefined}
   </div>
 );

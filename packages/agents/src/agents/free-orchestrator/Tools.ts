@@ -1,23 +1,15 @@
 import type { FreeOrchestratorToolContext } from "./ToolContext";
 
 import { AskTool } from "./tools/AskTool";
-import { ChatTool } from "./tools/ChatTool";
-import { ImageTool } from "./tools/ImageTool";
-import { SendImageResultTool } from "./tools/SendImageResultTool";
-import { SendTextResultTool } from "./tools/SendTextResultTool";
-import { StorageListTool } from "./tools/StorageListTool";
-import { StorageReadTool } from "./tools/StorageReadTool";
+import { GenerateImageTool } from "./tools/GenerateImageTool";
+import { GenerateTextTool } from "./tools/GenerateTextTool";
 
 const list = (context: FreeOrchestratorToolContext) =>
   ({
     "free-orchestrator": {
       "ask": AskTool(context),
-      "chat": ChatTool(context),
-      "image": ImageTool(context),
-      "send-image-result": SendImageResultTool(context),
-      "send-text-result": SendTextResultTool(context),
-      "storage-list": StorageListTool(context),
-      "storage-read": StorageReadTool(context),
+      "generate-image": GenerateImageTool(context),
+      "generate-text": GenerateTextTool(context),
     },
   }) as const;
 

@@ -9,8 +9,8 @@ import type { AgentDefinition, AgentRegenerateInput } from "../../Types";
 import { FreeOrchestratorComponent } from "./FreeOrchestratorComponent";
 
 export const Agent = (locale: `en` | `ru`): Omit<AgentDefinition, `id`> => {
-  const regenerate = async ({ aiConfig, artifact, locale }: AgentRegenerateInput) => {
-    const ai = await Ai({ ...aiConfig.options, locale });
+  const regenerate = async ({ aiConfig, artifact, locale: agentLocale }: AgentRegenerateInput) => {
+    const ai = await Ai({ ...aiConfig.options, locale: agentLocale });
     if (artifact.type === `image`) {
       const result = await ai.images.generate({
         model: aiConfig.models.image,

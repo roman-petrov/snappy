@@ -1,0 +1,9 @@
+@use "pkg:@snappy/theme/typography";
+
+.body {
+  @include typography.body;
+
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}

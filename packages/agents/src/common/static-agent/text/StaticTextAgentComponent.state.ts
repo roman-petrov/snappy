@@ -1,16 +1,11 @@
 import { Ai } from "@snappy/ai";
 import { useEffect, useRef, useState } from "react";
 
-import type { AgentFeedEntry, AgentFeedItem } from "../../components/agent-feed";
 import type { StaticFormAnswers } from "../../../core";
+import type { AgentFeedEntry, AgentFeedItem } from "../../components/agent-feed";
 import type { StaticTextAgentComponentProps } from "./StaticTextAgentComponent";
 
 import { StaticAgentPrompt } from "../StaticAgentPrompt";
-
-const copy = (locale: StaticTextAgentComponentProps[`locale`]) => ({
-  chatDone: locale === `ru` ? `Ответ получен` : `Response generated`,
-  thinking: locale === `ru` ? `Думаю` : `Thinking`,
-});
 
 export const useStaticTextAgentComponentState = ({
   agentId,
@@ -28,70 +23,78 @@ export const useStaticTextAgentComponentState = ({
   const mountedRef = useRef(true);
   const entryKeyRef = useRef(0);
 
-  const addEntry = (entry: AgentFeedEntry) => {
+  const addEntry = (entry: AgentFeedEntry): number => {
     const key = entryKeyRef.current;
     entryKeyRef.current += 1;
     setEntries(previous => [...previous, { entry, key }]);
+
+    return key;
   };
 
-  const appendArtifact = async (generationPrompt: string, html: string) => {
-    const item = { agentId, generationPrompt, html, id: crypto.randomUUID(), type: `text` } as const;
-    addEntry({ artifact: item, type: `artifact` });
-    await onArtifacts([item]);
+  const removeEntry = (key: number) => {
+    setEntries(previous => previous.filter(item => item.key !== key));
   };
 
-  const chat = async (promptText: string) => {
-    const labels = copy(locale);
-    let resolveThinking!: (value: { label: string }) => void;
-    const thinkingFinished = new Promise<{ label: string }>(r => {
-      resolveThinking = r;
+  const replaceEntry = (key: number, entry: AgentFeedEntry) => {
+    setEntries(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
+  };
+
+  const chat = async (promptText: string): Promise<string> => {
+    const htmlBridge: { settle: (value: string) => void } = {
+      settle: () => undefined,
+    };
+
+    const htmlPromise = new Promise<string>(resolve => {
+      htmlBridge.settle = resolve;
     });
-    addEntry({ finished: thinkingFinished, text: labels.thinking, type: `status` });
 
-    let resolveText!: (value: string) => void;
-    const textPromise = new Promise<string>(r => {
-      resolveText = r;
-    });
+    const streamChunks = async function* streamChunks(): AsyncGenerator<string> {
+      let html = ``;
+      try {
+        const ai = await Ai({ ...aiConfig.options, locale });
+        const session = await ai.chat.completions.create({
+          model: aiConfig.models.chat,
+          prompt: promptText,
+        });
+        for await (const part of session.stream) {
+          if (!mountedRef.current) {
+            break;
+          }
 
-    try {
-      const ai = await Ai({ ...aiConfig.options, locale });
-      const session = await ai.chat.completions.create({ model: aiConfig.models.chat, prompt: promptText });
-
-      let fullText = ``;
-      let firstChunk = true;
-
-      async function* chunks() {
-        try {
-          for await (const part of session.stream) {
-            if (part.type !== `text`) {
-              continue;
-            }
-            if (!mountedRef.current) {
-              return;
-            }
-            if (firstChunk) {
-              firstChunk = false;
-              resolveThinking({ label: labels.chatDone });
-            }
-            fullText += part.text;
+          if (part.type === `text`) {
+            html += part.text;
             yield part.text;
           }
-          if (firstChunk) {
-            resolveThinking({ label: labels.chatDone });
-          }
-        } finally {
-          await session.cost();
-          resolveText(fullText);
         }
+        await session.cost();
+      } finally {
+        htmlBridge.settle(html);
       }
+    };
 
-      addEntry({ chunks: chunks(), tool: `chat`, type: `stream` });
-    } catch {
-      resolveThinking({ label: labels.chatDone });
-      resolveText(``);
+    const key = addEntry({
+      chunks: streamChunks(),
+      generationPrompt: promptText,
+      type: `text-card-stream`,
+    });
+
+    const html = await htmlPromise;
+    if (!mountedRef.current || html.trim() === ``) {
+      removeEntry(key);
+
+      return ``;
     }
+    const item = {
+      agentId,
+      generationPrompt: promptText,
+      html,
+      id: crypto.randomUUID(),
+      type: `text`,
+    } as const;
+    replaceEntry(key, { artifact: item, type: `artifact` });
+    await onArtifacts([item]);
 
-    return textPromise;
+    return html;
   };
 
   useEffect(() => {
@@ -109,8 +112,7 @@ export const useStaticTextAgentComponentState = ({
   const run = async (answers: StaticFormAnswers) => {
     setRunning(true);
     try {
-      const generationPrompt = StaticAgentPrompt({ answers, mainPrompt: prompt, plan });
-      await appendArtifact(generationPrompt, await chat(generationPrompt));
+      await chat(StaticAgentPrompt({ answers, mainPrompt: prompt, plan }));
     } finally {
       if (mountedRef.current) {
         setRunning(false);

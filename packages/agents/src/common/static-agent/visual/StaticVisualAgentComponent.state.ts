@@ -2,18 +2,11 @@ import { Ai } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
 import { useEffect, useRef, useState } from "react";
 
-import type { AgentFeedEntry, AgentFeedItem } from "../../components/agent-feed";
 import type { StaticFormAnswers } from "../../../core";
+import type { AgentFeedEntry, AgentFeedItem } from "../../components/agent-feed";
 import type { StaticVisualAgentComponentProps } from "./StaticVisualAgentComponent";
 
 import { StaticAgentPrompt } from "../StaticAgentPrompt";
-
-const copy = (locale: StaticVisualAgentComponentProps[`locale`]) => ({
-  chatDone: locale === `ru` ? `Ответ получен` : `Response generated`,
-  imageDone: locale === `ru` ? `Изображение готово` : `Image generated`,
-  imagePending: locale === `ru` ? `Генерирую изображение` : `Generating image`,
-  thinking: locale === `ru` ? `Думаю` : `Thinking`,
-});
 
 export const useStaticVisualAgentComponentState = ({
   agentId,
@@ -31,80 +24,83 @@ export const useStaticVisualAgentComponentState = ({
   const mountedRef = useRef(true);
   const entryKeyRef = useRef(0);
 
-  const addEntry = (entry: AgentFeedEntry) => {
+  const addEntry = (entry: AgentFeedEntry): number => {
     const key = entryKeyRef.current;
     entryKeyRef.current += 1;
     setEntries(previous => [...previous, { entry, key }]);
+
+    return key;
   };
 
-  const appendArtifact = async (generationPrompt: string, src: string) => {
-    const item = { agentId, generationPrompt, id: crypto.randomUUID(), src, type: `image` } as const;
-    addEntry({ artifact: item, type: `artifact` });
-    await onArtifacts([item]);
+  const removeEntry = (key: number) => {
+    setEntries(previous => previous.filter(item => item.key !== key));
   };
 
-  const chat = async (promptText: string) => {
-    const labels = copy(locale);
-    let resolveThinking!: (value: { label: string }) => void;
-    const thinkingFinished = new Promise<{ label: string }>(r => {
-      resolveThinking = r;
+  const replaceEntry = (key: number, entry: AgentFeedEntry) => {
+    setEntries(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
+  };
+
+  const chat = async (promptText: string): Promise<string> => {
+    const htmlBridge: { settle: (value: string) => void } = {
+      settle: () => undefined,
+    };
+
+    const htmlPromise = new Promise<string>(resolve => {
+      htmlBridge.settle = resolve;
     });
-    addEntry({ finished: thinkingFinished, text: labels.thinking, type: `status` });
 
-    let resolveText!: (value: string) => void;
-    const textPromise = new Promise<string>(r => {
-      resolveText = r;
-    });
+    const streamChunks = async function* streamChunks(): AsyncGenerator<string> {
+      let html = ``;
+      try {
+        const ai = await Ai({ ...aiConfig.options, locale });
 
-    try {
-      const ai = await Ai({ ...aiConfig.options, locale });
-      const session = await ai.chat.completions.create({ model: aiConfig.models.chat, prompt: promptText });
+        const session = await ai.chat.completions.create({
+          model: aiConfig.models.chat,
+          prompt: promptText,
+        });
+        for await (const part of session.stream) {
+          if (!mountedRef.current) {
+            break;
+          }
 
-      let fullText = ``;
-      let firstChunk = true;
-
-      async function* chunks() {
-        try {
-          for await (const part of session.stream) {
-            if (part.type !== `text`) {
-              continue;
-            }
-            if (!mountedRef.current) {
-              return;
-            }
-            if (firstChunk) {
-              firstChunk = false;
-              resolveThinking({ label: labels.chatDone });
-            }
-            fullText += part.text;
+          if (part.type === `text`) {
+            html += part.text;
             yield part.text;
           }
-          if (firstChunk) {
-            resolveThinking({ label: labels.chatDone });
-          }
-        } finally {
-          await session.cost();
-          resolveText(fullText);
         }
+        await session.cost();
+      } finally {
+        htmlBridge.settle(html);
       }
+    };
 
-      addEntry({ chunks: chunks(), tool: `chat`, type: `stream` });
-    } catch {
-      resolveThinking({ label: labels.chatDone });
-      resolveText(``);
+    const key = addEntry({
+      chunks: streamChunks(),
+      generationPrompt: promptText,
+      type: `text-card-stream`,
+    });
+
+    const html = await htmlPromise;
+    if (!mountedRef.current || html.trim() === ``) {
+      removeEntry(key);
+
+      return ``;
     }
+    const item = {
+      agentId,
+      generationPrompt: promptText,
+      html,
+      id: crypto.randomUUID(),
+      type: `text`,
+    } as const;
+    replaceEntry(key, { artifact: item, type: `artifact` });
+    await onArtifacts([item]);
 
-    return textPromise;
+    return html;
   };
 
-  const image = async (promptText: string) => {
-    const labels = copy(locale);
-    let resolveDone!: (value: { label: string }) => void;
-    const finished = new Promise<{ label: string }>(r => {
-      resolveDone = r;
-    });
-    addEntry({ finished, text: labels.imagePending, type: `status` });
-
+  const image = async (promptText: string): Promise<void> => {
+    const key = addEntry({ generationPrompt: promptText, type: `image-card-progress` });
     try {
       const ai = await Ai({ ...aiConfig.options, locale });
 
@@ -114,14 +110,27 @@ export const useStaticVisualAgentComponentState = ({
         quality: aiConfig.models.imageQuality,
         size: `1024x1024`,
       });
-      resolveDone({ label: labels.imageDone });
+      if (!mountedRef.current || out.bytes.length === 0) {
+        removeEntry(key);
 
-      return mountedRef.current ? out.bytes : new Uint8Array();
+        return;
+      }
+
+      const src = DataUrl.png(out.bytes);
+
+      const item = {
+        agentId,
+        generationPrompt: promptText,
+        id: crypto.randomUUID(),
+        src,
+        type: `image`,
+      } as const;
+      replaceEntry(key, { artifact: item, type: `artifact` });
+      await onArtifacts([item]);
     } catch {
-      resolveDone({ label: labels.imageDone });
-
-      return new Uint8Array();
+      removeEntry(key);
     }
+
   };
 
   useEffect(() => {
@@ -140,7 +149,9 @@ export const useStaticVisualAgentComponentState = ({
     setRunning(true);
     try {
       const generationPrompt = await chat(StaticAgentPrompt({ answers, mainPrompt: prompt, plan }));
-      await appendArtifact(generationPrompt, DataUrl.png(await image(generationPrompt)));
+      if (generationPrompt.trim() !== ``) {
+        await image(generationPrompt);
+      }
     } finally {
       if (mountedRef.current) {
         setRunning(false);

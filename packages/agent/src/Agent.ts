@@ -255,7 +255,7 @@ export const Agent = ({ ai, chatModel, locale, maxRounds, systemPrompt, tools }:
                     push({
                       callId: toolCall.id,
                       finished,
-                      label: tool.formatCall(parsed.data, `running`, locale),
+                      label: tool.formatCall?.(parsed.data, `running`, locale) ?? ``,
                       type: `tool`,
                     });
                     try {
@@ -264,7 +264,7 @@ export const Agent = ({ ai, chatModel, locale, maxRounds, systemPrompt, tools }:
                         ? runResult
                         : `Tool "${toolCall.function.name}" failed: ${runResult.error}`;
                     } finally {
-                      resolveTool({ label: tool.formatCall(parsed.data, `completed`, locale) });
+                      resolveTool({ label: tool.formatCall?.(parsed.data, `completed`, locale) ?? `` });
                     }
                     if (toolIndex < toolCalls.length - 1) {
                       setStatus(`thinking`);

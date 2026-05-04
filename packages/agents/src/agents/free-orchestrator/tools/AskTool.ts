@@ -28,14 +28,6 @@ export const AskTool: FreeOrchestratorAgentTool = ({ agentContext, askForm, isSt
 For EVERY ask tool call, validate the call arguments before sending: each field label in plan.fields MUST start with exactly one leading emoji (emoji at position 1 only), and each option label inside tabs_single/tabs_multi field options MUST also start with exactly one leading emoji. If any label does not match, rewrite the call arguments before sending.`,
       ],
     ],
-    formatCall: ({ title }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Запрашиваю уточнения: ${title}`
-          : `Уточнения запрошены: ${title}`
-        : status === `running`
-          ? `Asking for clarifications: ${title}`
-          : `Clarifications requested: ${title}`,
     run: async ({ plan }) => {
       const formAnswers = await askForm(plan);
       if (agentContext.isStopped() || isStopped()) {
