@@ -2,11 +2,13 @@
 import type { Locale } from "@snappy/intl";
 import type { AgentCard, AgentDefinition, AgentEntry, AgentGroupId } from "@snappy/snappy-sdk";
 
+import { _ } from "@snappy/core";
+
 // eslint-disable-next-line @typescript-eslint/naming-convention -- this is an entry point
 const modules = import.meta.glob<{ Agent: AgentEntry }>(`./agents/*/Agent.ts`, { eager: true });
 
 const list = (locale: Locale) =>
-  Object.entries(modules)
+  _.entries(modules)
     .map(([path, moduleObject]) => ({ entry: moduleObject.Agent(locale), id: path.split(`/`).at(-2) ?? `` }))
     .toSorted((left, right) => left.id.localeCompare(right.id));
 
