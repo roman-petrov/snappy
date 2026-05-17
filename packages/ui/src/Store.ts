@@ -1,8 +1,8 @@
 import { Serializer } from "@snappy/core";
+import { Bridge } from "@snappy/platform";
 
 import type { Language, Theme } from "./core";
 
-import { Bridge } from "@snappy/platform";
 import { SavedStore } from "./SavedStore";
 
 export const $locale = await SavedStore<Language>(`snappy-locale`, `system`);

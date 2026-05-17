@@ -1,7 +1,7 @@
 import { Speech, type SpeechRecognizerOptions, type SpeechRecognizerStop } from "@snappy/browser";
+import { Vibrate } from "@snappy/platform";
 import { useRef, useState } from "react";
 
-import { Vibrate } from "@snappy/platform";
 import { useUnmount } from "./useUnmount";
 
 export const useSpeechRecognition = () => {

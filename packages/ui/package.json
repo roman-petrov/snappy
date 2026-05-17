@@ -10,8 +10,8 @@
   "dependencies": {
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
-    "@snappy/platform": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/platform": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "material-symbols": "^0.44.6",
