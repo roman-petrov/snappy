@@ -11,8 +11,8 @@ const navigate = vi.fn();
 const { bridgeState, hapticImpact } = vi.hoisted(() => ({ bridgeState: { available: false }, hapticImpact: vi.fn() }));
 
 vi.mock(import(`../hooks/useGo`), () => ({ useGo: () => navigate }));
-vi.mock(import(`../core/AndroidBridge`), () => ({
-  AndroidBridge: {
+vi.mock(import(`@snappy/platform`), () => ({
+  Bridge: {
     get available() {
       return bridgeState.available;
     },

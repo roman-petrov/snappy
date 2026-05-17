@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { Vibrate } from "../core/Vibrate";
+import type { Vibrate } from "@snappy/platform";
 
 import { useTapState } from "./Tap.state";
 import { TapView } from "./Tap.view";

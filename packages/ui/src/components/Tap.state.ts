@@ -1,10 +1,9 @@
 import { _ } from "@snappy/core";
+import { Bridge, Vibrate } from "@snappy/platform";
 import { useHref } from "react-router-dom";
 
 import type { TapProps } from "./Tap";
 
-import { AndroidBridge } from "../core/AndroidBridge";
-import { Vibrate } from "../core/Vibrate";
 import { useGo } from "../hooks/useGo";
 
 export const useTapState = ({
@@ -24,7 +23,7 @@ export const useTapState = ({
   const isHash = _.isString(link) && link.startsWith(`#`);
   const spaPath = _.isString(link) && !isHash ? link : undefined;
   const spaHref = useHref(spaPath ?? `/`);
-  const useJsNavigation = AndroidBridge.available && spaPath !== undefined;
+  const useJsNavigation = Bridge.available && spaPath !== undefined;
 
   const handleLinkClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();

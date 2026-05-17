@@ -1,5 +1,6 @@
 import { AiConstants } from "@snappy/ai";
-import { Clipboard, DataUrl, Share } from "@snappy/browser";
+import { DataUrl } from "@snappy/browser";
+import { Clipboard, Share } from "@snappy/platform";
 import { type MenuAction, useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 

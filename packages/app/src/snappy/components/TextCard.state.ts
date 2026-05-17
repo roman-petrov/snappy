@@ -1,6 +1,6 @@
 import type { MenuAction } from "@snappy/ui";
 
-import { Clipboard, Share } from "@snappy/browser";
+import { Clipboard, Share } from "@snappy/platform";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { TextCardProps } from "./TextCard";

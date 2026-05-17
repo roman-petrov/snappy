@@ -34,6 +34,7 @@
         "@ai-sdk/openai": "^3.0.63",
         "@snappy/core": "workspace:*",
         "ai": "^6.0.182",
+        "zod": "^4.3.6",
       },
     },
     "packages/app": {
@@ -44,6 +45,7 @@
         "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/platform": "workspace:*",
         "@snappy/snappy": "workspace:*",
         "@snappy/snappy-presets": "workspace:*",
         "@snappy/snappy-sdk": "workspace:*",
@@ -257,6 +259,10 @@
         "vitest": "^4.1.4",
       },
     },
+    "packages/platform": {
+      "name": "@snappy/platform",
+      "version": "0.0.0",
+    },
     "packages/server": {
       "name": "@snappy/server",
       "version": "0.0.0",
@@ -345,13 +351,9 @@
       "name": "@snappy/snappy-presets",
       "version": "0.0.0",
       "dependencies": {
-        "@snappy/agent": "workspace:*",
-        "@snappy/ai": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/snappy-sdk": "workspace:*",
-        "@snappy/snappy-skills": "workspace:*",
-        "zod": "^4.3.6",
       },
     },
     "packages/snappy-sdk": {
@@ -406,6 +408,7 @@
         "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/platform": "workspace:*",
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "material-symbols": "^0.44.6",
@@ -1093,6 +1096,8 @@
     "@snappy/node": ["@snappy/node@workspace:packages/node"],
 
     "@snappy/payment": ["@snappy/payment@workspace:packages/payment"],
+
+    "@snappy/platform": ["@snappy/platform@workspace:packages/platform"],
 
     "@snappy/server": ["@snappy/server@workspace:packages/server"],
 

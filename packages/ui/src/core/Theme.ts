@@ -1,9 +1,9 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 import { MediaQuery } from "@snappy/browser";
+import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
-import { AndroidBridge } from "./AndroidBridge";
 import { ThemeFog } from "./ThemeFog";
 import { ThemeTransition } from "./ThemeTransition";
 
@@ -26,7 +26,7 @@ const resolve = (value: Theme | undefined) =>
 const applyEffective = () => {
   const next = effective();
   document.documentElement.dataset[`theme`] = next;
-  AndroidBridge.setBarStyle(next === `dark` ? `dark` : `light`);
+  Bridge.setBarStyle(next === `dark` ? `dark` : `light`);
   fog.sync();
 };
 

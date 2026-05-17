@@ -1,6 +1,6 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable functional/no-expression-statements */
-import { AndroidBridge } from "./AndroidBridge";
+import { Bridge } from "./Bridge";
 
 /**
  * @see https://developer.android.com/reference/android/view/HapticFeedbackConstants
@@ -31,10 +31,10 @@ const types = [
 export type Vibrate = (typeof types)[number];
 
 const trigger = (type: Vibrate) => {
-  if (!AndroidBridge.available) {
+  if (!Bridge.available) {
     return;
   }
-  AndroidBridge.hapticImpact(type);
+  Bridge.hapticImpact(type);
 };
 
 export const Vibrate = { trigger };

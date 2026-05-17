@@ -1,5 +1,3 @@
-export * from "./Clipboard";
-
 export * from "./DataUrl";
 
 export * from "./Dom";
@@ -11,8 +9,6 @@ export * from "./FilePicker";
 export * from "./Html";
 
 export * from "./MediaQuery";
-
-export * from "./Share";
 
 export * from "./speech";
 

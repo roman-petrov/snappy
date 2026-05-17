@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Theme } from "./Theme";
 import type { Vibrate } from "./Vibrate";
 
 const hapticFeedbackConstants: Record<Vibrate, number> = {
@@ -26,6 +25,8 @@ const hapticFeedbackConstants: Record<Vibrate, number> = {
   virtualKeyRelease: 8,
 };
 
+type BarStyle = `dark` | `light`;
+
 type NativeAndroidBridge = { hapticImpact: (constant: number) => void; setBarStyle: (theme: string) => void };
 
 declare global {
@@ -34,9 +35,9 @@ declare global {
   }
 }
 
-const bridge = typeof window === `undefined` ? undefined : window.AndroidBridge;
-const available = bridge !== undefined;
-const hapticImpact = (constant: Vibrate) => bridge?.hapticImpact(hapticFeedbackConstants[constant]);
-const setBarStyle = (theme: Theme) => bridge?.setBarStyle(theme);
+const native = typeof window === `undefined` ? undefined : window.AndroidBridge;
+const available = native !== undefined;
+const hapticImpact = (constant: Vibrate) => native?.hapticImpact(hapticFeedbackConstants[constant]);
+const setBarStyle = (style: BarStyle) => native?.setBarStyle(style);
 
-export const AndroidBridge = { available, hapticImpact, setBarStyle };
+export const Bridge = { available, hapticImpact, setBarStyle };
