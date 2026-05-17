@@ -1,6 +1,5 @@
 ---
-description: View/State pattern (entry, state hook, view), where logic vs presentation live, translations and styles.
-globs: "**/*.tsx" "**/*.state.ts" "**/*.view.tsx"
+description: Use for React components and hooks.
 alwaysApply: false
 ---
 

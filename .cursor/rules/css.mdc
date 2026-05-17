@@ -1,7 +1,5 @@
 ---
-description:
-  SCSS/CSS styling rules (design tokens, theme functions, units, naming). Use when writing or reviewing SCSS/CSS files.
-globs: "**/*.{scss,module.scss}"
+globs: **/*.scss,**/*.module.scss
 alwaysApply: false
 ---
 

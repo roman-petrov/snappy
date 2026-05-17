@@ -1,7 +1,4 @@
 ---
-description:
-  General programming principles (functional, minimal, no OOP; DRY, single source of truth, pure functions, comments).
-  Use when writing or reviewing code in any language.
 alwaysApply: true
 ---
 

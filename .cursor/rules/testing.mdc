@@ -1,8 +1,5 @@
 ---
-description:
-  Test structure — destructure module under test, describe by function name, call without module prefix. Use when
-  writing or reviewing unit tests.
-globs: "**/*.test.{ts,tsx}"
+globs: **/*.test.ts,**/*.test.tsx
 alwaysApply: false
 ---
 

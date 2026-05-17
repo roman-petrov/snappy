@@ -1,8 +1,5 @@
 ---
-description:
-  React component structure (one component per file, props types, View/State pattern). Builds on programming and
-  typescript rules. Use when writing or reviewing React components.
-globs: "**/*.tsx"
+description: Use for React components and hooks.
 alwaysApply: false
 ---
 

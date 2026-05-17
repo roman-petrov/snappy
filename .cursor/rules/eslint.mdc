@@ -1,6 +1,5 @@
 ---
-description: ESLint exceptions (disable comments). Use when adding or reviewing ESLint overrides in code.
-globs: "**/*.{js,ts,mjs,cjs}"
+description: Use when working with ESLint issues.
 alwaysApply: false
 ---
 

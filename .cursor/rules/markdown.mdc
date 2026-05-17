@@ -1,8 +1,5 @@
 ---
-description:
-  Markdown style — emphasis (bold, italic), code spans, emoji in headers. Use when creating or editing .md files, docs,
-  README, notes.
-globs: "**/*.md"
+globs: **/*.md
 alwaysApply: false
 ---
 
