@@ -27,7 +27,15 @@ const hapticFeedbackConstants: Record<Vibrate, number> = {
 
 type BarStyle = `dark` | `light`;
 
-type NativeBridge = { hapticImpact: (constant: number) => void; setBarStyle: (theme: string) => void };
+type NativeBridge = {
+  copyHtml: (html: string, plain: string) => void;
+  copyImage: (src: string) => void;
+  copyText: (text: string) => void;
+  hapticImpact: (constant: number) => void;
+  setBarStyle: (theme: string) => void;
+  shareImage: (src: string, title: string) => void;
+  shareText: (text: string, title: string) => void;
+};
 
 declare global {
   interface Window {
@@ -39,5 +47,10 @@ const native = typeof window === `undefined` ? undefined : window.Bridge;
 const available = native !== undefined;
 const hapticImpact = (constant: Vibrate) => native?.hapticImpact(hapticFeedbackConstants[constant]);
 const setBarStyle = (style: BarStyle) => native?.setBarStyle(style);
+const copyText = (text: string) => native?.copyText(text);
+const copyHtml = (html: string, plain: string) => native?.copyHtml(html, plain);
+const copyImage = (src: string) => native?.copyImage(src);
+const shareText = (text: string, title: string) => native?.shareText(text, title);
+const shareImage = (src: string, title: string) => native?.shareImage(src, title);
 
-export const Bridge = { available, hapticImpact, setBarStyle };
+export const Bridge = { available, copyHtml, copyImage, copyText, hapticImpact, setBarStyle, shareImage, shareText };

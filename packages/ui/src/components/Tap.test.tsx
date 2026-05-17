@@ -16,8 +16,13 @@ vi.mock(import(`@snappy/platform`), () => ({
     get available() {
       return bridgeState.available;
     },
+    copyHtml: vi.fn(),
+    copyImage: vi.fn(),
+    copyText: vi.fn(),
     hapticImpact,
     setBarStyle: vi.fn(),
+    shareImage: vi.fn(),
+    shareText: vi.fn(),
   },
 }));
 

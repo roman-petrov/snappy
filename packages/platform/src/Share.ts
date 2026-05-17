@@ -1,7 +1,22 @@
 /* eslint-disable functional/no-expression-statements */
-const text = async (value: string, title = `Snappy`) => navigator.share({ text: value, title });
+import { Bridge } from "./Bridge";
+
+const text = async (value: string, title = `Snappy`) => {
+  if (Bridge.available) {
+    Bridge.shareText(value, title);
+
+    return;
+  }
+
+  await navigator.share({ text: value, title });
+};
 
 const image = async (src: string, title = `Snappy`) => {
+  if (Bridge.available) {
+    Bridge.shareImage(src, title);
+
+    return;
+  }
   const blob = await fetch(src).then(async response => response.blob());
   const type = blob.type.startsWith(`image/`) ? blob.type : `image/png`;
   const extension = type.slice(type.indexOf(`/`) + 1);
