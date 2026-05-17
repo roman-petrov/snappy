@@ -27,15 +27,15 @@ const hapticFeedbackConstants: Record<Vibrate, number> = {
 
 type BarStyle = `dark` | `light`;
 
-type NativeAndroidBridge = { hapticImpact: (constant: number) => void; setBarStyle: (theme: string) => void };
+type NativeBridge = { hapticImpact: (constant: number) => void; setBarStyle: (theme: string) => void };
 
 declare global {
   interface Window {
-    AndroidBridge?: NativeAndroidBridge;
+    Bridge?: NativeBridge;
   }
 }
 
-const native = typeof window === `undefined` ? undefined : window.AndroidBridge;
+const native = typeof window === `undefined` ? undefined : window.Bridge;
 const available = native !== undefined;
 const hapticImpact = (constant: Vibrate) => native?.hapticImpact(hapticFeedbackConstants[constant]);
 const setBarStyle = (style: BarStyle) => native?.setBarStyle(style);

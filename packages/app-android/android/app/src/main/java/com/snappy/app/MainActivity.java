@@ -40,7 +40,7 @@ public class MainActivity extends ComponentActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        webView.addJavascriptInterface(new Bridge(this), "AndroidBridge");
+        webView.addJavascriptInterface(new Bridge(this), "Bridge");
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
