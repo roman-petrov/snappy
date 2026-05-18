@@ -5,6 +5,7 @@ import type { useStreamingTextState } from "./StreamingText.state";
 
 import { $ } from "../$";
 import styles from "./StreamingText.module.scss";
+import { StreamingTextCursor } from "./StreamingTextCursor";
 
 export type StreamingTextViewProps = ReturnType<typeof useStreamingTextState>;
 
@@ -13,6 +14,6 @@ export const StreamingTextView = ({ color, parts, streaming, typography }: Strea
     {parts.map((text, index) => (
       <span className={styles.chunk} key={index} {...Html.text(text)} />
     ))}
-    {streaming && <span className={styles.cursor} />}
+    {streaming && <StreamingTextCursor />}
   </div>
 );

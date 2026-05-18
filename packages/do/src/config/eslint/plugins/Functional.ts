@@ -30,6 +30,7 @@ export default defineConfig([
       "functional/no-promise-reject": `off`,
       "functional/no-try-statements": `off`,
       "no-await-in-loop": `off`,
+      "no-continue": `off`,
     },
   },
 ]);
