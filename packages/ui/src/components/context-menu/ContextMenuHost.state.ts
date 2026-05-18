@@ -1,8 +1,6 @@
-import type { ReactNode } from "react";
-
 import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 

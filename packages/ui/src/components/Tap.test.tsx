@@ -254,18 +254,13 @@ describe(`tap`, () => {
     expect(hapticImpact).toHaveBeenCalledTimes(1);
   });
 
-  it(`passes tip to title and data-pressed`, () => {
-    const { container } = renderTap(
-      <Tap pressed tip="Close dialog">
-        X
-      </Tap>,
-    );
+  it(`passes tip to title`, () => {
+    const { container } = renderTap(<Tap tip="Close dialog">X</Tap>);
 
     expect(container).toMatchInlineSnapshot(`
       <div>
         <button
           class="_root_fa81c3"
-          data-pressed="true"
           title="Close dialog"
           type="button"
         >

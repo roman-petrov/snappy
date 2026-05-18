@@ -13,7 +13,6 @@ export type TapProps = {
   keepFocus?: boolean;
   link?: string | TapLinkExternal;
   onClick?: () => void;
-  pressed?: boolean;
   submit?: boolean;
   tip?: string;
   vibrate?: Vibrate;

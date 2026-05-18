@@ -25,7 +25,6 @@ export const SettingsOptionList = <T extends string>({ onSelect, options, value 
             end={value === opt.value ? `✓` : undefined}
             icon={opt.icon}
             onClick={() => onSelect(opt.value)}
-            pressed={value === opt.value}
             text={opt.label}
           />
         </Fragment>

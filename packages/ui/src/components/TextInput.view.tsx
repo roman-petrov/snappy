@@ -42,7 +42,6 @@ export const TextInputView = ({
           icon="mic"
           keepFocus
           onClick={toggleRecording}
-          pressed={listening}
           tip={
             speechSupported
               ? listening

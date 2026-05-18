@@ -1,4 +1,14 @@
-/* eslint-disable functional/immutable-data, functional/no-expression-statements, functional/no-loop-statements, functional/no-promise-reject, functional/no-try-statements, no-await-in-loop, no-continue */
+/* eslint-disable require-atomic-updates */
+/* eslint-disable no-continue */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable max-depth */
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-promise-reject */
+/* eslint-disable functional/no-loop-statements */
+/* eslint-disable functional/no-try-statements */
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { Ai, AiChatMessage } from "@snappy/ai";
 import type { Coder } from "@snappy/coder";
 
@@ -43,7 +53,6 @@ const run = async ({
   const rl = createInterface({ input: process.stdin, output: process.stdout });
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     while (true) {
       if (uiState.padPromptWithEmptyLine) {
         Console.logLine(``);

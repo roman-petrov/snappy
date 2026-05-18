@@ -25,7 +25,6 @@ export const SettingsModelsImageView = ({
               end={modelValue === option.value ? `✓` : undefined}
               icon={option.icon}
               onClick={async () => onModelSelect(option.value)}
-              pressed={modelValue === option.value}
               text={option.label}
             />
           </div>
@@ -39,7 +38,6 @@ export const SettingsModelsImageView = ({
               end={qualityValue === value ? `✓` : undefined}
               icon="stars"
               onClick={() => onQualitySelect(value)}
-              pressed={qualityValue === value}
               text={t(`settings.models.image.qualityValue.${value}`)}
             />
           </div>

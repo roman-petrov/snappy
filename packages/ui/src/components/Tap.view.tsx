@@ -16,18 +16,11 @@ export const TapView = ({
   linkTarget,
   onLinkClick,
   onMouseDown,
-  pressed,
   renderAsLink,
   submit,
   title,
 }: TapViewProps) => {
-  const common = {
-    children,
-    "className": _.cn(styles.root, cn),
-    "data-pressed": pressed ? `true` : undefined,
-    onMouseDown,
-    title,
-  };
+  const common = { children, className: _.cn(styles.root, cn), onMouseDown, title };
 
   if (renderAsLink && linkHref !== undefined) {
     return (

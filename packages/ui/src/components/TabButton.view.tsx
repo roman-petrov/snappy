@@ -13,7 +13,6 @@ export const TabButtonView = ({ active, onPress, text, ...rest }: TabButtonViewP
     cn={_.cn($.radius(`sm`), $.typography(`caption`), styles.tab, active ? $.tap(`accent`) : $.tap(`soft`))}
     keepFocus
     onClick={onPress}
-    pressed={active}
     {...rest}
   >
     {text}
