@@ -1,6 +1,4 @@
-@use "pkg:@snappy/theme/elevation" as elevation;
-@use "pkg:@snappy/theme/tokens/radius";
-@use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
@@ -11,19 +9,12 @@
   padding: space.md();
 }
 
-.emoji {
-  @include surface.primary;
-  @include elevation.e2;
+.icon {
+  @include primitives.inline-row-center;
 
-  display: flex;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  width: 3.25rem;
-  height: 3.25rem;
-  font-size: 2.25rem;
-  line-height: 1;
-  border-radius: radius.md();
+  min-width: space.x2xl();
+  padding: space.sm();
 }
 
 .body {
