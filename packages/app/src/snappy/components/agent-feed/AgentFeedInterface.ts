@@ -171,14 +171,12 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     commit(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
   };
 
-  const appendStream = (stream: AsyncIterable<string>, { color, typography }: { color: Color; typography: Typography }) => {
+  const appendStream = (
+    stream: AsyncIterable<string>,
+    { color, typography }: { color: Color; typography: Typography },
+  ) => {
     const key = nextKey();
-    pushEntry(key, {
-      color,
-      stream: streamClosedOnEnd(key, stream, commit),
-      type: `stream`,
-      typography,
-    });
+    pushEntry(key, { color, stream: streamClosedOnEnd(key, stream, commit), type: `stream`, typography });
 
     return key;
   };

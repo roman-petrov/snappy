@@ -19,5 +19,4 @@
 .marker {
   @include primitives.grid-center;
   @include primitives.circle(space.xl());
-
 }
