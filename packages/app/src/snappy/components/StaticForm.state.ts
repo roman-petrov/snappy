@@ -72,7 +72,6 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
       onChange: clicked =>
         setField(field.id, value.includes(clicked) ? value.filter(item => item !== clicked) : [...value, clicked]),
       options: tabOptions(field),
-      tabs: false,
       value: field.options[0]?.value ?? ``,
     }),
   }),

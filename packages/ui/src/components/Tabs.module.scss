@@ -1,38 +1,10 @@
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/radius";
-@use "pkg:@snappy/theme/tokens/tokens";
 
 .tabs {
-  position: relative;
-  width: 100%;
-  min-width: 0;
-  overflow: visible;
-}
-
-.tab-row {
   display: flex;
   flex-wrap: wrap;
   gap: space.xs();
   align-items: flex-start;
-}
-
-.indicator-track {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.indicator {
-  position: absolute;
-  top: 0;
-  left: 0;
+  width: 100%;
   min-width: 0;
-  background: color.primary();
-  border-radius: radius.sm();
-  transition:
-    left tokens.ease(),
-    top tokens.ease(),
-    width tokens.ease(),
-    height tokens.ease();
 }
