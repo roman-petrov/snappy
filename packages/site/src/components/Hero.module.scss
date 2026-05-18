@@ -1,0 +1,38 @@
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/core" as *;
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  align-items: center;
+  padding-block: space.x3xl() space.lg();
+  text-align: center;
+}
+
+.lead {
+  max-width: tokens.content-narrow();
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.md();
+  justify-content: center;
+}
+
+@include mobile {
+  .root {
+    padding-block: space.x2xl() space.lg();
+  }
+
+  .cta {
+    flex-direction: column;
+    width: 100%;
+
+    > * {
+      width: 100%;
+    }
+  }
+}
