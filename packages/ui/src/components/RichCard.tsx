@@ -1,18 +1,20 @@
 import { _ } from "@snappy/core";
-import { $, CardButton, type CardButtonProps, Icon } from "@snappy/ui";
 
-import styles from "./PresetCard.module.scss";
+import { $ } from "../$";
+import { CardButton, type CardButtonProps } from "./CardButton";
+import { Icon } from "./Icon";
+import styles from "./RichCard.module.scss";
 
-export type PresetCardProps = Omit<CardButtonProps, `children` | `cn`> & {
+export type RichCardProps = Omit<CardButtonProps, `children` | `cn`> & {
   description: string;
-  emoji: string;
+  icon: Icon;
   title: string;
 };
 
-export const PresetCard = ({ description, emoji, title, ...tapProps }: PresetCardProps) => (
+export const RichCard = ({ description, icon, title, ...tapProps }: RichCardProps) => (
   <CardButton {...tapProps} cn={styles.root}>
     <span className={_.cn(styles.icon, $.surface(`primary`), $.elevation(`e2`), $.radius(`md`))}>
-      <Icon name={{ emoji }} size="xl" />
+      <Icon name={icon} size="xl" />
     </span>
     <span className={styles.body}>
       <span className={$.typography(`h3`)}>{title}</span>

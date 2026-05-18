@@ -8,8 +8,6 @@ export * from "./Examples";
 
 export * from "./Faq";
 
-export * from "./FeatureCard";
-
 export * from "./Features";
 
 export * from "./Hero";

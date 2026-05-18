@@ -36,6 +36,8 @@ export * from "./PasswordInput";
 
 export * from "./PasswordStrength";
 
+export * from "./RichCard";
+
 export * from "./SafeArea";
 
 export * from "./StreamingText";
