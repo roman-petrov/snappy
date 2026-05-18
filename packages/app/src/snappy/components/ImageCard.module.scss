@@ -19,14 +19,11 @@
 .empty-text {
   @include typography.body;
 
-  margin: 0;
-  color: color.text();
   text-align: center;
 }
 
 .spinner {
   display: inline-flex;
-  color: color.primary();
   animation: spin 900ms linear infinite;
 }
 
