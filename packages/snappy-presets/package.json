@@ -8,6 +8,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@snappy/ai": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/snappy-sdk": "workspace:*"

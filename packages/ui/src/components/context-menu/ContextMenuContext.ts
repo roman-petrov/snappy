@@ -1,6 +1,4 @@
-import type { ReactNode } from "react";
-
-import { createContext } from "react";
+import { createContext, type ReactNode } from "react";
 
 export const ContextMenuContext = createContext<
   | undefined

@@ -2,14 +2,16 @@
 /* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticVisualAgent(
-  ({ maxImagePromptLength }) =>
+  () =>
     ({
       "meta.description": [`Logo mark — structured options, then generate`, `Логотип — структурированные опции`],
-      "meta.prompt": [
-        `You build image-generation prompts. From the **brand** line (required text), every tab below, and optional tagline line, write **one** detailed prompt **for image generation**: a **single logo artwork** on a simple background (it will be sent to the image model). Reflect industry, mark type, complexity, **palette by tab name**, style, and layout. Demand legibility at small sizes. End: no watermark; no laptop/phone mockups—logo only. Hard limit: keep the final prompt string at or below ${maxImagePromptLength} characters; compress wording if needed. Reply with that string only—no other text.`,
-        `Собери **один** промпт для генерации **одного** логотипа на простом фоне по строке **бренд** (обязательно), всем вкладкам и необязательному слогану. Учти сферу, тип знака, сложность, **палитру по названию вкладок**, стиль и связку. Читаемость в мелком масштабе. Без водяного знака; без мокапов ноутбуков/телефонов — только знак. Лимит: не длиннее ${maxImagePromptLength} символов. Ответь только строкой промпта.`,
-      ],
+      "meta.prompt": Prompts.visual.joinMeta([
+        `You build image-generation prompts. From the **brand** line (required text), every tab below, and optional tagline line, write **one** detailed prompt **for image generation**: a **single logo artwork** on a simple background (it will be sent to the image model). Reflect industry, mark type, complexity, **palette by tab name**, style, and layout. Demand legibility at small sizes. No laptop/phone mockups—logo only.`,
+        `Собери **один** промпт для генерации **одного** логотипа на простом фоне по строке **бренд** (обязательно), всем вкладкам и необязательному слогану. Учти сферу, тип знака, сложность, **палитру по названию вкладок**, стиль и связку. Читаемость в мелком масштабе. Без мокапов ноутбуков/телефонов — только знак.`,
+      ]),
       "meta.title": [`Logo`, `Логотип`],
       "ui.field.background.label": [`Preview bg`, `Фон превью`],
       "ui.field.background.option.dark.label": [`Dark`, `Тёмный`],

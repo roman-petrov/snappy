@@ -2,6 +2,8 @@
 /* jscpd:ignore-start */
 import { StaticTextAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticTextAgent(
   () =>
     ({
@@ -24,11 +26,8 @@ export const Agent = StaticTextAgent(
         `Щедро используй эмодзи по всему тексту: по нескольку на фразу, где подходят настроение и смысл; чередуй; ставь рядом со словами; строки остаются читаемыми.`,
       ],
       "ui.field.addFormatting.label": [`Markup`, `Разметка`],
-      "ui.field.addFormatting.promptOff": [`Plain text only; no HTML tags.`, `Только простой текст, без HTML.`],
-      "ui.field.addFormatting.promptOn": [
-        `Use <strong> or <b> HTML to stress important words and phrases—more accents than in plain text.`,
-        `Используй <strong> или <b>, чтобы выделить важные слова и фразы — сильнее, чем в голом тексте.`,
-      ],
+      "ui.field.addFormatting.promptOff": Prompts.formatting.off,
+      "ui.field.addFormatting.promptOn": Prompts.formatting.on,
       "ui.field.address.label": [`Addressing`, `Обращение`],
       "ui.field.address.option.dear_name.label": [`Dear + name`, `«Дорогой/ая» + имя`],
       "ui.field.address.option.dear_name.prompt": [

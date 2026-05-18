@@ -9,12 +9,8 @@ export const StaticTextAgent = StaticAgent(async ({ aiConfig, feed, isStopped, p
   if (isStopped()) {
     return;
   }
-  const ai = await Ai({ ...aiConfig.options });
-  if (isStopped()) {
-    return;
-  }
   await feed.generateText({
-    ai,
+    ai: Ai(aiConfig.options),
     model: aiConfig.models.chat,
     prompt: StaticAgentPrompt({ answers, mainPrompt: prompt, plan }),
   });

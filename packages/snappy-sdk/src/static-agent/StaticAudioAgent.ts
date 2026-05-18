@@ -13,11 +13,9 @@ export const StaticAudioAgent = StaticAgent(async ({ aiConfig, feed, isStopped, 
   if (!(file instanceof File)) {
     return;
   }
-  const ai = await Ai({ ...aiConfig.options });
+  const ai = Ai(aiConfig.options);
   const bytes = new Uint8Array(await file.arrayBuffer());
-  if (isStopped()) {
-    return;
-  }
+
   const out = await ai.audio.transcriptions.create({
     file: { bytes, fileName: file.name, mimeType: file.type.trim() === `` ? `application/octet-stream` : file.type },
     model: aiConfig.models.speech,

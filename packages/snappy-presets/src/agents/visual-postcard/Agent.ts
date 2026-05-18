@@ -2,14 +2,16 @@
 /* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticVisualAgent(
-  ({ maxImagePromptLength }) =>
+  () =>
     ({
       "meta.description": [`Greeting card front — rich art options`, `Открытка — много вариантов оформления`],
-      "meta.prompt": [
-        `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border. End: no watermark. Hard limit: keep the final prompt string at or below ${maxImagePromptLength} characters; compress wording if needed. Reply with that string only—no other text.`,
-        `Собери **один** промпт для **иллюстрации лицевой стороны открытки** (не фото готовой открытки, если не просили). Учти: повод, настроение, формат, стиль, **палитру по вкладкам**, орнамент, правило текста на картинке. Опиши композицию, мотив, кайму. Без водяного знака. Лимит: не длиннее ${maxImagePromptLength} символов. Ответь только строкой промпта.`,
-      ],
+      "meta.prompt": Prompts.visual.joinMeta([
+        `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border.`,
+        `Собери **один** промпт для **иллюстрации лицевой стороны открытки** (не фото готовой открытки, если не просили). Учти: повод, настроение, формат, стиль, **палитру по вкладкам**, орнамент, правило текста на картинке. Опиши композицию, мотив, кайму.`,
+      ]),
       "meta.title": [`Postcard`, `Открытка`],
       "ui.field.decoration.label": [`Ornament`, `Орнамент`],
       "ui.field.decoration.option.minimal.label": [`Minimal`, `Минимум`],

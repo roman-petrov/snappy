@@ -78,7 +78,8 @@ export const SkillTool: SnappyToolFactory = ({ isStopped }) => {
           : `Skill loaded: ${name(id, `en`)}`;
     },
     inputSchema: z.object({
-      id: (registry.length > 0 ? z.enum(registry.map(({ id }) => id) as [string, ...string[]]) : z.string())
+      id: z
+        .enum(registry.map(({ id }) => id))
         .optional()
         .describe(`Skill id from the catalog. Required when mode is load.`),
       mode: z

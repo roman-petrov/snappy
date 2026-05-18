@@ -2,17 +2,19 @@
 /* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticVisualAgent(
-  ({ maxImagePromptLength }) =>
+  () =>
     ({
       "meta.description": [
         `Portrait or character — rich options, then generate`,
         `Портрет или персонаж — детальные настройки`,
       ],
-      "meta.prompt": [
-        `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. End: no watermark; no random text on image unless detail asks for text. Hard limit: keep the final prompt string at or below ${maxImagePromptLength} characters; compress wording if needed. Reply with that string only—no other text.`,
-        `Собери **один** промпт для генерации изображения по последнему сообщению пользователя, необязательной строке уточнения и каждому пункту ниже. Объедини: тип субъекта, настроение, кадр, стиль, **название палитры с вкладок**, фон, свет. Уточнение вплети в описание. Без водяного знака; без случайного текста на картинке, если уточнение не просит текст. Лимит: не длиннее ${maxImagePromptLength} символов. Ответь только строкой промпта.`,
-      ],
+      "meta.prompt": Prompts.visual.joinMeta([
+        `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. No random text on image unless detail asks for text.`,
+        `Собери **один** промпт для генерации изображения по последнему сообщению пользователя, необязательной строке уточнения и каждому пункту ниже. Объедини: тип субъекта, настроение, кадр, стиль, **название палитры с вкладок**, фон, свет. Уточнение вплети в описание. Без случайного текста на картинке, если уточнение не просит текст.`,
+      ]),
       "meta.title": [`Avatar`, `Аватар`],
       "ui.field.background.label": [`Background`, `Фон`],
       "ui.field.background.option.bokeh.label": [`Blurred scene`, `Боке`],

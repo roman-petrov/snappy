@@ -1,29 +1,21 @@
 /* eslint-disable functional/prefer-tacit */
 /* eslint-disable functional/immutable-data */
-/* eslint-disable func-style */
-/* eslint-disable max-depth */
 /* eslint-disable init-declarations */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import type { AiChatMessage } from "@snappy/ai";
+import type { AiChatMessage, AiChatStreamSegment, AiToolCall } from "@snappy/ai";
 
 import { _, StructuredPrompt } from "@snappy/core";
 
-import type { AgentTool, AgentToolGroup } from "./AgentTool";
+import type { AgentTool } from "./AgentTool";
 import type { AgentCreateInput, AgentRun, AgentStopReason, AgentStreamPart } from "./Types";
 
-type AgentStatus = `runningTool` | `streaming` | `thinking`;
+import { AgentToolInput } from "./AgentToolInput";
 
-const flattenTools = (groups: Record<string, AgentToolGroup>): Record<string, AgentTool> =>
-  _.fromEntries(
-    _.entries(groups).flatMap(([group, groupTools]) =>
-      _.entries(groupTools).map(([name, agentTool]) => [`${group}_${name}`, agentTool]),
-    ),
-  );
+type AgentStatus = `runningTool` | `streaming` | `thinking`;
 
 export const Agent = ({
   ai,
@@ -35,54 +27,63 @@ export const Agent = ({
   tools,
 }: AgentCreateInput) => {
   let stopped = false;
-  const context = { isStopped: () => stopped };
+  const isStopped = () => stopped;
 
   const thinkingLabels =
     locale === `ru` ? { done: `Мысль`, running: `Думаю...` } : { done: `Thought`, running: `Thinking...` };
 
-  const toolsByName = flattenTools(tools);
+  const toolsByName = _.fromEntries(
+    _.entries(tools).flatMap(([group, groupTools]) =>
+      _.entries(groupTools).map(([name, agentTool]) => [`${group}_${name}`, agentTool]),
+    ),
+  );
+
+  const toolResultContent = (result: Awaited<ReturnType<AgentTool[`execute`]>>) =>
+    _.isString(result) ? result : `Tool failed: ${result.error}`;
 
   return {
-    context,
+    context: { isStopped },
     start: (initialMessages: AiChatMessage[]) => {
       stopped = false;
-      let idleWake: (() => void) | undefined;
-      let status: AgentStatus = `streaming`;
-      const parts = { list: [] as AgentStreamPart[], wake: undefined as (() => void) | undefined };
+
+      const queue: AgentStreamPart[] = [];
+      let dequeueWake: (() => void) | undefined;
 
       const push = (part: AgentStreamPart) => {
-        parts.list.push(part);
-        parts.wake?.();
+        queue.push(part);
+        dequeueWake?.();
       };
 
-      async function* iterate(): AsyncGenerator<AgentStreamPart> {
+      const waitForPart = async () => {
+        await new Promise<void>(resolve => {
+          dequeueWake = resolve;
+        });
+      };
+
+      const stream = (async function* agentParts() {
         for (;;) {
-          if (parts.list.length === 0) {
-            await new Promise<void>(resolve => {
-              parts.wake = resolve;
-            });
-            parts.wake = undefined;
-          }
-          while (parts.list.length > 0) {
-            const part = parts.list.shift();
+          while (queue.length > 0) {
+            const part = queue.shift();
             if (part === undefined) {
-              continue;
+              break;
             }
             yield part;
             if (part.type === `run`) {
               return;
             }
           }
+          await waitForPart();
+          dequeueWake = undefined;
         }
-      }
+      })();
 
-      const iterateInstance = iterate();
       let resolveDone!: (value: { error?: unknown; messages: AiChatMessage[]; reason: AgentStopReason }) => void;
 
       const done = new Promise<{ error?: unknown; messages: AiChatMessage[]; reason: AgentStopReason }>(resolve => {
         resolveDone = resolve;
       });
 
+      let status: AgentStatus = `streaming`;
       let thinkingEnd: ((value: { label: string }) => void) | undefined;
 
       const setStatus = (next: AgentStatus) => {
@@ -102,11 +103,69 @@ export const Agent = ({
         }
       };
 
-      let appendUserTextImpl: (raw: string) => void = _.noop;
+      let idleWake: (() => void) | undefined;
+      let appendUserText = _.noop as (text: string) => void;
 
-      async function runSession() {
+      const consumeSegment = async (seg: AiChatStreamSegment) => {
+        if (seg.type === `chat` || seg.type === `reasoning`) {
+          setStatus(`streaming`);
+          push({ stream: seg.stream, type: `model_stream`, variant: seg.type });
+
+          return;
+        }
+
+        setStatus(`thinking`);
+        for await (const call of seg.stream) {
+          if (isStopped()) {
+            return;
+          }
+          void call;
+        }
+      };
+
+      const executeTool = async (call: AiToolCall) => {
+        if (isStopped()) {
+          return undefined;
+        }
+
+        const agentTool = toolsByName[call.toolName];
+        if (agentTool === undefined) {
+          return undefined;
+        }
+
+        const parsed = AgentToolInput.parse(call.argumentsJson, agentTool.inputSchema);
+        if (!parsed.ok) {
+          return { content: toolResultContent({ error: parsed.error }), role: `tool`, toolCallId: call.toolCallId };
+        }
+
+        const input = parsed.data;
+
+        setStatus(`runningTool`);
+        let finishToolBadge: ((value: { label: string }) => void) | undefined;
+        const { formatCall } = agentTool;
+        if (formatCall !== undefined) {
+          const finished = new Promise<{ label: string }>(resolve => {
+            finishToolBadge = resolve;
+          });
+
+          const runningLabel = formatCall(input, `running`, locale);
+          if (runningLabel.trim() !== ``) {
+            push({ callId: call.toolCallId, finished, label: runningLabel, type: `tool` });
+          }
+        }
+        const result = await agentTool.execute(input);
+        if (formatCall !== undefined) {
+          finishToolBadge?.({ label: formatCall(input, `completed`, locale) });
+        }
+
+        setStatus(`thinking`);
+
+        return { content: toolResultContent(result), role: `tool`, toolCallId: call.toolCallId };
+      };
+
+      const run = async () => {
         let stopReason: AgentStopReason = `stopped`;
-        let stopError = undefined as unknown;
+        let stopError: unknown;
 
         let messages: AiChatMessage[] = [
           { content: StructuredPrompt(systemPrompt), role: `system` },
@@ -115,44 +174,79 @@ export const Agent = ({
 
         const pendingUserTexts: string[] = [];
 
-        const flushPendingUserMessages = (): boolean => {
+        const flushUser = () => {
           if (pendingUserTexts.length === 0) {
             return false;
           }
-          const additions = pendingUserTexts.splice(0).map((content): AiChatMessage => ({ content, role: `user` }));
-
-          messages = [...messages, ...additions];
+          messages = [
+            ...messages,
+            ...pendingUserTexts.splice(0).map((content): AiChatMessage => ({ content, role: `user` })),
+          ];
 
           return true;
         };
 
-        const waitForUserOrStop = async () =>
-          new Promise<void>(resolve => {
-            idleWake = () => {
-              idleWake = undefined;
-              resolve();
-            };
-            if (stopped || pendingUserTexts.length > 0) {
-              idleWake();
-            }
-          });
+        const retryAfterUser = () => {
+          if (!flushUser()) {
+            return false;
+          }
 
-        appendUserTextImpl = (raw: string) => {
-          const trimmed = raw.trim();
-          if (trimmed !== ``) {
-            pendingUserTexts.push(trimmed);
+          setStatus(`streaming`);
+
+          return true;
+        };
+
+        const handleNoToolCalls = async () => {
+          if (retryAfterUser()) {
+            return `next`;
+          }
+          if (idleAfterSuccess === true) {
+            await new Promise<void>(resolve => {
+              idleWake = () => {
+                idleWake = undefined;
+                resolve();
+              };
+              if (isStopped() || pendingUserTexts.length > 0) {
+                idleWake();
+              }
+            });
+          }
+          if (isStopped()) {
+            return `stopped`;
+          }
+
+          return retryAfterUser() ? `next` : `done`;
+        };
+
+        const finishWithoutTools = async () => {
+          const end = await handleNoToolCalls();
+          if (end === `next`) {
+            return false;
+          }
+          stopReason = end === `stopped` ? `stopped` : `success`;
+          if (end === `done`) {
+            setStatus(`streaming`);
+          }
+
+          return true;
+        };
+
+        appendUserText = (raw: string) => {
+          const text = raw.trim();
+          if (text !== ``) {
+            pendingUserTexts.push(text);
             idleWake?.();
           }
         };
 
         try {
           for (let round = 0; round < maxRounds; round += 1) {
-            if (stopped) {
+            if (isStopped()) {
               break;
             }
-            flushPendingUserMessages();
-
+            flushUser();
             setStatus(`thinking`);
+
             const session = ai.chat.completions.create({
               messages,
               model: chatModel,
@@ -161,84 +255,37 @@ export const Agent = ({
               tools: toolsByName,
             });
 
-            for await (const seg of session.stream(() => stopped)) {
-              if (seg.type === `chat` || seg.type === `reasoning`) {
-                setStatus(`streaming`);
-                push({ stream: seg.stream, type: `model_stream`, variant: seg.type });
-              } else if (seg.type === `tool`) {
-                setStatus(`thinking`);
-                for await (const call of seg.stream) {
-                  if (stopped) {
-                    break;
-                  }
-                  const agentTool = toolsByName[call.toolName];
-                  const formatCall = agentTool?.formatCall;
-                  if (formatCall === undefined) {
-                    continue;
-                  }
-                  setStatus(`runningTool`);
-                  let resolveTool!: (value: { label: string }) => void;
-
-                  const finished = new Promise<{ label: string }>(resolve => {
-                    resolveTool = resolve;
-                  });
-
-                  const runningLabel = formatCall(call.input, `running`, locale);
-                  if (runningLabel.trim() !== ``) {
-                    push({ callId: call.toolCallId, finished, label: runningLabel, type: `tool` });
-                  }
-                  resolveTool({ label: formatCall(call.input, `completed`, locale) });
-                  setStatus(`thinking`);
-                }
-              }
-            }
-
-            if (stopped) {
-              break;
-            }
-
-            await session.cost();
-
-            if (stopped) {
-              break;
-            }
-
-            messages = [...messages, ...(await session.messages())];
-
-            const assistantMessage = await session.assistant();
-            const toolCalls = assistantMessage.toolCalls ?? [];
-            if (toolCalls.length === 0) {
-              const continueIfPendingUser = () => {
-                if (!flushPendingUserMessages()) {
-                  return false;
-                }
-                setStatus(`streaming`);
-
-                return true;
-              };
-
-              if (continueIfPendingUser()) {
-                continue;
-              }
-              if (idleAfterSuccess === true) {
-                await waitForUserOrStop();
-              }
-              if (stopped) {
-                stopReason = `stopped`;
+            for await (const seg of session.stream(isStopped)) {
+              await consumeSegment(seg);
+              if (isStopped()) {
                 break;
               }
-              if (continueIfPendingUser()) {
-                continue;
-              }
-              setStatus(`streaming`);
-              stopReason = `success`;
+            }
+
+            if (isStopped()) {
               break;
             }
-            setStatus(`streaming`);
+
+            const [assistantMessage] = await Promise.all([session.assistant(), session.cost()]);
+            messages = [...messages, assistantMessage];
+
+            const toolCalls = assistantMessage.toolCalls ?? [];
+            if (toolCalls.length === 0) {
+              if (await finishWithoutTools()) {
+                break;
+              }
+            } else {
+              const toolMessages = await Promise.all(toolCalls.map(executeTool));
+              messages = [
+                ...messages,
+                ...toolMessages.filter((row): row is Extract<AiChatMessage, { role: `tool` }> => row !== undefined),
+              ];
+              setStatus(`streaming`);
+            }
           }
         } catch (error) {
-          stopReason = stopped ? `stopped` : `failed`;
-          if (!stopped) {
+          stopReason = isStopped() ? `stopped` : `failed`;
+          if (!isStopped()) {
             stopError = error;
           }
         }
@@ -246,12 +293,12 @@ export const Agent = ({
         const completed = { error: stopReason === `failed` ? stopError : undefined, messages, reason: stopReason };
         push({ type: `run`, ...completed });
         resolveDone(completed);
-      }
+      };
 
-      void runSession();
+      void run();
 
-      return Object.assign(iterateInstance, {
-        appendUserText: (text: string) => appendUserTextImpl(text),
+      return Object.assign(stream, {
+        appendUserText: (text: string) => appendUserText(text),
         done,
         stop: () => {
           stopped = true;

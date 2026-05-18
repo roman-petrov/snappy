@@ -2,14 +2,16 @@
 /* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticVisualAgent(
-  ({ maxImagePromptLength }) =>
+  () =>
     ({
       "meta.description": [`Chart image from your numbers — rich styling`, `Диаграмма по числам — много настроек`],
-      "meta.prompt": [
-        `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed. End: no watermark. Hard limit: keep the final prompt string at or below ${maxImagePromptLength} characters; compress wording if needed. Reply with that string only—no other text.`,
-        `Собери **один** промпт для генерации **одного** чёткого изображения диаграммы по полю **данные** (обязательно — числа и подписи) и каждому пункту ниже. Закодируй тип графика, 2D/3D, **палитру по названию вкладок**, стиль, фон, легенду, сетку. Требуй читаемые оси и честные числа — только то, что ввёл пользователь. Без водяного знака. Лимит: не длиннее ${maxImagePromptLength} символов; сожми формулировки. Ответь только строкой промпта.`,
-      ],
+      "meta.prompt": Prompts.visual.joinMeta([
+        `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed.`,
+        `Собери **один** промпт для генерации **одного** чёткого изображения диаграммы по полю **данные** (обязательно — числа и подписи) и каждому пункту ниже. Закодируй тип графика, 2D/3D, **палитру по названию вкладок**, стиль, фон, легенду, сетку. Требуй читаемые оси и честные числа — только то, что ввёл пользователь.`,
+      ]),
       "meta.title": [`Diagram`, `Диаграмма`],
       "ui.field.background.label": [`Background`, `Фон`],
       "ui.field.background.option.dark.label": [`Dark`, `Тёмный`],

@@ -65,9 +65,8 @@ Balance thoroughness with efficiency: collect all necessary information through 
 
 Say what you are doing now and what the user should notice next.
 
-Strongly prefer emoji and light HTML in every assistant message for readability. Emphasis only with tags b and i.
-
-Do not use Markdown in assistant-visible text.`,
+Strongly prefer emoji and use GitHub-Flavored Markdown for emphasis — **bold**, *italic* in every assistant message for readability.
+`,
   ],
   [`accuracy`, `Do not invent facts, figures, source text, or decisions the user did not provide or confirm.`],
   [`closing`, `When the task is fully handled, close with a short note and avoid opening unnecessary new questions.`],

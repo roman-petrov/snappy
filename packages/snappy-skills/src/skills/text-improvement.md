@@ -31,12 +31,13 @@ Improve an existing text while preserving intent and adapting quality to a targe
 - Length policy (shorter, same, expanded with limit).
 - Must-keep facts, terminology, and legal sensitivity.
 - Structural preference (plain text, bullets, sections, CTA).
+- Emoji and formatting intensity (plain text vs GitHub-Flavored Markdown: **bold**, _italic_, lists, ## headings).
 - Degree of transformation (light edit vs deep rewrite).
 
 ## Clarification Strategy
 
-1. Minimum baseline: get source text, objective, audience, and transformation intensity.
-2. Constraint locking: confirm keep/remove rules, tone boundaries, and format requirements.
+1. Minimum baseline: get source text, objective, audience, transformation intensity, and formatting intensity.
+2. Constraint locking: confirm keep/remove rules, tone boundaries, emoji/format rules, and GFM vs plain text.
 3. Final validation: recheck factual integrity and completion criteria before rewrite.
 
 ## Quality Checklist
@@ -46,6 +47,7 @@ Improve an existing text while preserving intent and adapting quality to a targe
 - Tone matches audience and channel.
 - Redundancy and filler are reduced.
 - Output respects explicit constraints and kept terms.
+- Formatting matches the chosen intensity (GitHub-Flavored Markdown when markup is on).
 
 ## Common Failure Modes And Prevention
 

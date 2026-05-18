@@ -40,10 +40,6 @@ export * from "./RichCard";
 
 export * from "./SafeArea";
 
-export * from "./StreamingText";
-
-export * from "./StreamingTextCursor";
-
 export * from "./Switch";
 
 export * from "./SwitchDisplay";

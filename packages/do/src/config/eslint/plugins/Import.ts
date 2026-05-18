@@ -1,7 +1,7 @@
 import pluginImport from "eslint-plugin-import";
 import { defineConfig } from "eslint/config";
 
-const reactPackages = [`**/packages/app/**`, `**/packages/site/**`, `**/packages/ui/**`];
+const reactPackages = [`ai-stream`, `app`, `site`, `ui`];
 
 export default defineConfig([
   {
@@ -27,5 +27,8 @@ export default defineConfig([
     },
     settings: { "import/resolver": { node: true, typescript: true } },
   },
-  { files: reactPackages, settings: { "import/core-modules": [`react`, `react-dom`, `react-dom/client`] } },
+  {
+    files: reactPackages.map(name => `**/packages/${name}/**`),
+    settings: { "import/core-modules": [`react`, `react-dom`, `react-dom/client`] },
+  },
 ]);

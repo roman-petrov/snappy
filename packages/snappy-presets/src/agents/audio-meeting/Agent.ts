@@ -2,8 +2,11 @@
 /* jscpd:ignore-start */
 import { StaticAudioAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+import { UiCommon } from "../../UiCommon";
+
 export const Agent = StaticAudioAgent(
-  ({ maxSpeechFileMegaBytes }) =>
+  () =>
     ({
       "meta.description": [
         `Meeting recording → structured notes, decisions, actions`,
@@ -15,21 +18,12 @@ export const Agent = StaticAudioAgent(
       ],
       "meta.title": [`Meeting notes`, `Протокол встречи`],
       "ui.field.addEmoji.label": [`Emoji`, `Эмодзи`],
-      "ui.field.addEmoji.promptOff": [`No emoji.`, `Без эмодзи.`],
-      "ui.field.addEmoji.promptOn": [
-        `Use emoji sparingly for section cues only.`,
-        `Эмодзи умеренно, только как маркеры разделов.`,
-      ],
+      "ui.field.addEmoji.promptOff": Prompts.emoji.off,
+      "ui.field.addEmoji.promptOn": Prompts.emoji.on.moderate,
       "ui.field.addFormatting.label": [`Markup`, `Разметка`],
-      "ui.field.addFormatting.promptOff": [
-        `Plain text with clear headings as lines (e.g. ALL CAPS lines).`,
-        `Простой текст с явными заголовками строками (например ЗАГЛАВНЫМИ).`,
-      ],
-      "ui.field.addFormatting.promptOn": [
-        `Use HTML: <h2>/<h3> for sections, <ul>/<li> for lists, <strong> for emphasis.`,
-        `HTML: <h2>/<h3> для разделов, <ul>/<li> для списков, <strong> для акцента.`,
-      ],
-      "ui.field.audio.hint": [`Max ${maxSpeechFileMegaBytes} MB`, `До ${maxSpeechFileMegaBytes} МБ`],
+      "ui.field.addFormatting.promptOff": Prompts.formatting.off,
+      "ui.field.addFormatting.promptOn": Prompts.formatting.on,
+      "ui.field.audio.hint": UiCommon.audioFileHint,
       "ui.field.audio.label": [`Meeting recording`, `Запись встречи`],
       "ui.field.audio.pickLabel": [`Choose file`, `Выбрать файл`],
       "ui.field.context.label": [`Context (optional)`, `Контекст (необязательно)`],

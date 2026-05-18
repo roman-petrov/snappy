@@ -20,6 +20,7 @@ export const useTextCardState = ({
 }: TextCardProps) => {
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
+  const copyHtml = useRef(``);
   const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
   const empty = html.trim() === ``;
   const streaming = busy || generating;
@@ -43,36 +44,36 @@ export const useTextCardState = ({
     }
   }, [busy, canRegenerate, empty]);
 
-  const stream = useMemo(() => {
-    if (!streaming || ai === undefined || model === undefined || prompt.trim() === ``) {
-      return undefined;
-    }
-
-    return (async function* textStream(): AsyncGenerator<string> {
-      let next = ``;
-      try {
-        const session = ai.chat.completions.create({
-          model,
-          prompt,
-          ...(generating ? { reasoningEffort: `none` } : {}),
-        });
-        for await (const part of session.chatText()) {
-          if (part !== ``) {
-            next += part;
-            yield part;
+  const content = useMemo((): AsyncIterable<string> | string => {
+    if (streaming && ai !== undefined && model !== undefined && prompt.trim() !== ``) {
+      return (async function* textStream(): AsyncGenerator<string> {
+        let next = ``;
+        try {
+          const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
+          for await (const part of session.chatText()) {
+            if (part !== ``) {
+              next += part;
+              yield part;
+            }
+          }
+          await session.cost();
+          await Promise.resolve(onGenerated?.(next));
+        } catch (error) {
+          onError?.(error);
+        } finally {
+          if (busy) {
+            setBusy(false);
           }
         }
-        await session.cost();
-        await Promise.resolve(onGenerated?.(next));
-      } catch (error) {
-        onError?.(error);
-      } finally {
-        if (busy) {
-          setBusy(false);
-        }
-      }
-    })();
-  }, [ai, busy, generating, model, onError, onGenerated, prompt, streaming]);
+      })();
+    }
+
+    return html;
+  }, [ai, busy, html, model, onError, onGenerated, prompt, streaming]);
+
+  const onHtml = useCallback((text: string) => {
+    copyHtml.current = text;
+  }, []);
 
   const actions = useMemo<MenuAction[]>(() => {
     const base: MenuAction[] = [
@@ -87,14 +88,14 @@ export const useTextCardState = ({
             } satisfies MenuAction,
           ]
         : []),
-      { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(html), tip: t(`feedCard.copy`) },
-      { icon: `share`, key: `share`, onClick: async () => Share.html(html), tip: t(`feedCard.share`) },
+      { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(copyHtml.current), tip: t(`feedCard.copy`) },
+      { icon: `share`, key: `share`, onClick: async () => Share.html(copyHtml.current), tip: t(`feedCard.share`) },
     ];
 
     return onDelete === undefined
       ? base
       : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
-  }, [busy, canRegenerate, html, onDelete, regenerate]);
+  }, [busy, canRegenerate, onDelete, regenerate]);
 
-  return { actions, active, html, stream };
+  return { actions, active, content, onHtml };
 };

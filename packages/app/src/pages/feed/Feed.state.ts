@@ -51,7 +51,7 @@ export const useFeedState = () => {
   useAsyncEffect(async () => {
     const config = AgentAiFromSettings(await trpc.user.settings.get.query());
     setAiConfig(config);
-    setAi(await Ai({ ...config.options }));
+    setAi(Ai(config.options));
   }, []);
 
   const onGenerationError = (error: unknown) => {

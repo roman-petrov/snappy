@@ -2,8 +2,11 @@
 /* jscpd:ignore-start */
 import { StaticAudioAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+import { UiCommon } from "../../UiCommon";
+
 export const Agent = StaticAudioAgent(
-  ({ maxSpeechFileMegaBytes }) =>
+  () =>
     ({
       "meta.description": [
         `Transcribe audio and get a tailored summary`,
@@ -15,18 +18,12 @@ export const Agent = StaticAudioAgent(
       ],
       "meta.title": [`Audio summary`, `Резюме аудио`],
       "ui.field.addEmoji.label": [`Emoji`, `Эмодзи`],
-      "ui.field.addEmoji.promptOff": [`No emoji.`, `Без эмодзи.`],
-      "ui.field.addEmoji.promptOn": [
-        `Use emoji where they reinforce meaning; keep the text readable.`,
-        `Эмодзи там, где усиливают смысл; текст остаётся читаемым.`,
-      ],
+      "ui.field.addEmoji.promptOff": Prompts.emoji.off,
+      "ui.field.addEmoji.promptOn": Prompts.emoji.on.moderate,
       "ui.field.addFormatting.label": [`Markup`, `Разметка`],
-      "ui.field.addFormatting.promptOff": [`Plain text only (no HTML).`, `Только простой текст (без HTML).`],
-      "ui.field.addFormatting.promptOn": [
-        `Use HTML for structure: <strong>/<b>, <em>/<i>, <ul>/<ol>/<li>; headings <h2>–<h6> only if they help scanning.`,
-        `HTML: <strong>/<b>, <em>/<i>, <ul>/<ol>/<li>; заголовки <h2>–<h6> только если помогают сканированию.`,
-      ],
-      "ui.field.audio.hint": [`Max ${maxSpeechFileMegaBytes} MB`, `До ${maxSpeechFileMegaBytes} МБ`],
+      "ui.field.addFormatting.promptOff": Prompts.formatting.off,
+      "ui.field.addFormatting.promptOn": Prompts.formatting.on,
+      "ui.field.audio.hint": UiCommon.audioFileHint,
       "ui.field.audio.label": [`Audio file`, `Аудиофайл`],
       "ui.field.audio.pickLabel": [`Choose file`, `Выбрать файл`],
       "ui.field.context.label": [`Context (optional)`, `Контекст (необязательно)`],

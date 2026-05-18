@@ -6,6 +6,7 @@
   "main": "./src/main.tsx",
   "dependencies": {
     "@snappy/ai": "workspace:*",
+    "@snappy/ai-stream": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",

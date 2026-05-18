@@ -35,7 +35,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale, onRunningChange }: SnappyA
           return;
         }
         const initialMessages: AiChatMessage[] = [{ content: text, role: `user` }];
-        const aiClient = await Ai({ ...aiConfig.options });
+        const aiClient = Ai(aiConfig.options);
 
         const agent = AgentRuntime({
           ai: aiClient,
@@ -56,7 +56,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale, onRunningChange }: SnappyA
 
         const runInstance = agent.start(initialMessages);
         stopRun = runInstance.stop;
-        registerAppendUser(text => runInstance.appendUserText(text));
+        registerAppendUser(userText => runInstance.appendUserText(userText));
 
         const handleStreamPart = (part: AgentStreamPart) => {
           switch (part.type) {

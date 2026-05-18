@@ -2,6 +2,8 @@
 /* jscpd:ignore-start */
 import { StaticTextAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticTextAgent(
   () =>
     ({
@@ -12,17 +14,11 @@ export const Agent = StaticTextAgent(
       ],
       "meta.title": [`Improve text`, `Улучшение текста`],
       "ui.field.addEmoji.label": [`Emoji`, `Эмодзи`],
-      "ui.field.addEmoji.promptOff": [`Omit emoji.`, `Без эмодзи.`],
-      "ui.field.addEmoji.promptOn": [
-        `Add emoji generously: several per section or paragraph where they fit meaning; place them to reinforce tone, not at random. Keep lines readable—do not crowd them or replace words with emoji alone.`,
-        `Добавляй эмодзи щедро: по нескольку на абзац или блок, где они усиливают смысл; не хаотично. Строки должны оставаться читаемыми — не перегружай и не заменяй слова одними эмодзи.`,
-      ],
+      "ui.field.addEmoji.promptOff": Prompts.emoji.off,
+      "ui.field.addEmoji.promptOn": Prompts.emoji.on.generous,
       "ui.field.addFormatting.label": [`Markup`, `Разметка`],
-      "ui.field.addFormatting.promptOff": [`Plain text only (no HTML tags).`, `Только простой текст (без HTML).`],
-      "ui.field.addFormatting.promptOn": [
-        `Use HTML for structure: <strong> or <b> for emphasis, <em> or <i> for italic, lists with <ul>/<ol> and <li>; add <h2>–<h6> only if they aid scanning.`,
-        `Используй HTML: <strong> или <b> для акцента, <em> или <i> для курсива, списки <ul>/<ol> и <li>; заголовки <h2>–<h6> только если помогают сканированию.`,
-      ],
+      "ui.field.addFormatting.promptOff": Prompts.formatting.off,
+      "ui.field.addFormatting.promptOn": Prompts.formatting.on,
       "ui.field.length.label": [`Length`, `Длина`],
       "ui.field.length.option.extend.label": [`Longer`, `Длиннее`],
       "ui.field.length.option.extend.prompt": [

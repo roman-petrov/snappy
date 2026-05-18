@@ -13,14 +13,9 @@ export const useSettingsModelIds = (modelType: AiModelType) => {
 
   useAsyncEffect(async () => {
     const settings = await trpc.user.settings.get.query();
-    const ai = await Ai({ ...AgentAiFromSettings(settings).options });
+    const ai = Ai(AgentAiFromSettings(settings).options);
 
-    setIds(
-      ai.models
-        .list()
-        .filter(model => model.type === modelType)
-        .map(model => model.name),
-    );
+    setIds(ai.models.filter(model => model.type === modelType).map(model => model.name));
     setSettingsResponse(settings);
   }, [modelType]);
 

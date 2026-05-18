@@ -36,7 +36,8 @@ styled by selected emoji/formatting intensity.
 - Optional recipient name and addressing style.
 - Tone and target length.
 - Emoji intensity (minimal / medium / rich).
-- Formatting intensity (minimal / medium / rich, using HTML tags where needed).
+- Formatting intensity (minimal / medium / rich, using GitHub-Flavored Markdown: **bold**, _italic_, lists, ##
+  headings).
 - Recipient and sender gender where applicable for grammar/style.
 - Optional personalization anchors (facts, milestones, hobbies, shared context).
 
@@ -66,7 +67,8 @@ styled by selected emoji/formatting intensity.
 - Do not skip style choices even if the user did not ask directly.
 - The generated greeting must always include:
   - emoji according to selected intensity;
-  - formatting according to selected intensity.
+  - GitHub-Flavored Markdown according to selected formatting intensity (minimal = light emphasis; rich = headings,
+    lists, and structure throughout).
 - If user requests strict plain text, clarify conflict and ask whether to override the mandatory style policy.
 
 ## Gender Applicability Rule (General)

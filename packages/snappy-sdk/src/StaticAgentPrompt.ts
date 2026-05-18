@@ -45,7 +45,9 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
 
         return labelLine(field.label.text, label);
       }
-      // No default
+      default: {
+        return undefined;
+      }
     }
   };
 

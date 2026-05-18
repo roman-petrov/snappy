@@ -45,7 +45,7 @@ const promptChoice = async <TChoice extends AiModelListItem>({
   }
 };
 
-const prompt = async ({ models, t }: { models: AiModelListItem[]; t: TFunction }) => {
+const prompt = async ({ models, t }: { models: readonly AiModelListItem[]; t: TFunction }) => {
   const chatChoices = models
     .filter(model => model.type === `chat`)
     .map(model => ({ label: `${model.source} · ${model.name}`, model }));

@@ -3,19 +3,12 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Locale } from "@snappy/intl";
 
-import { AiConstants } from "@snappy/ai";
-
 import type { StaticFormPlan } from "../Schema";
 import type { AgentAiConfig, AgentEntry, AgentFeedRuntime, AgentGroupId } from "../Types";
 
-export type StaticAgentMetaParameters = { maxImagePromptLength: number; maxSpeechFileMegaBytes: number };
-
 type Localization = Record<string, readonly [string, string]>;
 
-type StaticAgentMetaCreateInput<TLocalization extends Localization> = {
-  i18n: (key: keyof TLocalization) => string;
-  parameters: StaticAgentMetaParameters;
-};
+type StaticAgentMetaCreateInput<TLocalization extends Localization> = { i18n: (key: keyof TLocalization) => string };
 
 type StaticAgentMetaPayload = {
   description: string;
@@ -33,7 +26,6 @@ type StaticAgentRunInput = {
   feed: AgentFeedRuntime;
   isStopped: () => boolean;
   locale: Locale;
-  parameters: StaticAgentMetaParameters;
   plan: StaticFormPlan;
   prompt: string;
 };
@@ -41,16 +33,11 @@ type StaticAgentRunInput = {
 export const StaticAgent =
   (run: StaticAgentRun) =>
   <TLocalization extends Localization>(
-    localizationFactory: (parameters: StaticAgentMetaParameters) => TLocalization,
+    localizationFactory: () => TLocalization,
     create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload,
   ): AgentEntry =>
   locale => {
-    const parameters: StaticAgentMetaParameters = {
-      maxImagePromptLength: AiConstants.maxImagePromptLength,
-      maxSpeechFileMegaBytes: AiConstants.maxSpeechFileMegaBytes,
-    };
-
-    const localization = localizationFactory(parameters);
+    const localization = localizationFactory();
 
     const i18n = (key: keyof TLocalization) => {
       const value = localization[key];
@@ -63,7 +50,7 @@ export const StaticAgent =
       return locale === `ru` ? ru : en;
     };
 
-    const { plan, prompt, ...meta } = create({ i18n, parameters });
+    const { plan, prompt, ...meta } = create({ i18n });
 
     return {
       meta,
@@ -76,7 +63,7 @@ export const StaticAgent =
             stopped = false;
             onRunningChange?.(true);
             try {
-              await run({ aiConfig, feed, isStopped, locale, parameters, plan, prompt });
+              await run({ aiConfig, feed, isStopped, locale, plan, prompt });
             } finally {
               onRunningChange?.(false);
             }

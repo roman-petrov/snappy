@@ -1,21 +1,13 @@
-import { Html } from "@snappy/browser";
-import { StreamingText } from "@snappy/ui";
+import { AiStream } from "@snappy/ai-stream";
 
 import type { useTextCardState } from "./TextCard.state";
 
 import { FeedCard } from "./FeedCard";
-import styles from "./TextCard.module.scss";
 
 export type TextCardViewProps = ReturnType<typeof useTextCardState>;
 
-export const TextCardView = ({ actions, active, html, stream }: TextCardViewProps) => (
+export const TextCardView = ({ actions, active, content, onHtml }: TextCardViewProps) => (
   <FeedCard actions={actions} active={active}>
-    {stream === undefined ? (
-      <div className={styles.richText} {...Html.text(html)} />
-    ) : (
-      <div className={styles.richText}>
-        <StreamingText stream={stream} />
-      </div>
-    )}
+    <AiStream onHtml={onHtml} stream={content} />
   </FeedCard>
 );

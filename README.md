@@ -43,7 +43,6 @@ is reachable at **home.local**.
 - 🎨 [Prettier](https://prettier.io/)
 - 🖌️ [Stylelint](https://stylelint.io/)
 - 📦 [Zod](https://zod.dev/)
-- 🤖 [Vercel AI SDK](https://ai-sdk.dev/)
 
 ## 🤖 AI (recommended)
 

@@ -32,8 +32,8 @@ try {
   const dbDirResolved = path.resolve(dbDir);
   const aiTunnelKey = process.env[`AI_TUNNEL_API_KEY`] ?? ``;
   const t = makeLocaleT(locale);
-  const ai = await Ai({ aiTunnelKey });
-  const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models.list(), t });
+  const ai = Ai({ aiTunnelKey });
+  const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models, t });
 
   const db = await CoderDb({
     aiEmbeddings: ai.embeddings,

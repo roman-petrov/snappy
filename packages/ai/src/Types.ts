@@ -61,7 +61,7 @@ export type AiTool<INPUT = unknown> = {
   inputSchema: z.ZodType<INPUT>;
 };
 
-export type AiToolCall = { input: unknown; toolCallId: string; toolName: string };
+export type AiToolCall = { argumentsJson: string; toolCallId: string; toolName: string };
 
 export type AiToolInput<T extends AiTool> = T extends AiTool<infer INPUT> ? INPUT : never;
 

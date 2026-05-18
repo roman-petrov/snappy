@@ -29,9 +29,7 @@ export const AgentTool = <TSchema extends z.ZodType>({
   inputSchema: TSchema;
 }): AgentTool<TSchema> => ({
   description: _.isString(description) ? description : StructuredPrompt(description),
-  execute: async args => execute(inputSchema.parse(args)),
+  execute,
   inputSchema,
-  ...(formatCall === undefined
-    ? {}
-    : { formatCall: (args, status, locale) => formatCall(inputSchema.parse(args), status, locale) }),
+  ...(formatCall === undefined ? {} : { formatCall }),
 });

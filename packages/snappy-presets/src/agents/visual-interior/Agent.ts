@@ -2,17 +2,19 @@
 /* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
+import { Prompts } from "../../Prompts";
+
 export const Agent = StaticVisualAgent(
-  ({ maxImagePromptLength }) =>
+  () =>
     ({
       "meta.description": [
         `Room render for renovation planning — style, palette, light, staging`,
         `Визуализация комнаты под ремонт — стиль, палитра, свет, наполнение`,
       ],
-      "meta.prompt": [
-        `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; watermarks; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition. Hard limit: keep the final prompt string at or below ${maxImagePromptLength} characters; compress wording if needed. Reply with that string only—no other text.`,
-        `Собери **один** промпт для генерации изображения. Каждый пункт ниже — жёсткое ограничение. Цель: **одна** визуализация интерьера для планирования ремонта — фотореализм или премиум 3D-рендер. Исключи: планы этажей, чертежи, вид сверху, изометрические «разрезы», только фасад. Объедини: тип комнаты, стиль, **палитра по названию вкладок**, наполнение, пол, свет, ракурс. Уточнение с предметами/материалами/цветами вплети без противоречий вкладкам. Запрет: люди и питомцы, если явно не запрошено; водяные знаки; читаемые логотипы; плакаты с текстом — только абстракция или фактура. Требуй чёткие материалы, масштаб, композицию. Лимит: не длиннее ${maxImagePromptLength} символов; сожми при необходимости. Ответь только этой строкой.`,
-      ],
+      "meta.prompt": Prompts.visual.joinMeta([
+        `Build **one** image-generation prompt. Use every bullet below as hard constraints. Target: **single interior visualization** for renovation planning—photorealistic architectural photo or high-end interior 3D render. Exclude: floor plans, blueprints, top-down layouts, isometric dollhouse cutaways, exterior-only shots. Merge: room type, design style, **exact palette named in the tabs**, staging level, floor material, lighting recipe, camera framing. If optional detail names objects, materials, or colors, weave them in without contradicting the tabs. Forbid: people and pets unless optional detail explicitly requests them; readable brand logos on products; posters or signs with legible words—use abstract art or texture only. Demand crisp materials, believable scale, clean composition.`,
+        `Собери **один** промпт для генерации изображения. Каждый пункт ниже — жёсткое ограничение. Цель: **одна** визуализация интерьера для планирования ремонта — фотореализм или премиум 3D-рендер. Исключи: планы этажей, чертежи, вид сверху, изометрические «разрезы», только фасад. Объедини: тип комнаты, стиль, **палитра по названию вкладок**, наполнение, пол, свет, ракурс. Уточнение с предметами/материалами/цветами вплети без противоречий вкладкам. Запрет: люди и питомцы, если явно не запрошено; читаемые логотипы; плакаты с текстом — только абстракция или фактура. Требуй чёткие материалы, масштаб, композицию.`,
+      ]),
       "meta.title": [`Interior`, `Интерьер`],
       "ui.field.camera.label": [`Camera`, `Камера`],
       "ui.field.camera.option.corner.label": [`Corner`, `Из угла`],
