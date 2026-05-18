@@ -1,10 +1,4 @@
-@use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/typography";
-
 .rich-text {
-  @include typography.body;
-
-  color: color.text();
   overflow-wrap: anywhere;
   white-space: normal;
 }

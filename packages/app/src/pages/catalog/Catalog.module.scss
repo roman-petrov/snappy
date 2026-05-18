@@ -1,28 +1,19 @@
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/typography" as typography;
 
-.action-row {
-  display: flex;
-  justify-content: flex-end;
-  padding: space.xs();
-}
-
-.snappy-section {
-  display: flex;
-  flex-direction: column;
-  gap: space.sm();
+.root {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: space.md();
   width: 100%;
   padding: 0 space.md() space.md();
 }
 
-.snappy-heading {
-  @include typography.h3;
-
-  margin: 0;
+.head {
+  display: flex;
+  grid-column: 1 / -1;
+  justify-content: flex-end;
 }
 
-.snappy-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: space.md();
+.heading {
+  grid-column: 1 / -1;
 }

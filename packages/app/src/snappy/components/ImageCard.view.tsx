@@ -15,7 +15,7 @@ export const ImageCardView = ({ actions, active, busy, empty, emptyText, src }: 
         <span className={styles.spinner}>
           <Icon name="wand_stars" />
         </span>
-        <p className={styles.emptyText}>{emptyText}</p>
+        <p>{emptyText}</p>
       </div>
     ) : (
       <>

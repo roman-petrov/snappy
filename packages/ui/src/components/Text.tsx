@@ -36,9 +36,7 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
 
 export const Text = ({ as, cn = ``, color = `text`, html = false, text, typography = `body`, ...rest }: TextProps) => {
   const Tag = as ?? typographyTag[typography];
-  const typographyClass = $.typography(typography);
-  const colorClass = $.color(color);
-  const className = _.cn(typographyClass, colorClass, cn);
+  const className = _.cn($.typography(typography), $.color(color), cn);
 
   if (html) {
     return <Tag className={className} {...Html.text(text)} {...rest} />;

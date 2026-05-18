@@ -45,7 +45,6 @@
     color: color.primary();
   }
 
-  color: color.text();
   border-radius: radius.lg();
   transition: color var(--ease);
 }
@@ -62,7 +61,6 @@
     }
   }
 
-  color: color.text();
   transition: color var(--ease);
 
   &::before {

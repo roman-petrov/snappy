@@ -11,7 +11,7 @@ export type BalanceTapViewProps = ReturnType<typeof useBalanceTapState>;
 
 export const BalanceTapView = ({ label }: BalanceTapViewProps) => (
   <Tap
-    cn={_.cn($.tap(`soft`), $.radius(`lg`), styles.root)}
+    cn={_.cn($.tap(`soft`), $.radius(`lg`), $.typography(`captionSm`), styles.root)}
     link={Routes.balance.topUp}
     tip={t(`balance.common.tapTip`)}
   >

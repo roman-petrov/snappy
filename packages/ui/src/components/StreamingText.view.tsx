@@ -9,7 +9,7 @@ import styles from "./StreamingText.module.scss";
 export type StreamingTextViewProps = ReturnType<typeof useStreamingTextState>;
 
 export const StreamingTextView = ({ color, parts, streaming, typography }: StreamingTextViewProps) => (
-  <div className={_.cn(styles.text, $.typography(typography ?? `body`), color === undefined ? `` : $.color(color))}>
+  <div className={_.cn(styles.text, $.typography(typography), $.color(color))}>
     {parts.map((text, index) => (
       <span className={styles.chunk} key={index} {...Html.text(text)} />
     ))}

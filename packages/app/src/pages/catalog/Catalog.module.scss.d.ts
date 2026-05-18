@@ -1,7 +1,6 @@
 declare const __Catalog: {
-  readonly actionRow: "actionRow";
-  readonly snappySection: "snappySection";
-  readonly snappyHeading: "snappyHeading";
-  readonly snappyGrid: "snappyGrid";
+  readonly root: "root";
+  readonly head: "head";
+  readonly heading: "heading";
 };
 export default __Catalog;

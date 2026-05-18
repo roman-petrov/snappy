@@ -15,14 +15,4 @@
 
 .muted {
   @include focus($radius: radius.xs());
-
-  @include hover {
-    color: color.text();
-
-    * {
-      color: inherit;
-    }
-  }
-
-  color: color.text();
 }

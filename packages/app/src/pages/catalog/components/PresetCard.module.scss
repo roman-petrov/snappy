@@ -2,7 +2,6 @@
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/surface";
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/typography" as typography;
 
 .root {
   display: flex;
@@ -31,16 +30,4 @@
   display: flex;
   flex-direction: column;
   gap: space.xs();
-}
-
-.title {
-  @include typography.h3;
-
-  margin: 0;
-}
-
-.desc {
-  @include typography.caption;
-
-  margin: 0;
 }

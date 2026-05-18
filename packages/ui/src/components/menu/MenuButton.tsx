@@ -14,6 +14,6 @@ export type MenuButtonProps = Omit<TapProps, `children` | `cn` | `tip` | `vibrat
 export const MenuButton = ({ color, icon, tip, ...tapProps }: MenuButtonProps) => (
   <Tap {...tapProps} cn={_.cn($.tap(`soft`), $.radius(`lg`), styles.root)} tip={tip} vibrate="confirm">
     <Icon color={color} name={icon} />
-    <span className={styles.label}>{tip}</span>
+    <span className={$.typography(`bodySm`)}>{tip}</span>
   </Tap>
 );

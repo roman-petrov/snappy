@@ -11,6 +11,6 @@ export const SettingsCardRow = ({ end, icon, text, ...tapProps }: SettingsCardRo
   <Tap {...tapProps} cn={_.cn($.tap(`menu`), styles.row)}>
     <Icon name={icon} />
     <span>{text}</span>
-    {end === undefined ? undefined : _.isObject(end) ? end : <span className={styles.rowValue}>{end}</span>}
+    {end === undefined ? undefined : _.isObject(end) ? end : <span className={$.typography(`bodySm`)}>{end}</span>}
   </Tap>
 );

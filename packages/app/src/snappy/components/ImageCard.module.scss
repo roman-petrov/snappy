@@ -1,7 +1,6 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/typography";
 
 .image {
   display: block;
@@ -14,11 +13,6 @@
   gap: space.sm();
   place-items: center;
   min-height: r(256);
-}
-
-.empty-text {
-  @include typography.body;
-
   text-align: center;
 }
 

@@ -18,6 +18,7 @@ export const Button = ({ cn = ``, icon, large = false, text, type = `default`, .
     {...tapProps}
     cn={_.cn(
       styles.root,
+      $.typography(large ? `buttonLarge` : `button`),
       type === `primary` ? $.tap(`accent`) : $.tap(`soft`),
       $.radius(`md`),
       large && styles.large,

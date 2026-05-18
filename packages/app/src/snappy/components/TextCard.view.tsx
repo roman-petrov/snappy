@@ -14,7 +14,7 @@ export const TextCardView = ({ actions, active, html, stream }: TextCardViewProp
       <div className={styles.richText} {...Html.text(html)} />
     ) : (
       <div className={styles.richText}>
-        <StreamingText color="text" stream={stream} typography="body" />
+        <StreamingText stream={stream} />
       </div>
     )}
   </FeedCard>

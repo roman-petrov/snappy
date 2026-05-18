@@ -15,7 +15,7 @@ export const Icon = ({ cn, color, name, size = `md` }: IconProps) => (
       styles.root,
       $.iconSize(size),
       _.isString(name) ? styles.material : styles.emoji,
-      color === undefined ? `` : $.color(color),
+      $.color(color),
       cn,
     )}
   >

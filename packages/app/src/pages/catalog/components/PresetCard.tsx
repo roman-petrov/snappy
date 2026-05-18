@@ -1,4 +1,4 @@
-import { CardButton, type CardButtonProps } from "@snappy/ui";
+import { $, CardButton, type CardButtonProps } from "@snappy/ui";
 
 import styles from "./PresetCard.module.scss";
 
@@ -12,8 +12,8 @@ export const PresetCard = ({ description, emoji, title, ...tapProps }: PresetCar
   <CardButton {...tapProps} cn={styles.root}>
     <span className={styles.emoji}>{emoji}</span>
     <span className={styles.body}>
-      <span className={styles.title}>{title}</span>
-      <span className={styles.desc}>{description}</span>
+      <span className={$.typography(`h3`)}>{title}</span>
+      <span className={$.typography(`caption`)}>{description}</span>
     </span>
   </CardButton>
 );

@@ -15,7 +15,7 @@ export const AgentView = ({ session }: AgentViewProps) =>
     <Navigate replace to={Routes.home} />
   ) : (
     <Page title={session.title}>
-      <div className={styles.actionRow}>
+      <div className={styles.head}>
         <Button onClick={session.onStop} text={t(`agent.stop`)} />
       </div>
       {session.balanceLow ? (

@@ -34,7 +34,6 @@
   left: space.md();
   padding: 0;
   line-height: 1.5;
-  color: color.text();
   pointer-events: none;
   background: transparent;
   border-radius: 0;
@@ -105,20 +104,12 @@
   width: 100%;
   height: tokens.field-height();
   padding: space.sm() space.md();
-  color: color.text();
-  background: transparent;
-}
-
-.input::placeholder {
-  color: color.text();
 }
 
 .input-inside-wrap {
   flex: 1 1 0;
   width: 0;
   min-width: 0;
-  color: color.text();
-  background: transparent;
   border: none;
 }
 

@@ -20,12 +20,12 @@ export type TapKey = keyof typeof tapStyles;
 
 export type Typography = keyof typeof typographyStyles;
 
-const color = (name: Color) => colorStyles[name];
+const color = (name?: Color) => (name === undefined ? `` : colorStyles[name]);
 const elevation = (name: Elevation) => elevationStyles[name];
 const iconSize = (name: IconSize) => iconSizeStyles[name];
 const radius = (name: Radius) => radiusStyles[name];
 const surface = (name: Surface) => surfaceStyles[name];
 const tap = (name: TapKey) => tapStyles[name];
-const typography = (name: Typography) => typographyStyles[name];
+const typography = (name?: Typography) => (name === undefined || name === `body` ? `` : typographyStyles[name]);
 
 export const $ = { color, elevation, iconSize, radius, surface, tap, typography };

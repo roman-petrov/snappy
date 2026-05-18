@@ -2,7 +2,6 @@ import { _ } from "@snappy/core";
 
 import type { useInputState } from "./Input.state";
 
-import { $ } from "../$";
 import styles from "./Input.module.scss";
 
 export type InputViewProps = ReturnType<typeof useInputState>;
@@ -22,7 +21,7 @@ export const InputView = ({
   value,
 }: InputViewProps) => {
   const hasValue = value.length > 0;
-  const inputClassName = _.cn(styles.input, $.typography(`body`), styles.inputInsideWrap);
+  const inputClassName = _.cn(styles.input, styles.inputInsideWrap);
 
   const inputElement = (
     <input

@@ -1,4 +1,3 @@
-@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
 
@@ -14,10 +13,8 @@
   margin: 0;
   overflow-y: hidden;
   scrollbar-gutter: stable;
-  color: color.text();
   resize: none;
   scrollbar-width: none;
-  background: transparent;
   border: none;
   transition: height tokens.ease();
   -webkit-overflow-scrolling: touch;
@@ -25,10 +22,6 @@
 
   &::-webkit-scrollbar {
     display: none;
-  }
-
-  &::placeholder {
-    color: color.text();
   }
 
   &:focus {

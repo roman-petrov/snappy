@@ -2,10 +2,8 @@
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
-@use "pkg:@snappy/theme/tokens/typography";
 
 .root {
-  @include typography.button;
   @include primitives.inline-row-center;
   @include focus;
 
@@ -15,8 +13,6 @@
   white-space: nowrap;
 
   &.large {
-    @include typography.button-large;
-
     padding: space.md() space.xl();
   }
 

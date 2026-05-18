@@ -1,6 +1,4 @@
-@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/typography";
 
 .root {
   display: flex;
@@ -9,15 +7,6 @@
   width: 100%;
 }
 
-.hint {
-  @include typography.caption;
-
-  color: color.text();
-}
-
 .file-name {
-  @include typography.caption;
-
-  color: color.text();
   word-break: break-all;
 }
