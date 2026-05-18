@@ -18,11 +18,10 @@ vi.mock(import(`@snappy/platform`), () => ({
     },
     copyHtml: vi.fn(),
     copyImage: vi.fn(),
-    copyText: vi.fn(),
     hapticImpact,
     setBarStyle: vi.fn(),
+    shareHtml: vi.fn(),
     shareImage: vi.fn(),
-    shareText: vi.fn(),
   },
 }));
 

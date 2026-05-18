@@ -8,6 +8,7 @@ import type {
   StaticFormAnswersOf,
   StaticFormPlan,
 } from "@snappy/snappy-sdk";
+import type { Color, Typography } from "@snappy/ui";
 import type { MutableRefObject } from "react";
 
 import { AiConstants } from "@snappy/ai";
@@ -97,7 +98,8 @@ const rowsFromEntries = (entries: AgentFeedItem[]): AgentFeedRow[] => {
         key,
         props: {
           ...base,
-          ai: externallyGenerating ? undefined : ai,
+          ai,
+          generating: externallyGenerating,
           html: artifact.html,
           model: model ?? artifact.model,
           onGenerated: html => onArtifactGenerated?.({ ...artifact, generationStatus: `done`, html, type: `text` }),
@@ -169,6 +171,18 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     commit(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
   };
 
+  const appendStream = (stream: AsyncIterable<string>, { color, typography }: { color: Color; typography: Typography }) => {
+    const key = nextKey();
+    pushEntry(key, {
+      color,
+      stream: streamClosedOnEnd(key, stream, commit),
+      type: `stream`,
+      typography,
+    });
+
+    return key;
+  };
+
   const updateArtifactEntry = (artifactId: string, patch: Partial<AgentArtifact>) => {
     commit(previous =>
       previous.map(item => {
@@ -205,27 +219,27 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
       type: `text`,
     };
 
-    const key = addEntry({ ai, artifact, model, type: `artifact` });
-
-    try {
-      const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
-      let html = ``;
-      for await (const part of session.chatText()) {
-        if (part !== ``) {
-          html += part;
-          updateArtifactEntry(artifactId, { generationStatus: `running`, html });
-        }
-      }
-      await session.cost();
-      const doneArtifact: AgentArtifact = { ...artifact, generationStatus: `done`, html };
-      replaceEntry(key, { ai, artifact: doneArtifact, model, type: `artifact` });
-      await getArtifactSink()?.publish(doneArtifact);
-
-      return { artifactId };
-    } catch (error) {
+    return new Promise<{ artifactId: string }>((resolve, reject) => {
+      const key = addEntry({
+        ai,
+        artifact,
+        model,
+        onArtifactError: reject,
+        onArtifactGenerated: async doneArtifact => {
+          replaceEntry(key, { ai, artifact: doneArtifact, model, type: `artifact` });
+          try {
+            await getArtifactSink()?.publish(doneArtifact);
+            resolve({ artifactId });
+          } catch (error) {
+            reject(error);
+          }
+        },
+        type: `artifact`,
+      });
+    }).catch(error => {
       failArtifactGeneration(artifactId, error);
       throw error;
-    }
+    });
   };
 
   const generateImage: AgentFeedHandle[`generateImage`] = async ({ ai, model, prompt, size }) => {
@@ -267,29 +281,9 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
   const handle: AgentFeedHandle = {
     appendArtifact: (artifact, options) =>
       addEntry({ ai: options?.ai, artifact, model: options?.model, type: `artifact` }),
-    appendChatStream: stream => {
-      const key = nextKey();
-      pushEntry(key, {
-        color: `text`,
-        stream: streamClosedOnEnd(key, stream, commit),
-        type: `stream`,
-        typography: `caption`,
-      });
-
-      return key;
-    },
+    appendChatStream: stream => appendStream(stream, { color: `text`, typography: `caption` }),
     appendForm: plan => addEntry({ plan, type: `form` }),
-    appendReasoningStream: stream => {
-      const key = nextKey();
-      pushEntry(key, {
-        color: `outline`,
-        stream: streamClosedOnEnd(key, stream, commit),
-        type: `stream`,
-        typography: `captionSm`,
-      });
-
-      return key;
-    },
+    appendReasoningStream: stream => appendStream(stream, { color: `outline`, typography: `captionSm` }),
     appendStatus: (text, finished) => addEntry({ finished, text, type: `status` }),
     appendToolBadge: (text, finished) => addEntry({ finished, text, type: `tool-badge` }),
     appendUserText: text => addEntry({ text, type: `user` }),

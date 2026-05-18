@@ -1,6 +1,8 @@
 export * from "./Bridge";
 
-export * from "./Clipboard";
+export * from "./Copy";
+
+export * from "./PlatformCommon";
 
 export * from "./Share";
 

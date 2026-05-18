@@ -6,6 +6,7 @@ import { TextCardView } from "./TextCard.view";
 export type TextCardProps = {
   active?: boolean;
   ai?: Ai;
+  generating?: boolean;
   html: string;
   model?: string;
   onDelete?: () => void;

@@ -44,62 +44,49 @@ public class Bridge {
     }
 
     @JavascriptInterface
-    public void copyText(String text) {
-        onUi(() -> clipboard().setPrimaryClip(ClipData.newPlainText("text", text)));
-    }
-
-    @JavascriptInterface
     public void copyHtml(String html, String plain) {
-        onUi(() -> clipboard().setPrimaryClip(ClipData.newHtmlText("html", plain, html)));
+        onUi(() -> {
+            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newHtmlText("html", plain, html));
+        });
     }
 
     @JavascriptInterface
-    public void copyImage(String src) {
-        onUi(() -> clipboard().setPrimaryClip(ClipData.newUri(activity.getContentResolver(), "image", imageUri(src))));
+    public void copyImage(String base64, String name, String ext) {
+        onUi(() -> {
+            Uri uri = cacheUri(base64, name, ext);
+            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newUri(activity.getContentResolver(), "image", uri));
+        });
     }
 
     @JavascriptInterface
-    public void shareText(String text, String title) {
+    public void shareHtml(String html, String plain, String title) {
         onUi(() -> {
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/plain");
-            intent.putExtra(Intent.EXTRA_TEXT, text);
+            intent.setType("text/html");
+            intent.putExtra(Intent.EXTRA_HTML_TEXT, html);
+            intent.putExtra(Intent.EXTRA_TEXT, plain);
             intent.putExtra(Intent.EXTRA_SUBJECT, title);
-            share(intent, title);
+            activity.startActivity(Intent.createChooser(intent, title));
         });
     }
 
     @JavascriptInterface
-    public void shareImage(String src, String title) {
+    public void shareImage(String base64, String mime, String title, String ext) {
         onUi(() -> {
+            Uri uri = cacheUri(base64, "share", ext);
             Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType(imageMime(src));
-            intent.putExtra(Intent.EXTRA_STREAM, imageUri(src));
+            intent.setType(mime);
+            intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            share(intent, title);
+            activity.startActivity(Intent.createChooser(intent, title));
         });
     }
 
-    private void share(Intent intent, String title) {
-        activity.startActivity(Intent.createChooser(intent, title));
-    }
-
-    private ClipboardManager clipboard() {
-        return (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-    }
-
-    private String imageMime(String src) {
-        int comma = src.indexOf(',');
-        String type = src.substring(5, comma).split(";")[0];
-        return type.isEmpty() ? "image/png" : type;
-    }
-
-    private Uri imageUri(String src) {
-        int comma = src.indexOf(',');
-        String type = imageMime(src);
-        String ext = type.contains("jpeg") || type.contains("jpg") ? "jpg" : "png";
-        File file = new File(activity.getCacheDir(), "clipboard." + ext);
-        byte[] data = Base64.decode(src.substring(comma + 1), Base64.DEFAULT);
+    private Uri cacheUri(String base64, String name, String ext) {
+        File file = new File(activity.getCacheDir(), name + "." + ext);
+        byte[] data = Base64.decode(base64, Base64.DEFAULT);
         try (FileOutputStream out = new FileOutputStream(file)) {
             out.write(data);
         } catch (IOException e) {

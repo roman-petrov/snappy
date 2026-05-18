@@ -1,6 +1,6 @@
 import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
-import { Clipboard, Share } from "@snappy/platform";
+import { Copy, Share } from "@snappy/platform";
 import { type MenuAction, useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -61,10 +61,6 @@ export const useImageCardState = ({
     }
   }, [ai, busy, model, onError, onGenerated, prompt]);
 
-  const onShare = useCallback(async () => {
-    await Share.image(src);
-  }, [src]);
-
   const actions = useMemo<MenuAction[]>(() => {
     const base: MenuAction[] = [
       ...(canRegenerate
@@ -84,17 +80,22 @@ export const useImageCardState = ({
             {
               icon: `content_copy`,
               key: `copy`,
-              onClick: async () => Clipboard.copyImage(src),
+              onClick: async () => Copy.image(src),
               tip: t(`feedCard.copy`),
             } satisfies MenuAction,
-            { icon: `share`, key: `share`, onClick: onShare, tip: t(`feedCard.share`) } satisfies MenuAction,
+            {
+              icon: `share`,
+              key: `share`,
+              onClick: async () => Share.image(src),
+              tip: t(`feedCard.share`),
+            } satisfies MenuAction,
           ]),
     ];
 
     return onDelete === undefined
       ? base
       : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
-  }, [busy, canRegenerate, empty, onDelete, onShare, regenerate, src]);
+  }, [busy, canRegenerate, empty, onDelete, regenerate, src]);
 
   return { actions, active, busy, empty, emptyText: t(`feedCard.generatingImage`), src };
 };

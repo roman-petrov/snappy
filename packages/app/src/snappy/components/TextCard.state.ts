@@ -1,6 +1,6 @@
 import type { MenuAction } from "@snappy/ui";
 
-import { Clipboard, Share } from "@snappy/platform";
+import { Copy, Share } from "@snappy/platform";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { TextCardProps } from "./TextCard";
@@ -10,6 +10,7 @@ import { t } from "../../locales";
 export const useTextCardState = ({
   active = false,
   ai,
+  generating = false,
   html,
   model,
   onDelete,
@@ -19,8 +20,9 @@ export const useTextCardState = ({
 }: TextCardProps) => {
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
-  const canRegenerate = ai !== undefined && model !== undefined && prompt.trim() !== ``;
+  const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
   const empty = html.trim() === ``;
+  const streaming = busy || generating;
 
   const regenerate = useCallback(() => {
     if (canRegenerate) {
@@ -41,26 +43,19 @@ export const useTextCardState = ({
     }
   }, [busy, canRegenerate, empty]);
 
-  const stripHtml = (value: string) =>
-    value
-      .replaceAll(/<[^<>]*>/gu, ` `)
-      .replaceAll(/\s+/gu, ` `)
-      .trim();
-
-  const onShare = useCallback(async () => {
-    const text = stripHtml(html);
-    await Share.text(text);
-  }, [html]);
-
   const stream = useMemo(() => {
-    if (!busy || ai === undefined || model === undefined || prompt.trim() === ``) {
+    if (!streaming || ai === undefined || model === undefined || prompt.trim() === ``) {
       return undefined;
     }
 
     return (async function* textStream(): AsyncGenerator<string> {
       let next = ``;
       try {
-        const session = ai.chat.completions.create({ model, prompt });
+        const session = ai.chat.completions.create({
+          model,
+          prompt,
+          ...(generating ? { reasoningEffort: `none` } : {}),
+        });
         for await (const part of session.chatText()) {
           if (part !== ``) {
             next += part;
@@ -72,10 +67,12 @@ export const useTextCardState = ({
       } catch (error) {
         onError?.(error);
       } finally {
-        setBusy(false);
+        if (busy) {
+          setBusy(false);
+        }
       }
     })();
-  }, [ai, busy, model, onError, onGenerated, prompt]);
+  }, [ai, busy, generating, model, onError, onGenerated, prompt, streaming]);
 
   const actions = useMemo<MenuAction[]>(() => {
     const base: MenuAction[] = [
@@ -90,14 +87,14 @@ export const useTextCardState = ({
             } satisfies MenuAction,
           ]
         : []),
-      { icon: `content_copy`, key: `copy`, onClick: async () => Clipboard.copyHtml(html), tip: t(`feedCard.copy`) },
-      { icon: `share`, key: `share`, onClick: onShare, tip: t(`feedCard.share`) },
+      { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(html), tip: t(`feedCard.copy`) },
+      { icon: `share`, key: `share`, onClick: async () => Share.html(html), tip: t(`feedCard.share`) },
     ];
 
     return onDelete === undefined
       ? base
       : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
-  }, [busy, canRegenerate, html, onDelete, onShare, regenerate]);
+  }, [busy, canRegenerate, html, onDelete, regenerate]);
 
-  return { actions, active, busy, html, stream };
+  return { actions, active, html, stream };
 };
