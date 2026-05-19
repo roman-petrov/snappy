@@ -55,6 +55,7 @@ public class MainActivity extends ComponentActivity {
         View container = findViewById(R.id.webview_container);
         View splash = findViewById(R.id.splash);
         WebView webView = findViewById(R.id.webview);
+        webView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         ViewCompat.setOnApplyWindowInsetsListener(container, (v, windowInsets) -> {
             Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
             v.setPadding(0, 0, 0, ime.bottom);
