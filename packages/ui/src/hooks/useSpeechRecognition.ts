@@ -1,5 +1,4 @@
 import { Speech, type SpeechRecognizerOptions, type SpeechRecognizerStop } from "@snappy/browser";
-import { Vibrate } from "@snappy/platform";
 import { useRef, useState } from "react";
 
 import { useUnmount } from "./useUnmount";
@@ -27,13 +26,7 @@ export const useSpeechRecognition = () => {
       return false;
     }
     setListening(true);
-    stopRef.current = recognize({
-      ...options,
-      onText: text => {
-        Vibrate.trigger(`clockTick`);
-        options.onText(text);
-      },
-    });
+    stopRef.current = recognize(options);
 
     return true;
   };

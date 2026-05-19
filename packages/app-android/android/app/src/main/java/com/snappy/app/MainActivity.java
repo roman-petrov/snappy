@@ -1,10 +1,14 @@
 package com.snappy.app;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -12,11 +16,31 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.SystemBarStyle;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends ComponentActivity {
+
+    private PermissionRequest pendingPermissionRequest;
+
+    private final ActivityResultLauncher<String> microphonePermissionLauncher = registerForActivityResult(
+        new ActivityResultContracts.RequestPermission(),
+        granted -> {
+            if (pendingPermissionRequest == null) {
+                return;
+            }
+            if (granted) {
+                pendingPermissionRequest.grant(pendingPermissionRequest.getResources());
+            } else {
+                pendingPermissionRequest.deny();
+            }
+            pendingPermissionRequest = null;
+        }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +65,22 @@ public class MainActivity extends ComponentActivity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         webView.addJavascriptInterface(new Bridge(this), "Bridge");
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onPermissionRequest(final PermissionRequest request) {
+                runOnUiThread(() -> {
+                    if (
+                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) ==
+                        PackageManager.PERMISSION_GRANTED
+                    ) {
+                        request.grant(request.getResources());
+                        return;
+                    }
+                    pendingPermissionRequest = request;
+                    microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+                });
+            }
+        });
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
