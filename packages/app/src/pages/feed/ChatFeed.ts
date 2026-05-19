@@ -14,10 +14,6 @@ export type FeedArtifact =
   | { generationPrompt: string; html: string; id: string; type: `text` }
   | { generationPrompt: string; id: string; src: string; type: `image` };
 
-export type FeedArtifactInput =
-  | Omit<Extract<FeedArtifact, { type: `image` }>, `id`>
-  | Omit<Extract<FeedArtifact, { type: `text` }>, `id`>;
-
 export type FeedArtifactPatch = { html?: string; src?: string };
 
 type FeedRecord = { artifacts: FeedArtifact[]; id: string };
@@ -83,19 +79,6 @@ const writeAll = async (artifacts: FeedArtifact[]) => {
   await settled;
 };
 
-const append = async (items: FeedArtifactInput[]): Promise<FeedArtifact[]> => {
-  const next = [
-    ...(await read()),
-    ...items.map(
-      (item): FeedArtifact =>
-        item.type === `text` ? { ...item, id: crypto.randomUUID() } : { ...item, id: crypto.randomUUID() },
-    ),
-  ];
-  await writeAll(next);
-
-  return clone(next);
-};
-
 const remove = async (id: string): Promise<FeedArtifact[]> => {
   const next = (await read()).filter(item => item.id !== id);
   await writeAll(next);
@@ -119,12 +102,23 @@ const patch = async (id: string, delta: FeedArtifactPatch): Promise<FeedArtifact
   return clone(next);
 };
 
-const clear = async (): Promise<FeedArtifact[]> => {
+const upsert = async (artifact: FeedArtifact) => {
+  const items = await read();
+  const index = items.findIndex(item => item.id === artifact.id);
+
+  const next =
+    index === -1 ? [...items, artifact] : items.map((item, itemIndex) => (itemIndex === index ? artifact : item));
+  await writeAll(next);
+
+  return clone(next);
+};
+
+const clear = async () => {
   await writeAll([]);
 
   return [];
 };
 
-export const ChatFeed = { append, clear, patch, read, remove };
+export const ChatFeed = { clear, patch, read, remove, upsert };
 
 export type ChatFeed = typeof ChatFeed;

@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";
 import { AgentFeed, type AgentFeedHandle } from "../../snappy/components";
-import { ChatFeed } from "../feed/ChatFeed";
+import { AgentFeedArtifactSink } from "../feed";
 
 type ChatPhase = `blocked` | `booting` | `ready`;
 
@@ -66,21 +66,7 @@ export const useAgentState = () => {
   const title = resolved?.meta.title;
   const balanceLow = resolved !== undefined && phase === `blocked`;
   const ready = resolved !== undefined && phase === `ready` && aiConfig !== undefined;
-
-  const screen = ready
-    ? createElement(AgentFeed, {
-        artifactSink: {
-          publish: async artifact => {
-            await ChatFeed.append([
-              artifact.type === `text`
-                ? { generationPrompt: artifact.generationPrompt, html: artifact.html, type: `text` }
-                : { generationPrompt: artifact.generationPrompt, src: artifact.src, type: `image` },
-            ]);
-          },
-        },
-        ref: feedRef,
-      })
-    : undefined;
+  const screen = ready ? createElement(AgentFeed, { artifactSink: AgentFeedArtifactSink(), ref: feedRef }) : undefined;
 
   return { balanceLow, onStop, screen, title };
 };

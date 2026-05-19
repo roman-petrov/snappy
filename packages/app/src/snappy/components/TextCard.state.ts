@@ -20,6 +20,10 @@ export const useTextCardState = ({
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
   const copyHtml = useRef(``);
+  const onGeneratedRef = useRef(onGenerated);
+  const onErrorRef = useRef(onError);
+  onGeneratedRef.current = onGenerated;
+  onErrorRef.current = onError;
   const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
   const empty = html.trim() === ``;
   const streaming = busy || generating;
@@ -43,32 +47,34 @@ export const useTextCardState = ({
     }
   }, [busy, canRegenerate, empty]);
 
-  const content = useMemo((): AsyncIterable<string> | string => {
-    if (streaming && ai !== undefined && model !== undefined && prompt.trim() !== ``) {
-      return (async function* textStream(): AsyncGenerator<string> {
-        let next = ``;
-        try {
-          const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
-          for await (const part of session.chatText()) {
-            if (part !== ``) {
-              next += part;
-              yield part;
-            }
-          }
-          await session.cost();
-          await Promise.resolve(onGenerated?.(next));
-        } catch (error) {
-          onError?.(error);
-        } finally {
-          if (busy) {
-            setBusy(false);
-          }
-        }
-      })();
+  const stream = useMemo((): AsyncIterable<string> | undefined => {
+    if (!streaming || ai === undefined || model === undefined || prompt.trim() === ``) {
+      return undefined;
     }
 
-    return html;
-  }, [ai, busy, html, model, onError, onGenerated, prompt, streaming]);
+    return (async function* textStream(): AsyncGenerator<string> {
+      let next = ``;
+      try {
+        const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
+        for await (const part of session.chatText()) {
+          if (part !== ``) {
+            next += part;
+            yield part;
+          }
+        }
+        await session.cost();
+        await Promise.resolve(onGeneratedRef.current?.(next));
+      } catch (error) {
+        onErrorRef.current?.(error);
+      } finally {
+        if (busy) {
+          setBusy(false);
+        }
+      }
+    })();
+  }, [ai, busy, model, prompt, streaming]);
+
+  const content = stream ?? html;
 
   const onHtml = useCallback((text: string) => {
     copyHtml.current = text;

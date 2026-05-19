@@ -11,6 +11,10 @@ import { t } from "../../locales";
 export const useImageCardState = ({ ai, model, onDelete, onError, onGenerated, prompt = ``, src }: ImageCardProps) => {
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
+  const onGeneratedRef = useRef(onGenerated);
+  const onErrorRef = useRef(onError);
+  onGeneratedRef.current = onGenerated;
+  onErrorRef.current = onError;
   const canRegenerate = ai !== undefined && model !== undefined && prompt.trim() !== ``;
   const empty = src.trim() === ``;
 
@@ -44,13 +48,13 @@ export const useImageCardState = ({ ai, model, onDelete, onError, onGenerated, p
         quality: AiConstants.defaults.imageQuality,
         size: `1024x1024`,
       });
-      await Promise.resolve(onGenerated?.(DataUrl.png(result.bytes)));
+      await Promise.resolve(onGeneratedRef.current?.(DataUrl.png(result.bytes)));
     } catch (error: unknown) {
-      onError?.(error);
+      onErrorRef.current?.(error);
     } finally {
       setBusy(false);
     }
-  }, [ai, busy, model, onError, onGenerated, prompt]);
+  }, [ai, busy, model, prompt]);
 
   const actions = useMemo<MenuAction[]>(() => {
     const base: MenuAction[] = [
