@@ -12,11 +12,11 @@ export const useAgentFeedState = ({ artifactSink, ref, ...rest }: AgentFeedProps
   const sinkRef = useRef(artifactSink);
   sinkRef.current = artifactSink;
 
-  const core = useMemo(() => AgentFeedInterface({ commit: setEntries, getArtifactSink: () => sinkRef.current }), []);
+  const handle = useMemo(() => AgentFeedInterface({ commit: setEntries, getArtifactSink: () => sinkRef.current }), []);
 
-  useImperativeHandle(ref, () => core.handle, [core]);
+  useImperativeHandle(ref, () => handle, [handle]);
 
-  const rows = useMemo(() => core.rows(entries), [core, entries]);
+  const rows = useMemo(() => handle.rows(entries), [handle, entries]);
 
-  return { ...rest, onFormSubmit: core.answerForm, rows };
+  return { ...rest, onFormSubmit: handle.submitForm, rows };
 };

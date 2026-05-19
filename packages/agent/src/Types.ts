@@ -4,8 +4,6 @@ import type { Locale } from "@snappy/intl";
 
 import type { AgentToolGroup } from "./AgentTool";
 
-export type AgentToolsContext = { isStopped: () => boolean };
-
 export type AgentCreateInput = {
   ai: Ai;
   chatModel: string;
@@ -29,3 +27,5 @@ export type AgentStreamPart =
   | { error?: unknown; messages: AiChatMessage[]; reason: AgentStopReason; type: `run` }
   | { finished: Promise<{ label: string }>; label: string; type: `thinking` }
   | { stream: AsyncIterable<string>; type: `model_stream`; variant: `chat` | `reasoning` };
+
+export type AgentToolsContext = { isStopped: () => boolean };

@@ -5,7 +5,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
-import type { StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
 import type { Color, Typography } from "@snappy/ui";
 
 import { AiConstants } from "@snappy/ai";
@@ -16,7 +16,7 @@ import type { TextCardProps } from "../TextCard";
 import type { AgentArtifact } from "../Types";
 import type { AgentFeedBadgeProps } from "./AgentFeedBadge";
 import type { AgentFeedStreamCardProps } from "./AgentFeedStreamCard";
-import type { AgentFeedArtifactSink, AgentFeedEntry, AgentFeedHandle, AgentFeedItem } from "./Types";
+import type { AgentFeedArtifactSink, AgentFeedEntry, AgentFeedItem } from "./Types";
 
 export type AgentFeedRow =
   | { key: number; props: AgentFeedBadgeProps; variant: `badge` }
@@ -62,7 +62,7 @@ const streamClosedOnEnd = (key: number, stream: AsyncIterable<string>, commit: E
     }
   })();
 
-const rowsFromEntries = (entries: AgentFeedItem[]): AgentFeedRow[] => {
+const rows = (entries: AgentFeedItem[]): AgentFeedRow[] => {
   const activeKey = activeEntryKeyFrom(entries);
 
   return entries.map(({ entry, key }): AgentFeedRow => {
@@ -202,7 +202,7 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     });
   };
 
-  const generateText: AgentFeedHandle[`generateText`] = async ({ ai, model, prompt }) => {
+  const generateText: AgentFeedRuntime[`generateText`] = async ({ ai, model, prompt }) => {
     const artifactId = crypto.randomUUID();
 
     const artifact: AgentArtifact = {
@@ -239,7 +239,7 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
 
   let pendingFormAnswer: ((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined;
 
-  const ask: AgentFeedHandle[`ask`] = async plan => {
+  const ask: AgentFeedRuntime[`ask`] = async plan => {
     const key = addEntry({ plan, type: `form` });
 
     return new Promise(resolve => {
@@ -250,12 +250,12 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     });
   };
 
-  const answerForm = (value: StaticFormAnswersOf<StaticFormPlan>) => {
+  const submitForm = (value: StaticFormAnswersOf<StaticFormPlan>) => {
     pendingFormAnswer?.(value);
     pendingFormAnswer = undefined;
   };
 
-  const generateImage: AgentFeedHandle[`generateImage`] = async ({ ai, model, prompt, size }) => {
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt, size }) => {
     const artifactId = crypto.randomUUID();
 
     const artifact: AgentArtifact = {
@@ -291,22 +291,32 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     }
   };
 
-  const handle: AgentFeedHandle = {
-    appendArtifact: (artifact, options) =>
-      addEntry({ ai: options?.ai, artifact, model: options?.model, type: `artifact` }),
-    appendChatStream: stream => appendStream(stream, { color: `text`, typography: `caption` }),
-    appendForm: plan => addEntry({ plan, type: `form` }),
-    appendReasoningStream: stream => appendStream(stream, { color: `outline`, typography: `captionSm` }),
-    appendStatus: (text, finished) => addEntry({ finished, text, type: `status` }),
-    appendToolBadge: (text, finished) => addEntry({ finished, text, type: `tool-badge` }),
-    appendUserText: text => addEntry({ text, type: `user` }),
+  const appendChatStream = (stream: AsyncIterable<string>) =>
+    appendStream(stream, { color: `text`, typography: `caption` });
+
+  const appendReasoningStream = (stream: AsyncIterable<string>) =>
+    appendStream(stream, { color: `outline`, typography: `captionSm` });
+
+  const appendStatus = (text: string, finished: Promise<{ label: string }>) =>
+    addEntry({ finished, text, type: `status` });
+
+  const appendToolBadge = (text: string, finished: Promise<{ label: string }>) =>
+    addEntry({ finished, text, type: `tool-badge` });
+
+  const appendUserText = (text: string) => addEntry({ text, type: `user` });
+
+  return {
+    appendChatStream,
+    appendReasoningStream,
+    appendStatus,
+    appendToolBadge,
+    appendUserText,
     ask,
-    clear: () => commit(() => []),
     generateImage,
     generateText,
-    removeEntry,
-    updateArtifact: updateArtifactEntry,
+    rows,
+    submitForm,
   };
-
-  return { answerForm, handle, rows: rowsFromEntries };
 };
+
+export type AgentFeedHandle = ReturnType<typeof AgentFeedInterface>;

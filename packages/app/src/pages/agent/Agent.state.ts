@@ -6,11 +6,9 @@ import { Language, useAsyncEffect, useGo } from "@snappy/ui";
 import { createElement, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import type { AgentFeedHandle } from "../../snappy/components/agent-feed/Types";
-
 import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";
-import { AgentFeed } from "../../snappy/components";
+import { AgentFeed, type AgentFeedHandle } from "../../snappy/components";
 import { ChatFeed } from "../feed/ChatFeed";
 
 type ChatPhase = `blocked` | `booting` | `ready`;

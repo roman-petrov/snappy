@@ -1,5 +1,5 @@
 import type { Ai } from "@snappy/ai";
-import type { AgentFeedRuntime, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { StaticFormPlan } from "@snappy/snappy-sdk";
 import type { Color, Typography } from "@snappy/ui";
 
 import type { AgentArtifact } from "../Types";
@@ -24,13 +24,6 @@ export type AgentFeedEntry =
   | { plan: StaticFormPlan; type: `form` }
   | { text: string; type: `user` };
 
-export type AgentFeedHandle = AgentFeedRuntime & {
-  appendArtifact: (artifact: AgentArtifact, options?: { ai?: Ai; model?: string }) => number;
-  appendForm: (plan: StaticFormPlan) => number;
-  appendUserText: (text: string) => number;
-  clear: () => void;
-  removeEntry: (key: number) => void;
-  updateArtifact: (id: string, patch: Partial<AgentArtifact>) => void;
-};
-
 export type AgentFeedItem = { entry: AgentFeedEntry; key: number };
+
+export type { AgentFeedHandle } from "./AgentFeedInterface";
