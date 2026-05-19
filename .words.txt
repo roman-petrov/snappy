@@ -12,6 +12,7 @@ androidx
 proguard
 wouter
 vectordrawable
+fileprovider
 selfsigned
 ollama
 topup
@@ -20,3 +21,9 @@ rerank
 reranker
 clusterize
 nprobes
+xhigh
+
+// Ai Models
+deepseek
+qwen
+codestral

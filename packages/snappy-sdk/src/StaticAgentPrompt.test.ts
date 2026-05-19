@@ -355,7 +355,7 @@ describe(`StaticAgentPrompt`, () => {
               options: [
                 { label: { emoji: `🔹`, text: `Email` }, prompt: `email campaign`, value: `email` },
                 { label: { emoji: `🔹`, text: `Blog` }, prompt: `blog post`, value: `blog` },
-                { label: { emoji: `🔹`, text: `In-app` }, value: `inapp` },
+                { label: { emoji: `🔹`, text: `In-app` }, value: `in-app` },
               ],
             },
             {

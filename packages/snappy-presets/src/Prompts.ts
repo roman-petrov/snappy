@@ -1,3 +1,4 @@
+// cspell:word промпта
 import { AiConstants } from "@snappy/ai";
 
 export type Bilingual = readonly [en: string, ru: string];

@@ -1,7 +1,5 @@
-// cspell:disable
 import type { AiModelListItem } from "./Types";
 
-/** Curated from AiTunnel catalog; chat ids are short, routed via OpenRouter at request time. */
 const items = [
   { name: `gpt-5-nano`, source: `ai-tunnel`, type: `chat` },
   { name: `gpt-5-mini`, source: `ai-tunnel`, type: `chat` },
@@ -48,7 +46,6 @@ const items = [
   { name: `gemini-3-pro-image-preview`, source: `ai-tunnel`, type: `image` },
   { name: `flux.2-pro`, source: `ai-tunnel`, type: `image` },
   { name: `flux.2-max`, source: `ai-tunnel`, type: `image` },
-  { name: `seedream-4.5`, source: `ai-tunnel`, type: `image` },
   { name: `gpt-4o-mini-transcribe`, source: `ai-tunnel`, type: `speech-recognition` },
   { name: `gpt-4o-transcribe`, source: `ai-tunnel`, type: `speech-recognition` },
 ] as const satisfies readonly AiModelListItem[];
