@@ -16,5 +16,5 @@ export const useAgentFeedState = ({ artifactSink, ref }: AgentFeedProps) => {
 
   const rows = useMemo(() => handle.rows(entries), [handle, entries]);
 
-  return rows;
+  return { rows };
 };

@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-let */
-
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
@@ -33,24 +32,19 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
     return key;
   };
 
-  const pushEntry = (key: number, entry: AgentFeedEntry) => {
-    commit(previous => [...previous, { entry, key }]);
-  };
+  const pushEntry = (key: number, entry: AgentFeedEntry) => commit(previous => [...previous, { entry, key }]);
 
-  const addEntry = (entry: AgentFeedEntry): number => {
+  const addEntry = (entry: AgentFeedEntry) => {
     const key = nextKey();
     pushEntry(key, entry);
 
     return key;
   };
 
-  const removeEntry = (key: number) => {
-    commit(previous => previous.filter(item => item.key !== key));
-  };
+  const removeEntry = (key: number) => commit(previous => previous.filter(item => item.key !== key));
 
-  const replaceEntry = (key: number, entry: AgentFeedEntry) => {
+  const replaceEntry = (key: number, entry: AgentFeedEntry) =>
     commit(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
-  };
 
   const appendStream = (stream: AsyncIterable<string>, entryType: StreamEntryType) => {
     const key = nextKey();
@@ -215,9 +209,7 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
         quality: AiConstants.defaults.imageQuality,
         size: size ?? `1024x1024`,
       });
-      if (out.bytes.length === 0) {
-        throw new Error(`Image bytes are empty`);
-      }
+
       const src = DataUrl.png(out.bytes);
       const doneArtifact: AgentArtifact = { ...artifact, generationStatus: `done`, src };
       replaceEntry(key, { ai, artifact: doneArtifact, model, type: `artifact` });
