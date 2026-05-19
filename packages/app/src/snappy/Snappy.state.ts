@@ -1,7 +1,7 @@
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
 import { _ } from "@snappy/core";
-import { SnappyAgent } from "@snappy/snappy";
+import { SnappyAgent, type SnappyAgentRuntime } from "@snappy/snappy";
 import { Language, useAsyncEffect, useGo } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
@@ -23,8 +23,7 @@ export const useSnappyState = () => {
   const [splashDraft, setSplashDraft] = useState(``);
   const [sessionDraft, setSessionDraft] = useState(``);
   const feedRef = useRef<AgentFeedHandle>(null);
-  const stopRef = useRef<(() => void) | undefined>(undefined);
-  const appendToAgentRef = useRef<(text: string) => void>(() => {});
+  const runtimeRef = useRef<SnappyAgentRuntime | undefined>(undefined);
 
   useAsyncEffect(async () => {
     setPhase(`booting`);
@@ -48,21 +47,17 @@ export const useSnappyState = () => {
       return _.noop;
     }
     const runtime = SnappyAgent({ aiConfig, feed: handle, locale });
-    stopRef.current = runtime.stop;
-    appendToAgentRef.current = () => {};
-    void runtime.run(starterText, fn => {
-      appendToAgentRef.current = fn;
-    });
+    runtimeRef.current = runtime;
+    void runtime.run(starterText);
 
     return () => {
       runtime.stop();
-      stopRef.current = undefined;
-      appendToAgentRef.current = () => {};
+      runtimeRef.current = undefined;
     };
   }, [aiConfig, locale, phase, starterText]);
 
   const onStop = async () => {
-    stopRef.current?.();
+    runtimeRef.current?.stop();
     await go(Routes.home);
   };
 
@@ -81,7 +76,7 @@ export const useSnappyState = () => {
       return;
     }
     feedRef.current?.appendUserText(text);
-    appendToAgentRef.current(text);
+    runtimeRef.current?.appendUserText(text);
     setSessionDraft(``);
   };
 

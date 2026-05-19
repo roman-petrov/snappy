@@ -14,94 +14,93 @@ import { _ } from "@snappy/core";
 import { System } from "./System";
 import tools from "./tools/index";
 
-export type SnappyAgentConfig = {
-  aiConfig: AgentAiConfig;
-  feed: AgentFeedRuntime;
-  locale: Locale;
-  onRunningChange?: (running: boolean) => void;
-};
+export type SnappyAgentConfig = { aiConfig: AgentAiConfig; feed: AgentFeedRuntime; locale: Locale };
 
-export const SnappyAgent = ({ aiConfig, feed, locale, onRunningChange }: SnappyAgentConfig) => {
+export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
   let stopped = false;
   let stopRun: (() => void) | undefined;
+  let appendUser: ((text: string) => void) | undefined;
+  const appendUserText = (text: string) => appendUser?.(text);
 
-  return {
-    run: async (firstUserMessage: string, registerAppendUser: (append: (text: string) => void) => void) => {
-      stopped = false;
-      onRunningChange?.(true);
-      try {
-        const text = firstUserMessage.trim();
-        if (text === ``) {
-          return;
-        }
-        const initialMessages: AiChatMessage[] = [{ content: text, role: `user` }];
-        const aiClient = Ai(aiConfig.options);
+  const stop = () => {
+    stopped = true;
+    stopRun?.();
+  };
 
-        const agent = AgentRuntime({
-          ai: aiClient,
-          chatModel: aiConfig.models.chat,
-          idleAfterSuccess: true,
-          locale,
-          maxRounds: 32,
-          systemPrompt: System.prompt(locale),
-          tools: {
-            snappy: _.fromEntries(
-              _.entries(tools).map(([toolId, tool]) => [
-                toolId,
-                tool({ ai: aiClient, config: aiConfig, feed, isStopped: () => stopped, locale }),
-              ]),
-            ),
-          },
-        });
+  const run = async (firstUserMessage: string) => {
+    stopped = false;
+    try {
+      const text = firstUserMessage.trim();
+      if (text === ``) {
+        return;
+      }
+      const initialMessages: AiChatMessage[] = [{ content: text, role: `user` }];
+      const aiClient = Ai(aiConfig.options);
 
-        const runInstance = agent.start(initialMessages);
-        stopRun = runInstance.stop;
-        registerAppendUser(userText => runInstance.appendUserText(userText));
+      const agent = AgentRuntime({
+        ai: aiClient,
+        chatModel: aiConfig.models.chat,
+        idleAfterSuccess: true,
+        locale,
+        maxRounds: 32,
+        systemPrompt: System.prompt(locale),
+        tools: {
+          snappy: _.fromEntries(
+            _.entries(tools).map(([toolId, tool]) => [
+              toolId,
+              tool({ ai: aiClient, config: aiConfig, feed, isStopped: () => stopped, locale }),
+            ]),
+          ),
+        },
+      });
 
-        const handleStreamPart = (part: AgentStreamPart) => {
-          switch (part.type) {
-            case `model_stream`: {
-              if (part.variant === `reasoning`) {
-                feed.appendReasoningStream(part.stream);
-              } else {
-                feed.appendChatStream(part.stream);
-              }
-              break;
+      const runInstance = agent.start(initialMessages);
+      stopRun = runInstance.stop;
+      appendUser = userText => runInstance.appendUserText(userText);
+
+      const handleStreamPart = (part: AgentStreamPart) => {
+        switch (part.type) {
+          case `model_stream`: {
+            if (part.variant === `reasoning`) {
+              feed.appendReasoningStream(part.stream);
+            } else {
+              feed.appendChatStream(part.stream);
             }
-            case `run`: {
-              break;
-            }
-            case `thinking`: {
-              feed.appendStatus(part.label, part.finished);
-              break;
-            }
-            case `tool`: {
-              if (part.label.trim() !== ``) {
-                feed.appendToolBadge(part.label, part.finished);
-              }
-              break;
-            }
-            // No default
-          }
-        };
-
-        for await (const part of runInstance) {
-          if (stopped) {
             break;
           }
-          handleStreamPart(part);
+          case `run`: {
+            break;
+          }
+          case `thinking`: {
+            feed.appendStatus(part.label, part.finished);
+            break;
+          }
+          case `tool`: {
+            if (part.label.trim() !== ``) {
+              feed.appendToolBadge(part.label, part.finished);
+            }
+            break;
+          }
+          // No default
         }
-        await runInstance.done;
-      } catch {
-        /* Aborted */
-      } finally {
-        stopRun = undefined;
-        onRunningChange?.(false);
+      };
+
+      for await (const part of runInstance) {
+        if (stopped) {
+          break;
+        }
+        handleStreamPart(part);
       }
-    },
-    stop: () => {
-      stopped = true;
-      stopRun?.();
-    },
+      await runInstance.done;
+    } catch {
+      /* Aborted */
+    } finally {
+      appendUser = undefined;
+      stopRun = undefined;
+    }
   };
+
+  return { appendUserText, run, stop };
 };
+
+export type SnappyAgentRuntime = ReturnType<typeof SnappyAgent>;
