@@ -45,6 +45,7 @@ try {
 
   const store = CoderStore({ ignore: Ignore, projectRoot: projectRootResolved });
   const tools = { ...db.tools, ...store.tools };
+
   const coder = (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) =>
     Coder({ ...props, locale, tools: () => tools });
   Console.logLine(

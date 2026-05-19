@@ -5,12 +5,10 @@ import { SnappyAgent } from "@snappy/snappy";
 import { Language, useAsyncEffect, useGo } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
-import type { AgentFeedHandle } from "./components/agent-feed/Types";
-
 import { AgentAiFromSettings, trpc } from "../core";
 import { ChatFeed } from "../pages/feed/ChatFeed";
 import { Routes } from "../Routes";
-import { AgentFeed } from "./components";
+import { AgentFeed, type AgentFeedHandle } from "./components";
 
 type ChatPhase = `blocked` | `booting` | `ready`;
 

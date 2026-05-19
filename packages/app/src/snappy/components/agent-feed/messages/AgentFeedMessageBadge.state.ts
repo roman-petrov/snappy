@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 
-import type { AgentFeedBadgeProps } from "./AgentFeedBadge";
+import type { AgentFeedMessageBadgeProps } from "./AgentFeedMessageBadge";
 
-export type AgentFeedBadgeState = { status: `done` | `error` | `running`; text: string };
+export type AgentFeedMessageBadgeState = { status: `done` | `error` | `running`; text: string };
 
-export const useAgentFeedBadgeState = ({
+export const useAgentFeedMessageBadgeState = ({
   finished,
   hideOnSuccess = false,
   text,
   ...textProps
-}: AgentFeedBadgeProps) => {
-  const [state, setState] = useState<AgentFeedBadgeState>({ status: `running`, text });
+}: AgentFeedMessageBadgeProps) => {
+  const [state, setState] = useState<AgentFeedMessageBadgeState>({ status: `running`, text });
 
   useEffect(() => {
     let mounted = true;

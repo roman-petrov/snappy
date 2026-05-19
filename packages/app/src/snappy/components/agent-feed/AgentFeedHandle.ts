@@ -6,140 +6,62 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
-import type { Color, Typography } from "@snappy/ui";
 
 import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
+import { createElement } from "react";
 
-import type { ImageCardProps } from "../ImageCard";
-import type { TextCardProps } from "../TextCard";
 import type { AgentArtifact } from "../Types";
-import type { AgentFeedBadgeProps } from "./AgentFeedBadge";
-import type { AgentFeedStreamCardProps } from "./AgentFeedStreamCard";
 import type { AgentFeedArtifactSink, AgentFeedEntry, AgentFeedItem } from "./Types";
 
-export type AgentFeedRow =
-  | { key: number; props: AgentFeedBadgeProps; variant: `badge` }
-  | { key: number; props: AgentFeedStreamCardProps; variant: `stream` }
-  | { key: number; props: ImageCardProps; variant: `image` }
-  | { key: number; props: TextCardProps; variant: `text` }
-  | { key: number; props: { plan: StaticFormPlan }; variant: `form` }
-  | { key: number; props: { text: string }; variant: `user` };
+import { AgentFeedRow } from "./AgentFeedRow";
 
-type EntriesCommit = (recipe: (previous: AgentFeedItem[]) => AgentFeedItem[]) => void;
-
-const activeEntryKeyFrom = (items: AgentFeedItem[]): number | undefined => {
-  if (items.some(({ entry }) => entry.type === `form`)) {
-    return undefined;
-  }
-  const item = items.findLast(({ entry }) => {
-    if (entry.type === `artifact`) {
-      const { generationStatus } = entry.artifact;
-
-      return generationStatus === `running`;
-    }
-
-    return entry.type === `stream` && entry.closed !== true;
-  });
-
-  return item?.key;
-};
-
-const streamClosedOnEnd = (key: number, stream: AsyncIterable<string>, commit: EntriesCommit): AsyncIterable<string> =>
-  (async function* streamText() {
-    try {
-      for await (const text of stream) {
-        yield text;
-      }
-    } finally {
-      commit(previous =>
-        previous.map(streamItem =>
-          streamItem.key === key && streamItem.entry.type === `stream`
-            ? { ...streamItem, entry: { ...streamItem.entry, closed: true } }
-            : streamItem,
-        ),
-      );
-    }
-  })();
-
-const rows = (entries: AgentFeedItem[]): AgentFeedRow[] => {
-  const activeKey = activeEntryKeyFrom(entries);
-
-  return entries.map(({ entry, key }): AgentFeedRow => {
-    const active = activeKey !== undefined && key === activeKey;
-
-    if (entry.type === `artifact`) {
-      const { ai, artifact, model, onArtifactError, onArtifactGenerated } = entry;
-      const prompt = artifact.generationPrompt;
-      const externallyGenerating = artifact.generationStatus === `running`;
-      const base = { active, onError: onArtifactError, prompt };
-
-      if (artifact.type === `image`) {
-        const suppressCardAi = externallyGenerating && artifact.src.trim() === ``;
-
-        return {
-          key,
-          props: {
-            ...base,
-            ai: suppressCardAi ? undefined : ai,
-            model: suppressCardAi ? undefined : (model ?? artifact.model),
-            onGenerated: next =>
-              onArtifactGenerated?.({ ...artifact, generationStatus: `done`, src: next, type: `image` }),
-            src: artifact.src,
-          },
-          variant: `image`,
-        };
-      }
-
-      return {
-        key,
-        props: {
-          ...base,
-          ai,
-          generating: externallyGenerating,
-          html: artifact.html,
-          model: model ?? artifact.model,
-          onGenerated: html => onArtifactGenerated?.({ ...artifact, generationStatus: `done`, html, type: `text` }),
-        },
-        variant: `text`,
-      };
-    }
-
-    if (entry.type === `status` || entry.type === `tool-badge`) {
-      return {
-        key,
-        props: {
-          finished: entry.finished,
-          ...(entry.type === `status` ? { hideOnSuccess: true as const } : {}),
-          text: entry.text,
-          typography: `caption`,
-        },
-        variant: `badge`,
-      };
-    }
-
-    if (entry.type === `form`) {
-      return { key, props: { plan: entry.plan }, variant: `form` };
-    }
-
-    if (entry.type === `user`) {
-      return { key, props: { text: entry.text }, variant: `user` };
-    }
-
-    return {
-      key,
-      props: { active, color: entry.color ?? `text`, stream: entry.stream, typography: entry.typography ?? `caption` },
-      variant: `stream`,
-    };
-  });
-};
-
-export type AgentFeedInterfaceInput = {
-  commit: EntriesCommit;
+export type AgentFeedHandleConfig = {
+  commit: (recipe: (previous: AgentFeedItem[]) => AgentFeedItem[]) => void;
   getArtifactSink: () => AgentFeedArtifactSink | undefined;
 };
 
-export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfaceInput) => {
+export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConfig) => {
+  const activeEntryKeyFrom = (items: AgentFeedItem[]): number | undefined => {
+    if (items.some(({ entry }) => entry.type === `form`)) {
+      return undefined;
+    }
+    const item = items.findLast(({ entry }) => {
+      if (entry.type === `artifact`) {
+        const { generationStatus } = entry.artifact;
+
+        return generationStatus === `running`;
+      }
+
+      return (entry.type === `stream` || entry.type === `reasoning`) && entry.closed !== true;
+    });
+
+    return item?.key;
+  };
+
+  type StreamEntryType = `reasoning` | `stream`;
+
+  const streamClosedOnEnd = (
+    key: number,
+    stream: AsyncIterable<string>,
+    entryType: StreamEntryType,
+  ): AsyncIterable<string> =>
+    (async function* streamText() {
+      try {
+        for await (const text of stream) {
+          yield text;
+        }
+      } finally {
+        commit(previous =>
+          previous.map(streamItem =>
+            streamItem.key === key && streamItem.entry.type === entryType
+              ? { ...streamItem, entry: { ...streamItem.entry, closed: true } }
+              : streamItem,
+          ),
+        );
+      }
+    })();
+
   let keySeq = 0;
 
   const nextKey = () => {
@@ -168,12 +90,9 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     commit(previous => previous.map(item => (item.key === key ? { ...item, entry } : item)));
   };
 
-  const appendStream = (
-    stream: AsyncIterable<string>,
-    { color, typography }: { color: Color; typography: Typography },
-  ) => {
+  const appendStream = (stream: AsyncIterable<string>, entryType: StreamEntryType) => {
     const key = nextKey();
-    pushEntry(key, { color, stream: streamClosedOnEnd(key, stream, commit), type: `stream`, typography });
+    pushEntry(key, { stream: streamClosedOnEnd(key, stream, entryType), type: entryType });
 
     return key;
   };
@@ -255,6 +174,69 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     pendingFormAnswer = undefined;
   };
 
+  const rows = (items: AgentFeedItem[]) => {
+    const activeKey = activeEntryKeyFrom(items);
+
+    return items.map(({ entry, key }) => {
+      const active = activeKey !== undefined && key === activeKey;
+
+      if (entry.type === `artifact`) {
+        const { ai, artifact, model, onArtifactError, onArtifactGenerated } = entry;
+        const prompt = artifact.generationPrompt;
+        const externallyGenerating = artifact.generationStatus === `running`;
+        const base = { active, onError: onArtifactError, prompt };
+
+        if (artifact.type === `image`) {
+          const suppressCardAi = externallyGenerating && artifact.src.trim() === ``;
+
+          return createElement(AgentFeedRow.image, {
+            key,
+            ...base,
+            ai: suppressCardAi ? undefined : ai,
+            model: suppressCardAi ? undefined : (model ?? artifact.model),
+            onGenerated: next =>
+              onArtifactGenerated?.({ ...artifact, generationStatus: `done`, src: next, type: `image` }),
+            src: artifact.src,
+          });
+        }
+
+        return createElement(AgentFeedRow.text, {
+          key,
+          ...base,
+          ai,
+          generating: externallyGenerating,
+          html: artifact.html,
+          model: model ?? artifact.model,
+          onGenerated: html => onArtifactGenerated?.({ ...artifact, generationStatus: `done`, html, type: `text` }),
+        });
+      }
+
+      if (entry.type === `status` || entry.type === `tool-badge`) {
+        return createElement(AgentFeedRow.badge, {
+          finished: entry.finished,
+          key,
+          ...(entry.type === `status` ? { hideOnSuccess: true as const } : {}),
+          text: entry.text,
+          typography: `caption`,
+        });
+      }
+
+      if (entry.type === `form`) {
+        return createElement(AgentFeedRow.form, { key, onSubmit: submitForm, plan: entry.plan });
+      }
+
+      if (entry.type === `user`) {
+        return createElement(AgentFeedRow.user, { key, text: entry.text });
+      }
+
+      if (entry.type === `reasoning`) {
+        return createElement(AgentFeedRow.reasoning, { active, key, stream: entry.stream });
+      }
+
+      return createElement(AgentFeedRow.stream, { active, key, stream: entry.stream });
+    });
+  };
+
   const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt, size }) => {
     const artifactId = crypto.randomUUID();
 
@@ -291,11 +273,8 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     }
   };
 
-  const appendChatStream = (stream: AsyncIterable<string>) =>
-    appendStream(stream, { color: `text`, typography: `caption` });
-
-  const appendReasoningStream = (stream: AsyncIterable<string>) =>
-    appendStream(stream, { color: `outline`, typography: `captionSm` });
+  const appendChatStream = (stream: AsyncIterable<string>) => appendStream(stream, `stream`);
+  const appendReasoningStream = (stream: AsyncIterable<string>) => appendStream(stream, `reasoning`);
 
   const appendStatus = (text: string, finished: Promise<{ label: string }>) =>
     addEntry({ finished, text, type: `status` });
@@ -315,8 +294,7 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     generateImage,
     generateText,
     rows,
-    submitForm,
   };
 };
 
-export type AgentFeedHandle = ReturnType<typeof AgentFeedInterface>;
+export type AgentFeedHandle = ReturnType<typeof AgentFeedHandle>;

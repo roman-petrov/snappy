@@ -1,13 +1,13 @@
 import { _ } from "@snappy/core";
 import { $, Text } from "@snappy/ui";
 
-import type { useAgentFeedBadgeState } from "./AgentFeedBadge.state";
+import type { useAgentFeedMessageBadgeState } from "./AgentFeedMessageBadge.state";
 
-import styles from "./AgentFeedBadge.module.scss";
+import styles from "./AgentFeedMessageBadge.module.scss";
 
-export type AgentFeedBadgeViewProps = ReturnType<typeof useAgentFeedBadgeState>;
+export type AgentFeedMessageBadgeViewProps = ReturnType<typeof useAgentFeedMessageBadgeState>;
 
-export const AgentFeedBadgeView = ({ hideOnSuccess, message, status, textProps }: AgentFeedBadgeViewProps) => {
+export const AgentFeedMessageBadgeView = ({ hideOnSuccess, message, status, textProps }: AgentFeedMessageBadgeViewProps) => {
   if (hideOnSuccess && status === `done`) {
     return undefined;
   }

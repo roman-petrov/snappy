@@ -1,4 +1,4 @@
-declare const __AgentFeedBadge: {
+declare const __AgentFeedMessageBadge: {
   readonly badge: "badge";
   readonly badgeRunning: "badgeRunning";
   readonly status: "status";
@@ -6,4 +6,4 @@ declare const __AgentFeedBadge: {
   readonly spinner: "spinner";
   readonly icon: "icon";
 };
-export default __AgentFeedBadge;
+export default __AgentFeedMessageBadge;

@@ -63,29 +63,24 @@ export const useAgentState = () => {
     await go(Routes.home);
   };
 
-  const session =
-    resolved === undefined
-      ? undefined
-      : {
-          balanceLow: phase === `blocked`,
-          onStop,
-          screen:
-            phase !== `ready` || aiConfig === undefined
-              ? undefined
-              : createElement(AgentFeed, {
-                  artifactSink: {
-                    publish: async artifact => {
-                      await ChatFeed.append([
-                        artifact.type === `text`
-                          ? { generationPrompt: artifact.generationPrompt, html: artifact.html, type: `text` }
-                          : { generationPrompt: artifact.generationPrompt, src: artifact.src, type: `image` },
-                      ]);
-                    },
-                  },
-                  ref: feedRef,
-                }),
-          title: resolved.meta.title,
-        };
+  const title = resolved?.meta.title;
+  const balanceLow = resolved !== undefined && phase === `blocked`;
+  const ready = resolved !== undefined && phase === `ready` && aiConfig !== undefined;
 
-  return { session };
+  const screen = ready
+    ? createElement(AgentFeed, {
+        artifactSink: {
+          publish: async artifact => {
+            await ChatFeed.append([
+              artifact.type === `text`
+                ? { generationPrompt: artifact.generationPrompt, html: artifact.html, type: `text` }
+                : { generationPrompt: artifact.generationPrompt, src: artifact.src, type: `image` },
+            ]);
+          },
+        },
+        ref: feedRef,
+      })
+    : undefined;
+
+  return { balanceLow, onStop, screen, title };
 };

@@ -1,6 +1,7 @@
 import type { Ref } from "react";
 
-import type { AgentFeedArtifactSink, AgentFeedHandle } from "./Types";
+import type { AgentFeedHandle } from "./AgentFeedHandle";
+import type { AgentFeedArtifactSink } from "./Types";
 
 import { useAgentFeedState } from "./AgentFeed.state";
 import { AgentFeedView } from "./AgentFeed.view";
