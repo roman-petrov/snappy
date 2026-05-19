@@ -12,14 +12,12 @@ export const Layout = ({ content, header }: LayoutProps) => (
     <div className={styles.wrap}>
       <div className={styles.scroll}>
         <header className={styles.mobileHeader}>
-          <SafeArea left right top>
-            <Header>{header}</Header>
-          </SafeArea>
+          <Header>{header}</Header>
         </header>
         <div className={styles.desktopHeader}>
           <Header>{header}</Header>
         </div>
-        <SafeArea bottom cn={styles.mainSafe} left right top>
+        <SafeArea bottom cn={styles.mainSafe} left right>
           <main className={styles.main}>{content}</main>
         </SafeArea>
       </div>
