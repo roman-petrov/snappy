@@ -1,4 +1,4 @@
-import type { AgentAiConfig, AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
 import { _ } from "@snappy/core";
 import { Agents } from "@snappy/snappy-presets";
@@ -10,7 +10,7 @@ import type { AgentFeedHandle } from "../../snappy/components/agent-feed/Types";
 
 import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";
-import { AgentFeed, agentFeedRuntime } from "../../snappy/components";
+import { AgentFeed } from "../../snappy/components";
 import { ChatFeed } from "../feed/ChatFeed";
 
 type ChatPhase = `blocked` | `booting` | `ready`;
@@ -25,7 +25,6 @@ export const useAgentState = () => {
   const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
   const feedRef = useRef<AgentFeedHandle>(null);
   const stopRef = useRef<(() => void) | undefined>(undefined);
-  const askResolveRef = useRef<((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined>(undefined);
 
   useAsyncEffect(async () => {
     if (resolved === undefined) {
@@ -47,15 +46,17 @@ export const useAgentState = () => {
     if (phase !== `ready` || aiConfig === undefined || resolved === undefined) {
       return _.noop;
     }
-    const feed: AgentFeedRuntime = agentFeedRuntime({ askResolveRef, getHandle: () => feedRef.current });
-    const runtime = resolved.module({ aiConfig, feed });
+    const handle = feedRef.current;
+    if (handle === null) {
+      return _.noop;
+    }
+    const runtime = resolved.module({ aiConfig, feed: handle });
     stopRef.current = runtime.stop;
     void runtime.run();
 
     return () => {
       runtime.stop();
       stopRef.current = undefined;
-      askResolveRef.current = undefined;
     };
   }, [aiConfig, phase, resolved]);
 
@@ -82,10 +83,6 @@ export const useAgentState = () => {
                           : { generationPrompt: artifact.generationPrompt, src: artifact.src, type: `image` },
                       ]);
                     },
-                  },
-                  onFormSubmit: value => {
-                    askResolveRef.current?.(value);
-                    askResolveRef.current = undefined;
                   },
                   ref: feedRef,
                 }),

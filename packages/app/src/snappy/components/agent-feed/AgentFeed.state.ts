@@ -18,5 +18,5 @@ export const useAgentFeedState = ({ artifactSink, ref, ...rest }: AgentFeedProps
 
   const rows = useMemo(() => core.rows(entries), [core, entries]);
 
-  return { ...rest, rows };
+  return { ...rest, onFormSubmit: core.answerForm, rows };
 };

@@ -1,15 +1,12 @@
+/* eslint-disable init-declarations */
+/* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
-import type {
-  AgentFeedRuntime as AgentFeedRuntimeContract,
-  StaticFormAnswersOf,
-  StaticFormPlan,
-} from "@snappy/snappy-sdk";
+import type { StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
 import type { Color, Typography } from "@snappy/ui";
-import type { MutableRefObject } from "react";
 
 import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
@@ -234,10 +231,28 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
         },
         type: `artifact`,
       });
-    }).catch(error => {
+    }).catch((error: unknown) => {
       failArtifactGeneration(artifactId, error);
       throw error;
     });
+  };
+
+  let pendingFormAnswer: ((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined;
+
+  const ask: AgentFeedHandle[`ask`] = async plan => {
+    const key = addEntry({ plan, type: `form` });
+
+    return new Promise(resolve => {
+      pendingFormAnswer = value => {
+        removeEntry(key);
+        resolve(value);
+      };
+    });
+  };
+
+  const answerForm = (value: StaticFormAnswersOf<StaticFormPlan>) => {
+    pendingFormAnswer?.(value);
+    pendingFormAnswer = undefined;
   };
 
   const generateImage: AgentFeedHandle[`generateImage`] = async ({ ai, model, prompt, size }) => {
@@ -285,6 +300,7 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     appendStatus: (text, finished) => addEntry({ finished, text, type: `status` }),
     appendToolBadge: (text, finished) => addEntry({ finished, text, type: `tool-badge` }),
     appendUserText: text => addEntry({ text, type: `user` }),
+    ask,
     clear: () => commit(() => []),
     generateImage,
     generateText,
@@ -292,47 +308,5 @@ export const AgentFeedInterface = ({ commit, getArtifactSink }: AgentFeedInterfa
     updateArtifact: updateArtifactEntry,
   };
 
-  return { handle, rows: rowsFromEntries };
+  return { answerForm, handle, rows: rowsFromEntries };
 };
-
-export type AgentFeedRuntimeBind = {
-  askResolveRef: MutableRefObject<((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined>;
-  getHandle: () => AgentFeedHandle | null;
-};
-
-export const agentFeedRuntime = ({ askResolveRef, getHandle }: AgentFeedRuntimeBind): AgentFeedRuntimeContract => ({
-  appendChatStream: stream => getHandle()?.appendChatStream(stream) ?? -1,
-  appendReasoningStream: stream => getHandle()?.appendReasoningStream(stream) ?? -1,
-  appendStatus: (text, finished) => getHandle()?.appendStatus(text, finished) ?? -1,
-  appendToolBadge: (text, finished) => getHandle()?.appendToolBadge(text, finished) ?? -1,
-  ask: async plan => {
-    const handle = getHandle();
-    if (handle === null) {
-      throw new Error(`agent_feed_not_ready`);
-    }
-    const key = handle.appendForm(plan);
-
-    return new Promise(resolve => {
-      askResolveRef.current = value => {
-        handle.removeEntry(key);
-        resolve(value);
-      };
-    });
-  },
-  generateImage: async input => {
-    const handle = getHandle();
-    if (handle === null) {
-      throw new Error(`agent_feed_not_ready`);
-    }
-
-    return handle.generateImage(input);
-  },
-  generateText: async input => {
-    const handle = getHandle();
-    if (handle === null) {
-      throw new Error(`agent_feed_not_ready`);
-    }
-
-    return handle.generateText(input);
-  },
-});

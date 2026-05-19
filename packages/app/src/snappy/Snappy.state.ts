@@ -1,4 +1,4 @@
-import type { AgentAiConfig, AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
 import { _ } from "@snappy/core";
 import { SnappyAgent } from "@snappy/snappy";
@@ -10,7 +10,7 @@ import type { AgentFeedHandle } from "./components/agent-feed/Types";
 import { AgentAiFromSettings, trpc } from "../core";
 import { ChatFeed } from "../pages/feed/ChatFeed";
 import { Routes } from "../Routes";
-import { AgentFeed, agentFeedRuntime } from "./components";
+import { AgentFeed } from "./components";
 
 type ChatPhase = `blocked` | `booting` | `ready`;
 
@@ -24,7 +24,6 @@ export const useSnappyState = () => {
   const [sessionDraft, setSessionDraft] = useState(``);
   const feedRef = useRef<AgentFeedHandle>(null);
   const stopRef = useRef<(() => void) | undefined>(undefined);
-  const askResolveRef = useRef<((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined>(undefined);
   const appendToAgentRef = useRef<(text: string) => void>(() => {});
 
   useAsyncEffect(async () => {
@@ -44,8 +43,11 @@ export const useSnappyState = () => {
     if (phase !== `ready` || aiConfig === undefined || starterText === undefined) {
       return _.noop;
     }
-    const feed: AgentFeedRuntime = agentFeedRuntime({ askResolveRef, getHandle: () => feedRef.current });
-    const runtime = SnappyAgent({ aiConfig, feed, locale });
+    const handle = feedRef.current;
+    if (handle === null) {
+      return _.noop;
+    }
+    const runtime = SnappyAgent({ aiConfig, feed: handle, locale });
     stopRef.current = runtime.stop;
     appendToAgentRef.current = () => {};
     void runtime.run(starterText, fn => {
@@ -55,7 +57,6 @@ export const useSnappyState = () => {
     return () => {
       runtime.stop();
       stopRef.current = undefined;
-      askResolveRef.current = undefined;
       appendToAgentRef.current = () => {};
     };
   }, [aiConfig, locale, phase, starterText]);
@@ -100,10 +101,6 @@ export const useSnappyState = () => {
                     : { generationPrompt: artifact.generationPrompt, src: artifact.src, type: `image` },
                 ]);
               },
-            },
-            onFormSubmit: value => {
-              askResolveRef.current?.(value);
-              askResolveRef.current = undefined;
             },
             ref: feedRef,
           }),
