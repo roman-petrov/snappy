@@ -1,4 +1,4 @@
 declare const __Settings: {
-  readonly title: "title";
+  readonly logout: "logout";
 };
 export default __Settings;

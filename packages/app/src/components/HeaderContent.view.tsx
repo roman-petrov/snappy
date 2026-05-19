@@ -9,15 +9,14 @@ import styles from "./HeaderContent.module.scss";
 
 export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 
-export const HeaderContentView = ({ logoutOnClick }: HeaderContentViewProps) => (
+export const HeaderContentView = ({ loggedIn }: HeaderContentViewProps) => (
   <div className={styles.root}>
     <SystemButtons />
-    {logoutOnClick === undefined ? undefined : (
+    {loggedIn ? (
       <>
         <IconButton icon="settings" link={Routes.settings.root} tip={t(`settings.root.title`)} />
         <BalanceTap />
-        <IconButton icon="logout" onClick={logoutOnClick} tip={t(`common.logout`)} />
       </>
-    )}
+    ) : undefined}
   </div>
 );

@@ -1,11 +1,14 @@
 import { i } from "@snappy/intl";
 import { useStoreValue } from "@snappy/store";
-import { $fog, $locale, $theme, useAsyncEffect } from "@snappy/ui";
+import { $fog, $locale, $theme, useAsyncEffect, useGo } from "@snappy/ui";
 import { useState } from "react";
 
-import { t, trpc } from "../../core";
+import { Auth, t, trpc } from "../../core";
+import { Routes } from "../../Routes";
+import { $loggedIn } from "../../Store";
 
 export const useSettingsState = () => {
+  const go = useGo();
   const [aiTunnelEnd, setAiTunnelEnd] = useState(`›`);
   const [balanceEnd, setBalanceEnd] = useState(`›`);
   const [llmChatEnd, setLlmChatEnd] = useState(`›`);
@@ -25,5 +28,22 @@ export const useSettingsState = () => {
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  return { aiTunnelEnd, balanceEnd, fog, llmChatEnd, llmImageEnd, llmSpeechEnd, locale, theme, toggleFog };
+  const logoutOnClick = async () => {
+    await Auth.signOut();
+    $loggedIn.set(false);
+    void go(Routes.login, { replace: true });
+  };
+
+  return {
+    aiTunnelEnd,
+    balanceEnd,
+    fog,
+    llmChatEnd,
+    llmImageEnd,
+    llmSpeechEnd,
+    locale,
+    logoutOnClick,
+    theme,
+    toggleFog,
+  };
 };
