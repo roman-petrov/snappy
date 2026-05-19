@@ -7,7 +7,12 @@ import styles from "./AgentFeedMessageBadge.module.scss";
 
 export type AgentFeedMessageBadgeViewProps = ReturnType<typeof useAgentFeedMessageBadgeState>;
 
-export const AgentFeedMessageBadgeView = ({ hideOnSuccess, message, status, textProps }: AgentFeedMessageBadgeViewProps) => {
+export const AgentFeedMessageBadgeView = ({
+  hideOnSuccess,
+  message,
+  status,
+  textProps,
+}: AgentFeedMessageBadgeViewProps) => {
   if (hideOnSuccess && status === `done`) {
     return undefined;
   }

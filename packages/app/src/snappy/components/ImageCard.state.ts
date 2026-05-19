@@ -8,15 +8,7 @@ import type { ImageCardProps } from "./ImageCard";
 
 import { t } from "../../locales";
 
-export const useImageCardState = ({
-  ai,
-  model,
-  onDelete,
-  onError,
-  onGenerated,
-  prompt = ``,
-  src,
-}: ImageCardProps) => {
+export const useImageCardState = ({ ai, model, onDelete, onError, onGenerated, prompt = ``, src }: ImageCardProps) => {
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
   const canRegenerate = ai !== undefined && model !== undefined && prompt.trim() !== ``;
