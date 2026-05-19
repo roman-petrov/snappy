@@ -6,9 +6,9 @@ import { FeedPanel } from "./FeedPanel";
 
 export type FeedCardViewProps = ReturnType<typeof useFeedCardState>;
 
-export const FeedCardView = ({ actions, active, bodyRef, children }: FeedCardViewProps) => (
+export const FeedCardView = ({ actions, bodyRef, children }: FeedCardViewProps) => (
   <>
-    <FeedPanel active={active} bodyRef={bodyRef}>
+    <FeedPanel bodyRef={bodyRef}>
       {children}
     </FeedPanel>
     <ContextMenu elementRef={bodyRef}>{close => <Menu actions={actions ?? []} close={close} />}</ContextMenu>

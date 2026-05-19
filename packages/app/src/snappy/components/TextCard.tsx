@@ -4,7 +4,6 @@ import { useTextCardState } from "./TextCard.state";
 import { TextCardView } from "./TextCard.view";
 
 export type TextCardProps = {
-  active?: boolean;
   ai?: Ai;
   generating?: boolean;
   html: string;

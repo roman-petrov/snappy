@@ -9,7 +9,6 @@ import type { ImageCardProps } from "./ImageCard";
 import { t } from "../../locales";
 
 export const useImageCardState = ({
-  active = false,
   ai,
   model,
   onDelete,
@@ -97,5 +96,5 @@ export const useImageCardState = ({
       : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
   }, [busy, canRegenerate, empty, onDelete, regenerate, src]);
 
-  return { actions, active, busy, empty, emptyText: t(`feedCard.generatingImage`), src };
+  return { actions, busy, empty, emptyText: t(`feedCard.generatingImage`), src };
 };

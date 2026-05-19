@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/prefer-promise-reject-errors */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-let */
-/* eslint-disable functional/no-loop-statements */
+
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
@@ -22,45 +22,7 @@ export type AgentFeedHandleConfig = {
 };
 
 export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConfig) => {
-  const activeEntryKeyFrom = (items: AgentFeedItem[]): number | undefined => {
-    if (items.some(({ entry }) => entry.type === `form`)) {
-      return undefined;
-    }
-    const item = items.findLast(({ entry }) => {
-      if (entry.type === `artifact`) {
-        const { generationStatus } = entry.artifact;
-
-        return generationStatus === `running`;
-      }
-
-      return (entry.type === `stream` || entry.type === `reasoning`) && entry.closed !== true;
-    });
-
-    return item?.key;
-  };
-
   type StreamEntryType = `reasoning` | `stream`;
-
-  const streamClosedOnEnd = (
-    key: number,
-    stream: AsyncIterable<string>,
-    entryType: StreamEntryType,
-  ): AsyncIterable<string> =>
-    (async function* streamText() {
-      try {
-        for await (const text of stream) {
-          yield text;
-        }
-      } finally {
-        commit(previous =>
-          previous.map(streamItem =>
-            streamItem.key === key && streamItem.entry.type === entryType
-              ? { ...streamItem, entry: { ...streamItem.entry, closed: true } }
-              : streamItem,
-          ),
-        );
-      }
-    })();
 
   let keySeq = 0;
 
@@ -92,7 +54,7 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
 
   const appendStream = (stream: AsyncIterable<string>, entryType: StreamEntryType) => {
     const key = nextKey();
-    pushEntry(key, { stream: streamClosedOnEnd(key, stream, entryType), type: entryType });
+    pushEntry(key, { stream, type: entryType });
 
     return key;
   };
@@ -174,17 +136,13 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
     pendingFormAnswer = undefined;
   };
 
-  const rows = (items: AgentFeedItem[]) => {
-    const activeKey = activeEntryKeyFrom(items);
-
-    return items.map(({ entry, key }) => {
-      const active = activeKey !== undefined && key === activeKey;
-
+  const rows = (items: AgentFeedItem[]) =>
+    items.map(({ entry, key }) => {
       if (entry.type === `artifact`) {
         const { ai, artifact, model, onArtifactError, onArtifactGenerated } = entry;
         const prompt = artifact.generationPrompt;
         const externallyGenerating = artifact.generationStatus === `running`;
-        const base = { active, onError: onArtifactError, prompt };
+        const base = { onError: onArtifactError, prompt };
 
         if (artifact.type === `image`) {
           const suppressCardAi = externallyGenerating && artifact.src.trim() === ``;
@@ -230,12 +188,11 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
       }
 
       if (entry.type === `reasoning`) {
-        return createElement(AgentFeedRow.reasoning, { active, key, stream: entry.stream });
+        return createElement(AgentFeedRow.reasoning, { key, stream: entry.stream });
       }
 
-      return createElement(AgentFeedRow.stream, { active, key, stream: entry.stream });
+      return createElement(AgentFeedRow.stream, { key, stream: entry.stream });
     });
-  };
 
   const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt, size }) => {
     const artifactId = crypto.randomUUID();

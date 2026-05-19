@@ -7,10 +7,10 @@ import { FeedPanel } from "./FeedPanel";
 import styles from "./StaticForm.module.scss";
 import { StaticFormField } from "./StaticFormField";
 
-export type StaticFormViewProps = ReturnType<typeof useStaticFormState> & { active: boolean };
+export type StaticFormViewProps = ReturnType<typeof useStaticFormState>;
 
-export const StaticFormView = ({ active, fields, submit }: StaticFormViewProps) => (
-  <FeedPanel active={active}>
+export const StaticFormView = ({ fields, submit }: StaticFormViewProps) => (
+  <FeedPanel>
     <div className={styles.root}>
       {fields.map(field => (
         <StaticFormField key={field.id} label={field.label}>

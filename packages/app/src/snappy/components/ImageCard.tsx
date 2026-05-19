@@ -4,7 +4,6 @@ import { useImageCardState } from "./ImageCard.state";
 import { ImageCardView } from "./ImageCard.view";
 
 export type ImageCardProps = {
-  active?: boolean;
   ai?: Ai;
   model?: string;
   onDelete?: () => void;

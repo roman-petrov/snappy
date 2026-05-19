@@ -4,6 +4,6 @@ import type { ReactNode } from "react";
 import { useFeedCardState } from "./FeedCard.state";
 import { FeedCardView } from "./FeedCard.view";
 
-export type FeedCardProps = { actions?: MenuAction[]; active?: boolean; children: ReactNode };
+export type FeedCardProps = { actions?: MenuAction[]; children: ReactNode };
 
 export const FeedCard = (props: FeedCardProps) => <FeedCardView {...useFeedCardState(props)} />;

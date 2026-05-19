@@ -13,6 +13,6 @@ export const AgentFeedMessageForm = <TPlan extends StaticFormPlan>({
   plan,
 }: AgentFeedMessageFormProps<TPlan>) => (
   <div className={styles.root}>
-    <StaticForm active onSubmit={onSubmit} plan={plan} />
+    <StaticForm onSubmit={onSubmit} plan={plan} />
   </div>
 );

@@ -6,8 +6,8 @@ import { FeedCard } from "./FeedCard";
 
 export type TextCardViewProps = ReturnType<typeof useTextCardState>;
 
-export const TextCardView = ({ actions, active, content, onHtml }: TextCardViewProps) => (
-  <FeedCard actions={actions} active={active}>
+export const TextCardView = ({ actions, content, onHtml }: TextCardViewProps) => (
+  <FeedCard actions={actions}>
     <AiStream onHtml={onHtml} stream={content} />
   </FeedCard>
 );

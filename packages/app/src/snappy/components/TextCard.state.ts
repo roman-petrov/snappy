@@ -8,7 +8,6 @@ import type { TextCardProps } from "./TextCard";
 import { t } from "../../locales";
 
 export const useTextCardState = ({
-  active = false,
   ai,
   generating = false,
   html,
@@ -97,5 +96,5 @@ export const useTextCardState = ({
       : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
   }, [busy, canRegenerate, onDelete, regenerate]);
 
-  return { actions, active, content, onHtml };
+  return { actions, content, onHtml };
 };

@@ -8,8 +8,8 @@ import styles from "./ImageCard.module.scss";
 
 export type ImageCardViewProps = ReturnType<typeof useImageCardState>;
 
-export const ImageCardView = ({ actions, active, busy, empty, emptyText, src }: ImageCardViewProps) => (
-  <FeedCard actions={actions} active={active}>
+export const ImageCardView = ({ actions, busy, empty, emptyText, src }: ImageCardViewProps) => (
+  <FeedCard actions={actions}>
     {empty ? (
       <div className={styles.empty}>
         <span className={styles.spinner}>

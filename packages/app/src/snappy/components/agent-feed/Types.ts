@@ -17,11 +17,11 @@ export type AgentFeedEntry =
       onArtifactGenerated?: (artifact: AgentArtifact) => void;
       type: `artifact`;
     }
-  | { closed?: boolean; stream: AsyncIterable<string>; type: `reasoning` }
-  | { closed?: boolean; stream: AsyncIterable<string>; type: `stream` }
   | { finished: Promise<{ label: string }>; text: string; type: `status` }
   | { finished: Promise<{ label: string }>; text: string; type: `tool-badge` }
   | { plan: StaticFormPlan; type: `form` }
+  | { stream: AsyncIterable<string>; type: `reasoning` }
+  | { stream: AsyncIterable<string>; type: `stream` }
   | { text: string; type: `user` };
 
 export type AgentFeedItem = { entry: AgentFeedEntry; key: number };
