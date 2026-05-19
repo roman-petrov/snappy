@@ -130,7 +130,7 @@ const defs: Record<string, CmdDefinition> = {
   jscpd: { description: `JSCPD: copy-paste detection.`, label: `📋 JSCPD`, run: { args: [`.`], tool: `jscpd` } },
   knip: { description: `Knip: unused code, deps, exports.`, label: `🧹 Knip`, run: { args: [], tool: `knip` } },
   lint: {
-    children: [`tsc`, `eslint`, `prettier`, `stylelint`, `cspell`, `jscpd`, `knip`, `markdownlint`],
+    children: [`tsc`, `eslint`, `prettier`, `stylelint`, `cspell`, `knip`, `markdownlint`, `jscpd`],
     description: `TypeScript, ESLint, Prettier, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
     label: `🛡️ Lint`,
   },
