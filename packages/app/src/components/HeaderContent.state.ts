@@ -17,5 +17,5 @@ export const useHeaderContentState = () => {
       }
     : undefined;
 
-  return { balanceVisible: loggedIn, logoutOnClick };
+  return { logoutOnClick };
 };
