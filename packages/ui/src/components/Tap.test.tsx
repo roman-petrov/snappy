@@ -8,7 +8,11 @@ import { Tap } from "./Tap";
 
 const renderTap = (ui: ReactElement) => render(<MemoryRouter>{ui}</MemoryRouter>);
 const navigate = vi.fn();
-const { bridgeState, hapticImpact } = vi.hoisted(() => ({ bridgeState: { available: false }, hapticImpact: vi.fn() }));
+
+const { bridgeState, vibrateTrigger } = vi.hoisted(() => ({
+  bridgeState: { available: false },
+  vibrateTrigger: vi.fn(),
+}));
 
 vi.mock(import(`../hooks/useGo`), () => ({ useGo: () => navigate }));
 vi.mock(import(`@snappy/platform`), () => ({
@@ -18,11 +22,12 @@ vi.mock(import(`@snappy/platform`), () => ({
     },
     copyHtml: vi.fn(),
     copyImage: vi.fn(),
-    hapticImpact,
+    hapticImpact: vi.fn(),
     setBarStyle: vi.fn(),
     shareHtml: vi.fn(),
     shareImage: vi.fn(),
   },
+  Vibrate: { trigger: vibrateTrigger },
 }));
 
 describe(`tap`, () => {
@@ -237,9 +242,8 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`calls hapticImpact when vibrate is provided`, () => {
-    bridgeState.available = true;
-    hapticImpact.mockReset();
+  it(`calls Vibrate.trigger when vibrate is provided`, () => {
+    vibrateTrigger.mockReset();
     const onClick = vi.fn();
 
     const { container } = renderTap(
@@ -250,8 +254,8 @@ describe(`tap`, () => {
 
     fireEvent.click(within(container).getByRole(`button`));
 
-    expect(hapticImpact).toHaveBeenCalledWith(`confirm`);
-    expect(hapticImpact).toHaveBeenCalledTimes(1);
+    expect(vibrateTrigger).toHaveBeenCalledWith(`confirm`);
+    expect(vibrateTrigger).toHaveBeenCalledTimes(1);
   });
 
   it(`passes tip to title`, () => {
