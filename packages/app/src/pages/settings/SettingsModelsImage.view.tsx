@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
+import { Icon } from "@snappy/ui";
+
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
 import { Page } from "../../components";
@@ -22,9 +24,9 @@ export const SettingsModelsImageView = ({
           <div key={option.value}>
             {index > 0 && <SettingsCardSeparator />}
             <SettingsCardRow
-              end={modelValue === option.value ? `✓` : undefined}
               icon={option.icon}
               onClick={async () => onModelSelect(option.value)}
+              right={modelValue === option.value ? <Icon color="primary" name="check" /> : undefined}
               text={option.label}
             />
           </div>
@@ -35,9 +37,9 @@ export const SettingsModelsImageView = ({
           <div key={value}>
             {index > 0 && <SettingsCardSeparator />}
             <SettingsCardRow
-              end={qualityValue === value ? `✓` : undefined}
               icon="stars"
               onClick={() => onQualitySelect(value)}
+              right={qualityValue === value ? <Icon color="primary" name="check" /> : undefined}
               text={t(`settings.models.image.qualityValue.${value}`)}
             />
           </div>

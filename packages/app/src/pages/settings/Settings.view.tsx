@@ -26,21 +26,21 @@ export const SettingsView = ({
     <SettingsCards>
       <SettingsCard title={t(`settings.root.systemGroup`)}>
         <SettingsCardRow
-          end={`${t(`settings.theme.${theme}`)} ›`}
+          bottom={t(`settings.theme.${theme}`)}
           icon="palette"
           link={Routes.settings.theme}
           text={t(`settings.root.theme`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          end={<SwitchDisplay checked={fog} />}
           icon="blur_on"
           onClick={toggleFog}
+          right={<SwitchDisplay checked={fog} />}
           text={t(`settings.root.fogBackground`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          end={`${t(`settings.language.${locale}`)} ›`}
+          bottom={t(`settings.language.${locale}`)}
           icon="language"
           link={Routes.settings.language}
           text={t(`settings.root.language`)}
@@ -48,28 +48,28 @@ export const SettingsView = ({
       </SettingsCard>
       <SettingsCard title={t(`settings.root.modelsGroup`)}>
         <SettingsCardRow
-          end={aiTunnelEnd}
+          bottom={aiTunnelEnd}
           icon="vpn_key"
           link={Routes.settings.aiTunnel}
           text={t(`settings.root.aiTunnel`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          end={llmChatEnd}
+          bottom={llmChatEnd}
           icon="chat"
           link={Routes.settings.models.chat}
           text={t(`settings.models.chat.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          end={llmImageEnd}
+          bottom={llmImageEnd}
           icon="image"
           link={Routes.settings.models.image}
           text={t(`settings.models.image.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          end={llmSpeechEnd}
+          bottom={llmSpeechEnd}
           icon="record_voice_over"
           link={Routes.settings.models.speech}
           text={t(`settings.models.speech.title`)}
@@ -77,7 +77,7 @@ export const SettingsView = ({
       </SettingsCard>
       <SettingsCard>
         <SettingsCardRow
-          end={balanceEnd}
+          bottom={balanceEnd}
           icon="credit_card"
           link={Routes.balance.topUp}
           text={t(`settings.root.balance`)}

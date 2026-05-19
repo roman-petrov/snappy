@@ -1,5 +1,4 @@
-import type { Icon as UiIcon } from "@snappy/ui";
-
+import { Icon, type Icon as UiIcon } from "@snappy/ui";
 import { Fragment } from "react";
 
 import { SettingsCard } from "./SettingsCard";
@@ -22,9 +21,9 @@ export const SettingsOptionList = <T extends string>({ onSelect, options, value 
         <Fragment key={opt.value}>
           {index > 0 && <SettingsCardSeparator />}
           <SettingsCardRow
-            end={value === opt.value ? `✓` : undefined}
             icon={opt.icon}
             onClick={() => onSelect(opt.value)}
+            right={value === opt.value ? <Icon color="primary" name="check" /> : undefined}
             text={opt.label}
           />
         </Fragment>

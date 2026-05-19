@@ -20,9 +20,9 @@ export const SettingsAiTunnelView = ({
     <SettingsCard lead={t(`settings.aiTunnel.connectionLead`)} title={t(`settings.aiTunnel.connection`)}>
       <SettingsCardRow
         disabled={loading}
-        end={<SwitchDisplay checked={aiTunnelDirect} disabled={loading} />}
         icon="vpn_key"
         onClick={onDirectSwitchClick}
+        right={<SwitchDisplay checked={aiTunnelDirect} disabled={loading} />}
         text={t(`settings.aiTunnel.directSwitch`)}
       />
     </SettingsCard>
