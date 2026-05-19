@@ -28,12 +28,20 @@ export const Agent = ({
 }: AgentCreateInput) => {
   let stopped = false;
   const isStopped = () => stopped;
+  let activeAppend = _.noop as (text: string) => void;
+  let activeStop = _.noop;
+  const appendUserText = (text: string) => activeAppend(text);
+
+  const stop = () => {
+    stopped = true;
+    activeStop();
+  };
 
   const thinkingLabels =
     locale === `ru` ? { done: `Мысль`, running: `Думаю...` } : { done: `Thought`, running: `Thinking...` };
 
   const toolsByName = _.fromEntries(
-    _.entries(tools).flatMap(([group, groupTools]) =>
+    _.entries(tools({ isStopped })).flatMap(([group, groupTools]) =>
       _.entries(groupTools).map(([name, agentTool]) => [`${group}_${name}`, agentTool]),
     ),
   );
@@ -42,9 +50,12 @@ export const Agent = ({
     _.isString(result) ? result : `Tool failed: ${result.error}`;
 
   return {
+    appendUserText,
     context: { isStopped },
     start: (initialMessages: AiChatMessage[]) => {
       stopped = false;
+      activeAppend = _.noop;
+      activeStop = _.noop;
 
       const queue: AgentStreamPart[] = [];
       let dequeueWake: (() => void) | undefined;
@@ -104,7 +115,12 @@ export const Agent = ({
       };
 
       let idleWake: (() => void) | undefined;
-      let appendUserText = _.noop as (text: string) => void;
+
+      const stopRun = () => {
+        stopped = true;
+        idleWake?.();
+      };
+      activeStop = stopRun;
 
       const consumeSegment = async (seg: AiChatStreamSegment) => {
         if (seg.type === `chat` || seg.type === `reasoning`) {
@@ -231,7 +247,7 @@ export const Agent = ({
           return true;
         };
 
-        appendUserText = (raw: string) => {
+        activeAppend = (raw: string) => {
           const text = raw.trim();
           if (text !== ``) {
             pendingUserTexts.push(text);
@@ -290,6 +306,8 @@ export const Agent = ({
           }
         }
         setStatus(`streaming`);
+        activeAppend = _.noop;
+        activeStop = _.noop;
         const completed = { error: stopReason === `failed` ? stopError : undefined, messages, reason: stopReason };
         push({ type: `run`, ...completed });
         resolveDone(completed);
@@ -297,15 +315,9 @@ export const Agent = ({
 
       void run();
 
-      return Object.assign(stream, {
-        appendUserText: (text: string) => appendUserText(text),
-        done,
-        stop: () => {
-          stopped = true;
-          idleWake?.();
-        },
-      }) satisfies AgentRun;
+      return Object.assign(stream, { appendUserText, done, stop: stopRun }) satisfies AgentRun;
     },
+    stop,
   };
 };
 

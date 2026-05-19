@@ -45,7 +45,8 @@ try {
 
   const store = CoderStore({ ignore: Ignore, projectRoot: projectRootResolved });
   const tools = { ...db.tools, ...store.tools };
-  const coder = (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) => Coder({ ...props, locale, tools });
+  const coder = (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) =>
+    Coder({ ...props, locale, tools: () => tools });
   Console.logLine(
     `${Theme.indexStart(t(`startup.indexingStart`))} ${Theme.dim(t(`startup.indexingStatus`))} ${Theme.dim(`(${embeddingModel})`)}…`,
   );

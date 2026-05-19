@@ -4,6 +4,8 @@ import type { Locale } from "@snappy/intl";
 
 import type { AgentToolGroup } from "./AgentTool";
 
+export type AgentToolsContext = { isStopped: () => boolean };
+
 export type AgentCreateInput = {
   ai: Ai;
   chatModel: string;
@@ -11,7 +13,7 @@ export type AgentCreateInput = {
   locale: Locale;
   maxRounds: number;
   systemPrompt: StructuredPrompt;
-  tools: Record<string, AgentToolGroup>;
+  tools: (context: AgentToolsContext) => Record<string, AgentToolGroup>;
 };
 
 export type AgentRun = AsyncIterable<AgentStreamPart> & {
