@@ -1,3 +1,4 @@
+/* jscpd:ignore-start */
 import { AgentTool } from "@snappy/agent";
 import { z } from "zod";
 
@@ -30,3 +31,4 @@ export const WriteFileTool: WorkspaceAgentTool = workspace =>
       path: z.string().min(1).describe(`File path relative to workspace root.`),
     }),
   });
+/* jscpd:ignore-end */

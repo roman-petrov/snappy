@@ -4,7 +4,6 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
-
 const jsonChunks = (body: ReadableStream<Uint8Array>): AsyncIterable<unknown> =>
   (async function* chunks() {
     const decoder = new TextDecoder();
