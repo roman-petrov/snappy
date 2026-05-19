@@ -4,4 +4,4 @@ import styles from "./AgentFeed.module.scss";
 
 export type AgentFeedViewProps = ReturnType<typeof useAgentFeedState>;
 
-export const AgentFeedView = ({ rows }: AgentFeedViewProps) => <article className={styles.root}>{rows}</article>;
+export const AgentFeedView = (rows: AgentFeedViewProps) => <article className={styles.root}>{rows}</article>;

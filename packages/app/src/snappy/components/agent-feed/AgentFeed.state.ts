@@ -5,7 +5,7 @@ import type { AgentFeedItem } from "./Types";
 
 import { AgentFeedHandle } from "./AgentFeedHandle";
 
-export const useAgentFeedState = ({ artifactSink, ref, ...rest }: AgentFeedProps) => {
+export const useAgentFeedState = ({ artifactSink, ref }: AgentFeedProps) => {
   const [entries, setEntries] = useState<AgentFeedItem[]>([]);
   const sinkRef = useRef(artifactSink);
   sinkRef.current = artifactSink;
@@ -16,5 +16,5 @@ export const useAgentFeedState = ({ artifactSink, ref, ...rest }: AgentFeedProps
 
   const rows = useMemo(() => handle.rows(entries), [handle, entries]);
 
-  return { ...rest, rows };
+  return rows;
 };
