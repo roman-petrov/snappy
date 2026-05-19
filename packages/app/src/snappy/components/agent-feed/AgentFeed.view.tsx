@@ -32,7 +32,9 @@ export const AgentFeedView = ({ onFormSubmit, rows }: AgentFeedViewProps) => (
         case `user`: {
           return <AgentFeedUserMessage key={row.key} text={row.props.text} />;
         }
-        // No default
+        default: {
+          return undefined;
+        }
       }
     })}
   </article>
