@@ -27,8 +27,7 @@ const image = async (src: string) => {
     return;
   }
 
-  const blob = await fetch(src).then(async response => response.blob());
-  const type = blob.type.startsWith(`image/`) ? blob.type : `image/png`;
+  const { blob, type } = await PlatformCommon.imageBlob(src);
 
   await navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
 };

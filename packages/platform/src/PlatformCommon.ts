@@ -9,4 +9,12 @@ const imageInfo = (src: string) => {
   return { base64, extension, mime };
 };
 
-export const PlatformCommon = { imageInfo, plainText };
+const imageBlob = async (src: string) => {
+  const blob = await fetch(src).then(async response => response.blob());
+  const type = blob.type.startsWith(`image/`) ? blob.type : `image/png`;
+  const extension = type.slice(type.indexOf(`/`) + 1);
+
+  return { blob, extension, type };
+};
+
+export const PlatformCommon = { imageBlob, imageInfo, plainText };
