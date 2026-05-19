@@ -103,4 +103,4 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
   return { appendUserText, run, stop };
 };
 
-export type SnappyAgentRuntime = ReturnType<typeof SnappyAgent>;
+export type SnappyAgent = ReturnType<typeof SnappyAgent>;
