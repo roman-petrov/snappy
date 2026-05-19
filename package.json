@@ -15,6 +15,7 @@
   "devDependencies": {
     "@knip/mcp": "^0.0.27",
     "actions-up": "^1.13.0",
+    "jsdom": "^29.0.2",
     "vitest": "^4.1.4"
   },
   "patchedDependencies": {

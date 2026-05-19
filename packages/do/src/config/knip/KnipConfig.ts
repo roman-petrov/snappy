@@ -1,7 +1,7 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-  ignore: [`.snappy/**`, `packages/**/generated/**`],
+  ignore: [`packages/**/generated/**`],
   ignoreExportsUsedInFile: true,
   ignoreIssues: {
     "**/*.module.scss.d.ts": [`exports`],
@@ -11,7 +11,7 @@ const config: KnipConfig = {
   workspaces: {
     ".": {
       entry: [`auth.ts`, `cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`],
-      ignoreDependencies: [`@knip/mcp`, `jsdom`, `actions-up`, `@snappy/coder-cli`],
+      ignoreDependencies: [`@knip/mcp`, `actions-up`, `@snappy/coder-cli`],
     },
     "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/coder-chunk": {
