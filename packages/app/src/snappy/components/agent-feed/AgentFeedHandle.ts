@@ -117,27 +117,40 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
     onArtifactError?: (error: unknown) => void;
   }) => addEntry({ ai, artifact, model, onArtifactError, type: `artifact` });
 
-  const generateText: AgentFeedRuntime[`generateText`] = async ({ ai, model, prompt }) => {
-    const artifactId = crypto.randomUUID();
-
+  const generateArtifact = async ({
+    ai,
+    model,
+    prompt,
+    type,
+  }: {
+    ai: Ai;
+    model: string;
+    prompt: string;
+    type: AgentArtifact[`type`];
+  }) => {
     const artifact: AgentArtifact = {
       generationPrompt: prompt,
       generationStatus: `running`,
-      html: ``,
-      id: artifactId,
+      id: crypto.randomUUID(),
       model,
-      type: `text`,
+      ...(type === `image` ? { src: ``, type: `image` } : { html: ``, type: `text` }),
     };
 
-    const settled = trackArtifact(artifactId);
+    const settled = trackArtifact(artifact.id);
 
-    addArtifactEntry({ ai, artifact, model, onArtifactError: error => failArtifact(artifactId, error) });
+    addArtifactEntry({ ai, artifact, model, onArtifactError: error => failArtifact(artifact.id, error) });
 
     return settled.catch((error: unknown) => {
-      failArtifact(artifactId, error);
+      failArtifact(artifact.id, error);
       throw error;
     });
   };
+
+  const generateText: AgentFeedRuntime[`generateText`] = async ({ ai, model, prompt }) =>
+    generateArtifact({ ai, model, prompt, type: `text` });
+
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt }) =>
+    generateArtifact({ ai, model, prompt, type: `image` });
 
   let pendingFormAnswer: ((value: StaticFormAnswersOf<StaticFormPlan>) => void) | undefined;
 
@@ -218,28 +231,6 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
 
       return createElement(AgentFeedRow.stream, { key, stream: entry.stream });
     });
-
-  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt }) => {
-    const artifactId = crypto.randomUUID();
-
-    const artifact: AgentArtifact = {
-      generationPrompt: prompt,
-      generationStatus: `running`,
-      id: artifactId,
-      model,
-      src: ``,
-      type: `image`,
-    };
-
-    const settled = trackArtifact(artifactId);
-
-    addArtifactEntry({ ai, artifact, model, onArtifactError: error => failArtifact(artifactId, error) });
-
-    return settled.catch((error: unknown) => {
-      failArtifact(artifactId, error);
-      throw error;
-    });
-  };
 
   const appendStream = (stream: AsyncIterable<string>, entryType: StreamEntryType) => {
     const key = nextKey();
