@@ -19,7 +19,7 @@
     "@snappy/trpc": "workspace:*",
     "@snappy/ui": "workspace:*",
     "@trpc/client": "^11.17.0",
-    "better-auth": "^1.6.9",
+    "better-auth": "^1.6.11",
     "react": "^19.2.6",
     "react-router-dom": "^7.14.2"
   },

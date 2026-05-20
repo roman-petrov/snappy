@@ -12,7 +12,7 @@
     "@snappy/trpc": "workspace:*",
     "@snappy/ui": "workspace:*",
     "@trpc/server": "^11.17.0",
-    "better-auth": "^1.6.9",
+    "better-auth": "^1.6.11",
     "fastify": "^5.8.5"
   },
   "devDependencies": {

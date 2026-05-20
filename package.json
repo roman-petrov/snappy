@@ -11,6 +11,7 @@
     "@snappy/db": "workspace:*",
     "@snappy/do": "workspace:*",
     "@snappy/server-app": "workspace:*",
+    "better-auth": "^1.6.11",
     "prisma": "^7.7.0",
     "web-tree-sitter": "^0.26.9"
   },
