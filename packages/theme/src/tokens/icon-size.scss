@@ -1,4 +1,4 @@
-@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/scale-token" as scale;
 
 $values: (
   sm: 16,
@@ -7,18 +7,12 @@ $values: (
   xl: 40,
 );
 
-@function -var($segment) {
-  @return --icon-size-#{$segment};
-}
-
 @mixin root {
-  @each $name, $px in $values {
-    #{-var($name)}: #{r($px)};
-  }
+  @include scale.root("icon-size", $values);
 }
 
 @function -icon-size($name) {
-  @return var(#{-var($name)});
+  @return scale.var-ref("icon-size", $name);
 }
 
 @function sm() {

@@ -1,4 +1,4 @@
-@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/scale-token" as scale;
 
 $values: (
   xs: 4,
@@ -7,18 +7,12 @@ $values: (
   lg: 20,
 );
 
-@function -var($segment) {
-  @return --radius-#{$segment};
-}
-
 @mixin root {
-  @each $name, $px in $values {
-    #{-var($name)}: #{r($px)};
-  }
+  @include scale.root("radius", $values);
 }
 
 @function -radius($name) {
-  @return var(#{-var($name)});
+  @return scale.var-ref("radius", $name);
 }
 
 @function xs() {

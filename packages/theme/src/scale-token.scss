@@ -1,0 +1,11 @@
+@use "pkg:@snappy/theme/core" as *;
+
+@mixin root($prefix, $values) {
+  @each $name, $px in $values {
+    --#{$prefix}-#{$name}: #{r($px)};
+  }
+}
+
+@function var-ref($prefix, $name) {
+  @return var(--#{$prefix}-#{$name});
+}

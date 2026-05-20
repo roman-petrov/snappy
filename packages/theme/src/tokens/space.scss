@@ -1,4 +1,4 @@
-@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/scale-token" as scale;
 
 $values: (
   xs: 4,
@@ -10,18 +10,12 @@ $values: (
   "3xl": 96,
 );
 
-@function -var($segment) {
-  @return --space-#{$segment};
-}
-
 @mixin root {
-  @each $name, $px in $values {
-    #{-var($name)}: #{r($px)};
-  }
+  @include scale.root("space", $values);
 }
 
 @function -space($name) {
-  @return var(#{-var($name)});
+  @return scale.var-ref("space", $name);
 }
 
 @function xs() {
