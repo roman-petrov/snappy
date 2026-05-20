@@ -31,6 +31,7 @@ const config: KnipConfig = {
         `prettier-plugin-pkg`,
         `stylelint-config-recess-order`,
         `stylelint-config-standard-scss`,
+        `stylelint-order`,
       ],
     },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
