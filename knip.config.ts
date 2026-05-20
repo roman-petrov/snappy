@@ -1,1 +1,1 @@
-export { KnipConfig as default } from "@snappy/do/config";
+export { KnipConfig as default } from "@snappy/do/config/knip";

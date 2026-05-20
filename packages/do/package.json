@@ -8,7 +8,18 @@
   },
   "exports": {
     "./config": "./src/config/index.ts",
-    "./config/js": "./src/config/index.esm.js"
+    "./config/cspell": "./src/config/cspell/index.ts",
+    "./config/eslint": "./src/config/eslint/index.ts",
+    "./config/js/cspell": "./src/config/esm/cspell.js",
+    "./config/js/eslint": "./src/config/esm/eslint.js",
+    "./config/js/knip": "./src/config/esm/knip.js",
+    "./config/js/prettier": "./src/config/esm/prettier.js",
+    "./config/js/stylelint": "./src/config/esm/stylelint.js",
+    "./config/js/vite": "./src/config/esm/vite.js",
+    "./config/knip": "./src/config/knip/index.ts",
+    "./config/prettier": "./src/config/prettier/index.ts",
+    "./config/stylelint": "./src/config/stylelint/index.ts",
+    "./config/vite": "./src/config/vite/index.ts"
   },
   "scripts": {
     "start": "node --import tsx/esm src/main.server.ts"
@@ -45,7 +56,7 @@
     "express": "^5.2.1",
     "globals": "^17.6.0",
     "jscpd": "^4.0.9",
-    "knip": "^6.8.0",
+    "knip": "^6.14.1",
     "markdownlint-cli": "^0.48.0",
     "prettier": "^3.8.3",
     "prettier-plugin-pkg": "^0.22.1",

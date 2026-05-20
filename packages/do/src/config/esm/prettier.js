@@ -1,10 +1,10 @@
+/* eslint-disable unicorn/filename-case */
 /* eslint-disable functional/no-expression-statements */
 import { register } from "tsx/esm/api";
 
 const unregister = register();
-
-export const { CSpellConfig, ESLintConfig, PrettierConfig, StyleLintConfig, ViteConfigLoader } = await import(
-  `./index.ts`
-);
+const { PrettierConfig } = await import(`../prettier/PrettierConfig.ts`);
 
 await unregister();
+
+export default PrettierConfig;

@@ -3,11 +3,7 @@ import type { KnipConfig } from "knip";
 const config: KnipConfig = {
   ignore: [`packages/**/generated/**`],
   ignoreExportsUsedInFile: true,
-  ignoreIssues: {
-    "**/*.module.scss.d.ts": [`exports`],
-    "**/entry-server.tsx": [`exports`],
-    "packages/do/src/config/index.esm.js": [`exports`],
-  },
+  ignoreIssues: { "**/*.module.scss.d.ts": [`exports`], "**/entry-server.tsx": [`exports`] },
   workspaces: {
     ".": {
       entry: [`auth.ts`, `cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`],
