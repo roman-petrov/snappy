@@ -1,11 +1,12 @@
 import type { MenuAction } from "@snappy/ui";
 
 import { Copy, Share } from "@snappy/platform";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import type { TextCardProps } from "./TextCard";
 
 import { t } from "../../locales";
+import { useFeedCardGeneration } from "../hooks";
 
 export const useTextCardState = ({
   ai,
@@ -17,35 +18,28 @@ export const useTextCardState = ({
   prompt = ``,
   text,
 }: TextCardProps) => {
-  const [busy, setBusy] = useState(false);
-  const autoStarted = useRef(false);
   const copyHtml = useRef(``);
-  const onGeneratedRef = useRef(onGenerated);
-  const onErrorRef = useRef(onError);
-  onGeneratedRef.current = onGenerated;
-  onErrorRef.current = onError;
   const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
   const empty = text.trim() === ``;
+
+  const extraActions = useMemo<MenuAction[]>(
+    () => [
+      { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(copyHtml.current), tip: t(`feedCard.copy`) },
+      { icon: `share`, key: `share`, onClick: async () => Share.html(copyHtml.current), tip: t(`feedCard.share`) },
+    ],
+    [],
+  );
+
+  const { actions, busy, onErrorRef, onGeneratedRef, setBusy } = useFeedCardGeneration({
+    canRegenerate,
+    empty,
+    extraActions,
+    onDelete,
+    onError,
+    onGenerated,
+  });
+
   const streaming = busy || generating;
-
-  const regenerate = useCallback(() => {
-    if (canRegenerate) {
-      setBusy(true);
-    }
-  }, [canRegenerate]);
-
-  useEffect(() => {
-    if (!empty) {
-      autoStarted.current = false;
-    }
-  }, [empty]);
-
-  useEffect(() => {
-    if (!busy && empty && canRegenerate && !autoStarted.current) {
-      autoStarted.current = true;
-      setBusy(true);
-    }
-  }, [busy, canRegenerate, empty]);
 
   const stream = useMemo((): AsyncIterable<string> | undefined => {
     if (!streaming || ai === undefined || model === undefined || prompt.trim() === ``) {
@@ -62,7 +56,6 @@ export const useTextCardState = ({
             yield part;
           }
         }
-        await session.cost();
         await Promise.resolve(onGeneratedRef.current?.(next));
       } catch (error) {
         onErrorRef.current?.(error);
@@ -72,35 +65,13 @@ export const useTextCardState = ({
         }
       }
     })();
-  }, [ai, busy, model, prompt, streaming]);
+  }, [ai, busy, model, onErrorRef, onGeneratedRef, prompt, setBusy, streaming]);
 
   const content = stream ?? text;
 
   const onHtml = useCallback((htmlText: string) => {
     copyHtml.current = htmlText;
   }, []);
-
-  const actions = useMemo<MenuAction[]>(() => {
-    const base: MenuAction[] = [
-      ...(canRegenerate
-        ? [
-            {
-              disabled: busy,
-              icon: `refresh`,
-              key: `regenerate`,
-              onClick: regenerate,
-              tip: t(`feedCard.regenerate`),
-            } satisfies MenuAction,
-          ]
-        : []),
-      { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(copyHtml.current), tip: t(`feedCard.copy`) },
-      { icon: `share`, key: `share`, onClick: async () => Share.html(copyHtml.current), tip: t(`feedCard.share`) },
-    ];
-
-    return onDelete === undefined
-      ? base
-      : [...base, { color: `error`, icon: `delete`, key: `delete`, onClick: onDelete, tip: t(`feedCard.delete`) }];
-  }, [busy, canRegenerate, onDelete, regenerate]);
 
   return { actions, content, onHtml };
 };
