@@ -11,7 +11,8 @@
     "@snappy/db": "workspace:*",
     "@snappy/do": "workspace:*",
     "@snappy/server-app": "workspace:*",
-    "prisma": "^7.7.0"
+    "prisma": "^7.7.0",
+    "web-tree-sitter": "^0.26.9"
   },
   "devDependencies": {
     "@knip/mcp": "^0.0.27",
