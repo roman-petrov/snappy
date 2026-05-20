@@ -78,6 +78,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     "build:app": Build.app,
     "build:app-android": Build.appAndroid,
     "build:app-android-debug": Build.appAndroidDebug,
+    "build:server": Build.server,
     "build:site": Build.site,
     "build:ssr": Build.ssr,
   } as const;

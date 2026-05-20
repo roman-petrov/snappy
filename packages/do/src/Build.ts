@@ -2,6 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 import { _ } from "@snappy/core";
 import { Process } from "@snappy/node";
+import * as esbuild from "esbuild";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -103,4 +104,42 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
   return exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { app, appAndroid, appAndroidDebug, site, ssr };
+const server = async (root: string) => {
+  const packageName = `server-prod`;
+  const out = outDir(root, packageName);
+  fs.rmSync(out, { force: true, recursive: true });
+
+  return esbuild
+    .build({
+      banner: { js: `import { createRequire } from "node:module";const require=createRequire(import.meta.url);` },
+      bundle: true,
+      entryPoints: [join(packageDir(root, packageName), `src`, `main.ts`)],
+      format: `esm`,
+      minify: false,
+      outfile: join(out, `main.js`),
+      platform: `node`,
+      plugins: [
+        {
+          name: `external-deps`,
+          setup: build =>
+            // eslint-disable-next-line require-unicode-regexp, regexp/require-unicode-regexp
+            build.onResolve({ filter: /.*/ }, ({ kind, path: id }) =>
+              kind === `entry-point` ||
+              id.startsWith(`@snappy/`) ||
+              id.startsWith(`node:`) ||
+              id.startsWith(`.`) ||
+              id.startsWith(`/`) ||
+              /^[a-z]:[/\\]/iu.test(id)
+                ? undefined
+                : { external: true },
+            ),
+        },
+      ],
+      sourcemap: true,
+      target: `node24`,
+    })
+    .then(() => 0)
+    .catch(() => 1);
+};
+
+export const Build = { app, appAndroid, appAndroidDebug, server, site, ssr };

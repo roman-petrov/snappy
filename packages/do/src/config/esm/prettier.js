@@ -1,10 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable functional/no-expression-statements */
-import { register } from "tsx/esm/api";
+import { Tsx } from "./core/Tsx.js";
 
-const unregister = register();
-const { PrettierConfig } = await import(`../prettier/PrettierConfig.ts`);
-
-await unregister();
-
-export default PrettierConfig;
+export default (await Tsx.import(() => import(`../prettier/PrettierConfig.ts`))).PrettierConfig;

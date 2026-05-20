@@ -22,7 +22,7 @@
     "./config/vite": "./src/config/vite/index.ts"
   },
   "scripts": {
-    "start": "node --import tsx/esm src/main.server.ts"
+    "start": "node --import tsx/esm --require tsx/cjs src/main.server.ts"
   },
   "dependencies": {
     "@cspell/dict-ru_ru": "^2.3.2",
@@ -39,6 +39,7 @@
     "@vitejs/plugin-react": "^6.0.0",
     "@vitest/eslint-plugin": "^1.6.16",
     "cspell": "^10.0.0",
+    "esbuild": "^0.28.0",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",

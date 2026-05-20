@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Language, Theme } from "@snappy/ui";
+import { Language, Theme } from "@snappy/ui-core";
 
 export const Cookie = (value?: string, acceptLanguage?: string) => {
   const parse = (key: string) =>

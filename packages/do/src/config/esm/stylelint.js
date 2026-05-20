@@ -1,10 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable functional/no-expression-statements */
-import { register } from "tsx/esm/api";
+import { Tsx } from "./core/Tsx.js";
 
-const unregister = register();
-const { StyleLintConfig } = await import(`../stylelint/StyleLintConfig.ts`);
-
-await unregister();
-
-export default StyleLintConfig;
+export default (await Tsx.import(() => import(`../stylelint/StyleLintConfig.ts`))).StyleLintConfig;

@@ -1,10 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable functional/no-expression-statements */
-import { register } from "tsx/esm/api";
+import { Tsx } from "./core/Tsx.js";
 
-const unregister = register();
-const { CSpellConfig } = await import(`../cspell/CSpellConfig.ts`);
-
-await unregister();
-
-export default CSpellConfig;
+export default (await Tsx.import(() => import(`../cspell/CSpellConfig.ts`))).CSpellConfig;

@@ -1,27 +1,40 @@
 #!/usr/bin/env bash
 set -e
 
+DEPLOY_PATH="/home/deploy/snappy"
+ARCHIVE="/tmp/snappy.tar.gz"
+
 echo '.'
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "⚙️ Setting up server..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo '.'
 
-if ! command -v node &>/dev/null; then
+rm -rf "${DEPLOY_PATH}"
+mkdir -p "${DEPLOY_PATH}"
+tar -xzf "${ARCHIVE}" -C "${DEPLOY_PATH}"
+cd "${DEPLOY_PATH}"
+
+VERSION="$(tr -d '[:space:]' < .node-version)"
+NODE_DIR="${HOME}/.local/node-v${VERSION}"
+
+if [[ ! -x "${NODE_DIR}/bin/node" ]] || [[ "$("${NODE_DIR}/bin/node" -v 2>/dev/null)" != "v${VERSION}" ]]; then
   echo "📦 Installing Node.js..."
-  apt-get update -qq
-  apt-get install -y -qq curl unzip
-  curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
-  apt-get install -y -qq nodejs
-  echo "✅ Node.js installed: $(node --version)"
+  rm -rf "${NODE_DIR}"
+  mkdir -p "${NODE_DIR}"
+  curl -fsSL "https://nodejs.org/dist/v${VERSION}/node-v${VERSION}-linux-x64.tar.xz" |
+    tar -xJ --strip-components=1 -C "${NODE_DIR}"
+  echo "✅ Node.js installed: $("${NODE_DIR}/bin/node" --version)"
 else
-  echo "✅ Node.js already installed: $(node --version)"
+  echo "✅ Node.js already installed: $("${NODE_DIR}/bin/node" --version)"
 fi
 
-export PATH="${HOME}/.bun/bin:${PATH}"
+export PATH="${NODE_DIR}/bin:${HOME}/.bun/bin:${PATH}"
+
 if ! command -v bun &>/dev/null; then
   echo "📦 Installing Bun..."
   curl -fsSL https://bun.sh/install | bash
+  export PATH="${HOME}/.bun/bin:${PATH}"
   echo "✅ Bun installed: $(bun --version)"
 else
   echo "✅ Bun already installed: $(bun --version)"
@@ -41,14 +54,6 @@ echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo "🚀 Deploying app..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo '.'
-
-DEPLOY_PATH="/home/deploy/snappy"
-ARCHIVE="/tmp/snappy.tar.gz"
-
-rm -rf "${DEPLOY_PATH}"
-mkdir -p "${DEPLOY_PATH}"
-tar -xzf "${ARCHIVE}" -C "${DEPLOY_PATH}"
-cd "${DEPLOY_PATH}"
 
 bun install --frozen-lockfile
 

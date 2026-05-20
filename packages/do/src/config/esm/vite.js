@@ -1,10 +1,9 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable functional/no-expression-statements */
-import { register } from "tsx/esm/api";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
-const unregister = register();
-const { ViteConfigLoader } = await import(`../vite/ViteConfigLoader.ts`);
+import { Tsx } from "./core/Tsx.js";
 
-await unregister();
-
-export { ViteConfigLoader };
+export const ViteConfigLoader = async moduleUrl =>
+  (await Tsx.import(() => import(pathToFileURL(path.join(path.dirname(fileURLToPath(moduleUrl)), `vite.config.ts`)).href)))
+    .default;

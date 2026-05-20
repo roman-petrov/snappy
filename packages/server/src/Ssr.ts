@@ -5,7 +5,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-promise-reject */
 import type { Locale } from "@snappy/intl";
-import type { Theme } from "@snappy/ui";
+import type { Theme } from "@snappy/ui-core";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";

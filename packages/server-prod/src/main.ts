@@ -16,7 +16,7 @@ const sslCertPem = sslCertB64 === undefined ? undefined : _.base64decode(sslCert
 const sslKeyPem = sslKeyB64 === undefined ? undefined : _.base64decode(sslKeyB64);
 const portHttp = 80;
 const portHttps = 443;
-const distDir = join(import.meta.dirname, `..`, `..`, `..`, `dist`);
+const distDir = join(process.cwd(), `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
 

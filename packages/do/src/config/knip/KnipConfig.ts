@@ -20,7 +20,7 @@ const config: KnipConfig = {
       ],
     },
     "packages/do": {
-      entry: [`src/main.*.ts`, `src/NodeLoader.js`],
+      entry: [`src/main.*.ts`],
       ignoreDependencies: [
         `@cspell/dict-ru_ru`,
         `@typescript-eslint/parser`,

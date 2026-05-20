@@ -1,6 +1,6 @@
 import type { CmdDefinition } from "./CommandTypes";
 
-const nodeLoaderPath = `src/NodeLoader.js`;
+const tsxPreload = `--import tsx/esm --require tsx/cjs`;
 
 /**
  * ! Some emojis have incorrect width in VSCode terminal.
@@ -20,6 +20,11 @@ const defs: Record<string, CmdDefinition> = {
     run: { handler: `build:app-android` },
   },
   [`build:app`]: { description: `Vite: build app into dist/app.`, label: `💻 App`, run: { handler: `build:app` } },
+  [`build:server`]: {
+    description: `esbuild: bundle @snappy → dist/server-prod/main.js (npm deps external, no minify).`,
+    label: `🏭 Server`,
+    run: { handler: `build:server` },
+  },
   [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
   [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
   [`db:container:up`]: {
@@ -44,12 +49,12 @@ const defs: Record<string, CmdDefinition> = {
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
-    description: `Build + apply migrations (for deploy or before run).`,
+    description: `Full build (incl. build:server) + Prisma migrate deploy.`,
     label: `🔨 Deploy prepare`,
   },
   [`deploy-run`]: {
     children: [`server:prod`],
-    description: `Run prod server only (after deploy-prepare).`,
+    description: `Run server:prod only (after deploy-prepare / build:server).`,
     label: `▶️ Deploy run`,
   },
   [`docker:start`]: {
@@ -76,7 +81,7 @@ const defs: Record<string, CmdDefinition> = {
     description: `Run server-dev (API).`,
     label: `⚙️ API dev`,
     run: {
-      command: `node --watch --import ./packages/do/${nodeLoaderPath} --import tsx/esm packages/server-dev/src/main.ts`,
+      command: `node --watch ${tsxPreload} packages/server-dev/src/main.ts`,
       cwd: `.`,
       env: { NODE_ENV: `development` },
       shutdown: { command: `docker compose down` },
@@ -90,20 +95,12 @@ const defs: Record<string, CmdDefinition> = {
   [`server:frontend:dev`]: {
     description: `Run site + app dev server together (one port).`,
     label: `🌐 Site + App`,
-    run: {
-      background: true,
-      command: `node --import ./${nodeLoaderPath} --import tsx/esm src/main.dev-server.ts`,
-      cwd: `packages/do`,
-    },
+    run: { background: true, command: `node ${tsxPreload} src/main.dev-server.ts`, cwd: `packages/do` },
   },
   [`server:prod`]: {
-    description: `Run prod server (tsx).`,
-    label: `🏭 Server`,
-    run: {
-      command: `node --import ./packages/do/${nodeLoaderPath} --import tsx/esm packages/server-prod/src/main.ts`,
-      cwd: `.`,
-      shutdown: { command: `docker compose down` },
-    },
+    description: `Run dist/server-prod/main.js (after build:server).`,
+    label: `🏭 Server run`,
+    run: { command: `node dist/server-prod/main.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
   },
   [`stylelint-fix`]: {
     description: `Stylelint: auto-fix.`,
@@ -111,8 +108,8 @@ const defs: Record<string, CmdDefinition> = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app`, `build:app-android`],
-    description: `Build site into dist (site + ssr + app + Android APK).`,
+    children: [`build:site`, `build:ssr`, `build:app`, `build:app-android`, `build:server`],
+    description: `Build into dist (site + ssr + app + Android APK + server bundle).`,
     label: `📦 Build`,
   },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
@@ -146,7 +143,7 @@ const defs: Record<string, CmdDefinition> = {
   },
   run: {
     children: [`env:dev`, `build`, `deploy-run`],
-    description: `Build + deploy run (without DB migrations). Use locally or under PM2.`,
+    description: `Build (incl. build:server) + server:prod. No DB migrations. For PM2 or local prod.`,
     label: `🏃 Run`,
   },
   shot: {

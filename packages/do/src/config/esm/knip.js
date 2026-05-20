@@ -1,10 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable functional/no-expression-statements */
-import { register } from "tsx/esm/api";
+import { Tsx } from "./core/Tsx.js";
 
-const unregister = register();
-const { KnipConfig } = await import(`../knip/KnipConfig.ts`);
-
-await unregister();
-
-export default KnipConfig;
+export default (await Tsx.import(() => import(`../knip/KnipConfig.ts`))).KnipConfig;

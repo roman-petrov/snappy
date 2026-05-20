@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
 import { _ } from "@snappy/core";
 import react from "@vitejs/plugin-react";
 import { join } from "node:path";

@@ -1,5 +1,5 @@
 import type { Locale } from "@snappy/intl";
-import type { Theme } from "@snappy/ui";
+import type { Theme } from "@snappy/ui-core";
 
 const rootPlaceholder = /<div id="root">\s*<\/div>/u;
 const dataThemePlaceholder = /data-theme="[^"]*"/u;

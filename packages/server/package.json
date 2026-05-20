@@ -10,7 +10,7 @@
     "@snappy/intl": "workspace:*",
     "@snappy/server-app": "workspace:*",
     "@snappy/trpc": "workspace:*",
-    "@snappy/ui": "workspace:*",
+    "@snappy/ui-core": "workspace:*",
     "@trpc/server": "^11.17.0",
     "better-auth": "^1.6.11",
     "fastify": "^5.8.5"
