@@ -17,7 +17,7 @@ export const FeedView = ({ ai, aiConfig, cards }: FeedViewProps) => (
     </div>
     <div className={styles.cards}>
       {cards.map(item =>
-        item.kind === `image` ? (
+        item.type === `image` ? (
           <ImageCard {...item} ai={ai} key={item.id} model={aiConfig?.models.image} />
         ) : (
           <TextCard {...item} ai={ai} key={item.id} model={aiConfig?.models.chat} />
