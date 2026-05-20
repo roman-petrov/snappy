@@ -1,6 +1,6 @@
-export * from "./AgentFeed";
+export * from "./AgentChat";
 
-export * from "./AgentFeed.state";
+export * from "./AgentFeed";
 
 export * from "./AgentFeedHandle";
 

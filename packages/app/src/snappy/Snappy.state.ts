@@ -1,69 +1,20 @@
-import type { AgentAiConfig } from "@snappy/snappy-sdk";
-
 import { _ } from "@snappy/core";
 import { SnappyAgent } from "@snappy/snappy";
-import { Language, useAsyncEffect, useGo } from "@snappy/ui";
-import { createElement, useEffect, useRef, useState } from "react";
+import { Language } from "@snappy/ui";
+import { useRef, useState } from "react";
 
-import { AgentAiFromSettings, trpc } from "../core";
-import { Routes } from "../Routes";
-import { AgentFeed, type AgentFeedHandle } from "./components";
-
-type ChatPhase = `blocked` | `booting` | `ready`;
+import type { AgentChatProps } from "./components";
 
 export const useSnappyState = () => {
   const locale = Language.locale();
-  const go = useGo();
-  const [phase, setPhase] = useState<ChatPhase>(`booting`);
-  const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
+  const agentRef = useRef<SnappyAgent | undefined>(undefined);
   const [starterText, setStarterText] = useState<string | undefined>(undefined);
   const [splashDraft, setSplashDraft] = useState(``);
   const [sessionDraft, setSessionDraft] = useState(``);
-  const feedRef = useRef<AgentFeedHandle>(null);
-  const agentRef = useRef<SnappyAgent | undefined>(undefined);
-
-  useAsyncEffect(async () => {
-    setPhase(`booting`);
-    const [balance, settings] = await Promise.all([trpc.user.balance.query(), trpc.user.settings.get.query()]);
-    setAiConfig(AgentAiFromSettings(settings));
-    const billViaProxy = !(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``);
-    if (billViaProxy && balance <= 0) {
-      setPhase(`blocked`);
-
-      return;
-    }
-    setPhase(`ready`);
-  }, []);
-
-  useEffect(() => {
-    if (phase !== `ready` || aiConfig === undefined || starterText === undefined) {
-      return _.noop;
-    }
-    const handle = feedRef.current;
-    if (handle === null) {
-      return _.noop;
-    }
-    const runtime = SnappyAgent({ aiConfig, feed: handle, locale });
-    agentRef.current = runtime;
-    void runtime.run(starterText);
-
-    return () => {
-      runtime.stop();
-      agentRef.current = undefined;
-    };
-  }, [aiConfig, locale, phase, starterText]);
-
-  const onStop = async () => {
-    agentRef.current?.stop();
-    await go(Routes.home);
-  };
+  const started = starterText !== undefined;
 
   const splashSend = () => {
-    const text = splashDraft.trim();
-    if (text === ``) {
-      return;
-    }
-    setStarterText(text);
+    setStarterText(splashDraft.trim());
     setSplashDraft(``);
   };
 
@@ -72,28 +23,33 @@ export const useSnappyState = () => {
     if (text === ``) {
       return;
     }
-    feedRef.current?.appendUserText(text);
     agentRef.current?.appendUserText(text);
     setSessionDraft(``);
   };
 
-  const conductorReady = phase === `ready` && aiConfig !== undefined;
-  const balanceLow = phase === `blocked`;
+  const chatProps: AgentChatProps = {
+    runtime: ({ aiConfig, feed }) => {
+      if (starterText === undefined) {
+        return { run: _.noop, stop: _.noop };
+      }
+      const agent = SnappyAgent({ aiConfig, feed, locale });
+      agentRef.current = agent;
 
-  const desk =
-    conductorReady && starterText !== undefined
-      ? {
-          draft: sessionDraft,
-          feed: createElement(AgentFeed, { ref: feedRef }),
-          onSend: sessionSend,
-          setDraft: setSessionDraft,
-        }
-      : undefined;
+      return {
+        run: async () => agent.run(starterText),
+        stop: () => {
+          agent.stop();
+          agentRef.current = undefined;
+        },
+      };
+    },
+    session: [locale, starterText],
+    showFeed: started,
+  };
 
-  const splash =
-    conductorReady && starterText === undefined
-      ? { draft: splashDraft, onSend: splashSend, setDraft: setSplashDraft }
-      : undefined;
+  const composer = started
+    ? { draft: sessionDraft, onSend: sessionSend, setDraft: setSessionDraft }
+    : { draft: splashDraft, onSend: splashSend, setDraft: setSplashDraft };
 
-  return { balanceLow, desk, onStop, splash };
+  return { chatProps, composer, started };
 };

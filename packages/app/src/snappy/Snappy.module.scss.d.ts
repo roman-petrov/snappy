@@ -1,10 +1,8 @@
 declare const __Snappy: {
-  readonly actionRow: "actionRow";
-  readonly pageBody: "pageBody";
-  readonly splash: "splash";
-  readonly session: "session";
-  readonly feed: "feed";
+  readonly shell: "shell";
+  readonly shellDocked: "shellDocked";
   readonly composer: "composer";
+  readonly composerDocked: "composerDocked";
   readonly composerInner: "composerInner";
 };
 export default __Snappy;
