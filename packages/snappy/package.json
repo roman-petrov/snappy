@@ -14,6 +14,6 @@
     "@snappy/intl": "workspace:*",
     "@snappy/snappy-sdk": "workspace:*",
     "@snappy/snappy-skills": "workspace:*",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   }
 }
