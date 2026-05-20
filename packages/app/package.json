@@ -20,11 +20,11 @@
     "@snappy/ui": "workspace:*",
     "@trpc/client": "^11.17.0",
     "better-auth": "^1.6.9",
-    "react": "^19.2.5",
+    "react": "^19.2.6",
     "react-router-dom": "^7.14.2"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.14"
+    "@types/react": "^19.2.15"
   }
 }

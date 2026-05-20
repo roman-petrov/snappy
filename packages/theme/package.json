@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.8",
-    "material-symbols": "^0.44.6"
+    "material-symbols": "^0.44.8"
   }
 }
