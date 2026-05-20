@@ -1,18 +1,10 @@
-import type { StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
-
-import { StaticForm } from "../../StaticForm";
+import { StaticForm, type StaticFormProps } from "../../StaticForm";
 import styles from "./AgentFeedMessageForm.module.scss";
 
-export type AgentFeedMessageFormProps<TPlan extends StaticFormPlan = StaticFormPlan> = {
-  onSubmit: (value: StaticFormAnswersOf<TPlan>) => void;
-  plan: TPlan;
-};
+export type AgentFeedMessageFormProps = StaticFormProps;
 
-export const AgentFeedMessageForm = <TPlan extends StaticFormPlan>({
-  onSubmit,
-  plan,
-}: AgentFeedMessageFormProps<TPlan>) => (
+export const AgentFeedMessageForm = (props: AgentFeedMessageFormProps) => (
   <div className={styles.root}>
-    <StaticForm onSubmit={onSubmit} plan={plan} />
+    <StaticForm {...props} />
   </div>
 );
