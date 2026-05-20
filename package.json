@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@lancedb/lancedb": "^0.29.0",
     "@snappy/coder-cli": "workspace:*",
     "@snappy/config": "workspace:*",
     "@snappy/db": "workspace:*",
