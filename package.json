@@ -13,6 +13,7 @@
     "@snappy/server-app": "workspace:*",
     "better-auth": "^1.6.11",
     "prisma": "^7.7.0",
+    "tsx": "^4.22.3",
     "web-tree-sitter": "^0.26.9"
   },
   "devDependencies": {
