@@ -6,21 +6,13 @@ import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
-import { renderToString } from "react-dom/server";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider, StaticRouter } from "react-router-dom";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 
 import { App } from "./App";
 import { Language, Theme } from "./core";
 import "@snappy/theme/styles/index";
 
 export type CreateRouter = (basename: string) => ReturnType<typeof createBrowserRouter>;
-
-export type RenderAppOptions = {
-  base?: string;
-  disableLinkSelection?: boolean;
-  disableTextSelection?: boolean;
-  location?: string;
-};
 
 export type StartAppContent = CreateRouter | ReactNode;
 
@@ -71,15 +63,3 @@ export const startApp = async (
     };
   }
 };
-
-export const renderApp = (
-  app: ReactNode,
-  { base = ``, disableLinkSelection = false, disableTextSelection = false, location = `/` }: RenderAppOptions = {},
-) =>
-  renderToString(
-    <App disableLinkSelection={disableLinkSelection} disableTextSelection={disableTextSelection}>
-      <StaticRouter basename={base} location={location}>
-        {app}
-      </StaticRouter>
-    </App>,
-  );
