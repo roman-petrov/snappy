@@ -20,13 +20,13 @@ type FeedImageCard = {
 };
 
 type FeedTextCard = {
-  html: string;
   id: string;
   kind: `text`;
   onDelete: () => void;
   onError: (error: unknown) => void;
   onGenerated: (next: string) => void;
   prompt: string;
+  text: string;
 };
 
 export const useFeedState = () => {
@@ -68,8 +68,8 @@ export const useFeedState = () => {
     setArtifacts(await ChatFeed.patch(id, { src }));
   };
 
-  const onTextGenerated = async (id: string, html: string) => {
-    setArtifacts(await ChatFeed.patch(id, { html }));
+  const onTextGenerated = async (id: string, text: string) => {
+    setArtifacts(await ChatFeed.patch(id, { text }));
   };
 
   const cards: (FeedImageCard | FeedTextCard)[] = artifacts.map(item =>
@@ -84,13 +84,13 @@ export const useFeedState = () => {
           src: item.src,
         }
       : {
-          html: item.html,
           id: item.id,
           kind: `text`,
           onDelete: () => onDeleteArtifact(item.id),
           onError: onGenerationError,
           onGenerated: async (next: string) => onTextGenerated(item.id, next),
           prompt: item.generationPrompt,
+          text: item.text,
         },
   );
 

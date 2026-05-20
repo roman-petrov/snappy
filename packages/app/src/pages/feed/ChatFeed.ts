@@ -11,10 +11,10 @@ const storeName = `feed`;
 const recordId = `global`;
 
 export type FeedArtifact =
-  | { generationPrompt: string; html: string; id: string; type: `text` }
-  | { generationPrompt: string; id: string; src: string; type: `image` };
+  | { generationPrompt: string; id: string; src: string; type: `image` }
+  | { generationPrompt: string; id: string; text: string; type: `text` };
 
-export type FeedArtifactPatch = { html?: string; src?: string };
+export type FeedArtifactPatch = { src?: string; text?: string };
 
 type FeedRecord = { artifacts: FeedArtifact[]; id: string };
 
@@ -92,7 +92,7 @@ const patch = async (id: string, delta: FeedArtifactPatch): Promise<FeedArtifact
       return item;
     }
     if (item.type === `text`) {
-      return delta.html === undefined ? item : { ...item, html: delta.html };
+      return delta.text === undefined ? item : { ...item, text: delta.text };
     }
 
     return delta.src === undefined ? item : { ...item, src: delta.src };

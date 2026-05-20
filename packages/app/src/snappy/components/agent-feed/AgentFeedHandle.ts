@@ -98,7 +98,7 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
   const artifactDone = (artifact: AgentArtifact, content: string): AgentArtifact =>
     artifact.type === `image`
       ? { ...artifact, generationStatus: `done`, src: content, type: `image` }
-      : { ...artifact, generationStatus: `done`, html: content, type: `text` };
+      : { ...artifact, generationStatus: `done`, text: content, type: `text` };
 
   const trackArtifact = async (artifactId: string) =>
     new Promise<{ artifactId: string }>((resolve, reject) => {
@@ -133,7 +133,7 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
       generationStatus: `running`,
       id: crypto.randomUUID(),
       model,
-      ...(type === `image` ? { src: ``, type: `image` } : { html: ``, type: `text` }),
+      ...(type === `image` ? { src: ``, type: `image` } : { text: ``, type: `text` }),
     };
 
     const settled = trackArtifact(artifact.id);
@@ -202,8 +202,8 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
           ...base,
           ai,
           generating: externallyGenerating,
-          html: artifact.html,
           model: model ?? artifact.model,
+          text: artifact.text,
         });
       }
 

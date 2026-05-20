@@ -10,12 +10,12 @@ import { t } from "../../locales";
 export const useTextCardState = ({
   ai,
   generating = false,
-  html,
   model,
   onDelete,
   onError,
   onGenerated,
   prompt = ``,
+  text,
 }: TextCardProps) => {
   const [busy, setBusy] = useState(false);
   const autoStarted = useRef(false);
@@ -25,7 +25,7 @@ export const useTextCardState = ({
   onGeneratedRef.current = onGenerated;
   onErrorRef.current = onError;
   const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
-  const empty = html.trim() === ``;
+  const empty = text.trim() === ``;
   const streaming = busy || generating;
 
   const regenerate = useCallback(() => {
@@ -74,10 +74,10 @@ export const useTextCardState = ({
     })();
   }, [ai, busy, model, prompt, streaming]);
 
-  const content = stream ?? html;
+  const content = stream ?? text;
 
-  const onHtml = useCallback((text: string) => {
-    copyHtml.current = text;
+  const onHtml = useCallback((htmlText: string) => {
+    copyHtml.current = htmlText;
   }, []);
 
   const actions = useMemo<MenuAction[]>(() => {

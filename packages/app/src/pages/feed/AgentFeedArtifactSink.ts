@@ -8,7 +8,7 @@ export const AgentFeedArtifactSink = () => ({
   publish: async (artifact: AgentArtifact) =>
     ChatFeed.upsert(
       artifact.type === `text`
-        ? { generationPrompt: artifact.generationPrompt, html: artifact.html, id: artifact.id, type: `text` }
+        ? { generationPrompt: artifact.generationPrompt, id: artifact.id, text: artifact.text, type: `text` }
         : { generationPrompt: artifact.generationPrompt, id: artifact.id, src: artifact.src, type: `image` },
     ),
   remove: async (id: string) => ChatFeed.remove(id),
