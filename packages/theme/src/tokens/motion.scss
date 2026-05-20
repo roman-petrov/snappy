@@ -1,0 +1,7 @@
+@function default() {
+  @return var(--motion-default);
+}
+
+@function soft() {
+  @return var(--motion-soft);
+}

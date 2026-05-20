@@ -3,6 +3,7 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/elevation" as elevation;
 @use "pkg:@snappy/theme/glass";
+@use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/surface";
 
@@ -46,7 +47,7 @@
   }
 
   border-radius: radius.lg();
-  transition: color var(--ease);
+  transition: color motion.default();
 }
 
 @mixin icon {
@@ -61,7 +62,7 @@
     }
   }
 
-  transition: color var(--ease);
+  transition: color motion.default();
 
   &::before {
     @include glass.reset;
@@ -69,11 +70,11 @@
     border: 1px solid transparent;
     opacity: 0;
     transition:
-      opacity var(--ease),
-      background-color var(--ease),
-      border-color var(--ease),
-      box-shadow var(--ease),
-      backdrop-filter var(--ease),
-      -webkit-backdrop-filter var(--ease);
+      opacity motion.default(),
+      background-color motion.default(),
+      border-color motion.default(),
+      box-shadow motion.default(),
+      backdrop-filter motion.default(),
+      -webkit-backdrop-filter motion.default();
   }
 }

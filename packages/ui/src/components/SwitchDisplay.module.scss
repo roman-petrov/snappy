@@ -3,6 +3,7 @@
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/tokens";
 
 .root {
@@ -15,8 +16,8 @@
   border: 1px solid color.outline();
   border-radius: calc(#{space.lg()} * 0.5);
   transition:
-    background-color tokens.ease(),
-    border-color tokens.ease();
+    background-color motion.default(),
+    border-color motion.default();
 
   &[data-disabled] {
     opacity: 0.5;
@@ -32,9 +33,9 @@
     border: 1px solid transparent;
     transform: translateY(-50%);
     transition:
-      transform tokens.ease(),
-      background-color tokens.ease(),
-      border-color tokens.ease();
+      transform motion.default(),
+      background-color motion.default(),
+      border-color motion.default();
   }
 
   &.checked {

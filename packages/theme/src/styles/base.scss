@@ -1,5 +1,6 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
 
@@ -21,8 +22,8 @@ body {
   color: color.text();
   background: color.surface();
   transition:
-    color tokens.ease(),
-    background-color tokens.ease();
+    color motion.default(),
+    background-color motion.default();
 }
 
 ::selection {

@@ -1,0 +1,22 @@
+@use "pkg:@snappy/theme/tokens/motion";
+
+.shell {
+  contain: layout;
+}
+
+.shell-exiting {
+  pointer-events: none;
+}
+
+.shell-inner {
+  transition:
+    opacity motion.soft(),
+    filter motion.soft(),
+    transform motion.soft();
+}
+
+.shell-exiting .shell-inner {
+  opacity: 0;
+  filter: blur(0.45rem);
+  transform: scale(0.96);
+}

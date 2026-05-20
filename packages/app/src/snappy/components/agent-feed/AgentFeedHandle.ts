@@ -1,5 +1,4 @@
 /* eslint-disable init-declarations */
-/* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-let */
@@ -9,44 +8,36 @@ import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@sna
 
 import { createElement } from "react";
 
-import type { AgentFeedArtifactSink } from "../../../pages/feed";
 import type { AgentArtifact } from "../Types";
 import type { AgentFeedEntry, AgentFeedItem } from "./Types";
 
+import { ChatFeed } from "../../../pages/feed/ChatFeed";
 import { AgentFeedRow } from "./AgentFeedRow";
 
-export type AgentFeedHandleConfig = {
-  commit: (recipe: (previous: AgentFeedItem[]) => AgentFeedItem[]) => void;
-  getArtifactSink: () => AgentFeedArtifactSink | undefined;
-};
+export type AgentFeedHandleConfig = { commit: (recipe: (previous: AgentFeedItem[]) => AgentFeedItem[]) => void };
 
 type ArtifactPending = { reject: (error: unknown) => void; resolve: (value: { artifactId: string }) => void };
 
-export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConfig) => {
-  type StreamEntryType = `reasoning` | `stream`;
-
+export const AgentFeedHandle = ({ commit }: AgentFeedHandleConfig) => {
   let keySeq = 0;
   const artifactPending = new Map<string, ArtifactPending>();
 
-  const nextKey = () => {
-    const key = keySeq;
-    keySeq += 1;
-
-    return key;
-  };
-
-  const pushEntry = (key: number, entry: AgentFeedEntry) => commit(previous => [...previous, { entry, key }]);
+  const seed = (type: AgentArtifact[`type`], id: string, prompt: string) =>
+    type === `image`
+      ? ({ generationPrompt: prompt, id, src: ``, type: `image` } as const)
+      : ({ generationPrompt: prompt, id, text: ``, type: `text` } as const);
 
   const addEntry = (entry: AgentFeedEntry) => {
-    const key = nextKey();
-    pushEntry(key, entry);
+    const key = keySeq;
+    keySeq += 1;
+    commit(previous => [...previous, { entry, key }]);
 
     return key;
   };
 
   const removeEntry = (key: number) => commit(previous => previous.filter(item => item.key !== key));
 
-  const updateArtifactEntry = (artifactId: string, patch: Partial<AgentArtifact>) => {
+  const updateArtifactEntry = (artifactId: string, patch: Partial<AgentArtifact>) =>
     commit(previous =>
       previous.map(item => {
         if (item.entry.type !== `artifact` || item.entry.artifact.id !== artifactId) {
@@ -61,7 +52,6 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
         return { ...item, entry: { ...item.entry, artifact: next } };
       }),
     );
-  };
 
   const settleArtifactPending = (artifactId: string, error?: unknown) => {
     const pending = artifactPending.get(artifactId);
@@ -84,38 +74,34 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
     settleArtifactPending(artifactId, error);
   };
 
-  const persistArtifact = async (done: AgentArtifact) => {
-    updateArtifactEntry(done.id, done);
-    try {
-      await getArtifactSink()?.publish(done);
-      settleArtifactPending(done.id);
-    } catch (error) {
-      failArtifact(done.id, error);
-      throw error;
+  const publish = async (artifactId: string) => {
+    const row = (await ChatFeed.read()).find(item => item.id === artifactId);
+    if (row === undefined) {
+      return;
     }
+
+    updateArtifactEntry(
+      artifactId,
+      row.type === `image`
+        ? { generationStatus: `done`, src: row.src, type: `image` }
+        : { generationStatus: `done`, text: row.text, type: `text` },
+    );
+    settleArtifactPending(artifactId);
   };
 
-  const artifactDone = (artifact: AgentArtifact, content: string): AgentArtifact =>
-    artifact.type === `image`
-      ? { ...artifact, generationStatus: `done`, src: content, type: `image` }
-      : { ...artifact, generationStatus: `done`, text: content, type: `text` };
+  const onPublish = (artifactId: string) => {
+    void publish(artifactId);
+  };
+
+  const onRemove = (artifactId: string) =>
+    commit(previous =>
+      previous.filter(item => item.entry.type !== `artifact` || item.entry.artifact.id !== artifactId),
+    );
 
   const trackArtifact = async (artifactId: string) =>
     new Promise<{ artifactId: string }>((resolve, reject) => {
       artifactPending.set(artifactId, { reject, resolve });
     });
-
-  const addArtifactEntry = ({
-    ai,
-    artifact,
-    model,
-    onArtifactError,
-  }: {
-    ai: Ai;
-    artifact: AgentArtifact;
-    model: string;
-    onArtifactError?: (error: unknown) => void;
-  }) => addEntry({ ai, artifact, model, onArtifactError, type: `artifact` });
 
   const generateArtifact = async ({
     ai,
@@ -128,20 +114,14 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
     prompt: string;
     type: AgentArtifact[`type`];
   }) => {
-    const artifact: AgentArtifact = {
-      generationPrompt: prompt,
-      generationStatus: `running`,
-      id: crypto.randomUUID(),
-      model,
-      ...(type === `image` ? { src: ``, type: `image` } : { text: ``, type: `text` }),
-    };
+    const id = crypto.randomUUID();
+    const base = seed(type, id, prompt);
 
-    const settled = trackArtifact(artifact.id);
+    await ChatFeed.upsert(base);
+    addEntry({ ai, artifact: { ...base, generationStatus: `running`, model }, model, type: `artifact` });
 
-    addArtifactEntry({ ai, artifact, model, onArtifactError: error => failArtifact(artifact.id, error) });
-
-    return settled.catch((error: unknown) => {
-      failArtifact(artifact.id, error);
+    return trackArtifact(id).catch((error: unknown) => {
+      failArtifact(id, error);
       throw error;
     });
   };
@@ -173,38 +153,25 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
   const rows = (items: AgentFeedItem[]) =>
     items.map(({ entry, key }) => {
       if (entry.type === `artifact`) {
-        const { ai, artifact, model, onArtifactError } = entry;
-        const prompt = artifact.generationPrompt;
-        const externallyGenerating = artifact.generationStatus === `running`;
-
-        const base = {
-          onError: (error: unknown) => {
-            onArtifactError?.(error);
-            failArtifact(artifact.id, error);
-          },
-          onGenerated: async (content: string) => persistArtifact(artifactDone(artifact, content)),
-          prompt,
-        };
-
-        if (artifact.type === `image`) {
-          return createElement(AgentFeedRow.image, {
-            key,
-
-            ...base,
-            ai,
-            model: model ?? artifact.model,
-            src: artifact.src,
-          });
+        if (entry.ai === undefined) {
+          return undefined;
         }
 
-        return createElement(AgentFeedRow.text, {
+        const { artifact } = entry;
+
+        const props = {
+          ai: entry.ai,
+          content: artifact.type === `image` ? artifact.src : artifact.text,
+          id: artifact.id,
           key,
-          ...base,
-          ai,
-          generating: externallyGenerating,
-          model: model ?? artifact.model,
-          text: artifact.text,
-        });
+          model: entry.model ?? artifact.model ?? ``,
+          onError: failArtifact,
+          onPublish,
+          onRemove,
+          prompt: artifact.generationPrompt,
+        };
+
+        return createElement(artifact.type === `image` ? AgentFeedRow.image : AgentFeedRow.text, props);
       }
 
       if (entry.type === `status` || entry.type === `tool-badge`) {
@@ -232,15 +199,8 @@ export const AgentFeedHandle = ({ commit, getArtifactSink }: AgentFeedHandleConf
       return createElement(AgentFeedRow.stream, { key, stream: entry.stream });
     });
 
-  const appendStream = (stream: AsyncIterable<string>, entryType: StreamEntryType) => {
-    const key = nextKey();
-    pushEntry(key, { stream, type: entryType });
-
-    return key;
-  };
-
-  const appendChatStream = (stream: AsyncIterable<string>) => appendStream(stream, `stream`);
-  const appendReasoningStream = (stream: AsyncIterable<string>) => appendStream(stream, `reasoning`);
+  const appendChatStream = (stream: AsyncIterable<string>) => addEntry({ stream, type: `stream` });
+  const appendReasoningStream = (stream: AsyncIterable<string>) => addEntry({ stream, type: `reasoning` });
 
   const appendStatus = (text: string, finished: Promise<{ label: string }>) =>
     addEntry({ finished, text, type: `status` });

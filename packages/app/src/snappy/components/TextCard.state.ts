@@ -1,28 +1,20 @@
+import type { AiChatCompletionSession } from "@snappy/ai";
 import type { MenuAction } from "@snappy/ui";
 
 import { Copy, Share } from "@snappy/platform";
-import { useCallback, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 
 import type { TextCardProps } from "./TextCard";
 
 import { t } from "../../locales";
-import { useFeedCardGeneration } from "../hooks";
+import { useFeedItem } from "../hooks";
 
-export const useTextCardState = ({
-  ai,
-  generating = false,
-  model,
-  onDelete,
-  onError,
-  onGenerated,
-  prompt = ``,
-  text,
-}: TextCardProps) => {
+export const useTextCardState = (props: TextCardProps) => {
+  const { ai, content, model, prompt } = props;
   const copyHtml = useRef(``);
-  const canRegenerate = !generating && ai !== undefined && model !== undefined && prompt.trim() !== ``;
-  const empty = text.trim() === ``;
+  const sessionRef = useRef<AiChatCompletionSession | undefined>(undefined);
 
-  const extraActions = useMemo<MenuAction[]>(
+  const menu = useMemo<MenuAction[]>(
     () => [
       { icon: `content_copy`, key: `copy`, onClick: async () => Copy.html(copyHtml.current), tip: t(`feedCard.copy`) },
       { icon: `share`, key: `share`, onClick: async () => Share.html(copyHtml.current), tip: t(`feedCard.share`) },
@@ -30,48 +22,28 @@ export const useTextCardState = ({
     [],
   );
 
-  const { actions, busy, onErrorRef, onGeneratedRef, setBusy } = useFeedCardGeneration({
-    canRegenerate,
-    empty,
-    extraActions,
-    onDelete,
-    onError,
-    onGenerated,
-  });
+  const onHtml = (htmlText: string) => (copyHtml.current = htmlText);
 
-  const streaming = busy || generating;
+  const run = async () => {
+    const { current } = sessionRef;
 
-  const stream = useMemo((): AsyncIterable<string> | undefined => {
-    if (!streaming || ai === undefined || model === undefined || prompt.trim() === ``) {
-      return undefined;
+    return current === undefined ? `` : (await current.assistant()).content;
+  };
+
+  const { actions, remove, running } = useFeedItem({ ...props, menu, run, saveField: `text` });
+
+  const displayContent = useMemo(() => {
+    if (!running) {
+      sessionRef.current = undefined;
+
+      return content;
     }
 
-    return (async function* textStream(): AsyncGenerator<string> {
-      let next = ``;
-      try {
-        const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
-        for await (const part of session.chatText()) {
-          if (part !== ``) {
-            next += part;
-            yield part;
-          }
-        }
-        await Promise.resolve(onGeneratedRef.current?.(next));
-      } catch (error) {
-        onErrorRef.current?.(error);
-      } finally {
-        if (busy) {
-          setBusy(false);
-        }
-      }
-    })();
-  }, [ai, busy, model, onErrorRef, onGeneratedRef, prompt, setBusy, streaming]);
+    const session = ai.chat.completions.create({ model, prompt, reasoningEffort: `none` });
+    sessionRef.current = session;
 
-  const content = stream ?? text;
+    return session.chatText();
+  }, [ai, content, model, prompt, running]);
 
-  const onHtml = useCallback((htmlText: string) => {
-    copyHtml.current = htmlText;
-  }, []);
-
-  return { actions, content, onHtml };
+  return { actions, content: displayContent, onHtml, remove };
 };

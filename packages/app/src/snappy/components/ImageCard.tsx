@@ -1,16 +1,8 @@
-import type { Ai } from "@snappy/ai";
+import type { FeedItemBindings } from "../hooks";
 
 import { useImageCardState } from "./ImageCard.state";
 import { ImageCardView } from "./ImageCard.view";
 
-export type ImageCardProps = {
-  ai?: Ai;
-  model?: string;
-  onDelete?: () => void;
-  onError?: (error: unknown) => void;
-  onGenerated?: (src: string) => Promise<void> | void;
-  prompt?: string;
-  src: string;
-};
+export type ImageCardProps = FeedItemBindings;
 
 export const ImageCard = (props: ImageCardProps) => <ImageCardView {...useImageCardState(props)} />;

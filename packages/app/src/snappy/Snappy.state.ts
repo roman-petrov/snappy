@@ -6,7 +6,6 @@ import { Language, useAsyncEffect, useGo } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
 import { AgentAiFromSettings, trpc } from "../core";
-import { AgentFeedArtifactSink } from "../pages/feed";
 import { Routes } from "../Routes";
 import { AgentFeed, type AgentFeedHandle } from "./components";
 
@@ -85,7 +84,7 @@ export const useSnappyState = () => {
     conductorReady && starterText !== undefined
       ? {
           draft: sessionDraft,
-          feed: createElement(AgentFeed, { artifactSink: AgentFeedArtifactSink(), ref: feedRef }),
+          feed: createElement(AgentFeed, { ref: feedRef }),
           onSend: sessionSend,
           setDraft: setSessionDraft,
         }

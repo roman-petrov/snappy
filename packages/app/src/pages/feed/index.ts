@@ -1,5 +1,3 @@
-export * from "./AgentFeedArtifactSink";
-
 export * from "./ChatFeed";
 
 export * from "./Feed";

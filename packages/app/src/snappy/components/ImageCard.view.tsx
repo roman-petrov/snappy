@@ -3,19 +3,20 @@ import { $, BusyShimmerOverlay, Icon } from "@snappy/ui";
 
 import type { useImageCardState } from "./ImageCard.state";
 
+import { t } from "../../locales";
 import { FeedCard } from "./FeedCard";
 import styles from "./ImageCard.module.scss";
 
 export type ImageCardViewProps = ReturnType<typeof useImageCardState>;
 
-export const ImageCardView = ({ actions, busy, empty, emptyText, src }: ImageCardViewProps) => (
-  <FeedCard actions={actions}>
-    {empty ? (
+export const ImageCardView = ({ actions, busy, pending, remove, src }: ImageCardViewProps) => (
+  <FeedCard actions={actions} onRemove={remove}>
+    {pending ? (
       <div className={styles.empty}>
         <span className={styles.spinner}>
           <Icon name="wand_stars" />
         </span>
-        <p>{emptyText}</p>
+        <p>{t(`feedCard.generatingImage`)}</p>
       </div>
     ) : (
       <>

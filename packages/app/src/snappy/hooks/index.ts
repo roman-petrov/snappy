@@ -1,1 +1,1 @@
-export * from "./useFeedCardGeneration";
+export * from "./useFeedItem";

@@ -1,66 +1,51 @@
+import type { MenuAction } from "@snappy/ui";
+
 import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
 import { Copy, Share } from "@snappy/platform";
-import { type MenuAction, useAsyncEffect } from "@snappy/ui";
 import { useMemo } from "react";
 
 import type { ImageCardProps } from "./ImageCard";
 
 import { t } from "../../locales";
-import { useFeedCardGeneration } from "../hooks";
+import { type FeedItemContext, useFeedItem } from "../hooks";
 
-export const useImageCardState = ({ ai, model, onDelete, onError, onGenerated, prompt = ``, src }: ImageCardProps) => {
-  const canRegenerate = ai !== undefined && model !== undefined && prompt.trim() !== ``;
-  const empty = src.trim() === ``;
+export const useImageCardState = (props: ImageCardProps) => {
+  const { content } = props;
 
-  const extraActions = useMemo<MenuAction[]>(
+  const menu = useMemo<MenuAction[]>(
     () =>
-      empty
+      content.trim() === ``
         ? []
         : [
             {
               icon: `content_copy`,
               key: `copy`,
-              onClick: async () => Copy.image(src),
+              onClick: async () => Copy.image(content),
               tip: t(`feedCard.copy`),
             } satisfies MenuAction,
             {
               icon: `share`,
               key: `share`,
-              onClick: async () => Share.image(src),
+              onClick: async () => Share.image(content),
               tip: t(`feedCard.share`),
             } satisfies MenuAction,
           ],
-    [empty, src],
+    [content],
   );
 
-  const { actions, busy, onErrorRef, onGeneratedRef, setBusy } = useFeedCardGeneration({
-    canRegenerate,
-    empty,
-    extraActions,
-    onDelete,
-    onError,
-    onGenerated,
-  });
+  const run = async ({ ai: client, model: imageModel, prompt: imagePrompt }: FeedItemContext) => {
+    const result = await client.images.generate({
+      model: imageModel,
+      prompt: imagePrompt,
+      quality: AiConstants.defaults.imageQuality,
+      size: `1024x1024`,
+    });
 
-  useAsyncEffect(async () => {
-    if (!busy || ai === undefined || model === undefined || prompt.trim() === ``) {
-      return;
-    }
-    try {
-      const result = await ai.images.generate({
-        model,
-        prompt,
-        quality: AiConstants.defaults.imageQuality,
-        size: `1024x1024`,
-      });
-      await Promise.resolve(onGeneratedRef.current?.(DataUrl.png(result.bytes)));
-    } catch (error: unknown) {
-      onErrorRef.current?.(error);
-    } finally {
-      setBusy(false);
-    }
-  }, [ai, busy, model, prompt]);
+    return DataUrl.png(result.bytes);
+  };
 
-  return { actions, busy, empty, emptyText: t(`feedCard.generatingImage`), src };
+  const { actions, busy, pending, remove } = useFeedItem({ ...props, menu, run, saveField: `src` });
+
+  return { actions, busy, pending, remove, src: content };
 };

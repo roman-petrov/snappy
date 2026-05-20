@@ -1,14 +1,15 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/glass";
+@use "pkg:@snappy/theme/tokens/motion";
 
 @mixin compose($tone, $text) {
   @include glass.simple($tone);
 
   color: $text;
   transition:
-    background-color var(--ease),
-    border-color var(--ease),
-    box-shadow var(--ease),
-    color var(--ease),
-    opacity var(--ease);
+    background-color motion.default(),
+    border-color motion.default(),
+    box-shadow motion.default(),
+    color motion.default(),
+    opacity motion.default();
 }

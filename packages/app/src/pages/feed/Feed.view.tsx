@@ -10,18 +10,14 @@ import styles from "./Feed.module.scss";
 
 export type FeedViewProps = ReturnType<typeof useFeedState>;
 
-export const FeedView = ({ ai, aiConfig, cards }: FeedViewProps) => (
+export const FeedView = ({ cards }: FeedViewProps) => (
   <Page title={t(`feed.title`)}>
     <div className={styles.actionRow}>
       <Button link={Routes.home} text={t(`feed.openCatalog`)} />
     </div>
     <div className={styles.cards}>
-      {cards.map(item =>
-        item.type === `image` ? (
-          <ImageCard {...item} ai={ai} key={item.id} model={aiConfig?.models.image} />
-        ) : (
-          <TextCard {...item} ai={ai} key={item.id} model={aiConfig?.models.chat} />
-        ),
+      {cards?.map(({ type, ...props }) =>
+        type === `image` ? <ImageCard key={props.id} {...props} /> : <TextCard key={props.id} {...props} />,
       )}
     </div>
   </Page>

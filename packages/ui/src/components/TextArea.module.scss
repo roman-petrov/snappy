@@ -1,4 +1,4 @@
-@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/typography";
 
 .root {
@@ -16,7 +16,7 @@
   resize: none;
   scrollbar-width: none;
   border: none;
-  transition: height tokens.ease();
+  transition: height motion.default();
   -webkit-overflow-scrolling: touch;
   field-sizing: fixed;
 

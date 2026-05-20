@@ -6,6 +6,7 @@
 @use "pkg:@snappy/theme/surface";
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
 
@@ -39,13 +40,13 @@
   border-radius: 0;
   transform: translateY(-50%);
   transition:
-    top tokens.ease(),
-    transform tokens.ease(),
-    color tokens.ease(),
-    font-size tokens.ease(),
-    padding tokens.ease(),
-    border-radius tokens.ease(),
-    background-color tokens.ease();
+    top motion.default(),
+    transform motion.default(),
+    color motion.default(),
+    font-size motion.default(),
+    padding motion.default(),
+    border-radius motion.default(),
+    background-color motion.default();
 }
 
 .input-surface {
@@ -78,13 +79,13 @@
       border-radius: radius.xs();
       transform: translateY(calc(-50% - r(1)));
       transition:
-        top tokens.ease(),
-        transform tokens.ease(),
-        color tokens.ease(),
-        font-size tokens.ease(),
-        padding tokens.ease(),
-        border-radius tokens.ease(),
-        background-color tokens.ease();
+        top motion.default(),
+        transform motion.default(),
+        color motion.default(),
+        font-size motion.default(),
+        padding motion.default(),
+        border-radius motion.default(),
+        background-color motion.default();
     }
 
     .input-slot .input,
