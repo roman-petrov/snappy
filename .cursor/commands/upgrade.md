@@ -1,7 +1,7 @@
 # ⬆️ Upgrade: Package Update with Changelog Review
 
-**Goal:** Menu of outdated packages → upgrade one across the monorepo → project-focused impact report → code changes only
-after confirmation.
+**Goal:** Menu of outdated packages → upgrade one across the monorepo → project-focused impact report → code changes
+only after confirmation.
 
 **Flow:** `bun outdated` → AskQuestion → snapshot → upgrade manifests → Do MCP `tsc`/`test` → research releases
 internally → impact report → ask → apply.
