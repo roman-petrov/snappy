@@ -3,8 +3,10 @@
 /* eslint-disable functional/no-expression-statements */
 import type { Locale } from "@snappy/intl";
 
-import type { StaticFormPlan } from "../Schema";
-import type { AgentAiConfig, AgentEntry, AgentFeedRuntime, AgentGroupId } from "../Types";
+import { Ai } from "@snappy/ai";
+
+import type { StaticFormAnswers, StaticFormPlan } from "../Schema";
+import type { AgentAiModels, AgentEntry, AgentFeedRuntime, AgentGroupId } from "../Types";
 
 type Localization = Record<string, readonly [string, string]>;
 
@@ -19,13 +21,15 @@ type StaticAgentMetaPayload = {
   title: string;
 };
 
-type StaticAgentRun = (input: StaticAgentRunInput) => Promise<void>;
+type StaticAgentRun = (input: StaticAgentRunInput) => Promise<unknown>;
 
 type StaticAgentRunInput = {
-  aiConfig: AgentAiConfig;
+  ai: Ai;
+  answers: StaticFormAnswers;
   feed: AgentFeedRuntime;
   isStopped: () => boolean;
   locale: Locale;
+  models: AgentAiModels;
   plan: StaticFormPlan;
   prompt: string;
 };
@@ -55,6 +59,8 @@ export const StaticAgent =
     return {
       meta,
       module: ({ aiConfig, feed, onRunningChange }) => {
+        const ai = Ai(aiConfig.options);
+        const { models } = aiConfig;
         let stopped = false;
         const isStopped = () => stopped;
 
@@ -63,7 +69,11 @@ export const StaticAgent =
             stopped = false;
             onRunningChange?.(true);
             try {
-              await run({ aiConfig, feed, isStopped, locale, plan, prompt });
+              const answers = await feed.ask(plan);
+              if (isStopped()) {
+                return;
+              }
+              await run({ ai, answers, feed, isStopped, locale, models, plan, prompt });
             } finally {
               onRunningChange?.(false);
             }
