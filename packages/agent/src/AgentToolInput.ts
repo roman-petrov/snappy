@@ -1,14 +1,5 @@
 /* eslint-disable functional/no-try-statements */
-import type { z } from "zod";
-
-const validationError = (error: z.ZodError): string =>
-  error.issues
-    .map(issue => {
-      const path = issue.path.length > 0 ? `${issue.path.map(String).join(`.`)}: ` : ``;
-
-      return `${path}${issue.message}`;
-    })
-    .join(`; `);
+import { z } from "zod";
 
 const json = (argumentsJson: string): { error: string; ok: false } | { ok: true; value: unknown } => {
   const trimmed = argumentsJson.trim();
@@ -34,7 +25,7 @@ const parse = <TSchema extends z.ZodType>(
 
   return result.success
     ? { data: result.data, ok: true }
-    : { error: `Invalid tool arguments: ${validationError(result.error)}`, ok: false };
+    : { error: `Invalid tool arguments: ${z.prettifyError(result.error)}`, ok: false };
 };
 
 export const AgentToolInput = { parse };
