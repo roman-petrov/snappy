@@ -52,14 +52,14 @@ jobs:
       - name: 🤖 Build Android app
         run: bun do build:app-android
 
-      - name: ⬇️ Push Prisma schema
+      - name: 📥 Apply migrations
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
-        run: bun prisma db push --force-reset
+        run: bun do db:migrate:deploy
 
       - name: 📦 Create deploy archive
         run: |

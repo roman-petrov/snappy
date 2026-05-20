@@ -12,7 +12,7 @@ Schema source of truth: `packages/db/prisma/schema.prisma`.
 ## Before merge
 
 1. Rebase on `main`.
-2. Create one migration: `bun prisma migrate dev --create-only`.
+2. Create one migration: `bun prisma migrate dev --create-only --name <short_description>`.
 3. Generate client: `bun prisma generate`.
 4. Review SQL in `packages/db/prisma/migrations/`.
 5. Commit schema + generated client + migration.
