@@ -12,6 +12,7 @@
     "@snappy/do": "workspace:*",
     "@snappy/server-app": "workspace:*",
     "better-auth": "^1.6.11",
+    "isomorphic-dompurify": "^3.14.0",
     "prisma": "^7.7.0",
     "react-router-dom": "^7.15.1",
     "tsx": "^4.22.3",
