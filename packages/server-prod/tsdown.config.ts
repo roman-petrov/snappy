@@ -15,7 +15,8 @@ export default defineConfig({
         /^[a-z]:[/\\]/iu.test(id)
       ),
   },
-  entry: { main: `./src/main.ts` },
+  // eslint-disable-next-line @stylistic/quotes --- IMPORTANT: Knip will not work with backticks!
+  entry: { main: "./src/main.ts" },
   format: `esm`,
   minify: false,
   outExtensions: () => ({ js: `.js` }),

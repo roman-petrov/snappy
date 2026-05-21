@@ -32,6 +32,7 @@ const config: KnipConfig = {
         `stylelint-config-recess-order`,
         `stylelint-config-standard-scss`,
         `stylelint-order`,
+        `tsdown`,
       ],
     },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
