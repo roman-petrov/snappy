@@ -18,6 +18,20 @@ export type FeedArtifactPatch = { src?: string; text?: string };
 
 type FeedRecord = { artifacts: FeedArtifact[]; id: string };
 
+const ok = (item: unknown): item is FeedArtifact => {
+  if (!_.isObject(item)) {
+    return false;
+  }
+  const row = item as Record<string, unknown>;
+  const { generationPrompt, id, src, text, type } = row;
+
+  return (
+    _.isString(id) &&
+    _.isString(generationPrompt) &&
+    ((type === `image` && _.isString(src)) || (type === `text` && _.isString(text)))
+  );
+};
+
 const clone = (artifacts: FeedArtifact[]) => artifacts.map(item => ({ ...item }));
 
 const idbUntilDone = async <T = void>(
@@ -67,8 +81,9 @@ const read = async (): Promise<FeedArtifact[]> => {
   const tx = db.transaction(storeName, `readonly`);
   const request = tx.objectStore(storeName).get(recordId);
   const raw = await idbUntilDone<FeedRecord | undefined>(request, `success`);
+  const list = _.isArray(raw?.artifacts) ? raw.artifacts : [];
 
-  return clone(raw?.artifacts ?? []);
+  return clone(list.filter(ok));
 };
 
 const writeAll = async (artifacts: FeedArtifact[]) => {
