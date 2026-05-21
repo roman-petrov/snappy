@@ -6,8 +6,8 @@
 
 - ⌨️ [Cursor](https://cursor.com/)
   - 🔌 Install recommended workspace `VSCode` extensions.
-- 📥 [Node.js 24](https://nodejs.org/en/download).
-- 📥 [Bun](https://bun.com/)
+- 📥 [Node.js](https://nodejs.org/) — version from [`.node-version`](.node-version).
+- 📥 [Bun](https://bun.com/).
 - 📝 Fonts:
   - [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)
   - [Cascadia Code](https://fonts.microsoft.com/specimen/Cascadia+Code)
@@ -17,8 +17,7 @@
 
 ## 🔄 Workflow
 
-- 📦 `!install.bat`: Install global tools.
-- ⚙️ `!setup.bat`: Set up project dependencies.
+- ⚙️ `!setup.bat`: Configure git and install project dependencies.
 - ✅ `!check.bat`: Run all CI checks.
 - 🧹 `!cleanup.bat`: Clean up repository.
 - 📦 `!upgrade.bat`: Upgrade dependencies interactively.
@@ -38,7 +37,6 @@ is reachable at **home.local**.
 - 🔐 [Better Auth](https://www.better-auth.com/)
 - 🔗 [tRPC](https://trpc.io/)
 - 🧬 [Prisma](https://www.prisma.io/)
-- 🍞 [Bun](https://bun.sh/)
 - 🧪 [Vitest](https://vitest.dev/)
 - ✨ [ESLint](https://eslint.org/)
 - 🎨 [Prettier](https://prettier.io/)
