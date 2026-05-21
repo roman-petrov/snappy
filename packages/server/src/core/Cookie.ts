@@ -21,3 +21,5 @@ export const Cookie = (value?: string, acceptLanguage?: string) => {
 
   return { locale, theme };
 };
+
+export type Cookie = ReturnType<typeof Cookie>;
