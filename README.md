@@ -33,6 +33,7 @@ is reachable at **home.local**.
 
 - 🟦 [TypeScript](https://www.typescriptlang.org/)
 - ⚡ [Vite](https://vite.dev/)
+- 📦 [tsdown](https://tsdown.dev/)
 - ⚛️ [React](https://react.dev/)
 - 🔐 [Better Auth](https://www.better-auth.com/)
 - 🔗 [tRPC](https://trpc.io/)

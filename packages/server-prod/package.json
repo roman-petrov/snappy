@@ -10,5 +10,8 @@
     "@snappy/server": "workspace:*",
     "@snappy/server-app": "workspace:*",
     "fastify": "^5.8.5"
+  },
+  "devDependencies": {
+    "tsdown": "^0.22.0"
   }
 }
