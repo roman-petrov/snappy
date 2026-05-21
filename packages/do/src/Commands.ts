@@ -2,83 +2,89 @@ import type { CmdDefinition } from "./CommandTypes";
 
 const tsxPreload = `--import tsx/esm --require tsx/cjs`;
 
-/**
- * ! Some emojis have incorrect width in VSCode terminal.
- * ? See:
- * ? - https://github.com/microsoft/vscode/issues/251102
- * ? - https://github.com/xtermjs/xterm.js/issues/2668
- */
 const defs: Record<string, CmdDefinition> = {
   [`build:app-android-debug`]: {
-    description: `Gradle: build Android debug APK (dev URL). Manual only, not part of build/ci.`,
+    description: `Android build for development and testing on a device.`,
     label: `🤖 Android debug`,
     run: { handler: `build:app-android-debug` },
   },
   [`build:app-android`]: {
-    description: `Gradle: build Android release APK (prod URL) into dist/snappy.apk.`,
+    description: `Android build for release and distribution.`,
     label: `🤖 Android app`,
     run: { handler: `build:app-android` },
   },
-  [`build:app`]: { description: `Vite: build app into dist/app.`, label: `💻 App`, run: { handler: `build:app` } },
+  [`build:app`]: {
+    description: `Production build of the web application.`,
+    label: `💻 App`,
+    run: { handler: `build:app` },
+  },
   [`build:server`]: {
-    description: `esbuild: bundle @snappy → dist/server-prod/main.js (npm deps external, no minify).`,
+    description: `Production build of the backend.`,
     label: `🏭 Server`,
     run: { handler: `build:server` },
   },
-  [`build:site`]: { description: `Vite: build site.`, label: `🌐 Site`, run: { handler: `build:site` } },
-  [`build:ssr`]: { description: `Vite: build SSR bundle.`, label: `⚡ SSR`, run: { handler: `build:ssr` } },
+  [`build:site`]: {
+    description: `Production build of the marketing site.`,
+    label: `🌐 Site`,
+    run: { handler: `build:site` },
+  },
+  [`build:ssr`]: {
+    description: `Server rendering bundle for the marketing site.`,
+    label: `⚡ SSR`,
+    run: { handler: `build:ssr` },
+  },
   [`db:container:up`]: {
-    description: `Docker: start DB container.`,
+    description: `Start the local database.`,
     label: `🐳 Database container`,
     run: { command: `docker compose up -d` },
   },
   [`db:dev`]: {
     children: [`db:container:up`, `db:push:dev`],
-    description: `DB for dev: container up + schema push.`,
+    description: `Prepare the database for local development.`,
     label: `🗄️ Database`,
   },
   [`db:migrate:deploy`]: {
-    description: `Prisma: apply migrations.`,
+    description: `Apply pending database changes on the server.`,
     label: `📥 Apply migrations`,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
   },
   [`db:push:dev`]: {
-    description: `Prisma: push schema (accept data loss, for dev).`,
+    description: `Align the local database with the current data model.`,
     label: `⬇️ Schema sync`,
     run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
-    description: `Full build (incl. build:server) + Prisma migrate deploy.`,
+    description: `Prepare the project for deployment: build artifacts and update the database.`,
     label: `🔨 Deploy prepare`,
   },
   [`deploy-run`]: {
     children: [`server:prod`],
-    description: `Run server:prod only (after deploy-prepare / build:server).`,
+    description: `Start the application on the server after deployment.`,
     label: `▶️ Deploy run`,
   },
   [`docker:start`]: {
-    description: `Start Docker Desktop (daemon) so containers can run.`,
+    description: `Start Docker for local services.`,
     label: `🐳 Docker`,
     run: { command: `docker desktop start` },
   },
   [`env:dev`]: {
     children: [`docker:start`, `db:dev`],
-    description: `Prepare Docker + DB for dev and run.`,
+    description: `Prepare the local environment: Docker and database.`,
     label: `🧰 Dev env`,
   },
   [`eslint-fix`]: {
-    description: `ESLint: auto-fix.`,
+    description: `Automatically fix JavaScript and TypeScript style issues.`,
     label: `🔧 ESLint`,
     run: { args: [`--fix`, `--max-warnings=0`, `.`], tool: `eslint` },
   },
   [`prettier-fix`]: {
-    description: `Prettier: format and write.`,
+    description: `Automatically format project code.`,
     label: `✨ Prettier`,
     run: { args: [`--write`, `.`], tool: `prettier` },
   },
   [`server:api:dev`]: {
-    description: `Run server-dev (API).`,
+    description: `Run the API locally with automatic restart on changes.`,
     label: `⚙️ API dev`,
     run: {
       command: `node --watch ${tsxPreload} packages/server-dev/src/main.ts`,
