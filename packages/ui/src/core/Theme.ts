@@ -1,16 +1,17 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
+import type { ResolvedTheme as CoreResolvedTheme, Theme as CoreTheme } from "@snappy/ui-core";
+
 import { MediaQuery } from "@snappy/browser";
 import { Bridge } from "@snappy/platform";
-import { Theme as ThemePrefs, type Theme as ThemeValue } from "@snappy/ui-core";
 
 import { $theme } from "../Store";
 import { ThemeFog } from "./ThemeFog";
 import { ThemeTransition } from "./ThemeTransition";
 
-export type ResolvedTheme = `dark` | `light`;
+export type ResolvedTheme = CoreResolvedTheme;
 
-export type Theme = ThemeValue;
+export type Theme = CoreTheme;
 
 const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
 
@@ -40,11 +41,4 @@ const set = (value: Theme) =>
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);
 
-export const Theme = {
-  effective,
-  init,
-  key: ThemePrefs.key,
-  resolve: ThemePrefs.resolve,
-  toggle,
-  values: ThemePrefs.values,
-};
+export const Theme = { effective, init, toggle };

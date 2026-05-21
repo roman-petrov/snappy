@@ -1,12 +1,13 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
+import type { Language as CoreLanguage } from "@snappy/ui-core";
+
 import { i, type Locale } from "@snappy/intl";
-import { Language as LanguagePrefs, type Language as LanguageValue } from "@snappy/ui-core";
 
 import { $locale } from "../Store";
 
-export type Language = LanguageValue;
+export type Language = CoreLanguage;
 
 const values = [`en`, `ru`, `system`] as const;
 
@@ -42,4 +43,4 @@ const toggle = () => {
   $locale.set(locale() === `ru` ? `en` : `ru`);
 };
 
-export const Language = { init, key: LanguagePrefs.key, locale, resolve: LanguagePrefs.resolve, toggle, values };
+export const Language = { init, locale, toggle, values };
