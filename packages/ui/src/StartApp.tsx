@@ -10,6 +10,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 
 import { App } from "./App";
 import { Language, Theme } from "./core";
+// @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
 
 export type CreateRouter = (basename: string) => ReturnType<typeof createBrowserRouter>;
