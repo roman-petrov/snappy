@@ -6,6 +6,8 @@ export * from "./FeedCard";
 
 export * from "./FeedPanel";
 
+export * from "./FeedStreamCard";
+
 export * from "./ImageCard";
 
 export * from "./StaticForm";

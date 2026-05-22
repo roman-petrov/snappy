@@ -6,7 +6,9 @@ const dbPort = Number(env[`DB_PORT`] ?? 0);
 const dbUser = env[`DB_USER`] ?? ``;
 const dbPassword = env[`DB_PASSWORD`] ?? ``;
 const dbName = env[`DB_NAME`] ?? ``;
-const dbUrl = `postgresql://${dbUser}:${dbPassword}@${dbHost}:${dbPort}/${dbName}`;
+const dbAuth = `${dbUser}:${dbPassword}@${dbHost}:${dbPort}`;
+const dbUrl = `postgresql://${dbAuth}/${dbName}`;
+const dbShadowUrl = `postgresql://${dbAuth}/${dbName}_shadow`;
 const balanceMinRub = -1000;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 500_000;
@@ -25,6 +27,7 @@ export const Config = {
   balancePaymentMinRub,
   betterAuthJwtSecret,
   betterAuthTrustedOrigins,
+  dbShadowUrl,
   dbUrl,
   origin,
   yooKassaSecretKey,

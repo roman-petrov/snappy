@@ -1,0 +1,46 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/tokens/space";
+/* stylelint-disable import-notation */
+@import url("@fontsource/google-sans-code/latin-400.css");
+/* stylelint-enable import-notation */
+
+.root {
+  @include surface.surface;
+
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.body {
+  pre {
+    width: max-content;
+    min-width: 100%;
+    padding: space.md();
+    padding-inline-end: calc(space.md() + 2.5rem);
+    margin: 0;
+    font-family: "Google Sans Code", ui-monospace, monospace;
+    font-size: r(14);
+    line-height: 1.65;
+    tab-size: 2;
+  }
+
+  code {
+    font-size: inherit;
+    line-height: inherit;
+  }
+}
+
+.copy {
+  position: absolute;
+  top: space.sm();
+  right: space.sm();
+  z-index: 1;
+}

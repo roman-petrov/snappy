@@ -11,3 +11,5 @@ export * from "./SettingsModelsImage";
 export * from "./SettingsModelsSpeech";
 
 export * from "./SettingsTheme";
+
+export * from "./SettingsTypeWriterSpeed";

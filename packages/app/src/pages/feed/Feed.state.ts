@@ -1,3 +1,4 @@
+import type { TypeWriterSpeed } from "@snappy/domain";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
 import { Ai, type Ai as AiClient } from "@snappy/ai";
@@ -13,6 +14,7 @@ export const useFeedState = () => {
   const [artifacts, setArtifacts] = useState<FeedArtifact[]>([]);
   const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
   const [ai, setAi] = useState<AiClient | undefined>(undefined);
+  const [typeWriterSpeed, setTypeWriterSpeed] = useState<TypeWriterSpeed | undefined>(undefined);
 
   const refresh = useCallback(async () => {
     setArtifacts(await ChatFeed.read());
@@ -23,9 +25,11 @@ export const useFeedState = () => {
   }, [refresh]);
 
   useAsyncEffect(async () => {
-    const config = AgentAiFromSettings(await trpc.user.settings.get.query());
+    const settings = await trpc.user.settings.get.query();
+    const config = AgentAiFromSettings(settings);
     setAiConfig(config);
     setAi(Ai(config.options));
+    setTypeWriterSpeed(settings.typeWriterSpeed);
   }, []);
 
   const go = useGo();
@@ -54,13 +58,21 @@ export const useFeedState = () => {
       ai === undefined || aiConfig === undefined
         ? undefined
         : artifacts.map(item => {
-            const shared = { ai, id: item.id, onError, onPublish, onRemove, prompt: item.generationPrompt };
+            const shared = {
+              ai,
+              aiOptions: aiConfig.options,
+              id: item.id,
+              onError,
+              onPublish,
+              onRemove,
+              prompt: item.generationPrompt,
+            };
 
             return item.type === `image`
-              ? { ...shared, content: item.src, model: aiConfig.models.image, type: `image` }
-              : { ...shared, content: item.text, model: aiConfig.models.chat, type: `text` };
+              ? { ...shared, content: item.src, model: aiConfig.models.image, type: `image` as const }
+              : { ...shared, content: item.text, model: aiConfig.models.chat, type: `text` as const, typeWriterSpeed };
           }),
-    [ai, aiConfig, artifacts, onError, onPublish, onRemove],
+    [ai, aiConfig, artifacts, onError, onPublish, onRemove, typeWriterSpeed],
   );
 
   return { cards };

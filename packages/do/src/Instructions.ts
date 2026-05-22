@@ -1,10 +1,12 @@
-export const instructions = `Do MCP server: use it for all project workflow tasks. Do not use the terminal to run scripts.
+export const instructions = `Do MCP server runs the Snappy project workflow.
 
-Rules:
-- For run, dev, CI, lint, or fix use the workflow_run tool only. Do not run npm run or similar in the terminal.
-- Call workflow_run with one of: run, dev, test, shot, ci, tsc, eslint, prettier, stylelint, cspell, jscpd, knip, markdownlint, eslint-fix, prettier-fix, stylelint-fix.
-- ci = full pipeline (test + all linters). Use short names for linters (eslint, prettier, …), *-fix for auto-fix (eslint-fix, …).
+How to work:
+- Use workflow_run for every project script. Do not run bun/npm scripts in the terminal.
+- The script parameter must be a name from the tool schema. Each name has a short description there — pick by task, do not guess names.
+- Prefer the smallest command that matches the goal (e.g. eslint after TS edits). Use ci when you need the full check before finishing work.
+- Names ending in -fix apply auto-fixes; the same name without -fix only reports problems.
+- Parent commands run several steps in order (e.g. lint, build). If a step fails, fix it and re-run; read the tool output.
 
-Read this resource (do://instructions) at the start of a session to follow these rules.`;
+Read do://instructions at the start of a session.`;
 
 export const Instructions = { instructions };

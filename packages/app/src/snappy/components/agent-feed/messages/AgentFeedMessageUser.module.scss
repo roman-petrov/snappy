@@ -1,17 +1,6 @@
-@use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/tokens";
-
 .root {
   display: flex;
   justify-content: flex-end;
   width: 100%;
   min-width: 0;
-}
-
-.bubble {
-  width: fit-content;
-  max-width: min(100%, tokens.content-narrow());
-  padding: space.xs() space.sm();
-  overflow-wrap: anywhere;
-  white-space: pre-wrap;
 }

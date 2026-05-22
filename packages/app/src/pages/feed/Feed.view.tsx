@@ -16,8 +16,8 @@ export const FeedView = ({ cards }: FeedViewProps) => (
       <Button link={Routes.home} text={t(`feed.openCatalog`)} />
     </div>
     <div className={styles.cards}>
-      {cards?.map(({ type, ...props }) =>
-        type === `image` ? <ImageCard key={props.id} {...props} /> : <TextCard key={props.id} {...props} />,
+      {cards?.map(card =>
+        card.type === `image` ? <ImageCard key={card.id} {...card} /> : <TextCard key={card.id} {...card} />,
       )}
     </div>
   </Page>

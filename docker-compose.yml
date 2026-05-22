@@ -1,3 +1,4 @@
+# cspell:words datname isready
 services:
   postgres:
     image: postgres:16-alpine
@@ -10,6 +11,18 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  postgres-shadow:
+    image: postgres:16-alpine
+    depends_on: [postgres]
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        url="postgresql://${DB_USER}:${DB_PASSWORD}@postgres/${DB_NAME}"
+        until pg_isready -h postgres -U "${DB_USER}" -d "${DB_NAME}"; do sleep 1; done
+        psql "$$url" -tc "SELECT 1 FROM pg_database WHERE datname = '${DB_NAME}_shadow'" | grep -q 1 \
+        || psql "$$url" -c "CREATE DATABASE \"${DB_NAME}_shadow\""
+    restart: "no"
 
 volumes:
   postgres_data:

@@ -36,27 +36,32 @@ const defs: Record<string, CmdDefinition> = {
   [`db:container:up`]: {
     description: `Start the local database.`,
     label: `🐳 Database container`,
+    mcp: false,
     run: { command: `docker compose up -d` },
   },
   [`db:dev`]: {
     children: [`db:container:up`, `db:push:dev`],
     description: `Prepare the database for local development.`,
     label: `🗄️ Database`,
+    mcp: false,
   },
   [`db:migrate:deploy`]: {
     description: `Apply pending database changes on the server.`,
     label: `📥 Apply migrations`,
+    mcp: false,
     run: { args: [`migrate`, `deploy`], tool: `prisma` },
   },
   [`db:push:dev`]: {
     description: `Align the local database with the current data model.`,
     label: `⬇️ Schema sync`,
+    mcp: false,
     run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
   [`deploy-prepare`]: {
     children: [`build`, `db:migrate:deploy`],
     description: `Prepare the project for deployment: build artifacts and update the database.`,
     label: `🔨 Deploy prepare`,
+    mcp: false,
   },
   [`deploy-run`]: {
     children: [`server:prod`],
@@ -72,11 +77,19 @@ const defs: Record<string, CmdDefinition> = {
     children: [`docker:start`, `db:dev`],
     description: `Prepare the local environment: Docker and database.`,
     label: `🧰 Dev env`,
+    mcp: false,
   },
   [`eslint-fix`]: {
     description: `Automatically fix JavaScript and TypeScript style issues.`,
     label: `🔧 ESLint`,
     run: { args: [`--fix`, `--max-warnings=0`, `.`], tool: `eslint` },
+  },
+  [`finish-feature`]: {
+    description: `Prepare the current feature branch for merge into main.`,
+    interactive: true,
+    label: `🏁 Finish feature`,
+    mcp: false,
+    run: { handler: `finish-feature` },
   },
   [`prettier-fix`]: {
     description: `Automatically format project code.`,
@@ -124,6 +137,7 @@ const defs: Record<string, CmdDefinition> = {
     children: [`env:dev`, `server:dev`],
     description: `Start Docker + DB + run server in watch (server-dev).`,
     label: `🚀 Dev server`,
+    mcp: false,
   },
   eslint: {
     description: `ESLint: lint JS/TS.`,
@@ -151,6 +165,7 @@ const defs: Record<string, CmdDefinition> = {
     children: [`env:dev`, `build`, `deploy-run`],
     description: `Build (incl. build:server) + server:prod. No DB migrations. For PM2 or local prod.`,
     label: `🏃 Run`,
+    mcp: false,
   },
   shot: {
     description: `Vitest: run tests and update snapshots.`,
@@ -169,4 +184,18 @@ const defs: Record<string, CmdDefinition> = {
 const byName = (name: string) => defs[name];
 const list = () => Object.entries(defs).map(([name, definition]) => ({ description: definition.description, name }));
 
-export const Commands = { byName, list };
+const mcpExcluded = (name: string): boolean => {
+  const definition = defs[name];
+  if (definition === undefined) {
+    return true;
+  }
+  if (definition.mcp === false) {
+    return true;
+  }
+
+  return `children` in definition ? definition.children.some(mcpExcluded) : false;
+};
+
+const listMcp = () => list().filter(({ name }) => !mcpExcluded(name));
+
+export const Commands = { byName, list, listMcp, mcpExcluded };

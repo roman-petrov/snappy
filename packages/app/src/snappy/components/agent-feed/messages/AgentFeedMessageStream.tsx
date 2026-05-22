@@ -1,14 +1,7 @@
-import { AiStream } from "@snappy/ai-stream";
+import { FeedStreamCard, type FeedStreamCardContentProps } from "../../FeedStreamCard";
 
-import { FeedPanel } from "../../FeedPanel";
-import styles from "./AgentFeedMessageStream.module.scss";
+export type AgentFeedMessageStreamProps = Omit<Extract<FeedStreamCardContentProps, { text?: never }>, `theme`>;
 
-export type AgentFeedMessageStreamProps = { stream: AsyncIterable<string> };
-
-export const AgentFeedMessageStream = ({ stream }: AgentFeedMessageStreamProps) => (
-  <div className={styles.root}>
-    <FeedPanel>
-      <AiStream color="text" stream={stream} typography="caption" />
-    </FeedPanel>
-  </div>
+export const AgentFeedMessageStream = (props: AgentFeedMessageStreamProps) => (
+  <FeedStreamCard {...props} theme="chat" />
 );

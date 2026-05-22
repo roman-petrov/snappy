@@ -18,10 +18,10 @@ export type AgentDefinition = ReturnType<AgentEntry> & { id: string };
 export type AgentEntry = (locale: Locale) => { meta: AgentInfo; module: AgentModuleFactory };
 
 export type AgentFeedRuntime = {
-  appendChatStream: (stream: AsyncIterable<string>) => number;
-  appendReasoningStream: (stream: AsyncIterable<string>) => number;
-  appendStatus: (text: string, finished: Promise<{ label: string }>) => number;
-  appendToolBadge: (text: string, finished: Promise<{ label: string }>) => number;
+  appendChatStream: (stream: AsyncIterable<string>) => Promise<void>;
+  appendReasoningStream: (stream: AsyncIterable<string>) => Promise<void>;
+  appendStatus: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;
+  appendToolBadge: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;
   appendUserText: (text: string) => number;
   ask: AgentAsk;
   generateImage: (input: {

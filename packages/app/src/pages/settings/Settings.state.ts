@@ -3,7 +3,7 @@ import { useStoreValue } from "@snappy/store";
 import { $fog, $locale, $theme, useAsyncEffect, useGo } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth, t, trpc } from "../../core";
+import { Auth, t, trpc, type UserSettings } from "../../core";
 import { Routes } from "../../Routes";
 import { $loggedIn } from "../../Store";
 
@@ -14,6 +14,7 @@ export const useSettingsState = () => {
   const [llmChatEnd, setLlmChatEnd] = useState<string>();
   const [llmImageEnd, setLlmImageEnd] = useState<string>();
   const [llmSpeechEnd, setLlmSpeechEnd] = useState<string>();
+  const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
   const fog = useStoreValue($fog);
   const theme = useStoreValue($theme);
   const locale = useStoreValue($locale);
@@ -25,6 +26,7 @@ export const useSettingsState = () => {
     setLlmChatEnd(llm.llmChatModel);
     setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality}`);
     setLlmSpeechEnd(llm.llmSpeechRecognitionModel);
+    setTypeWriterSpeed(llm.typeWriterSpeed);
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
@@ -45,5 +47,6 @@ export const useSettingsState = () => {
     logoutOnClick,
     theme,
     toggleFog,
+    typeWriterSpeed,
   };
 };

@@ -3,16 +3,17 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
 import { _ } from "@snappy/core";
-import { Console, Process, Terminal } from "@snappy/node";
+import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
 import { Build } from "./Build";
 import { Commands } from "./Commands";
+import { Feature } from "./Feature";
 
 const ok = `✓`;
 const fail = `✗`;
-const ellipsis = `\u2026`;
+const ellipsis = `…`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
@@ -38,7 +39,7 @@ const treeLine = (prefix: string, connector: string, label: string, status: `fai
   Console.logLine(`${prefix}${connector}─ ${icon ? `${icon} ` : ``}${Terminal.cyan(label)}`);
 };
 
-type ShellResult = number | { exitCode: number; stderr: string; stdout: string };
+type ShellResult = number | SpawnResult;
 
 const runShell = async (
   root: string,
@@ -84,7 +85,9 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   } as const;
 
   const rawResult = await (`handler` in run
-    ? buildHandlers[run.handler](root, buildOptions)
+    ? run.handler === `finish-feature`
+      ? Feature.finish(root)
+      : buildHandlers[run.handler](root, buildOptions)
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
@@ -120,14 +123,14 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
               if (run.shutdown !== undefined) {
                 const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
 
-                return _.isObject(shutdownResult) ? shutdownResult.exitCode : shutdownResult;
+                return Process.exitCode(shutdownResult);
               }
 
               return code;
             })()
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
-  const exitCode = _.isObject(rawResult) ? rawResult.exitCode : rawResult;
+  const exitCode = Process.exitCode(rawResult);
   const message = _.isObject(rawResult) ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
   if (!mcp && !verbose) {
@@ -205,6 +208,10 @@ const run = async (
   name: string,
   { mcp, verbose: verboseOpt }: { mcp?: boolean; verbose?: boolean } = {},
 ): Promise<RunResult> => {
+  if (mcp === true && Commands.mcpExcluded(name)) {
+    return { exitCode: 1, message: `Command "${name}" is not available via MCP. Run it in the terminal.` };
+  }
+
   const definition = Commands.byName(name);
   const verbose = verboseOpt ?? (mcp === true || definition?.interactive === true);
   const node = tree(name);

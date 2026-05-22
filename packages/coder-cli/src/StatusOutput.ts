@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data, functional/no-expression-statements */
-import { _ } from "@snappy/core";
+import { _, Unicode } from "@snappy/core";
 import { Console } from "@snappy/node";
 import { clearLine, cursorTo } from "node:readline";
 
@@ -42,7 +42,7 @@ export const StatusOutput = () => {
 
       return;
     }
-    process.stdout.write(`\u001B[${String(state.transient.lineCount - 1)}A`);
+    process.stdout.write(`${Unicode.escape}[${String(state.transient.lineCount - 1)}A`);
     cursorTo(process.stdout, 0);
   };
 
@@ -51,11 +51,11 @@ export const StatusOutput = () => {
     for (let index = 0; index < state.transient.lineCount; index += 1) {
       clearLine(process.stdout, 0);
       if (index < state.transient.lineCount - 1) {
-        process.stdout.write(`\u001B[1B`);
+        process.stdout.write(`${Unicode.escape}[1B`);
       }
     }
     if (state.transient.lineCount > 1) {
-      process.stdout.write(`\u001B[${String(state.transient.lineCount - 1)}A`);
+      process.stdout.write(`${Unicode.escape}[${String(state.transient.lineCount - 1)}A`);
       cursorTo(process.stdout, 0);
     }
   };

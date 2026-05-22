@@ -9,6 +9,7 @@
     "@snappy/ai-stream": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
+    "@snappy/domain": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/platform": "workspace:*",
     "@snappy/snappy": "workspace:*",

@@ -28,4 +28,6 @@ export * from "./Translate";
 
 export type * from "./Types";
 
+export * from "./Unicode";
+
 export * from "./Vector";

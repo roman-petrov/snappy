@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-import { _ } from "@snappy/core";
+import { _, Unicode } from "@snappy/core";
 
-const code = (value: number) => `\u001B[${value}m`;
+const code = (value: number) => `${Unicode.escape}[${value}m`;
 const reset = code(0);
 
 const codes = {

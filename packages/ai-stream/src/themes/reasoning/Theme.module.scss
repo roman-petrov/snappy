@@ -1,0 +1,55 @@
+/* jscpd:ignore-start */
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/space";
+@use "../typography" as typography;
+
+.root {
+  @include typography.font(400, 12, 1.5);
+
+  color: color.outline();
+
+  p + p::before {
+    height: space.sm();
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    @include typography.font(600, 13, 1.4);
+
+    margin: space.sm() 0 space.xs();
+  }
+
+  hr {
+    margin: space.sm() 0;
+    border-top: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
+  }
+
+  ul,
+  ol {
+    padding-inline-start: 1.25em;
+  }
+
+  li + li {
+    margin-block-start: space.xs();
+  }
+
+  table {
+    font-size: 0.95em;
+  }
+
+  th,
+  td {
+    padding: space.xs() space.sm();
+    border: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
+  }
+
+  th {
+    font-weight: 600;
+  }
+}
+
+/* jscpd:ignore-end */

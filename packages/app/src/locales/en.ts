@@ -129,8 +129,10 @@ export const en = {
       systemGroup: `System`,
       theme: `Theme`,
       title: `Settings`,
+      typeWriterSpeed: `Typewriter speed`,
     },
     theme: { dark: `Dark`, light: `Light`, system: `System`, title: `Theme` },
+    typeWriterSpeed: { fast: `Fast`, medium: `Medium`, slow: `Slow`, stream: `Stream`, title: `Typewriter speed` },
   },
   snappy: { composer: { placeholder: `What do you need?`, send: `Send` } },
 };

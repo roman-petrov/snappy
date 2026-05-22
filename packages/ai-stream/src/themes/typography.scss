@@ -1,0 +1,11 @@
+/* stylelint-disable property-disallowed-list */
+@use "sass:list";
+@use "pkg:@snappy/theme/core" as *;
+
+@mixin font($weight, $size, $line, $tracking: null) {
+  font: $weight #{list.slash(r($size), $line)} var(--font-sans);
+
+  @if $tracking {
+    letter-spacing: $tracking;
+  }
+}

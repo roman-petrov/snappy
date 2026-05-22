@@ -142,8 +142,10 @@ export const ru = {
       systemGroup: `Система`,
       theme: `Тема`,
       title: `Настройки`,
+      typeWriterSpeed: `Скорость печати`,
     },
     theme: { dark: `Тёмная`, light: `Светлая`, system: `Системная`, title: `Тема` },
+    typeWriterSpeed: { fast: `Быстро`, medium: `Средне`, slow: `Медленно`, stream: `Поток`, title: `Скорость печати` },
   },
   snappy: { composer: { placeholder: `Что нужно?`, send: `Отправить` } },
 };

@@ -1,13 +1,13 @@
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
-import { _ } from "@snappy/core";
+import { _, Unicode } from "@snappy/core";
 import { useAsyncEffect, useGo } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
 import type { AgentChatProps, AgentChatRuntime } from "./AgentChat";
 import type { AgentFeedHandle } from "./AgentFeedHandle";
 
-import { AgentAiFromSettings, trpc } from "../../../core";
+import { AgentAiFromSettings, trpc, type UserSettings } from "../../../core";
 import { Routes } from "../../../Routes";
 import { AgentFeed } from "./AgentFeed";
 
@@ -19,12 +19,14 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
   runtimeFn.current = runtime;
   const [phase, setPhase] = useState<`blocked` | `booting` | `ready`>(`booting`);
   const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
-  const sessionKey = session.map(token => token ?? ``).join(`\u0000`);
+  const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
+  const sessionKey = session.map(token => token ?? ``).join(Unicode.null);
 
   useAsyncEffect(async () => {
     setPhase(`booting`);
     const [balance, settings] = await Promise.all([trpc.user.balance.query(), trpc.user.settings.get.query()]);
     setAiConfig(AgentAiFromSettings(settings));
+    setTypeWriterSpeed(settings.typeWriterSpeed);
     const billViaProxy = !(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``);
     if (billViaProxy && balance <= 0) {
       setPhase(`blocked`);
@@ -48,6 +50,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
     return () => {
       instance.stop();
+      handle.reset();
       runtimeRef.current = undefined;
     };
   }, [aiConfig, phase, sessionKey]);
@@ -59,7 +62,10 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
   const ready = phase === `ready` && aiConfig !== undefined;
   const balanceLow = phase === `blocked`;
-  const feed = ready ? createElement(AgentFeed, { ref: feedRef }) : undefined;
+
+  const feed = ready
+    ? createElement(AgentFeed, { aiOptions: aiConfig.options, ref: feedRef, typeWriterSpeed })
+    : undefined;
 
   return { balanceLow, feed, showFeed, stop };
 };

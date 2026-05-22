@@ -1,3 +1,4 @@
+import { Unicode } from "@snappy/core";
 import { describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -140,7 +141,7 @@ describe(`terminalStatusOutput`, () => {
       output.succeed();
 
       const transientWrites = mocks.events
-        .filter(entry => entry.startsWith(String.raw`WRITE \r`) && !entry.includes(String.raw`\u001B[2K`))
+        .filter(entry => entry.startsWith(String.raw`WRITE \r`) && !entry.includes(`${Unicode.escape}[2K`))
         .map(entry => entry.slice(String.raw`WRITE \r`.length));
 
       expect(transientWrites.length).toBeGreaterThan(0);

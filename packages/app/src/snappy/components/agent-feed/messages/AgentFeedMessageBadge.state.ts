@@ -1,46 +1,33 @@
-import { useEffect, useState } from "react";
+import { useAsyncEffect } from "@snappy/ui";
+import { useState } from "react";
 
 import type { AgentFeedMessageBadgeProps } from "./AgentFeedMessageBadge";
 
 export type AgentFeedMessageBadgeState = { status: `done` | `error` | `running`; text: string };
 
 export const useAgentFeedMessageBadgeState = ({
-  finished,
+  done,
   hideOnSuccess = false,
   text,
   ...textProps
 }: AgentFeedMessageBadgeProps) => {
   const [state, setState] = useState<AgentFeedMessageBadgeState>({ status: `running`, text });
 
-  useEffect(() => {
-    let mounted = true;
+  useAsyncEffect(async () => {
+    setState({ status: `running`, text });
 
-    void finished
-      .then((value: { label: string }) => {
-        if (!mounted) {
-          return undefined;
-        }
+    try {
+      const value = await done.promise;
 
-        if (hideOnSuccess) {
-          setState({ status: `done`, text: `` });
-        } else {
-          setState({ status: `done`, text: value.label.trim() === `` ? text : value.label });
-        }
-
-        return undefined;
-      })
-      .catch(() => {
-        if (!mounted) {
-          return;
-        }
-
-        setState(current => ({ ...current, status: `error` }));
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [finished, hideOnSuccess, text]);
+      setState(
+        hideOnSuccess
+          ? { status: `done`, text: `` }
+          : { status: `done`, text: value.label.trim() === `` ? text : value.label },
+      );
+    } catch {
+      setState(current => ({ ...current, status: `error` }));
+    }
+  }, [done, hideOnSuccess, text]);
 
   return { hideOnSuccess, message: state.text, status: state.status, textProps };
 };

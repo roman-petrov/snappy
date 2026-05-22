@@ -1,14 +1,19 @@
-import type { Ai } from "@snappy/ai";
+import type { Ai, AiOptions } from "@snappy/ai";
+import type { MenuAction } from "@snappy/ui";
 
-import { type MenuAction, useAsyncEffect } from "@snappy/ui";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { t } from "../../locales";
 import { ChatFeed } from "../../pages/feed/ChatFeed";
 
-export type FeedItemBindings = FeedItemNotify & { ai: Ai; content: string; id: string; model: string; prompt: string };
-
-export type FeedItemContext = { ai: Ai; model: string; prompt: string };
+export type FeedItemBindings = FeedItemNotify & {
+  ai: Ai;
+  aiOptions: AiOptions;
+  content: string;
+  id: string;
+  model: string;
+  prompt: string;
+};
 
 export type FeedItemNotify = {
   onError?: (artifactId: string, error: unknown) => void;
@@ -16,25 +21,12 @@ export type FeedItemNotify = {
   onRemove?: (artifactId: string) => void;
 };
 
-export type UseFeedItemInput = FeedItemBindings & {
-  menu?: MenuAction[];
-  run: (input: FeedItemContext) => Promise<string>;
-  saveField: `src` | `text`;
-};
+export type UseFeedItemInput = FeedItemBase;
 
-export const useFeedItem = ({
-  ai,
-  content,
-  id,
-  menu = [],
-  model,
-  onError,
-  onPublish,
-  onRemove,
-  prompt,
-  run,
-  saveField,
-}: UseFeedItemInput) => {
+type FeedItemBase = FeedItemBindings & { menu?: MenuAction[]; saveField: `src` | `text` };
+
+export const useFeedItem = (input: UseFeedItemInput) => {
+  const { content, id, menu = [], onError, onPublish, onRemove, prompt, saveField } = input;
   const pending = content.trim() === ``;
 
   const save = useCallback(
@@ -59,43 +51,34 @@ export const useFeedItem = ({
     })();
   }, [id, onRemove]);
 
-  const handlers = useRef({ error, publish, run });
-  handlers.current = { error, publish, run };
-
   const [busy, setBusy] = useState(false);
+  const [generation, setGeneration] = useState(0);
   const ready = prompt.trim() !== ``;
   const canRegenerate = ready && !pending;
   const running = ready && (busy || pending);
 
   const regenerate = useCallback(() => {
     if (canRegenerate) {
+      setGeneration(previous => previous + 1);
       setBusy(true);
     }
   }, [canRegenerate]);
 
-  const context = useMemo((): FeedItemContext | undefined => {
-    if (!running) {
-      return undefined;
-    }
+  const complete = useCallback(
+    async (value: string) => {
+      await publish(value);
+      setBusy(false);
+    },
+    [publish],
+  );
 
-    return { ai, model, prompt };
-  }, [ai, model, prompt, running]);
-
-  useAsyncEffect(async () => {
-    if (context === undefined) {
-      return;
-    }
-    const { current } = handlers;
-    try {
-      await current.publish(await current.run(context));
-    } catch (error_) {
-      current.error(error_);
-    } finally {
-      if (busy) {
-        setBusy(false);
-      }
-    }
-  }, [busy, context]);
+  const fail = useCallback(
+    (cause: unknown) => {
+      error(cause);
+      setBusy(false);
+    },
+    [error],
+  );
 
   const actions = useMemo<MenuAction[]>(
     () => [
@@ -122,5 +105,5 @@ export const useFeedItem = ({
     [busy, canRegenerate, menu, regenerate, remove],
   );
 
-  return { actions, busy, pending, remove, running };
+  return { actions, busy, complete, fail, generation, pending, remove, running };
 };

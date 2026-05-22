@@ -21,6 +21,7 @@ export const SettingsView = ({
   logoutOnClick,
   theme,
   toggleFog,
+  typeWriterSpeed,
 }: SettingsViewProps) => (
   <Page title={t(`settings.root.title`)}>
     <SettingsCards>
@@ -44,6 +45,13 @@ export const SettingsView = ({
           icon="language"
           link={Routes.settings.language}
           text={t(`settings.root.language`)}
+        />
+        <SettingsCardSeparator />
+        <SettingsCardRow
+          bottom={t(`settings.typeWriterSpeed.${typeWriterSpeed ?? `stream`}`)}
+          icon="text_fields"
+          link={Routes.settings.typeWriterSpeed}
+          text={t(`settings.root.typeWriterSpeed`)}
         />
       </SettingsCard>
       <SettingsCard title={t(`settings.root.modelsGroup`)}>

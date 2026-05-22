@@ -1,7 +1,6 @@
 // cspell:word gradlew
 /* eslint-disable functional/no-expression-statements */
-import { _ } from "@snappy/core";
-import { Process } from "@snappy/node";
+import { Process, type SpawnResult } from "@snappy/node";
 import fs from "node:fs";
 import { join } from "node:path";
 
@@ -15,8 +14,6 @@ const faviconPath = (root: string) => join(root, `packages`, `ui`, `src`, `asset
 
 export type BuildOptions = { capture?: true };
 
-const exitCode = (r: number | { exitCode: number; stderr: string; stdout: string }) => (_.isObject(r) ? r.exitCode : r);
-
 const runSpawn = async (cwd: string, argv: string[], capture: boolean) =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
@@ -29,7 +26,7 @@ const viteBuild = async (root: string, packageName: string, { capture }: BuildOp
     Process.toolArgv(workflowRunner, `vite`, [`build`, `--outDir`, out]),
     capture === true,
   );
-  if (exitCode(result) !== 0) {
+  if (Process.exitCode(result) !== 0) {
     return result;
   }
   const favicon = faviconPath(root);
@@ -58,8 +55,6 @@ const apkOutPath = (root: string, variant: string) =>
 
 const gradlew = (root: string) => join(androidDir(root), process.platform === `win32` ? `gradlew.bat` : `gradlew`);
 
-type SpawnResult = { exitCode: number; stderr: string; stdout: string };
-
 const buildAndroidApk = async (
   root: string,
   task: `assembleDebug` | `assembleRelease`,
@@ -68,7 +63,7 @@ const buildAndroidApk = async (
 ): Promise<number | SpawnResult> => {
   await Drawable.generate(root);
   const result = await runSpawn(androidDir(root), [gradlew(root), task], capture);
-  if (exitCode(result) !== 0) {
+  if (Process.exitCode(result) !== 0) {
     return result;
   }
   const variant = task === `assembleRelease` ? `release` : `debug`;
@@ -100,7 +95,7 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
     capture === true,
   );
 
-  return exitCode(result) === 0 ? 0 : result;
+  return Process.exitCode(result) === 0 ? 0 : result;
 };
 
 const server = async (root: string, { capture }: BuildOptions = {}) => {
@@ -110,7 +105,7 @@ const server = async (root: string, { capture }: BuildOptions = {}) => {
   fs.rmSync(out, { force: true, recursive: true });
   const result = await runSpawn(cwd, Process.toolArgv(workflowRunner, `tsdown`, [`--out-dir`, out]), capture === true);
 
-  return exitCode(result) === 0 ? 0 : result;
+  return Process.exitCode(result) === 0 ? 0 : result;
 };
 
 export const Build = { app, appAndroid, appAndroidDebug, server, site, ssr };

@@ -16,6 +16,7 @@ import {
   SettingsModelsImage,
   SettingsModelsSpeech,
   SettingsTheme,
+  SettingsTypeWriterSpeed,
   Snappy,
 } from "./pages";
 import { TopUp } from "./pages/balance";
@@ -37,6 +38,7 @@ export const Router = (basename: string) =>
           { element: <ResetPassword />, path: Routes.segment.resetPassword },
           { element: <Settings />, path: Routes.segment.settings.root },
           { element: <SettingsAiTunnel />, path: Routes.segment.settings.aiTunnel },
+          { element: <SettingsTypeWriterSpeed />, path: Routes.segment.settings.typeWriterSpeed },
           { element: <SettingsTheme />, path: Routes.segment.settings.theme },
           { element: <SettingsLanguage />, path: Routes.segment.settings.language },
           { element: <SettingsModelsChat />, path: Routes.segment.settings.models.chat },

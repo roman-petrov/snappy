@@ -6,19 +6,23 @@ import { SettingsCardRow } from "./SettingsCardRow";
 import { SettingsCards } from "./SettingsCards";
 import { SettingsCardSeparator } from "./SettingsCardSeparator";
 
-export type SettingsOption<T extends string> = { icon: UiIcon; label: string; value: T };
+export type SettingsOption<T extends string | undefined> = { icon: UiIcon; label: string; value: T };
 
-export type SettingsOptionListProps<T extends string> = {
+export type SettingsOptionListProps<T extends string | undefined> = {
   onSelect: (value: T) => void;
   options: readonly SettingsOption<T>[];
   value: T;
 };
 
-export const SettingsOptionList = <T extends string>({ onSelect, options, value }: SettingsOptionListProps<T>) => (
+export const SettingsOptionList = <T extends string | undefined>({
+  onSelect,
+  options,
+  value,
+}: SettingsOptionListProps<T>) => (
   <SettingsCards>
     <SettingsCard>
       {options.map((opt, index) => (
-        <Fragment key={opt.value}>
+        <Fragment key={opt.value ?? `none`}>
           {index > 0 && <SettingsCardSeparator />}
           <SettingsCardRow
             icon={opt.icon}

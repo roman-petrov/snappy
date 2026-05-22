@@ -1,17 +1,14 @@
-/* eslint-disable regexp/unicode-escape */
-/* eslint-disable regexp/no-control-character */
-/* eslint-disable regexp/letter-case */
-/* eslint-disable regexp/hexadecimal-escape */
-/* eslint-disable no-control-regex */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
+import { Unicode } from "@snappy/core";
+
 const githubCi = process.env[`GITHUB_ACTIONS`] === `true`;
 const windows = process.platform === `win32`;
 const vscodeTerminal = process.env[`TERM_PROGRAM`] === `vscode`;
 const buggyEmoji = [`🖥️`, `⚙️`, `🗄️`, `⬇️`, `🛡️`, `▶️`];
 const shouldFix = windows && vscodeTerminal && !githubCi;
-const ansi = /\u001B\[[0-9;]*m/gu;
+const ansi = new RegExp(String.raw`${Unicode.escape}\[[0-9;]*m`, `gu`);
 
 const fixEmoji = (text: string) => {
   let result = text;

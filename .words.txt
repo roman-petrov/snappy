@@ -22,8 +22,14 @@ reranker
 clusterize
 nprobes
 xhigh
+shiki
 
 // Ai Models
 deepseek
 qwen
 codestral
+
+// Russian
+промпт
+стримом
+стриминга

@@ -1,26 +1,52 @@
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import type { DbUserSettings } from "@snappy/db";
 
 import { AiConstants, type AiImageQuality } from "@snappy/ai";
+import { type TypeWriterSpeed, TypeWriterSpeeds } from "@snappy/domain";
 import { z } from "zod";
 
 import { TrpcAuth } from "./Trpc";
 
+const llmImageQualitySchema = z.enum(AiConstants.imageQuality);
+const typeWriterSpeedSchema = z.enum(TypeWriterSpeeds);
+const typeWriterSpeedInput = z.union([typeWriterSpeedSchema, z.literal(false)]);
+
 export type UserSettingsConfig = { userSettings: DbUserSettings };
 
+export type UserSettingsData = {
+  aiTunnelDirect: boolean;
+  aiTunnelKey: string;
+  llmChatModel: string;
+  llmImageModel: string;
+  llmImageQuality: AiImageQuality;
+  llmSpeechRecognitionModel: string;
+  typeWriterSpeed?: TypeWriterSpeed;
+};
+
 export const UserSettings = ({ userSettings }: UserSettingsConfig) => {
-  const load = async (userId: string) => {
+  const load = async (userId: string): Promise<UserSettingsData> => {
     const row = await userSettings.findByUserId(userId);
+    const aiTunnelDirect = row?.aiTunnelDirect ?? false;
+    const aiTunnelKey = row?.aiTunnelKey ?? ``;
+    const llmChatModel = row?.llmChatModel ?? AiConstants.defaults.models.chat;
+    const llmImageModel = row?.llmImageModel ?? AiConstants.defaults.models.image;
+    const llmImageQuality = llmImageQualitySchema.catch(AiConstants.defaults.imageQuality).parse(row?.llmImageQuality);
+    const llmSpeechRecognitionModel = row?.llmSpeechRecognitionModel ?? AiConstants.defaults.models.speechRecognition;
+    const typeWriterSpeedStored = row?.typeWriterSpeed ?? ``;
+
+    const typeWriterSpeed =
+      typeWriterSpeedStored === ``
+        ? undefined
+        : typeWriterSpeedSchema.parse(typeWriterSpeedStored === `normal` ? `medium` : typeWriterSpeedStored);
 
     return {
-      aiTunnelDirect: row?.aiTunnelDirect ?? false,
-      aiTunnelKey: row?.aiTunnelKey ?? ``,
-      llmChatModel: row?.llmChatModel ?? AiConstants.defaults.models.chat,
-      llmImageModel: row?.llmImageModel ?? AiConstants.defaults.models.image,
-      llmImageQuality: (row?.llmImageQuality as AiImageQuality) ?? AiConstants.defaults.imageQuality,
-      llmSpeechRecognitionModel: row?.llmSpeechRecognitionModel ?? AiConstants.defaults.models.speechRecognition,
+      aiTunnelDirect,
+      aiTunnelKey,
+      llmChatModel,
+      llmImageModel,
+      llmImageQuality,
+      llmSpeechRecognitionModel,
+      typeWriterSpeed,
     };
   };
 
@@ -32,8 +58,9 @@ export const UserSettings = ({ userSettings }: UserSettingsConfig) => {
         aiTunnelKey: z.string().optional(),
         llmChatModel: z.string().optional(),
         llmImageModel: z.string().optional(),
-        llmImageQuality: z.enum(AiConstants.imageQuality).optional(),
+        llmImageQuality: llmImageQualitySchema.optional(),
         llmSpeechRecognitionModel: z.string().optional(),
+        typeWriterSpeed: typeWriterSpeedInput.optional(),
       }),
     ).mutation(async ({ ctx, input }) => {
       if (
@@ -42,7 +69,8 @@ export const UserSettings = ({ userSettings }: UserSettingsConfig) => {
         input.llmChatModel === undefined &&
         input.llmImageQuality === undefined &&
         input.llmImageModel === undefined &&
-        input.llmSpeechRecognitionModel === undefined
+        input.llmSpeechRecognitionModel === undefined &&
+        input.typeWriterSpeed === undefined
       ) {
         return load(ctx.userId);
       }

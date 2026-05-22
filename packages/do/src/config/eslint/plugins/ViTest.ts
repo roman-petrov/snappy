@@ -8,6 +8,7 @@ export default defineConfig([
     rules: {
       ...pluginVitest.configs.all.rules,
       "vitest/max-expects": `off`,
+      "vitest/no-large-snapshots": `off`,
       "vitest/prefer-describe-function-title": `off`,
       "vitest/prefer-expect-assertions": `off`,
       "vitest/prefer-lowercase-title": `off`,

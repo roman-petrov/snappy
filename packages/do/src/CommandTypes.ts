@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prevent-abbreviations */
 export type CmdDefinition =
-  | { children: readonly string[]; description: string; interactive?: true; label: string }
-  | { description: string; interactive?: true; label: string; run: CmdRunDef };
+  | { children: readonly string[]; description: string; interactive?: true; label: string; mcp?: false }
+  | { description: string; interactive?: true; label: string; mcp?: false; run: CmdRunDef };
 
 export type CmdRunDef =
   | { args: string[]; tool: string }
@@ -19,4 +19,5 @@ export type CmdRunDef =
   | { handler: `build:app` }
   | { handler: `build:server` }
   | { handler: `build:site` }
-  | { handler: `build:ssr` };
+  | { handler: `build:ssr` }
+  | { handler: `finish-feature` };

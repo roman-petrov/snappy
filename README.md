@@ -23,6 +23,25 @@
 - 📦 `!upgrade.bat`: Upgrade dependencies interactively.
 - 🔄 `!upgrade_actions.bat`: Upgrade GitHub Actions.
 
+### 🧬 Prisma workflow
+
+Schema source of truth: `packages/db/prisma/schema.prisma`.
+
+#### 🌿 Feature branch
+
+1. Run `bun do dev`.
+2. Modify `schema.prisma` and restart dev server during development.
+
+#### ✅ Before merge
+
+1. Rebase on `main`.
+2. Run `bun do finish-feature`.
+3. Review changes.
+4. Commit if ok.
+
+⚠️ Note: after `bun do finish-feature`, do not modify `schema.prisma`. If schema changed, run `bun do finish-feature`
+again.
+
 ## 📱 Android Debug
 
 The Android Debug build loads `https://home.local/app`. The dev machine must be named **home** (computer/hostname) so it

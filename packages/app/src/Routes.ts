@@ -27,6 +27,7 @@ const segment = {
     models: { chat: `settings/models/chat`, image: `settings/models/image`, speech: `settings/models/speech` },
     root: `settings`,
     theme: `settings/theme`,
+    typeWriterSpeed: `settings/type-writer-speed`,
   },
   snappy: `snappy`,
   wildcard: `*`,

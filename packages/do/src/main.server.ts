@@ -11,7 +11,8 @@ import { Runner } from "./Runner";
 import { Scripts } from "./Scripts";
 
 const root = Scripts.rootDir();
-const inputSchema = z.object({ script: z.enum(Commands.list().map(c => c.name) as [string, ...string[]]) });
+const mcpScripts = Commands.listMcp().map(command => command.name);
+const inputSchema = z.object({ script: z.enum(mcpScripts as [string, ...string[]]) });
 
 type WorkflowRunInput = z.infer<typeof inputSchema>;
 
@@ -23,7 +24,7 @@ const server = new McpServer(
 server.registerTool(
   `workflow_run`,
   {
-    description: `Run a project workflow command (run, dev, test, ci, lint:*, fix:*). Use this tool instead of the terminal; do not run npm run in the terminal.`,
+    description: `Run a project workflow command (test, ci, lint, build, fix). Use this tool instead of the terminal; do not run npm run in the terminal.`,
     inputSchema,
   },
   async ({ script }: WorkflowRunInput) => {

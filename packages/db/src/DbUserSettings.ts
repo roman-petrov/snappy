@@ -1,5 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 import type { AiImageQuality } from "@snappy/ai";
+import type { TypeWriterSpeed } from "@snappy/domain";
 
 import type { PrismaClient } from "./generated/client";
 
@@ -16,6 +17,7 @@ export const DbUserSettings = (prisma: PrismaClient) => {
       llmImageModel?: string;
       llmImageQuality?: AiImageQuality;
       llmSpeechRecognitionModel?: string;
+      typeWriterSpeed?: false | TypeWriterSpeed;
     },
   ): Promise<void> => {
     const modelPatch = {
@@ -27,6 +29,11 @@ export const DbUserSettings = (prisma: PrismaClient) => {
       ...(patch.llmSpeechRecognitionModel === undefined
         ? {}
         : { llmSpeechRecognitionModel: patch.llmSpeechRecognitionModel }),
+      ...(patch.typeWriterSpeed === undefined
+        ? {}
+        : patch.typeWriterSpeed === false
+          ? { typeWriterSpeed: `` }
+          : { typeWriterSpeed: patch.typeWriterSpeed }),
     };
 
     await prisma.userSettings.upsert({ create: { userId, ...modelPatch }, update: modelPatch, where: { userId } });

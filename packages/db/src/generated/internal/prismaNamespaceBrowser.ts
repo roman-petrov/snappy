@@ -180,7 +180,8 @@ export const UserSettingsScalarFieldEnum = {
   llmImageQuality: 'llmImageQuality',
   llmSpeechRecognitionModel: 'llmSpeechRecognitionModel',
   aiTunnelKey: 'aiTunnelKey',
-  aiTunnelDirect: 'aiTunnelDirect'
+  aiTunnelDirect: 'aiTunnelDirect',
+  typeWriterSpeed: 'typeWriterSpeed'
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]

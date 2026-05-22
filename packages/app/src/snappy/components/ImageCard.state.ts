@@ -1,51 +1,45 @@
-import type { MenuAction } from "@snappy/ui";
-
 import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
 import { Copy, Share } from "@snappy/platform";
-import { useMemo } from "react";
+import { useAsyncEffect } from "@snappy/ui";
+import { useRef } from "react";
 
 import type { ImageCardProps } from "./ImageCard";
 
-import { t } from "../../locales";
-import { type FeedItemContext, useFeedItem } from "../hooks";
+import { Menu } from "../core";
+import { useFeedItem } from "../hooks";
 
 export const useImageCardState = (props: ImageCardProps) => {
-  const { content } = props;
+  const { ai, content, model, prompt } = props;
 
-  const menu = useMemo<MenuAction[]>(
-    () =>
-      content.trim() === ``
-        ? []
-        : [
-            {
-              icon: `content_copy`,
-              key: `copy`,
-              onClick: async () => Copy.image(content),
-              tip: t(`feedCard.copy`),
-            } satisfies MenuAction,
-            {
-              icon: `share`,
-              key: `share`,
-              onClick: async () => Share.image(content),
-              tip: t(`feedCard.share`),
-            } satisfies MenuAction,
-          ],
-    [content],
-  );
+  const menu =
+    content.trim() === ``
+      ? []
+      : Menu.copyShare({ copy: async () => Copy.image(content), share: async () => Share.image(content) });
 
-  const run = async ({ ai: client, model: imageModel, prompt: imagePrompt }: FeedItemContext) => {
-    const result = await client.images.generate({
-      model: imageModel,
-      prompt: imagePrompt,
-      quality: AiConstants.defaults.imageQuality,
-      size: `1024x1024`,
-    });
+  const { actions, busy, complete, fail, pending, remove, running } = useFeedItem({ ...props, menu, saveField: `src` });
+  const handlers = useRef({ complete, fail });
+  handlers.current = { complete, fail };
 
-    return DataUrl.png(result.bytes);
-  };
+  useAsyncEffect(async () => {
+    if (!running) {
+      return;
+    }
 
-  const { actions, busy, pending, remove } = useFeedItem({ ...props, menu, run, saveField: `src` });
+    const { current } = handlers;
+
+    try {
+      const result = await ai.images.generate({
+        model,
+        prompt,
+        quality: AiConstants.defaults.imageQuality,
+        size: `1024x1024`,
+      });
+      await current.complete(DataUrl.png(result.bytes));
+    } catch (error) {
+      current.fail(error);
+    }
+  }, [ai, model, prompt, running]);
 
   return { actions, busy, pending, remove, src: content };
 };

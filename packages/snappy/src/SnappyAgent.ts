@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
 import type { Locale } from "@snappy/intl";
 import type { AgentAiConfig, AgentFeedRuntime } from "@snappy/snappy-sdk";
@@ -34,35 +33,17 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
 
   const run = async (content: string) => {
     feed.appendUserText(content);
-    for await (const part of agent.start([{ content, role: `user` }])) {
-      if (agent.context.isStopped()) {
-        break;
-      }
-      switch (part.type) {
-        case `model_stream`: {
-          if (part.variant === `reasoning`) {
-            feed.appendReasoningStream(part.stream);
-          } else {
-            feed.appendChatStream(part.stream);
-          }
-          break;
+    const agentRun = agent.start([{ content, role: `user` }], {
+      chatStream: async stream => feed.appendChatStream(stream),
+      reasoningStream: async stream => feed.appendReasoningStream(stream),
+      thinking: (label, done) => feed.appendStatus(label, done),
+      tool: part => {
+        if (part.label.trim() !== ``) {
+          feed.appendToolBadge(part.label, part.done);
         }
-        case `run`: {
-          break;
-        }
-        case `thinking`: {
-          feed.appendStatus(part.label, part.finished);
-          break;
-        }
-        case `tool`: {
-          if (part.label.trim() !== ``) {
-            feed.appendToolBadge(part.label, part.finished);
-          }
-          break;
-        }
-        // No default
-      }
-    }
+      },
+    });
+    await agentRun.done;
   };
 
   const appendUserText = (text: string) => {

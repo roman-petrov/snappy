@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-promise-reject */
 import type { Readable } from "node:stream";
 
+import { _ } from "@snappy/core";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 
 export type Runner = `bun` | `npx`;
@@ -46,14 +47,16 @@ const waitExit = async (proc: ChildProcess): Promise<number> =>
     proc.on(`error`, reject);
   });
 
-type SpawnResult = { exitCode: number; stderr: string; stdout: string };
+export type SpawnResult = { exitCode: number; stderr: string; stdout: string };
+
+const exitCode = (result: number | SpawnResult) => (_.isObject(result) ? result.exitCode : result);
 
 const waitOrCapture = async (proc: ChildProcess, capture: boolean): Promise<number | SpawnResult> => {
   if (capture && proc.stdout !== null && proc.stderr !== null) {
     const [stdout, stderr] = await Promise.all([readStream(proc.stdout), readStream(proc.stderr)]);
-    const exitCode = await waitExit(proc);
+    const code = await waitExit(proc);
 
-    return { exitCode, stderr, stdout };
+    return { exitCode: code, stderr, stdout };
   }
 
   return waitExit(proc);
@@ -89,4 +92,4 @@ const spawnShell = async (
   return waitOrCapture(proc, capture === true);
 };
 
-export const Process = { spawn, spawnShell, toolArgv, toolCommand };
+export const Process = { exitCode, spawn, spawnShell, toolArgv, toolCommand };

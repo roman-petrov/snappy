@@ -1,7 +1,6 @@
 /* eslint-disable require-atomic-updates */
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
-/* eslint-disable max-depth */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-loop-statements */
@@ -12,6 +11,7 @@
 import type { Ai, AiChatMessage } from "@snappy/ai";
 import type { Coder } from "@snappy/coder";
 
+import { Unicode } from "@snappy/core";
 import { Console } from "@snappy/node";
 import { createInterface } from "node:readline/promises";
 
@@ -20,8 +20,8 @@ import type { TFunction } from "./locales";
 import { StatusOutput } from "./StatusOutput";
 import { Theme } from "./Theme";
 
-const hideCursor = `\u001B[?25l`;
-const showCursor = `\u001B[?25h`;
+const hideCursor = `${Unicode.escape}[?25l`;
+const showCursor = `${Unicode.escape}[?25h`;
 
 const run = async ({
   ai,
@@ -83,38 +83,32 @@ const run = async ({
           const engine = coder({ ai, chatModel });
 
           output.start();
-          const agentRun = engine.start(session);
-          for await (const part of agentRun) {
-            switch (part.type) {
-              case `model_stream`: {
-                let text = ``;
-                for await (const delta of part.stream) {
-                  output.assistantDelta(delta);
-                  if (part.variant === `chat`) {
-                    text += delta;
-                  }
-                }
-                output.assistantMessage(text.trimEnd());
-                break;
+          const agentRun = engine.start(session, {
+            chatStream: async stream => {
+              let text = ``;
+              for await (const delta of stream) {
+                output.assistantDelta(delta);
+                text += delta;
               }
-              case `run`: {
-                break;
+              output.assistantMessage(text.trimEnd());
+            },
+            reasoningStream: async stream => {
+              for await (const delta of stream) {
+                output.assistantDelta(delta);
               }
-              case `thinking`: {
-                output.onThinkingEvent({ label: part.label, status: `running` });
-                const { label } = await part.finished;
-                output.onThinkingEvent({ label, status: `completed` });
-                break;
-              }
-              case `tool`: {
-                output.onToolEvent({ callId: part.callId, label: part.label, status: `running` });
-                const { label } = await part.finished;
-                output.onToolEvent({ callId: part.callId, label, status: `completed` });
-                break;
-              }
-              // No default
-            }
-          }
+            },
+            thinking: async (label, done) => {
+              output.onThinkingEvent({ label, status: `running` });
+              const { label: doneLabel } = await done.promise;
+              output.onThinkingEvent({ label: doneLabel, status: `completed` });
+            },
+            tool: async part => {
+              output.onToolEvent({ callId: part.callId, label: part.label, status: `running` });
+              const { label } = await part.done.promise;
+              output.onToolEvent({ callId: part.callId, label, status: `completed` });
+            },
+          });
+
           const result = await agentRun.done;
           session.length = 0;
           session.push(...result.messages.filter(message => message.role !== `system`));
