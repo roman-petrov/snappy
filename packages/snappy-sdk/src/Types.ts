@@ -22,6 +22,7 @@ export type AgentFeedRuntime = {
   appendReasoningStream: (stream: AsyncIterable<string>) => number;
   appendStatus: (text: string, finished: Promise<{ label: string }>) => number;
   appendToolBadge: (text: string, finished: Promise<{ label: string }>) => number;
+  appendUserText: (text: string) => number;
   ask: AgentAsk;
   generateImage: (input: {
     ai: Ai;

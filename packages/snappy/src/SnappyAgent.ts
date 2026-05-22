@@ -33,6 +33,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
   });
 
   const run = async (content: string) => {
+    feed.appendUserText(content);
     for await (const part of agent.start([{ content, role: `user` }])) {
       if (agent.context.isStopped()) {
         break;
@@ -64,7 +65,12 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
     }
   };
 
-  return { ...agent, run };
+  const appendUserText = (text: string) => {
+    feed.appendUserText(text);
+    agent.appendUserText(text);
+  };
+
+  return { ...agent, appendUserText, run };
 };
 
 export type SnappyAgent = ReturnType<typeof SnappyAgent>;
