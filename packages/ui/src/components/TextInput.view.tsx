@@ -9,39 +9,20 @@ export type TextInputViewProps = ReturnType<typeof useTextInputState>;
 
 export const TextInputView = ({
   afterMic,
-  focused,
   listening,
-  maxLines,
-  micDisabled,
-  onChange,
-  setInputBlurred,
-  setInputFocused,
+  micButton,
   speechSupported,
-  textAreaRef,
-  toggleRecording,
-  ...textAreaProps
+  textArea,
+  wrapFocused,
 }: TextInputViewProps) => (
-  <div className={`${styles.wrap} ${focused ? styles.wrapFocused : ``}`}>
+  <div className={`${styles.wrap} ${wrapFocused ? styles.wrapFocused : ``}`}>
     <div className={`${styles.inputWrap} ${listening ? styles.inputWrapRecording : ``}`}>
       <div className={styles.textAreaWrap}>
-        <TextArea
-          {...textAreaProps}
-          collapsed={!focused}
-          maxLines={maxLines}
-          onBlur={setInputBlurred}
-          onChange={onChange}
-          onFocus={setInputFocused}
-          readOnly={listening}
-          ref={textAreaRef}
-        />
+        <TextArea {...textArea} />
       </div>
       <div className={styles.actionWrap}>
         <IconButton
-          color={listening ? `error` : undefined}
-          disabled={micDisabled}
-          icon="mic"
-          keepFocus
-          onClick={toggleRecording}
+          {...micButton}
           tip={
             speechSupported
               ? listening
@@ -50,16 +31,7 @@ export const TextInputView = ({
               : t(`textInput.voiceUnavailable`)
           }
         />
-        {afterMic === undefined ? undefined : (
-          <IconButton
-            color={afterMic.color}
-            disabled={afterMic.disabled === true}
-            icon={afterMic.icon}
-            keepFocus
-            onClick={afterMic.onClick}
-            tip={afterMic.tip}
-          />
-        )}
+        {afterMic === undefined ? undefined : <IconButton {...afterMic} />}
       </div>
     </div>
   </div>

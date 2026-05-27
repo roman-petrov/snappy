@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import type { IconButtonProps } from "./IconButton";
+import type { TextAreaProps } from "./TextArea";
 import type { TextInputProps } from "./TextInput";
 
 import { Language } from "../core";
@@ -22,20 +24,27 @@ export const useTextInputState = ({ afterMic, maxLines: maxLinesProp, onChange, 
     start({ lang: Language.locale(), onText: onChange });
   };
 
-  const micDisabled = textAreaRest.disabled === true || !speechSupported;
+  const setInputBlurred = () => setFocused(false);
+  const setInputFocused = () => setFocused(true);
 
-  return {
-    afterMic,
+  const textArea: TextAreaProps = {
     ...textAreaRest,
-    focused,
-    listening,
+    collapsed: !focused,
     maxLines,
-    micDisabled,
+    onBlur: setInputBlurred,
     onChange,
-    setInputBlurred: () => setFocused(false),
-    setInputFocused: () => setFocused(true),
-    speechSupported,
-    textAreaRef,
-    toggleRecording,
+    onFocus: setInputFocused,
+    readOnly: listening,
+    ref: textAreaRef,
   };
+
+  const micButton: Omit<IconButtonProps, `tip`> = {
+    color: listening ? `error` : undefined,
+    disabled: textAreaRest.disabled === true || !speechSupported,
+    icon: `mic`,
+    keepFocus: true,
+    onClick: toggleRecording,
+  };
+
+  return { afterMic, listening, micButton, speechSupported, textArea, wrapFocused: focused };
 };
