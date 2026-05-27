@@ -97,3 +97,7 @@ is reachable at **home.local**.
 - [Artificial Analysis](https://artificialanalysis.ai/) — quality, throughput, and price in one place.
 - [SWE-bench](https://www.swebench.com/) — real-world GitHub-style coding and patching (software engineering).
 - [LiveBench](https://livebench.ai/) — frequently updated benchmarks focused on contamination resistance.
+
+## 🔗 Links
+
+- [assistant-ui](https://www.assistant-ui.com/) — open-source React toolkit for production AI chat experiences.
