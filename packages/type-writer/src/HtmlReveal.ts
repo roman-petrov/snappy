@@ -8,7 +8,7 @@ const segmenter = new Intl.Segmenter();
 const partialAttribute = `data-tw-partial`;
 const partialStyle = `display:inline-block;overflow:hidden;vertical-align:bottom;`;
 
-export type Slot = { end: number; node: Text; start: number; text: string };
+export type Slot = { end: number; graphemes: readonly string[]; node: Text; start: number; text: string };
 
 export type Slots = { slots: readonly Slot[]; total: number };
 
@@ -47,9 +47,9 @@ const collect = (root: ParentNode): Slots => {
   const visit = (node: Node) => {
     if (node instanceof Text) {
       const text = node.textContent;
-      const { length } = graphemes(text);
-      slots.push({ end: total + length, node, start: total, text });
-      total += length;
+      const parts = graphemes(text);
+      slots.push({ end: total + parts.length, graphemes: parts, node, start: total, text });
+      total += parts.length;
 
       return;
     }
@@ -81,7 +81,7 @@ export type RevealSlice = { full: number; partial: number };
 
 const apply = (slots: readonly Slot[], { full, partial }: RevealSlice) => {
   for (const slot of slots) {
-    const parts = graphemes(slot.text);
+    const parts = slot.graphemes;
     const { length } = parts;
     const localFull = Math.max(0, Math.min(length, full - slot.start));
     const showPartial = partial > 0 && full >= slot.start && full < slot.end;

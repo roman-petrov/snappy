@@ -4,7 +4,7 @@
 /* eslint-disable functional/no-loop-statements */
 import { _ } from "@snappy/core";
 
-import { HtmlReveal, type Slot } from "./HtmlReveal";
+import type { Slot } from "./HtmlReveal";
 
 export type GraphemeCountResult = { full: number; partial: number; totalPx: number };
 
@@ -17,7 +17,7 @@ const firstTextIn = (root: ParentNode) => {
   return node instanceof Text ? node : undefined;
 };
 
-const utf16Offset = (text: string, graphemeCount: number) => {
+const utf16Offset = (parts: readonly string[], graphemeCount: number) => {
   if (graphemeCount <= 0) {
     return 0;
   }
@@ -25,7 +25,7 @@ const utf16Offset = (text: string, graphemeCount: number) => {
   let offset = 0;
   let left = graphemeCount;
 
-  for (const part of HtmlReveal.graphemes(text)) {
+  for (const part of parts) {
     if (left <= 0) {
       break;
     }
@@ -49,8 +49,8 @@ const slotAtGrapheme = (slots: readonly Slot[], graphemeIndex: number) => {
 };
 
 const measureGraphemeInSlot = (range: Range, slot: Slot, localIndex: number) => {
-  const startOffset = utf16Offset(slot.text, localIndex);
-  const endOffset = utf16Offset(slot.text, localIndex + 1);
+  const startOffset = utf16Offset(slot.graphemes, localIndex);
+  const endOffset = utf16Offset(slot.graphemes, localIndex + 1);
   range.setStart(slot.node, startOffset);
   range.setEnd(slot.node, endOffset);
 
@@ -112,7 +112,7 @@ const pxAt = (cache: WidthCache, graphemeCount: number) =>
   graphemeCount <= 0 ? 0 : (cache.cumulative[graphemeCount - 1] ?? cache.totalPx);
 
 const buildWidthCache = (root: HTMLElement, slots: readonly Slot[]): WidthCache => {
-  const total = slots.reduce((sum, slot) => sum + HtmlReveal.graphemes(slot.text).length, 0);
+  const total = slots.reduce((sum, slot) => sum + slot.graphemes.length, 0);
 
   return widths(root, slots, total);
 };
