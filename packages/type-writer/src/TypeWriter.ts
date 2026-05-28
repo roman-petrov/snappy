@@ -6,7 +6,6 @@
 /* eslint-disable no-continue */
 import type { TypeWriterSpeed } from "@snappy/domain";
 
-import { Html } from "@snappy/browser";
 import { _ } from "@snappy/core";
 
 import styles from "./TypeWriter.module.scss";
@@ -55,8 +54,10 @@ export const TypeWriter = () => {
   let revealedPx = 0;
   let totalPx = 0;
   let speed: TypeWriterSpeed = `medium`;
-  let busyOn = false;
+  let animating = false;
   let waiting = false;
+  let pendingId = 0;
+  let pendingResolve: ((finished: boolean) => void) | undefined;
   let frame = 0;
   let clockLast = 0;
   let lastPaintedFull = -1;
@@ -69,8 +70,21 @@ export const TypeWriter = () => {
   let pendingOldAtPrefixPx = 0;
   let pendingVisibleUnchanged = false;
   let partialCaretAnchor: HTMLElement | undefined;
-  const listeners = new Set<(busy: boolean) => void>();
   const graphemes = (source: string) => [...segmenter.segment(source)].map(part => part.segment);
+
+  const clearPending = () => {
+    pendingResolve = undefined;
+  };
+
+  const supersedePending = () => {
+    pendingResolve?.(false);
+    clearPending();
+  };
+
+  const completePending = () => {
+    pendingResolve?.(true);
+    clearPending();
+  };
 
   const removePartialAfter = (node: Text) => {
     const span = partialSpans.get(node);
@@ -371,7 +385,7 @@ export const TypeWriter = () => {
           : `pre`;
   };
 
-  const caretActive = () => busyOn || waiting;
+  const caretActive = () => animating || waiting;
 
   const placeCaret = () => {
     if (caretElement === undefined || contentMount === undefined) {
@@ -416,15 +430,12 @@ export const TypeWriter = () => {
     }
   };
 
-  const setBusy = (next: boolean) => {
-    if (busyOn === next) {
+  const setAnimating = (next: boolean) => {
+    if (animating === next) {
       return;
     }
-    busyOn = next;
+    animating = next;
     updateCaret();
-    for (const fn of listeners) {
-      fn(next);
-    }
   };
 
   const stopLoop = () => {
@@ -563,7 +574,8 @@ export const TypeWriter = () => {
 
     if (revealedPx >= totalPx) {
       stopLoop();
-      setBusy(false);
+      setAnimating(false);
+      completePending();
 
       return;
     }
@@ -590,14 +602,22 @@ export const TypeWriter = () => {
     } else {
       paint();
     }
-    if (busyOn) {
+    if (animating) {
       startLoop();
     }
   };
 
-  const push = (nextHtml: string) => {
-    const safeHtml = Html.sanitize(nextHtml);
-    const newBody = new DOMParser().parseFromString(safeHtml, `text/html`).body;
+  const push = async (nextHtml: string): Promise<boolean> => {
+    supersedePending();
+    const id = ++pendingId;
+    const { promise, resolve } = Promise.withResolvers<boolean>();
+    pendingResolve = (finished: boolean) => {
+      if (pendingId === id) {
+        resolve(finished);
+      }
+    };
+
+    const newBody = new DOMParser().parseFromString(nextHtml, `text/html`).body;
     const { slots: newSlots } = collect(newBody);
     const newVisible = plain(newSlots);
     const prefixGraphemes = prefix(previousVisible, newVisible);
@@ -631,26 +651,20 @@ export const TypeWriter = () => {
     textSlots = undefined;
 
     const ready = host === undefined ? false : paint();
-    if (ready && revealedPx >= totalPx) {
-      setBusy(false);
+    if (host === undefined || (ready && revealedPx >= totalPx)) {
+      setAnimating(false);
+      completePending();
     } else {
-      setBusy(true);
+      setAnimating(true);
       startLoop();
     }
-  };
 
-  const subscribe = (listener: (state: boolean) => void) => {
-    listeners.add(listener);
-    listener(busyOn);
-
-    return () => {
-      listeners.delete(listener);
-    };
+    return promise;
   };
 
   const destroy = () => {
     stopLoop();
-    listeners.clear();
+    supersedePending();
     if (host !== undefined) {
       host.replaceChildren();
     }
@@ -664,11 +678,9 @@ export const TypeWriter = () => {
     widthCache = undefined;
     lastPaintedFull = -1;
     lastPaintedPartial = -1;
-    busyOn = false;
+    animating = false;
     waiting = false;
   };
-
-  const busy = () => busyOn;
 
   const setSpeed = (value: TypeWriterSpeed) => {
     if (value === speed) {
@@ -676,7 +688,7 @@ export const TypeWriter = () => {
     }
     speed = value;
     updateCaret();
-    if (busyOn && frame === 0 && host !== undefined) {
+    if (animating && frame === 0 && host !== undefined) {
       startLoop();
     }
   };
@@ -695,7 +707,7 @@ export const TypeWriter = () => {
     }
   };
 
-  return { attach, busy, destroy, push, setSpeed, setWaiting, subscribe };
+  return { attach, destroy, push, setSpeed, setWaiting };
 };
 
 export type TypeWriter = ReturnType<typeof TypeWriter>;
