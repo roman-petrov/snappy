@@ -1,56 +1,56 @@
 import { Html } from "@snappy/browser";
-import { _ } from "@snappy/core";
+import { Timer } from "@snappy/core";
+import { Copy } from "@snappy/platform";
 import { useStoreValue } from "@snappy/store";
 import { $theme, Theme } from "@snappy/ui";
-import { useEffect, useMemo, useState } from "react";
-import { codeToHtml } from "shiki";
+import { useEffect, useState } from "react";
 
-import type { CodeViewProps } from "../../../core/Types";
+import { Code, type CodeInput, type CodeViewProps } from "../../../core";
 
-import { Markdown } from "../../../core/Markdown";
+const code = Code();
+const safeCodeHtml = async ({ lang, source, theme }: CodeInput) => Html.sanitize(await code({ lang, source, theme }));
 
 export const useCodeState = ({ onTailHtml, piece, tailHostRef }: CodeViewProps) => {
+  const debounceMs = 120;
   const { closed, lang, source } = piece;
   const theme = useStoreValue($theme);
-
-  const fallback = useMemo(
-    () => Html.sanitize(Markdown.html(`\`\`\`${lang ?? ``}\n${source}\n\`\`\``)),
-    [lang, source],
-  );
-
-  const [html, setHtml] = useState(fallback);
+  const themeName = Theme.effective() === `dark` ? `dark-plus` : `light-plus`;
+  const [html, setHtml] = useState(``);
+  const tail = tailHostRef !== undefined && onTailHtml !== undefined;
 
   useEffect(() => {
     let alive = true;
+    if (!tail) {
+      setHtml(``);
+    }
 
     const run = async () => {
-      const shikiTheme = Theme.effective() === `dark` ? `dark-plus` : `light-plus`;
+      const safe = await safeCodeHtml({ lang, source, theme: themeName });
 
-      try {
-        const raw = await codeToHtml(source, { lang: _.isString(lang) ? lang : `text`, theme: shikiTheme });
-
-        if (alive) {
-          setHtml(Html.sanitize(raw));
-        }
-      } catch {
-        if (alive) {
-          setHtml(fallback);
-        }
+      if (!alive) {
+        return;
+      }
+      if (tail) {
+        onTailHtml(safe);
+      } else {
+        setHtml(safe);
       }
     };
 
-    void run();
+    const stopTimer = Timer.timeout(
+      () => {
+        void run();
+      },
+      closed ? 0 : debounceMs,
+    );
 
     return () => {
       alive = false;
+      stopTimer();
     };
-  }, [fallback, lang, source, theme]);
+  }, [closed, lang, onTailHtml, source, tail, theme, themeName]);
 
-  useEffect(() => {
-    onTailHtml?.(html);
-  }, [html, onTailHtml]);
-
-  const copy = async () => navigator.clipboard.writeText(source);
+  const copy = async () => Copy.html(await safeCodeHtml({ lang, source, theme: themeName }));
 
   return { closed, copy, html, tailHostRef };
 };

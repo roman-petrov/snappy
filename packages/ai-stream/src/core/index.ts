@@ -1,3 +1,5 @@
+export * from "./Code";
+
 export * from "./Markdown";
 
 export * from "./Stream";

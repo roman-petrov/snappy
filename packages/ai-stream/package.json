@@ -13,6 +13,7 @@
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/domain": "workspace:*",
+    "@snappy/platform": "workspace:*",
     "@snappy/remend": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
