@@ -132,17 +132,7 @@ export const useAiStreamerState = ({
     }
 
     const segment = segments[playIndex];
-    if (segment?.kind === `code` && codeHtmlRef.current === ``) {
-      tw.push(``);
-
-      return;
-    }
-
-    const html = Stream.tailHtml(segment, codeHtmlRef.current);
-    if (html === ``) {
-      return;
-    }
-
+    const html = segment?.kind === `code` && codeHtmlRef.current === `` ? `` : Stream.tailHtml(segment, codeHtmlRef.current);
     tw.push(html);
   }, [playIndex, segments]);
 
@@ -160,18 +150,18 @@ export const useAiStreamerState = ({
   }, [playIndex, segments]);
 
   useEffect(() => {
-    if (!typeWriter || !streaming || twBusy || playIndexStep >= streamEnd) {
-      return undefined;
-    }
+    const canAdvance =
+      typeWriter &&
+      streaming &&
+      !twBusy &&
+      playIndexStep < streamEnd &&
+      !(segments[playIndexStep]?.kind === `code` && codeHtmlRef.current === ``);
 
-    const segment = segments[playIndexStep];
-    if (segment?.kind === `code` && codeHtmlRef.current === ``) {
-      return undefined;
+    if (!canAdvance) {
+      return;
     }
 
     setPlayIndexStep(index => index + 1);
-
-    return undefined;
   }, [streaming, twBusy, playIndexStep, streamEnd, segments, typeWriter]);
 
   const pushTailHtml = useCallback(
