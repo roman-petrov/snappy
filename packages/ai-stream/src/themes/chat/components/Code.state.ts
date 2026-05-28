@@ -37,12 +37,7 @@ export const useCodeState = ({ onTailHtml, piece, tailHostRef }: CodeViewProps) 
       }
     };
 
-    const stopTimer = Timer.timeout(
-      () => {
-        void run();
-      },
-      closed ? 0 : debounceMs,
-    );
+    const stopTimer = Timer.timeout(run, closed ? 0 : debounceMs);
 
     return () => {
       alive = false;

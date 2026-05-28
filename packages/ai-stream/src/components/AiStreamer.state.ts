@@ -133,6 +133,8 @@ export const useAiStreamerState = ({
 
     const segment = segments[playIndex];
     if (segment?.kind === `code` && codeHtmlRef.current === ``) {
+      tw.push(``);
+
       return;
     }
 
