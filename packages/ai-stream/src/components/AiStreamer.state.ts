@@ -8,7 +8,6 @@ import { Markdown, Stream } from "../core";
 import { AiStreamTheme } from "../themes";
 
 const streamFps = 60;
-const frameMs = _.second / streamFps;
 
 export const useAiStreamerState = ({
   onTailBusyChange,
@@ -19,22 +18,35 @@ export const useAiStreamerState = ({
 }: AiStreamerProps) => {
   const theme = AiStreamTheme[themeKey];
   const typeWriter = typeWriterSpeed !== undefined;
-  const throttle = !typeWriter && streaming;
+  const throttle = streaming && !typeWriter;
+  const frameMs = _.second / streamFps;
   const [renderText, setRenderText] = useState(text);
+  const [twBusy, setTwBusy] = useState(false);
   const latestRef = useRef(text);
   const rafRef = useRef(0);
   const lastPaintRef = useRef(0);
 
+  const syncRenderText = useCallback(
+    (next: string) => {
+      setRenderText(previous => (previous === next ? previous : next));
+    },
+    [setRenderText],
+  );
+
   latestRef.current = text;
 
   useEffect(() => {
+    if (streaming && typeWriter) {
+      return undefined;
+    }
+
     if (!throttle) {
       if (rafRef.current !== 0) {
         cancelAnimationFrame(rafRef.current);
         rafRef.current = 0;
       }
       lastPaintRef.current = 0;
-      setRenderText(text);
+      syncRenderText(text);
 
       return undefined;
     }
@@ -44,7 +56,7 @@ export const useAiStreamerState = ({
       const elapsed = lastPaintRef.current === 0 ? frameMs : now - lastPaintRef.current;
       if (elapsed >= frameMs) {
         lastPaintRef.current = now;
-        setRenderText(latestRef.current);
+        syncRenderText(latestRef.current);
 
         return;
       }
@@ -67,7 +79,15 @@ export const useAiStreamerState = ({
         rafRef.current = 0;
       }
     };
-  }, [text, throttle]);
+  }, [frameMs, streaming, syncRenderText, text, throttle, typeWriter]);
+
+  useEffect(() => {
+    if (!streaming || !typeWriter || twBusy) {
+      return;
+    }
+
+    syncRenderText(latestRef.current);
+  }, [streaming, syncRenderText, text, twBusy, typeWriter]);
 
   const pieces = useMemo(() => {
     const parsed = Markdown.pieces(renderText);
@@ -84,21 +104,16 @@ export const useAiStreamerState = ({
   }
 
   const [playIndexStep, setPlayIndexStep] = useState(0);
-  const [twBusy, setTwBusy] = useState(false);
   const codeHtmlRef = useRef(``);
   const playIndex = typeWriter ? Math.min(playIndexStep, streamEnd) : streamEnd;
 
   useEffect(() => {
-    if (text === ``) {
-      setPlayIndexStep(0);
+    if (text !== `` && streaming) {
+      return;
     }
-  }, [text]);
 
-  useEffect(() => {
-    if (!streaming) {
-      setPlayIndexStep(0);
-    }
-  }, [streaming]);
+    setPlayIndexStep(0);
+  }, [streaming, text]);
 
   useEffect(() => {
     const tw = twRef.current;
@@ -132,7 +147,9 @@ export const useAiStreamerState = ({
     }
 
     const segment = segments[playIndex];
-    const html = segment?.kind === `code` && codeHtmlRef.current === `` ? `` : Stream.tailHtml(segment, codeHtmlRef.current);
+
+    const html =
+      segment?.kind === `code` && codeHtmlRef.current === `` ? `` : Stream.tailHtml(segment, codeHtmlRef.current);
     tw.push(html);
   }, [playIndex, segments]);
 
