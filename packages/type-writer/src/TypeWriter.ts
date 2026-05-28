@@ -15,8 +15,6 @@ type BodyShell =
   | { inner: string; kind: `prePlain`; pre: HtmlAttributes }
   | { kind: `void`; outer: HtmlAttributes; tag: string };
 
-type GraphemeCountResult = { full: number; partial: number; totalPx: number };
-
 type HtmlAttributes = { className?: string; style?: string };
 
 type RevealSlice = { full: number; partial: number };
@@ -28,24 +26,7 @@ type WidthCache = { cumulative: Float32Array; totalPx: number };
 export const TypeWriter = () => {
   const segmenter = new Intl.Segmenter();
   const partialSpans = new Map<Text, HTMLSpanElement>();
-
-  const voidTags = new Set([
-    `area`,
-    `base`,
-    `br`,
-    `col`,
-    `embed`,
-    `hr`,
-    `img`,
-    `input`,
-    `link`,
-    `meta`,
-    `param`,
-    `source`,
-    `track`,
-    `wbr`,
-  ]);
-
+  const voidTags = new Set([`br`, `hr`, `img`]);
   const pixelsPerSecond = { fast: 0x4_00, medium: 0x2_00, slow: 0x1_00 } as const;
   let host: HTMLElement | undefined;
   let caretElement: HTMLSpanElement | undefined;
@@ -63,7 +44,7 @@ export const TypeWriter = () => {
   let lastPaintedFull = -1;
   let lastPaintedPartial = -1;
   let contentMount: HTMLElement | undefined;
-  let mountSignature = ``;
+  let mountedSignature = ``;
   let widthCache: undefined | WidthCache;
   let textSlots: readonly Slot[] | undefined;
   let pendingPrefixGraphemes = 0;
@@ -72,18 +53,9 @@ export const TypeWriter = () => {
   let partialCaretAnchor: HTMLElement | undefined;
   const graphemes = (source: string) => [...segmenter.segment(source)].map(part => part.segment);
 
-  const clearPending = () => {
+  const settlePending = (finished: boolean) => {
+    pendingResolve?.(finished);
     pendingResolve = undefined;
-  };
-
-  const supersedePending = () => {
-    pendingResolve?.(false);
-    clearPending();
-  };
-
-  const completePending = () => {
-    pendingResolve?.(true);
-    clearPending();
   };
 
   const removePartialAfter = (node: Text) => {
@@ -100,14 +72,12 @@ export const TypeWriter = () => {
 
   const applyPartialAfter = (node: Text, grapheme: string, widthPx: number) => {
     let span = partialSpans.get(node);
-
     if (span === undefined) {
       span = document.createElement(`span`);
       span.className = styles.partial;
       node.after(span);
       partialSpans.set(node, span);
     }
-
     span.style.width = `${widthPx}px`;
     span.textContent = grapheme;
     partialCaretAnchor = span;
@@ -133,10 +103,8 @@ export const TypeWriter = () => {
 
     visit(root);
 
-    return { slots, total };
+    return slots;
   };
-
-  const plain = (slots: readonly Slot[]) => slots.map(slot => slot.text).join(``);
 
   const prefix = (left: string, right: string) => {
     if (left === right) {
@@ -157,22 +125,14 @@ export const TypeWriter = () => {
       const { length } = parts;
       const localFull = Math.max(0, Math.min(length, full - slot.start));
       const showPartial = partial > 0 && full >= slot.start && full < slot.end;
-      const partialIndex = full - slot.start;
 
       if (showPartial) {
-        const visible = parts.slice(0, localFull).join(``);
-        slot.node.textContent = visible;
-        applyPartialAfter(slot.node, parts[partialIndex] ?? ``, partial);
+        slot.node.textContent = parts.slice(0, localFull).join(``);
+        applyPartialAfter(slot.node, parts[full - slot.start] ?? ``, partial);
       } else {
         removePartialAfter(slot.node);
-
-        if (localFull === length) {
-          slot.node.textContent = slot.text;
-        } else if (localFull === 0) {
-          slot.node.textContent = ``;
-        } else {
-          slot.node.textContent = parts.slice(0, localFull).join(``);
-        }
+        slot.node.textContent =
+          localFull === length ? slot.text : localFull === 0 ? `` : parts.slice(0, localFull).join(``);
       }
     }
   };
@@ -196,27 +156,6 @@ export const TypeWriter = () => {
     return offset;
   };
 
-  const rangeRectsWidthSum = (range: Range) => _.sum([...range.getClientRects()].map(rect => rect.width)) ?? 0;
-
-  const slotAtGrapheme = (slots: readonly Slot[], graphemeIndex: number) => {
-    for (const slot of slots) {
-      if (graphemeIndex < slot.end) {
-        return { local: graphemeIndex - slot.start, slot };
-      }
-    }
-
-    return undefined;
-  };
-
-  const measureGraphemeInSlot = (range: Range, slot: Slot, localIndex: number) => {
-    const startOffset = utf16Offset(slot.graphemes, localIndex);
-    const endOffset = utf16Offset(slot.graphemes, localIndex + 1);
-    range.setStart(slot.node, startOffset);
-    range.setEnd(slot.node, endOffset);
-
-    return rangeRectsWidthSum(range);
-  };
-
   const widths = (root: HTMLElement, slots: readonly Slot[], total: number): WidthCache => {
     if (total === 0) {
       return { cumulative: new Float32Array(0), totalPx: 0 };
@@ -225,15 +164,24 @@ export const TypeWriter = () => {
     const cumulative = new Float32Array(total);
     const range = document.createRange();
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-    const firstText = walker.nextNode();
 
-    if (!(firstText instanceof Text)) {
+    if (!(walker.nextNode() instanceof Text)) {
       return { cumulative, totalPx: 0 };
     }
 
     _.gen(total, index => {
-      const position = slotAtGrapheme(slots, index);
-      const step = position === undefined ? 0 : measureGraphemeInSlot(range, position.slot, position.local);
+      let step = 0;
+      for (const slot of slots) {
+        if (index < slot.end) {
+          const local = index - slot.start;
+          const startOffset = utf16Offset(slot.graphemes, local);
+          const endOffset = utf16Offset(slot.graphemes, local + 1);
+          range.setStart(slot.node, startOffset);
+          range.setEnd(slot.node, endOffset);
+          step = _.sum([...range.getClientRects()].map(rect => rect.width)) ?? 0;
+          break;
+        }
+      }
       const previous = index > 0 ? cumulative[index - 1] : undefined;
       cumulative[index] = index > 0 ? (previous ?? 0) + step : step;
     });
@@ -241,9 +189,9 @@ export const TypeWriter = () => {
     return { cumulative, totalPx: cumulative[total - 1] ?? 0 };
   };
 
-  const countAtPx = (cache: WidthCache, px: number): GraphemeCountResult => {
+  const countAtPx = (cache: WidthCache, px: number): RevealSlice => {
     if (px <= 0 || cache.cumulative.length === 0) {
-      return { full: 0, partial: 0, totalPx: 0 };
+      return { full: 0, partial: 0 };
     }
 
     const { cumulative } = cache;
@@ -264,28 +212,18 @@ export const TypeWriter = () => {
     }
 
     const floorValue = floor >= 0 ? cumulative[floor] : undefined;
-    const previousWidth = floorValue ?? 0;
-    const partial = Math.max(0, px - previousWidth);
-    const full = floor + 1;
 
-    return { full, partial, totalPx: px };
+    return { full: floor + 1, partial: Math.max(0, px - (floorValue ?? 0)) };
   };
 
   const pxAt = (cache: WidthCache, graphemeCount: number) =>
     graphemeCount <= 0 ? 0 : (cache.cumulative[graphemeCount - 1] ?? cache.totalPx);
 
-  const partialStep = (value: number) => _.round(value * 2, 0) / 2;
-
-  const shellAttributes = (element: Element): HtmlAttributes => ({
-    className: element.getAttribute(`class`) ?? undefined,
-    style: element.getAttribute(`style`) ?? undefined,
-  });
-
-  const significantNodes = (parent: ParentNode) =>
-    [...parent.childNodes].filter(node => node.nodeType !== Node.TEXT_NODE || (node.textContent ?? ``).trim() !== ``);
-
   const shellFromBody = (source: HTMLElement): BodyShell | undefined => {
-    const nodes = significantNodes(source);
+    const nodes = [...source.childNodes].filter(
+      node => node.nodeType !== Node.TEXT_NODE || (node.textContent ?? ``).trim() !== ``,
+    );
+
     const [first] = nodes;
 
     const onlyElement =
@@ -295,45 +233,57 @@ export const TypeWriter = () => {
       return undefined;
     }
 
+    const attributes = (element: Element): HtmlAttributes => ({
+      className: element.getAttribute(`class`) ?? undefined,
+      style: element.getAttribute(`style`) ?? undefined,
+    });
+
     if (onlyElement.tagName === `PRE`) {
       const code = onlyElement.querySelector(`:scope > code`);
 
       return code === null
-        ? { inner: onlyElement.innerHTML, kind: `prePlain`, pre: shellAttributes(onlyElement) }
-        : { code: shellAttributes(code), inner: code.innerHTML, kind: `pre`, pre: shellAttributes(onlyElement) };
+        ? { inner: onlyElement.innerHTML, kind: `prePlain`, pre: attributes(onlyElement) }
+        : { code: attributes(code), inner: code.innerHTML, kind: `pre`, pre: attributes(onlyElement) };
     }
 
     const tag = onlyElement.tagName.toLowerCase();
 
-    return voidTags.has(tag) ? { kind: `void`, outer: shellAttributes(onlyElement), tag } : undefined;
+    return voidTags.has(tag) ? { kind: `void`, outer: attributes(onlyElement), tag } : undefined;
   };
 
-  const inlineStyle = (css: string) =>
-    _.fromEntries(
-      css.split(`;`).flatMap(part => {
-        const colon = part.indexOf(`:`);
-        if (colon === -1) {
-          return [];
-        }
-
-        const key = part.slice(0, colon).trim();
-        const value = part.slice(colon + 1).trim();
-
-        return key === `` || value === `` ? [] : [[_.camelCase(key), value]];
-      }),
-    );
+  const shellSignature = (shell: BodyShell | undefined) =>
+    shell === undefined
+      ? `content`
+      : shell.kind === `void`
+        ? `void:${shell.tag}`
+        : shell.kind === `pre`
+          ? `pre:code`
+          : `pre`;
 
   const applyAttributes = (element: HTMLElement, { className, style }: HtmlAttributes) => {
     if (className !== undefined) {
       element.className = className;
     }
     if (style !== undefined) {
-      Object.assign(element.style, inlineStyle(style));
+      Object.assign(
+        element.style,
+        _.fromEntries(
+          style.split(`;`).flatMap(part => {
+            const colon = part.indexOf(`:`);
+            if (colon === -1) {
+              return [];
+            }
+            const key = part.slice(0, colon).trim();
+            const value = part.slice(colon + 1).trim();
+
+            return key === `` || value === `` ? [] : [[_.camelCase(key), value]];
+          }),
+        ),
+      );
     }
   };
 
-  const mountBody = (mountHost: HTMLElement, source: HTMLElement): HTMLElement | undefined => {
-    const shell = shellFromBody(source);
+  const mountBody = (mountHost: HTMLElement, shell: BodyShell | undefined): HTMLElement | undefined => {
     mountHost.replaceChildren();
 
     if (shell === undefined) {
@@ -343,24 +293,22 @@ export const TypeWriter = () => {
       return inner;
     }
 
-    if (shell.kind === `prePlain`) {
+    if (shell.kind === `prePlain` || shell.kind === `pre`) {
       const pre = document.createElement(`pre`);
       applyAttributes(pre, shell.pre);
-      const inner = document.createElement(`span`);
-      pre.append(inner);
-      mountHost.append(pre);
+      const contentParent =
+        shell.kind === `pre`
+          ? (() => {
+              const code = document.createElement(`code`);
+              applyAttributes(code, shell.code);
+              pre.append(code);
 
-      return inner;
-    }
+              return code;
+            })()
+          : pre;
 
-    if (shell.kind === `pre`) {
-      const pre = document.createElement(`pre`);
-      const code = document.createElement(`code`);
-      applyAttributes(pre, shell.pre);
-      applyAttributes(code, shell.code);
       const inner = document.createElement(`span`);
-      code.append(inner);
-      pre.append(code);
+      contentParent.append(inner);
       mountHost.append(pre);
 
       return inner;
@@ -373,30 +321,15 @@ export const TypeWriter = () => {
     return undefined;
   };
 
-  const signature = (source: HTMLElement): string => {
-    const shell = shellFromBody(source);
-
-    return shell === undefined
-      ? `content`
-      : shell.kind === `void`
-        ? `void:${shell.tag}`
-        : shell.kind === `pre`
-          ? `pre:code`
-          : `pre`;
-  };
-
-  const caretActive = () => animating || waiting;
-
   const placeCaret = () => {
     if (caretElement === undefined || contentMount === undefined) {
       return;
     }
 
     if (partialCaretAnchor !== undefined) {
-      if (caretElement.previousSibling === partialCaretAnchor) {
-        return;
+      if (caretElement.previousSibling !== partialCaretAnchor) {
+        partialCaretAnchor.after(caretElement);
       }
-      partialCaretAnchor.after(caretElement);
 
       return;
     }
@@ -404,29 +337,25 @@ export const TypeWriter = () => {
     if (textSlots !== undefined) {
       for (let index = textSlots.length - 1; index >= 0; index -= 1) {
         const slot = textSlots.at(index);
-        if (slot === undefined) {
+        if (slot === undefined || slot.node.data.trim().length === 0) {
           continue;
         }
-        if (slot.node.data.trim().length > 0) {
-          if (caretElement.previousSibling === slot.node) {
-            return;
-          }
+        if (caretElement.previousSibling !== slot.node) {
           slot.node.after(caretElement);
-
-          return;
         }
+
+        return;
       }
     }
 
-    if (caretElement.parentElement === contentMount && caretElement === contentMount.lastElementChild) {
-      return;
+    if (caretElement.parentElement !== contentMount || caretElement !== contentMount.lastElementChild) {
+      contentMount.append(caretElement);
     }
-    contentMount.append(caretElement);
   };
 
   const updateCaret = () => {
     if (caretElement !== undefined) {
-      caretElement.classList.toggle(styles.hidden, !caretActive());
+      caretElement.classList.toggle(styles.hidden, !(animating || waiting));
     }
   };
 
@@ -455,23 +384,20 @@ export const TypeWriter = () => {
   const resetMount = () => {
     caretElement?.remove();
     contentMount = undefined;
-    mountSignature = ``;
+    mountedSignature = ``;
     textSlots = undefined;
     partialSpans.clear();
     partialCaretAnchor = undefined;
   };
 
-  const revealSlice = () =>
-    widthCache === undefined
-      ? { full: 0, partial: 0, totalPx: 0 }
-      : countAtPx(widthCache, Math.min(revealedPx, totalPx));
+  const revealSlice = (): RevealSlice =>
+    widthCache === undefined ? { full: 0, partial: 0 } : countAtPx(widthCache, Math.min(revealedPx, totalPx));
 
-  const applyReveal = () => {
+  const applyReveal = (slice = revealSlice()) => {
     if (contentMount === undefined || widthCache === undefined || textSlots === undefined) {
       return;
     }
 
-    const slice = revealSlice();
     applyRevealToSlots(textSlots, slice);
     lastPaintedFull = slice.full;
     lastPaintedPartial = slice.partial;
@@ -490,16 +416,13 @@ export const TypeWriter = () => {
     contentMount.style.visibility = `hidden`;
     const shell = shellFromBody(body);
     contentMount.innerHTML = shell?.kind === `pre` || shell?.kind === `prePlain` ? shell.inner : body.innerHTML;
-    const { slots } = collect(contentMount);
-    textSlots = slots;
-    const slotTotal = slots.reduce((sum, slot) => sum + slot.graphemes.length, 0);
-    const nextWidthCache = widths(contentMount, slots, slotTotal);
-    widthCache = nextWidthCache;
-    const { totalPx: cacheTotalPx } = nextWidthCache;
-    totalPx = cacheTotalPx;
+    textSlots = collect(contentMount);
+    const slotTotal = textSlots.reduce((sum, slot) => sum + slot.graphemes.length, 0);
+    widthCache = widths(contentMount, textSlots, slotTotal);
+    ({ totalPx } = widthCache);
 
     if (pendingPrefixGraphemes > 0) {
-      const newAtPrefix = pxAt(nextWidthCache, pendingPrefixGraphemes);
+      const newAtPrefix = pxAt(widthCache, pendingPrefixGraphemes);
 
       if (pendingVisibleUnchanged && pendingOldAtPrefixPx > 0) {
         revealedPx =
@@ -524,10 +447,11 @@ export const TypeWriter = () => {
     }
     ensureCaret();
 
-    const nextSignature = signature(body);
-    if (contentMount === undefined || mountSignature !== nextSignature) {
-      contentMount = mountBody(host, body);
-      mountSignature = nextSignature;
+    const shell = shellFromBody(body);
+    const nextSignature = shellSignature(shell);
+    if (contentMount === undefined || mountedSignature !== nextSignature) {
+      contentMount = mountBody(host, shell);
+      mountedSignature = nextSignature;
       widthCache = undefined;
       textSlots = undefined;
       placeCaret();
@@ -556,6 +480,13 @@ export const TypeWriter = () => {
     updateCaret();
   };
 
+  const caughtUp = () => revealedPx >= totalPx;
+
+  const finishPush = () => {
+    setAnimating(false);
+    settlePending(true);
+  };
+
   const tick = (now: number) => {
     if (host === undefined || body === undefined || widthCache === undefined) {
       stopLoop();
@@ -567,15 +498,15 @@ export const TypeWriter = () => {
     clockLast = now;
     revealedPx = Math.min(revealedPx + (elapsed / _.second) * pixelsPerSecond[speed], totalPx);
 
-    const { full, partial } = revealSlice();
-    if (full !== lastPaintedFull || partialStep(partial) !== partialStep(lastPaintedPartial)) {
-      applyReveal();
+    const slice = revealSlice();
+    const partialStep = (value: number) => _.round(value * 2, 0) / 2;
+    if (slice.full !== lastPaintedFull || partialStep(slice.partial) !== partialStep(lastPaintedPartial)) {
+      applyReveal(slice);
     }
 
-    if (revealedPx >= totalPx) {
+    if (caughtUp()) {
       stopLoop();
-      setAnimating(false);
-      completePending();
+      finishPush();
 
       return;
     }
@@ -584,7 +515,7 @@ export const TypeWriter = () => {
   };
 
   const startLoop = () => {
-    if (frame !== 0 || host === undefined || revealedPx >= totalPx) {
+    if (frame !== 0 || host === undefined || caughtUp()) {
       return;
     }
     clockLast = performance.now();
@@ -608,7 +539,7 @@ export const TypeWriter = () => {
   };
 
   const push = async (nextHtml: string): Promise<boolean> => {
-    supersedePending();
+    settlePending(false);
     const id = ++pendingId;
     const { promise, resolve } = Promise.withResolvers<boolean>();
     pendingResolve = (finished: boolean) => {
@@ -618,28 +549,20 @@ export const TypeWriter = () => {
     };
 
     const newBody = new DOMParser().parseFromString(nextHtml, `text/html`).body;
-    const { slots: newSlots } = collect(newBody);
-    const newVisible = plain(newSlots);
+    const newSlots = collect(newBody);
+    const newVisible = newSlots.map(slot => slot.text).join(``);
     const prefixGraphemes = prefix(previousVisible, newVisible);
-    const visibleUnchanged = previousVisible === newVisible && previousVisible !== ``;
     const cacheBeforePush = widthCache;
 
-    if (previousVisible === ``) {
+    if (previousVisible === `` || prefixGraphemes === 0) {
       revealedPx = 0;
       pendingPrefixGraphemes = 0;
       pendingOldAtPrefixPx = 0;
       pendingVisibleUnchanged = false;
     } else if (cacheBeforePush !== undefined) {
-      if (prefixGraphemes === 0) {
-        revealedPx = 0;
-        pendingPrefixGraphemes = 0;
-        pendingOldAtPrefixPx = 0;
-        pendingVisibleUnchanged = false;
-      } else {
-        pendingPrefixGraphemes = prefixGraphemes;
-        pendingOldAtPrefixPx = pxAt(cacheBeforePush, prefixGraphemes);
-        pendingVisibleUnchanged = visibleUnchanged;
-      }
+      pendingPrefixGraphemes = prefixGraphemes;
+      pendingOldAtPrefixPx = pxAt(cacheBeforePush, prefixGraphemes);
+      pendingVisibleUnchanged = previousVisible === newVisible;
     }
 
     body = newBody;
@@ -650,10 +573,9 @@ export const TypeWriter = () => {
     lastPaintedPartial = -1;
     textSlots = undefined;
 
-    const ready = host === undefined ? false : paint();
-    if (host === undefined || (ready && revealedPx >= totalPx)) {
-      setAnimating(false);
-      completePending();
+    const ready = host !== undefined && paint();
+    if (host === undefined || (ready && caughtUp())) {
+      finishPush();
     } else {
       setAnimating(true);
       startLoop();
@@ -664,7 +586,7 @@ export const TypeWriter = () => {
 
   const destroy = () => {
     stopLoop();
-    supersedePending();
+    settlePending(false);
     if (host !== undefined) {
       host.replaceChildren();
     }
@@ -698,12 +620,13 @@ export const TypeWriter = () => {
       return;
     }
     waiting = value;
-    if (host !== undefined) {
-      if (body === undefined) {
-        paintWaiting();
-      } else {
-        updateCaret();
-      }
+    if (host === undefined) {
+      return;
+    }
+    if (body === undefined) {
+      paintWaiting();
+    } else {
+      updateCaret();
     }
   };
 
