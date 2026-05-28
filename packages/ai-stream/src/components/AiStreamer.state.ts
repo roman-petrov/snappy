@@ -121,7 +121,7 @@ export const useAiStreamerState = ({
     if (!streaming || !typeWriter || tw === undefined || speed === undefined) {
       return undefined;
     }
-    tw.speed = speed;
+    tw.setSpeed(speed);
 
     return tw.subscribe(setTwBusy);
   }, [streaming, typeWriter, typeWriterSpeed]);
@@ -192,7 +192,7 @@ export const useAiStreamerState = ({
   const waitingHost = streaming && typeWriter && segments.length === 0;
 
   if (twRef.current !== undefined) {
-    twRef.current.waiting = waitingHost;
+    twRef.current.setWaiting(waitingHost);
   }
 
   const attachTailHost = useCallback(

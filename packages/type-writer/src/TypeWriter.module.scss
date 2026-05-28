@@ -33,3 +33,9 @@ $-shadow: #0f172a;
 .hidden {
   visibility: hidden;
 }
+
+.partial {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
