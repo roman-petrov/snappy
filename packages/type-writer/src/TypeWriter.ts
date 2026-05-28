@@ -15,7 +15,7 @@ import { TextMetrics, type WidthCache } from "./TextMetrics";
 import styles from "./TypeWriter.module.scss";
 
 export const TypeWriter = () => {
-  const pixelsPerSecond = { fast: 0x4_00, medium: 0x4_00, slow: 0x1_00 } as const;
+  const pixelsPerSecond = { fast: 0x4_00, medium: 0x2_00, slow: 0x1_00 } as const;
   const speedPixelsPerSecond = (speed: TypeWriterSpeed) => pixelsPerSecond[speed];
   const partialPaintStep = (partial: number) => _.round(partial * 2, 0) / 2;
   let host: HTMLElement | undefined;
