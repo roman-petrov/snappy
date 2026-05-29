@@ -1,8 +1,9 @@
 declare const __Layout: {
   readonly wrap: "wrap";
-  readonly mobileHeader: "mobileHeader";
-  readonly desktopHeader: "desktopHeader";
   readonly scroll: "scroll";
+  readonly header: "header";
+  readonly headerInner: "headerInner";
+  readonly headerTrailing: "headerTrailing";
   readonly mainSafe: "mainSafe";
   readonly main: "main";
 };

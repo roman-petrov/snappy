@@ -12,8 +12,6 @@ export * from "./context-menu";
 
 export * from "./FileSelect";
 
-export * from "./Header";
-
 export * from "./Icon";
 
 export * from "./IconButton";

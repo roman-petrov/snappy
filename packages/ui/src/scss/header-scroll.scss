@@ -1,9 +1,0 @@
-$-timeline: --layout-scroll;
-
-@function timeline() {
-  @return $-timeline;
-}
-
-@mixin scroller {
-  scroll-timeline: #{$-timeline} block;
-}

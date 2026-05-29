@@ -1,34 +1,69 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/glass";
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
-@use "../scss/header-scroll";
+
+@at-root html {
+  scroll-timeline: --layout-scroll block;
+}
 
 .wrap {
-  height: 100vh;
-}
-
-.mobile-header,
-.desktop-header {
-  position: sticky;
-  inset-block-start: 0;
-  z-index: 1;
-}
-
-.mobile-header {
-  display: none;
-}
-
-.desktop-header {
-  display: block;
+  min-height: 100dvh;
 }
 
 .scroll {
-  @include header-scroll.scroller;
-
-  height: 100%;
-  overflow: hidden auto;
   scroll-behavior: smooth;
+}
+
+.header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 1;
+
+  &::before {
+    @include glass.simple(color.surface(), $no-border: true);
+    @include elevation.e1;
+
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    border-bottom: 1px solid color.outline();
+    opacity: 0;
+    animation: header-glass 1ms linear both;
+    animation-timeline: --layout-scroll;
+    animation-range: 0 r(48);
+  }
+}
+
+@keyframes header-glass {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.header-inner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: space.md();
+  align-items: center;
+  max-width: tokens.content-width();
+  padding: space.md() space.lg();
+  margin-inline: auto;
+}
+
+.header-trailing {
+  display: flex;
+  gap: space.lg();
+  align-items: center;
+  justify-self: end;
 }
 
 .main-safe {
@@ -49,12 +84,12 @@
 }
 
 @include mobile {
-  .mobile-header {
-    display: block;
+  .header-inner {
+    padding-inline: space.md();
   }
 
-  .desktop-header {
-    display: none;
+  .header-trailing {
+    gap: space.md();
   }
 
   .main {
