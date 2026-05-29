@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
 import { Cert } from "@snappy/node";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
@@ -25,14 +26,13 @@ export const DevServer = async () => {
   const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
   const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
   const portHttps = 443;
-  const hostHttps = `localhost`;
   const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
   const appContext = ServerApp();
   const apiApp = await App({ api: appContext });
   const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
   const apiPort = Number(new URL(apiAddr).port);
   const app = express();
-  const server = https.createServer(await Cert.generate(), app);
+  const server = https.createServer(await Cert.generate(Config.host), app);
 
   const configBuilder = ViteConfig(
     {
@@ -52,8 +52,9 @@ export const DevServer = async () => {
     server: {
       ...config.server,
       allowedHosts: true,
-      hmr: { clientPort: portHttps, host: hostHttps, protocol: `wss`, server },
+      hmr: { clientPort: portHttps, host: Config.host, protocol: `wss`, server },
       middlewareMode: true,
+      origin: `https://${Config.host}`,
     },
   });
 

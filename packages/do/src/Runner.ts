@@ -2,6 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
+import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
@@ -55,8 +56,6 @@ type RunLeafOptions = {
   withoutTree?: boolean;
 };
 
-const startupMessage = `\n🌐 ${Terminal.yellow(`Site running at`)} ${Terminal.blue(`https://localhost`)}\n`;
-
 const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
   const definition = Commands.byName(name);
@@ -100,10 +99,12 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
                 shell: true,
                 stdio: `inherit`,
               });
-              if (name === `server:prod`) {
-                Console.log(`\n${startupMessage}`);
+              if (!verbose && (name === `server:frontend:dev` || name === `server:prod`)) {
+                const origin = `https://${Config.host}`;
+                Console.log(
+                  `\n\n🌐 ${Terminal.yellow(`Site:`)} ${Terminal.blue(origin)}\n💻 ${Terminal.yellow(`App:`)} ${Terminal.blue(`${origin}/app`)}\n`,
+                );
               }
-
               if (run.background === true) {
                 backgroundProcesses.push(proc);
 
@@ -133,13 +134,10 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   const exitCode = Process.exitCode(rawResult);
   const message = _.isObject(rawResult) ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
 
-  if (!mcp && !verbose) {
+  if (!mcp && !verbose && !(`background` in run && run.background === true)) {
     const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
     Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
-    if (exitCode === 0 && name === `server:frontend:dev`) {
-      Console.log(startupMessage);
-    }
   }
 
   if (!mcp && exitCode !== 0 && _.isObject(rawResult)) {

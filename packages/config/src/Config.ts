@@ -11,14 +11,12 @@ const dbUrl = `postgresql://${dbAuth}/${dbName}`;
 const dbShadowUrl = `postgresql://${dbAuth}/${dbName}_shadow`;
 const balanceMinRub = -1000;
 const balancePaymentMinRub = 10;
-const balancePaymentMaxRub = 500_000;
+const balancePaymentMaxRub = 5000;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
 const betterAuthJwtSecret = env[`JWT_SECRET`] ?? ``;
 const aiTunnelKey = env[`AI_TUNNEL_API_KEY`] ?? ``;
-const isProduction = env.NODE_ENV === `production`;
-const origin = isProduction ? `https://snappy-ai.ru` : `https://localhost`;
-const betterAuthTrustedOrigins = [...new Set([origin, ...(isProduction ? [] : ([`https://home.local`] as const))])];
+const host = env.NODE_ENV === `production` ? `snappy-ai.ru` : `home.local`;
 
 export const Config = {
   aiTunnelKey,
@@ -26,10 +24,9 @@ export const Config = {
   balancePaymentMaxRub,
   balancePaymentMinRub,
   betterAuthJwtSecret,
-  betterAuthTrustedOrigins,
   dbShadowUrl,
   dbUrl,
-  origin,
+  host,
   yooKassaSecretKey,
   yooKassaShopId,
 };

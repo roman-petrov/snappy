@@ -10,11 +10,11 @@ export type BetterAuthConfig = { prisma: Db[`prisma`] };
 export const BetterAuth = ({ prisma }: BetterAuthConfig) =>
   betterAuth({
     basePath: `/api/auth`,
-    baseURL: Config.origin,
+    baseURL: `https://${Config.host}`,
     database: prismaAdapter(prisma, { provider: `postgresql` }),
     emailAndPassword: { enabled: true, sendResetPassword: async () => undefined },
     secret: Config.betterAuthJwtSecret,
-    trustedOrigins: Config.betterAuthTrustedOrigins,
+    trustedOrigins: [`https://${Config.host}`],
   });
 
 export type BetterAuth = ReturnType<typeof BetterAuth>;

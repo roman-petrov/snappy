@@ -42,10 +42,11 @@ Schema source of truth: `packages/db/prisma/schema.prisma`.
 ⚠️ Note: after `bun do finish-feature`, do not modify `schema.prisma`. If schema changed, run `bun do finish-feature`
 again.
 
-## 📱 Android Debug
+## 🌐 Local development URL
 
-The Android Debug build loads `https://home.local/app`. The dev machine must be named **home** (computer/hostname) so it
-is reachable at **home.local**.
+Dev server (`bun do dev`) is always at **<https://home.local>** (site) and **<https://home.local/app>** (app). The
+machine hostname should be **home** so phones and other devices on the LAN can resolve **home.local**. Android debug APK
+uses the same URL.
 
 ## 🛠️ Technologies
 
