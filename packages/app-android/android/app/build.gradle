@@ -22,6 +22,8 @@ android {
     }
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            versionNameSuffix "-debug"
             buildConfigField "String", "APP_URL", "\"https://home.local/app\""
         }
         release {
