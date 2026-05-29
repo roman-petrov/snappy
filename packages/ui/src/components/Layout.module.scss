@@ -2,6 +2,7 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
+@use "../scss/header-scroll";
 
 .wrap {
   height: 100vh;
@@ -23,6 +24,8 @@
 }
 
 .scroll {
+  @include header-scroll.scroller;
+
   height: 100%;
   overflow: hidden auto;
   scroll-behavior: smooth;

@@ -1,6 +1,39 @@
+/* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/glass";
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
+@use "../scss/header-scroll";
+
+@keyframes header-glass {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.root {
+  position: relative;
+
+  &::before {
+    @include glass.simple(color.surface(), $no-border: true);
+    @include elevation.e1;
+
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    content: "";
+    border-bottom: 1px solid color.outline();
+    animation: header-glass 1ms linear both;
+    animation-timeline: #{header-scroll.timeline()};
+    animation-range: 0 r(48);
+  }
+}
 
 .inner {
   display: grid;

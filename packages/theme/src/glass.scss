@@ -9,20 +9,24 @@ $-saturate: 1.18;
 $-rim-white: 0.66;
 $-rim-tone: 0.34;
 
-@mixin -paint($background, $border-color, $backdrop) {
+@mixin -paint($background, $border-color, $backdrop, $no-border: false) {
   background-color: $background;
-  border: 1px solid $border-color;
   backdrop-filter: $backdrop;
+
+  @if not $no-border {
+    border: 1px solid $border-color;
+  }
 }
 
 @mixin reset {
   @include -paint(transparent, transparent, none);
 }
 
-@mixin simple($tone) {
+@mixin simple($tone, $no-border: false) {
   @include -paint(
     color-mix(in srgb, $tone calc(100% * $-fill), transparent),
-    color-mix(in srgb, #ffffff calc(100% * $-rim-white), $tone calc(100% * $-rim-tone)),
-    blur($-blur) saturate($-saturate) contrast($-contrast)
+    color-mix(in srgb, #fff calc(100% * $-rim-white), $tone calc(100% * $-rim-tone)),
+    blur($-blur) saturate($-saturate) contrast($-contrast),
+    $no-border
   );
 }
