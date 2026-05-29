@@ -131,6 +131,12 @@ const defs: Record<string, CmdDefinition> = {
     description: `Build into dist (site + ssr + app + Android APK + server bundle).`,
     label: `📦 Build`,
   },
+  cert: {
+    description: `Prepare trusted HTTPS for local development.`,
+    label: `🔐 Dev TLS`,
+    mcp: false,
+    run: { handler: `cert` },
+  },
   ci: { children: [`test`, `lint`, `build`], description: `Test + lint + build.`, label: `🔁 CI` },
   cspell: { description: `CSpell: spell-check.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
   dev: {

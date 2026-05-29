@@ -33,6 +33,7 @@
     "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",
     "@snappy/server-app": "workspace:*",
+    "@snappy/server-prod": "workspace:*",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/bun": "^1.3.14",
     "@types/node": "^25.9.1",

@@ -3,11 +3,9 @@ package com.snappy.app;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.PermissionRequest;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -83,15 +81,6 @@ public class MainActivity extends ComponentActivity {
             }
         });
         webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                if (BuildConfig.DEBUG) {
-                    handler.proceed();
-                    return;
-                }
-                handler.cancel();
-            }
-
             @Override
             public void onPageFinished(WebView view, String url) {
                 splash.setVisibility(View.GONE);

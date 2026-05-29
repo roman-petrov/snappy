@@ -20,4 +20,5 @@ export type CmdRunDef =
   | { handler: `build:server` }
   | { handler: `build:site` }
   | { handler: `build:ssr` }
+  | { handler: `cert` }
   | { handler: `finish-feature` };

@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
-import { Cert } from "@snappy/node";
+import { DevCert } from "@snappy/server-prod/DevCert";
 import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import express from "express";
@@ -32,7 +32,7 @@ export const DevServer = async () => {
   const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
   const apiPort = Number(new URL(apiAddr).port);
   const app = express();
-  const server = https.createServer(await Cert.generate(Config.host), app);
+  const server = https.createServer(DevCert.read(), app);
 
   const configBuilder = ViteConfig(
     {

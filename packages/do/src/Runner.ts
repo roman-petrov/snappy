@@ -5,6 +5,7 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
+import { DevCert } from "@snappy/server-prod/DevCert";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
@@ -84,9 +85,11 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
   } as const;
 
   const rawResult = await (`handler` in run
-    ? run.handler === `finish-feature`
-      ? Feature.finish(root)
-      : buildHandlers[run.handler](root, buildOptions)
+    ? run.handler === `cert`
+      ? DevCert.write(Config.host).then(() => 0)
+      : run.handler === `finish-feature`
+        ? Feature.finish(root)
+        : buildHandlers[run.handler](root, buildOptions)
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run

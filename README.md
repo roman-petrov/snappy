@@ -1,4 +1,4 @@
-<!-- cspell:word neuro aiesa lmsys -->
+<!-- cspell:word neuro aiesa lmsys certutil addstore -->
 
 # Snappy
 
@@ -47,6 +47,15 @@ again.
 Dev server (`bun do dev`) is always at **<https://home.local>** (site) and **<https://home.local/app>** (app). The
 machine hostname should be **home** so phones and other devices on the LAN can resolve **home.local**. Android debug APK
 uses the same URL.
+
+### 🔐 Dev HTTPS
+
+1. `bun do cert`
+   - creates `$env:USERPROFILE\.snappy\cert\` folder.
+2. `certutil -addstore -user Root "$env:USERPROFILE\.snappy\cert\ca.pem"`
+3. `bun do dev`
+
+On a phone: copy `ca.pem` to the device and install it as a CA certificate (Settings → Security).
 
 ## 🛠️ Technologies
 

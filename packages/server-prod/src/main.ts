@@ -1,15 +1,15 @@
 /* eslint-disable functional/immutable-data */
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { Cert } from "@snappy/node";
 import { App, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
+
+import { DevCert } from "./DevCert";
 
 const sslCertB64 = process.env[`SSL_CERT_PEM`];
 const sslKeyB64 = process.env[`SSL_KEY_PEM`];
@@ -111,10 +111,7 @@ if (handlerRef.current === undefined) {
   throw new Error(`serverFactory was not called`);
 }
 
-const tls =
-  sslCertPem !== undefined && sslKeyPem !== undefined
-    ? { cert: sslCertPem, key: sslKeyPem }
-    : await Cert.generate(Config.host);
+const tls = sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : DevCert.read();
 
 https.createServer(tls, handlerRef.current).listen(portHttps, `0.0.0.0`);
 http.createServer(handlerRef.current).listen(portHttp, `127.0.0.1`);

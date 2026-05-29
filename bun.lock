@@ -214,10 +214,12 @@
         "@cspell/dict-ru_ru": "^2.3.2",
         "@eslint/js": "^9.39.2",
         "@modelcontextprotocol/sdk": "^1.29.0",
+        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/node": "workspace:*",
         "@snappy/server": "workspace:*",
         "@snappy/server-app": "workspace:*",
+        "@snappy/server-prod": "workspace:*",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/bun": "^1.3.14",
         "@types/node": "^25.9.1",
@@ -356,6 +358,7 @@
       "name": "@snappy/server-prod",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/node": "workspace:*",
         "@snappy/server": "workspace:*",
@@ -453,7 +456,6 @@
       "name": "@snappy/type-writer",
       "version": "0.0.0",
       "dependencies": {
-        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/domain": "workspace:*",
       },
