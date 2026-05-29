@@ -29,6 +29,7 @@
     z-index: -1;
     content: "";
     border-bottom: 1px solid color.outline();
+    opacity: 0;
     animation: header-glass 1ms linear both;
     animation-timeline: #{header-scroll.timeline()};
     animation-range: 0 r(48);
