@@ -1,2 +1,3 @@
 * text auto
+*.jar binary
 *.scss.d.ts text eol=lf
