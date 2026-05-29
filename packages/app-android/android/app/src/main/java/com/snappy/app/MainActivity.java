@@ -44,6 +44,7 @@ public class MainActivity extends ComponentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
         EdgeToEdge.enable(
                 this,
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
