@@ -360,7 +360,6 @@
       "name": "@snappy/server-prod",
       "version": "0.0.0",
       "dependencies": {
-        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/node": "workspace:*",
         "@snappy/server": "workspace:*",

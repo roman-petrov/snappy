@@ -9,7 +9,6 @@
     "./DevCert": "./src/DevCert.ts"
   },
   "dependencies": {
-    "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",
