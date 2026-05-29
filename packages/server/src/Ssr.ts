@@ -15,7 +15,7 @@ import { pathToFileURL } from "node:url";
 
 import type { ServerCache } from "./ServerCache";
 
-import { Cookie } from "./core/Cookie";
+import { Cookie } from "./Cookie";
 import { SiteSsr, type SsrEntry } from "./SiteSsr";
 
 export const Ssr = () => {

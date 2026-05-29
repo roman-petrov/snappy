@@ -5,9 +5,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
-import { DevCert } from "@snappy/server-prod/DevCert";
-import { App, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
+import { App, AppManifestHost, Cookie, SiteSsr, type SsrEntry } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
+import { DevCert } from "@snappy/server-prod/DevCert";
 import express from "express";
 import { readFileSync } from "node:fs";
 import * as http from "node:http";
@@ -112,6 +112,8 @@ export const DevServer = async () => {
   for (const path of [`/favicon.svg`, `/app/favicon.svg`]) {
     app.get(path, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
   }
+
+  AppManifestHost.express(app);
 
   html({
     body: ({ locale, template, theme }) => SiteSsr.prepareAppIndex(template, locale, theme),

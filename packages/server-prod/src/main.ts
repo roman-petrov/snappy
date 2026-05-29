@@ -2,7 +2,7 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";
-import { App, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
+import { App, AppManifestHost, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import http from "node:http";
@@ -55,6 +55,8 @@ const staticSite = cache.createStatic(siteRoot);
 const appIndexPath = join(appRoot, `index.html`);
 const getAppIndexKey = (locale: string, theme: string) => `app:index:${locale}:${theme}`;
 
+AppManifestHost.fastify(app);
+
 app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
   const pathname = cache.pathnameFromRequest(request);
   const acceptEncoding = request.headers[`accept-encoding`];
@@ -106,10 +108,6 @@ app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
 
 await app.ready();
 await ssr.prewarmSsr(siteRoot, cache, [`ru`, `en`]);
-
-if (handlerRef.current === undefined) {
-  throw new Error(`serverFactory was not called`);
-}
 
 const tls = sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : DevCert.read();
 

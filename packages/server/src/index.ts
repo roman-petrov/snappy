@@ -1,6 +1,10 @@
 export * from "./App";
 
-export * from "./core/Cookie";
+export * from "./AppManifest";
+
+export * from "./AppManifestHost";
+
+export * from "./Cookie";
 
 export * from "./ServerCache";
 
