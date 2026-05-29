@@ -82,6 +82,12 @@ const appAndroid = async (root: string, options: BuildOptions = {}) =>
 const appAndroidDebug = async (root: string, options: BuildOptions = {}) =>
   buildAndroidApk(root, `assembleDebug`, `snappy-debug.apk`, options.capture === true);
 
+const javaFormat = async (root: string, options: BuildOptions = {}) =>
+  runSpawn(androidDir(root), [gradlew(root), `spotlessCheck`], options.capture === true);
+
+const javaFormatFix = async (root: string, options: BuildOptions = {}) =>
+  runSpawn(androidDir(root), [gradlew(root), `spotlessApply`], options.capture === true);
+
 const ssr = async (root: string, { capture }: BuildOptions = {}) => {
   const result = await runSpawn(
     packageDir(root, `site`),
@@ -108,4 +114,4 @@ const server = async (root: string, { capture }: BuildOptions = {}) => {
   return Process.exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { app, appAndroid, appAndroidDebug, server, site, ssr };
+export const Build = { app, appAndroid, appAndroidDebug, javaFormat, javaFormatFix, server, site, ssr };

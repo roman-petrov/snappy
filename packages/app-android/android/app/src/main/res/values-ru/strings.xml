@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="error_load_body">Возможно, сервис перегружен. Подождите немного и нажмите
+        «Повторить».</string>
+    <string name="error_load_title">Не удаётся открыть Snappy</string>
+    <string name="error_network_body">Включите Wi‑Fi или мобильный интернет и нажмите «Повторить».</string>
+    <string name="error_network_title">Нет подключения</string>
+    <string name="error_retry">Повторить</string>
+</resources>

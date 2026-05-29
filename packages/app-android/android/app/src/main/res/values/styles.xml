@@ -1,4 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:colorBackground">@color/chrome</item>
+    </style>
+
+    <style name="ErrorTitle">
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/on_surface</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ErrorBody">
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+        <item name="android:textColor">@color/on_surface_variant</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ErrorRetry">
+        <item name="android:background">@drawable/error_retry</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:minWidth">160dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/chrome</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

@@ -2,5 +2,7 @@ ext {
     minSdkVersion = 24
     compileSdkVersion = 36
     targetSdkVersion = 36
-    androidxActivityVersion = '1.12.4'
+    androidxActivityVersion = '1.13.0'
+    androidxCoreVersion = '1.18.0'
+    googleJavaFormatVersion = '1.35.0'
 }

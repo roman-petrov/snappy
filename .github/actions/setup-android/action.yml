@@ -1,5 +1,5 @@
 name: Setup Android
-description: Fix gradlew permissions and select Java 21 for Android build
+description: Fix gradlew permissions and Java 21 for Gradle (Android build, Spotless)
 runs:
   using: composite
   steps:

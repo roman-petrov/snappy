@@ -24,64 +24,72 @@ public class Bridge {
 
     @JavascriptInterface
     public void setBarStyle(String theme) {
-        onUi(() -> {
-            WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(
-                activity.getWindow(),
-                activity.getWindow().getDecorView()
-            );
-            boolean lightBars = "light".equals(theme);
-            controller.setAppearanceLightStatusBars(lightBars);
-            controller.setAppearanceLightNavigationBars(lightBars);
-        });
+        onUi(
+                () -> {
+                    WindowInsetsControllerCompat controller =
+                            WindowCompat.getInsetsController(
+                                    activity.getWindow(), activity.getWindow().getDecorView());
+                    boolean lightBars = "light".equals(theme);
+                    controller.setAppearanceLightStatusBars(lightBars);
+                    controller.setAppearanceLightNavigationBars(lightBars);
+                });
     }
 
     @JavascriptInterface
     public void hapticImpact(int constant) {
-        onUi(() -> {
-            View view = activity.getWindow().getDecorView();
-            view.performHapticFeedback(constant);
-        });
+        onUi(
+                () -> {
+                    View view = activity.getWindow().getDecorView();
+                    view.performHapticFeedback(constant);
+                });
     }
 
     @JavascriptInterface
     public void copyHtml(String html, String plain) {
-        onUi(() -> {
-            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newHtmlText("html", plain, html));
-        });
+        onUi(
+                () -> {
+                    ClipboardManager clipboard =
+                            (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboard.setPrimaryClip(ClipData.newHtmlText("html", plain, html));
+                });
     }
 
     @JavascriptInterface
     public void copyImage(String base64, String name, String ext) {
-        onUi(() -> {
-            Uri uri = cacheUri(base64, name, ext);
-            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newUri(activity.getContentResolver(), "image", uri));
-        });
+        onUi(
+                () -> {
+                    Uri uri = cacheUri(base64, name, ext);
+                    ClipboardManager clipboard =
+                            (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboard.setPrimaryClip(
+                            ClipData.newUri(activity.getContentResolver(), "image", uri));
+                });
     }
 
     @JavascriptInterface
     public void shareHtml(String html, String plain, String title) {
-        onUi(() -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("text/html");
-            intent.putExtra(Intent.EXTRA_HTML_TEXT, html);
-            intent.putExtra(Intent.EXTRA_TEXT, plain);
-            intent.putExtra(Intent.EXTRA_SUBJECT, title);
-            activity.startActivity(Intent.createChooser(intent, title));
-        });
+        onUi(
+                () -> {
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType("text/html");
+                    intent.putExtra(Intent.EXTRA_HTML_TEXT, html);
+                    intent.putExtra(Intent.EXTRA_TEXT, plain);
+                    intent.putExtra(Intent.EXTRA_SUBJECT, title);
+                    activity.startActivity(Intent.createChooser(intent, title));
+                });
     }
 
     @JavascriptInterface
     public void shareImage(String base64, String mime, String title, String ext) {
-        onUi(() -> {
-            Uri uri = cacheUri(base64, "share", ext);
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType(mime);
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            activity.startActivity(Intent.createChooser(intent, title));
-        });
+        onUi(
+                () -> {
+                    Uri uri = cacheUri(base64, "share", ext);
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.setType(mime);
+                    intent.putExtra(Intent.EXTRA_STREAM, uri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    activity.startActivity(Intent.createChooser(intent, title));
+                });
     }
 
     private Uri cacheUri(String base64, String name, String ext) {
@@ -92,7 +100,8 @@ public class Bridge {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return FileProvider.getUriForFile(activity, activity.getPackageName() + ".fileprovider", file);
+        return FileProvider.getUriForFile(
+                activity, activity.getPackageName() + ".fileprovider", file);
     }
 
     private void onUi(Runnable action) {

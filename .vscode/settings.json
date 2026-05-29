@@ -84,8 +84,21 @@
   "typescript.referencesCodeLens.enabled": true,
   "typescript.tsdk": "./node_modules/typescript/lib",
 
+  // Npm
+  "npm.autoDetect": "off",
+
   // Formatters
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
-  }
+  },
+  "[java]": {
+    "editor.defaultFormatter": "josevseb.google-java-format-for-vs-code"
+  },
+  "[xml]": {
+    "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+
+  // Java / Android
+  "java.format.settings.google.extra": "--aosp",
+  "java.format.settings.google.mode": "jar-file"
 }

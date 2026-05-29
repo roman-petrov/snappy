@@ -82,6 +82,8 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
     "build:server": Build.server,
     "build:site": Build.site,
     "build:ssr": Build.ssr,
+    "java-format": Build.javaFormat,
+    "java-format-fix": Build.javaFormatFix,
   } as const;
 
   const rawResult = await (`handler` in run

@@ -38,5 +38,5 @@ android {
 
 dependencies {
     implementation "androidx.activity:activity:$androidxActivityVersion"
-    implementation "androidx.core:core:1.17.0"
+    implementation "androidx.core:core:$androidxCoreVersion"
 }

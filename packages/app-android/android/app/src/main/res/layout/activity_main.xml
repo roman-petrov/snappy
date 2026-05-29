@@ -11,7 +11,7 @@
         android:id="@+id/splash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:colorBackground"
+        android:background="@color/chrome"
         android:clickable="true"
         android:focusable="true">
         <ImageView
@@ -21,4 +21,7 @@
             android:contentDescription="@null"
             android:src="@drawable/ic_launcher" />
     </FrameLayout>
+    <include
+        android:id="@+id/error"
+        layout="@layout/error_screen" />
 </FrameLayout>

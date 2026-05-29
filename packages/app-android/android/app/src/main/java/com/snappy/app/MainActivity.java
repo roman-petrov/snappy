@@ -9,7 +9,6 @@ import android.webkit.PermissionRequest;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -23,81 +22,98 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends ComponentActivity {
 
+    private WebView webView;
+    private AppHost appHost;
     private PermissionRequest pendingPermissionRequest;
 
-    private final ActivityResultLauncher<String> microphonePermissionLauncher = registerForActivityResult(
-        new ActivityResultContracts.RequestPermission(),
-        granted -> {
-            if (pendingPermissionRequest == null) {
-                return;
-            }
-            if (granted) {
-                pendingPermissionRequest.grant(pendingPermissionRequest.getResources());
-            } else {
-                pendingPermissionRequest.deny();
-            }
-            pendingPermissionRequest = null;
-        }
-    );
+    private final ActivityResultLauncher<String> microphonePermissionLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    granted -> {
+                        if (pendingPermissionRequest == null) {
+                            return;
+                        }
+                        if (granted) {
+                            pendingPermissionRequest.grant(pendingPermissionRequest.getResources());
+                        } else {
+                            pendingPermissionRequest.deny();
+                        }
+                        pendingPermissionRequest = null;
+                    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(
-            this,
-            SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
-            SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-        );
+                this,
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
         setContentView(R.layout.activity_main);
 
         View container = findViewById(R.id.webview_container);
         View splash = findViewById(R.id.splash);
-        WebView webView = findViewById(R.id.webview);
+        ErrorScreen errorScreen = new ErrorScreen(findViewById(R.id.error), splash);
+        webView = findViewById(R.id.webview);
         webView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        ViewCompat.setOnApplyWindowInsetsListener(container, (v, windowInsets) -> {
-            Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-            v.setPadding(0, 0, 0, ime.bottom);
-            return windowInsets;
-        });
+        ViewCompat.setOnApplyWindowInsetsListener(
+                container,
+                (v, windowInsets) -> {
+                    Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+                    v.setPadding(0, 0, 0, ime.bottom);
+                    return windowInsets;
+                });
         container.requestApplyInsets();
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         webView.addJavascriptInterface(new Bridge(this), "Bridge");
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onPermissionRequest(final PermissionRequest request) {
-                runOnUiThread(() -> {
-                    if (
-                        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) ==
-                        PackageManager.PERMISSION_GRANTED
-                    ) {
-                        request.grant(request.getResources());
-                        return;
+        webView.setWebChromeClient(
+                new WebChromeClient() {
+                    @Override
+                    public void onPermissionRequest(final PermissionRequest request) {
+                        runOnUiThread(
+                                () -> {
+                                    if (ContextCompat.checkSelfPermission(
+                                                    MainActivity.this,
+                                                    Manifest.permission.RECORD_AUDIO)
+                                            == PackageManager.PERMISSION_GRANTED) {
+                                        request.grant(request.getResources());
+                                        return;
+                                    }
+                                    pendingPermissionRequest = request;
+                                    microphonePermissionLauncher.launch(
+                                            Manifest.permission.RECORD_AUDIO);
+                                });
                     }
-                    pendingPermissionRequest = request;
-                    microphonePermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
                 });
-            }
-        });
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                splash.setVisibility(View.GONE);
-            }
-        });
-        webView.loadUrl(BuildConfig.APP_URL);
 
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                } else {
-                    setEnabled(false);
-                    getOnBackPressedDispatcher().onBackPressed();
-                }
-            }
-        });
+        appHost = new AppHost(this, webView, splash, errorScreen, BuildConfig.APP_URL);
+        appHost.bind();
+
+        getOnBackPressedDispatcher()
+                .addCallback(
+                        this,
+                        new OnBackPressedCallback(true) {
+                            @Override
+                            public void handleOnBackPressed() {
+                                if (appHost.errorVisible()) {
+                                    return;
+                                }
+                                if (webView.canGoBack()) {
+                                    webView.goBack();
+                                } else {
+                                    setEnabled(false);
+                                    getOnBackPressedDispatcher().onBackPressed();
+                                }
+                            }
+                        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (appHost != null) {
+            appHost.destroy();
+        }
+        super.onDestroy();
     }
 }

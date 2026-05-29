@@ -21,4 +21,6 @@ export type CmdRunDef =
   | { handler: `build:site` }
   | { handler: `build:ssr` }
   | { handler: `cert` }
-  | { handler: `finish-feature` };
+  | { handler: `finish-feature` }
+  | { handler: `java-format-fix` }
+  | { handler: `java-format` };

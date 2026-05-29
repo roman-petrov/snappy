@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Snappy</string>
     <string name="error_load_body">The service may be busy. Wait a moment and tap Try again.</string>
     <string name="error_load_title">Couldn’t open Snappy</string>
     <string name="error_network_body">Turn on Wi‑Fi or mobile data, then tap Try again.</string>

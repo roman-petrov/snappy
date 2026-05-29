@@ -13,6 +13,10 @@
     "vitest.explorer",
     "pflannery.vscode-versionlens",
     "slevesque.shader",
+    // Java / Android
+    "JoseVSeb.google-java-format-for-vs-code",
+    // XML
+    "redhat.vscode-xml",
     // Linters
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",

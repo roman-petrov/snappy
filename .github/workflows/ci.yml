@@ -27,6 +27,8 @@ jobs:
             arg: eslint
           - name: ✨ prettier
             arg: prettier
+          - name: ☕ java-format
+            arg: java-format
           - name: 📝 cspell
             arg: cspell
           - name: 📋 jscpd
@@ -44,7 +46,7 @@ jobs:
         uses: ./.github/actions/setup-repo
 
       - name: 🔧 Setup Android
-        if: matrix.task.arg == 'build:app-android'
+        if: matrix.task.arg == 'build:app-android' || matrix.task.arg == 'java-format'
         uses: ./.github/actions/setup-android
 
       - name: ▶️ Run ${{ matrix.task.name }}

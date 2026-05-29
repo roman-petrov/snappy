@@ -1,23 +1,30 @@
-// cspell:word buildscript allprojects
+// cspell:word buildscript allprojects diffplug aosp
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:9.1.0'
+        classpath 'com.android.tools.build:gradle:9.2.0'
     }
 }
 
+plugins {
+    id 'com.diffplug.spotless' version '8.6.0'
+}
+
 apply from: "variables.gradle"
+
+spotless {
+    java {
+        target 'app/src/main/java/**/*.java'
+        googleJavaFormat(rootProject.ext.googleJavaFormatVersion).aosp()
+    }
+}
 
 allprojects {
     repositories {
         google()
         mavenCentral()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }

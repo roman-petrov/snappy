@@ -91,6 +91,16 @@ const defs: Record<string, CmdDefinition> = {
     mcp: false,
     run: { handler: `finish-feature` },
   },
+  [`java-format-fix`]: {
+    description: `Automatically format Android Java code.`,
+    label: `☕ Java format fix`,
+    run: { handler: `java-format-fix` },
+  },
+  [`java-format`]: {
+    description: `Check that Android Java code is formatted.`,
+    label: `☕ Java format`,
+    run: { handler: `java-format` },
+  },
   [`prettier-fix`]: {
     description: `Automatically format project code.`,
     label: `✨ Prettier`,
@@ -153,8 +163,8 @@ const defs: Record<string, CmdDefinition> = {
   jscpd: { description: `JSCPD: copy-paste detection.`, label: `📋 JSCPD`, run: { args: [`.`], tool: `jscpd` } },
   knip: { description: `Knip: unused code, deps, exports.`, label: `🧹 Knip`, run: { args: [], tool: `knip` } },
   lint: {
-    children: [`tsc`, `eslint`, `prettier`, `stylelint`, `cspell`, `knip`, `markdownlint`, `jscpd`],
-    description: `TypeScript, ESLint, Prettier, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
+    children: [`tsc`, `eslint`, `prettier`, `java-format`, `stylelint`, `cspell`, `knip`, `markdownlint`, `jscpd`],
+    description: `TypeScript, ESLint, Prettier, Java format, Stylelint, CSpell, JSCPD, Knip, Markdown.`,
     label: `🛡️ Lint`,
   },
   markdownlint: {
