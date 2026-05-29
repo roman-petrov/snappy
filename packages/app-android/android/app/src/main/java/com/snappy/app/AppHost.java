@@ -72,14 +72,17 @@ final class AppHost {
                 new ConnectivityManager.NetworkCallback() {
                     @Override
                     public void onAvailable(android.net.Network network) {
-                        if (errorScreen.visible()) {
-                            loadMain();
-                        }
+                        webView.post(
+                                () -> {
+                                    if (errorScreen.visible()) {
+                                        loadMain();
+                                    }
+                                });
                     }
 
                     @Override
                     public void onLost(android.net.Network network) {
-                        errorScreen.show(true);
+                        webView.post(() -> errorScreen.show(true));
                     }
                 };
         connectivity.registerNetworkCallback(
