@@ -10,5 +10,3 @@ $loggedIn.set(await Auth.loggedIn());
 await startApp(Router, { base: `/app`, disableLinkSelection: true, disableTextSelection: true });
 
 Shiki.preload();
-
-void navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`);

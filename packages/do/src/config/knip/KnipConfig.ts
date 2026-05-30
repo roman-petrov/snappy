@@ -10,7 +10,7 @@ const config: KnipConfig = {
       ignoreDependencies: [`@knip/mcp`, `actions-up`, `@snappy/coder-cli`],
     },
     "packages/ai-stream": { ignoreDependencies: [`@fontsource/google-sans-code`] },
-    "packages/app": { entry: [`index.html`, `public/sw.js`], ignoreDependencies: [`@snappy/theme`] },
+    "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/coder-chunk": {
       ignoreDependencies: [
         `tree-sitter-css`,
