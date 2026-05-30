@@ -43,14 +43,11 @@ final class AppHost {
                         }
                     }
 
+                    // ! Remove this after we fix SSL certificate errors on on server!
                     @Override
                     public void onReceivedSslError(
                             WebView view, SslErrorHandler handler, SslError error) {
-                        if (BuildConfig.DEBUG) {
-                            handler.proceed();
-                            return;
-                        }
-                        handler.cancel();
+                        handler.proceed();
                     }
 
                     @Override
