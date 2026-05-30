@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.net.http.SslError;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -39,6 +41,16 @@ final class AppHost {
                         if (!errorScreen.visible()) {
                             splash.setVisibility(View.GONE);
                         }
+                    }
+
+                    @Override
+                    public void onReceivedSslError(
+                            WebView view, SslErrorHandler handler, SslError error) {
+                        if (BuildConfig.DEBUG) {
+                            handler.proceed();
+                            return;
+                        }
+                        handler.cancel();
                     }
 
                     @Override

@@ -14,6 +14,7 @@
     "pflannery.vscode-versionlens",
     "slevesque.shader",
     // Java / Android
+    "adelphes.android-dev-ext",
     "JoseVSeb.google-java-format-for-vs-code",
     // XML
     "redhat.vscode-xml",

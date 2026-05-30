@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "android",
+      "request": "launch",
+      "name": "Android",
+      "appSrcRoot": "${workspaceFolder}/packages/app-android/android/app/src/main",
+      "apkFile": "${workspaceFolder}/packages/app-android/android/app/build/outputs/apk/debug/app-debug.apk",
+      "launchActivity": "com.snappy.app.MainActivity",
+      "preLaunchTask": "android: assemble debug"
+    }
+  ]
+}
