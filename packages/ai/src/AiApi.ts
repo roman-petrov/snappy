@@ -34,10 +34,7 @@ export type AiChatCompletionBody = {
 export type AiReasoning = { effort: `high` | `low` | `medium` | `minimal` | `none` | `xhigh`; exclude?: boolean };
 
 export type AiStreamChunk = {
-  choices?: {
-    delta?: AiStreamDelta;
-    finish_reason?: null | string;
-  }[];
+  choices?: { delta?: AiStreamDelta; finish_reason?: null | string }[];
   usage?: { cost_rub?: number };
 };
 

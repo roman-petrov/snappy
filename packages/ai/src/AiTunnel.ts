@@ -40,10 +40,4 @@ const reasoningBody = (effort: AiReasoningEffort | undefined): AiReasoning => ({
   effort: effort === undefined || effort === `none` ? `none` : effort,
 });
 
-export const AiTunnel = {
-  baseUrl,
-  baseUrlDefault,
-  chatModelId,
-  openRouterChatModel,
-  reasoningBody,
-};
+export const AiTunnel = { baseUrl, baseUrlDefault, chatModelId, openRouterChatModel, reasoningBody };
