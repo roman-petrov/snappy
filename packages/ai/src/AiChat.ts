@@ -31,6 +31,7 @@ import { AiHttp, type AiHttpConfig } from "./AiHttp";
 import { AiMessages } from "./AiMessages";
 import { AiSse } from "./AiSse";
 import { AiTunnel } from "./AiTunnel";
+import { AiModel, type AiModelStreamSink } from "./models";
 
 type StreamCell<T> = { close: () => void; push: (value: T) => void; stream: AsyncIterable<T> };
 
@@ -140,8 +141,9 @@ const completion = (
   http: AiHttpConfig,
   { model, reasoningEffort, ...input }: AiChatCompletionCreateInput,
 ): AiChatCompletionSession => {
+  const modelPlugin = AiModel.resolve(AiTunnel.chatModelId(model));
   const sourceMessages = `prompt` in input ? [{ content: input.prompt, role: `user` as const }] : input.messages;
-  const messages = AiMessages.chatToApi(sourceMessages);
+  const messages = AiMessages.chatToApi(sourceMessages, modelPlugin);
   const chatInput = `prompt` in input ? undefined : input;
   const reasoning = AiTunnel.reasoningBody(reasoningEffort);
 
@@ -151,7 +153,7 @@ const completion = (
     model: AiTunnel.openRouterChatModel(model),
     reasoning,
     stream: true,
-    ...AiTunnel.chatCompletionExtras(model, reasoning),
+    ...modelPlugin.completionExtras(reasoning),
     ...(chatInput?.tools === undefined
       ? {}
       : { tool_choice: apiToolChoice(chatInput.toolChoice), tools: apiTools(chatInput.tools) }),
@@ -174,6 +176,7 @@ const completion = (
     const toolRows = new Map<number, StreamCell<AiToolCall>>();
     const callsEmitted = new Set<string>();
     let content = ``;
+    let reasoningContent = ``;
     const toolCalls = new Map<number, ToolCallBuild>();
 
     const closeTextStreams = () => {
@@ -234,6 +237,34 @@ const completion = (
       }
     };
 
+    const pushModelReasoning = (text: string) => {
+      reasoningContent += text;
+      pushText(`reasoning`, text);
+    };
+
+    const streamSink: AiModelStreamSink = {
+      pushDetailsReasoning: details => {
+        if (!_.isArray(details)) {
+          return;
+        }
+        for (const part of details) {
+          if (part.type === `reasoning.text` && _.isString(part.text) && part.text !== ``) {
+            pushModelReasoning(part.text);
+          }
+        }
+      },
+      pushPlainReasoning: reasoningDelta => {
+        if (_.isString(reasoningDelta) && reasoningDelta !== ``) {
+          pushModelReasoning(reasoningDelta);
+
+          return true;
+        }
+
+        return false;
+      },
+      pushReasoning: pushModelReasoning,
+    };
+
     try {
       const bodyStream = await AiHttp.postStream(http, `/chat/completions`, body);
       for await (const raw of AiSse.jsonChunks(bodyStream)) {
@@ -247,10 +278,10 @@ const completion = (
         }
         const { delta, finish_reason: finishReason } = choice;
         if (delta !== undefined) {
-          const reasoningDelta = delta.reasoning;
-          if (_.isString(reasoningDelta) && reasoningDelta !== ``) {
-            pushText(`reasoning`, reasoningDelta);
-          }
+          modelPlugin.streamDelta(
+            { reasoning: delta.reasoning, reasoningDetails: delta.reasoning_details },
+            streamSink,
+          );
           const contentDelta = delta.content;
           if (_.isString(contentDelta) && contentDelta !== ``) {
             pushText(`chat`, contentDelta);
@@ -275,7 +306,13 @@ const completion = (
     }
 
     const builtCalls = builtApiToolCalls(toolCalls);
-    const assistant = AiMessages.assistantToAi(content, builtCalls.length > 0 ? builtCalls : undefined);
+
+    const assistant = AiMessages.assistantToAi(
+      modelPlugin,
+      content,
+      reasoningContent,
+      builtCalls.length > 0 ? builtCalls : undefined,
+    );
 
     for (const [, row] of toolCalls.entries()) {
       if (row.id === ``) {

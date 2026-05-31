@@ -5,7 +5,12 @@ import type { AiConstants } from "./AiConstants";
 
 export type AiAudioTranscriptionsCreateInput = { file: AiSpeechRecognitionInput; model: string };
 
-export type AiChatAssistantMessage = { content: string; role: `assistant`; toolCalls?: AiToolCall[] };
+export type AiChatAssistantMessage = {
+  content: string;
+  reasoningContent?: string;
+  role: `assistant`;
+  toolCalls?: AiToolCall[];
+};
 
 export type AiChatCompletionCreateInput = (AiChatInput | { prompt: string }) & {
   model: string;
@@ -24,7 +29,7 @@ export type AiChatCompletionSession = {
 export type AiChatInput = { messages: AiChatMessage[]; toolChoice?: AiChatToolChoice; tools?: AiToolSet };
 
 export type AiChatMessage =
-  | { content: string; role: `assistant`; toolCalls?: AiToolCall[] }
+  | { content: string; reasoningContent?: string; role: `assistant`; toolCalls?: AiToolCall[] }
   | { content: string; role: `system` | `user` }
   | { content: string; role: `tool`; toolCallId: string };
 

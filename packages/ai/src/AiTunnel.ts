@@ -40,20 +40,9 @@ const reasoningBody = (effort: AiReasoningEffort | undefined): AiReasoning => ({
   effort: effort === undefined || effort === `none` ? `none` : effort,
 });
 
-/** DeepSeek V4 may ignore `reasoning.effort: none` unless thinking is disabled explicitly. */
-const chatCompletionExtras = (model: string, reasoning: AiReasoning) => {
-  if (reasoning.effort !== `none`) {
-    return {};
-  }
-  const id = chatModelId(model);
-
-  return id.startsWith(`deepseek-`) ? { thinking: { type: `disabled` as const } } : {};
-};
-
 export const AiTunnel = {
   baseUrl,
   baseUrlDefault,
-  chatCompletionExtras,
   chatModelId,
   openRouterChatModel,
   reasoningBody,

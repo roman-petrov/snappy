@@ -24,4 +24,6 @@ export * from "./AiSse";
 
 export * from "./AiTunnel";
 
+export * from "./models";
+
 export type * from "./Types";

@@ -1,6 +1,13 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+export type AiApiAssistantMessage = {
+  content: null | string;
+  reasoning_content?: string;
+  role: `assistant`;
+  tool_calls?: AiApiToolCall[];
+};
+
 export type AiApiMessage =
-  | { content: null | string; role: `assistant`; tool_calls?: AiApiToolCall[] }
+  | AiApiAssistantMessage
   | { content: string; role: `system` | `user` }
   | { content: string; role: `tool`; tool_call_id: string };
 
@@ -28,12 +35,16 @@ export type AiReasoning = { effort: `high` | `low` | `medium` | `minimal` | `non
 
 export type AiStreamChunk = {
   choices?: {
-    delta?: {
-      content?: null | string;
-      reasoning?: null | string;
-      tool_calls?: { function?: { arguments?: string; name?: string }; id?: string; index: number }[];
-    };
+    delta?: AiStreamDelta;
     finish_reason?: null | string;
   }[];
   usage?: { cost_rub?: number };
+};
+
+export type AiStreamDelta = {
+  content?: null | string;
+  reasoning?: null | string;
+  reasoning_details?: { format?: string; index?: number; text?: string; type?: string }[];
+  role?: string;
+  tool_calls?: { function?: { arguments?: string; name?: string }; id?: string; index: number; type?: string }[];
 };
