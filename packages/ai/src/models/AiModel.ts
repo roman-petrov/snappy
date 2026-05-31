@@ -22,7 +22,6 @@ export type AiModelStreamDelta = {
 export type AiModelStreamSink = {
   pushDetailsReasoning: (details: AiModelStreamDelta[`reasoningDetails`]) => void;
   pushPlainReasoning: (reasoning: AiModelStreamDelta[`reasoning`]) => boolean;
-  pushReasoning: (text: string) => void;
 };
 
 const catalog: readonly AiModel[] = [AiModelDeepSeek];

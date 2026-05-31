@@ -12,7 +12,7 @@
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
-import type { AiApiTool, AiApiToolCall, AiChatCompletionBody, AiStreamChunk } from "./AiApi";
+import type { AiApiTool, AiChatCompletionBody, AiStreamChunk } from "./AiApi";
 import type {
   AiChatAssistantMessage,
   AiChatCompletionCreateInput,
@@ -28,7 +28,7 @@ import type {
 import { AiConstants } from "./AiConstants";
 import { AiCost } from "./AiCost";
 import { AiHttp, type AiHttpConfig } from "./AiHttp";
-import { AiMessages } from "./AiMessages";
+import { AiMessages, type ToolCallRow } from "./AiMessages";
 import { AiSse } from "./AiSse";
 import { AiTunnel } from "./AiTunnel";
 import { AiModel, type AiModelStreamSink } from "./models";
@@ -123,19 +123,7 @@ const apiToolChoice = (toolChoice: AiChatToolChoice | undefined) => {
   return { function: { name: toolChoice.name }, type: `function` as const };
 };
 
-type ToolCallBuild = { arguments: string; id: string; name: string };
-
 type ToolCallDelta = NonNullable<NonNullable<NonNullable<AiStreamChunk[`choices`]>[0][`delta`]>[`tool_calls`]>[number];
-
-const builtApiToolCalls = (toolCalls: Map<number, ToolCallBuild>): AiApiToolCall[] =>
-  [...toolCalls.entries()]
-    .toSorted(([a], [b]) => a - b)
-    .map(([, row]) => ({
-      function: { arguments: row.arguments, name: row.name },
-      id: row.id,
-      type: `function` as const,
-    }))
-    .filter(row => row.id !== ``);
 
 const completion = (
   http: AiHttpConfig,
@@ -167,17 +155,13 @@ const completion = (
     resolveDone = resolve;
   });
 
-  const enqueue = (segment: AiChatStreamSegment) => {
-    segmentOut.push(segment);
-  };
-
   const pump = async () => {
     const textCells: Partial<Record<`chat` | `reasoning`, StreamCell<string>>> = {};
     const toolRows = new Map<number, StreamCell<AiToolCall>>();
     const callsEmitted = new Set<string>();
     let content = ``;
     let reasoningContent = ``;
-    const toolCalls = new Map<number, ToolCallBuild>();
+    const toolCalls = new Map<number, ToolCallRow>();
 
     const closeTextStreams = () => {
       for (const kind of [`chat`, `reasoning`] as const) {
@@ -198,7 +182,7 @@ const completion = (
       textCells[other] = undefined;
       if (textCells[kind] === undefined) {
         textCells[kind] = streamCell<string>();
-        enqueue({ stream: textCells[kind].stream, type: kind });
+        segmentOut.push({ stream: textCells[kind].stream, type: kind });
       }
       textCells[kind].push(text);
     };
@@ -210,7 +194,7 @@ const completion = (
       const cell = streamCell<AiToolCall>();
       cell.push(call);
       cell.close();
-      enqueue({ stream: cell.stream, type: `tool` });
+      segmentOut.push({ stream: cell.stream, type: `tool` });
       callsEmitted.add(call.toolCallId);
     };
 
@@ -233,7 +217,7 @@ const completion = (
       if (row.id !== `` && toolRows.get(index) === undefined) {
         const cell = streamCell<AiToolCall>();
         toolRows.set(index, cell);
-        enqueue({ stream: cell.stream, type: `tool` });
+        segmentOut.push({ stream: cell.stream, type: `tool` });
       }
     };
 
@@ -262,7 +246,6 @@ const completion = (
 
         return false;
       },
-      pushReasoning: pushModelReasoning,
     };
 
     try {
@@ -305,20 +288,20 @@ const completion = (
       }
     }
 
-    const builtCalls = builtApiToolCalls(toolCalls);
+    const rows = [...toolCalls.entries()]
+      .toSorted(([a], [b]) => a - b)
+      .map(([, row]) => row)
+      .filter(row => row.id !== ``);
 
     const assistant = AiMessages.assistantToAi(
       modelPlugin,
       content,
       reasoningContent,
-      builtCalls.length > 0 ? builtCalls : undefined,
+      rows.length > 0 ? rows : undefined,
     );
 
-    for (const [, row] of toolCalls.entries()) {
-      if (row.id === ``) {
-        continue;
-      }
-      emitTool(AiMessages.toolCallFromRow(row));
+    for (const row of rows) {
+      emitTool(AiMessages.toolCallToAi(row));
     }
 
     resolveDone({ assistant, cost: AiCost.cost(costSlot.usage) });

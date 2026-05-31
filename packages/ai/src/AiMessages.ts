@@ -6,25 +6,24 @@ import type { AiApiAssistantMessage, AiApiMessage, AiApiToolCall } from "./AiApi
 import type { AiModel } from "./models/AiModel";
 import type { AiChatAssistantMessage, AiChatMessage, AiToolCall } from "./Types";
 
+export type ToolCallRow = { arguments: string; id: string; name: string };
+
 const hasToolCalls = (calls: AiToolCall[] | undefined): calls is AiToolCall[] => _.isArray(calls) && calls.length > 0;
 
-const toolCallToAi = (call: AiApiToolCall): AiToolCall => ({
-  argumentsJson: call.function.arguments,
-  toolCallId: call.id,
-  toolName: call.function.name,
+const toolCallToAi = (row: ToolCallRow): AiToolCall => ({
+  argumentsJson: row.arguments,
+  toolCallId: row.id,
+  toolName: row.name,
 });
 
-const toolCallFromRow = (row: { arguments: string; id: string; name: string }): AiToolCall =>
-  toolCallToAi({ function: { arguments: row.arguments, name: row.name }, id: row.id, type: `function` });
+const toolCallToApi = (row: ToolCallRow): AiApiToolCall => ({
+  function: { arguments: row.arguments, name: row.name },
+  id: row.id,
+  type: `function`,
+});
 
 const apiToolCalls = (calls: AiToolCall[]): AiApiToolCall[] =>
-  calls.map(
-    (call): AiApiToolCall => ({
-      function: { arguments: call.argumentsJson, name: call.toolName },
-      id: call.toolCallId,
-      type: `function`,
-    }),
-  );
+  calls.map(call => toolCallToApi({ arguments: call.argumentsJson, id: call.toolCallId, name: call.toolName }));
 
 const assistantToApi = (
   message: Extract<AiChatMessage, { role: `assistant` }>,
@@ -47,9 +46,9 @@ const assistantToAi = (
   modelPlugin: AiModel,
   content: string,
   reasoning: string,
-  toolCalls?: AiApiToolCall[],
+  toolCallRows?: ToolCallRow[],
 ): AiChatAssistantMessage => {
-  const calls = toolCalls?.map(toolCallToAi);
+  const calls = toolCallRows?.map(toolCallToAi);
 
   return {
     content: content.trimEnd(),
@@ -74,4 +73,4 @@ const chatToApi = (source: readonly AiChatMessage[], modelPlugin: AiModel): AiAp
     throw new Error(`ai_unsupported_message`);
   });
 
-export const AiMessages = { assistantToAi, chatToApi, toolCallFromRow };
+export const AiMessages = { assistantToAi, chatToApi, toolCallToAi };
