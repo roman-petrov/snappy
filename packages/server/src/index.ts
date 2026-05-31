@@ -6,7 +6,7 @@ export * from "./AppManifestHost";
 
 export * from "./Cookie";
 
-export * from "./ServerCache";
+export * from "./HtmlCache";
 
 export * from "./SiteSsr";
 

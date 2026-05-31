@@ -1,8 +1,9 @@
 /* eslint-disable functional/immutable-data */
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import fastifyStatic, { type FastifyStaticOptions } from "@fastify/static";
 import { _ } from "@snappy/core";
-import { App, AppManifestHost, Cookie, ServerCache, SiteSsr, Ssr } from "@snappy/server";
+import { App, AppManifestHost, Cookie, HtmlCache, SiteSsr, Ssr } from "@snappy/server";
 import { ServerApp } from "@snappy/server-app";
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import http from "node:http";
@@ -20,9 +21,18 @@ const portHttps = 443;
 const distDir = join(process.cwd(), `dist`);
 const siteRoot = join(distDir, `site`);
 const appRoot = join(distDir, `app`);
+const appIndexPath = join(appRoot, `index.html`);
 
 const handlerRef: { current: ((request: http.IncomingMessage, response: http.ServerResponse) => void) | undefined } = {
   current: undefined,
+};
+
+const hasHashInName = (path: string) => /[-.]\w{8,}\./u.test(path.split(/[/\\]/u).pop() ?? ``);
+
+const staticHeaders: NonNullable<FastifyStaticOptions[`setHeaders`]> = (response, path) => {
+  if (hasHashInName(path)) {
+    response.setHeader(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
+  }
 };
 
 const app = await App({
@@ -34,9 +44,10 @@ const app = await App({
   },
 });
 
-const cache = ServerCache();
+const htmlCache = HtmlCache();
 const ssr = Ssr();
-app.get(`/`, ssr.createCachedSsrHandler(siteRoot, cache));
+
+app.get(`/`, ssr.createCachedSsrHandler(siteRoot, htmlCache));
 
 const apkPath = join(distDir, `snappy.apk`);
 app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyReply) => {
@@ -50,64 +61,54 @@ app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyR
   await reply.send(createReadStream(apkPath));
 });
 
-const staticApp = cache.createStaticWithPrefix(appRoot, `/app`);
-const staticSite = cache.createStatic(siteRoot);
-const appIndexPath = join(appRoot, `index.html`);
-const getAppIndexKey = (locale: string, theme: string) => `app:index:${locale}:${theme}`;
+await app.register(fastifyStatic, {
+  index: false,
+  preCompressed: true,
+  prefix: `/app/assets/`,
+  root: join(appRoot, `assets`),
+  setHeaders: staticHeaders,
+});
+
+await app.register(fastifyStatic, {
+  decorateReply: false,
+  index: false,
+  preCompressed: true,
+  prefix: `/assets/`,
+  root: join(siteRoot, `assets`),
+  setHeaders: staticHeaders,
+});
+
+app.get(`/favicon.svg`, async (_request, reply) => {
+  await reply.sendFile(`favicon.svg`, siteRoot);
+});
+
+app.get(`/app/favicon.svg`, async (_request, reply) => {
+  await reply.sendFile(`favicon.svg`, appRoot);
+});
 
 AppManifestHost.fastify(app);
 
-app.get(`*`, async (request: FastifyRequest, reply: FastifyReply) => {
-  const pathname = cache.pathnameFromRequest(request);
-  const acceptEncoding = request.headers[`accept-encoding`];
+const serveAppShell = async (request: FastifyRequest, reply: FastifyReply) => {
+  if (!existsSync(appIndexPath)) {
+    reply.callNotFound();
+
+    return;
+  }
   const { locale, theme } = Cookie(request.headers.cookie);
-  const themeKey = theme ?? `system`;
+  const key = `app:index:${locale}:${theme ?? `system`}`;
+  await htmlCache.replyCached(reply, key, `text/html`, () =>
+    SiteSsr.prepareAppIndex(readFileSync(appIndexPath, `utf8`), locale, theme),
+  );
+};
 
-  const runChain = async (step: number) => {
-    if (step === 0) {
-      if (!pathname.startsWith(`/app`) || pathname === `/app` || pathname === `/app/`) {
-        await runChain(1);
-
-        return;
-      }
-      staticApp(request, reply, () => {
-        void runChain(1);
-      });
-
-      return;
-    }
-
-    if (step === 1) {
-      staticSite(request, reply, () => {
-        void runChain(2);
-      });
-
-      return;
-    }
-
-    if (step === 2) {
-      if (!/^\/app(?:\/.*)?$/u.test(pathname)) {
-        reply.callNotFound();
-
-        return;
-      }
-      if (!existsSync(appIndexPath)) {
-        reply.callNotFound();
-
-        return;
-      }
-      const appIndexKey = getAppIndexKey(locale, themeKey);
-      await cache.replyCached(reply, appIndexKey, acceptEncoding, `text/html`, () =>
-        SiteSsr.prepareAppIndex(readFileSync(appIndexPath, `utf8`), locale, theme),
-      );
-    }
-  };
-
-  await runChain(0);
+app.get(`/app`, async (_request, reply) => {
+  await reply.redirect(`/app/`);
 });
 
+app.get(`/app/`, serveAppShell);
+app.get(`/app/*`, serveAppShell);
+
 await app.ready();
-await ssr.prewarmSsr(siteRoot, cache, [`ru`, `en`]);
 
 const tls = sslCertPem !== undefined && sslKeyPem !== undefined ? { cert: sslCertPem, key: sslKeyPem } : DevCert.read();
 

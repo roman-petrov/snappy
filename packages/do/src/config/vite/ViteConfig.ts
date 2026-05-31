@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { visualizer } from "rollup-plugin-visualizer";
 import { NodePackageImporter } from "sass-embedded";
 import { type ConfigEnv, defineConfig, mergeConfig, type UserConfig } from "vite";
+import { compression } from "vite-plugin-compression2";
 import pluginSassDts from "vite-plugin-sass-dts";
 
 import { pluginFontPreload, pluginOptimizeCssModules } from "./plugins";
@@ -43,7 +44,12 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
             exportName: { replacement: fileName => `__${_.pascalCase(fileName.split(`.`)[0] ?? ``)}` },
             legacyFileFormat: true,
           }),
-          ...(isSsr ? [] : [visualizer({ filename: analyzeFilePath, gzipSize: true })]),
+          ...(isSsr
+            ? []
+            : [
+                compression({ algorithms: [`brotliCompress`, `gzip`] }),
+                visualizer({ filename: analyzeFilePath, gzipSize: true }),
+              ]),
         ],
         resolve: { dedupe: [`react`, `react-dom`, `react-router-dom`] },
       },
