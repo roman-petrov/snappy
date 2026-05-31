@@ -107,7 +107,7 @@ const runLeaf = async (root: string, name: string, options: RunLeafOptions): Pro
               if (!verbose && (name === `server:frontend:dev` || name === `server:prod`)) {
                 const origin = `https://${Config.host}`;
                 Console.log(
-                  `\n\n🌐 ${Terminal.yellow(`Site:`)} ${Terminal.blue(origin)}\n💻 ${Terminal.yellow(`App:`)} ${Terminal.blue(`${origin}/app`)}\n`,
+                  `\n\n🌐 ${Terminal.yellow(`Site:`)} ${Terminal.blue(origin)}\n💻 ${Terminal.yellow(` App:`)} ${Terminal.blue(`${origin}/app`)}\n`,
                 );
               }
               if (run.background === true) {
