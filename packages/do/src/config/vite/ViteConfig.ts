@@ -47,7 +47,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
           ...(isSsr
             ? []
             : [
-                compression({ algorithms: [`brotliCompress`, `gzip`] }),
+                compression({ algorithms: [`brotliCompress`] }),
                 visualizer({ filename: analyzeFilePath, gzipSize: true }),
               ]),
         ],
