@@ -51,8 +51,8 @@ $-palette-by-mode: (
   $semantic-tail: map.get($p, semantic-tail);
 
   #{-var(text)}: #{$text};
-  #{-var(surface)}: color-mix(in oklch, #{$surface-tint} 90%, #{$primary-color} 10%);
-  #{-var(outline)}: color-mix(in oklch, #{$outline-tint} 90%, #{$primary-color} 10%);
+  #{-var(surface)}: color-mix(in oklch, #{$surface-tint} 94%, #{$primary-color} 6%);
+  #{-var(outline)}: color-mix(in oklch, #{$outline-tint} 94%, #{$primary-color} 6%);
   #{-var(primary)}: -oklch("from #{$primary-color} #{$primary-tail}");
 
   @each $name, $hue in $-semantic-hue {
