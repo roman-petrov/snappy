@@ -21,16 +21,6 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
 
     return mergeConfig(
       {
-        build: {
-          rollupOptions: {
-            output: isSsr
-              ? undefined
-              : {
-                  chunkFileNames: `assets/[name]-[hash].js`,
-                  codeSplitting: { groups: [{ name: `vendor`, test: /node_modules|rolldown/u }] },
-                },
-          },
-        },
         css: {
           modules: { localsConvention: `camelCaseOnly` },
           preprocessorOptions: { scss: { importers: [new NodePackageImporter()] } },
