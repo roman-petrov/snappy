@@ -72,6 +72,29 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - 🖌️ [Stylelint](https://stylelint.io/)
 - 📦 [Zod](https://zod.dev/)
 
+## 📎 Service links
+
+### 📊 Repository & monitoring
+
+- [GitHub](https://github.com/roman-petrov/snappy/)
+- [PageSpeed Insights](https://pagespeed.web.dev/)
+- [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html)
+
+### 🎛️ AI consoles
+
+- [AITunnel panel](https://aitunnel.ru/panel/)
+- [ProxyAPI console](https://console.proxyapi.ru/)
+
+### 🌐 Hosting & DNS
+
+- [Reg.ru account](https://www.reg.ru/user/account/)
+- [Reg.ru cloud](https://cloud.reg.ru/panel/)
+- [ISPmanager](https://dnsadmin.hosting.reg.ru/manager/ispmgr)
+
+### 💳 Payments
+
+- [YooKassa](https://yookassa.ru/)
+
 ## 🤖 AI (recommended)
 
 - 🎮 [MSI Afterburner](https://www.msi.com/Landing/afterburner)
