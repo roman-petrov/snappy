@@ -4,15 +4,17 @@ import type {
   StaticFormAnswersOf,
   StaticFormAnswerValue,
   StaticFormField,
+  StaticFormFieldByKind,
   StaticFormPlan,
 } from "@snappy/snappy-sdk";
 
+import { _ } from "@snappy/core";
 import { FileSelect, Switch, Tabs, TextInput } from "@snappy/ui";
 import { type ComponentProps, type ElementType, useRef, useState } from "react";
 
 import type { StaticFormProps } from "./StaticForm";
 
-type FieldByKind<TKind extends FieldKind> = Extract<StaticFormField, { kind: TKind }>;
+type FieldByKind<TKind extends FieldKind> = StaticFormFieldByKind<TKind>;
 
 type FieldConfig<TKind extends FieldKind> = {
   component: ElementType;
@@ -30,8 +32,11 @@ type FieldKind = StaticFormField[`kind`];
 
 type ValueByKind<TKind extends FieldKind> = StaticFormAnswerValue<FieldByKind<TKind>>;
 
+const stringDefault = (value: StaticFormField[`default`], fallback: string) => (_.isString(value) ? value : fallback);
+const stringListDefault = (value: StaticFormField[`default`]) => (_.isArray(value) ? value.filter(_.isString) : []);
+
 const tabOptions = (field: FieldByKind<`multiple_choice`> | FieldByKind<`single_choice`>) =>
-  field.options.map(option => {
+  (field.options ?? []).map(option => {
     const label = `${option.label.emoji} ${option.label.text}`;
 
     return { label, title: label, value: option.value };
@@ -46,7 +51,7 @@ const fieldConfig = <TKind extends FieldKind, TComponent extends ElementType>(co
 const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
   binary_choice: fieldConfig({
     component: Switch,
-    default: field => field.default ?? false,
+    default: field => (_.isBoolean(field.default) ? field.default : false),
     props: ({ field, setField, value }) => ({
       checked: value,
       label: `${field.label.emoji} ${field.label.text}`,
@@ -61,23 +66,23 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
       fileName: value?.name ?? ``,
       hint: field.hint,
       onChange: files => setField(field.id, files[0]),
-      pickLabel: field.pickLabel,
+      pickLabel: field.pickLabel ?? ``,
     }),
   }),
   multiple_choice: fieldConfig({
     component: Tabs,
-    default: field => field.default ?? [],
+    default: field => stringListDefault(field.default),
     props: ({ field, setField, value }) => ({
       isActive: item => value.includes(item),
       onChange: clicked =>
         setField(field.id, value.includes(clicked) ? value.filter(item => item !== clicked) : [...value, clicked]),
       options: tabOptions(field),
-      value: field.options[0]?.value ?? ``,
+      value: field.options?.[0]?.value ?? ``,
     }),
   }),
   single_choice: fieldConfig({
     component: Tabs,
-    default: field => field.default ?? field.options[0]?.value ?? ``,
+    default: field => stringDefault(field.default, field.options?.[0]?.value ?? ``),
     props: ({ field, setField, value }) => ({
       onChange: selected => setField(field.id, selected),
       options: tabOptions(field),
@@ -86,7 +91,7 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
   }),
   text_input: fieldConfig({
     component: TextInput,
-    default: field => field.default ?? ``,
+    default: field => stringDefault(field.default, ``),
     props: ({ field, setField, value }) => ({
       maxLines: 8,
       onChange: text => setField(field.id, text),

@@ -1,8 +1,10 @@
 import { _ } from "@snappy/core";
 
-import type { StaticFormField, StaticFormPlan } from "./Schema";
+import type { StaticFormFieldByKind, StaticFormFieldKind, StaticFormPlan } from "./Schema";
 
 export type StaticAgentPromptInput = { answers: Record<string, unknown>; mainPrompt?: string; plan: StaticFormPlan };
+
+type NonTextFieldKind = Exclude<StaticFormFieldKind, `file_input` | `text_input`>;
 
 export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentPromptInput) => {
   const head = (mainPrompt ?? ``).trim();
@@ -14,10 +16,7 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
     return value === undefined || value === `` ? fallback : value;
   };
 
-  const nonTextLine = (
-    field: Exclude<StaticFormField, { kind: `file_input` } | { kind: `text_input` }>,
-    raw: unknown,
-  ) => {
+  const nonTextLine = (field: StaticFormFieldByKind<NonTextFieldKind>, raw: unknown) => {
     switch (field.kind) {
       case `binary_choice`: {
         return _.isBoolean(raw)
@@ -27,7 +26,7 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
       case `multiple_choice`: {
         const selected = new Set(_.isArray(raw) ? raw.filter(_.isString) : []);
 
-        const labels = field.options
+        const labels = (field.options ?? [])
           .filter(option => selected.has(option.value))
           .map(option => promptValue(option.prompt, option.label.text));
 
@@ -38,7 +37,7 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
         if (value === ``) {
           return undefined;
         }
-        const selectedOption = field.options.find(option => option.value === value);
+        const selectedOption = (field.options ?? []).find(option => option.value === value);
 
         const label =
           selectedOption === undefined ? value : promptValue(selectedOption.prompt, selectedOption.label.text);
@@ -51,21 +50,21 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
     }
   };
 
-  const textLine = (field: Extract<StaticFormField, { kind: `text_input` }>, raw: unknown) => {
+  const textLine = (field: StaticFormFieldByKind<`text_input`>, raw: unknown) => {
     const value = raw === undefined || raw === null ? `` : _.isString(raw) ? raw.trim() : ``;
 
     return value === `` ? undefined : labelLine(field.label.text, JSON.stringify(value));
   };
 
   const valueFields = plan.fields.filter(
-    (field): field is Exclude<StaticFormField, { kind: `file_input` } | { kind: `text_input` }> =>
+    (field): field is StaticFormFieldByKind<NonTextFieldKind> =>
       field.kind !== `text_input` && field.kind !== `file_input`,
   );
 
   const lines = [
     ...valueFields.map(field => nonTextLine(field, answers[field.id])),
     ...plan.fields
-      .filter((field): field is Extract<StaticFormField, { kind: `text_input` }> => field.kind === `text_input`)
+      .filter((field): field is StaticFormFieldByKind<`text_input`> => field.kind === `text_input`)
       .map(field => textLine(field, answers[field.id])),
   ]
     .filter((line): line is string => line !== undefined)
