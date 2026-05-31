@@ -7,5 +7,7 @@ declare const __Color: {
   readonly surface: "surface";
   readonly text: "text";
   readonly outline: "outline";
+  readonly rim: "rim";
+  readonly rimWeight: "rimWeight";
 };
 export default __Color;

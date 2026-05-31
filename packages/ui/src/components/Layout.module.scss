@@ -31,7 +31,7 @@
     inset: 0;
     z-index: -1;
     content: "";
-    border-bottom: 1px solid color.outline();
+    border-bottom: 1px solid glass.border(color.surface());
     opacity: 0;
     animation: header-glass 1ms linear both;
     animation-timeline: --layout-scroll;

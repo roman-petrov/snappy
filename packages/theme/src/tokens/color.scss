@@ -33,3 +33,11 @@
 @function outline() {
   @return -color("outline");
 }
+
+@function rim() {
+  @return -color("rim");
+}
+
+@function rim-weight() {
+  @return -color("rim-weight");
+}
