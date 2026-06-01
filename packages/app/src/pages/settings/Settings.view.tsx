@@ -23,7 +23,7 @@ export const SettingsView = ({
   toggleFog,
   typeWriterSpeed,
 }: SettingsViewProps) => (
-  <Page title={t(`settings.root.title`)}>
+  <Page back title={t(`settings.root.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.root.systemGroup`)}>
         <SettingsCardRow
