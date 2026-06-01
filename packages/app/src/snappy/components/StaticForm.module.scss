@@ -1,5 +1,11 @@
 @use "pkg:@snappy/theme/tokens/space";
 
+.card {
+  width: 100%;
+  min-width: 0;
+  padding: space.md();
+}
+
 .root {
   display: flex;
   flex-direction: column;
