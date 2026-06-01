@@ -1,0 +1,16 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/icon-size";
+
+.root {
+  @include primitives.circle(icon-size.sm());
+
+  border: 2px solid currentcolor;
+  border-top-color: transparent;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,13 +1,3 @@
-@use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/tokens/radius";
-@use "pkg:@snappy/theme/tokens/space";
-
 .root {
-  @include focus($radius: radius.lg());
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: space.xs() space.sm();
   font-variant-numeric: tabular-nums;
 }

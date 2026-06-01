@@ -12,7 +12,7 @@ export const StaticFormView = ({ fields, submit }: StaticFormViewProps) => (
   <Card cn={styles.card}>
     <div className={styles.root}>
       {fields.map(field => (
-        <StaticFormField key={field.id} cn={styles.field} label={field.label}>
+        <StaticFormField cn={styles.field} key={field.id} label={field.label}>
           <field.Component {...field.props} />
         </StaticFormField>
       ))}

@@ -157,7 +157,6 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
           key,
           ...(entry.type === `status` ? { hideOnSuccess: true as const } : {}),
           text: entry.text,
-          typography: `captionSm`,
         });
       }
 

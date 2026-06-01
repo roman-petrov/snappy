@@ -1,4 +1,4 @@
-import { TabButton } from "./TabButton";
+import { Chip } from "./Chip";
 import styles from "./Tabs.module.scss";
 
 export type TabsProps<T extends string> = {
@@ -12,8 +12,8 @@ export type TabsProps<T extends string> = {
 export const Tabs = <T extends string>({ disabled = false, isActive, onChange, options, value }: TabsProps<T>) => (
   <div className={styles.tabs}>
     {options.map(option => (
-      <TabButton
-        active={isActive?.(option.value) ?? option.value === value}
+      <Chip
+        color={(isActive?.(option.value) ?? option.value === value) ? `accent` : `soft`}
         disabled={disabled}
         key={option.value}
         onClick={() => onChange(option.value)}

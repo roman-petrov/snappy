@@ -8,6 +8,8 @@ export * from "./Card";
 
 export * from "./CardButton";
 
+export * from "./Chip";
+
 export * from "./context-menu";
 
 export * from "./FileSelect";
@@ -38,13 +40,13 @@ export * from "./RichCard";
 
 export * from "./SafeArea";
 
+export * from "./Spinner";
+
 export * from "./Switch";
 
 export * from "./SwitchDisplay";
 
 export * from "./SystemButtons";
-
-export * from "./TabButton";
 
 export * from "./Tabs";
 

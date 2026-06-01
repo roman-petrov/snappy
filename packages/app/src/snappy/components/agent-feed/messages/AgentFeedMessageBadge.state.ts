@@ -5,12 +5,7 @@ import type { AgentFeedMessageBadgeProps } from "./AgentFeedMessageBadge";
 
 export type AgentFeedMessageBadgeState = { status: `done` | `error` | `running`; text: string };
 
-export const useAgentFeedMessageBadgeState = ({
-  done,
-  hideOnSuccess = false,
-  text,
-  ...textProps
-}: AgentFeedMessageBadgeProps) => {
+export const useAgentFeedMessageBadgeState = ({ done, hideOnSuccess = false, text }: AgentFeedMessageBadgeProps) => {
   const [state, setState] = useState<AgentFeedMessageBadgeState>({ status: `running`, text });
 
   useAsyncEffect(async () => {
@@ -29,5 +24,5 @@ export const useAgentFeedMessageBadgeState = ({
     }
   }, [done, hideOnSuccess, text]);
 
-  return { hideOnSuccess, message: state.text, status: state.status, textProps };
+  return { hideOnSuccess, message: state.text, status: state.status };
 };

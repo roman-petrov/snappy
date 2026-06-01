@@ -1,11 +1,10 @@
-import type { TextProps } from "@snappy/ui";
-
 import { useAgentFeedMessageBadgeState } from "./AgentFeedMessageBadge.state";
 import { AgentFeedMessageBadgeView } from "./AgentFeedMessageBadge.view";
 
-export type AgentFeedMessageBadgeProps = TextProps & {
+export type AgentFeedMessageBadgeProps = {
   done: PromiseWithResolvers<{ label: string }>;
   hideOnSuccess?: boolean;
+  text: string;
 };
 
 export const AgentFeedMessageBadge = (props: AgentFeedMessageBadgeProps) => (
