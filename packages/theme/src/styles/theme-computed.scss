@@ -10,30 +10,30 @@
   @return string.unquote("oklch(#{$body})");
 }
 
-$-neutral-hue: 268deg;
+$-neutral-hue: 266deg;
 $-semantic-hue: (
-  error: 29deg,
-  warning: 82deg,
-  success: 155deg,
-  info: 252deg,
+  error: 25deg,
+  warning: 78deg,
+  success: 152deg,
+  info: 228deg,
 );
 $-palette-by-mode: (
   light: (
-    text: -oklch("24% 0.012 #{$-neutral-hue}"),
-    surface-tint: -oklch("98.5% 0.004 #{$-neutral-hue}"),
-    outline-tint: -oklch("81% 0.024 #{$-neutral-hue}"),
+    text: -oklch("23% 0.014 #{$-neutral-hue}"),
+    surface-tint: -oklch("98.2% 0.006 #{$-neutral-hue}"),
+    outline-tint: -oklch("53% 0.072 #{$-neutral-hue}"),
     rim: -oklch("100% 0 0"),
     rim-weight: 1,
-    primary-tail: "l c h",
-    semantic-tail: "l c",
+    primary-tail: "min(0.74, calc(l + 0.08)) c h",
+    semantic-tail: "min(0.50, calc(l - 0.05)) max(0.14, c)",
   ),
   dark: (
-    text: -oklch("95% 0.01 #{$-neutral-hue}"),
-    surface-tint: -oklch("17% 0.018 #{$-neutral-hue}"),
-    outline-tint: -oklch("44% 0.035 #{$-neutral-hue}"),
-    rim-weight: 0.72,
-    primary-tail: "min(0.92, calc(l + 0.14)) min(0.14, calc(c * 1.05)) h",
-    semantic-tail: "min(0.87, calc(l + 0.12)) c",
+    text: -oklch("94% 0.012 #{$-neutral-hue}"),
+    surface-tint: -oklch("15% 0.02 #{$-neutral-hue}"),
+    outline-tint: -oklch("52% 0.042 #{$-neutral-hue}"),
+    rim-weight: 0.76,
+    primary-tail: "min(0.52, calc(l - 0.03)) min(0.16, calc(c * 1.06)) h",
+    semantic-tail: "min(0.72, calc(l + 0.04)) c",
   ),
 );
 

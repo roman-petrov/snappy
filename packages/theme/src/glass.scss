@@ -3,12 +3,12 @@
 @use "pkg:@snappy/theme/tokens/color";
 
 $-blur: r(22);
-$-contrast: 1.06;
-$-fill: 0.41;
-$-outline: 0.4;
-$-saturate: 1.18;
-$-rim-white: 0.66;
-$-rim-tone: 0.34;
+$-contrast: 1.05;
+$-fill: 0.44;
+$-outline: 0.42;
+$-saturate: 1.14;
+$-rim-white: 0.62;
+$-rim-tone: 0.38;
 
 @mixin -paint($background, $border-color, $backdrop, $no-border: false) {
   background-color: $background;
