@@ -19,7 +19,7 @@ body {
   min-height: 100dvh;
   margin: 0;
   color: color.text();
-  background: color.surface();
+  background: color.backdrop();
   transition:
     color motion.default(),
     background-color motion.default();

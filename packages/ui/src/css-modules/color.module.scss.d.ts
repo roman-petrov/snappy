@@ -4,6 +4,7 @@ declare const __Color: {
   readonly info: "info";
   readonly success: "success";
   readonly warning: "warning";
+  readonly backdrop: "backdrop";
   readonly surface: "surface";
   readonly text: "text";
   readonly outline: "outline";

@@ -6,7 +6,7 @@
 }
 
 @mixin surface {
-  @include surface-core.compose(color.surface(), color.text());
+  @include surface-core.compose(color-mix(in oklch, color.rim() 18%, color.surface()), color.text());
 }
 
 @mixin primary {

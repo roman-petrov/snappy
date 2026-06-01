@@ -20,6 +20,7 @@ $-semantic-hue: (
 $-palette-by-mode: (
   light: (
     text: -oklch("23% 0.014 #{$-neutral-hue}"),
+    backdrop-tint: -oklch("93.5% 0.008 #{$-neutral-hue}"),
     surface-tint: -oklch("98.2% 0.006 #{$-neutral-hue}"),
     outline-tint: -oklch("53% 0.072 #{$-neutral-hue}"),
     rim: -oklch("100% 0 0"),
@@ -29,7 +30,8 @@ $-palette-by-mode: (
   ),
   dark: (
     text: -oklch("94% 0.012 #{$-neutral-hue}"),
-    surface-tint: -oklch("15% 0.02 #{$-neutral-hue}"),
+    backdrop-tint: -oklch("5.5% 0.024 #{$-neutral-hue}"),
+    surface-tint: -oklch("26% 0.028 #{$-neutral-hue}"),
     outline-tint: -oklch("52% 0.042 #{$-neutral-hue}"),
     rim-weight: 0.76,
     primary-tail: "min(0.52, calc(l - 0.03)) min(0.16, calc(c * 1.06)) h",
@@ -48,6 +50,7 @@ $-palette-by-mode: (
   }
 
   $text: map.get($p, text);
+  $backdrop-tint: map.get($p, backdrop-tint);
   $surface-tint: map.get($p, surface-tint);
   $outline-tint: map.get($p, outline-tint);
   $rim: map.get($p, rim);
@@ -56,6 +59,7 @@ $-palette-by-mode: (
   $semantic-tail: map.get($p, semantic-tail);
 
   #{-var(text)}: #{$text};
+  #{-var(backdrop)}: color-mix(in oklch, #{$backdrop-tint} 94%, #{$primary-color} 6%);
   #{-var(surface)}: color-mix(in oklch, #{$surface-tint} 94%, #{$primary-color} 6%);
   #{-var(outline)}: color-mix(in oklch, #{$outline-tint} 94%, #{$primary-color} 6%);
 

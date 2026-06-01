@@ -22,6 +22,10 @@
   @return -color("warning");
 }
 
+@function backdrop() {
+  @return -color("backdrop");
+}
+
 @function surface() {
   @return -color("surface");
 }
