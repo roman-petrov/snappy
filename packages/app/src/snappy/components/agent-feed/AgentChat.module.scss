@@ -1,7 +1,6 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
-.root,
 .root-idle {
   display: flex;
   flex-direction: column;
@@ -9,8 +8,12 @@
 }
 
 .root {
+  display: flex;
   flex: 1;
+  flex-direction: column;
+  width: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
 .action-row {

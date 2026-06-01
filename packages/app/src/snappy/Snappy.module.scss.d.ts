@@ -1,8 +1,8 @@
 declare const __Snappy: {
   readonly shell: "shell";
-  readonly shellDocked: "shellDocked";
+  readonly shellStarted: "shellStarted";
   readonly composer: "composer";
-  readonly composerDocked: "composerDocked";
+  readonly composerStarted: "composerStarted";
   readonly composerInner: "composerInner";
 };
 export default __Snappy;

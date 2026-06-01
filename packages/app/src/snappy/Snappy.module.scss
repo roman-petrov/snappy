@@ -8,11 +8,12 @@
   flex: 1;
   flex-direction: column;
   width: 100%;
-  min-height: calc(100dvh - #{r(128)});
+  min-height: 0;
 }
 
-.shell-docked {
+.shell-started {
   padding-bottom: calc(#{space.sm()} + #{r(92)});
+  overflow: hidden;
 }
 
 .composer {
@@ -31,13 +32,13 @@
     transform motion.soft();
 }
 
-.composer-docked {
+.composer-started {
   bottom: 0;
   transform: translateY(0);
 }
 
 @include desktop {
-  .composer-docked {
+  .composer-started {
     padding-bottom: space.md();
   }
 }
