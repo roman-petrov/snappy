@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable id-length */
 export const en = {
   cta: { button: `Open web app`, lead: `Sign in and process your first text in a minute.`, title: `💬 Try Snappy` },
   examples: {

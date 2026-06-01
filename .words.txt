@@ -23,6 +23,7 @@ clusterize
 nprobes
 xhigh
 shiki
+culori
 
 // Ai Models
 deepseek

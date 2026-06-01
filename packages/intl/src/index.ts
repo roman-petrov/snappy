@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/prevent-abbreviations */
-/* eslint-disable id-length */
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */

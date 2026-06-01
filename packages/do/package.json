@@ -41,6 +41,7 @@
     "@vitejs/plugin-react": "^6.0.2",
     "@vitest/eslint-plugin": "^1.6.18",
     "cspell": "^10.0.1",
+    "culori": "^4.0.2",
     "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
@@ -80,6 +81,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/culori": "^4.0.1",
     "@types/express": "^5.0.6"
   }
 }

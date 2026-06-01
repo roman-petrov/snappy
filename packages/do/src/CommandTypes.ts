@@ -1,9 +1,8 @@
-/* eslint-disable unicorn/prevent-abbreviations */
-export type CmdDefinition =
-  | { children: readonly string[]; description: string; interactive?: true; label: string; mcp?: false }
-  | { description: string; interactive?: true; label: string; mcp?: false; run: CmdRunDef };
+export type CommandDefinition =
+  | { children: readonly string[]; description: string; interactive?: true; label: string }
+  | { description: string; interactive?: true; label: string; run: CommandRun };
 
-export type CmdRunDef =
+export type CommandRun =
   | { args: string[]; tool: string }
   | {
       background?: true;

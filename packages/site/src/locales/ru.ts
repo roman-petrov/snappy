@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/filename-case */
-/* eslint-disable id-length */
 export const ru = {
   cta: {
     button: `Открыть веб-приложение`,

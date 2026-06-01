@@ -69,8 +69,7 @@ Confirm `bun.lock` updated and package no longer outdated. No application code i
 
 ### 5️⃣ Verify
 
-Do MCP `workflow_run` (read `do://instructions`; not terminal scripts): `tsc`, then `test`. On failure — include output
-in report; pause until user decides.
+Do MCP `workflow_run`: `tsc`, then `test`. On failure — include output in report; pause until user decides.
 
 ---
 

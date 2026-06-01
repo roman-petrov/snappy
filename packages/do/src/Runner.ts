@@ -10,7 +10,7 @@ import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
 import { Build } from "./Build";
-import { Commands } from "./Commands";
+import { type CommandName, Commands } from "./Commands";
 import { Feature } from "./Feature";
 
 const ok = `✓`;
@@ -24,14 +24,12 @@ type RunResult = { exitCode: number; message: string };
 
 type TreeNode = { children: TreeNode[]; name: string };
 
-const tree = (name: string): TreeNode | undefined => {
+const tree = (name: CommandName): TreeNode => {
   const definition = Commands.byName(name);
 
-  return definition === undefined
-    ? undefined
-    : `run` in definition
-      ? { children: [], name }
-      : { children: definition.children.map(tree).filter((node): node is TreeNode => node !== undefined), name };
+  return `run` in definition
+    ? { children: [], name }
+    : { children: definition.children.filter(Commands.has).map(tree), name };
 };
 
 type TreeContext = { connector: string; prefix: string };
@@ -57,10 +55,10 @@ type RunLeafOptions = {
   withoutTree?: boolean;
 };
 
-const runLeaf = async (root: string, name: string, options: RunLeafOptions): Promise<RunResult> => {
+const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
   const definition = Commands.byName(name);
-  if (definition === undefined || !(`run` in definition)) {
+  if (!(`run` in definition)) {
     return { exitCode: 1, message: `Unknown: ${name}` };
   }
 
@@ -166,12 +164,9 @@ type RunNodeOptions = {
   verbose: boolean;
 };
 
-const runNode = async (root: string, name: string, options: RunNodeOptions): Promise<RunResult> => {
+const runNode = async (root: string, name: CommandName, options: RunNodeOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, isRoot, mcp = false, verbose } = options;
   const definition = Commands.byName(name);
-  if (definition === undefined) {
-    return { exitCode: 1, message: `Unknown: ${name}` };
-  }
 
   if (`run` in definition) {
     return runLeaf(root, name, { backgroundProcesses, context, mcp, verbose, withoutTree: isRoot === true });
@@ -185,8 +180,9 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
 
   const childPrefix = context.prefix + (context.connector === end ? `   ` : `${bar}  `);
   const childIndent = isRoot === true ? context.prefix : childPrefix;
-  for (const [index, child] of children.entries()) {
-    const childConnector = index === children.length - 1 ? end : br;
+  const childNames = children.filter(Commands.has);
+  for (const [index, child] of childNames.entries()) {
+    const childConnector = index === childNames.length - 1 ? end : br;
 
     const result = await runNode(root, child, {
       backgroundProcesses,
@@ -203,33 +199,23 @@ const runNode = async (root: string, name: string, options: RunNodeOptions): Pro
   return { exitCode: 0, message: `` };
 };
 
-const resolveCommand = (name: string): { error: string; ok: false } | { name: string; ok: true } =>
-  Commands.byName(name) === undefined ? { error: `Unknown command: ${name}`, ok: false } : { name, ok: true };
+const resolveCommand = (name: string): { error: string; ok: false } | { name: CommandName; ok: true } =>
+  Commands.has(name) ? { name, ok: true } : { error: `Unknown command: ${name}`, ok: false };
 
 const run = async (
   root: string,
-  name: string,
+  name: CommandName,
   { mcp, verbose: verboseOpt }: { mcp?: boolean; verbose?: boolean } = {},
-): Promise<RunResult> => {
-  if (mcp === true && Commands.mcpExcluded(name)) {
-    return { exitCode: 1, message: `Command "${name}" is not available via MCP. Run it in the terminal.` };
-  }
-
+) => {
   const definition = Commands.byName(name);
-  const verbose = verboseOpt ?? (mcp === true || definition?.interactive === true);
+  const verbose = verboseOpt ?? (mcp === true || definition.interactive === true);
   const node = tree(name);
-  if (node === undefined) {
-    return { exitCode: 1, message: `Unknown command: ${name}` };
-  }
-
   const isMcp = mcp === true;
   const start = _.now();
   const withTree = node.children.length > 0;
   if (!isMcp && !verbose && withTree) {
     Console.log(`\n`);
-    if (definition !== undefined) {
-      Console.logLine(Terminal.cyan(definition.label));
-    }
+    Console.logLine(Terminal.cyan(definition.label));
   }
 
   const backgroundProcesses: ChildProcess[] = [];
