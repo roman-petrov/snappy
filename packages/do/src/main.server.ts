@@ -4,8 +4,12 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { Console } from "@snappy/node";
 
 import { McpTools } from "./mcp";
+import { McpInstructions } from "./mcp/McpInstructions";
 
-const server = new McpServer({ name: `do`, version: `0.0.0` }, { capabilities: { tools: {} } });
+const server = new McpServer(
+  { name: `do`, version: `0.0.0` },
+  { capabilities: { tools: {} }, instructions: McpInstructions },
+);
 
 McpTools.register(server);
 
