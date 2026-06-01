@@ -1,3 +1,4 @@
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
 
 .card {
@@ -9,12 +10,17 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: space.md();
+}
+
+.field + .field,
+.field + .actions {
+  padding-top: space.md();
+  margin-top: space.md();
+  border-top: 1px solid color.outline();
 }
 
 .actions {
   display: flex;
   gap: space.xs();
   justify-content: flex-end;
-  margin-top: space.sm();
 }
