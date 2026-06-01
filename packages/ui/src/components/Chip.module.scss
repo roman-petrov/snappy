@@ -19,6 +19,7 @@ $-half-height: calc(#{$-height} / 2);
   width: fit-content;
   max-width: 100%;
   min-height: $-height;
+  padding-block: calc((#{$-height} - #{icon-size.md()}) / 2);
   padding-inline: space.sm();
   vertical-align: middle;
   text-align: center;
