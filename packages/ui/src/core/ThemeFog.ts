@@ -17,8 +17,6 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
   let fogHost: HTMLElement | undefined;
   let stopFog: Action | undefined;
   const hostClass = styles.host;
-  const fogClass = styles.fog;
-  const gridClass = styles.grid;
 
   const attachFogHost = () => {
     if (fogHost?.isConnected === true) {
@@ -39,7 +37,7 @@ export const ThemeFog = (resolveTheme: () => ResolvedTheme) => {
     stop?.();
 
     const element = attachFogHost();
-    element.className = `${hostClass} ${$fog() ? fogClass : gridClass}`;
+    element.className = hostClass;
     element.replaceChildren();
 
     if (!$fog()) {
