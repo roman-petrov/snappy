@@ -1,9 +1,13 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/tokens/icon-size";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/primitives";
+
+$-height: r(32);
+$-icon: icon-size.md();
+$-spinner: icon-size.sm();
 
 .badge {
   display: inline-flex;
@@ -11,27 +15,23 @@
   align-items: center;
   width: fit-content;
   max-width: 100%;
-  padding: space.sm();
+  min-height: $-height;
+  padding-inline: space.sm();
   vertical-align: middle;
-}
-
-.badge-running {
-  animation: badge-running-pulse 2s ease-in-out infinite;
+  border-radius: calc(#{$-height} / 2);
 }
 
 .status {
+  @include primitives.square($-icon);
+
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-}
-
-.message {
-  flex: 0 1 auto;
-  min-width: 0;
+  justify-content: center;
 }
 
 .spinner {
-  @include primitives.circle(r(14));
+  @include primitives.circle($-spinner);
 
   border: 2px solid color.primary();
   border-top-color: transparent;
@@ -42,27 +42,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: r(16);
+  width: $-icon;
+  font-size: r(18);
+  line-height: 1;
   text-align: center;
 }
 
 @keyframes spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes badge-running-pulse {
-  0%,
-  100% {
-    box-shadow:
-      elevation.level(2),
-      0 0 0 0 color.primary();
-  }
-
-  50% {
-    box-shadow:
-      elevation.level(2),
-      0 0 0 r(5) color.primary();
   }
 }

@@ -21,10 +21,8 @@ export const AgentFeedMessageBadgeView = ({
     <span
       className={_.cn(
         styles.badge,
-        $.radius(`lg`),
         $.elevation(`e2`),
         status === `running` ? $.surface(`primary`) : status === `done` ? $.surface(`success`) : $.surface(`error`),
-        status === `running` ? styles.badgeRunning : undefined,
       )}
     >
       <span className={styles.status}>
@@ -36,7 +34,7 @@ export const AgentFeedMessageBadgeView = ({
           <span className={styles.icon}>❌</span>
         )}
       </span>
-      <Text {...textProps} as="span" text={message} typography="bodyBold" />
+      <Text {...textProps} as="span" text={message} typography="captionSm" />
     </span>
   );
 };
