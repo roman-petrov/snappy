@@ -1,5 +1,4 @@
 import { _ } from "@snappy/core";
-import { SafeArea } from "@snappy/ui";
 
 import type { useSnappyState } from "./Snappy.state";
 
@@ -14,11 +13,7 @@ export const SnappyView = ({ chatProps, composer, started }: SnappyViewProps) =>
     <div className={_.cn(styles.shell, started && styles.shellStarted)}>
       <AgentChat {...chatProps} />
       <div className={_.cn(styles.composer, started && styles.composerStarted)}>
-        <SafeArea bottom={started}>
-          <div className={styles.composerInner}>
-            <Composer onChange={composer.setDraft} onSend={composer.onSend} value={composer.draft} />
-          </div>
-        </SafeArea>
+        <Composer onChange={composer.setDraft} onSend={composer.onSend} value={composer.draft} />
       </div>
     </div>
   </Page>

@@ -11,10 +11,9 @@
 }
 
 .wrap {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
-}
-
-.scroll {
   scroll-behavior: smooth;
 }
 
@@ -81,6 +80,17 @@
   min-height: 100%;
   padding: space.lg() space.lg() space.x2xl();
   margin: 0 auto;
+}
+
+.wrap-app::after {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: calc(env(safe-area-inset-bottom, 0) + #{space.md()});
+  pointer-events: none;
+  content: "";
+  background-image: linear-gradient(to top, #{color.backdrop()}, transparent);
 }
 
 @include mobile {

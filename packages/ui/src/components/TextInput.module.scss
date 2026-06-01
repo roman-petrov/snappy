@@ -24,18 +24,18 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
 .wrap-focused {
   .input-wrap {
     @include surface.primary;
-    @include elevation.e2;
+    @include elevation.e3;
   }
 
   .input-wrap-recording {
     @include surface.error;
-    @include elevation.e2;
+    @include elevation.e3;
   }
 }
 
 .input-wrap {
   @include surface.surface;
-  @include elevation.e1;
+  @include elevation.e2;
 
   display: flex;
   gap: $-icon-gap;

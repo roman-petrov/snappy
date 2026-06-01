@@ -3,6 +3,10 @@
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
 
+$-composer-edge: r(3);
+$-composer-height: calc(#{tokens.icon-button-touch-size()} + #{$-composer-edge} * 2);
+$-composer-bottom: max(#{space.md()}, env(safe-area-inset-bottom, 0));
+
 .shell {
   display: flex;
   flex: 1;
@@ -12,7 +16,7 @@
 }
 
 .shell-started {
-  padding-bottom: calc(#{space.sm()} + #{r(92)});
+  padding-bottom: calc(#{$-composer-height} + #{$-composer-bottom});
   overflow: hidden;
 }
 
@@ -30,19 +34,18 @@
   transition:
     bottom motion.soft(),
     transform motion.soft();
+
+  > * {
+    width: 100%;
+    max-width: tokens.content-width();
+    margin-inline: auto;
+    pointer-events: auto;
+  }
 }
 
 .composer-started {
-  bottom: 0;
-  padding-bottom: space.md();
+  bottom: $-composer-bottom;
   transform: translateY(0);
-}
-
-.composer-inner {
-  width: 100%;
-  max-width: tokens.content-width();
-  margin-inline: auto;
-  pointer-events: auto;
 }
 
 @include mobile {
