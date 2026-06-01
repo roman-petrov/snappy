@@ -78,7 +78,7 @@
   width: 100%;
   max-width: tokens.content-width();
   min-height: 100%;
-  padding: space.lg();
+  padding: tokens.layout-gutter();
   margin: 0 auto;
 }
 
@@ -95,7 +95,7 @@
 
 @include mobile {
   .header-inner {
-    padding-inline: space.md();
+    padding: tokens.layout-gutter();
   }
 
   .header-trailing {
@@ -104,6 +104,5 @@
 
   .main {
     max-width: none;
-    padding: space.sm();
   }
 }

@@ -10,6 +10,10 @@
   @return var(--content-narrow);
 }
 
+@function layout-gutter() {
+  @return var(--layout-gutter);
+}
+
 @function icon-button-touch-size() {
   @return var(--icon-button-touch-size);
 }

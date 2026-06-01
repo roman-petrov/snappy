@@ -28,7 +28,7 @@ $-composer-bottom: max(#{space.md()}, env(safe-area-inset-bottom, 0));
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-inline: space.lg();
+  padding-inline: tokens.layout-gutter();
   pointer-events: none;
   transform: translateY(50%);
   transition:
@@ -46,10 +46,4 @@ $-composer-bottom: max(#{space.md()}, env(safe-area-inset-bottom, 0));
 .composer-started {
   bottom: $-composer-bottom;
   transform: translateY(0);
-}
-
-@include mobile {
-  .composer {
-    padding-inline: space.sm();
-  }
 }

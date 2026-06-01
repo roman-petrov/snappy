@@ -12,6 +12,7 @@
   --content-narrow: #{r(550)};
 
   /* Layout */
+  --layout-gutter: #{space.lg()};
   --icon-button-touch-size: #{r(40)};
   --field-height: #{r(48)};
   --accent-edge: 3px;
@@ -32,4 +33,10 @@
 
   /* Icon size */
   @include icon-size.root;
+}
+
+@include mobile {
+  :root {
+    --layout-gutter: #{space.sm()};
+  }
 }
