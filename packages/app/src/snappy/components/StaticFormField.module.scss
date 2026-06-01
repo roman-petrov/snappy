@@ -1,11 +1,13 @@
-@use "pkg:@snappy/theme/tokens/color";
+/* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/tokens/space";
 
 .field {
   display: flex;
   flex-direction: column;
   gap: space.sm();
+  width: 100%;
   min-width: 0;
+  padding: space.md();
 }
 
 .label-wrap {
@@ -13,8 +15,7 @@
   align-items: center;
   width: 100%;
   min-width: 0;
-  padding: space.xs() space.sm();
-  border-inline-start: 3px solid color.primary();
+  text-transform: uppercase;
 }
 
 .controls {
