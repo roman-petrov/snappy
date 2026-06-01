@@ -34,8 +34,8 @@ $-palette-by-mode: (
     surface-tint: -oklch("26% 0.028 #{$-neutral-hue}"),
     outline-tint: -oklch("52% 0.042 #{$-neutral-hue}"),
     rim-weight: 0.76,
-    primary-tail: "min(0.52, calc(l - 0.03)) min(0.16, calc(c * 1.06)) h",
-    semantic-tail: "min(0.72, calc(l + 0.04)) c",
+    primary-tail: "min(0.64, calc(l + 0.08)) min(0.20, calc(c * 1.18)) h",
+    semantic-tail: "min(0.76, calc(l + 0.12)) min(0.18, c)",
   ),
 );
 
