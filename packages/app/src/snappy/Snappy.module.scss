@@ -34,13 +34,8 @@
 
 .composer-started {
   bottom: 0;
+  padding-bottom: space.md();
   transform: translateY(0);
-}
-
-@include desktop {
-  .composer-started {
-    padding-bottom: space.md();
-  }
 }
 
 .composer-inner {
