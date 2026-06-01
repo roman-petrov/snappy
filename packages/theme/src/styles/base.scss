@@ -3,6 +3,7 @@
 @use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
+@use "pkg:@snappy/theme/surface";
 
 html {
   scroll-behavior: smooth;
@@ -26,8 +27,7 @@ body {
 }
 
 ::selection {
-  color: color.text();
-  background: color.primary();
+  @include surface.primary;
 }
 
 input,

@@ -1,12 +1,16 @@
 @use "pkg:@snappy/theme/tokens/color";
 @use "surface-core";
 
+@mixin -mix($tone, $ratio) {
+  @include surface-core.compose(color-mix(in srgb, #{$tone} $ratio, color.surface()), color.text());
+}
+
 @mixin -accent($accent) {
-  @include surface-core.compose(color-mix(in oklch, #{$accent} 55%, color.surface()), color.text());
+  @include -mix($accent, 55%);
 }
 
 @mixin surface {
-  @include surface-core.compose(color-mix(in oklch, color.rim() 18%, color.surface()), color.text());
+  @include -mix(color.rim(), 18%);
 }
 
 @mixin primary {

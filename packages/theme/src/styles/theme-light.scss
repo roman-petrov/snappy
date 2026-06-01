@@ -1,5 +1,13 @@
-@use "theme-computed" as computed;
-
 :root[data-theme="light"] {
-  @include computed.palette($isDark: false);
+  --color-text: #1a1d24;
+  --color-backdrop: #dce2ee;
+  --color-surface: #ebf1fc;
+  --color-outline: #576b9a;
+  --color-rim: #fff;
+  --color-rim-weight: 1;
+  --color-primary: #1858bd;
+  --color-error: #960000;
+  --color-warning: #7f4200;
+  --color-success: #005f00;
+  --color-info: #005a6d;
 }
