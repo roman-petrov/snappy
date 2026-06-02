@@ -1,7 +1,9 @@
+@use "animation";
+
 @function default() {
-  @return var(--motion-default);
+  @return animation.duration-default() animation.easing-function();
 }
 
 @function soft() {
-  @return var(--motion-soft);
+  @return animation.duration-soft() animation.easing-function();
 }

@@ -1,0 +1,15 @@
+@function -animation($name) {
+  @return var(--animation-#{$name});
+}
+
+@function easing-function() {
+  @return -animation("easing-function");
+}
+
+@function duration-default() {
+  @return -animation("duration-default");
+}
+
+@function duration-soft() {
+  @return -animation("duration-soft");
+}

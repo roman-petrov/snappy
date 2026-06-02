@@ -3,7 +3,8 @@
 @use "tokens";
 @use "typography";
 @use "base";
-@use "../view-transition";
+@use "../transitions/view-transition-route";
+@use "../transitions/view-transition-theme";
 /* stylelint-disable import-notation */
 @import url("@fontsource-variable/inter");
 @import url("material-symbols/rounded.css");

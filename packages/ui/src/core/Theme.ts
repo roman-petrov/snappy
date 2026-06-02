@@ -37,7 +37,12 @@ const set = (value: Theme) => {
     return;
   }
 
-  void document.startViewTransition(() => $theme.set(value));
+  const root = document.documentElement;
+  const transitionAttribute = `data-theme-transition`;
+  root.setAttribute(transitionAttribute, `true`);
+  void document
+    .startViewTransition(() => $theme.set(value))
+    .finished.finally(() => root.removeAttribute(transitionAttribute));
 };
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);
