@@ -16,13 +16,13 @@ export const ExampleBlock = ({ after, afterLabel, before, beforeLabel, label }: 
     <Text as="p" cn={styles.label} text={label} typography="h3" />
     <div className={styles.row}>
       <div className={_.cn(styles.panel, $.surface(`error`), $.elevation(`e2`))}>
-        <Text as="span" cn={styles.panelTitle} color="error" text={beforeLabel.toUpperCase()} typography="caption" />
+        <Text cn={styles.panelTitle} color="error" text={beforeLabel.toUpperCase()} typography="caption" />
         <Text as="p" text={before} typography="large" />
       </div>
-      <Text as="span" cn={styles.arrow} text="→" typography="h2" />
+      <Text cn={styles.arrow} text="→" typography="h2" />
       <div className={_.cn(styles.panel, $.surface(`success`), $.elevation(`e2`))}>
-        <Text as="span" cn={styles.panelTitle} color="success" text={afterLabel.toUpperCase()} typography="caption" />
-        <Text as="span" html text={after} typography="large" />
+        <Text cn={styles.panelTitle} color="success" text={afterLabel.toUpperCase()} typography="caption" />
+        <Text html text={after} typography="large" />
       </div>
     </div>
   </div>

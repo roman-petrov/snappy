@@ -1,13 +1,12 @@
 /* eslint-disable functional/no-expression-statements */
 import type { FastifyInstance } from "fastify";
 
-import fastifyCookie from "@fastify/cookie";
 import { TrpcRouter } from "@snappy/app-server-api";
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
 import { Db } from "@snappy/db";
 import { Payment } from "@snappy/payment";
-import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
+import { Trpc } from "@snappy/server-module";
 import { fromNodeHeaders } from "better-auth/node";
 
 import { AiTunnelProxy } from "./AiTunnelProxy";
@@ -42,7 +41,6 @@ export const App = async ({ app }: AppConfig) => {
 
   const userSettings = UserSettings({ userSettings: db.userSettings });
 
-  await app.register(fastifyCookie);
   app.route({
     handler: async (request, reply) => {
       const url = new URL(request.url, `http://${request.headers.host ?? `localhost`}`);
@@ -65,12 +63,11 @@ export const App = async ({ app }: AppConfig) => {
 
   await AiTunnelProxy(app, { balance, betterAuth });
 
-  await app.register(fastifyTRPCPlugin<TrpcRouter>, {
+  await Trpc.register({
+    app,
+    context: async ({ req }) => ({ userId: await SessionUserId(betterAuth, req.headers) }),
     prefix: `/api/trpc`,
-    trpcOptions: {
-      createContext: async ({ req }) => ({ userId: await SessionUserId(betterAuth, req.headers) }),
-      router: TrpcRouter({ balance, balancePayment, betterAuth, db, userSettings }),
-    },
+    router: TrpcRouter({ balance, balancePayment, betterAuth, db, userSettings }),
   });
 
   app.post(`/api/webhooks/yookassa`, async (request, reply) => {

@@ -3,8 +3,6 @@ import type { Locale } from "@snappy/intl";
 import type { Theme } from "@snappy/ui-core";
 import type { FastifyInstance, FastifyReply } from "fastify";
 
-export type Cookie = (cookie?: string, acceptLanguage?: string) => LocaleTheme;
-
 export type HtmlCache = (input: HtmlCacheReply) => Promise<void>;
 
 export type HtmlCacheReply = {
@@ -24,12 +22,19 @@ export type ServerModule = (config: ServerModuleConfig) => Promise<void>;
 
 export type ServerModuleConfig = {
   app: FastifyInstance;
-  cookie: Cookie;
+  cookie: SettingsCookie;
   distDir: string;
   htmlCache: HtmlCache;
   injectTheme: InjectTheme;
   prepareIndex: PrepareIndex;
+  serveSpa: ServeSpa;
   setHeaders: StaticSetHeaders;
 };
+
+export type ServeSpa = (config: ServeSpaConfig) => Promise<void>;
+
+export type ServeSpaConfig = { cacheKeyPrefix: string; distName: string; prefix: string };
+
+export type SettingsCookie = (cookie?: string, acceptLanguage?: string) => LocaleTheme;
 
 export type StaticSetHeaders = NonNullable<FastifyStaticOptions[`setHeaders`]>;

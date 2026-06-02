@@ -1,12 +1,12 @@
-/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
-import { Cookie, Fastify, Html } from "@snappy/server";
+import { Fastify, Html, SettingsCookie } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
 import express from "express";
 import { readFileSync } from "node:fs";
@@ -16,18 +16,21 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import { createServer as createViteServer } from "vite";
 
+import type { ServerDevHtml } from "./Types";
+
 import { ViteConfig } from "../config/vite/ViteConfig";
+import { ServerDevSpa } from "./ServerDevSpa";
 
 export const ServerDev = async () => {
   const projectRoot = join(import.meta.dirname, `..`, `..`, `..`, `..`);
   const siteDir = join(projectRoot, `packages`, `site`);
-  const appDir = join(projectRoot, `packages`, `app`);
   const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
   const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);
   const portHttps = 443;
-  const devInput = [`site`, `app`].map(name => join(projectRoot, `packages`, name, `index.html`));
-  const apiApp = Fastify();
+  const devInput = [`site`, `app`, `admin`].map(name => join(projectRoot, `packages`, name, `index.html`));
+  const apiApp = await Fastify();
   await App({ app: apiApp });
+  await Admin({ app: apiApp });
   const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
   const apiPort = Number(new URL(apiAddr).port);
   const app = express();
@@ -36,7 +39,13 @@ export const ServerDev = async () => {
   const configBuilder = ViteConfig(
     {
       build: { rollupOptions: { input: devInput } },
-      resolve: { alias: { "/app": appDir, "/src": join(siteDir, `src`) } },
+      resolve: {
+        alias: {
+          "/admin": join(projectRoot, `packages`, `admin`),
+          "/app": join(projectRoot, `packages`, `app`),
+          "/src": join(siteDir, `src`),
+        },
+      },
       root: projectRoot,
     },
     { analyzeFileName: `dev` },
@@ -77,15 +86,7 @@ export const ServerDev = async () => {
     request.pipe(proxyRequest);
   });
 
-  type HtmlConfig = {
-    body: (input: ReturnType<typeof Cookie> & { template: string }) => Promise<string> | string;
-    dir: string;
-    documentUrl?: string;
-    path: RegExp | string;
-    skip?: (request: express.Request) => boolean;
-  };
-
-  const html = ({ body, dir, documentUrl, path, skip }: HtmlConfig) => {
+  const html: ServerDevHtml = ({ body, dir, documentUrl, path, skip }) => {
     app.get(path, async (request, response, next) => {
       if (skip?.(request) ?? false) {
         next();
@@ -93,7 +94,7 @@ export const ServerDev = async () => {
         return;
       }
       try {
-        const cookie = Cookie(request.headers.cookie);
+        const cookie = SettingsCookie(request.headers.cookie);
         const indexPath = join(dir, `index.html`);
 
         const template = await vite.transformIndexHtml(
@@ -108,19 +109,13 @@ export const ServerDev = async () => {
     });
   };
 
-  for (const path of [`/favicon.svg`, `/app/favicon.svg`]) {
-    app.get(path, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
-  }
+  app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
-  AppManifestHost.express(app, Cookie);
+  AppManifestHost.express(app, SettingsCookie);
 
-  html({
-    body: ({ locale, template, theme }) => Html.prepareIndex(template, locale, theme),
-    dir: appDir,
-    documentUrl: `/app/index.html`,
-    path: /^\/app(?:\/.*)?$/u,
-    skip: request => /\.\w+$/iu.test(request.path),
-  });
+  const serverDevSpa = ServerDevSpa({ expressApp: app, faviconPath, html, projectRoot });
+  serverDevSpa.register({ packageName: `app`, urlPrefix: `/app` });
+  serverDevSpa.register({ packageName: `admin`, urlPrefix: `/admin` });
 
   html({
     body: async ({ locale, template, theme }) =>
@@ -137,14 +132,14 @@ export const ServerDev = async () => {
 
   app.use((request, _response, next) => {
     const { path } = request;
-    if (path.startsWith(`/src/`) && !path.startsWith(`/app`)) {
+    if (path.startsWith(`/src/`) && !path.startsWith(`/app`) && !path.startsWith(`/admin`)) {
       request.url = `/packages/site${path}`;
-    } else if (path.startsWith(`/app/`)) {
-      request.url = `/packages/app${path.slice(4)}`;
+    } else {
+      serverDevSpa.rewrite(request);
     }
     next();
   });
-  app.use(`/packages/app`, express.static(join(appDir, `public`)));
+  serverDevSpa.mountPublic();
   app.use(vite.middlewares);
 
   server.listen({ host: `::`, ipv6Only: false, port: portHttps });

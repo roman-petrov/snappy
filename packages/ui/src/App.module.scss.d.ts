@@ -1,6 +1,5 @@
 declare const __App: {
   readonly viewport: "viewport";
-  readonly disableTextSelection: "disableTextSelection";
-  readonly disableLinkSelection: "disableLinkSelection";
+  readonly disableSelection: "disableSelection";
 };
 export default __App;

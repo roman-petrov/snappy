@@ -1,8 +1,7 @@
-import { Button } from "@snappy/ui";
+import { Button, Page } from "@snappy/ui";
 
 import type { useFeedState } from "./Feed.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { Routes } from "../../Routes";
 import { ImageCard, TextCard } from "../../snappy/components";

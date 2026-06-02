@@ -13,8 +13,8 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
     {screen === `sent` ? (
       <MessageWithLink
         lead={t(`auth.forgotPassword.checkEmailLead`)}
-        linkText={t(`auth.forgotPassword.backToLogin`)}
-        linkTo={Routes.login}
+        linkText={t(`auth.forgotPassword.backToSignIn`)}
+        linkTo={Routes.signIn}
         title={t(`auth.forgotPassword.checkEmail`)}
       />
     ) : (
@@ -34,7 +34,7 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
             text={loading ? t(`auth.forgotPassword.submitting`) : t(`auth.forgotPassword.submit`)}
             type="primary"
           />
-          <Button link={Routes.login} text={t(`auth.login.title`)} />
+          <Button link={Routes.signIn} text={t(`auth.signIn.title`)} />
         </FormErrorAndActions>
       </>
     )}

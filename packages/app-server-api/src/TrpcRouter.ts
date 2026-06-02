@@ -1,4 +1,4 @@
-import { type ServerApp, TrpcContext as t } from "@snappy/app-server";
+import { type ServerApp, AppTrpcContext as t } from "@snappy/app-server";
 
 export const TrpcRouter = (api: ServerApp) =>
   t.router({

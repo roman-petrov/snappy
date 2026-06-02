@@ -4,6 +4,8 @@ export * from "./Browser";
 
 export * from "./Cache";
 
+export * from "./Cookie";
+
 export * from "./DateTime";
 
 export * from "./HttpStatus";

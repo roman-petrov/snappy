@@ -16,8 +16,8 @@ export const SettingsCardRow = ({ bottom, icon, right, text, ...tapProps }: Sett
   <Tap {...tapProps} cn={_.cn($.tap(`menu`), styles.row)}>
     <Icon color="primary" name={icon} />
     <span className={styles.text}>
-      <Text as="span" color="primary" text={text} />
-      {bottom === undefined ? undefined : <Text as="span" text={bottom} typography="bodySm" />}
+      <Text color="primary" text={text} />
+      {bottom === undefined ? undefined : <Text text={bottom} typography="bodySm" />}
     </span>
     {right}
   </Tap>

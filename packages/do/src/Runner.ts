@@ -19,6 +19,10 @@ const ellipsis = `…`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
+const devOriginLabelWidth = 6;
+
+const devOriginLine = (emoji: string, name: string, url: string) =>
+  `${emoji} ${Terminal.yellow(`${name}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
 
 type RunResult = { exitCode: number; message: string };
 
@@ -74,6 +78,7 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
   const buildOptions = capture ? { capture: true as const } : {};
 
   const buildHandlers = {
+    "build:admin": Build.admin,
     "build:app": Build.app,
     "build:app-android": Build.appAndroid,
     "build:app-android-debug": Build.appAndroidDebug,
@@ -105,7 +110,11 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
               if (!verbose && (name === `server:frontend:dev` || name === `server:prod`)) {
                 const origin = `https://${Config.host}`;
                 Console.log(
-                  `\n\n🌐 ${Terminal.yellow(`Site:`)} ${Terminal.blue(origin)}\n💻 ${Terminal.yellow(` App:`)} ${Terminal.blue(`${origin}/app`)}\n`,
+                  `\n\n${[
+                    devOriginLine(`🌐`, `Site`, origin),
+                    devOriginLine(`💻`, `App`, `${origin}/app`),
+                    devOriginLine(`🛡️`, `Admin`, `${origin}/admin`),
+                  ].join(`\n`)}\n`,
                 );
               }
               if (run.background === true) {

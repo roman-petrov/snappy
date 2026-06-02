@@ -1,7 +1,7 @@
 export * from "./ForgotPassword";
 
-export * from "./Login";
-
-export * from "./Register";
-
 export * from "./ResetPassword";
+
+export * from "./SignIn";
+
+export * from "./SignUp";

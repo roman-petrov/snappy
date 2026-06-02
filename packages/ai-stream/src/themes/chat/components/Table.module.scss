@@ -1,12 +1,10 @@
-/* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/table";
 @use "pkg:@snappy/theme/tokens/space";
 
 .pad {
+  @include table.pad;
   @include surface.surface;
 
-  box-sizing: border-box;
-  display: inline-block;
-  min-width: 100%;
   padding: space.md();
 }

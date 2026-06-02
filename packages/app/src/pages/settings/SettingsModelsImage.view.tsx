@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
-import { Icon } from "@snappy/ui";
+import { Icon, Page } from "@snappy/ui";
 
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "./components";
 

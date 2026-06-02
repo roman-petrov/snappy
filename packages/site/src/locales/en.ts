@@ -36,7 +36,7 @@ export const en = {
       q: `Are my texts stored?`,
     },
     registration: {
-      a: `Yes: the web app uses email sign-in so you get an account and request history.`,
+      a: `Yes: sign up with email in the web app so you get an account and request history.`,
       q: `Do I need to register?`,
     },
     title: `❓ FAQ`,

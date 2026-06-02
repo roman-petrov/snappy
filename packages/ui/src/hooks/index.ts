@@ -2,6 +2,10 @@ export * from "./useAsyncEffect";
 
 export * from "./useAsyncEffectOnce";
 
+export * from "./useAsyncSubmit";
+
+export * from "./useAuthSubmit";
+
 export * from "./useEffectOnce";
 
 export * from "./useGo";

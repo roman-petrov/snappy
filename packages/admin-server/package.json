@@ -1,0 +1,16 @@
+{
+  "name": "@snappy/admin-server",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@snappy/admin-server-api": "workspace:*",
+    "@snappy/config": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/db": "workspace:*",
+    "@snappy/server-module": "workspace:*",
+    "fastify": "^5.8.5",
+    "zod": "^4.4.3"
+  }
+}

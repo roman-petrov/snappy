@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 export const ru = {
   localeSwitcher: `Переключить на английский`,
+  page: { back: `Назад` },
   passwordInput: { hidePassword: `Скрыть пароль`, showPassword: `Показать пароль` },
   textInput: {
     voiceStart: `Нажмите, чтобы диктовать`,

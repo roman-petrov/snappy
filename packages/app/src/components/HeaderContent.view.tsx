@@ -9,9 +9,9 @@ import styles from "./HeaderContent.module.scss";
 
 export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 
-export const HeaderContentView = ({ loggedIn }: HeaderContentViewProps) => (
+export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) => (
   <div className={styles.root}>
-    {loggedIn ? (
+    {signedIn ? (
       <>
         <IconButton icon="settings" link={Routes.settings.root} tip={t(`settings.root.title`)} />
         <BalanceTap />

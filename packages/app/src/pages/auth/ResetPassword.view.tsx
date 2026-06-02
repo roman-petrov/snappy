@@ -41,8 +41,8 @@ export const ResetPasswordView = ({
     ) : (
       <MessageWithLink
         lead={screen === `invalid` ? t(`auth.resetPassword.invalidLinkLead`) : t(`auth.resetPassword.doneLead`)}
-        linkText={screen === `invalid` ? t(`auth.resetPassword.requestAgain`) : t(`auth.login.title`)}
-        linkTo={screen === `invalid` ? Routes.forgotPassword : Routes.login}
+        linkText={screen === `invalid` ? t(`auth.resetPassword.requestAgain`) : t(`auth.signIn.title`)}
+        linkTo={screen === `invalid` ? Routes.forgotPassword : Routes.signIn}
         title={screen === `invalid` ? t(`auth.resetPassword.invalidLink`) : t(`auth.resetPassword.done`)}
       />
     )}

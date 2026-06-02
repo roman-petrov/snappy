@@ -6,6 +6,8 @@ export * from "./AppManifest";
 
 export * from "./AppManifestHost";
 
+export * from "./AppTrpc";
+
 export * from "./Balance";
 
 export * from "./BalancePayment";
@@ -17,7 +19,5 @@ export * from "./PaymentLog";
 export type * from "./ServerApp";
 
 export * from "./SessionUserId";
-
-export * from "./Trpc";
 
 export * from "./UserSettings";

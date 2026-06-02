@@ -1,8 +1,8 @@
 import { _ } from "@snappy/core";
+import { Page } from "@snappy/ui";
 
 import type { useSnappyState } from "./Snappy.state";
 
-import { Page } from "../components";
 import { AgentChat, Composer } from "./components";
 import styles from "./Snappy.module.scss";
 

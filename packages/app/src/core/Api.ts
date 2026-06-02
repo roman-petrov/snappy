@@ -1,9 +1,5 @@
 import type { TrpcRouter } from "@snappy/app-server-api";
 
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { TrpcClient } from "@snappy/ui";
 
-const url = `${globalThis.location.origin}/api/trpc`;
-
-export const trpc = createTRPCProxyClient<TrpcRouter>({
-  links: [httpBatchLink({ fetch: async (input, init) => fetch(input, { ...init, credentials: `include` }), url })],
-});
+export const trpc = TrpcClient<TrpcRouter>(`/api/trpc`);

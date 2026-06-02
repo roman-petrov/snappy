@@ -1,8 +1,8 @@
+import { Page } from "@snappy/ui";
 import { Navigate } from "react-router-dom";
 
 import type { useAgentState } from "./Agent.state";
 
-import { Page } from "../../components";
 import { Routes } from "../../Routes";
 import { AgentChat } from "../../snappy/components";
 

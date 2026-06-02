@@ -1,7 +1,7 @@
+import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth } from "../../core";
-import { useAsyncSubmit } from "../../hooks";
 
 export const useForgotPasswordState = () => {
   const [email, setEmail] = useState(``);

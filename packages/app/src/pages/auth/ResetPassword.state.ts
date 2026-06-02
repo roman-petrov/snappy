@@ -1,8 +1,8 @@
+import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { Auth, Password } from "../../core";
-import { useAsyncSubmit } from "../../hooks";
 
 export const useResetPasswordState = () => {
   const [searchParameters] = useSearchParams();

@@ -1,6 +1,7 @@
+import { Page } from "@snappy/ui";
+
 import type { useSettingsLanguageState } from "./SettingsLanguage.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { SettingsOptionList } from "./components";
 

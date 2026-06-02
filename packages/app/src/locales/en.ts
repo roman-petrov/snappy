@@ -4,7 +4,7 @@ export const en = {
   agent: { stop: `Stop` },
   auth: {
     forgotPassword: {
-      backToLogin: `Back to login`,
+      backToSignIn: `Back to sign in`,
       checkEmail: `Check your email`,
       checkEmailLead: `If an account with this email exists, we've sent a link to reset your password.`,
       email: `Email`,
@@ -14,7 +14,20 @@ export const en = {
       submitting: `Sending…`,
       title: `Forgot password`,
     },
-    login: {
+    resetPassword: {
+      done: `Password changed`,
+      doneLead: `You can now sign in with your new password.`,
+      errors: { invalidOrExpiredToken: `Link is invalid or expired`, unknownError: `Could not reset password` },
+      invalidLink: `Invalid link`,
+      invalidLinkLead: `Use the link from the email to reset your password.`,
+      passwordLabel: `Password (at least {min} characters, letters and numbers)`,
+      passwordRule: `Password: at least {min} characters, letters and numbers`,
+      requestAgain: `Request again`,
+      submit: `Save`,
+      submitting: `Saving…`,
+      title: `New password`,
+    },
+    signIn: {
       email: `Email`,
       errors: {
         invalidCredentials: `Invalid email or password`,
@@ -23,12 +36,12 @@ export const en = {
       },
       forgotPassword: `Forgot password?`,
       password: `Password`,
-      registerLink: `Sign up`,
-      submit: `Log in`,
-      submitting: `Logging in…`,
-      title: `Login`,
+      signUpLink: `Sign up`,
+      submit: `Sign in`,
+      submitting: `Signing in…`,
+      title: `Sign in`,
     },
-    register: {
+    signUp: {
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `An account with this email already exists`,
@@ -48,19 +61,6 @@ export const en = {
       submit: `Sign up`,
       submitting: `Signing up…`,
       title: `Sign up`,
-    },
-    resetPassword: {
-      done: `Password changed`,
-      doneLead: `You can now log in with your new password.`,
-      errors: { invalidOrExpiredToken: `Link is invalid or expired`, unknownError: `Could not reset password` },
-      invalidLink: `Invalid link`,
-      invalidLinkLead: `Use the link from the email to reset your password.`,
-      passwordLabel: `Password (at least {min} characters, letters and numbers)`,
-      passwordRule: `Password: at least {min} characters, letters and numbers`,
-      requestAgain: `Request again`,
-      submit: `Save`,
-      submitting: `Saving…`,
-      title: `New password`,
     },
   },
   balance: {
@@ -90,7 +90,7 @@ export const en = {
     title: `Agent catalog`,
   },
   chat: { continue: `Continue` },
-  common: { back: `Back`, logout: `Log out` },
+  common: { signOut: `Sign out` },
   feed: { openCatalog: `Catalog`, title: `Feed` },
   feedCard: {
     copy: `Copy`,

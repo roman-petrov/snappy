@@ -44,6 +44,9 @@ jobs:
       - name: 💻 Build app
         run: bun do build:app
 
+      - name: 🛡️ Build admin
+        run: bun do build:admin
+
       - name: 🤖 Build Android app
         run: bun do build:app-android
 
@@ -85,6 +88,8 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
           AI_TUNNEL_API_KEY: ${{ secrets.AI_TUNNEL_API_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
@@ -98,6 +103,8 @@ jobs:
             DB_PASSWORD="${DB_PASSWORD}" \
             DB_NAME="${DB_NAME}" \
             JWT_SECRET="${JWT_SECRET}" \
+            ADMIN_USERNAME="${ADMIN_USERNAME}" \
+            ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
             AI_TUNNEL_API_KEY="${AI_TUNNEL_API_KEY}" \
             YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
             YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \

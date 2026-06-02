@@ -8,6 +8,6 @@ export const Logo = ({ title }: LogoProps = {}) => (
   <a className={styles.logo} href="/" title={title}>
     <img alt="" className={styles.logoIcon} height={20} src={faviconUrl} width={20} />
     {` `}
-    <Text as="span" cn={styles.logoText} color="primary" text="Snappy" />
+    <Text cn={styles.logoText} color="primary" text="Snappy" />
   </a>
 );

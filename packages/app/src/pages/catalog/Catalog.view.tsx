@@ -1,9 +1,8 @@
 import { _ } from "@snappy/core";
-import { $, Button, RichCard } from "@snappy/ui";
+import { $, Button, Page, RichCard } from "@snappy/ui";
 
 import type { useCatalogState } from "./Catalog.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { Routes } from "../../Routes";
 import styles from "./Catalog.module.scss";
@@ -32,7 +31,7 @@ export const CatalogView = ({ agents }: CatalogViewProps) => (
             description={agent.description}
             icon={{ emoji: agent.emoji }}
             key={agent.id}
-            link={Routes.agent(agent.id)}
+            link={Routes.agent({ agentId: agent.id })}
             title={agent.title}
           />
         )),

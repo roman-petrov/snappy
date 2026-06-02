@@ -10,7 +10,7 @@ export const ChipView = ({ interactive, left, rootCn, tapProps, text, textProps 
   const content = (
     <>
       {left === undefined ? undefined : <span className={styles.left}>{left}</span>}
-      <Text {...textProps} as="span" text={text} typography="captionSm" />
+      <Text {...textProps} text={text} typography="captionSm" />
     </>
   );
 

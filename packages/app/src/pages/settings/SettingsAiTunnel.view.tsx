@@ -1,8 +1,7 @@
-import { PasswordInput, SwitchDisplay } from "@snappy/ui";
+import { Page, PasswordInput, SwitchDisplay } from "@snappy/ui";
 
 import type { useSettingsAiTunnelState } from "./SettingsAiTunnel.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { SettingsCard, SettingsCardRow } from "./components";
 

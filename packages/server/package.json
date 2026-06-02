@@ -5,6 +5,9 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
+    "@fastify/cookie": "^11.0.1",
+    "@fastify/static": "^9.1.3",
+    "@snappy/admin-server": "workspace:*",
     "@snappy/app-server": "workspace:*",
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",

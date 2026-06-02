@@ -1,8 +1,7 @@
-import { Button, Input } from "@snappy/ui";
+import { Button, Input, Page } from "@snappy/ui";
 
 import type { useTopUpState } from "./TopUp.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { FormErrorAndActions } from "../auth/components";
 

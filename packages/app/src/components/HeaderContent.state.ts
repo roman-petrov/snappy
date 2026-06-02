@@ -1,5 +1,5 @@
 import { useStoreValue } from "@snappy/store";
 
-import { $loggedIn } from "../Store";
+import { $signedIn } from "../Store";
 
-export const useHeaderContentState = () => ({ loggedIn: useStoreValue($loggedIn) });
+export const useHeaderContentState = () => ({ signedIn: useStoreValue($signedIn) });

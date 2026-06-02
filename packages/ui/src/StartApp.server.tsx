@@ -5,19 +5,14 @@ import { StaticRouter } from "react-router-dom";
 
 import { App } from "./App";
 
-export type RenderAppOptions = {
-  base?: string;
-  disableLinkSelection?: boolean;
-  disableTextSelection?: boolean;
-  location?: string;
-};
+export type RenderAppOptions = { base?: string; disableSelection?: boolean; location?: string };
 
 export const renderApp = (
   app: ReactNode,
-  { base = ``, disableLinkSelection = false, disableTextSelection = false, location = `/` }: RenderAppOptions = {},
+  { base = ``, disableSelection = false, location = `/` }: RenderAppOptions = {},
 ) =>
   renderToString(
-    <App disableLinkSelection={disableLinkSelection} disableTextSelection={disableTextSelection}>
+    <App disableSelection={disableSelection}>
       <StaticRouter basename={base} location={location}>
         {app}
       </StaticRouter>

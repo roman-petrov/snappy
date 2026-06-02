@@ -14,6 +14,7 @@ export const McpToolWorkflowRun: McpTool = server => {
 
   const scriptNames = [
     `build`,
+    `build:admin`,
     `build:app`,
     `build:app-android`,
     `build:app-android-debug`,

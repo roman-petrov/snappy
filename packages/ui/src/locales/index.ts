@@ -1,7 +1,5 @@
-import { Translate } from "@snappy/core";
-
-import { Language } from "../core";
+import { TranslateFunction } from "../core";
 import { en } from "./en";
 import { ru } from "./ru";
 
-export const t = Translate.makeT({ en, ru } as const, () => Language.locale());
+export const t = TranslateFunction({ en, ru } as const);

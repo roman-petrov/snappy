@@ -1,8 +1,7 @@
-import { Button, SwitchDisplay } from "@snappy/ui";
+import { Button, Page, SwitchDisplay } from "@snappy/ui";
 
 import type { useSettingsState } from "./Settings.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { Routes } from "../../Routes";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "./components";
@@ -18,7 +17,7 @@ export const SettingsView = ({
   llmImageEnd,
   llmSpeechEnd,
   locale,
-  logoutOnClick,
+  signOutOnClick,
   theme,
   toggleFog,
   typeWriterSpeed,
@@ -92,8 +91,8 @@ export const SettingsView = ({
         />
       </SettingsCard>
     </SettingsCards>
-    <div className={styles.logout}>
-      <Button onClick={logoutOnClick} text={t(`common.logout`)} />
+    <div className={styles.signOut}>
+      <Button onClick={signOutOnClick} text={t(`common.signOut`)} />
     </div>
   </Page>
 );

@@ -7,7 +7,7 @@ import { z } from "zod";
 import type { Balance } from "./Balance";
 import type { PaymentLog } from "./PaymentLog";
 
-import { TrpcAuth } from "./Trpc";
+import { AppTrpcAuth } from "./AppTrpc";
 
 export type BalancePaymentConfig = {
   balance: Balance;
@@ -100,7 +100,7 @@ export const BalancePayment = ({
   };
 
   const trpc = {
-    paymentUrl: TrpcAuth.input(z.object({ amount: z.number().optional() })).mutation(async ({ ctx, input }) =>
+    paymentUrl: AppTrpcAuth.input(z.object({ amount: z.number().optional() })).mutation(async ({ ctx, input }) =>
       paymentUrl(ctx.userId, input.amount ?? 0),
     ),
   };

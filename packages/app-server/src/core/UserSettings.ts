@@ -5,7 +5,7 @@ import { AiConstants } from "@snappy/ai";
 import { TypeWriterSpeeds } from "@snappy/domain";
 import { z } from "zod";
 
-import { TrpcAuth } from "./Trpc";
+import { AppTrpcAuth } from "./AppTrpc";
 
 export type UserSettingsConfig = { userSettings: DbUserSettings };
 
@@ -41,8 +41,8 @@ export const UserSettings = ({ userSettings }: UserSettingsConfig) => {
   };
 
   const trpc = {
-    get: TrpcAuth.query(async ({ ctx }) => load(ctx.userId)),
-    set: TrpcAuth.input(
+    get: AppTrpcAuth.query(async ({ ctx }) => load(ctx.userId)),
+    set: AppTrpcAuth.input(
       z.object({
         aiTunnelDirect: z.boolean().optional(),
         aiTunnelKey: z.string().optional(),

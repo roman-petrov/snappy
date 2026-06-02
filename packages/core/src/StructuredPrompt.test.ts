@@ -1,16 +1,34 @@
-import { describe, expect, it } from "vitest";
+/* eslint-disable vitest/expect-expect */
+import { describe, expect, expectTypeOf, it } from "vitest";
 
-import { StructuredPrompt } from "./StructuredPrompt";
+import { StructuredPrompt, type StructuredPromptSection } from "./StructuredPrompt";
 
 describe(`StructuredPrompt`, () => {
-  it(`rejects duplicate section tags at compile time`, () => {
-    // @ts-expect-error duplicate "role" section must fail type-check
-    StructuredPrompt([
-      [`role`, `You are a helpful assistant.`],
-      [`role`, `Answer briefly.`],
-    ] as const);
+  describe(`types`, () => {
+    it(`returns string`, () => {
+      const prompt = StructuredPrompt([[`role`, `text`]] as const);
 
-    expect(true).toBe(true);
+      expectTypeOf(prompt).toEqualTypeOf<string>();
+    });
+
+    it(`accepts unique section tags`, () => {
+      const sections = [
+        [`role`, `You are a helpful assistant.`],
+        [`rules`, `Answer briefly.`],
+      ] as const;
+
+      expectTypeOf(StructuredPrompt).toBeFunction();
+      expectTypeOf(sections).toExtend<readonly StructuredPromptSection[]>();
+      expectTypeOf(StructuredPrompt(sections)).toEqualTypeOf<string>();
+    });
+
+    it(`rejects duplicate section tags at compile time`, () => {
+      // @ts-expect-error duplicate section
+      StructuredPrompt([
+        [`role`, `You are a helpful assistant.`],
+        [`role`, `Answer briefly.`],
+      ] as const);
+    });
   });
 
   it(`wraps sections with XML-like tags`, () => {

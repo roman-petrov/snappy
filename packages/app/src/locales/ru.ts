@@ -4,7 +4,7 @@ export const ru = {
   agent: { stop: `Стоп` },
   auth: {
     forgotPassword: {
-      backToLogin: `Вернуться ко входу`,
+      backToSignIn: `Вернуться ко входу`,
       checkEmail: `Проверьте почту`,
       checkEmailLead: `Если аккаунт с таким email есть, мы отправили ссылку для сброса пароля.`,
       email: `Email`,
@@ -14,7 +14,23 @@ export const ru = {
       submitting: `Отправка…`,
       title: `Забыли пароль`,
     },
-    login: {
+    resetPassword: {
+      done: `Пароль изменён`,
+      doneLead: `Теперь можно войти с новым паролем.`,
+      errors: {
+        invalidOrExpiredToken: `Ссылка недействительна или истекла`,
+        unknownError: `Не удалось изменить пароль`,
+      },
+      invalidLink: `Неверная ссылка`,
+      invalidLinkLead: `Используйте ссылку из письма для сброса пароля.`,
+      passwordLabel: `Пароль (не менее {min} символов, буквы и цифры)`,
+      passwordRule: `Пароль: не менее {min} символов, буквы и цифры`,
+      requestAgain: `Запросить снова`,
+      submit: `Сохранить`,
+      submitting: `Сохранение…`,
+      title: `Новый пароль`,
+    },
+    signIn: {
       email: `Email`,
       errors: {
         invalidCredentials: `Неверный email или пароль`,
@@ -23,12 +39,12 @@ export const ru = {
       },
       forgotPassword: `Забыли пароль?`,
       password: `Пароль`,
-      registerLink: `Регистрация`,
+      signUpLink: `Регистрация`,
       submit: `Войти`,
       submitting: `Вход…`,
       title: `Вход`,
     },
-    register: {
+    signUp: {
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `Аккаунт с таким email уже зарегистрирован`,
@@ -48,22 +64,6 @@ export const ru = {
       submit: `Зарегистрироваться`,
       submitting: `Регистрация…`,
       title: `Регистрация`,
-    },
-    resetPassword: {
-      done: `Пароль изменён`,
-      doneLead: `Теперь можно войти с новым паролем.`,
-      errors: {
-        invalidOrExpiredToken: `Ссылка недействительна или истекла`,
-        unknownError: `Не удалось изменить пароль`,
-      },
-      invalidLink: `Неверная ссылка`,
-      invalidLinkLead: `Используйте ссылку из письма для сброса пароля.`,
-      passwordLabel: `Пароль (не менее {min} символов, буквы и цифры)`,
-      passwordRule: `Пароль: не менее {min} символов, буквы и цифры`,
-      requestAgain: `Запросить снова`,
-      submit: `Сохранить`,
-      submitting: `Сохранение…`,
-      title: `Новый пароль`,
     },
   },
   balance: {
@@ -96,7 +96,7 @@ export const ru = {
     title: `Каталог агентов`,
   },
   chat: { continue: `Продолжить` },
-  common: { back: `Назад`, logout: `Выйти` },
+  common: { signOut: `Выйти` },
   feed: { openCatalog: `Каталог`, title: `Лента` },
   feedCard: {
     copy: `Копировать`,

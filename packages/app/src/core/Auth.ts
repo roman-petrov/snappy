@@ -50,11 +50,11 @@ const requestPasswordReset = async (email: string) => call(async () => client.re
 const resetPassword = async (token: string, newPassword: string) =>
   call(async () => client.resetPassword({ newPassword, token }));
 
-const loggedIn = async () => {
+const signedIn = async () => {
   const result = await client.getSession();
   const errorCode = readErrorCode(result);
 
   return errorCode === undefined ? result.data?.session !== undefined : false;
 };
 
-export const Auth = { loggedIn, requestPasswordReset, resetPassword, signIn, signOut, signUp };
+export const Auth = { requestPasswordReset, resetPassword, signedIn, signIn, signOut, signUp };

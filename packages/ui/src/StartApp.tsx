@@ -1,66 +1,85 @@
+/* eslint-disable prefer-const */
 /* eslint-disable init-declarations */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 import type { ReactNode } from "react";
 
-import { _ } from "@snappy/core";
-import { createRoot, hydrateRoot, type Root } from "react-dom/client";
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+import { _, type Action, type ReadonlyStore } from "@snappy/core";
+import { createRoot, hydrateRoot } from "react-dom/client";
+import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom";
 
 import { App } from "./App";
+import { AuthLayout } from "./components/AuthLayout";
 import { Language, Theme } from "./core";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
 
-export type CreateRouter = (basename: string) => ReturnType<typeof createBrowserRouter>;
+export type StartAppInput = {
+  base: string;
+  header: ReactNode;
+  index: ReactNode;
+  path: string;
+  publicPaths: readonly string[];
+  routes: Record<string, ReactNode>;
+  signedIn: ReadonlyStore<boolean>;
+  signInPath: string;
+};
 
-export type StartAppContent = CreateRouter | ReactNode;
+const container = () => {
+  const element = document.querySelector(`#root`);
 
-export type StartAppOptions = { base?: string; disableLinkSelection?: boolean; disableTextSelection?: boolean };
+  return element instanceof HTMLElement ? element : undefined;
+};
 
-const mountSelector = `#root`;
-let remount: (() => void) | undefined;
+export const startApp = ({ base, header, index, path, publicPaths, routes, signedIn, signInPath }: StartAppInput) => {
+  let remount: Action | undefined;
 
-export const startApp = async (
-  content: StartAppContent,
-  { base = ``, disableLinkSelection = false, disableTextSelection = false }: StartAppOptions = {},
-) => {
   Theme.init();
   Language.init({ onRemount: () => remount?.() });
 
-  const container = document.querySelector(mountSelector);
-  if (!(container instanceof HTMLElement)) {
+  const mountContainer = container();
+  if (mountContainer === undefined) {
     return;
   }
   history.scrollRestoration = `manual`;
 
-  const rootElement = (
-    <App
-      children={
-        <RouterProvider
-          router={
-            _.isFunction(content)
-              ? content(base)
-              : createBrowserRouter(createRoutesFromElements(<Route element={content} path="*" />), { basename: base })
-          }
-        />
-      }
-      disableLinkSelection={disableLinkSelection}
-      disableTextSelection={disableTextSelection}
-    />
+  const router = createBrowserRouter(
+    [
+      {
+        children: [
+          { element: index, index: true },
+          ..._.entries(routes).map(([routePath, element]) => ({ element, path: routePath })),
+          { element: <Navigate replace to={path} />, path: `*` },
+        ],
+        element: <AuthLayout header={header} publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath} />,
+        path,
+      },
+    ],
+    { basename: base },
   );
 
-  const isSsr = container.hasChildNodes();
-  if (isSsr) {
-    hydrateRoot(container, rootElement);
-  } else {
-    let reactRoot: Root | undefined = createRoot(container);
-    reactRoot.render(rootElement);
-    remount = () => {
-      reactRoot?.unmount();
-      reactRoot = createRoot(container);
-      reactRoot.render(rootElement);
-    };
+  const element = <App disableSelection router={router} />;
+  let reactRoot = createRoot(mountContainer);
+  reactRoot.render(element);
+  remount = () => {
+    reactRoot.unmount();
+    reactRoot = createRoot(mountContainer);
+    reactRoot.render(element);
+  };
+};
+
+export const startSite = (component: ReactNode) => {
+  Theme.init();
+  Language.init();
+
+  const mountContainer = container();
+  if (mountContainer === undefined) {
+    return;
   }
+
+  hydrateRoot(
+    mountContainer,
+    <App router={createBrowserRouter(createRoutesFromElements(<Route element={component} path="*" />))} />,
+  );
 };

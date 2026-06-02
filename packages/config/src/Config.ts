@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 
 import { DevTls } from "./DevTls";
@@ -19,8 +20,21 @@ const balancePaymentMaxRub = 5000;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
 const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
 const betterAuthJwtSecret = env[`JWT_SECRET`] ?? ``;
+const adminSessionSecret = createHmac(`sha256`, betterAuthJwtSecret).update(`snappy-admin-v1`).digest();
 const aiTunnelKey = env[`AI_TUNNEL_API_KEY`] ?? ``;
 const host = isProduction ? `snappy-ai.ru` : `home.local`;
+
+const admin = () => {
+  const adminUsername = env[`ADMIN_USERNAME`] ?? ``;
+  const adminPassword = env[`ADMIN_PASSWORD`] ?? ``;
+  if (isProduction && (adminUsername === `` || adminPassword === ``)) {
+    throw new Error(`ADMIN_USERNAME and ADMIN_PASSWORD must be set in production`);
+  }
+
+  return { adminPassword, adminUsername };
+};
+
+const { adminPassword, adminUsername } = admin();
 
 const prodSsl = () => {
   const certB64 = env[`SSL_CERT_PEM`];
@@ -49,6 +63,9 @@ const devSsl = () => {
 const sslCert = isProduction ? prodSsl() : devSsl();
 
 export const Config = {
+  adminPassword,
+  adminSessionSecret,
+  adminUsername,
   aiTunnelKey,
   balanceMinRub,
   balancePaymentMaxRub,

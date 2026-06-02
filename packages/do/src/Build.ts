@@ -39,6 +39,7 @@ const viteBuild = async (root: string, packageName: string, { capture }: BuildOp
 
 const site = async (root: string, options: BuildOptions = {}) => viteBuild(root, `site`, options);
 const app = async (root: string, options: BuildOptions = {}) => viteBuild(root, `app`, options);
+const admin = async (root: string, options: BuildOptions = {}) => viteBuild(root, `admin`, options);
 const androidAppDir = (root: string) => packageDir(root, `app-android`);
 const androidDir = (root: string) => join(androidAppDir(root), `android`);
 
@@ -114,4 +115,4 @@ const server = async (root: string, { capture }: BuildOptions = {}) => {
   return Process.exitCode(result) === 0 ? 0 : result;
 };
 
-export const Build = { app, appAndroid, appAndroidDebug, javaFormat, javaFormatFix, server, site, ssr };
+export const Build = { admin, app, appAndroid, appAndroidDebug, javaFormat, javaFormatFix, server, site, ssr };

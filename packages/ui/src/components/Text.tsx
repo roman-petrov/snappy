@@ -6,24 +6,6 @@ import { _ } from "@snappy/core";
 
 import { $, type Color, type Typography } from "../$";
 
-type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
-
-const typographyTag: Record<Typography, TextTag> = {
-  body: `p`,
-  bodyBold: `p`,
-  bodySm: `p`,
-  button: `span`,
-  buttonLarge: `span`,
-  caption: `span`,
-  captionBold: `span`,
-  captionSm: `span`,
-  display: `h1`,
-  h1: `h1`,
-  h2: `h2`,
-  h3: `h3`,
-  large: `p`,
-};
-
 export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children` | `className`> & {
   as?: TextTag;
   cn?: string;
@@ -34,8 +16,18 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
   typography?: Typography;
 };
 
-export const Text = ({ as, cn = ``, color = `text`, html = false, text, typography = `body`, ...rest }: TextProps) => {
-  const Tag = as ?? typographyTag[typography];
+type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
+
+export const Text = ({
+  as = `span`,
+  cn = ``,
+  color = `text`,
+  html = false,
+  text,
+  typography = `body`,
+  ...rest
+}: TextProps) => {
+  const Tag = as;
   const className = _.cn($.typography(typography), $.color(color), cn);
 
   if (html) {

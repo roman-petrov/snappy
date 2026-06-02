@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-expression-statements */
 import type { BalanceHistoryMeta, DbUserBalance } from "@snappy/db";
 
-import { TrpcAuth } from "./Trpc";
+import { AppTrpcAuth } from "./AppTrpc";
 
 export type BalanceConfig = { balanceMinRub: number; userBalance: DbUserBalance };
 
@@ -16,7 +16,7 @@ export const Balance = ({ balanceMinRub, userBalance }: BalanceConfig) => {
     await userBalance.debit(userId, rub, `debit_llm`, { ...meta, chargedRub: rub });
   };
 
-  const trpc = TrpcAuth.query(async ({ ctx }) => read(ctx.userId));
+  const trpc = AppTrpcAuth.query(async ({ ctx }) => read(ctx.userId));
 
   return { creditFromTopUp, debitForLlm, isLlmBlocked, read, trpc };
 };

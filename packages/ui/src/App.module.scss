@@ -6,11 +6,9 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.disable-text-selection {
+.disable-selection {
   user-select: none;
-}
 
-.disable-link-selection {
   a {
     -webkit-user-drag: none;
     user-select: none;

@@ -1,5 +1,7 @@
 export * from "./Alert";
 
+export * from "./AuthLayout";
+
 export * from "./BusyShimmerOverlay";
 
 export * from "./Button";
@@ -31,6 +33,8 @@ export * from "./Link";
 export * from "./Logo";
 
 export * from "./menu";
+
+export * from "./Page";
 
 export * from "./PasswordInput";
 

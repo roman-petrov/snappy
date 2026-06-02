@@ -1,7 +1,6 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-import type { ServerModuleConfig } from "@snappy/server-module";
-
+import { AdminServer } from "@snappy/admin-server";
 import { AppServer } from "@snappy/app-server";
 import { Config } from "@snappy/config";
 import { SiteServer } from "@snappy/site-server";
@@ -9,10 +8,11 @@ import http, { type IncomingMessage, type ServerResponse } from "node:http";
 import https from "node:https";
 import { join } from "node:path";
 
-import { Cookie } from "./Cookie";
 import { Fastify } from "./Fastify";
 import { Html } from "./Html";
 import { HtmlCache } from "./HtmlCache";
+import { Spa } from "./ServeSpa";
+import { SettingsCookie } from "./SettingsCookie";
 import { Static } from "./Static";
 
 export const Server = async () => {
@@ -24,7 +24,7 @@ export const Server = async () => {
     current: undefined,
   };
 
-  const app = Fastify({
+  const app = await Fastify({
     serverFactory: handler => {
       handlerRef.current = handler;
 
@@ -34,17 +34,22 @@ export const Server = async () => {
 
   const htmlCache = HtmlCache();
 
-  const module: ServerModuleConfig = {
+  const shared = {
     app,
-    cookie: Cookie,
+    cookie: SettingsCookie,
     distDir,
     htmlCache,
     injectTheme: Html.injectTheme,
     prepareIndex: Html.prepareIndex,
     setHeaders: Static.setHeaders,
   };
+
+  const serveSpa = Spa(shared);
+  const module = { ...shared, serveSpa };
+
   await SiteServer(module);
   await AppServer(module);
+  await AdminServer(module);
 
   await app.ready();
 

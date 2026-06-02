@@ -1,0 +1,10 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  @include primitives.inline-row-center;
+
+  gap: space.md();
+  margin-top: space.md();
+}

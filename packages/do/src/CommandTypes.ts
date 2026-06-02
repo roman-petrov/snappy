@@ -13,6 +13,7 @@ export type CommandRun =
       shutdown?: { command: string };
     }
   | { command: string }
+  | { handler: `build:admin` }
   | { handler: `build:app-android-debug` }
   | { handler: `build:app-android` }
   | { handler: `build:app` }

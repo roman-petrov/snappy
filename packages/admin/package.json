@@ -1,0 +1,20 @@
+{
+  "name": "@snappy/admin",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/main.tsx",
+  "dependencies": {
+    "@snappy/admin-server-api": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/intl": "workspace:*",
+    "@snappy/store": "workspace:*",
+    "@snappy/theme": "workspace:*",
+    "@snappy/ui": "workspace:*",
+    "react": "^19.2.6"
+  },
+  "devDependencies": {
+    "@snappy/do": "workspace:*",
+    "@types/react": "^19.2.15"
+  }
+}

@@ -1,4 +1,4 @@
 declare const __Settings: {
-  readonly logout: "logout";
+  readonly signOut: "signOut";
 };
 export default __Settings;

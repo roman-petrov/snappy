@@ -1,6 +1,7 @@
+import { Page } from "@snappy/ui";
+
 import type { useSettingsTypeWriterSpeedState } from "./SettingsTypeWriterSpeed.state";
 
-import { Page } from "../../components";
 import { t } from "../../core";
 import { SettingsOptionList } from "./components";
 

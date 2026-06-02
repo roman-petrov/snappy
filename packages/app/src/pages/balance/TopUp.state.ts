@@ -1,7 +1,7 @@
+import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { trpc } from "../../core";
-import { useAsyncSubmit } from "../../hooks";
 
 export const useTopUpState = () => {
   const [amountText, setAmountText] = useState(``);

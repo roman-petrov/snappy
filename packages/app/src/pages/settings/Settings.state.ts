@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { Auth, t, trpc, type UserSettings } from "../../core";
 import { Routes } from "../../Routes";
-import { $loggedIn } from "../../Store";
+import { $signedIn } from "../../Store";
 
 export const useSettingsState = () => {
   const go = useGo();
@@ -30,10 +30,10 @@ export const useSettingsState = () => {
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  const logoutOnClick = async () => {
+  const signOutOnClick = async () => {
     await Auth.signOut();
-    $loggedIn.set(false);
-    void go(Routes.login, { replace: true });
+    $signedIn.set(false);
+    void go(Routes.signIn, { replace: true });
   };
 
   return {
@@ -44,7 +44,7 @@ export const useSettingsState = () => {
     llmImageEnd,
     llmSpeechEnd,
     locale,
-    logoutOnClick,
+    signOutOnClick,
     theme,
     toggleFog,
     typeWriterSpeed,

@@ -1,0 +1,41 @@
+@mixin frame {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+@mixin scroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@mixin body {
+  width: 100%;
+  min-width: 0;
+}
+
+@mixin body-table {
+  width: fit-content;
+  min-width: 100%;
+}
+
+@mixin pad {
+  display: inline-block;
+  min-width: 100%;
+}
+
+@mixin layout {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+@mixin cell {
+  vertical-align: top;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
+}
