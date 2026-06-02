@@ -2,6 +2,7 @@ package com.snappy.app;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends ComponentActivity {
 
     private WebView webView;
+    private Bridge bridge;
     private AppHost appHost;
     private PermissionRequest pendingPermissionRequest;
 
@@ -67,7 +69,8 @@ public class MainActivity extends ComponentActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        webView.addJavascriptInterface(new Bridge(this), "Bridge");
+        bridge = new Bridge(this, webView);
+        webView.addJavascriptInterface(bridge, "Bridge");
         webView.setWebChromeClient(
                 new WebChromeClient() {
                     @Override
@@ -108,6 +111,15 @@ public class MainActivity extends ComponentActivity {
                                 }
                             }
                         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (bridge == null) {
+            return;
+        }
+        bridge.systemThemeChanged();
     }
 
     @Override

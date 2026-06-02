@@ -2,7 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 import type { ResolvedTheme as CoreResolvedTheme, Theme as CoreTheme } from "@snappy/ui-core";
 
-import { MediaQuery } from "@snappy/browser";
+import { Dom, MediaQuery } from "@snappy/browser";
 import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
@@ -13,10 +13,8 @@ export type ResolvedTheme = CoreResolvedTheme;
 export type Theme = CoreTheme;
 
 const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
-
-const effective = (value = $theme()): ResolvedTheme =>
-  value === `system` ? (MediaQuery.matches(prefersDarkQuery) ? `dark` : `light`) : value;
-
+const systemDark = () => (Bridge.available ? Bridge.systemDark() === true : MediaQuery.matches(prefersDarkQuery));
+const effective = (value = $theme()): ResolvedTheme => (value === `system` ? (systemDark() ? `dark` : `light`) : value);
 const fog = ThemeFog(effective);
 
 const applyEffective = () => {
@@ -27,7 +25,11 @@ const applyEffective = () => {
 };
 
 const init = () => {
-  MediaQuery.subscribe(prefersDarkQuery, applyEffective);
+  if (Bridge.available) {
+    Dom.subscribe(window, Bridge.systemThemeChangedEvent, applyEffective);
+  } else {
+    MediaQuery.subscribe(prefersDarkQuery, applyEffective);
+  }
   $theme.subscribe(applyEffective);
   applyEffective();
 };

@@ -27,10 +27,13 @@ const hapticFeedbackConstants: Record<Vibrate, number> = {
 
 type BarStyle = `dark` | `light`;
 
+const systemThemeChangedEvent = `snappy:system-theme-changed` as const;
+
 type NativeBridge = {
   copyHtml: (html: string, plain: string) => void;
   copyImage: (base64: string, name: string, extension: string) => void;
   hapticImpact: (constant: number) => void;
+  isSystemDark: () => boolean;
   setBarStyle: (theme: string) => void;
   shareHtml: (html: string, plain: string, title: string) => void;
   shareImage: (base64: string, mime: string, title: string, extension: string) => void;
@@ -40,11 +43,16 @@ declare global {
   interface Window {
     Bridge?: NativeBridge;
   }
+
+  interface WindowEventMap {
+    [systemThemeChangedEvent]: Event;
+  }
 }
 
 const native = typeof window === `undefined` ? undefined : window.Bridge;
 const available = native !== undefined;
 const hapticImpact = (constant: Vibrate) => native?.hapticImpact(hapticFeedbackConstants[constant]);
+const systemDark = () => native?.isSystemDark();
 const setBarStyle = (style: BarStyle) => native?.setBarStyle(style);
 const copyHtml = (html: string, plain: string) => native?.copyHtml(html, plain);
 const copyImage = (base64: string, name: string, extension: string) => native?.copyImage(base64, name, extension);
@@ -53,4 +61,14 @@ const shareHtml = (html: string, plain: string, title: string) => native?.shareH
 const shareImage = (base64: string, mime: string, title: string, extension: string) =>
   native?.shareImage(base64, mime, title, extension);
 
-export const Bridge = { available, copyHtml, copyImage, hapticImpact, setBarStyle, shareHtml, shareImage };
+export const Bridge = {
+  available,
+  copyHtml,
+  copyImage,
+  hapticImpact,
+  setBarStyle,
+  shareHtml,
+  shareImage,
+  systemDark,
+  systemThemeChangedEvent,
+};

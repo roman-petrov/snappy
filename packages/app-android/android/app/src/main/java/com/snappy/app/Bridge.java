@@ -4,10 +4,12 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.util.Base64;
 import android.view.View;
 import android.webkit.JavascriptInterface;
+import android.webkit.WebView;
 import androidx.core.content.FileProvider;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -17,9 +19,11 @@ import java.io.IOException;
 
 public class Bridge {
     private final MainActivity activity;
+    private final WebView webView;
 
-    public Bridge(MainActivity activity) {
+    public Bridge(MainActivity activity, WebView webView) {
         this.activity = activity;
+        this.webView = webView;
     }
 
     @JavascriptInterface
@@ -33,6 +37,14 @@ public class Bridge {
                     controller.setAppearanceLightStatusBars(lightBars);
                     controller.setAppearanceLightNavigationBars(lightBars);
                 });
+    }
+
+    @JavascriptInterface
+    public boolean isSystemDark() {
+        int nightModeFlags =
+                activity.getResources().getConfiguration().uiMode
+                        & Configuration.UI_MODE_NIGHT_MASK;
+        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
 
     @JavascriptInterface
@@ -90,6 +102,15 @@ public class Bridge {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     activity.startActivity(Intent.createChooser(intent, title));
                 });
+    }
+
+    public void systemThemeChanged() {
+        webView.post(
+                () ->
+                        webView.evaluateJavascript(
+                                "window.dispatchEvent(new"
+                                        + " CustomEvent('snappy:system-theme-changed'))",
+                                null));
     }
 
     private Uri cacheUri(String base64, String name, String ext) {

@@ -26,6 +26,8 @@ vi.mock(import(`@snappy/platform`), () => ({
     setBarStyle: vi.fn(),
     shareHtml: vi.fn(),
     shareImage: vi.fn(),
+    systemDark: vi.fn(),
+    systemThemeChangedEvent: `snappy:system-theme-changed` as const,
   },
   Vibrate: { trigger: vibrateTrigger },
 }));
