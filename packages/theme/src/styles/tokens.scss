@@ -37,6 +37,6 @@
 
 @include mobile {
   :root {
-    --layout-gutter: #{space.sm()};
+    --layout-gutter: #{space.md()};
   }
 }
