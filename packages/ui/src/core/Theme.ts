@@ -32,13 +32,17 @@ const transitionDirection = (next: ResolvedTheme) => (next === `dark` ? `in` : `
 const init = () => {
   MediaQuery.subscribe(prefersDarkQuery, applyEffective);
   $theme.subscribe(applyEffective);
-  ThemeTransition.init();
   applyEffective();
 };
 
-const set = (value: Theme) =>
+const set = (value: Theme) => {
+  if (value === $theme()) {
+    return;
+  }
+
   ThemeTransition.start({ direction: transitionDirection(effective(value)), onChange: () => $theme.set(value) });
+};
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);
 
-export const Theme = { effective, init, toggle };
+export const Theme = { effective, init, set, toggle };

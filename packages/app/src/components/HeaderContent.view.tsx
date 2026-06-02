@@ -1,4 +1,4 @@
-import { IconButton, SystemButtons } from "@snappy/ui";
+import { IconButton } from "@snappy/ui";
 
 import type { useHeaderContentState } from "./HeaderContent.state";
 
@@ -11,7 +11,6 @@ export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 
 export const HeaderContentView = ({ loggedIn }: HeaderContentViewProps) => (
   <div className={styles.root}>
-    <SystemButtons />
     {loggedIn ? (
       <>
         <IconButton icon="settings" link={Routes.settings.root} tip={t(`settings.root.title`)} />

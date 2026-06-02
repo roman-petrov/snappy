@@ -37,25 +37,21 @@ $ease-circle: cubic-bezier(0.2, 0.9, 0.2, 1);
 
 @keyframes view-transition-circle-expand {
   from {
-    clip-path: circle(0 at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%));
+    clip-path: circle(0 at 100% 0);
   }
 
   to {
-    clip-path: circle(
-      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
-    );
+    clip-path: circle(150vmax at 100% 0);
   }
 }
 
 @keyframes view-transition-circle-collapse {
   from {
-    clip-path: circle(
-      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%)
-    );
+    clip-path: circle(150vmax at 100% 0);
   }
 
   to {
-    clip-path: circle(0 at var(--theme-transition-x, 50%) var(--theme-transition-y, 50%));
+    clip-path: circle(0 at 100% 0);
   }
 }
 
