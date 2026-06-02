@@ -9,5 +9,3 @@ export * from "./ReactRef";
 export * from "./Theme";
 
 export * from "./ThemeFog";
-
-export * from "./ThemeTransition";

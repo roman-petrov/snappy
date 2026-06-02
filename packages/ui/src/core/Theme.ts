@@ -7,7 +7,6 @@ import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
 import { ThemeFog } from "./ThemeFog";
-import { ThemeTransition } from "./ThemeTransition";
 
 export type ResolvedTheme = CoreResolvedTheme;
 
@@ -27,8 +26,6 @@ const applyEffective = () => {
   fog.sync();
 };
 
-const transitionDirection = (next: ResolvedTheme) => (next === `dark` ? `in` : `out`);
-
 const init = () => {
   MediaQuery.subscribe(prefersDarkQuery, applyEffective);
   $theme.subscribe(applyEffective);
@@ -40,7 +37,7 @@ const set = (value: Theme) => {
     return;
   }
 
-  ThemeTransition.start({ direction: transitionDirection(effective(value)), onChange: () => $theme.set(value) });
+  void document.startViewTransition(() => $theme.set(value));
 };
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);
