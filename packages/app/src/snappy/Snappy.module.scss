@@ -17,7 +17,6 @@ $-composer-bottom: max(#{space.md()}, env(safe-area-inset-bottom, 0));
 
 .shell-started {
   padding-bottom: calc(#{$-composer-height} + #{$-composer-bottom});
-  overflow: hidden;
 }
 
 .composer {

@@ -1,5 +1,6 @@
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/tokens";
 
 .section {
   display: flex;
@@ -7,6 +8,8 @@
   flex-direction: column;
   gap: space.md();
   min-height: 0;
+  padding: tokens.layout-gutter();
+  overflow: auto;
 }
 
 .head {
