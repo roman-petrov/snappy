@@ -7,6 +7,7 @@
   "dependencies": {
     "@snappy/ai": "workspace:*",
     "@snappy/ai-stream": "workspace:*",
+    "@snappy/app-server-api": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/domain": "workspace:*",
@@ -17,7 +18,6 @@
     "@snappy/snappy-sdk": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
-    "@snappy/trpc": "workspace:*",
     "@snappy/ui": "workspace:*",
     "@trpc/client": "^11.17.0",
     "better-auth": "^1.6.13",

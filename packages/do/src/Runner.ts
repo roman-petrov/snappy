@@ -5,13 +5,13 @@
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
-import { DevCert } from "@snappy/server-prod/DevCert";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
 import { Build } from "./Build";
 import { type CommandName, Commands } from "./Commands";
 import { Feature } from "./Feature";
+import { DevCert } from "./server-dev";
 
 const ok = `✓`;
 const fail = `✗`;

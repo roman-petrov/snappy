@@ -34,7 +34,6 @@ export const McpToolWorkflowRun: McpTool = server => {
     `markdownlint`,
     `prettier`,
     `prettier-fix`,
-    `server:api:dev`,
     `server:dev`,
     `server:frontend:dev`,
     `server:prod`,

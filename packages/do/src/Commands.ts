@@ -85,16 +85,6 @@ const defs = {
     label: `✨ Prettier`,
     run: { args: [`--write`, `.`], tool: `prettier` },
   },
-  [`server:api:dev`]: {
-    description: `Run API in development with live reload.`,
-    label: `⚙️ API dev`,
-    run: {
-      command: `node --watch ${tsxPreload} packages/server-dev/src/main.ts`,
-      cwd: `.`,
-      env: { NODE_ENV: `development` },
-      shutdown: { command: `docker compose down` },
-    },
-  },
   [`server:dev`]: {
     children: [`server:frontend:dev`],
     description: `Run site, app, and API in development.`,
@@ -108,7 +98,7 @@ const defs = {
   [`server:prod`]: {
     description: `Run API server in production.`,
     label: `🏭 Server run`,
-    run: { command: `node dist/server-prod/main.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
+    run: { command: `node dist/server/main.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
   },
   [`stylelint-fix`]: {
     description: `Fix Stylelint issues.`,

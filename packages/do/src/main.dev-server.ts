@@ -1,4 +1,4 @@
 /* eslint-disable functional/no-expression-statements */
-import { DevServer } from "./DevServer";
+import { ServerDev } from "./server-dev";
 
-void DevServer();
+void ServerDev();

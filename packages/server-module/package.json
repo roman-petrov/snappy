@@ -1,0 +1,13 @@
+{
+  "name": "@snappy/server-module",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@fastify/static": "^9.1.3",
+    "@snappy/intl": "workspace:*",
+    "@snappy/ui-core": "workspace:*",
+    "fastify": "^5.8.5"
+  }
+}

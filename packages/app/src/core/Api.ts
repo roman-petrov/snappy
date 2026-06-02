@@ -1,4 +1,4 @@
-import type { TrpcRouter } from "@snappy/trpc";
+import type { TrpcRouter } from "@snappy/app-server-api";
 
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 

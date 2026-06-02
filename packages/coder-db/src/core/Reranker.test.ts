@@ -232,7 +232,7 @@ describe(`Reranker`, () => {
       hit(`docs/monetization.md`, { digest: `d0`, distance: 0.01 }),
       hit(`packages/coder-cli/src/feature.ts`, { digest: `d1`, distance: 0.04 }),
       hit(`packages/coder/src/core/feature.ts`, { digest: `d2`, distance: 0.04 }),
-      hit(`packages/server-app/src/feature.ts`, { digest: `d3`, distance: 0.05 }),
+      hit(`packages/app-server/src/feature.ts`, { digest: `d3`, distance: 0.05 }),
     ];
 
     const vectors = [

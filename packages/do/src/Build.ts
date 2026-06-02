@@ -105,7 +105,7 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
 };
 
 const server = async (root: string, { capture }: BuildOptions = {}) => {
-  const packageName = `server-prod`;
+  const packageName = `server`;
   const cwd = packageDir(root, packageName);
   const out = outDir(root, packageName);
   fs.rmSync(out, { force: true, recursive: true });
