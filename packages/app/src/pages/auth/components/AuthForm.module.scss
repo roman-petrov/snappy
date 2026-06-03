@@ -1,10 +1,6 @@
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
 
-.panel-page {
-  width: 100%;
-}
-
 .panel-card {
   width: 100%;
   max-width: tokens.content-narrow();
@@ -14,19 +10,4 @@
 
 .panel-form {
   margin-top: space.md();
-}
-
-.wrap {
-  width: 100%;
-  max-width: tokens.content-narrow();
-  margin-inline: auto;
-}
-
-.title {
-  margin-bottom: space.md();
-  text-align: start;
-}
-
-.mobile-form {
-  width: 100%;
 }
