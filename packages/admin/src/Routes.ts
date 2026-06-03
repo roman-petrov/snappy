@@ -1,3 +1,11 @@
-import { RouteCollection } from "@snappy/ui";
+import { AppRoutes } from "@snappy/ui";
 
-export const Routes = RouteCollection({ signIn: `login` } as const);
+import { SignIn, UserEdit, UserList } from "./pages";
+
+export const Routes = AppRoutes(
+  {
+    auth: { signIn: { page: SignIn, path: `login` } },
+    user: { edit: { page: UserEdit, path: `user/:userId` }, list: { page: UserList, path: `users` } },
+  },
+  { index: { redirect: r => r.user.list }, public: r => [r.auth.signIn], signIn: r => r.auth.signIn },
+);

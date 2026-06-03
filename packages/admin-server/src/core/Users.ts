@@ -1,23 +1,27 @@
-import type { DbUsers } from "@snappy/db";
+import type { Db } from "@snappy/db";
 
 import { z } from "zod";
 
 import { AdminTrpcAuth } from "./AdminTrpc";
 
-export type UsersConfig = { dbUsers: DbUsers; pageSize: number };
+export type UsersConfig = { db: ReturnType<typeof Db> };
 
-export const Users = ({ dbUsers, pageSize }: UsersConfig) => {
-  const list = AdminTrpcAuth.input(z.object({ page: z.number().int().min(1) })).query(async ({ input }) => {
-    const result = await dbUsers.list({ page: input.page, pageSize });
+export const Users = ({ db }: UsersConfig) => {
+  const idInput = z.object({ id: z.string().min(1) });
+  const maxPageSize = 100;
 
-    return { ...result, pageCount: Math.max(1, Math.ceil(result.total / pageSize)) };
-  });
+  const list = AdminTrpcAuth.input(
+    z.object({ page: z.number().int().min(1), pageSize: z.number().int().min(1).max(maxPageSize) }),
+  ).query(async ({ input }) => db.users.list(input));
 
-  const deleteUser = AdminTrpcAuth.input(z.object({ id: z.string().min(1) })).mutation(async ({ input }) =>
-    dbUsers.remove(input.id),
+  const read = AdminTrpcAuth.input(idInput).query(async ({ input }) => db.users.read(input.id));
+
+  const update = AdminTrpcAuth.input(idInput.extend({ balanceRub: z.number().min(0) })).mutation(async ({ input }) =>
+    db.user(input.id).balance.set(input.balanceRub),
   );
 
-  const trpc = { delete: deleteUser, list };
+  const remove = AdminTrpcAuth.input(idInput).mutation(async ({ input }) => db.users.remove(input.id));
+  const trpc = { delete: remove, list, read, update };
 
   return { trpc };
 };

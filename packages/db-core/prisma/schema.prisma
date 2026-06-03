@@ -11,7 +11,7 @@ datasource db {
  * cspell:word bunx
  * ! Better Auth schema block.
  * ? Regenerate and paste this block here:
- * 1) bunx auth generate --yes --output "packages/db/prisma/better-auth.generated.prisma"
+ * 1) bunx auth generate --yes --output "packages/db-core/prisma/better-auth.generated.prisma"
  * 2) Copy only models from generated file (without generator/datasource).
  * 3) Replace models from `model User` to `model Verification` in this section.
  */

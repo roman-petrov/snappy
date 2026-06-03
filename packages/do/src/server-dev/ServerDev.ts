@@ -5,7 +5,7 @@
 import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
 import { Fastify, Html, SettingsCookie } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
 import express from "express";
@@ -62,7 +62,7 @@ export const ServerDev = async () => {
       allowedHosts: true,
       hmr: { clientPort: portHttps, host: Config.host, protocol: `wss`, server },
       middlewareMode: true,
-      origin: `https://${Config.host}`,
+      origin: _.https(Config.host),
     },
   });
 

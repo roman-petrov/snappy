@@ -31,6 +31,7 @@
         "@snappy/ui": "workspace:*",
         "lucide-react": "^0.575.0",
         "react": "^19.2.6",
+        "react-router-dom": "^7.16.0",
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
@@ -265,10 +266,18 @@
       "name": "@snappy/db",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/db-core": "workspace:*",
+      },
+    },
+    "packages/db-core": {
+      "name": "@snappy/db-core",
+      "version": "0.0.0",
+      "dependencies": {
         "@prisma/adapter-pg": "^7.8.0",
         "@prisma/client": "^7.8.0",
         "@snappy/ai": "workspace:*",
         "@snappy/domain": "workspace:*",
+        "better-auth": "^1.6.13",
       },
       "devDependencies": {
         "prisma": "^7.7.0",
@@ -1295,6 +1304,8 @@
     "@snappy/core": ["@snappy/core@workspace:packages/core"],
 
     "@snappy/db": ["@snappy/db@workspace:packages/db"],
+
+    "@snappy/db-core": ["@snappy/db-core@workspace:packages/db-core"],
 
     "@snappy/do": ["@snappy/do@workspace:packages/do"],
 

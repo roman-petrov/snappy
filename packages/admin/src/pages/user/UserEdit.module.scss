@@ -1,0 +1,14 @@
+@use "pkg:@snappy/theme/tokens/space";
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.sm();
+  margin-top: space.md();
+}

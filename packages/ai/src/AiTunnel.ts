@@ -1,7 +1,10 @@
+// cspell:word aitunnel
+import { _ } from "@snappy/core";
+
 import type { AiReasoning } from "./AiApi";
 import type { AiReasoningEffort } from "./Types";
 
-const baseUrlDefault = `https://api.aitunnel.ru/v1`;
+const baseUrlDefault = _.https(`api.aitunnel.ru/v1`);
 const baseUrl = (path?: string) => (path === undefined ? baseUrlDefault : path.replace(/\/$/u, ``));
 
 /** Strip OpenRouter `provider/` prefix; package stores short ids (`gpt-5-mini`). */

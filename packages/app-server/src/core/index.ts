@@ -18,6 +18,6 @@ export * from "./PaymentLog";
 
 export type * from "./ServerApp";
 
-export * from "./SessionUserId";
+export * from "./Session";
 
 export * from "./UserSettings";

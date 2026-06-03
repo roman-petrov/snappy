@@ -1,4 +1,6 @@
 import { useAgentState } from "./Agent.state";
 import { AgentView } from "./Agent.view";
 
-export const Agent = () => <AgentView {...useAgentState()} />;
+export type AgentProps = { agentId: string };
+
+export const Agent = (props: AgentProps) => <AgentView {...useAgentState(props)} />;

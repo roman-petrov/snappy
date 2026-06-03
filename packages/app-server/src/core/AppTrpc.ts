@@ -1,9 +1,11 @@
+import type { DbUser } from "@snappy/db";
+
 import { Trpc } from "@snappy/server-module";
 
-export const AppTrpcContext = Trpc.context<{ userId?: string }>();
+export const AppTrpcContext = Trpc.context<{ dbUser?: DbUser }>();
 
 export const AppTrpcAuth = Trpc.auth(AppTrpcContext, context => {
-  const { userId } = context;
+  const { dbUser } = context;
 
-  return userId === undefined ? undefined : { userId };
+  return dbUser === undefined ? undefined : { dbUser };
 });

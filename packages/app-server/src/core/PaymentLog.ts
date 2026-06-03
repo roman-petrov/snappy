@@ -1,56 +1,50 @@
-import type { Db } from "@snappy/db";
+import type { Db, DbPaymentLogEntry, DbUser } from "@snappy/db";
 import type { PaymentErrorCode, PaymentQueryResult, PaymentSnapshotSuccess } from "@snappy/payment";
 
-const paymentFailureNote = (code: PaymentErrorCode, externalMessage?: string) =>
-  externalMessage === undefined ? code : `${code}: ${externalMessage}`;
+export const PaymentLog = (db: ReturnType<typeof Db>) => {
+  const failureNote = (code: PaymentErrorCode, externalMessage?: string) =>
+    externalMessage === undefined ? code : `${code}: ${externalMessage}`;
 
-const paymentOutcomeNote = (result: PaymentQueryResult) =>
-  result.ok ? (result.providerCancellationCode ?? undefined) : paymentFailureNote(result.code, result.externalMessage);
+  const outcomeNote = (result: PaymentQueryResult) =>
+    result.ok ? (result.providerCancellationCode ?? undefined) : failureNote(result.code, result.externalMessage);
 
-export const PaymentLog = (log: Db[`paymentLog`]) => {
-  const isSucceededAlready = async (paymentId: string) => log.hasSucceededPayment(paymentId);
+  const create = async (user: DbUser | undefined, entry: DbPaymentLogEntry) =>
+    user === undefined ? db.paymentLog.create(entry) : user.paymentLog.create(entry);
 
-  const logTopUpError = async (userId: string, code: PaymentErrorCode, externalMessage?: string) =>
-    log.create({
-      currency: `RUB`,
-      errorMessage: paymentFailureNote(code, externalMessage),
-      status: `error`,
-      type: `topup`,
-      userId,
-    });
+  const isSucceededAlready = async (paymentId: string) => db.paymentLog.succeeded(paymentId);
 
-  const logTopUpPending = async (userId: string, paymentId: string, amount: number | string) =>
-    log.create({ amount, currency: `RUB`, status: `pending`, type: `topup`, userId, yooKassaPaymentId: paymentId });
+  const logTopUpError = async (user: DbUser, code: PaymentErrorCode, externalMessage?: string) =>
+    create(user, { currency: `RUB`, errorMessage: failureNote(code, externalMessage), status: `error`, type: `topup` });
 
-  const logPaymentNonSucceeded = async (result: PaymentSnapshotSuccess) =>
-    log.create({
-      amount: result.money?.value,
-      currency: result.money?.currency,
-      paymentMethodId: result.savedMethodId ?? undefined,
-      status: result.status,
-      type: result.metadataKind ?? `topup`,
-      userId: result.userId,
-      yooKassaPaymentId: result.providerPaymentId,
-    });
+  const logTopUpPending = async (user: DbUser, paymentId: string, amount: number | string) =>
+    create(user, { amount, currency: `RUB`, status: `pending`, type: `topup`, yooKassaPaymentId: paymentId });
 
-  const logPaymentSucceeded = async (result: PaymentSnapshotSuccess, userId: string) =>
-    log.create({
+  const logPaymentSucceeded = async (user: DbUser, result: PaymentSnapshotSuccess) =>
+    create(user, {
       amount: result.money?.value,
       currency: result.money?.currency,
       paymentMethodId: result.savedMethodId,
       status: `succeeded`,
       type: result.metadataKind ?? `topup`,
-      userId,
       yooKassaPaymentId: result.providerPaymentId,
     });
 
-  const logPaymentCanceled = async (paymentId: string, result: PaymentQueryResult) =>
-    log.create({
-      errorMessage: paymentOutcomeNote(result),
+  const logPaymentNonSucceeded = async (user: DbUser | undefined, result: PaymentSnapshotSuccess) =>
+    create(user, {
+      amount: result.money?.value,
+      currency: result.money?.currency,
+      paymentMethodId: result.savedMethodId ?? undefined,
+      status: result.status,
+      type: result.metadataKind ?? `topup`,
+      yooKassaPaymentId: result.providerPaymentId,
+    });
+
+  const logPaymentCanceled = async (paymentId: string, result: PaymentQueryResult, user?: DbUser) =>
+    create(user, {
+      errorMessage: outcomeNote(result),
       paymentMethodId: result.ok ? (result.savedMethodId ?? undefined) : undefined,
       status: result.ok ? `canceled` : `error`,
       type: result.ok ? (result.metadataKind ?? `topup`) : `topup`,
-      userId: result.ok && result.userId !== undefined && result.userId !== `` ? result.userId : undefined,
       yooKassaPaymentId: paymentId,
     });
 

@@ -1,24 +1,22 @@
 /* eslint-disable functional/no-expression-statements */
-import type { BalanceHistoryMeta, DbUserBalance } from "@snappy/db";
+import type { DbBalanceHistoryMeta, DbUser } from "@snappy/db";
+
+import { Config } from "@snappy/config";
 
 import { AppTrpcAuth } from "./AppTrpc";
 
-export type BalanceConfig = { balanceMinRub: number; userBalance: DbUserBalance };
+const read = async (user: DbUser) => user.balance.read();
+const isLlmBlocked = async (user: DbUser) => (await read(user)) <= Config.balanceMinRub;
 
-export const Balance = ({ balanceMinRub, userBalance }: BalanceConfig) => {
-  const read = async (userId: string) => userBalance.read(userId);
-  const isLlmBlocked = async (userId: string) => (await read(userId)) <= balanceMinRub;
+const creditFromTopUp = async (user: DbUser, amountRub: number, meta?: DbBalanceHistoryMeta) =>
+  user.balance.credit(amountRub, meta);
 
-  const creditFromTopUp = async (userId: string, amountRub: number, meta?: BalanceHistoryMeta) =>
-    userBalance.credit(userId, amountRub, `credit_payment`, meta);
-
-  const debitForLlm = async (userId: string, rub: number, meta: { call: string; model: string }) => {
-    await userBalance.debit(userId, rub, `debit_llm`, { ...meta, chargedRub: rub });
-  };
-
-  const trpc = AppTrpcAuth.query(async ({ ctx }) => read(ctx.userId));
-
-  return { creditFromTopUp, debitForLlm, isLlmBlocked, read, trpc };
+const debitForLlm = async (user: DbUser, rub: number, meta: { call: string; model: string }) => {
+  await user.balance.debit(rub, { ...meta, chargedRub: rub });
 };
 
-export type Balance = ReturnType<typeof Balance>;
+const trpc = AppTrpcAuth.query(async ({ ctx }) => read(ctx.dbUser));
+
+export const Balance = { creditFromTopUp, debitForLlm, isLlmBlocked, read, trpc };
+
+export type Balance = typeof Balance;

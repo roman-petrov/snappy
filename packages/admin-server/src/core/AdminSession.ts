@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-try-statements */
+import type { FastifyReply } from "fastify";
+
 import { Config } from "@snappy/config";
 import { _, Cookie } from "@snappy/core";
 import { createHmac, timingSafeEqual } from "node:crypto";
@@ -6,7 +8,16 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 export type AdminSessionPayload = { exp: number };
 
 const cookieName = `snappy-admin`;
+const cookiePath = `/api/admin`;
 const ttlMs = _.day * _.daysInWeek;
+
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: ttlMs / _.second,
+  path: cookiePath,
+  sameSite: `lax` as const,
+  secure: true,
+};
 
 const isPayload = (value: unknown): value is AdminSessionPayload =>
   value !== null && _.isObject(value) && `exp` in value && _.isNumber(value.exp);
@@ -66,11 +77,7 @@ const verify = (cookie?: string) => {
 };
 
 const issue = () => signPayload({ exp: _.now() + ttlMs });
+const apply = (reply: FastifyReply, value: string) => reply.setCookie(cookieName, value, cookieOptions);
+const clear = (reply: FastifyReply) => reply.clearCookie(cookieName, { path: cookiePath });
 
-const cookieOptions = (maxAge: number) =>
-  [`HttpOnly`, `SameSite=Lax`, `Path=/api/admin`, `Max-Age=${maxAge}`, `Secure`].join(`; `);
-
-const setCookie = (value: string) => `${cookieName}=${encodeURIComponent(value)}; ${cookieOptions(ttlMs / _.second)}`;
-const clearCookie = () => `${cookieName}=; ${cookieOptions(0)}`;
-
-export const AdminSession = { clearCookie, credentialsMatch, issue, setCookie, verify };
+export const AdminSession = { apply, clear, credentialsMatch, issue, verify };

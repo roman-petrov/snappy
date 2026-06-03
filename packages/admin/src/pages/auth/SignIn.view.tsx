@@ -2,7 +2,7 @@ import { Alert, Button, Card, Input, Page, PasswordInput, Title } from "@snappy/
 
 import type { useSignInState } from "./SignIn.state";
 
-import { t } from "../core";
+import { t } from "../../core";
 import styles from "./SignIn.module.scss";
 
 export type SignInViewProps = ReturnType<typeof useSignInState>;

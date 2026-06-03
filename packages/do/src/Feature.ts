@@ -5,8 +5,8 @@ import fs from "node:fs";
 import { join } from "node:path";
 
 const workflowRunner = `bun`;
-const migrationsDir = `packages/db/prisma/migrations`;
-const schemaPath = `packages/db/prisma/schema.prisma`;
+const migrationsDir = `packages/db-core/prisma/migrations`;
+const schemaPath = `packages/db-core/prisma/schema.prisma`;
 const mainBranch = `main`;
 const slugMax = 100;
 

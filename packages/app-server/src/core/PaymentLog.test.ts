@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { describe, expect, it, vi } from "vitest";
 
@@ -9,33 +8,35 @@ describe(`paymentLog`, () => {
   describe(`logTopUpError / logTopUpPending`, () => {
     it(`logTopUpError calls create with error entry`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
+      const user = Mock.createDbUser(`10`);
+      vi.mocked(db.user).mockReturnValue(user);
+      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
 
-      await paymentLog.logTopUpError(`10`, `provider-error`);
+      await paymentLog.logTopUpError(user, `provider-error`);
 
-      expect(db.paymentLog.create).toHaveBeenCalledWith({
+      expect(user.paymentLog.create).toHaveBeenCalledWith({
         currency: `RUB`,
         errorMessage: `provider-error`,
         status: `error`,
         type: `topup`,
-        userId: `10`,
       });
     });
 
     it(`logTopUpPending calls create with pending entry`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
+      const user = Mock.createDbUser(`5`);
+      vi.mocked(db.user).mockReturnValue(user);
+      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
 
-      await paymentLog.logTopUpPending(`5`, `pay-id-1`, 199);
+      await paymentLog.logTopUpPending(user, `pay-id-1`, 199);
 
-      expect(db.paymentLog.create).toHaveBeenCalledWith({
+      expect(user.paymentLog.create).toHaveBeenCalledWith({
         amount: 199,
         currency: `RUB`,
         status: `pending`,
         type: `topup`,
-        userId: `5`,
         yooKassaPaymentId: `pay-id-1`,
       });
     });
@@ -44,18 +45,18 @@ describe(`paymentLog`, () => {
   describe(`isSucceededAlready`, () => {
     it(`returns false when no succeeded row for paymentId`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.hasSucceededPayment as ReturnType<typeof vi.fn>).mockResolvedValue(false);
-      const paymentLog = PaymentLog(db.paymentLog);
+      (db.paymentLog.succeeded as ReturnType<typeof vi.fn>).mockResolvedValue(false);
+      const paymentLog = PaymentLog(db);
 
       await expect(paymentLog.isSucceededAlready(`pay-123`)).resolves.toBe(false);
 
-      expect(db.paymentLog.hasSucceededPayment).toHaveBeenCalledWith(`pay-123`);
+      expect(db.paymentLog.succeeded).toHaveBeenCalledWith(`pay-123`);
     });
 
     it(`returns true when succeeded row exists`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.hasSucceededPayment as ReturnType<typeof vi.fn>).mockResolvedValue(true);
-      const paymentLog = PaymentLog(db.paymentLog);
+      (db.paymentLog.succeeded as ReturnType<typeof vi.fn>).mockResolvedValue(true);
+      const paymentLog = PaymentLog(db);
 
       await expect(paymentLog.isSucceededAlready(`pay-123`)).resolves.toBe(true);
     });
@@ -64,8 +65,10 @@ describe(`paymentLog`, () => {
   describe(`logPaymentSucceeded`, () => {
     it(`calls create with succeeded entry and type from result`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
+      const user = Mock.createDbUser(`7`);
+      vi.mocked(db.user).mockReturnValue(user);
+      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
 
       const result = {
         metadataKind: `topup` as const,
@@ -78,15 +81,14 @@ describe(`paymentLog`, () => {
         userId: `7`,
       };
 
-      await paymentLog.logPaymentSucceeded(result, `7`);
+      await paymentLog.logPaymentSucceeded(user, result);
 
-      expect(db.paymentLog.create).toHaveBeenCalledWith({
+      expect(user.paymentLog.create).toHaveBeenCalledWith({
         amount: `199.00`,
         currency: `RUB`,
         paymentMethodId: `pm-1`,
         status: `succeeded`,
         type: `topup`,
-        userId: `7`,
         yooKassaPaymentId: `pay-1`,
       });
     });
@@ -95,8 +97,9 @@ describe(`paymentLog`, () => {
   describe(`logPaymentCanceled`, () => {
     it(`calls create with canceled status when result has data`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
+      const user = Mock.createDbUser(`2`);
+      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
 
       const result = {
         metadataKind: undefined,
@@ -108,22 +111,21 @@ describe(`paymentLog`, () => {
         userId: `2`,
       };
 
-      await paymentLog.logPaymentCanceled(`pay-id`, result);
+      await paymentLog.logPaymentCanceled(`pay-id`, result, user);
 
-      expect(db.paymentLog.create).toHaveBeenCalledWith({
+      expect(user.paymentLog.create).toHaveBeenCalledWith({
         errorMessage: `user_cancelled`,
         paymentMethodId: `pm-x`,
         status: `canceled`,
         type: `topup`,
-        userId: `2`,
         yooKassaPaymentId: `pay-id`,
       });
     });
 
     it(`calls create with error status when result has error`, async () => {
       const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue({});
-      const paymentLog = PaymentLog(db.paymentLog);
+      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
       const result = { code: `network` as const, ok: false as const };
 
       await paymentLog.logPaymentCanceled(`pay-id`, result);

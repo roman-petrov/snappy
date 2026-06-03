@@ -11,19 +11,15 @@ import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "
 
 import { App } from "./App";
 import { AuthLayout } from "./components/AuthLayout";
-import { Language, Theme } from "./core";
+import { Language, type StartAppRoutes, Theme } from "./core";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
 
 export type StartAppInput = {
   base: string;
   header?: ReactNode;
-  index: ReactNode;
-  path: string;
-  publicPaths: readonly string[];
-  routes: Record<string, ReactNode>;
+  routes: StartAppRoutes;
   signedIn: ReadonlyStore<boolean>;
-  signInPath: string;
 };
 
 const container = () => {
@@ -32,7 +28,9 @@ const container = () => {
   return element instanceof HTMLElement ? element : undefined;
 };
 
-export const startApp = ({ base, header, index, path, publicPaths, routes, signedIn, signInPath }: StartAppInput) => {
+export const startApp = ({ base, header, routes, signedIn }: StartAppInput) => {
+  const { $: meta } = routes;
+  const { home: path, index, pages, publicPaths, signInPath } = meta;
   let remount: Action | undefined;
 
   Theme.init();
@@ -49,7 +47,7 @@ export const startApp = ({ base, header, index, path, publicPaths, routes, signe
       {
         children: [
           { element: index, index: true },
-          ..._.entries(routes).map(([routePath, element]) => ({ element, path: routePath })),
+          ..._.entries(pages).map(([routePath, element]) => ({ element, path: routePath })),
           { element: <Navigate replace to={path} />, path: `*` },
         ],
         element: <AuthLayout header={header} publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath} />,

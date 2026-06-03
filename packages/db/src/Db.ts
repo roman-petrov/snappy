@@ -1,17 +1,22 @@
-import { PrismaPg } from "@prisma/adapter-pg";
+import {
+  DbCore,
+  type DbCoreAuth,
+  type DbCoreBalanceHistoryMeta,
+  type DbCorePaymentLogEntry,
+  type DbCoreSettingsPatch,
+  type DbCoreUser,
+} from "@snappy/db-core";
 
-import { DbPaymentLog } from "./DbPaymentLog";
-import { DbUserBalance } from "./DbUserBalance";
-import { DbUserSettings } from "./DbUserSettings";
-import { PrismaClient } from "./generated/client";
+export const Db = DbCore;
 
-export const Db = (connectionString: string) => {
-  const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
-  const paymentLog = DbPaymentLog(prisma);
-  const userBalance = DbUserBalance(prisma);
-  const userSettings = DbUserSettings(prisma);
+export type Db = DbCore;
 
-  return { paymentLog, prisma, userBalance, userSettings };
-};
+export type DbAuth = DbCoreAuth;
 
-export type Db = ReturnType<typeof Db>;
+export type DbBalanceHistoryMeta = DbCoreBalanceHistoryMeta;
+
+export type DbPaymentLogEntry = DbCorePaymentLogEntry;
+
+export type DbSettingsPatch = DbCoreSettingsPatch;
+
+export type DbUser = DbCoreUser;

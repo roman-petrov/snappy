@@ -1,34 +1,25 @@
 /* eslint-disable functional/no-expression-statements */
+import type { Db, DbUser } from "@snappy/db";
 import type { PaymentProvider } from "@snappy/payment";
 
+import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
-import type { Balance } from "./Balance";
 import type { PaymentLog } from "./PaymentLog";
 
 import { AppTrpcAuth } from "./AppTrpc";
+import { Balance } from "./Balance";
+import { Session } from "./Session";
 
-export type BalancePaymentConfig = {
-  balance: Balance;
-  balancePaymentMaxRub: number;
-  balancePaymentMinRub: number;
-  payment: PaymentProvider;
-  paymentLog: PaymentLog;
-};
+export type BalancePaymentConfig = { db: ReturnType<typeof Db>; payment: PaymentProvider; paymentLog: PaymentLog };
 
-export const BalancePayment = ({
-  balance,
-  balancePaymentMaxRub,
-  balancePaymentMinRub,
-  payment,
-  paymentLog,
-}: BalancePaymentConfig) => {
+export const BalancePayment = ({ db, payment, paymentLog }: BalancePaymentConfig) => {
   const currency = `RUB`;
   const description = `Snappy — пополнение баланса`;
 
-  const paymentUrl = async (userId: string, amount: number) => {
-    if (!Number.isFinite(amount) || amount < balancePaymentMinRub || amount > balancePaymentMaxRub) {
+  const paymentUrl = async (user: DbUser, amount: number) => {
+    if (!Number.isFinite(amount) || amount < Config.balancePaymentMinRub || amount > Config.balancePaymentMaxRub) {
       return { status: `invalidAmount` as const };
     }
     const rounded = _.round(amount, 2);
@@ -38,16 +29,16 @@ export const BalancePayment = ({
       currency,
       description,
       metadataKind: `topup`,
-      userId,
+      userId: user.id,
     });
 
     if (!result.ok) {
-      await paymentLog.logTopUpError(userId, result.code, result.externalMessage);
+      await paymentLog.logTopUpError(user, result.code, result.externalMessage);
 
       return { status: `paymentError` as const };
     }
 
-    await paymentLog.logTopUpPending(userId, result.providerPaymentId, rounded);
+    await paymentLog.logTopUpPending(user, result.providerPaymentId, rounded);
 
     return { status: `ok` as const, url: result.redirectUrl };
   };
@@ -58,7 +49,7 @@ export const BalancePayment = ({
       return;
     }
     if (result.status !== `succeeded`) {
-      await paymentLog.logPaymentNonSucceeded(result);
+      await paymentLog.logPaymentNonSucceeded(Session.dbUserFromId(db, result.userId), result);
 
       return;
     }
@@ -71,22 +62,30 @@ export const BalancePayment = ({
       return;
     }
 
-    const { money, userId } = result;
-    if (userId === undefined || userId === ``) {
+    const user = Session.dbUserFromId(db, result.userId);
+    if (user === undefined) {
       return;
     }
 
-    await paymentLog.logPaymentSucceeded(result, userId);
+    const { money } = result;
+    await paymentLog.logPaymentSucceeded(user, result);
 
     const value = money?.value;
     const amountRub = value === undefined ? 0 : Number(value);
     if (amountRub > 0) {
-      await balance.creditFromTopUp(userId, amountRub, { yooKassaPaymentId: paymentId });
+      await Balance.creditFromTopUp(user, amountRub, { yooKassaPaymentId: paymentId });
     }
   };
 
-  const handlePaymentCanceled = async (paymentId: string) =>
-    paymentLog.logPaymentCanceled(paymentId, await payment.payment(paymentId));
+  const handlePaymentCanceled = async (paymentId: string) => {
+    const result = await payment.payment(paymentId);
+
+    await paymentLog.logPaymentCanceled(
+      paymentId,
+      result,
+      Session.dbUserFromId(db, result.ok ? result.userId : undefined),
+    );
+  };
 
   const webhook = async (body: unknown) => {
     const parsed = payment.parseWebhook(body);
@@ -101,11 +100,11 @@ export const BalancePayment = ({
 
   const trpc = {
     paymentUrl: AppTrpcAuth.input(z.object({ amount: z.number().optional() })).mutation(async ({ ctx, input }) =>
-      paymentUrl(ctx.userId, input.amount ?? 0),
+      paymentUrl(ctx.dbUser, input.amount ?? 0),
     ),
   };
 
-  return { trpc, webhook };
+  return { paymentUrl, trpc, webhook };
 };
 
 export type BalancePayment = ReturnType<typeof BalancePayment>;

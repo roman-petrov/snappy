@@ -25,7 +25,7 @@
 
 ### 🧬 Prisma workflow
 
-Schema source of truth: `packages/db/prisma/schema.prisma`.
+Schema source of truth: `packages/db-core/prisma/schema.prisma`.
 
 #### 🌿 Feature branch
 

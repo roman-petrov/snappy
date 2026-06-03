@@ -57,7 +57,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
   const stop = async () => {
     runtimeRef.current?.stop();
-    await go(Routes.home);
+    await go(Routes.$.home);
   };
 
   const ready = phase === `ready` && aiConfig !== undefined;

@@ -1,20 +1,21 @@
 /* eslint-disable @typescript-eslint/require-await */
-import type { Db } from "@snappy/db";
+import type { DbAuth } from "@snappy/db";
 
 import { Config } from "@snappy/config";
+import { _ } from "@snappy/core";
 import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
 
-export type BetterAuthConfig = { prisma: Db[`prisma`] };
+export type BetterAuthConfig = { auth: DbAuth };
 
-export const BetterAuth = ({ prisma }: BetterAuthConfig) =>
+export const BetterAuth = ({ auth }: BetterAuthConfig) =>
   betterAuth({
+    advanced: { cookiePrefix: `snappy` },
     basePath: `/api/auth`,
-    baseURL: `https://${Config.host}`,
-    database: prismaAdapter(prisma, { provider: `postgresql` }),
+    baseURL: _.https(Config.host),
+    database: auth,
     emailAndPassword: { enabled: true, sendResetPassword: async () => undefined },
     secret: Config.betterAuthJwtSecret,
-    trustedOrigins: [`https://${Config.host}`],
+    trustedOrigins: [_.https(Config.host)],
   });
 
 export type BetterAuth = ReturnType<typeof BetterAuth>;

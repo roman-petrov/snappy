@@ -90,6 +90,7 @@ const b1024 = 1024;
 const kb = (kiloBytes: number) => kiloBytes * b1024;
 const mb = (megaBytes: number) => kb(kb(megaBytes));
 const gb = (gigaBytes: number) => kb(mb(gigaBytes));
+const https = (authority: string) => `https://${authority}`;
 
 export const _ = {
   ...DateTime,
@@ -105,6 +106,7 @@ export const _ = {
   gb,
   gen,
   hex,
+  https,
   isArray,
   isBoolean,
   isFunction,

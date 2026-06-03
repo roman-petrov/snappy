@@ -7,39 +7,40 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import type { Db, DbUser } from "@snappy/db";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import type { IncomingHttpHeaders } from "node:http";
 import type { IncomingHttpHeaders as Http2IncomingHttpHeaders } from "node:http2";
 
 import httpProxy from "@fastify/http-proxy";
 import { Config } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
 import { type Readable, Transform } from "node:stream";
 import { z } from "zod";
 
 import type { Balance } from "./Balance";
 import type { BetterAuth } from "./BetterAuth";
 
-import { SessionUserId } from "./SessionUserId";
+import { Session } from "./Session";
 
-export type AiTunnelProxyConfig = { balance: Balance; betterAuth: BetterAuth };
+export type AiTunnelProxyConfig = { balance: Balance; betterAuth: BetterAuth; db: ReturnType<typeof Db> };
 
-export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth }: AiTunnelProxyConfig) => {
-  type RequestAuthenticated = FastifyRequest & { userId: string };
+export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth, db }: AiTunnelProxyConfig) => {
+  type RequestAuthenticated = FastifyRequest & { dbUser: DbUser };
 
   const upstreamHost = `api.aitunnel.ru`;
 
   await app.register(httpProxy, {
     prefix: `/api/ai-tunnel`,
     preHandler: async (request, reply) => {
-      const userId = await SessionUserId(betterAuth, request.headers);
-      if (userId === undefined) {
+      const dbUser = await Session.dbUser(betterAuth, request.headers, db);
+      if (dbUser === undefined) {
         return reply.status(HttpStatus.unauthorized).send({ status: `unauthorized` });
       }
-      (request as RequestAuthenticated).userId = userId;
-      if (await balance.isLlmBlocked(userId)) {
+      if (await balance.isLlmBlocked(dbUser)) {
         return reply.status(HttpStatus.ok).send({ status: `balanceBlocked` });
       }
+      (request as RequestAuthenticated).dbUser = dbUser;
 
       return undefined;
     },
@@ -52,7 +53,7 @@ export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth 
         };
 
         const contentType = upstreamHeaderList[`content-type`] ?? ``;
-        const { userId } = request as RequestAuthenticated;
+        const { dbUser } = request as RequestAuthenticated;
 
         if (stream === undefined || stream === null) {
           void reply.send();
@@ -68,7 +69,7 @@ export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth 
             return false;
           }
           const { model, usage } = parsed.data;
-          await balance.debitForLlm(userId, usage.cost_rub, { call: request.url, model: model ?? `` });
+          await balance.debitForLlm(dbUser, usage.cost_rub, { call: request.url, model: model ?? `` });
 
           return true;
         };
@@ -151,6 +152,6 @@ export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth 
         return { ...rest, authorization: `Bearer ${Config.aiTunnelKey}`, host: upstreamHost };
       },
     },
-    upstream: `https://${upstreamHost}`,
+    upstream: _.https(upstreamHost),
   });
 };

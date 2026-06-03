@@ -14,32 +14,23 @@ import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
 import { BetterAuth } from "./BetterAuth";
 import { PaymentLog } from "./PaymentLog";
-import { SessionUserId } from "./SessionUserId";
+import { Session } from "./Session";
 import { UserSettings } from "./UserSettings";
 
 export type AppConfig = { app: FastifyInstance };
 
 export const App = async ({ app }: AppConfig) => {
   const db = Db(Config.dbUrl);
-  const betterAuth = BetterAuth({ prisma: db.prisma });
+  const betterAuth = BetterAuth({ auth: db.auth });
 
   const payment = Payment({
     credentials: { secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId },
     type: `yoo-kassa`,
   });
 
-  const paymentLog = PaymentLog(db.paymentLog);
-  const balance = Balance({ balanceMinRub: Config.balanceMinRub, userBalance: db.userBalance });
-
-  const balancePayment = BalancePayment({
-    balance,
-    balancePaymentMaxRub: Config.balancePaymentMaxRub,
-    balancePaymentMinRub: Config.balancePaymentMinRub,
-    payment,
-    paymentLog,
-  });
-
-  const userSettings = UserSettings({ userSettings: db.userSettings });
+  const paymentLog = PaymentLog(db);
+  const balancePayment = BalancePayment({ db, payment, paymentLog });
+  const serverApp = { balance: Balance, balancePayment, betterAuth, userSettings: UserSettings };
 
   app.route({
     handler: async (request, reply) => {
@@ -61,13 +52,13 @@ export const App = async ({ app }: AppConfig) => {
     url: `/api/auth/*`,
   });
 
-  await AiTunnelProxy(app, { balance, betterAuth });
+  await AiTunnelProxy(app, { balance: Balance, betterAuth, db });
 
   await Trpc.register({
     app,
-    context: async ({ req }) => ({ userId: await SessionUserId(betterAuth, req.headers) }),
+    context: async ({ req }) => ({ dbUser: await Session.dbUser(betterAuth, req.headers, db) }),
     prefix: `/api/trpc`,
-    router: TrpcRouter({ balance, balancePayment, betterAuth, db, userSettings }),
+    router: TrpcRouter(serverApp),
   });
 
   app.post(`/api/webhooks/yookassa`, async (request, reply) => {

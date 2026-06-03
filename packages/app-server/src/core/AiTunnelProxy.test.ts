@@ -1,5 +1,7 @@
 // cspell:word aitunnel
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import type { Db, DbUser } from "@snappy/db";
+
 import { HttpStatus } from "@snappy/core";
 import fastifyFactory, { type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
 import { Readable, type Transform } from "node:stream";
@@ -11,7 +13,8 @@ import type { Balance } from "./Balance";
 import type { BetterAuth } from "./BetterAuth";
 
 import { AiTunnelProxy } from "./AiTunnelProxy";
-import { SessionUserId } from "./SessionUserId";
+import { Session } from "./Session";
+import { Mock } from "./test/Mock";
 
 type RegisterOptions = {
   preHandler?: (request: FastifyRequest, reply: FastifyReply, done: () => undefined) => Promise<unknown> | undefined;
@@ -53,7 +56,7 @@ const { httpProxyMock } = vi.hoisted(() => {
 
 vi.mock(`@fastify/http-proxy`, () => ({ default: httpProxyMock }));
 
-vi.mock(`./SessionUserId`, () => ({ SessionUserId: vi.fn() }));
+vi.mock(`./Session`, () => ({ Session: { dbUser: vi.fn() } }));
 
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: `test-ai-tunnel-key` } }));
 
@@ -110,15 +113,29 @@ const drainTransform = async (stream: Transform) => {
   await finished(stream);
 };
 
-const mockTunnel = () =>
-  ({ balance: { debitForLlm: vi.fn(), isLlmBlocked: vi.fn() }, betterAuth: {} }) as unknown as {
-    balance: Balance;
-    betterAuth: BetterAuth;
+type MockTunnel = { balance: Balance; betterAuth: BetterAuth; db: ReturnType<typeof Db>; dbUser: DbUser };
+
+const mockTunnel = (userId = `user-1`): MockTunnel => {
+  const dbUser = Mock.createDbUser(userId);
+  const db = Mock.createDb();
+
+  return {
+    balance: {
+      creditFromTopUp: vi.fn(),
+      debitForLlm: vi.fn(),
+      isLlmBlocked: vi.fn(),
+      read: vi.fn(),
+      trpc: {},
+    } as unknown as Balance,
+    betterAuth: {} as BetterAuth,
+    db,
+    dbUser,
   };
+};
 
 const resetMocks = () => {
   httpProxyMock.mockClear();
-  vi.mocked(SessionUserId).mockReset();
+  vi.mocked(Session.dbUser).mockReset();
 };
 
 const proxyWithReplyHooks = async () => {
@@ -134,7 +151,7 @@ describe(`AiTunnelProxy`, () => {
   describe(`preHandler`, () => {
     it(`returns 401 when there is no session user`, async () => {
       resetMocks();
-      vi.mocked(SessionUserId).mockResolvedValue(undefined);
+      vi.mocked(Session.dbUser).mockResolvedValue(undefined);
       const app = fastifyFactory();
       const api = mockTunnel();
       await AiTunnelProxy(app, api);
@@ -146,23 +163,23 @@ describe(`AiTunnelProxy`, () => {
 
     it(`returns balanceBlocked when LLM usage is blocked by balance`, async () => {
       resetMocks();
-      vi.mocked(SessionUserId).mockResolvedValue(`user-1`);
       const app = fastifyFactory();
       const api = mockTunnel();
+      vi.mocked(Session.dbUser).mockResolvedValue(api.dbUser);
       vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(true);
       await AiTunnelProxy(app, api);
       const response = await app.inject({ method: `GET`, url: `/api/ai-tunnel/x` });
 
       expect(response.statusCode).toBe(HttpStatus.ok);
       expect(response.json()).toStrictEqual({ status: `balanceBlocked` });
-      expect(api.balance.isLlmBlocked).toHaveBeenCalledWith(`user-1`);
+      expect(api.balance.isLlmBlocked).toHaveBeenCalledWith(api.dbUser);
     });
 
     it(`continues the request when user is present and not blocked`, async () => {
       resetMocks();
-      vi.mocked(SessionUserId).mockResolvedValue(`user-1`);
       const app = fastifyFactory();
       const api = mockTunnel();
+      vi.mocked(Session.dbUser).mockResolvedValue(api.dbUser);
       vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(false);
       await AiTunnelProxy(app, api);
       const response = await app.inject({ method: `GET`, url: `/api/ai-tunnel/x` });
@@ -197,9 +214,11 @@ describe(`AiTunnelProxy`, () => {
       const { api, onResponse } = await proxyWithReplyHooks();
       const reply = replyProbe();
 
-      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `application/json` },
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/x` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` } },
+      );
 
       expect(reply.sent).toBe(true);
       expect(reply.payloads).toStrictEqual([]);
@@ -214,7 +233,7 @@ describe(`AiTunnelProxy`, () => {
       const reply = replyProbe();
 
       onResponse(
-        { url: `/api/ai-tunnel/chat`, userId: `user-9` } as FastifyRequest & { userId: string },
+        { dbUser: api.dbUser, url: `/api/ai-tunnel/chat` } as FastifyRequest & { dbUser: DbUser },
         reply as unknown as FastifyReply,
         { headers: { "content-type": `application/json` }, stream },
       );
@@ -222,7 +241,7 @@ describe(`AiTunnelProxy`, () => {
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
       expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`user-9`, 12.5, {
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 12.5, {
         call: `/api/ai-tunnel/chat`,
         model: `gpt-x`,
       });
@@ -236,14 +255,14 @@ describe(`AiTunnelProxy`, () => {
       const reply = replyProbe();
 
       onResponse(
-        { url: `/api/z`, userId: `u` } as FastifyRequest & { userId: string },
+        { dbUser: api.dbUser, url: `/api/z` } as FastifyRequest & { dbUser: DbUser },
         reply as unknown as FastifyReply,
         { headers: { "content-type": `application/json` }, stream },
       );
 
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u`, 3, { call: `/api/z`, model: `` });
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 3, { call: `/api/z`, model: `` });
     });
 
     it(`does not debit when JSON lacks billing shape but still sends parsed body`, async () => {
@@ -252,10 +271,11 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([Buffer.from(JSON.stringify(parsed))]);
       const reply = replyProbe();
 
-      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `application/json` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/x` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` }, stream },
+      );
 
       await expect.poll(() => reply.payloads.length).toBeGreaterThan(0);
 
@@ -269,10 +289,11 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([raw]);
       const reply = replyProbe();
 
-      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `application/json` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/x` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` }, stream },
+      );
 
       await expect.poll(() => reply.payloads.length).toBeGreaterThan(0);
 
@@ -291,10 +312,11 @@ describe(`AiTunnelProxy`, () => {
 
       const reply = replyProbe();
 
-      onResponse({ url: `/x`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `application/json` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/x` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `application/json` }, stream },
+      );
 
       await expect
         .poll(() => ({ code: reply.statusCode, payloads: reply.payloads.length }))
@@ -314,7 +336,7 @@ describe(`AiTunnelProxy`, () => {
       const reply = replyProbe();
 
       onResponse(
-        { url: `/api/sse`, userId: `u1` } as FastifyRequest & { userId: string },
+        { dbUser: api.dbUser, url: `/api/sse` } as FastifyRequest & { dbUser: DbUser },
         reply as unknown as FastifyReply,
         { headers: { "content-type": `text/event-stream; charset=utf-8` }, stream },
       );
@@ -324,7 +346,7 @@ describe(`AiTunnelProxy`, () => {
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
       expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u1`, 7, { call: `/api/sse`, model: `` });
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 7, { call: `/api/sse`, model: `` });
     });
 
     it(`debits on first billable line after a non-billable data JSON line`, async () => {
@@ -334,17 +356,18 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([Buffer.from(skip + bill)]);
       const reply = replyProbe();
 
-      onResponse({ url: `/t`, userId: `u2` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `text/event-stream` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/t` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream` }, stream },
+      );
 
       await drainTransform(reply.payloads[0] as Transform);
 
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
       expect(api.balance.debitForLlm).toHaveBeenCalledTimes(1);
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u2`, 1, { call: `/t`, model: `` });
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 1, { call: `/t`, model: `` });
     });
 
     it(`ignores [DONE] and empty data payloads`, async () => {
@@ -352,10 +375,11 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([Buffer.from(`data: [DONE]\n\ndata: \n`)]);
       const reply = replyProbe();
 
-      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `text/event-stream` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/t` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream` }, stream },
+      );
 
       await drainTransform(reply.payloads[0] as Transform);
 
@@ -375,7 +399,7 @@ describe(`AiTunnelProxy`, () => {
       const reply = replyProbe();
 
       onResponse(
-        { url: `/chunk`, userId: `u3` } as FastifyRequest & { userId: string },
+        { dbUser: api.dbUser, url: `/chunk` } as FastifyRequest & { dbUser: DbUser },
         reply as unknown as FastifyReply,
         { headers: { "content-type": `text/event-stream` }, stream },
       );
@@ -384,7 +408,7 @@ describe(`AiTunnelProxy`, () => {
 
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u3`, 4, { call: `/chunk`, model: `m` });
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 4, { call: `/chunk`, model: `m` });
     });
 
     it(`does not debit on non-JSON data line content`, async () => {
@@ -392,10 +416,11 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([Buffer.from(`data: hello\n`)]);
       const reply = replyProbe();
 
-      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `text/event-stream` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/t` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream` }, stream },
+      );
 
       await drainTransform(reply.payloads[0] as Transform);
 
@@ -413,16 +438,17 @@ describe(`AiTunnelProxy`, () => {
       const stream = Readable.from([Buffer.from(`: comment\n\ndata: ${JSON.stringify({ usage: { cost_rub: 2 } })}\n`)]);
       const reply = replyProbe();
 
-      onResponse({ url: `/t`, userId: `u` } as FastifyRequest & { userId: string }, reply as unknown as FastifyReply, {
-        headers: { "content-type": `text/event-stream` },
-        stream,
-      });
+      onResponse(
+        { dbUser: api.dbUser, url: `/t` } as FastifyRequest & { dbUser: DbUser },
+        reply as unknown as FastifyReply,
+        { headers: { "content-type": `text/event-stream` }, stream },
+      );
 
       await drainTransform(reply.payloads[0] as Transform);
 
       await expect.poll(() => vi.mocked(api.balance.debitForLlm).mock.calls.length).toBeGreaterThan(0);
 
-      expect(api.balance.debitForLlm).toHaveBeenCalledWith(`u`, 2, { call: `/t`, model: `` });
+      expect(api.balance.debitForLlm).toHaveBeenCalledWith(api.dbUser, 2, { call: `/t`, model: `` });
     });
   });
 });

@@ -5,12 +5,6 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
-    "@snappy/ai": "workspace:*",
-    "@snappy/domain": "workspace:*"
-  },
-  "devDependencies": {
-    "prisma": "^7.7.0"
+    "@snappy/db-core": "workspace:*"
   }
 }

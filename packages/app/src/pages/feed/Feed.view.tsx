@@ -12,7 +12,7 @@ export type FeedViewProps = ReturnType<typeof useFeedState>;
 export const FeedView = ({ cards }: FeedViewProps) => (
   <Page title={t(`feed.title`)}>
     <div className={styles.actionRow}>
-      <Button link={Routes.home} text={t(`feed.openCatalog`)} />
+      <Button link={Routes.$.home} text={t(`feed.openCatalog`)} />
     </div>
     <div className={styles.cards}>
       {cards?.map(card =>

@@ -108,7 +108,7 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
                 stdio: `inherit`,
               });
               if (!verbose && (name === `server:frontend:dev` || name === `server:prod`)) {
-                const origin = `https://${Config.host}`;
+                const origin = _.https(Config.host);
                 Console.log(
                   `\n\n${[
                     devOriginLine(`🌐`, `Site`, origin),

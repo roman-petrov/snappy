@@ -106,7 +106,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaConfig): Paym
     let response: Response;
 
     try {
-      response = await fetch(`https://api.yookassa.ru/v3/payments${path}`, {
+      response = await fetch(_.https(`api.yookassa.ru/v3/payments${path}`), {
         ...(body === undefined ? {} : { body: Json.stringify(body) }),
         headers: {
           "Authorization": authHeader,

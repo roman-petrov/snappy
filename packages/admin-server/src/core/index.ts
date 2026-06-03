@@ -1,5 +1,7 @@
 export * from "./Admin";
 
+export * from "./AdminAuth";
+
 export * from "./AdminSession";
 
 export * from "./AdminTrpc";

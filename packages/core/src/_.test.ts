@@ -11,6 +11,7 @@ const {
   gb,
   gen,
   hex,
+  https,
   kb,
   kebabCase,
   keys,
@@ -90,6 +91,13 @@ describe(`dec`, () => {
 
   it(`returns undefined for non-numeric string`, () => {
     expect(dec(`ff`)).toBeUndefined();
+  });
+});
+
+describe(`https`, () => {
+  it(`builds https URL`, () => {
+    expect(https(`host/path`)).toBe(`https://host/path`);
+    expect(https(`host`)).toBe(`https://host`);
   });
 });
 

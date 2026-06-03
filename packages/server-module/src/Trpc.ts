@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type { FastifyInstance, FastifyRequest } from "fastify";
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { type AnyRouter, initTRPC, TRPCError } from "@trpc/server";
 import { fastifyTRPCPlugin } from "@trpc/server/adapters/fastify";
@@ -9,7 +9,7 @@ type CreatedTrpc<TContext extends object> = ReturnType<ReturnType<typeof initTRP
 
 type RegisterInput<TRouter extends AnyRouter> = {
   app: FastifyInstance;
-  context: (input: { req: FastifyRequest }) => unknown;
+  context: (input: { req: FastifyRequest; res: FastifyReply }) => unknown;
   prefix: string;
   router: TRouter;
 };

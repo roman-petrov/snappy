@@ -8,7 +8,7 @@ import { $signedIn } from "../../Store";
 export const useSignUpState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
-  const { error, loading, onSubmit, setError } = useAuthSubmit({ homePath: Routes.home, setSignedIn: $signedIn.set });
+  const { error, loading, onSubmit, setError } = useAuthSubmit({ homePath: Routes.$.home, setSignedIn: $signedIn.set });
   const { generate, minLength, requirementChecks, strength: strengthOf } = Password;
   const strength = strengthOf(password);
   const runCheck = (index: number) => (requirementChecks[index]?.check ?? (() => false))(password);

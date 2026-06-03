@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 
+import { _ } from "@snappy/core";
 import { fireEvent, render, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
@@ -90,7 +91,7 @@ describe(`tap`, () => {
 
   it(`renders as link with href when link is external object`, () => {
     bridgeState.available = false;
-    const { container } = renderTap(<Tap link={{ href: `https://example.com` }}>External</Tap>);
+    const { container } = renderTap(<Tap link={{ href: _.https(`example.com`) }}>External</Tap>);
 
     expect(container).toMatchInlineSnapshot(`
       <div>
@@ -107,7 +108,7 @@ describe(`tap`, () => {
   it(`passes rel and target for external link`, () => {
     bridgeState.available = false;
     const { container } = renderTap(
-      <Tap link={{ href: `https://x.com`, rel: `noopener`, target: `_blank` }}>Link</Tap>,
+      <Tap link={{ href: _.https(`x.com`), rel: `noopener`, target: `_blank` }}>Link</Tap>,
     );
 
     expect(container).toMatchInlineSnapshot(`
@@ -139,7 +140,7 @@ describe(`tap`, () => {
   it(`does not call navigate on external link click`, () => {
     navigate.mockReset();
     bridgeState.available = false;
-    const { container } = renderTap(<Tap link={{ href: `https://example.com` }}>External</Tap>);
+    const { container } = renderTap(<Tap link={{ href: _.https(`example.com`) }}>External</Tap>);
 
     fireEvent.click(within(container).getByRole(`link`));
 

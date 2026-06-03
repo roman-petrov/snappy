@@ -48,9 +48,9 @@ describe(`yooKassa`, () => {
     btoaMock.mockReset();
     vi.spyOn(_, `now`).mockReturnValue(1_111_111);
     fetchMock.mockResolvedValue(
-      response(200, Json.stringify({ confirmation: { confirmation_url: `https://ok` }, id: `p-1` })),
+      response(200, Json.stringify({ confirmation: { confirmation_url: _.https(`ok`) }, id: `p-1` })),
     );
-    const payment = YooKassa({ returnUrl: `https://fallback`, secretKey: `secret`, shopId: `shop` });
+    const payment = YooKassa({ returnUrl: _.https(`fallback`), secretKey: `secret`, shopId: `shop` });
 
     const result = await payment.createRedirectPayment({
       amount: 199,
@@ -61,15 +61,15 @@ describe(`yooKassa`, () => {
       userId: `7`,
     });
 
-    expect(result).toStrictEqual({ ok: true, providerPaymentId: `p-1`, redirectUrl: `https://ok` });
+    expect(result).toStrictEqual({ ok: true, providerPaymentId: `p-1`, redirectUrl: _.https(`ok`) });
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock).toHaveBeenCalledWith(
-      `https://api.yookassa.ru/v3/payments`,
+      _.https(`api.yookassa.ru/v3/payments`),
       expect.objectContaining({
         body: Json.stringify({
           amount: { currency: `RUB`, value: `199.00` },
           capture: true,
-          confirmation: { return_url: `https://fallback`, type: `redirect` },
+          confirmation: { return_url: _.https(`fallback`), type: `redirect` },
           description: `Top up`,
           metadata: { type: `topup`, userId: `7` },
           save_payment_method: true,

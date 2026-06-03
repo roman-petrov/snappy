@@ -1,26 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type { Db } from "@snappy/db";
+import type { Db, DbUser } from "@snappy/db";
 
 import { vi } from "vitest";
 
-const balanceMethods = () => ({ credit: vi.fn(), debit: vi.fn(), read: vi.fn() });
-const paymentLogMethods = () => ({ create: vi.fn(), hasSucceededPayment: vi.fn() });
-const userSettingsMethods = () => ({ findByUserId: vi.fn(), updateLlmModels: vi.fn() });
+const balanceMethods = () => ({ credit: vi.fn(), debit: vi.fn(), read: vi.fn(), set: vi.fn() });
+const paymentLogCreate = () => vi.fn();
+const userSettingsMethods = () => ({ find: vi.fn(), update: vi.fn() });
 
-const userMethods = () => ({
-  clearResetAndSetPassword: vi.fn(),
-  createWithEmailPassword: vi.fn(),
-  findByEmail: vi.fn(),
-  findByResetToken: vi.fn(),
-  setResetToken: vi.fn(),
+const createDbUser = (id = `test-user`): DbUser => ({
+  balance: balanceMethods(),
+  id,
+  paymentLog: { create: paymentLogCreate() },
+  settings: userSettingsMethods(),
 });
 
-const createDb = (): Db =>
-  ({
-    balance: balanceMethods(),
-    paymentLog: paymentLogMethods(),
-    user: userMethods(),
-    userSettings: userSettingsMethods(),
-  }) as unknown as Db;
+const createDb = (): ReturnType<typeof Db> => {
+  const user = vi.fn(createDbUser);
 
-export const Mock = { createDb };
+  return {
+    auth: {} as ReturnType<typeof Db>[`auth`],
+    paymentLog: { create: vi.fn(), succeeded: vi.fn() },
+    user,
+    users: { list: vi.fn(), read: vi.fn(), remove: vi.fn() },
+  };
+};
+
+export const Mock = { createDb, createDbUser };

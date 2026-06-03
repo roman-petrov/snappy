@@ -1,13 +1,11 @@
 import { Agents } from "@snappy/snappy-presets";
 import { Language } from "@snappy/ui";
 import { useMemo } from "react";
-import { useParams } from "react-router-dom";
 
 import type { AgentChatProps } from "../../snappy/components";
+import type { AgentProps } from "./Agent";
 
-export const useAgentState = () => {
-  const parameters = useParams();
-  const agentId = (parameters[`agentId`] ?? ``).trim();
+export const useAgentState = ({ agentId }: AgentProps) => {
   const locale = Language.locale();
   const resolved = useMemo(() => (agentId === `` ? undefined : Agents.byId(agentId, locale)), [agentId, locale]);
 
