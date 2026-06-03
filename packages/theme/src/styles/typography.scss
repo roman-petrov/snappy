@@ -21,12 +21,3 @@
   --typography-button-font: 600 #{list.slash(r(16), 1.65)} var(--font-sans);
   --typography-button-large-font: 600 #{list.slash(r(17), 1.6)} var(--font-sans);
 }
-
-@include mobile {
-  :root {
-    --typography-display-font: 800 #{list.slash(clamp(#{r(30)}, 7vw, #{r(44)}), 1.1)} var(--font-sans);
-    --typography-h1-font: 800 #{list.slash(r(24), 1.1)} var(--font-sans);
-    --typography-h2-font: 800 #{list.slash(r(20), 1.1)} var(--font-sans);
-    --typography-h3-font: 700 #{list.slash(r(17), 1.1)} var(--font-sans);
-  }
-}

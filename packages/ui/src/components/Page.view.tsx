@@ -14,7 +14,7 @@ export const PageView = ({ back, children, goBack, title }: PageViewProps) => (
     {back || title !== undefined ? (
       <div className={styles.head}>
         {back ? <IconButton icon={ArrowLeft} onClick={goBack} tip={t(`page.back`)} /> : undefined}
-        {title === undefined ? undefined : <Title cn={styles.title} level={1} title={title} />}
+        {title === undefined ? undefined : <Title level={1} title={title} />}
       </div>
     ) : undefined}
     {children}

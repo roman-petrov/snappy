@@ -16,11 +16,7 @@
   display: flex;
   gap: space.md();
   align-items: center;
-}
-
-.title {
   min-width: 0;
-  margin: 0;
 }
 
 @include mobile {

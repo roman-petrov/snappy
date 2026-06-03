@@ -1,16 +1,13 @@
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
-.root {
-  margin: 0 0 space.md();
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  min-width: 0;
 }
 
+.root,
 .lead {
-  margin: 0 0 space.md();
-}
-
-@include mobile {
-  .root {
-    margin-bottom: space.sm();
-  }
+  margin: 0;
 }
