@@ -1,8 +1,8 @@
 /* eslint-disable functional/no-try-statements */
 import { HttpStatus } from "@snappy/core";
 
-const signInUrl = `/api/admin/auth/login`;
-const signOutUrl = `/api/admin/auth/logout`;
+const signInUrl = `/api/admin/auth/sign-in`;
+const signOutUrl = `/api/admin/auth/sign-out`;
 const sessionUrl = `/api/admin/auth/session`;
 
 const signIn = async (username: string, password: string) => {

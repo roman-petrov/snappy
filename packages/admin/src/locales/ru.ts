@@ -3,12 +3,12 @@
 export const ru = {
   auth: {
     signIn: {
-      errors: { invalidCredentials: `Неверный логин или пароль`, unknownError: `Не удалось выполнить вход` },
+      errors: { invalidCredentials: `Неверное имя пользователя или пароль`, unknownError: `Не удалось выполнить вход` },
       password: `Пароль`,
       submit: `Войти`,
       submitting: `Вход…`,
-      title: `Вход в админку`,
-      username: `Логин`,
+      title: `Вход`,
+      username: `Имя пользователя`,
     },
   },
   layout: { signOutTip: `Выйти` },
@@ -16,7 +16,7 @@ export const ru = {
     columns: {
       actions: `Действия`,
       balance: `Баланс`,
-      createdAt: `Регистрация`,
+      createdAt: `Создан`,
       email: `Email`,
       emailVerified: `Подтверждён`,
     },

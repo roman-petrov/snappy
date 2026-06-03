@@ -2,20 +2,20 @@
 export const en = {
   auth: {
     signIn: {
-      errors: { invalidCredentials: `Invalid username or password`, unknownError: `Log in failed` },
+      errors: { invalidCredentials: `Invalid username or password`, unknownError: `Could not sign in` },
       password: `Password`,
-      submit: `Log in`,
-      submitting: `Logging in…`,
-      title: `Admin login`,
+      submit: `Sign in`,
+      submitting: `Signing in…`,
+      title: `Sign in`,
       username: `Username`,
     },
   },
-  layout: { signOutTip: `Log out` },
+  layout: { signOutTip: `Sign out` },
   users: {
     columns: {
       actions: `Actions`,
       balance: `Balance`,
-      createdAt: `Registered`,
+      createdAt: `Created`,
       email: `Email`,
       emailVerified: `Verified`,
     },

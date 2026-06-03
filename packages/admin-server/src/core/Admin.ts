@@ -18,7 +18,7 @@ export const Admin = async ({ app }: AdminConfig) => {
   const isRecord = (value: unknown): value is Record<string, unknown> =>
     value !== null && _.isObject(value) && !_.isArray(value);
 
-  const loginField = (body: unknown, key: `password` | `username`) => {
+  const signInField = (body: unknown, key: `password` | `username`) => {
     if (!isRecord(body) || !(key in body)) {
       return ``;
     }
@@ -32,9 +32,9 @@ export const Admin = async ({ app }: AdminConfig) => {
   const users = Users({ dbUsers, pageSize });
   const session = (cookie?: string) => AdminSession.verify(cookie);
 
-  app.post(`/api/admin/auth/login`, async (request, reply) => {
-    const username = loginField(request.body, `username`);
-    const password = loginField(request.body, `password`);
+  app.post(`/api/admin/auth/sign-in`, async (request, reply) => {
+    const username = signInField(request.body, `username`);
+    const password = signInField(request.body, `password`);
     if (!AdminSession.credentialsMatch(username, password)) {
       await reply.status(HttpStatus.unauthorized).send({ ok: false });
 
@@ -44,7 +44,7 @@ export const Admin = async ({ app }: AdminConfig) => {
     await reply.status(HttpStatus.ok).send({ ok: true });
   });
 
-  app.post(`/api/admin/auth/logout`, async (_request, reply) => {
+  app.post(`/api/admin/auth/sign-out`, async (_request, reply) => {
     reply.header(`Set-Cookie`, AdminSession.clearCookie());
     await reply.status(HttpStatus.ok).send({ ok: true });
   });
