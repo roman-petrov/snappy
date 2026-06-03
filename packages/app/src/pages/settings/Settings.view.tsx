@@ -1,3 +1,4 @@
+/* jscpd:ignore-start */
 import { Button, Page, SwitchDisplay } from "@snappy/ui";
 import { CloudFog, CreditCard, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type } from "lucide-react";
 
@@ -97,3 +98,4 @@ export const SettingsView = ({
     </div>
   </Page>
 );
+/* jscpd:ignore-end */

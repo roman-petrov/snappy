@@ -7,3 +7,5 @@ export * from "./SettingsCards";
 export * from "./SettingsCardSeparator";
 
 export * from "./SettingsOptionList";
+
+export * from "./SettingsOptionRows";

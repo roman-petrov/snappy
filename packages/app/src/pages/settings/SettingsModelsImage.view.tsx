@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-import { Icon, Page } from "@snappy/ui";
-import { Check, Star } from "lucide-react";
+import { Page } from "@snappy/ui";
+import { Star } from "lucide-react";
 
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
 import { t } from "../../core";
-import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "./components";
+import { SettingsCard, SettingsCards, SettingsOptionRows } from "./components";
 
 export type SettingsModelsImageViewProps = ReturnType<typeof useSettingsModelsImageState>;
 
@@ -20,30 +19,18 @@ export const SettingsModelsImageView = ({
   <Page back title={t(`settings.models.image.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.models.image.title`)}>
-        {modelOptions.map((option, index) => (
-          <div key={option.value}>
-            {index > 0 && <SettingsCardSeparator />}
-            <SettingsCardRow
-              icon={option.icon}
-              onClick={async () => onModelSelect(option.value)}
-              right={modelValue === option.value ? <Icon color="primary" icon={Check} /> : undefined}
-              text={option.label}
-            />
-          </div>
-        ))}
+        <SettingsOptionRows onSelect={onModelSelect} options={modelOptions} value={modelValue} />
       </SettingsCard>
       <SettingsCard title={t(`settings.models.image.quality`)}>
-        {qualityOptions.map((value, index) => (
-          <div key={value}>
-            {index > 0 && <SettingsCardSeparator />}
-            <SettingsCardRow
-              icon={Star}
-              onClick={() => onQualitySelect(value)}
-              right={qualityValue === value ? <Icon color="primary" icon={Check} /> : undefined}
-              text={t(`settings.models.image.qualityValue.${value}`)}
-            />
-          </div>
-        ))}
+        <SettingsOptionRows
+          onSelect={onQualitySelect}
+          options={qualityOptions.map(value => ({
+            icon: Star,
+            label: t(`settings.models.image.qualityValue.${value}`),
+            value,
+          }))}
+          value={qualityValue}
+        />
       </SettingsCard>
     </SettingsCards>
   </Page>
