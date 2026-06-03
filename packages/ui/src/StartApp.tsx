@@ -17,7 +17,7 @@ import "@snappy/theme/styles/index";
 
 export type StartAppInput = {
   base: string;
-  header: ReactNode;
+  header?: ReactNode;
   index: ReactNode;
   path: string;
   publicPaths: readonly string[];

@@ -9,5 +9,5 @@ import { Layout } from "./Layout";
 export type AuthLayoutViewProps = ReturnType<typeof useAuthLayoutState>;
 
 export const AuthLayoutView = ({ header, redirectTo }: AuthLayoutViewProps): ReactNode => (
-  <Layout content={redirectTo === undefined ? <Outlet /> : <Navigate replace to={redirectTo} />} header={header} />
+  <Layout content={redirectTo === undefined ? <Outlet /> : <Navigate replace to={redirectTo} />} trailing={header} />
 );

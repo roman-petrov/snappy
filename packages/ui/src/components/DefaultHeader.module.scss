@@ -1,0 +1,30 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.inner {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: space.md();
+  align-items: center;
+  max-width: tokens.content-width();
+  padding: space.md() space.lg();
+  margin-inline: auto;
+}
+
+.trailing {
+  display: flex;
+  gap: space.lg();
+  align-items: center;
+  justify-self: end;
+}
+
+@include mobile {
+  .inner {
+    padding: tokens.layout-gutter();
+  }
+
+  .trailing {
+    gap: space.md();
+  }
+}

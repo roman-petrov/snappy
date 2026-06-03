@@ -25,6 +25,6 @@ export const Landing = () => (
         <CtaBlock />
       </main>
     }
-    header={<SiteHeader />}
+    trailing={<SiteHeader />}
   />
 );

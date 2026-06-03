@@ -48,23 +48,6 @@
   }
 }
 
-.header-inner {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: space.md();
-  align-items: center;
-  max-width: tokens.content-width();
-  padding: space.md() space.lg();
-  margin-inline: auto;
-}
-
-.header-trailing {
-  display: flex;
-  gap: space.lg();
-  align-items: center;
-  justify-self: end;
-}
-
 .main-safe {
   display: flex;
   flex: 1;
@@ -93,14 +76,6 @@
 }
 
 @include mobile {
-  .header-inner {
-    padding: tokens.layout-gutter();
-  }
-
-  .header-trailing {
-    gap: space.md();
-  }
-
   .main {
     max-width: none;
   }

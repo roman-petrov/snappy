@@ -1,4 +1,4 @@
-import { IconButton } from "@snappy/ui";
+import { IconButton, SystemButtons } from "@snappy/ui";
 import { Settings } from "lucide-react";
 
 import type { useHeaderContentState } from "./HeaderContent.state";
@@ -17,6 +17,8 @@ export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) => (
         <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.root.title`)} />
         <BalanceTap />
       </>
-    ) : undefined}
+    ) : (
+      <SystemButtons />
+    )}
   </div>
 );

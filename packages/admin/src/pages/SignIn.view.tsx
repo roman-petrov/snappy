@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Input, PasswordInput, Title } from "@snappy/ui";
+import { Alert, Button, Card, Input, Page, PasswordInput, Title } from "@snappy/ui";
 
 import type { useSignInState } from "./SignIn.state";
 
@@ -16,33 +16,35 @@ export const SignInView = ({
   signIn,
   username,
 }: SignInViewProps) => (
-  <Card cn={styles.card}>
-    <Title as="h1" level={2} title={t(`auth.signIn.title`)} />
-    <form className={styles.form} onSubmit={signIn}>
-      <Input
-        autoComplete="username"
-        label={t(`auth.signIn.username`)}
-        onChange={setUsername}
-        required
-        value={username}
-      />
-      <PasswordInput
-        autoComplete="current-password"
-        disabled={loading}
-        label={t(`auth.signIn.password`)}
-        onChange={setPassword}
-        required
-        value={password}
-      />
-      {error === undefined ? undefined : <Alert text={t(`auth.signIn.errors.${error}`)} type="error" />}
-      <div className={styles.actions}>
-        <Button
-          disabled={loading}
-          submit
-          text={loading ? t(`auth.signIn.submitting`) : t(`auth.signIn.submit`)}
-          type="primary"
+  <Page>
+    <Card cn={styles.card}>
+      <Title as="h1" level={2} title={t(`auth.signIn.title`)} />
+      <form className={styles.form} onSubmit={signIn}>
+        <Input
+          autoComplete="username"
+          label={t(`auth.signIn.username`)}
+          onChange={setUsername}
+          required
+          value={username}
         />
-      </div>
-    </form>
-  </Card>
+        <PasswordInput
+          autoComplete="current-password"
+          disabled={loading}
+          label={t(`auth.signIn.password`)}
+          onChange={setPassword}
+          required
+          value={password}
+        />
+        {error === undefined ? undefined : <Alert text={t(`auth.signIn.errors.${error}`)} type="error" />}
+        <div className={styles.actions}>
+          <Button
+            disabled={loading}
+            submit
+            text={loading ? t(`auth.signIn.submitting`) : t(`auth.signIn.submit`)}
+            type="primary"
+          />
+        </div>
+      </form>
+    </Card>
+  </Page>
 );

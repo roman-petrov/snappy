@@ -14,6 +14,8 @@ export * from "./Chip";
 
 export * from "./context-menu";
 
+export * from "./DefaultHeader";
+
 export * from "./FileSelect";
 
 export * from "./Icon";
