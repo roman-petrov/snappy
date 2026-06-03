@@ -7,13 +7,13 @@ import styles from "./MenuButton.module.scss";
 
 export type MenuButtonProps = Omit<TapProps, `children` | `cn` | `tip` | `vibrate`> & {
   color?: Color;
-  icon: Exclude<Icon, { emoji: string }>;
+  icon: Exclude<Icon, string>;
   tip: string;
 };
 
 export const MenuButton = ({ color, icon, tip, ...tapProps }: MenuButtonProps) => (
   <Tap {...tapProps} cn={_.cn($.tap(`soft`), $.radius(`lg`), styles.root)} tip={tip} vibrate="confirm">
-    <Icon color={color} name={icon} />
+    <Icon color={color} icon={icon} />
     <span className={$.typography(`bodySm`)}>{tip}</span>
   </Tap>
 );

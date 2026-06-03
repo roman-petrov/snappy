@@ -1,5 +1,6 @@
 import { i } from "@snappy/intl";
 import { Chip, IconButton, Page } from "@snappy/ui";
+import { Trash2 } from "lucide-react";
 
 import type { useUsersState } from "./Users.state";
 
@@ -27,7 +28,7 @@ export const UsersView = ({
         ...(key === `actions` || key === `balance` ? { align: `right` as const } : {}),
       }))}
       rows={items.map(item => ({
-        actions: <IconButton icon="delete" onClick={async () => remove(item.id)} tip={t(`users.deleteTip`)} />,
+        actions: <IconButton icon={Trash2} onClick={async () => remove(item.id)} tip={t(`users.deleteTip`)} />,
         balance: i.price(item.balanceRub),
         createdAt: i.date(item.createdAt),
         email: item.email,

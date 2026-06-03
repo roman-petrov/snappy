@@ -1,3 +1,4 @@
+import { Mic } from "lucide-react";
 import { useRef, useState } from "react";
 
 import type { IconButtonProps } from "./IconButton";
@@ -41,7 +42,7 @@ export const useTextInputState = ({ afterMic, maxLines: maxLinesProp, onChange, 
   const micButton: Omit<IconButtonProps, `tip`> = {
     color: listening ? `error` : undefined,
     disabled: textAreaRest.disabled === true || !speechSupported,
-    icon: `mic`,
+    icon: Mic,
     keepFocus: true,
     onClick: toggleRecording,
   };

@@ -1,4 +1,5 @@
 import { Page } from "@snappy/ui";
+import { ChevronsLeft, ChevronsRight, Keyboard, Waves } from "lucide-react";
 
 import type { useSettingsTypeWriterSpeedState } from "./SettingsTypeWriterSpeed.state";
 
@@ -12,10 +13,10 @@ export const SettingsTypeWriterSpeedView = (props: SettingsTypeWriterSpeedViewPr
     <SettingsOptionList
       {...props}
       options={[
-        { icon: `stream`, label: t(`settings.typeWriterSpeed.stream`), value: undefined },
-        { icon: `keyboard_double_arrow_right`, label: t(`settings.typeWriterSpeed.fast`), value: `fast` },
-        { icon: `keyboard`, label: t(`settings.typeWriterSpeed.medium`), value: `medium` },
-        { icon: `keyboard_double_arrow_left`, label: t(`settings.typeWriterSpeed.slow`), value: `slow` },
+        { icon: Waves, label: t(`settings.typeWriterSpeed.stream`), value: undefined },
+        { icon: ChevronsRight, label: t(`settings.typeWriterSpeed.fast`), value: `fast` },
+        { icon: Keyboard, label: t(`settings.typeWriterSpeed.medium`), value: `medium` },
+        { icon: ChevronsLeft, label: t(`settings.typeWriterSpeed.slow`), value: `slow` },
       ]}
     />
   </Page>

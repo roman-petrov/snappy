@@ -7,8 +7,6 @@ $functions: meta.module-functions("icon-size");
 
 @each $name, $px in icon-size.$values {
   .#{$name} {
-    --icon-optical-size: #{$px};
-
     font-size: meta.call(map.get($functions, $name));
   }
 }

@@ -38,7 +38,7 @@ const config: KnipConfig = {
       ],
     },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
-    "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`, `material-symbols`] },
+    "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`] },
   },
 };
 

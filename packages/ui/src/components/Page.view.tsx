@@ -1,3 +1,5 @@
+import { ArrowLeft } from "lucide-react";
+
 import type { usePageState } from "./Page.state";
 
 import { t } from "../locales";
@@ -11,7 +13,7 @@ export const PageView = ({ back, children, goBack, title }: PageViewProps) => (
   <section className={styles.section}>
     {back || title !== undefined ? (
       <div className={styles.head}>
-        {back ? <IconButton icon="arrow_back" onClick={goBack} tip={t(`page.back`)} /> : undefined}
+        {back ? <IconButton icon={ArrowLeft} onClick={goBack} tip={t(`page.back`)} /> : undefined}
         {title === undefined ? undefined : <Title cn={styles.title} level={1} title={title} />}
       </div>
     ) : undefined}

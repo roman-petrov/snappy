@@ -14,7 +14,7 @@ export type SettingsCardRowProps = Omit<TapProps, `children` | `cn`> & {
 
 export const SettingsCardRow = ({ bottom, icon, right, text, ...tapProps }: SettingsCardRowProps) => (
   <Tap {...tapProps} cn={_.cn($.tap(`menu`), styles.row)}>
-    <Icon color="primary" name={icon} />
+    <Icon color="primary" icon={icon} />
     <span className={styles.text}>
       <Text color="primary" text={text} />
       {bottom === undefined ? undefined : <Text text={bottom} typography="bodySm" />}

@@ -1,5 +1,6 @@
 import { _ } from "@snappy/core";
 import { $, BusyShimmerOverlay, Icon } from "@snappy/ui";
+import { Wand2 } from "lucide-react";
 
 import type { useImageCardState } from "./ImageCard.state";
 
@@ -14,7 +15,7 @@ export const ImageCardView = ({ actions, busy, pending, remove, src }: ImageCard
     {pending ? (
       <div className={styles.empty}>
         <span className={styles.spinner}>
-          <Icon name="wand_stars" />
+          <Icon icon={Wand2} />
         </span>
         <p>{t(`feedCard.generatingImage`)}</p>
       </div>

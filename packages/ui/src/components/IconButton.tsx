@@ -13,6 +13,6 @@ export type IconButtonProps = Omit<TapProps, `children` | `cn` | `tip` | `vibrat
 
 export const IconButton = ({ color, icon, tip, ...tapProps }: IconButtonProps) => (
   <Tap {...tapProps} cn={_.cn($.tap(`icon`), styles.root)} tip={tip} vibrate="confirm">
-    <Icon color={color} name={icon} />
+    <Icon color={color} icon={icon} />
   </Tap>
 );

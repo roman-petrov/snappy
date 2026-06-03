@@ -19,6 +19,7 @@
     "@snappy/theme": "workspace:*",
     "@snappy/type-writer": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "lucide-react": "^0.575.0",
     "marked": "^18.0.4",
     "react": "^19.2.6",
     "shiki": "^4.1.0"

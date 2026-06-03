@@ -12,6 +12,7 @@
     "@snappy/intl": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "lucide-react": "^0.575.0",
     "react": "^19.2.6"
   },
   "devDependencies": {

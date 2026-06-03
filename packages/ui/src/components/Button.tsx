@@ -25,7 +25,7 @@ export const Button = ({ cn = ``, icon, large = false, text, type = `default`, .
       cn,
     )}
   >
-    {icon === undefined ? undefined : <Icon name={icon} />}
+    {icon === undefined ? undefined : <Icon icon={icon} />}
     {text}
   </Tap>
 );

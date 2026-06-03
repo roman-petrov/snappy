@@ -4,9 +4,5 @@ import { $theme, t, Theme } from "..";
 import { IconButton } from "./IconButton";
 
 export const IconButtonTheme = () => (
-  <IconButton
-    icon={{ emoji: useStoreValue($theme) === `dark` ? `🌙` : `☀️` }}
-    onClick={Theme.toggle}
-    tip={t(`themeToggle`)}
-  />
+  <IconButton icon={useStoreValue($theme) === `dark` ? `🌙` : `☀️`} onClick={Theme.toggle} tip={t(`themeToggle`)} />
 );

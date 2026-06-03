@@ -70,6 +70,7 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - ✨ [ESLint](https://eslint.org/)
 - 🎨 [Prettier](https://prettier.io/)
 - 🖌️ [Stylelint](https://stylelint.io/)
+- 🎯 [Lucide](https://lucide.dev/) — icons
 - 📦 [Zod](https://zod.dev/)
 
 ## 📎 Service links

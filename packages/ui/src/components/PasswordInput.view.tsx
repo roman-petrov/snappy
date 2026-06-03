@@ -1,3 +1,5 @@
+import { Eye, EyeOff } from "lucide-react";
+
 import type { usePasswordInputState } from "./PasswordInput.state";
 
 import { t } from "../locales";
@@ -27,7 +29,7 @@ export const PasswordInputView = ({
     suffix={
       <IconButton
         disabled={disabled}
-        icon={visible ? `visibility_off` : `visibility`}
+        icon={visible ? EyeOff : Eye}
         onClick={toggleVisible}
         tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
       />

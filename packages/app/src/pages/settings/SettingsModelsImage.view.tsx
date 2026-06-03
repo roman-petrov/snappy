@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 import { Icon, Page } from "@snappy/ui";
+import { Check, Star } from "lucide-react";
 
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
@@ -25,7 +26,7 @@ export const SettingsModelsImageView = ({
             <SettingsCardRow
               icon={option.icon}
               onClick={async () => onModelSelect(option.value)}
-              right={modelValue === option.value ? <Icon color="primary" name="check" /> : undefined}
+              right={modelValue === option.value ? <Icon color="primary" icon={Check} /> : undefined}
               text={option.label}
             />
           </div>
@@ -36,9 +37,9 @@ export const SettingsModelsImageView = ({
           <div key={value}>
             {index > 0 && <SettingsCardSeparator />}
             <SettingsCardRow
-              icon="stars"
+              icon={Star}
               onClick={() => onQualitySelect(value)}
-              right={qualityValue === value ? <Icon color="primary" name="check" /> : undefined}
+              right={qualityValue === value ? <Icon color="primary" icon={Check} /> : undefined}
               text={t(`settings.models.image.qualityValue.${value}`)}
             />
           </div>

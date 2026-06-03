@@ -1,4 +1,5 @@
 import { Icon, type Icon as UiIcon } from "@snappy/ui";
+import { Check } from "lucide-react";
 import { Fragment } from "react";
 
 import { SettingsCard } from "./SettingsCard";
@@ -27,7 +28,7 @@ export const SettingsOptionList = <T extends string | undefined>({
           <SettingsCardRow
             icon={opt.icon}
             onClick={() => onSelect(opt.value)}
-            right={value === opt.value ? <Icon color="primary" name="check" /> : undefined}
+            right={value === opt.value ? <Icon color="primary" icon={Check} /> : undefined}
             text={opt.label}
           />
         </Fragment>

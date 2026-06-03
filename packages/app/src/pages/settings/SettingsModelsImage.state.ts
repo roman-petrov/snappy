@@ -1,4 +1,5 @@
 import { AiConstants, type AiImageQuality } from "@snappy/ai";
+import { Image } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { SettingsOption } from "./components";
@@ -10,7 +11,7 @@ export const useSettingsModelsImageState = () => {
   const { ids, settingsResponse } = useSettingsModelIds(`image`);
   const [modelValue, setModelValue] = useState(``);
   const [qualityValue, setQualityValue] = useState<AiImageQuality>(AiConstants.imageQuality[0]);
-  const modelOptions: readonly SettingsOption<string>[] = ids.map(id => ({ icon: `image`, label: id, value: id }));
+  const modelOptions: readonly SettingsOption<string>[] = ids.map(id => ({ icon: Image, label: id, value: id }));
 
   useEffect(() => {
     if (settingsResponse === undefined) {

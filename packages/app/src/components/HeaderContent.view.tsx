@@ -1,4 +1,5 @@
 import { IconButton } from "@snappy/ui";
+import { Settings } from "lucide-react";
 
 import type { useHeaderContentState } from "./HeaderContent.state";
 
@@ -13,7 +14,7 @@ export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) => (
   <div className={styles.root}>
     {signedIn ? (
       <>
-        <IconButton icon="settings" link={Routes.settings.root} tip={t(`settings.root.title`)} />
+        <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.root.title`)} />
         <BalanceTap />
       </>
     ) : undefined}

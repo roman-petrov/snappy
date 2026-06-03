@@ -1,4 +1,5 @@
 import { IconButton, SystemButtons } from "@snappy/ui";
+import { LogOut } from "lucide-react";
 
 import type { useHeaderContentState } from "./HeaderContent.state";
 
@@ -9,6 +10,6 @@ export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 export const HeaderContentView = ({ signedIn, signOut }: HeaderContentViewProps) => (
   <>
     <SystemButtons />
-    {signedIn ? <IconButton icon="logout" onClick={signOut} tip={t(`layout.signOutTip`)} /> : undefined}
+    {signedIn ? <IconButton icon={LogOut} onClick={signOut} tip={t(`layout.signOutTip`)} /> : undefined}
   </>
 );

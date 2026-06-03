@@ -1,4 +1,5 @@
 import { Page } from "@snappy/ui";
+import { Settings } from "lucide-react";
 
 import type { useSettingsLanguageState } from "./SettingsLanguage.state";
 
@@ -12,9 +13,9 @@ export const SettingsLanguageView = (props: SettingsLanguageViewProps) => (
     <SettingsOptionList
       {...props}
       options={[
-        { icon: { emoji: `🇷🇺` }, label: t(`settings.language.ru`), value: `ru` },
-        { icon: { emoji: `🇬🇧` }, label: t(`settings.language.en`), value: `en` },
-        { icon: `settings`, label: t(`settings.language.system`), value: `system` },
+        { icon: `🇷🇺`, label: t(`settings.language.ru`), value: `ru` },
+        { icon: `🇬🇧`, label: t(`settings.language.en`), value: `en` },
+        { icon: Settings, label: t(`settings.language.system`), value: `system` },
       ]}
     />
   </Page>

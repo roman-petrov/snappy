@@ -1,4 +1,5 @@
 import { IconButton } from "@snappy/ui";
+import { Copy } from "lucide-react";
 
 import type { useCodeState } from "./Code.state";
 
@@ -18,7 +19,7 @@ export const CodeView = ({ closed, copy, html, tailHostRef }: CodeViewState) => 
       </div>
       {closed ? (
         <div className={styles.copy}>
-          <IconButton icon="content_copy" onClick={copy} tip="Copy" />
+          <IconButton icon={Copy} onClick={copy} tip="Copy" />
         </div>
       ) : undefined}
     </div>

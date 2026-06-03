@@ -14,7 +14,7 @@ export type RichCardProps = Omit<CardButtonProps, `children` | `cn`> & {
 export const RichCard = ({ description, icon, title, ...tapProps }: RichCardProps) => (
   <CardButton {...tapProps} cn={styles.root}>
     <span className={_.cn(styles.icon, $.surface(`primary`), $.elevation(`e2`), $.radius(`md`))}>
-      <Icon name={icon} size="xl" />
+      <Icon icon={icon} size="xl" />
     </span>
     <span className={styles.body}>
       <span className={$.typography(`h3`)}>{title}</span>

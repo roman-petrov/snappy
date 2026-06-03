@@ -1,6 +1,7 @@
 import type { Ai, AiOptions } from "@snappy/ai";
 import type { MenuAction } from "@snappy/ui";
 
+import { RefreshCw, Trash2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
 import { t } from "../../locales";
@@ -86,7 +87,7 @@ export const useFeedItem = (input: UseFeedItemInput) => {
         ? [
             {
               disabled: busy,
-              icon: `refresh`,
+              icon: RefreshCw,
               key: `regenerate`,
               onClick: regenerate,
               tip: t(`feedCard.regenerate`),
@@ -94,13 +95,7 @@ export const useFeedItem = (input: UseFeedItemInput) => {
           ]
         : []),
       ...menu,
-      {
-        color: `error`,
-        icon: `delete`,
-        key: `delete`,
-        onClick: remove,
-        tip: t(`feedCard.delete`),
-      } satisfies MenuAction,
+      { color: `error`, icon: Trash2, key: `delete`, onClick: remove, tip: t(`feedCard.delete`) } satisfies MenuAction,
     ],
     [busy, canRegenerate, menu, regenerate, remove],
   );

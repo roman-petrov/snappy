@@ -14,7 +14,7 @@ export const Block = ({ description, icon, title }: BlockProps) =>
     </>
   ) : (
     <div className={styles.rowWithIcon}>
-      <Icon cn={styles.icon} name={{ emoji: icon }} size="lg" />
+      <Icon cn={styles.icon} icon={icon} size="lg" />
       <Text as="dt" text={title} typography="h3" />
       <Text as="dd" text={description} typography="large" />
     </div>

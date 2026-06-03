@@ -1,6 +1,6 @@
 declare const __Icon: {
   readonly root: "root";
   readonly emoji: "emoji";
-  readonly material: "material";
+  readonly icon: "icon";
 };
 export default __Icon;

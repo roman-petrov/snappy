@@ -1,4 +1,5 @@
 import { Page, PasswordInput, SwitchDisplay } from "@snappy/ui";
+import { KeyRound } from "lucide-react";
 
 import type { useSettingsAiTunnelState } from "./SettingsAiTunnel.state";
 
@@ -19,7 +20,7 @@ export const SettingsAiTunnelView = ({
     <SettingsCard lead={t(`settings.aiTunnel.connectionLead`)} title={t(`settings.aiTunnel.connection`)}>
       <SettingsCardRow
         disabled={loading}
-        icon="vpn_key"
+        icon={KeyRound}
         onClick={onDirectSwitchClick}
         right={<SwitchDisplay checked={aiTunnelDirect} disabled={loading} />}
         text={t(`settings.aiTunnel.directSwitch`)}

@@ -5,7 +5,7 @@ import { IconButton } from "./IconButton";
 
 export const IconButtonLocale = () => (
   <IconButton
-    icon={{ emoji: useStoreValue($locale) === `ru` ? `🇷🇺` : `🇺🇸` }}
+    icon={useStoreValue($locale) === `ru` ? `🇷🇺` : `🇺🇸`}
     onClick={Language.toggle}
     tip={t(`localeSwitcher`)}
   />

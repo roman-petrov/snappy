@@ -18,7 +18,7 @@ export const CatalogView = ({ agents }: CatalogViewProps) => (
       <h3 className={_.cn(styles.heading, $.typography(`h3`))}>{t(`catalog.snappy.sectionTitle`)}</h3>
       <RichCard
         description={t(`catalog.snappy.description`)}
-        icon={{ emoji: `💬` }}
+        icon="💬"
         link={Routes.snappy}
         title={t(`catalog.snappy.title`)}
       />
@@ -29,7 +29,7 @@ export const CatalogView = ({ agents }: CatalogViewProps) => (
         ...group.items.map(agent => (
           <RichCard
             description={agent.description}
-            icon={{ emoji: agent.emoji }}
+            icon={agent.emoji}
             key={agent.id}
             link={Routes.agent({ agentId: agent.id })}
             title={agent.title}

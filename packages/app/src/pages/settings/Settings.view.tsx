@@ -1,4 +1,5 @@
 import { Button, Page, SwitchDisplay } from "@snappy/ui";
+import { CloudFog, CreditCard, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type } from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
@@ -27,13 +28,13 @@ export const SettingsView = ({
       <SettingsCard title={t(`settings.root.systemGroup`)}>
         <SettingsCardRow
           bottom={t(`settings.theme.${theme}`)}
-          icon="palette"
+          icon={Palette}
           link={Routes.settings.theme}
           text={t(`settings.root.theme`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          icon="blur_on"
+          icon={CloudFog}
           onClick={toggleFog}
           right={<SwitchDisplay checked={fog} />}
           text={t(`settings.root.fogBackground`)}
@@ -41,14 +42,14 @@ export const SettingsView = ({
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.language.${locale}`)}
-          icon="language"
+          icon={Languages}
           link={Routes.settings.language}
           text={t(`settings.root.language`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.typeWriterSpeed.${typeWriterSpeed ?? `stream`}`)}
-          icon="text_fields"
+          icon={Type}
           link={Routes.settings.typeWriterSpeed}
           text={t(`settings.root.typeWriterSpeed`)}
         />
@@ -56,28 +57,28 @@ export const SettingsView = ({
       <SettingsCard title={t(`settings.root.modelsGroup`)}>
         <SettingsCardRow
           bottom={aiTunnelEnd}
-          icon="vpn_key"
+          icon={KeyRound}
           link={Routes.settings.aiTunnel}
           text={t(`settings.root.aiTunnel`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmChatEnd}
-          icon="chat"
+          icon={MessageCircle}
           link={Routes.settings.models.chat}
           text={t(`settings.models.chat.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmImageEnd}
-          icon="image"
+          icon={Image}
           link={Routes.settings.models.image}
           text={t(`settings.models.image.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmSpeechEnd}
-          icon="record_voice_over"
+          icon={Mic}
           link={Routes.settings.models.speech}
           text={t(`settings.models.speech.title`)}
         />
@@ -85,7 +86,7 @@ export const SettingsView = ({
       <SettingsCard>
         <SettingsCardRow
           bottom={balanceEnd}
-          icon="credit_card"
+          icon={CreditCard}
           link={Routes.balance.topUp}
           text={t(`settings.root.balance`)}
         />
