@@ -1,4 +1,3 @@
-import type { FastifyStaticOptions } from "@fastify/static";
 import type { Locale } from "@snappy/intl";
 import type { Theme } from "@snappy/ui-core";
 import type { FastifyInstance, FastifyReply } from "fastify";
@@ -18,7 +17,10 @@ export type LocaleTheme = { locale: Locale; theme: Theme | undefined };
 
 export type PrepareIndex = (html: string, locale: Locale, theme: Theme | undefined) => string;
 
-export type ServerModule = (config: ServerModuleConfig) => Promise<void>;
+export type ServerModule = (distDir: string) => {
+  mount: StaticMount;
+  run: (config: ServerModuleConfig) => Promise<void>;
+};
 
 export type ServerModuleConfig = {
   app: FastifyInstance;
@@ -28,13 +30,12 @@ export type ServerModuleConfig = {
   injectTheme: InjectTheme;
   prepareIndex: PrepareIndex;
   serveSpa: ServeSpa;
-  setHeaders: StaticSetHeaders;
 };
 
-export type ServeSpa = (config: ServeSpaConfig) => Promise<void>;
+export type ServeSpa = (config: ServeSpaConfig) => void;
 
 export type ServeSpaConfig = { cacheKeyPrefix: string; distName: string; prefix: string };
 
 export type SettingsCookie = (cookie?: string, acceptLanguage?: string) => LocaleTheme;
 
-export type StaticSetHeaders = NonNullable<FastifyStaticOptions[`setHeaders`]>;
+export type StaticMount = { prefix: string; root: string };

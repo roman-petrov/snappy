@@ -2,30 +2,16 @@
 import type { ServerModuleConfig, ServeSpa, ServeSpaConfig } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import fastifyStatic from "@fastify/static";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-export type ServeSpaDeps = Pick<
-  ServerModuleConfig,
-  `app` | `cookie` | `distDir` | `htmlCache` | `prepareIndex` | `setHeaders`
->;
+export type SpaConfig = Pick<ServerModuleConfig, `app` | `cookie` | `distDir` | `htmlCache` | `prepareIndex`>;
 
 export const Spa =
-  (deps: ServeSpaDeps): ServeSpa =>
-  async ({ cacheKeyPrefix, distName, prefix }: ServeSpaConfig) => {
-    const { app, cookie, distDir, htmlCache, prepareIndex, setHeaders } = deps;
+  ({ app, cookie, distDir, htmlCache, prepareIndex }: SpaConfig): ServeSpa =>
+  ({ cacheKeyPrefix, distName, prefix }: ServeSpaConfig) => {
     const spaRoot = join(distDir, distName);
     const indexPath = join(spaRoot, `index.html`);
-    const assetsPrefix = `${prefix}/assets/`;
-
-    await app.register(fastifyStatic, {
-      index: false,
-      preCompressed: true,
-      prefix: assetsPrefix,
-      root: join(spaRoot, `assets`),
-      setHeaders,
-    });
 
     app.get(`${prefix}/favicon.svg`, async (_request, reply) => {
       await reply.sendFile(`favicon.svg`, spaRoot);

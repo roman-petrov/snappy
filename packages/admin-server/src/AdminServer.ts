@@ -1,9 +1,18 @@
 /* eslint-disable functional/no-expression-statements */
 import type { ServerModule } from "@snappy/server-module";
 
+import { join } from "node:path";
+
 import { Admin } from "./core";
 
-export const AdminServer: ServerModule = async ({ app, serveSpa }) => {
-  await Admin({ app });
-  await serveSpa({ cacheKeyPrefix: `admin:index`, distName: `admin`, prefix: `/admin` });
+export const AdminServer: ServerModule = distDir => {
+  const spa = { cacheKeyPrefix: `admin:index`, distName: `admin`, prefix: `/admin` } as const;
+
+  return {
+    mount: { prefix: `${spa.prefix}/assets/`, root: join(distDir, spa.distName, `assets`) },
+    run: async ({ app, serveSpa }) => {
+      await Admin({ app });
+      serveSpa(spa);
+    },
+  };
 };
