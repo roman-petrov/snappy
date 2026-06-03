@@ -55,7 +55,7 @@ export const Server = async () => {
 
   if (handlerRef.current !== undefined) {
     const handler = handlerRef.current;
-    https.createServer(Config.sslCert, handler).listen(portHttps, `0.0.0.0`);
+    https.createServer(Config.ssl(), handler).listen(portHttps, `0.0.0.0`);
     http.createServer(handler).listen(portHttp, `127.0.0.1`);
   }
 };

@@ -34,7 +34,7 @@ export const ServerDev = async () => {
   const apiAddr = await apiApp.listen({ host: `127.0.0.1`, port: 0 });
   const apiPort = Number(new URL(apiAddr).port);
   const app = express();
-  const server = https.createServer(Config.sslCert, app);
+  const server = https.createServer(Config.ssl(), app);
 
   const configBuilder = ViteConfig(
     {

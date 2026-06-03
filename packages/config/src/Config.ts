@@ -60,7 +60,7 @@ const devSsl = () => {
   return { cert, key };
 };
 
-const sslCert = isProduction ? prodSsl() : devSsl();
+const ssl = isProduction ? prodSsl : devSsl;
 
 export const Config = {
   adminPassword,
@@ -74,7 +74,7 @@ export const Config = {
   dbShadowUrl,
   dbUrl,
   host,
-  sslCert,
+  ssl,
   yooKassaSecretKey,
   yooKassaShopId,
 };
