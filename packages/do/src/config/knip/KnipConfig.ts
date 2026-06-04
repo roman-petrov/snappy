@@ -7,7 +7,7 @@ const config: KnipConfig = {
   workspaces: {
     ".": {
       entry: [`auth.ts`, `cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`],
-      ignoreDependencies: [`@knip/mcp`, `actions-up`, `@snappy/coder-cli`],
+      ignoreDependencies: [`@knip/mcp`, `actions-up`, `@snappy/coder-cli`, `agent-browser`],
     },
     "packages/admin": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/ai-stream": { ignoreDependencies: [`@fontsource/google-sans-code`] },
