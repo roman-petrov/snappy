@@ -23,6 +23,7 @@ clusterize
 nprobes
 xhigh
 shiki
+shikijs
 culori
 
 // Ai Models
