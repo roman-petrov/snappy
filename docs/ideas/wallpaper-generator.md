@@ -2,9 +2,9 @@
 
 ## 💡 Concept
 
-**Agent skill.** Creates backgrounds sized for the user’s device (phone, tablet, desktop, ultrawide), with control over
-mood, colors, and how busy the image is. The UI can show where icons and widgets will sit so the wallpaper stays
-readable.
+**Agent skill.** Creates backgrounds sized for the user’s device (phone, tablet, desktop, extra-wide screens), with
+control over mood, colors, and how busy the image is. The UI can show where icons and widgets will sit so the wallpaper
+stays readable.
 
 ## 👤 How the user experiences it
 
