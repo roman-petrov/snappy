@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-component-props */
 import type { LucideIcon } from "lucide-react";
 
 import { _ } from "@snappy/core";
@@ -15,11 +16,6 @@ export const Icon = ({ cn, color, icon, size = `md` }: IconProps) => {
   }
 
   const Svg = icon;
-  const strokeWidth = 1.75;
 
-  return (
-    <span className={_.cn(styles.root, $.iconSize(size), styles.icon, $.color(color), cn)}>
-      <Svg aria-hidden strokeWidth={strokeWidth} />
-    </span>
-  );
+  return <Svg className={_.cn(styles.root, styles.icon, $.iconSize(size), $.color(color), cn)} />;
 };
