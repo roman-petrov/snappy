@@ -2,8 +2,8 @@
 
 ## 💡 Concept
 
-**Export step** after an icon is ready (often from the mono or color SVG flow). One approved icon becomes a zip of PNG or
-WebP files in standard sizes, consistently padded and centered.
+**Export step** after an icon is ready (often from the mono or color SVG flow). One approved icon becomes a zip of PNG
+or WebP files in standard sizes, consistently padded and centered.
 
 ## 👤 How the user experiences it
 

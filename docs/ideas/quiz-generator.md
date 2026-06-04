@@ -10,5 +10,5 @@
 1. The user pastes study material or names a subject and level.
 2. The agent asks how many questions, which types, and how hard they should be.
 3. The agent drafts the quiz; the user removes or fixes weak questions.
-4. The user gets a **printable sheet**, an **interactive quiz** with scoring in Snappy, or a small **HTML page** to share
-   with others.
+4. The user gets a **printable sheet**, an **interactive quiz** with scoring in Snappy, or a small **HTML page** to
+   share with others.
