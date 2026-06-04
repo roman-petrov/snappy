@@ -21,11 +21,11 @@
     "@snappy/ui": "workspace:*",
     "better-auth": "^1.6.13",
     "lucide-react": "^0.575.0",
-    "react": "^19.2.6",
+    "react": "^19.2.7",
     "react-router-dom": "^7.16.0"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.15"
+    "@types/react": "^19.2.16"
   }
 }
