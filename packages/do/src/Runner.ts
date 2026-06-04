@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/max-params */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
@@ -7,6 +8,8 @@ import { _ } from "@snappy/core";
 import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
 import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
+
+import type { CommandRun } from "./CommandTypes";
 
 import { Build } from "./Build";
 import { type CommandName, Commands } from "./Commands";
@@ -23,6 +26,20 @@ const devOriginLabelWidth = 6;
 
 const devOriginLine = (emoji: string, name: string, url: string) =>
   `${emoji} ${Terminal.yellow(`${name}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
+
+const showDevOrigins = (name: CommandName) => name === `server:frontend:dev` || name === `server:prod`;
+
+const devOriginsBlock = () => {
+  const origin = _.https(Config.host);
+
+  return [
+    devOriginLine(`🌐`, `Site`, origin),
+    devOriginLine(`💻`, `App`, `${origin}/app`),
+    devOriginLine(`🛡️`, `Admin`, `${origin}/admin`),
+  ].join(`\n`);
+};
+
+const logDevOrigins = () => Console.log(`\n\n${devOriginsBlock()}\n`);
 
 type RunResult = { exitCode: number; message: string };
 
@@ -51,12 +68,69 @@ const runShell = async (
   options: { capture?: true; silent?: true },
 ): Promise<ShellResult> => Process.spawnShell(root, command, options);
 
+type CwdCommandRun = Extract<CommandRun, { command: string; cwd: string }>;
+
 type RunLeafOptions = {
   backgroundProcesses: ChildProcess[];
   context: TreeContext;
   mcp: boolean;
   verbose: boolean;
   withoutTree?: boolean;
+};
+
+const runCwdCommand = async (
+  root: string,
+  name: CommandName,
+  run: CwdCommandRun,
+  backgroundProcesses: ChildProcess[],
+  mcp: boolean,
+  verbose: boolean,
+): Promise<number | RunResult | ShellResult> => {
+  const background = run.background === true;
+  if (mcp && !background) {
+    return runShell(join(root, run.cwd), run.command, { capture: true });
+  }
+
+  const proc = nodeSpawn(run.command, [], {
+    cwd: join(root, run.cwd),
+    detached: mcp && background,
+    env: run.env === undefined ? process.env : { ...process.env, ...run.env },
+    shell: true,
+    stdio: mcp && background ? `ignore` : `inherit`,
+  });
+
+  if (background && mcp) {
+    proc.unref();
+    const origins = !verbose && showDevOrigins(name) ? `${devOriginsBlock()}\n\n` : ``;
+
+    return { exitCode: 0, message: `${origins}Started in background.` };
+  }
+  if (!verbose && showDevOrigins(name)) {
+    logDevOrigins();
+  }
+  if (background) {
+    backgroundProcesses.push(proc);
+
+    return 0;
+  }
+
+  const code = await new Promise<number>(resolve => {
+    proc.on(`exit`, (c: null | number) => {
+      resolve(c ?? 1);
+    });
+  });
+
+  for (const child of backgroundProcesses) {
+    child.kill(`SIGTERM`);
+  }
+
+  if (run.shutdown !== undefined) {
+    const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
+
+    return Process.exitCode(shutdownResult);
+  }
+
+  return code;
 };
 
 const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions): Promise<RunResult> => {
@@ -98,53 +172,17 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
-        ? mcp
-          ? runShell(join(root, run.cwd), run.command, { capture: true })
-          : (async () => {
-              const proc = nodeSpawn(run.command, [], {
-                cwd: join(root, run.cwd),
-                env: run.env === undefined ? process.env : { ...process.env, ...run.env },
-                shell: true,
-                stdio: `inherit`,
-              });
-              if (!verbose && (name === `server:frontend:dev` || name === `server:prod`)) {
-                const origin = _.https(Config.host);
-                Console.log(
-                  `\n\n${[
-                    devOriginLine(`🌐`, `Site`, origin),
-                    devOriginLine(`💻`, `App`, `${origin}/app`),
-                    devOriginLine(`🛡️`, `Admin`, `${origin}/admin`),
-                  ].join(`\n`)}\n`,
-                );
-              }
-              if (run.background === true) {
-                backgroundProcesses.push(proc);
-
-                return 0;
-              }
-
-              const code = await new Promise<number>(resolve => {
-                proc.on(`exit`, (c: null | number) => {
-                  resolve(c ?? 1);
-                });
-              });
-
-              for (const child of backgroundProcesses) {
-                child.kill(`SIGTERM`);
-              }
-
-              if (run.shutdown !== undefined) {
-                const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
-
-                return Process.exitCode(shutdownResult);
-              }
-
-              return code;
-            })()
+        ? runCwdCommand(root, name, run, backgroundProcesses, mcp, verbose)
         : runShell(root, run.command, capture ? { capture: true } : {}));
 
-  const exitCode = Process.exitCode(rawResult);
-  const message = _.isObject(rawResult) ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim() : ``;
+  const exitCode = _.isObject(rawResult) ? rawResult.exitCode : rawResult;
+
+  const message =
+    _.isObject(rawResult) && `message` in rawResult
+      ? rawResult.message
+      : _.isObject(rawResult)
+        ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim()
+        : ``;
 
   if (!mcp && !verbose && !(`background` in run && run.background === true)) {
     const seconds = Math.round((_.now() - start) / _.second);
@@ -152,7 +190,7 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
     Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
   }
 
-  if (!mcp && exitCode !== 0 && _.isObject(rawResult)) {
+  if (!mcp && exitCode !== 0 && _.isObject(rawResult) && `stderr` in rawResult) {
     Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
     if (rawResult.stderr.length > 0) {
       Console.error(rawResult.stderr);
@@ -237,7 +275,7 @@ const run = async (
     verbose,
   });
 
-  if (result.exitCode === 0 && backgroundProcesses.length > 0) {
+  if (result.exitCode === 0 && backgroundProcesses.length > 0 && !isMcp) {
     await new Promise<void>(resolve => {
       const cleanup = () => {
         for (const proc of backgroundProcesses) {
