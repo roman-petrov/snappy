@@ -17,8 +17,10 @@ export const ru = {
     resetPassword: {
       done: `Пароль изменён`,
       doneLead: `Теперь можно войти с новым паролем.`,
+      confirmPasswordLabel: `Подтверждение пароля`,
       errors: {
         invalidOrExpiredToken: `Ссылка недействительна или истекла`,
+        passwordMismatch: `Пароли не совпадают`,
         unknownError: `Не удалось изменить пароль`,
       },
       invalidLink: `Неверная ссылка`,

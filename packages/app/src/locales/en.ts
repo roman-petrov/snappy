@@ -17,7 +17,12 @@ export const en = {
     resetPassword: {
       done: `Password changed`,
       doneLead: `You can now sign in with your new password.`,
-      errors: { invalidOrExpiredToken: `Link is invalid or expired`, unknownError: `Could not reset password` },
+      confirmPasswordLabel: `Confirm password`,
+      errors: {
+        invalidOrExpiredToken: `Link is invalid or expired`,
+        passwordMismatch: `Passwords do not match`,
+        unknownError: `Could not reset password`,
+      },
       invalidLink: `Invalid link`,
       invalidLinkLead: `Use the link from the email to reset your password.`,
       passwordLabel: `Password`,
