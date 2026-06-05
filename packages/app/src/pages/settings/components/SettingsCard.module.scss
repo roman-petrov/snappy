@@ -3,9 +3,21 @@
 .block {
   display: grid;
   gap: space.xs();
-  padding: space.md();
+}
+
+.with-header {
+  padding-block: space.md();
+}
+
+.compact {
+  padding-block: space.xs();
+}
+
+.header {
+  padding-inline: space.md();
 }
 
 .form {
   gap: space.md();
+  padding: space.md();
 }

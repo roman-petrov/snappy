@@ -4,7 +4,6 @@
 @use "pkg:@snappy/theme/elevation" as elevation;
 @use "pkg:@snappy/theme/glass";
 @use "pkg:@snappy/theme/tokens/motion";
-@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/surface";
 
 @mixin -on-interactive {
@@ -46,7 +45,6 @@
     color: color.primary();
   }
 
-  border-radius: radius.lg();
   transition: color motion.default();
 }
 
