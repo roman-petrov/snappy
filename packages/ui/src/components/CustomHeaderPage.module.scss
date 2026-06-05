@@ -7,8 +7,7 @@
   flex-direction: column;
   gap: space.md();
   min-height: 0;
-  padding-block-end: tokens.layout-gutter();
-  padding-block-start: space.sm();
+  padding-block: space.sm() tokens.layout-gutter();
   padding-inline: tokens.layout-gutter();
   overflow: auto;
 }
