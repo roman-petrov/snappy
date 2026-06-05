@@ -15,9 +15,9 @@ export const en = {
       title: `Forgot password`,
     },
     resetPassword: {
+      confirmPasswordLabel: `Confirm password`,
       done: `Password changed`,
       doneLead: `You can now sign in with your new password.`,
-      confirmPasswordLabel: `Confirm password`,
       errors: {
         invalidOrExpiredToken: `Link is invalid or expired`,
         passwordMismatch: `Passwords do not match`,
