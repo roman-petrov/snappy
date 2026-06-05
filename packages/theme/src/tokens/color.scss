@@ -45,3 +45,39 @@
 @function rim-weight() {
   @return -color("rim-weight");
 }
+
+@function inverse() {
+  @return -color("inverse");
+}
+
+@function accent-indigo() {
+  @return -color("accent-indigo");
+}
+
+@function accent-violet() {
+  @return -color("accent-violet");
+}
+
+@function accent-purple() {
+  @return -color("accent-purple");
+}
+
+@function accent-fuchsia() {
+  @return -color("accent-fuchsia");
+}
+
+@function accent-pink() {
+  @return -color("accent-pink");
+}
+
+@function accent-orange() {
+  @return -color("accent-orange");
+}
+
+@function accent-magenta() {
+  @return -color("accent-magenta");
+}
+
+@function accent-plum() {
+  @return -color("accent-plum");
+}

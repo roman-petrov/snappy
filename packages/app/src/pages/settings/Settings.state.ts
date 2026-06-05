@@ -16,13 +16,13 @@ export const useSettingsState = () => {
   const locale = useStoreValue($locale);
 
   useAsyncEffect(async () => {
-    const [llm, profile] = await Promise.all([trpc.user.settings.get.query(), Auth.user()]);
-    setAiTunnelEnd(llm.aiTunnelDirect ? t(`settings.aiTunnel.mode.direct`) : t(`settings.aiTunnel.mode.proxy`));
+    const [settings, profile] = await Promise.all([trpc.user.settings.get.query(), Auth.user()]);
+    setAiTunnelEnd(settings.aiTunnelDirect ? t(`settings.aiTunnel.mode.direct`) : t(`settings.aiTunnel.mode.proxy`));
     setEmail(profile?.email);
-    setLlmChatEnd(llm.llmChatModel);
-    setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality}`);
-    setLlmSpeechEnd(llm.llmSpeechRecognitionModel);
-    setTypeWriterSpeed(llm.typeWriterSpeed);
+    setLlmChatEnd(settings.llmChatModel);
+    setLlmImageEnd(`${settings.llmImageModel} · ${settings.llmImageQuality}`);
+    setLlmSpeechEnd(settings.llmSpeechRecognitionModel);
+    setTypeWriterSpeed(settings.typeWriterSpeed);
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 

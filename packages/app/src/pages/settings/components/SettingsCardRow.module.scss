@@ -15,6 +15,10 @@
   text-align: left;
 }
 
+.row-no-icon {
+  grid-template-columns: 1fr auto;
+}
+
 .text {
   display: flex;
   flex-direction: column;

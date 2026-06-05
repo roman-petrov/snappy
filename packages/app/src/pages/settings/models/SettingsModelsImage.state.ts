@@ -1,5 +1,4 @@
 import { AiConstants, type AiImageQuality } from "@snappy/ai";
-import { Image } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import type { SettingsOption } from "../components";
@@ -11,7 +10,7 @@ export const useSettingsModelsImageState = () => {
   const { ids, settingsResponse } = useSettingsModelIds(`image`);
   const [modelValue, setModelValue] = useState(``);
   const [qualityValue, setQualityValue] = useState<AiImageQuality>(AiConstants.imageQuality[0]);
-  const modelOptions: readonly SettingsOption<string>[] = ids.map(id => ({ icon: Image, label: id, value: id }));
+  const modelOptions: readonly SettingsOption<string>[] = ids.map(modelId => ({ label: modelId, value: modelId }));
 
   useEffect(() => {
     if (settingsResponse === undefined) {
@@ -24,17 +23,17 @@ export const useSettingsModelsImageState = () => {
     setQualityValue(settingsResponse.llmImageQuality);
   }, [ids, settingsResponse]);
 
-  const onModelSelect = async (next: string) => {
-    const response = await trpc.user.settings.set.mutate({ llmImageModel: next });
+  const selectModel = async (modelId: string) => {
+    const response = await trpc.user.settings.set.mutate({ llmImageModel: modelId });
     setModelValue(response.llmImageModel);
   };
 
-  const onQualitySelect = async (next: AiImageQuality) => {
-    const response = await trpc.user.settings.set.mutate({ llmImageQuality: next });
+  const selectQuality = async (quality: AiImageQuality) => {
+    const response = await trpc.user.settings.set.mutate({ llmImageQuality: quality });
     setQualityValue(response.llmImageQuality);
   };
 
   const qualityOptions = AiConstants.imageQuality;
 
-  return { modelOptions, modelValue, onModelSelect, onQualitySelect, qualityOptions, qualityValue };
+  return { modelOptions, modelValue, qualityOptions, qualityValue, selectModel, selectQuality };
 };

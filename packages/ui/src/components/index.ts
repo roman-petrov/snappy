@@ -20,6 +20,8 @@ export * from "./DefaultHeader";
 
 export * from "./FileSelect";
 
+export * from "./FilledIcon";
+
 export * from "./Header";
 
 export * from "./Icon";

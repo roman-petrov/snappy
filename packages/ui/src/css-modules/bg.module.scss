@@ -7,7 +7,7 @@ $functions: meta.module-functions("color");
 
 @each $name, $fn in $functions {
   .#{$name} {
-    color: meta.call($fn);
+    background-color: meta.call($fn);
   }
 }
 

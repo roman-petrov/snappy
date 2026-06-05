@@ -12,10 +12,10 @@ export const useSettingsTypeWriterSpeedState = () => {
     setValue((await trpc.user.settings.get.query()).typeWriterSpeed);
   }, []);
 
-  const onSelect = async (next: TypeWriterSpeed | undefined) => {
-    const { typeWriterSpeed } = await trpc.user.settings.set.mutate({ typeWriterSpeed: next ?? false });
+  const select = async (speed: TypeWriterSpeed | undefined) => {
+    const { typeWriterSpeed } = await trpc.user.settings.set.mutate({ typeWriterSpeed: speed ?? false });
     setValue(typeWriterSpeed);
   };
 
-  return { onSelect, value };
+  return { select, value };
 };

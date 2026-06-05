@@ -10,15 +10,15 @@ export const useSettingsAiTunnelState = () => {
 
   useAsyncEffect(async () => {
     setLoading(true);
-    const s = await trpc.user.settings.get.query();
-    setAiTunnelDirect(s.aiTunnelDirect);
-    setTunnelKey(s.aiTunnelKey);
+    const settings = await trpc.user.settings.get.query();
+    setAiTunnelDirect(settings.aiTunnelDirect);
+    setTunnelKey(settings.aiTunnelKey);
     setLoading(false);
   }, []);
 
-  const onToggleDirect = async (next: boolean) => {
-    setAiTunnelDirect(next);
-    await trpc.user.settings.set.mutate({ aiTunnelDirect: next });
+  const saveDirect = async (direct: boolean) => {
+    setAiTunnelDirect(direct);
+    await trpc.user.settings.set.mutate({ aiTunnelDirect: direct });
   };
 
   const persistKeyOnBlur = async () => {
@@ -26,20 +26,20 @@ export const useSettingsAiTunnelState = () => {
       return;
     }
     await trpc.user.settings.set.mutate({ aiTunnelKey: tunnelKey });
-    const s = await trpc.user.settings.get.query();
-    setTunnelKey(s.aiTunnelKey);
+    const settings = await trpc.user.settings.get.query();
+    setTunnelKey(settings.aiTunnelKey);
   };
 
-  const onDirectSwitchClick = () => {
+  const toggleDirect = () => {
     if (loading) {
       return;
     }
-    onToggleDirect(!aiTunnelDirect).catch(() => undefined);
+    saveDirect(!aiTunnelDirect).catch(() => undefined);
   };
 
-  const onTunnelKeyBlur = () => {
+  const tunnelKeyBlur = () => {
     persistKeyOnBlur().catch(() => undefined);
   };
 
-  return { aiTunnelDirect, loading, onDirectSwitchClick, onTunnelKeyBlur, setTunnelKey, tunnelKey };
+  return { aiTunnelDirect, loading, setTunnelKey, toggleDirect, tunnelKey, tunnelKeyBlur };
 };

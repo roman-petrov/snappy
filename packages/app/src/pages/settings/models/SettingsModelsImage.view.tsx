@@ -1,5 +1,4 @@
 import { Page } from "@snappy/ui";
-import { Star } from "lucide-react";
 
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
@@ -11,24 +10,23 @@ export type SettingsModelsImageViewProps = ReturnType<typeof useSettingsModelsIm
 export const SettingsModelsImageView = ({
   modelOptions,
   modelValue,
-  onModelSelect,
-  onQualitySelect,
   qualityOptions,
   qualityValue,
+  selectModel,
+  selectQuality,
 }: SettingsModelsImageViewProps) => (
   <Page back title={t(`settings.models.image.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.models.image.title`)}>
-        <SettingsOptionRows onSelect={onModelSelect} options={modelOptions} value={modelValue} />
+        <SettingsOptionRows options={modelOptions} select={selectModel} value={modelValue} />
       </SettingsCard>
       <SettingsCard title={t(`settings.models.image.quality`)}>
         <SettingsOptionRows
-          onSelect={onQualitySelect}
-          options={qualityOptions.map(value => ({
-            icon: Star,
-            label: t(`settings.models.image.qualityValue.${value}`),
-            value,
+          options={qualityOptions.map(quality => ({
+            label: t(`settings.models.image.qualityValue.${quality}`),
+            value: quality,
           }))}
+          select={selectQuality}
           value={qualityValue}
         />
       </SettingsCard>

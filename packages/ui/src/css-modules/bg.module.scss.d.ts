@@ -1,5 +1,5 @@
 /* jscpd:ignore-start */
-declare const __Color: {
+declare const __Bg: {
   readonly primary: "primary";
   readonly error: "error";
   readonly info: "info";
@@ -21,5 +21,5 @@ declare const __Color: {
   readonly accentMagenta: "accentMagenta";
   readonly accentPlum: "accentPlum";
 };
-export default __Color;
+export default __Bg;
 /* jscpd:ignore-end */

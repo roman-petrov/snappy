@@ -1,0 +1,9 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/icon-size";
+
+.root {
+  @include primitives.inline-row-center;
+  @include primitives.circle(icon-size.lg());
+
+  flex-shrink: 0;
+}

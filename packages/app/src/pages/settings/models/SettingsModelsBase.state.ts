@@ -5,10 +5,10 @@ import type { SettingsModelsBaseProps } from "./SettingsModelsBase";
 import { trpc } from "../../../core";
 import { useSettingsModelIds } from "../hooks";
 
-export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, title }: SettingsModelsBaseProps) => {
+export const useSettingsModelsBaseState = ({ modelType, settingsField, title }: SettingsModelsBaseProps) => {
   const { ids, settingsResponse } = useSettingsModelIds(modelType);
   const [value, setValue] = useState(``);
-  const options = ids.map(id => ({ icon, label: id, value: id }));
+  const options = ids.map(modelId => ({ label: modelId, value: modelId }));
 
   useEffect(() => {
     if (settingsResponse === undefined) {
@@ -21,10 +21,10 @@ export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, tit
     setValue(ids.includes(selected) ? selected : (ids[0] ?? ``));
   }, [ids, settingsField, settingsResponse]);
 
-  const onSelect = async (next: string) => {
-    const settingsSetResponse = await trpc.user.settings.set.mutate({ [settingsField]: next });
+  const select = async (modelId: string) => {
+    const settingsSetResponse = await trpc.user.settings.set.mutate({ [settingsField]: modelId });
     setValue(settingsSetResponse[settingsField]);
   };
 
-  return { onSelect, options, title, value };
+  return { options, select, title, value };
 };

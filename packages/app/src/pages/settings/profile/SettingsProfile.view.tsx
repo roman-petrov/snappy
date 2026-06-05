@@ -1,4 +1,4 @@
-import { Button, Page } from "@snappy/ui";
+import { Button, FilledIcon, Page } from "@snappy/ui";
 import { CreditCard, KeyRound, Mail } from "lucide-react";
 
 import type { useSettingsProfileState } from "./SettingsProfile.state";
@@ -13,17 +13,22 @@ export type SettingsProfileViewProps = ReturnType<typeof useSettingsProfileState
 export const SettingsProfileView = ({ balanceEnd, email, signOut }: SettingsProfileViewProps) => (
   <Page back title={t(`settings.profile.title`)}>
     <SettingsCard>
-      <SettingsCardRow bottom={email} disabled icon={Mail} text={t(`settings.profile.email`)} />
+      <SettingsCardRow
+        bottom={email}
+        disabled
+        icon={<FilledIcon color="accentPink" icon={Mail} />}
+        text={t(`settings.profile.email`)}
+      />
       <SettingsCardSeparator />
       <SettingsCardRow
         bottom={balanceEnd}
-        icon={CreditCard}
+        icon={<FilledIcon color="accentOrange" icon={CreditCard} />}
         link={Routes.settings.profile.topUp}
         text={t(`settings.profile.balance`)}
       />
       <SettingsCardSeparator />
       <SettingsCardRow
-        icon={KeyRound}
+        icon={<FilledIcon color="accentViolet" icon={KeyRound} />}
         link={Routes.settings.profile.password}
         text={t(`settings.profile.password.title`)}
       />

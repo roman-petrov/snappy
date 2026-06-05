@@ -3,7 +3,7 @@ import { $theme, Theme } from "@snappy/ui";
 
 export const useSettingsThemeState = () => {
   const theme = useStoreValue($theme);
-  const onSelect = (value: Theme) => Theme.set(value);
+  const select = (value: Theme) => Theme.set(value);
 
-  return { onSelect, value: theme };
+  return { select, value: theme };
 };

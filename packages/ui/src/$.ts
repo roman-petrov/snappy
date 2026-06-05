@@ -1,3 +1,4 @@
+import bgStyles from "./css-modules/bg.module.scss";
 import colorStyles from "./css-modules/color.module.scss";
 import elevationStyles from "./css-modules/elevation.module.scss";
 import iconSizeStyles from "./css-modules/icon-size.module.scss";
@@ -5,6 +6,8 @@ import radiusStyles from "./css-modules/radius.module.scss";
 import surfaceStyles from "./css-modules/surface.module.scss";
 import tapStyles from "./css-modules/tap.module.scss";
 import typographyStyles from "./css-modules/typography.module.scss";
+
+export type Bg = keyof typeof bgStyles;
 
 export type Color = keyof typeof colorStyles;
 
@@ -20,6 +23,7 @@ export type TapKey = keyof typeof tapStyles;
 
 export type Typography = keyof typeof typographyStyles;
 
+const bg = (name: Color) => bgStyles[name];
 const color = (name?: Color) => (name === undefined ? `` : colorStyles[name]);
 const elevation = (name: Elevation) => elevationStyles[name];
 const iconSize = (name: IconSize) => iconSizeStyles[name];
@@ -28,4 +32,4 @@ const surface = (name: Surface) => surfaceStyles[name];
 const tap = (name: TapKey) => tapStyles[name];
 const typography = (name?: Typography) => (name === undefined || name === `body` ? `` : typographyStyles[name]);
 
-export const $ = { color, elevation, iconSize, radius, surface, tap, typography };
+export const $ = { bg, color, elevation, iconSize, radius, surface, tap, typography };
