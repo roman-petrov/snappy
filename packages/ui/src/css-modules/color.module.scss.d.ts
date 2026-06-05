@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 declare const __Color: {
   readonly primary: "primary";
   readonly error: "error";
@@ -22,4 +21,3 @@ declare const __Color: {
   readonly accentPlum: "accentPlum";
 };
 export default __Color;
-/* jscpd:ignore-end */

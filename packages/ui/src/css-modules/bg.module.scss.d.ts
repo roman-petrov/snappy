@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 declare const __Bg: {
   readonly primary: "primary";
   readonly error: "error";
@@ -22,4 +21,3 @@ declare const __Bg: {
   readonly accentPlum: "accentPlum";
 };
 export default __Bg;
-/* jscpd:ignore-end */

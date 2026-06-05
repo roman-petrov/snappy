@@ -1,0 +1,9 @@
+@use "sass:meta";
+
+@mixin define($functions, $property) {
+  @each $name, $fn in $functions {
+    .#{$name} {
+      #{$property}: meta.call($fn);
+    }
+  }
+}

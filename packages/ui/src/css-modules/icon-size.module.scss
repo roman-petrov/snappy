@@ -1,12 +1,4 @@
-/* stylelint-disable property-disallowed-list */
-@use "sass:map";
 @use "sass:meta";
+@use "pkg:@snappy/theme/theme-module" as theme-module;
 @use "pkg:@snappy/theme/tokens/icon-size" as icon-size;
-
-$functions: meta.module-functions("icon-size");
-
-@each $name, $px in icon-size.$values {
-  .#{$name} {
-    font-size: meta.call(map.get($functions, $name));
-  }
-}
+@include theme-module.define(meta.module-functions("icon-size"), font-size);

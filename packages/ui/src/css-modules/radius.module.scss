@@ -1,11 +1,4 @@
-/* stylelint-disable property-disallowed-list */
 @use "sass:meta";
+@use "pkg:@snappy/theme/theme-module" as theme-module;
 @use "pkg:@snappy/theme/tokens/radius" as radius;
-
-$functions: meta.module-functions("radius");
-
-@each $name, $fn in $functions {
-  .#{$name} {
-    border-radius: meta.call($fn);
-  }
-}
+@include theme-module.define(meta.module-functions("radius"), border-radius);
