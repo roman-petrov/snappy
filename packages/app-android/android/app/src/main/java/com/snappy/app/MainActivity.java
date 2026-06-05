@@ -17,9 +17,6 @@ import androidx.activity.SystemBarStyle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends ComponentActivity {
 
@@ -53,19 +50,10 @@ public class MainActivity extends ComponentActivity {
                 SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT));
         setContentView(R.layout.activity_main);
 
-        View container = findViewById(R.id.webview_container);
         View splash = findViewById(R.id.splash);
         ErrorScreen errorScreen = new ErrorScreen(findViewById(R.id.error), splash);
         webView = findViewById(R.id.webview);
         webView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
-        ViewCompat.setOnApplyWindowInsetsListener(
-                container,
-                (v, windowInsets) -> {
-                    Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-                    v.setPadding(0, 0, 0, ime.bottom);
-                    return windowInsets;
-                });
-        container.requestApplyInsets();
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
