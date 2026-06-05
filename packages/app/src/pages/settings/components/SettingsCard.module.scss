@@ -12,6 +12,10 @@
   &.form {
     gap: space.md();
     padding: space.md();
+
+    .header {
+      padding-inline: 0;
+    }
   }
 }
 

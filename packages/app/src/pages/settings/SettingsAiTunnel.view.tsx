@@ -26,7 +26,7 @@ export const SettingsAiTunnelView = ({
         text={t(`settings.aiTunnel.directSwitch`)}
       />
     </SettingsCard>
-    <SettingsCard lead={t(`settings.aiTunnel.keyLead`)} title={t(`settings.aiTunnel.keySection`)}>
+    <SettingsCard form lead={t(`settings.aiTunnel.keyLead`)} title={t(`settings.aiTunnel.keySection`)}>
       <PasswordInput
         disabled={loading || !aiTunnelDirect}
         label={t(`settings.aiTunnel.keyLabel`)}
