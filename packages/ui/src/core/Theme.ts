@@ -7,6 +7,7 @@ import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
 import { ThemeFog } from "./ThemeFog";
+import { ThemeTransition } from "./ThemeTransition";
 
 export type ResolvedTheme = CoreResolvedTheme;
 
@@ -25,6 +26,7 @@ const applyEffective = () => {
 };
 
 const init = () => {
+  ThemeTransition.init();
   if (Bridge.available) {
     Dom.subscribe(window, Bridge.systemThemeChangedEvent, applyEffective);
   } else {
@@ -39,12 +41,7 @@ const set = (value: Theme) => {
     return;
   }
 
-  const root = document.documentElement;
-  const transitionAttribute = `data-theme-transition`;
-  root.setAttribute(transitionAttribute, `true`);
-  void document
-    .startViewTransition(() => $theme.set(value))
-    .finished.finally(() => root.removeAttribute(transitionAttribute));
+  ThemeTransition.run(() => $theme.set(value));
 };
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);

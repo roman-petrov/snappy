@@ -1,3 +1,4 @@
+import { _ } from "@snappy/core";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import type { TextAreaProps } from "./TextArea";
@@ -38,7 +39,7 @@ export const useTextAreaState = ({
       element.style.overflowY = `hidden`;
       element.style.height = `auto`;
       const contentHeight = Math.round(element.scrollHeight);
-      element.style.height = `${lockedHeight}px`;
+      element.style.height = _.px(lockedHeight);
       element.scrollTop = scrollTopBefore;
 
       const expandedHeight = Math.min(contentHeight, maxHeight);
@@ -54,7 +55,7 @@ export const useTextAreaState = ({
       }
 
       rafRef.current = requestAnimationFrame(() => {
-        element.style.height = `${nextHeight}px`;
+        element.style.height = _.px(nextHeight);
         element.style.overflowY = !collapsed && overflow ? `auto` : `hidden`;
 
         const maxScroll = Math.max(0, element.scrollHeight - element.clientHeight);

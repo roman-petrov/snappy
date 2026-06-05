@@ -27,6 +27,8 @@ const pascalCase = (s: string) => {
   return c.length === 0 ? `` : (c[0] ?? ``).toUpperCase() + c.slice(1);
 };
 
+const px = (value: number) => `${value}px`;
+
 const sentenceCase = (s: string) => {
   const spaced = kebabCase(s).replaceAll(`-`, ` `).replaceAll(/\s+/gu, ` `).trim();
 
@@ -119,6 +121,7 @@ export const _ = {
   mb,
   noop,
   pascalCase,
+  px,
   round,
   sentenceCase,
   singleAction,

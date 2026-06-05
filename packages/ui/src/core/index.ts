@@ -12,6 +12,8 @@ export * from "./Theme";
 
 export * from "./ThemeFog";
 
+export * from "./ThemeTransition";
+
 export * from "./TranslateFunction";
 
 export * from "./TrpcClient";

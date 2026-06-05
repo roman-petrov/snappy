@@ -237,8 +237,8 @@ const createInterface = (
         iface.canvas.height = pixelHeight;
       }
       if (setStyle === true) {
-        const nextWidth = `${cssWidth}px`;
-        const nextHeight = `${cssHeight}px`;
+        const nextWidth = _.px(cssWidth);
+        const nextHeight = _.px(cssHeight);
         if (iface.canvas.style.width !== nextWidth) {
           iface.canvas.style.width = nextWidth;
         }

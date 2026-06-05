@@ -19,6 +19,7 @@ const {
   mb,
   noop,
   pascalCase,
+  px,
   round,
   sentenceCase,
   singleAction,
@@ -239,6 +240,21 @@ describe(`sentenceCase`, () => {
 
   it(`trims and collapses surrounding and repeated whitespace`, () => {
     expect(sentenceCase(`  foo  bar  `)).toBe(`Foo bar`);
+  });
+});
+
+describe(`px`, () => {
+  it(`appends px to integer`, () => {
+    expect(px(16)).toBe(`16px`);
+  });
+
+  it(`appends px to zero`, () => {
+    expect(px(0)).toBe(`0px`);
+  });
+
+  it(`appends px to negative and fractional values`, () => {
+    expect(px(-4)).toBe(`-4px`);
+    expect(px(12.5)).toBe(`12.5px`);
   });
 });
 

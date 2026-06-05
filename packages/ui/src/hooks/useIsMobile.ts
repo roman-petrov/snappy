@@ -10,7 +10,7 @@ const readMobileBreakpoint = () => {
   const value = getComputedStyle(document.documentElement).getPropertyValue(`--breakpoint-mobile`).trim();
   const parsed = _.dec(value);
 
-  return Number.isFinite(parsed) ? parsed : 0;
+  return parsed ?? 0;
 };
 
-export const useIsMobile = () => useMediaQuery(`(max-width: ${readMobileBreakpoint()}px)`);
+export const useIsMobile = () => useMediaQuery(`(max-width: ${_.px(readMobileBreakpoint())})`);

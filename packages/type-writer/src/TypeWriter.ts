@@ -78,7 +78,7 @@ export const TypeWriter = () => {
       node.after(span);
       partialSpans.set(node, span);
     }
-    span.style.width = `${widthPx}px`;
+    span.style.width = _.px(widthPx);
     span.textContent = grapheme;
     partialCaretAnchor = span;
   };
