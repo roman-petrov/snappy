@@ -1,12 +1,12 @@
 declare const __Input: {
   readonly root: "root";
-  readonly inputSlot: "inputSlot";
-  readonly inputWrap: "inputWrap";
-  readonly floatingLabel: "floatingLabel";
-  readonly inputSurface: "inputSurface";
-  readonly input: "input";
-  readonly inputInsideWrap: "inputInsideWrap";
+  readonly slot: "slot";
+  readonly row: "row";
+  readonly label: "label";
+  readonly surface: "surface";
+  readonly control: "control";
   readonly hasValue: "hasValue";
+  readonly field: "field";
   readonly suffix: "suffix";
 };
 export default __Input;

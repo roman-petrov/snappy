@@ -10,13 +10,9 @@ export const useResetPasswordState = () => {
   const [password, setPassword] = useState(``);
   const [done, setDone] = useState(false);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
+  const submitDisabled = loading || !Password.valid(password);
 
   const submit = () => {
-    if (!Password.valid(password)) {
-      setError({ key: `auth.resetPassword.passwordRule`, params: { min: Password.minLength } });
-
-      return;
-    }
     void wrapSubmit(async () => {
       const result = await Auth.resetPassword(token, password);
       if (result.status !== `ok`) {
@@ -30,5 +26,5 @@ export const useResetPasswordState = () => {
 
   const screen = token === `` ? (`invalid` as const) : done ? (`done` as const) : (`form` as const);
 
-  return { error, loading, minLength: Password.minLength, password, screen, setPassword, submit };
+  return { error, loading, password, screen, setPassword, submit, submitDisabled };
 };

@@ -14,20 +14,20 @@
   margin-bottom: space.md();
 }
 
-.input-slot {
+.slot {
   display: flex;
   flex: 1 1 0;
   flex-flow: row nowrap;
   align-items: center;
   min-width: 0;
 
-  & > .input-wrap {
+  & > .row {
     flex: 1 1 0;
     min-width: 0;
   }
 }
 
-.floating-label {
+.label {
   @include typography.body;
 
   position: absolute;
@@ -49,18 +49,15 @@
     background-color motion.default();
 }
 
-.input-surface {
+.surface {
   @include surface.surface;
   @include elevation.e1;
 
   position: relative;
   border-radius: radius.sm();
 
-  .input-slot {
-    .input,
-    .input-inside-wrap {
-      padding-top: 1.5em;
-    }
+  .slot .control {
+    padding-top: 1.5em;
   }
 
   &:focus-within {
@@ -70,7 +67,7 @@
 
   &:focus-within,
   &.has-value {
-    .floating-label {
+    .label {
       @include surface.primary;
       @include typography.caption-sm;
 
@@ -88,34 +85,38 @@
         background-color motion.default();
     }
 
-    .input-slot .input,
-    .input-slot .input-inside-wrap {
+    .slot .control {
       padding-top: space.sm();
     }
   }
 }
 
-.input-wrap {
+.row {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
 }
 
-.input {
-  width: 100%;
-  height: tokens.field-height();
-  padding: space.sm() space.md();
-}
-
-.input-inside-wrap {
+.control {
   flex: 1 1 0;
   width: 0;
   min-width: 0;
+  height: tokens.field-height();
+  padding: space.sm() space.md();
   border: none;
+
+  &:focus {
+    border-color: transparent;
+  }
 }
 
-.input-inside-wrap:focus {
-  border-color: transparent;
+.field {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-flow: row nowrap;
+  align-items: center;
+  min-width: 0;
 }
 
 .suffix {

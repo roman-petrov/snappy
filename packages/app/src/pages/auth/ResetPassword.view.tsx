@@ -1,4 +1,4 @@
-import { Button, PasswordInput } from "@snappy/ui";
+import { Button, NewPasswordInput } from "@snappy/ui";
 
 import type { useResetPasswordState } from "./ResetPassword.state";
 
@@ -11,27 +11,25 @@ export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
 export const ResetPasswordView = ({
   error,
   loading,
-  minLength,
   password,
   screen,
   setPassword,
   submit,
+  submitDisabled,
 }: ResetPasswordViewProps) => (
   <AuthForm submit={submit} title={t(`auth.resetPassword.title`)}>
     {screen === `form` ? (
       <>
-        <PasswordInput
-          autoComplete="new-password"
+        <NewPasswordInput
           disabled={loading}
-          label={t(`auth.resetPassword.passwordLabel`, { min: minLength })}
-          minLength={minLength}
+          label={t(`auth.resetPassword.passwordLabel`)}
           onChange={setPassword}
           required
           value={password}
         />
         <FormErrorAndActions error={error === undefined ? `` : t(error.key, error.params)}>
           <Button
-            disabled={loading}
+            disabled={submitDisabled}
             submit
             text={loading ? t(`auth.resetPassword.submitting`) : t(`auth.resetPassword.submit`)}
             type="primary"

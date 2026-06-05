@@ -10,6 +10,7 @@ export type InputProps = {
   minLength?: number;
   onBlur?: () => void;
   onChange: (value: string) => void;
+  overlay?: ReactNode;
   required?: boolean;
   suffix?: ReactNode;
   type?: `email` | `password` | `text`;

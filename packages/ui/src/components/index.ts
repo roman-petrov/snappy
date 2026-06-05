@@ -36,11 +36,11 @@ export * from "./Logo";
 
 export * from "./menu";
 
+export * from "./NewPasswordInput";
+
 export * from "./Page";
 
 export * from "./PasswordInput";
-
-export * from "./PasswordStrength";
 
 export * from "./RichCard";
 

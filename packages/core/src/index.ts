@@ -14,6 +14,8 @@ export * from "./I18n";
 
 export * from "./Json";
 
+export * from "./Password";
+
 export * from "./Rgb";
 
 export * from "./Serializer";
