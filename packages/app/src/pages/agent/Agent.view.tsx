@@ -12,7 +12,7 @@ export const AgentView = ({ chatProps, title }: AgentViewProps) =>
   title === undefined || chatProps === undefined ? (
     <Navigate replace to={Routes.$.home} />
   ) : (
-    <Page title={title}>
+    <Page>
       <AgentChat {...chatProps} />
     </Page>
   );

@@ -1,14 +1,11 @@
 import { useContext, useLayoutEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
-import type { PageProps } from "./Page";
+import type { CustomHeaderPageProps } from "./CustomHeaderPage";
 
 import { LayoutHeaderContext } from "./LayoutHeaderContext";
 
-export const usePageState = ({ back = false, header, ...props }: PageProps) => {
-  const navigate = useNavigate();
+export const useCustomHeaderPageState = ({ header, ...props }: CustomHeaderPageProps) => {
   const setPageHeader = useContext(LayoutHeaderContext);
-  const goBack = async () => navigate(-1);
 
   useLayoutEffect(() => {
     if (header === undefined || setPageHeader === undefined) {
@@ -19,5 +16,5 @@ export const usePageState = ({ back = false, header, ...props }: PageProps) => {
     return () => setPageHeader(undefined);
   }, [header, setPageHeader]);
 
-  return { ...props, back, goBack };
+  return props;
 };

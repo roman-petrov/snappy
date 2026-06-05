@@ -38,7 +38,11 @@ export * from "./menu";
 
 export * from "./NewPasswordInput";
 
+export * from "./CustomHeaderPage";
+
 export * from "./Page";
+
+export * from "./PageHeader";
 
 export * from "./PasswordInput";
 

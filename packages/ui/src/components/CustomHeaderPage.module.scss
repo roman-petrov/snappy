@@ -1,5 +1,4 @@
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/tokens";
 
 .section {
@@ -10,17 +9,4 @@
   min-height: 0;
   padding: tokens.layout-gutter();
   overflow: auto;
-}
-
-.head {
-  display: flex;
-  gap: space.md();
-  align-items: center;
-  min-width: 0;
-}
-
-@include mobile {
-  .section {
-    padding-top: space.lg();
-  }
 }

@@ -10,7 +10,7 @@ import styles from "./Catalog.module.scss";
 export type CatalogViewProps = ReturnType<typeof useCatalogState>;
 
 export const CatalogView = ({ agents }: CatalogViewProps) => (
-  <Page title={t(`catalog.title`)}>
+  <Page>
     <div className={styles.root}>
       <div className={styles.head}>
         <Button link={Routes.feed} text={t(`catalog.openFeed`)} />

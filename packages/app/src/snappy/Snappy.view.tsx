@@ -9,7 +9,7 @@ import styles from "./Snappy.module.scss";
 export type SnappyViewProps = ReturnType<typeof useSnappyState>;
 
 export const SnappyView = ({ chatProps, composer, started }: SnappyViewProps) => (
-  <Page title="Snappy">
+  <Page>
     <div className={_.cn(styles.shell, started && styles.shellStarted)}>
       <AgentChat {...chatProps} />
       <div className={_.cn(styles.composer, started && styles.composerStarted)}>

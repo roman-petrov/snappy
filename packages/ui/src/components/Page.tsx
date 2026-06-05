@@ -1,8 +1,13 @@
 import type { ReactNode } from "react";
 
-import { usePageState } from "./Page.state";
-import { PageView } from "./Page.view";
+import { CustomHeaderPage } from "./CustomHeaderPage";
+import { PageHeader } from "./PageHeader";
 
-export type PageProps = { back?: boolean; children: ReactNode; header?: ReactNode; title?: string };
+export type PageProps = { back?: boolean; children: ReactNode; title?: string };
 
-export const Page = (props: PageProps) => <PageView {...usePageState(props)} />;
+export const Page = ({ back = false, children, title }: PageProps) => (
+  <CustomHeaderPage
+    children={children}
+    header={title === undefined && !back ? undefined : <PageHeader back={back} title={title} />}
+  />
+);
