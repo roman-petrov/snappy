@@ -92,6 +92,7 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - [Reg.ru account](https://www.reg.ru/user/account/)
 - [Reg.ru cloud](https://cloud.reg.ru/panel/)
 - [ISPmanager](https://dnsadmin.hosting.reg.ru/manager/ispmgr)
+- [VK WorkSpace admin](https://app.workspace.vk.ru/admin)
 
 ### 💳 Payments
 
