@@ -1,5 +1,5 @@
 declare const __DefaultHeader: {
-  readonly inner: "inner";
+  readonly root: "root";
   readonly trailing: "trailing";
 };
 export default __DefaultHeader;

@@ -1,19 +1,7 @@
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/tokens";
 
-.inner {
+.root {
   display: flex;
   gap: space.md();
-  align-items: center;
-  max-width: tokens.content-width();
   min-width: 0;
-  padding: space.md() space.lg();
-  margin-inline: auto;
-}
-
-@include mobile {
-  .inner {
-    padding: tokens.layout-gutter();
-  }
 }

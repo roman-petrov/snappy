@@ -1,4 +1,4 @@
 declare const __PageHeader: {
-  readonly inner: "inner";
+  readonly root: "root";
 };
 export default __PageHeader;
