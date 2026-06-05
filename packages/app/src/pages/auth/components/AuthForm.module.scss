@@ -9,5 +9,7 @@
 }
 
 .panel-form {
+  display: grid;
+  gap: space.md();
   margin-top: space.md();
 }

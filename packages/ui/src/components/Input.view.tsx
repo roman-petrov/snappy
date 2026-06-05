@@ -47,22 +47,20 @@ export const InputView = ({
   const surfaceClassName = _.cn(styles.surface, hasValue && styles.hasValue);
 
   return (
-    <div className={styles.root}>
-      <div className={surfaceClassName}>
-        <div className={styles.slot}>
-          {suffix === undefined ? (
-            field
-          ) : (
-            <div className={styles.row}>
-              {field}
-              <div className={styles.suffix}>{suffix}</div>
-            </div>
-          )}
-        </div>
-        <label className={styles.label} htmlFor={id}>
-          {label}
-        </label>
+    <div className={surfaceClassName}>
+      <div className={styles.slot}>
+        {suffix === undefined ? (
+          field
+        ) : (
+          <div className={styles.row}>
+            {field}
+            <div className={styles.suffix}>{suffix}</div>
+          </div>
+        )}
       </div>
+      <label className={styles.label} htmlFor={id}>
+        {label}
+      </label>
     </div>
   );
 };

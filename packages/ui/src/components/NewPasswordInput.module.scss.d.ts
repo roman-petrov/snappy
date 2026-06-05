@@ -1,5 +1,4 @@
 declare const __NewPasswordInput: {
-  readonly root: "root";
   readonly strengthTrack: "strengthTrack";
   readonly strengthFill: "strengthFill";
   readonly weak: "weak";

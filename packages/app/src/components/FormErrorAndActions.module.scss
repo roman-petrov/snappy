@@ -1,11 +1,6 @@
 @use "pkg:@snappy/theme/tokens/space";
 
-.block {
+.root {
   display: grid;
   gap: space.sm();
-  padding: space.md();
-}
-
-.form {
-  gap: space.md();
 }

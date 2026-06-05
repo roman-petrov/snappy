@@ -1,15 +1,13 @@
 import { i } from "@snappy/intl";
 import { useStoreValue } from "@snappy/store";
-import { $fog, $locale, $theme, useAsyncEffect, useGo } from "@snappy/ui";
+import { $fog, $locale, $theme, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth, t, trpc, type UserSettings } from "../../core";
-import { Routes } from "../../Routes";
-import { $signedIn } from "../../Store";
 
 export const useSettingsState = () => {
-  const go = useGo();
   const [aiTunnelEnd, setAiTunnelEnd] = useState<string>();
+  const [email, setEmail] = useState<string>();
   const [balanceEnd, setBalanceEnd] = useState<string>();
   const [llmChatEnd, setLlmChatEnd] = useState<string>();
   const [llmImageEnd, setLlmImageEnd] = useState<string>();
@@ -20,9 +18,14 @@ export const useSettingsState = () => {
   const locale = useStoreValue($locale);
 
   useAsyncEffect(async () => {
-    const [balance, llm] = await Promise.all([trpc.user.balance.query(), trpc.user.settings.get.query()]);
+    const [balance, llm, profile] = await Promise.all([
+      trpc.user.balance.query(),
+      trpc.user.settings.get.query(),
+      Auth.user(),
+    ]);
     setAiTunnelEnd(llm.aiTunnelDirect ? t(`settings.aiTunnel.mode.direct`) : t(`settings.aiTunnel.mode.proxy`));
     setBalanceEnd(i.price(balance));
+    setEmail(profile?.email);
     setLlmChatEnd(llm.llmChatModel);
     setLlmImageEnd(`${llm.llmImageModel} · ${llm.llmImageQuality}`);
     setLlmSpeechEnd(llm.llmSpeechRecognitionModel);
@@ -30,21 +33,15 @@ export const useSettingsState = () => {
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  const signOutOnClick = async () => {
-    await Auth.signOut();
-    $signedIn.set(false);
-    void go(Routes.signIn, { replace: true });
-  };
-
   return {
     aiTunnelEnd,
     balanceEnd,
+    email,
     fog,
     llmChatEnd,
     llmImageEnd,
     llmSpeechEnd,
     locale,
-    signOutOnClick,
     theme,
     toggleFog,
     typeWriterSpeed,

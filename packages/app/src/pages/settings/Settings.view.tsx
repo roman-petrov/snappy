@@ -1,31 +1,49 @@
 /* jscpd:ignore-start */
-import { Button, Page, SwitchDisplay } from "@snappy/ui";
-import { CloudFog, CreditCard, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type } from "lucide-react";
+import { Page, SwitchDisplay } from "@snappy/ui";
+import {
+  CloudFog,
+  CreditCard,
+  Image,
+  KeyRound,
+  Languages,
+  MessageCircle,
+  Mic,
+  Palette,
+  Type,
+  User,
+} from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "./components";
-import styles from "./Settings.module.scss";
 
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
 export const SettingsView = ({
   aiTunnelEnd,
   balanceEnd,
+  email,
   fog,
   llmChatEnd,
   llmImageEnd,
   llmSpeechEnd,
   locale,
-  signOutOnClick,
   theme,
   toggleFog,
   typeWriterSpeed,
 }: SettingsViewProps) => (
   <Page back title={t(`settings.root.title`)}>
     <SettingsCards>
+      <SettingsCard title={t(`settings.root.accountGroup`)}>
+        <SettingsCardRow
+          bottom={email}
+          icon={User}
+          link={Routes.settings.profile.root}
+          text={t(`settings.root.profile`)}
+        />
+      </SettingsCard>
       <SettingsCard title={t(`settings.root.systemGroup`)}>
         <SettingsCardRow
           bottom={t(`settings.theme.${theme}`)}
@@ -93,9 +111,6 @@ export const SettingsView = ({
         />
       </SettingsCard>
     </SettingsCards>
-    <div className={styles.signOut}>
-      <Button onClick={signOutOnClick} text={t(`common.signOut`)} />
-    </div>
   </Page>
 );
 /* jscpd:ignore-end */

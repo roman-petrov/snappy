@@ -57,4 +57,23 @@ const signedIn = async () => {
   return errorCode === undefined ? result.data?.session !== undefined : false;
 };
 
-export const Auth = { requestPasswordReset, resetPassword, signedIn, signIn, signOut, signUp };
+const user = async () => {
+  const result = await client.getSession();
+  const errorCode = readErrorCode(result);
+  const email = result.data?.user.email;
+
+  return errorCode === undefined && email !== undefined ? { email } : undefined;
+};
+
+const changePassword = async (currentPassword: string, newPassword: string) => {
+  const result = await client.changePassword({ currentPassword, newPassword });
+  const errorCode = readErrorCode(result);
+
+  return errorCode === undefined
+    ? { status: `ok` }
+    : errorCode === `INVALID_PASSWORD`
+      ? { status: `invalidCurrentPassword` }
+      : { status: toCamelStatus(errorCode) };
+};
+
+export const Auth = { changePassword, requestPasswordReset, resetPassword, signedIn, signIn, signOut, signUp, user };

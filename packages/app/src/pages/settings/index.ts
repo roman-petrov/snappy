@@ -10,6 +10,10 @@ export * from "./SettingsModelsImage";
 
 export * from "./SettingsModelsSpeech";
 
+export * from "./SettingsProfile";
+
+export * from "./SettingsProfilePassword";
+
 export * from "./SettingsTheme";
 
 export * from "./SettingsTypeWriterSpeed";

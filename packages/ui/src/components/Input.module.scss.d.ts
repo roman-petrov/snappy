@@ -1,5 +1,4 @@
 declare const __Input: {
-  readonly root: "root";
   readonly slot: "slot";
   readonly row: "row";
   readonly label: "label";

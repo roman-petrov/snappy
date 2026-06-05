@@ -10,6 +10,7 @@ export const useSignInState = () => {
   const [password, setPassword] = useState(``);
   const { error, loading, onSubmit } = useAuthSubmit({ homePath: Routes.$.home, setSignedIn: $signedIn.set });
   const submit = () => onSubmit(async () => Auth.signIn(email.trim(), password));
+  const submitDisabled = loading || email.trim() === `` || password === ``;
 
-  return { email, error, loading, password, setEmail, setPassword, submit };
+  return { email, error, loading, password, setEmail, setPassword, submit, submitDisabled };
 };

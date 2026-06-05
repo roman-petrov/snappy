@@ -8,7 +8,16 @@ import { AuthForm, AuthSubmitActions } from "./components";
 
 export type SignInViewProps = ReturnType<typeof useSignInState>;
 
-export const SignInView = ({ email, error, loading, password, setEmail, setPassword, submit }: SignInViewProps) => (
+export const SignInView = ({
+  email,
+  error,
+  loading,
+  password,
+  setEmail,
+  setPassword,
+  submit,
+  submitDisabled,
+}: SignInViewProps) => (
   <AuthForm submit={submit} title={t(`auth.signIn.title`)}>
     <Input
       autoComplete="email"
@@ -27,7 +36,7 @@ export const SignInView = ({ email, error, loading, password, setEmail, setPassw
       value={password}
     />
     <AuthSubmitActions
-      disabled={loading}
+      disabled={submitDisabled}
       error={error === undefined ? `` : t(`auth.signIn.errors.${error}`)}
       loading={loading}
       submit={t(`auth.signIn.submit`)}

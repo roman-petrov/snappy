@@ -9,9 +9,12 @@
 }
 
 .form {
+  display: grid;
+  gap: space.md();
   margin-top: space.md();
 }
 
 .actions {
-  margin-top: space.lg();
+  display: grid;
+  gap: space.sm();
 }

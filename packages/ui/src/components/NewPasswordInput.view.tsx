@@ -19,41 +19,39 @@ export const NewPasswordInputView = ({
   visible,
   ...inputProps
 }: NewPasswordInputViewProps) => (
-  <div className={styles.root}>
-    <Input
-      {...inputProps}
-      overlay={
-        value.length === 0 ? undefined : (
-          <div className={styles.strengthTrack}>
-            <div
-              className={_.cn(
-                styles.strengthFill,
-                strength === `weak` ? styles.weak : strength === `medium` ? styles.medium : styles.strong,
-              )}
-              style={{ width: strengthBarWidth }}
-            />
-          </div>
-        )
-      }
-      suffix={
-        value.length === 0 ? (
-          <IconButton
-            disabled={inputProps.disabled}
-            icon={Dices}
-            onClick={generatePassword}
-            tip={t(`newPasswordInput.generatePassword`)}
+  <Input
+    {...inputProps}
+    overlay={
+      value.length === 0 ? undefined : (
+        <div className={styles.strengthTrack}>
+          <div
+            className={_.cn(
+              styles.strengthFill,
+              strength === `weak` ? styles.weak : strength === `medium` ? styles.medium : styles.strong,
+            )}
+            style={{ width: strengthBarWidth }}
           />
-        ) : (
-          <IconButton
-            disabled={inputProps.disabled}
-            icon={visible ? EyeOff : Eye}
-            onClick={toggleVisible}
-            tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
-          />
-        )
-      }
-      type={visible ? `text` : `password`}
-      value={value}
-    />
-  </div>
+        </div>
+      )
+    }
+    suffix={
+      value.length === 0 ? (
+        <IconButton
+          disabled={inputProps.disabled}
+          icon={Dices}
+          onClick={generatePassword}
+          tip={t(`newPasswordInput.generatePassword`)}
+        />
+      ) : (
+        <IconButton
+          disabled={inputProps.disabled}
+          icon={visible ? EyeOff : Eye}
+          onClick={toggleVisible}
+          tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
+        />
+      )
+    }
+    type={visible ? `text` : `password`}
+    value={value}
+  />
 );

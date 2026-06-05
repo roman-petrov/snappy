@@ -10,10 +10,6 @@
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
 
-.root {
-  margin-bottom: space.md();
-}
-
 .slot {
   display: flex;
   flex: 1 1 0;
