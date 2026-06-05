@@ -16,7 +16,7 @@ export const AgentChatView = ({ balanceLow, feed, showFeed, stop }: AgentChatVie
     {balanceLow ? (
       <div>
         <p>{t(`balance.common.lowLead`)}</p>
-        <Button link={Routes.balance.topUp} text={t(`balance.topUp.cta`)} type="primary" />
+        <Button link={Routes.settings.profile.topUp} text={t(`settings.profile.topUp.cta`)} type="primary" />
       </div>
     ) : (
       showFeed && <div className={styles.main}>{feed}</div>

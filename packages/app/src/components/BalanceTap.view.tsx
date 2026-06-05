@@ -9,5 +9,5 @@ import styles from "./BalanceTap.module.scss";
 export type BalanceTapViewProps = ReturnType<typeof useBalanceTapState>;
 
 export const BalanceTapView = ({ label }: BalanceTapViewProps) => (
-  <Chip cn={styles.root} color="soft" link={Routes.balance.topUp} text={label} tip={t(`balance.common.tapTip`)} />
+  <Chip cn={styles.root} color="soft" link={Routes.settings.profile.topUp} text={label} tip={t(`balance.common.tapTip`)} />
 );

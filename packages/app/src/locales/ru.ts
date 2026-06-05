@@ -64,19 +64,6 @@ export const ru = {
       lowLead: `Баланс нулевой или отрицательный. Пополните счёт, чтобы пользоваться AI.`,
       tapTip: `Пополнить баланс`,
     },
-    topUp: {
-      amountLabel: `Сумма (₽)`,
-      cta: `Пополнить`,
-      errors: {
-        invalid: `Введите корректную сумму`,
-        invalidAmount: `Сумма вне допустимого диапазона`,
-        payment: `Ошибка оплаты`,
-      },
-      lead: `Укажите сумму в рублях. Далее откроется страница оплаты.`,
-      submit: `Оплатить`,
-      submitting: `Переход…`,
-      title: `Пополнение баланса`,
-    },
   },
   catalog: {
     groups: { audio: `Аудио`, lab: `Лаборатория`, text: `Текст`, visual: `Графика` },
@@ -126,6 +113,7 @@ export const ru = {
       speech: { title: `Распознавание речи` },
     },
     profile: {
+      balance: `Баланс`,
       email: `Email`,
       password: {
         confirm: `Подтверждение пароля`,
@@ -142,11 +130,23 @@ export const ru = {
       },
       signOut: `Выйти`,
       title: `Профиль`,
+      topUp: {
+        amountLabel: `Сумма (₽)`,
+        cta: `Пополнить`,
+        errors: {
+          invalid: `Введите корректную сумму`,
+          invalidAmount: `Сумма вне допустимого диапазона`,
+          payment: `Ошибка оплаты`,
+        },
+        lead: `Укажите сумму в рублях. Далее откроется страница оплаты.`,
+        submit: `Оплатить`,
+        submitting: `Переход…`,
+        title: `Пополнение баланса`,
+      },
     },
     root: {
       accountGroup: `Аккаунт`,
       aiTunnel: `AI Tunnel`,
-      balance: `Баланс`,
       fogBackground: `Туман`,
       language: `Язык`,
       modelsGroup: `Модели`,

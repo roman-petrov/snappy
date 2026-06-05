@@ -1,16 +1,19 @@
+import { i } from "@snappy/intl";
 import { useAsyncEffect, useGo } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth } from "../../core";
+import { Auth, trpc } from "../../core";
 import { Routes } from "../../Routes";
 import { $signedIn } from "../../Store";
 
 export const useSettingsProfileState = () => {
   const go = useGo();
+  const [balanceEnd, setBalanceEnd] = useState<string>();
   const [email, setEmail] = useState<string>();
 
   useAsyncEffect(async () => {
-    const profile = await Auth.user();
+    const [profile, balance] = await Promise.all([Auth.user(), trpc.user.balance.query()]);
+    setBalanceEnd(i.price(balance));
     setEmail(profile?.email);
   }, []);
 
@@ -20,5 +23,5 @@ export const useSettingsProfileState = () => {
     void go(Routes.signIn, { replace: true });
   };
 
-  return { email, signOut };
+  return { balanceEnd, email, signOut };
 };

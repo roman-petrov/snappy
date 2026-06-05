@@ -14,18 +14,16 @@ import {
   SettingsModelsSpeech,
   SettingsProfile,
   SettingsProfilePassword,
+  SettingsProfileTopUp,
   SettingsTheme,
   SettingsTypeWriterSpeed,
   SignIn,
   SignUp,
   Snappy,
 } from "./pages";
-import { TopUp } from "./pages/balance";
-
 export const Routes = AppRoutes(
   {
     agent: { page: Agent, path: `agent/:agentId` },
-    balance: { topUp: { page: TopUp, path: `balance/top-up` } },
     feed: { page: Feed, path: `feed` },
     forgotPassword: { page: ForgotPassword, path: `forgot-password` },
     resetPassword: { page: ResetPassword, path: `reset-password` },
@@ -40,6 +38,7 @@ export const Routes = AppRoutes(
       profile: {
         password: { page: SettingsProfilePassword, path: `settings/profile/password` },
         root: { page: SettingsProfile, path: `settings/profile` },
+        topUp: { page: SettingsProfileTopUp, path: `settings/profile/top-up` },
       },
       root: { page: Settings, path: `settings` },
       theme: { page: SettingsTheme, path: `settings/theme` },

@@ -1,17 +1,6 @@
 /* jscpd:ignore-start */
 import { Page, SwitchDisplay } from "@snappy/ui";
-import {
-  CloudFog,
-  CreditCard,
-  Image,
-  KeyRound,
-  Languages,
-  MessageCircle,
-  Mic,
-  Palette,
-  Type,
-  User,
-} from "lucide-react";
+import { CloudFog, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
@@ -23,7 +12,6 @@ export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
 export const SettingsView = ({
   aiTunnelEnd,
-  balanceEnd,
   email,
   fog,
   llmChatEnd,
@@ -100,14 +88,6 @@ export const SettingsView = ({
           icon={Mic}
           link={Routes.settings.models.speech}
           text={t(`settings.models.speech.title`)}
-        />
-      </SettingsCard>
-      <SettingsCard>
-        <SettingsCardRow
-          bottom={balanceEnd}
-          icon={CreditCard}
-          link={Routes.balance.topUp}
-          text={t(`settings.root.balance`)}
         />
       </SettingsCard>
     </SettingsCards>

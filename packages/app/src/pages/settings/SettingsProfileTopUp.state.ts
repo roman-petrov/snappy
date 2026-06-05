@@ -3,14 +3,14 @@ import { useState } from "react";
 
 import { trpc } from "../../core";
 
-export const useTopUpState = () => {
+export const useSettingsProfileTopUpState = () => {
   const [amountText, setAmountText] = useState(``);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
   const submit = () => {
     const amount = Number(amountText.replace(`,`, `.`));
     if (!Number.isFinite(amount) || amount <= 0) {
-      setError({ key: `balance.topUp.errors.invalid` });
+      setError({ key: `settings.profile.topUp.errors.invalid` });
 
       return;
     }
@@ -22,11 +22,11 @@ export const useTopUpState = () => {
         return;
       }
       if (result.status === `invalidAmount`) {
-        setError({ key: `balance.topUp.errors.invalidAmount` });
+        setError({ key: `settings.profile.topUp.errors.invalidAmount` });
 
         return;
       }
-      setError({ key: `balance.topUp.errors.payment` });
+      setError({ key: `settings.profile.topUp.errors.payment` });
     });
   };
 

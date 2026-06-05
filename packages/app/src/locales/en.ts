@@ -61,19 +61,6 @@ export const en = {
   },
   balance: {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
-    topUp: {
-      amountLabel: `Amount (RUB)`,
-      cta: `Top up`,
-      errors: {
-        invalid: `Enter a valid amount`,
-        invalidAmount: `Amount is outside allowed range`,
-        payment: `Payment error`,
-      },
-      lead: `Enter the amount in rubles. You will be redirected to the payment page.`,
-      submit: `Pay`,
-      submitting: `Redirecting…`,
-      title: `Top up balance`,
-    },
   },
   catalog: {
     groups: { audio: `Audio`, lab: `Lab`, text: `Text`, visual: `Graphics` },
@@ -116,6 +103,7 @@ export const en = {
       speech: { title: `Speech recognition` },
     },
     profile: {
+      balance: `Balance`,
       email: `Email`,
       password: {
         confirm: `Confirm password`,
@@ -132,11 +120,23 @@ export const en = {
       },
       signOut: `Sign out`,
       title: `Profile`,
+      topUp: {
+        amountLabel: `Amount (RUB)`,
+        cta: `Top up`,
+        errors: {
+          invalid: `Enter a valid amount`,
+          invalidAmount: `Amount is outside allowed range`,
+          payment: `Payment error`,
+        },
+        lead: `Enter the amount in rubles. You will be redirected to the payment page.`,
+        submit: `Pay`,
+        submitting: `Redirecting…`,
+        title: `Top up balance`,
+      },
     },
     root: {
       accountGroup: `Account`,
       aiTunnel: `AI Tunnel`,
-      balance: `Balance`,
       fogBackground: `Fog`,
       language: `Language`,
       modelsGroup: `Models`,
