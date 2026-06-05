@@ -11,7 +11,6 @@ export const SettingsCard = ({ children, cn, form = false, lead, title, ...props
     cn={_.cn(
       styles.block,
       (title !== undefined || lead !== undefined) && styles.withHeader,
-      title === undefined && lead === undefined && !form && styles.compact,
       form && styles.form,
       cn,
     )}

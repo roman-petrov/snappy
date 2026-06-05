@@ -3,21 +3,19 @@
 .block {
   display: grid;
   gap: space.xs();
-}
-
-.with-header {
-  padding-block: space.md();
-}
-
-.compact {
   padding-block: space.xs();
+
+  &.with-header {
+    padding-block-start: space.md();
+  }
+
+  &.form {
+    gap: space.md();
+    padding: space.md();
+    padding-block-end: space.xs();
+  }
 }
 
 .header {
   padding-inline: space.md();
-}
-
-.form {
-  gap: space.md();
-  padding: space.md();
 }

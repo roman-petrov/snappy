@@ -1,8 +1,7 @@
 declare const __SettingsCard: {
   readonly block: "block";
   readonly withHeader: "withHeader";
-  readonly compact: "compact";
-  readonly header: "header";
   readonly form: "form";
+  readonly header: "header";
 };
 export default __SettingsCard;
