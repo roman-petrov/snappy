@@ -26,16 +26,5 @@ export const useSettingsState = () => {
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  return {
-    aiTunnelEnd,
-    email,
-    fog,
-    llmChatEnd,
-    llmImageEnd,
-    llmSpeechEnd,
-    locale,
-    theme,
-    toggleFog,
-    typeWriterSpeed,
-  };
+  return { aiTunnelEnd, email, fog, llmChatEnd, llmImageEnd, llmSpeechEnd, locale, theme, toggleFog, typeWriterSpeed };
 };

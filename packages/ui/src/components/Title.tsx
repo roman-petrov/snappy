@@ -1,4 +1,3 @@
-
 import { Text } from "./Text";
 import styles from "./Title.module.scss";
 
