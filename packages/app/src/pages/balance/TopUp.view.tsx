@@ -3,7 +3,7 @@ import { Button, Input, Page } from "@snappy/ui";
 import type { useTopUpState } from "./TopUp.state";
 
 import { t } from "../../core";
-import { FormErrorAndActions } from "../auth/components";
+import { FormErrorAndActions } from "../../components";
 
 export type TopUpViewProps = ReturnType<typeof useTopUpState>;
 

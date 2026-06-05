@@ -4,7 +4,7 @@ import type { useSignUpState } from "./SignUp.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm, FormErrorAndActions } from "./components";
+import { AuthForm, AuthSubmitActions } from "./components";
 
 export type SignUpViewProps = ReturnType<typeof useSignUpState>;
 
@@ -34,14 +34,14 @@ export const SignUpView = ({
       required
       value={password}
     />
-    <FormErrorAndActions error={error === undefined ? `` : t(`auth.signUp.errors.${error}`)}>
-      <Button
-        disabled={submitDisabled}
-        submit
-        text={loading ? t(`auth.signUp.submitting`) : t(`auth.signUp.submit`)}
-        type="primary"
-      />
+    <AuthSubmitActions
+      disabled={submitDisabled}
+      error={error === undefined ? `` : t(`auth.signUp.errors.${error}`)}
+      loading={loading}
+      submit={t(`auth.signUp.submit`)}
+      submitting={t(`auth.signUp.submitting`)}
+    >
       <Button link={Routes.signIn} text={t(`auth.signIn.title`)} />
-    </FormErrorAndActions>
+    </AuthSubmitActions>
   </AuthForm>
 );

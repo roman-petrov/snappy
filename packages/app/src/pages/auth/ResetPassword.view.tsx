@@ -1,10 +1,10 @@
-import { Button, NewPasswordInput, PasswordInput } from "@snappy/ui";
+import { NewPasswordInput, PasswordInput } from "@snappy/ui";
 
 import type { useResetPasswordState } from "./ResetPassword.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm, FormErrorAndActions, MessageWithLink } from "./components";
+import { AuthForm, AuthSubmitActions, MessageWithLink } from "./components";
 
 export type ResetPasswordViewProps = ReturnType<typeof useResetPasswordState>;
 
@@ -37,14 +37,13 @@ export const ResetPasswordView = ({
           required
           value={confirmPassword}
         />
-        <FormErrorAndActions error={error === undefined ? `` : t(`auth.resetPassword.errors.${error}`)}>
-          <Button
-            disabled={submitDisabled}
-            submit
-            text={loading ? t(`auth.resetPassword.submitting`) : t(`auth.resetPassword.submit`)}
-            type="primary"
-          />
-        </FormErrorAndActions>
+        <AuthSubmitActions
+          disabled={submitDisabled}
+          error={error === undefined ? `` : t(`auth.resetPassword.errors.${error}`)}
+          loading={loading}
+          submit={t(`auth.resetPassword.submit`)}
+          submitting={t(`auth.resetPassword.submitting`)}
+        />
       </>
     ) : (
       <MessageWithLink

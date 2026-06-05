@@ -1,5 +1,5 @@
 export * from "./AuthForm";
 
-export * from "./FormErrorAndActions";
+export * from "./AuthSubmitActions";
 
 export * from "./MessageWithLink";

@@ -4,7 +4,7 @@ import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm, FormErrorAndActions, MessageWithLink } from "./components";
+import { AuthForm, AuthSubmitActions, MessageWithLink } from "./components";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;
 
@@ -27,15 +27,15 @@ export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, su
           type="email"
           value={email}
         />
-        <FormErrorAndActions error={error === undefined ? `` : t(error.key, error.params)}>
-          <Button
-            disabled={loading}
-            submit
-            text={loading ? t(`auth.forgotPassword.submitting`) : t(`auth.forgotPassword.submit`)}
-            type="primary"
-          />
+        <AuthSubmitActions
+          disabled={loading}
+          error={error === undefined ? `` : t(error.key, error.params)}
+          loading={loading}
+          submit={t(`auth.forgotPassword.submit`)}
+          submitting={t(`auth.forgotPassword.submitting`)}
+        >
           <Button link={Routes.signIn} text={t(`auth.signIn.title`)} />
-        </FormErrorAndActions>
+        </AuthSubmitActions>
       </>
     )}
   </AuthForm>

@@ -4,7 +4,7 @@ import type { useSignInState } from "./SignIn.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm, FormErrorAndActions } from "./components";
+import { AuthForm, AuthSubmitActions } from "./components";
 
 export type SignInViewProps = ReturnType<typeof useSignInState>;
 
@@ -26,15 +26,15 @@ export const SignInView = ({ email, error, loading, password, setEmail, setPassw
       required
       value={password}
     />
-    <FormErrorAndActions error={error === undefined ? `` : t(`auth.signIn.errors.${error}`)}>
-      <Button
-        disabled={loading}
-        submit
-        text={loading ? t(`auth.signIn.submitting`) : t(`auth.signIn.submit`)}
-        type="primary"
-      />
+    <AuthSubmitActions
+      disabled={loading}
+      error={error === undefined ? `` : t(`auth.signIn.errors.${error}`)}
+      loading={loading}
+      submit={t(`auth.signIn.submit`)}
+      submitting={t(`auth.signIn.submitting`)}
+    >
       <Button link={Routes.forgotPassword} text={t(`auth.signIn.forgotPassword`)} />
       <Button link={Routes.signUp} text={t(`auth.signIn.signUpLink`)} />
-    </FormErrorAndActions>
+    </AuthSubmitActions>
   </AuthForm>
 );
