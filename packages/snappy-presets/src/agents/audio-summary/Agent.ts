@@ -139,9 +139,9 @@ export const Agent = StaticAudioAgent(
             prompt: i18n(`ui.field.context.prompt`),
           },
         ],
+        title: i18n(`meta.title`),
       },
       prompt: i18n(`meta.prompt`),
-      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

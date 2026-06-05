@@ -142,5 +142,5 @@ export const useStaticFormState = <TPlan extends StaticFormPlan>({ onSubmit, pla
 
   const fields = plan.fields.map(fieldView);
 
-  return { fields, submit };
+  return { fields, submit, title: plan.title };
 };

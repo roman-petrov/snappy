@@ -63,6 +63,7 @@ export const StaticFormPlanSchema = z.object({
     .describe(
       `Clarification form fields. Each entry is one object with id, kind, and label — not a plain question string.`,
     ),
+  title: z.string().optional().describe(`Optional heading shown above the form.`),
 });
 
 export type StaticFormAnswers = Record<string, boolean | File | number | string | string[] | undefined>;

@@ -12,6 +12,13 @@
   flex-direction: column;
 }
 
+.title + .field,
+.title + .actions {
+  padding-top: space.md();
+  margin-top: space.md();
+  border-top: 1px solid color.outline();
+}
+
 .field + .field,
 .field + .actions {
   padding-top: space.md();

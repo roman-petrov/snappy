@@ -16,9 +16,8 @@ type StaticAgentMetaPayload = {
   description: string;
   emoji: string;
   group: AgentGroupId;
-  plan: StaticFormPlan;
+  plan: StaticFormPlan & { title: string };
   prompt: string;
-  title: string;
 };
 
 type StaticAgentRun = (input: StaticAgentRunInput) => Promise<unknown>;
@@ -57,7 +56,7 @@ export const StaticAgent =
     const { plan, prompt, ...meta } = create({ i18n });
 
     return {
-      meta,
+      meta: { ...meta, title: plan.title },
       module: ({ aiConfig, feed, onRunningChange }) => {
         const ai = Ai(aiConfig.options);
         const { models } = aiConfig;

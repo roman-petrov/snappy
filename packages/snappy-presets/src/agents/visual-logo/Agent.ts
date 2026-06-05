@@ -452,9 +452,9 @@ export const Agent = StaticVisualAgent(
             prompt: i18n(`ui.field.tagline.prompt`),
           },
         ],
+        title: i18n(`meta.title`),
       },
       prompt: i18n(`meta.prompt`),
-      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

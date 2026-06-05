@@ -596,9 +596,9 @@ export const Agent = StaticTextAgent(
             prompt: i18n(`ui.field.extra.prompt`),
           },
         ],
+        title: i18n(`meta.title`),
       },
       prompt: i18n(`meta.prompt`),
-      title: i18n(`meta.title`),
     }) as const,
 );
 /* jscpd:ignore-end */

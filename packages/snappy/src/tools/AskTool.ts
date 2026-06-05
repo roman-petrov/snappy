@@ -10,7 +10,10 @@ export const AskTool: SnappyToolFactory = ({ feed, isStopped }) =>
         `when`,
         `Use when critical requirements are missing or ambiguous and you need structured user clarification before continuing.`,
       ],
-      [`input`, `Pass a concise clarification form plan and ask only for information required for the next step.`],
+      [
+        `input`,
+        `Pass a concise clarification form plan (optional title + fields) and ask only for information required for the next step.`,
+      ],
       [
         `output`,
         `Returns structured answers as JSON. Use these answers as the source of truth for subsequent tool calls.`,
