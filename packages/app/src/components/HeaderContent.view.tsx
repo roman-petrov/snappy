@@ -14,7 +14,7 @@ export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) => (
   <div className={styles.root}>
     {signedIn ? (
       <>
-        <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.root.title`)} />
+        <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.title`)} />
         <BalanceTap />
       </>
     ) : (

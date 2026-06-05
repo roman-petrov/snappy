@@ -2,7 +2,7 @@ import { Page } from "@snappy/ui";
 
 import type { useSettingsModelsBaseState } from "./SettingsModelsBase.state";
 
-import { SettingsOptionList } from "./components";
+import { SettingsOptionList } from "../components";
 
 export type SettingsModelsBaseViewProps = ReturnType<typeof useSettingsModelsBaseState>;
 

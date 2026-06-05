@@ -22,51 +22,51 @@ export const SettingsView = ({
   toggleFog,
   typeWriterSpeed,
 }: SettingsViewProps) => (
-  <Page back title={t(`settings.root.title`)}>
+  <Page back title={t(`settings.title`)}>
     <SettingsCards>
-      <SettingsCard title={t(`settings.root.accountGroup`)}>
+      <SettingsCard title={t(`settings.accountGroup`)}>
         <SettingsCardRow
           bottom={email}
           icon={User}
           link={Routes.settings.profile.root}
-          text={t(`settings.root.profile`)}
+          text={t(`settings.profile.title`)}
         />
       </SettingsCard>
-      <SettingsCard title={t(`settings.root.systemGroup`)}>
+      <SettingsCard title={t(`settings.systemGroup`)}>
         <SettingsCardRow
           bottom={t(`settings.theme.${theme}`)}
           icon={Palette}
           link={Routes.settings.theme}
-          text={t(`settings.root.theme`)}
+          text={t(`settings.theme.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           icon={CloudFog}
           onClick={toggleFog}
           right={<SwitchDisplay checked={fog} />}
-          text={t(`settings.root.fogBackground`)}
+          text={t(`settings.fogBackground`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.language.${locale}`)}
           icon={Languages}
           link={Routes.settings.language}
-          text={t(`settings.root.language`)}
+          text={t(`settings.language.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.typeWriterSpeed.${typeWriterSpeed ?? `stream`}`)}
           icon={Type}
           link={Routes.settings.typeWriterSpeed}
-          text={t(`settings.root.typeWriterSpeed`)}
+          text={t(`settings.typeWriterSpeed.title`)}
         />
       </SettingsCard>
-      <SettingsCard title={t(`settings.root.modelsGroup`)}>
+      <SettingsCard title={t(`settings.modelsGroup`)}>
         <SettingsCardRow
           bottom={aiTunnelEnd}
           icon={KeyRound}
           link={Routes.settings.aiTunnel}
-          text={t(`settings.root.aiTunnel`)}
+          text={t(`settings.aiTunnel.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow

@@ -14,11 +14,13 @@ export * from "./Chip";
 
 export * from "./context-menu";
 
+export * from "./CustomHeaderPage";
+
 export * from "./DefaultHeader";
 
-export * from "./Header";
-
 export * from "./FileSelect";
+
+export * from "./Header";
 
 export * from "./Icon";
 
@@ -39,8 +41,6 @@ export * from "./Logo";
 export * from "./menu";
 
 export * from "./NewPasswordInput";
-
-export * from "./CustomHeaderPage";
 
 export * from "./Page";
 

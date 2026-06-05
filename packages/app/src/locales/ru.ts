@@ -85,6 +85,7 @@ export const ru = {
     share: `Поделиться`,
   },
   settings: {
+    accountGroup: `Аккаунт`,
     aiTunnel: {
       connection: `Подключение`,
       connectionLead: `Запросы к AiTunnel из браузера с вашим ключом или через приложение (списание с баланса).`,
@@ -95,6 +96,7 @@ export const ru = {
       mode: { direct: `Прямой`, proxy: `Прокси` },
       title: `AI Tunnel`,
     },
+    fogBackground: `Туман`,
     language: { en: `English`, ru: `Русский`, system: `Системный`, title: `Язык` },
     models: {
       chat: { title: `Текст` },
@@ -112,6 +114,7 @@ export const ru = {
       },
       speech: { title: `Распознавание речи` },
     },
+    modelsGroup: `Модели`,
     profile: {
       balance: `Баланс`,
       email: `Email`,
@@ -144,19 +147,9 @@ export const ru = {
         title: `Пополнение баланса`,
       },
     },
-    root: {
-      accountGroup: `Аккаунт`,
-      aiTunnel: `AI Tunnel`,
-      fogBackground: `Туман`,
-      language: `Язык`,
-      modelsGroup: `Модели`,
-      profile: `Профиль`,
-      systemGroup: `Система`,
-      theme: `Тема`,
-      title: `Настройки`,
-      typeWriterSpeed: `Скорость печати`,
-    },
+    systemGroup: `Система`,
     theme: { dark: `Тёмная`, light: `Светлая`, system: `Системная`, title: `Тема` },
+    title: `Настройки`,
     typeWriterSpeed: { fast: `Быстро`, medium: `Средне`, slow: `Медленно`, stream: `Поток`, title: `Скорость печати` },
   },
   snappy: { composer: { placeholder: `Что нужно?`, send: `Отправить` } },

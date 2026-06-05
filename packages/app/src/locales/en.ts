@@ -82,6 +82,7 @@ export const en = {
     share: `Share`,
   },
   settings: {
+    accountGroup: `Account`,
     aiTunnel: {
       connection: `Connection`,
       connectionLead: `Use your own AiTunnel API key in the browser, or route requests through the app (balance billing applies).`,
@@ -92,6 +93,7 @@ export const en = {
       mode: { direct: `Direct`, proxy: `Proxy` },
       title: `AI Tunnel`,
     },
+    fogBackground: `Fog`,
     language: { en: `English`, ru: `Русский`, system: `System`, title: `Language` },
     models: {
       chat: { title: `Text` },
@@ -102,6 +104,7 @@ export const en = {
       },
       speech: { title: `Speech recognition` },
     },
+    modelsGroup: `Models`,
     profile: {
       balance: `Balance`,
       email: `Email`,
@@ -134,19 +137,9 @@ export const en = {
         title: `Top up balance`,
       },
     },
-    root: {
-      accountGroup: `Account`,
-      aiTunnel: `AI Tunnel`,
-      fogBackground: `Fog`,
-      language: `Language`,
-      modelsGroup: `Models`,
-      profile: `Profile`,
-      systemGroup: `System`,
-      theme: `Theme`,
-      title: `Settings`,
-      typeWriterSpeed: `Typewriter speed`,
-    },
+    systemGroup: `System`,
     theme: { dark: `Dark`, light: `Light`, system: `System`, title: `Theme` },
+    title: `Settings`,
     typeWriterSpeed: { fast: `Fast`, medium: `Medium`, slow: `Slow`, stream: `Stream`, title: `Typewriter speed` },
   },
   snappy: { composer: { placeholder: `What do you need?`, send: `Send` } },

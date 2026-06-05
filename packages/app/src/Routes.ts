@@ -21,6 +21,7 @@ import {
   SignUp,
   Snappy,
 } from "./pages";
+
 export const Routes = AppRoutes(
   {
     agent: { page: Agent, path: `agent/:agentId` },

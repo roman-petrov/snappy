@@ -2,10 +2,10 @@ import { AiConstants, type AiImageQuality } from "@snappy/ai";
 import { Image } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import type { SettingsOption } from "./components";
+import type { SettingsOption } from "../components";
 
-import { trpc } from "../../core";
-import { useSettingsModelIds } from "./hooks";
+import { trpc } from "../../../core";
+import { useSettingsModelIds } from "../hooks";
 
 export const useSettingsModelsImageState = () => {
   const { ids, settingsResponse } = useSettingsModelIds(`image`);

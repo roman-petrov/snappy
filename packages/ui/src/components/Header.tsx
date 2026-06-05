@@ -1,5 +1,6 @@
-import { _ } from "@snappy/core";
 import type { ReactNode } from "react";
+
+import { _ } from "@snappy/core";
 
 import styles from "./Header.module.scss";
 import { SafeArea } from "./SafeArea";

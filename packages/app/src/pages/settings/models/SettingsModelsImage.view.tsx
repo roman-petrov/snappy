@@ -3,8 +3,8 @@ import { Star } from "lucide-react";
 
 import type { useSettingsModelsImageState } from "./SettingsModelsImage.state";
 
-import { t } from "../../core";
-import { SettingsCard, SettingsCards, SettingsOptionRows } from "./components";
+import { t } from "../../../core";
+import { SettingsCard, SettingsCards, SettingsOptionRows } from "../components";
 
 export type SettingsModelsImageViewProps = ReturnType<typeof useSettingsModelsImageState>;
 

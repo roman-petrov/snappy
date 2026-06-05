@@ -3,9 +3,9 @@ import { CreditCard, KeyRound, Mail } from "lucide-react";
 
 import type { useSettingsProfileState } from "./SettingsProfile.state";
 
-import { t } from "../../core";
-import { Routes } from "../../Routes";
-import { SettingsCard, SettingsCardRow, SettingsCardSeparator } from "./components";
+import { t } from "../../../core";
+import { Routes } from "../../../Routes";
+import { SettingsCard, SettingsCardRow, SettingsCardSeparator } from "../components";
 import styles from "./SettingsProfile.module.scss";
 
 export type SettingsProfileViewProps = ReturnType<typeof useSettingsProfileState>;

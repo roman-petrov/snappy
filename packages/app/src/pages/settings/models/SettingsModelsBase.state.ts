@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 
 import type { SettingsModelsBaseProps } from "./SettingsModelsBase";
 
-import { trpc } from "../../core";
-import { useSettingsModelIds } from "./hooks";
+import { trpc } from "../../../core";
+import { useSettingsModelIds } from "../hooks";
 
 export const useSettingsModelsBaseState = ({ icon, modelType, settingsField, title }: SettingsModelsBaseProps) => {
   const { ids, settingsResponse } = useSettingsModelIds(modelType);

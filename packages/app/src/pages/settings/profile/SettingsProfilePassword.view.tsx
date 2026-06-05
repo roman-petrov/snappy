@@ -2,9 +2,9 @@ import { Button, NewPasswordInput, Page, PasswordInput } from "@snappy/ui";
 
 import type { useSettingsProfilePasswordState } from "./SettingsProfilePassword.state";
 
-import { FormErrorAndActions } from "../../components";
-import { t } from "../../core";
-import { SettingsCard } from "./components";
+import { FormErrorAndActions } from "../../../components";
+import { t } from "../../../core";
+import { SettingsCard } from "../components";
 
 export type SettingsProfilePasswordViewProps = ReturnType<typeof useSettingsProfilePasswordState>;
 

@@ -2,9 +2,9 @@ import { i } from "@snappy/intl";
 import { useAsyncEffect, useGo } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth, trpc } from "../../core";
-import { Routes } from "../../Routes";
-import { $signedIn } from "../../Store";
+import { Auth, trpc } from "../../../core";
+import { Routes } from "../../../Routes";
+import { $signedIn } from "../../../Store";
 
 export const useSettingsProfileState = () => {
   const go = useGo();

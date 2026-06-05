@@ -2,9 +2,9 @@ import { Button, Input, Page } from "@snappy/ui";
 
 import type { useSettingsProfileTopUpState } from "./SettingsProfileTopUp.state";
 
-import { FormErrorAndActions } from "../../components";
-import { t } from "../../core";
-import { SettingsCard } from "./components";
+import { FormErrorAndActions } from "../../../components";
+import { t } from "../../../core";
+import { SettingsCard } from "../components";
 
 export type SettingsProfileTopUpViewProps = ReturnType<typeof useSettingsProfileTopUpState>;
 

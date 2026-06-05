@@ -2,8 +2,8 @@
 
 .inner {
   align-items: center;
-  height: tokens.layout-header-height();
   max-width: tokens.content-width();
+  height: tokens.layout-header-height();
   padding-inline: tokens.layout-gutter();
   margin-inline: auto;
 }

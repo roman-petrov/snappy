@@ -1,6 +1,6 @@
 import { Bot } from "lucide-react";
 
-import { t } from "../../core";
+import { t } from "../../../core";
 import { SettingsModelsBase } from "./SettingsModelsBase";
 
 export const SettingsModelsChat = () => (
