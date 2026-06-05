@@ -6,7 +6,7 @@
     ".snappy",
     "**/dist/**",
     "**/build/**",
-    "**/*.{json,html,xml}",
+    "**/*.{json,html,xml,module.scss.d.ts}",
     "**/*.test.{ts,tsx}",
     "**/node_modules",
     "**/packages/*/src/generated"
