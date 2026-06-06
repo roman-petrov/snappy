@@ -11,7 +11,6 @@
 
 $-height: r(32);
 $-half-height: calc(#{$-height} / 2);
-$-primary-tone: color-mix(in srgb, color.primary() surface-theme.$material-accent-ratio, color.surface());
 $-accents: (
   primary: color.primary(),
   error: color.error(),
@@ -22,16 +21,20 @@ $-accents: (
   @return color-mix(in srgb, #{$color} $ratio, color.surface());
 }
 
-@mixin -paint($tone, $selected-accent: null) {
+@mixin -paint($tone, $accent: null) {
   background-color: color-mix(in srgb, $tone calc(100% * glass.$material-fill), transparent);
 
-  @if not $selected-accent {
+  @if not $accent {
     color: color.text();
     border: 1px solid glass.border($tone);
   } @else {
-    color: $selected-accent;
-    border: 1px solid color-mix(in srgb, $selected-accent surface-theme.$material-accent-ratio, glass.border($tone));
+    color: $accent;
+    border: 1px solid color-mix(in srgb, $accent surface-theme.$material-accent-ratio, glass.border($tone));
   }
+}
+
+@mixin -accent($accent) {
+  @include -paint(-tone($accent, surface-theme.$material-accent-ratio), $accent);
 }
 
 .root {
@@ -79,7 +82,7 @@ $-accents: (
 
 @each $name, $accent in $-accents {
   .#{$name} {
-    @include -paint(-tone($accent, surface-theme.$material-accent-ratio));
+    @include -accent($accent);
   }
 }
 
@@ -87,14 +90,14 @@ $-accents: (
   @include -paint(-tone(color.rim(), surface-theme.$material-rim-ratio));
 
   @include hover {
-    @include -paint($-primary-tone, color.primary());
+    @include -accent(color.primary());
   }
 
   @include pressed {
-    @include -paint($-primary-tone, color.primary());
+    @include -accent(color.primary());
   }
 }
 
 .accent {
-  @include -paint($-primary-tone, color.primary());
+  @include -accent(color.primary());
 }
