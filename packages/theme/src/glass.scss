@@ -2,13 +2,12 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
 
-$-blur: r(22);
-$-contrast: 1.05;
-$-fill: 0.44;
-$-outline: 0.42;
-$-saturate: 1.14;
-$-rim-white: 0.62;
-$-rim-tone: 0.38;
+$material-blur: r(22);
+$material-contrast: 1.05;
+$material-fill: 0.44;
+$material-saturate: 1.14;
+$material-rim-white: 0.62;
+$material-rim-tone: 0.38;
 
 @mixin -paint($background, $border-color, $backdrop, $no-border: false) {
   background-color: $background;
@@ -24,8 +23,8 @@ $-rim-tone: 0.38;
 }
 
 @function border($tone) {
-  $background: color-mix(in srgb, $tone calc(100% * $-fill), transparent);
-  $glow: color-mix(in srgb, color.rim() calc(100% * $-rim-white), $tone calc(100% * $-rim-tone));
+  $background: color-mix(in srgb, $tone calc(100% * $material-fill), transparent);
+  $glow: color-mix(in srgb, color.rim() calc(100% * $material-rim-white), $tone calc(100% * $material-rim-tone));
 
   @return color-mix(
     in srgb,
@@ -35,7 +34,12 @@ $-rim-tone: 0.38;
 }
 
 @mixin simple($tone, $no-border: false) {
-  $background: color-mix(in srgb, $tone calc(100% * $-fill), transparent);
+  $background: color-mix(in srgb, $tone calc(100% * $material-fill), transparent);
 
-  @include -paint($background, border($tone), blur($-blur) saturate($-saturate) contrast($-contrast), $no-border);
+  @include -paint(
+    $background,
+    border($tone),
+    blur($material-blur) saturate($material-saturate) contrast($material-contrast),
+    $no-border
+  );
 }

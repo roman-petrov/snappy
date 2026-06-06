@@ -18,6 +18,7 @@ export const Tabs = <T extends string>({ disabled = false, isActive, onChange, o
         key={option.value}
         onClick={() => onChange(option.value)}
         text={option.label}
+        tile
         tip={option.title}
       />
     ))}
