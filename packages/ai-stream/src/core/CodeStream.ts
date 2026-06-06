@@ -35,8 +35,7 @@ const lines = <T extends TokenChunk>(
 const lineBody = <T extends TokenChunk>(tokenLines: readonly T[][], span: (token: T) => string) =>
   tokenLines.map(line => `<span class="line">${line.map(span).join(``)}</span>`).join(`\n`);
 
-const preStyle = (bg: unknown, fg: unknown) =>
-  _.isString(bg) && _.isString(fg) ? `background-color:${bg};color:${fg}` : ``;
+const preStyle = (_bg: unknown, fg: unknown) => (_.isString(fg) ? `color:${fg}` : ``);
 
 const preWrap = (themeName: string, rootStyle: string, body: string) =>
   `<pre class="shiki ${themeName}" style="${rootStyle}" tabindex="0"><code>${body}</code></pre>`;

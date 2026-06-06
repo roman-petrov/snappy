@@ -43,11 +43,11 @@ describe(`finalizeBody`, () => {
 
 describe(`preStyle`, () => {
   it(`builds shiki pre style`, () => {
-    expect(preStyle(`#111`, `#eee`)).toBe(`background-color:#111;color:#eee`);
+    expect(preStyle(`#111`, `#eee`)).toBe(`color:#eee`);
   });
 
-  it(`returns empty when colors are missing`, () => {
-    expect(preStyle(undefined, `#eee`)).toBe(``);
+  it(`returns empty when foreground is missing`, () => {
+    expect(preStyle(`#111`, undefined)).toBe(``);
   });
 });
 

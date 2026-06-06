@@ -1,5 +1,6 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/elevation";
+@use "pkg:@snappy/theme/glass";
 @use "pkg:@snappy/theme/surface";
 @use "pkg:@snappy/theme/table";
 @use "pkg:@snappy/theme/tokens/color";
@@ -35,12 +36,7 @@
 }
 
 .body:has(pre) {
-  width: 100%;
-  min-width: 0;
-  padding: 0;
-  background: transparent;
-}
+  @include glass.reset;
 
-.scroll:has(pre) {
-  overflow-x: hidden;
+  padding: 0;
 }

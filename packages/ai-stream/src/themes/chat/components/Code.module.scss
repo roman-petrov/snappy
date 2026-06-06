@@ -1,14 +1,12 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
 /* stylelint-disable import-notation */
 @import url("@fontsource/google-sans-code/latin-400.css");
 /* stylelint-enable import-notation */
 
 .root {
-  @include surface.surface;
-
   position: relative;
   width: 100%;
   min-width: 0;
@@ -30,6 +28,7 @@
     font-size: r(14);
     line-height: 1.65;
     tab-size: 2;
+    background-color: color.backdrop();
   }
 
   code {
