@@ -35,7 +35,7 @@
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
       },
     },
     "packages/admin-server": {
@@ -98,7 +98,7 @@
         "shiki": "^4.2.0",
       },
       "devDependencies": {
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
         "vitest": "^4.1.8",
       },
     },
@@ -127,7 +127,7 @@
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
       },
     },
     "packages/app-android": {
@@ -171,7 +171,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
-        "isomorphic-dompurify": "^3.15.0",
+        "isomorphic-dompurify": "^3.16.0",
       },
       "devDependencies": {
         "@types/dom-speech-recognition": "^0.0.11",
@@ -439,7 +439,7 @@
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
       },
     },
     "packages/site-server": {
@@ -502,7 +502,7 @@
       },
       "devDependencies": {
         "@testing-library/react": "^16.0.0",
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
         "vitest": "^4.1.8",
       },
     },
@@ -542,7 +542,7 @@
       "devDependencies": {
         "@testing-library/dom": "^10.4.0",
         "@testing-library/react": "^16.0.0",
-        "@types/react": "^19.2.16",
+        "@types/react": "^19.2.17",
         "@types/react-dom": "^19.0.0",
         "vitest": "^4.1.8",
       },
@@ -1420,7 +1420,7 @@
 
     "@types/range-parser": ["@types/range-parser@1.2.7", "", {}, "sha512-hKormJbkJqzQGhziax5PItDUTMAM9uE2XXQmM37dyd4hVM+5aVl7oVxMVUiVQn2oCQFN/LKCZdvSM0pFRqbSmQ=="],
 
-    "@types/react": ["@types/react@19.2.16", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w=="],
+    "@types/react": ["@types/react@19.2.17", "", { "dependencies": { "csstype": "^3.2.2" } }, "sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw=="],
 
     "@types/react-dom": ["@types/react-dom@19.2.3", "", { "peerDependencies": { "@types/react": "^19.2.0" } }, "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ=="],
 
@@ -1814,7 +1814,7 @@
 
     "domhandler": ["domhandler@4.3.1", "", { "dependencies": { "domelementtype": "^2.2.0" } }, "sha512-GrwoxYN+uWlzO8uhUXRl0P+kHE4GtVPfYzVLcUxPL7KNdHKj66vvlhiweIHqYYXWlw+T8iLMp42Lm67ghw4WMQ=="],
 
-    "dompurify": ["dompurify@3.4.7", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-2jBxDJY4RR06tQNy4w5FlFH7kfxsQZlufd0sbv+chfHCxeJwrFw2baUDsSwvBISD4K4RDbd0PTfy3uNXsR6siA=="],
+    "dompurify": ["dompurify@3.4.8", "", { "optionalDependencies": { "@types/trusted-types": "^2.0.7" } }, "sha512-yb1cEmaOum7wFvOCSQxyfgVlv5D47Rc30iZWoMpbDIWTnJ6grDDQyu2KFJzB2k7u0pMuJcQ1zphH//fFnw2tjQ=="],
 
     "domutils": ["domutils@2.8.0", "", { "dependencies": { "dom-serializer": "^1.0.1", "domelementtype": "^2.2.0", "domhandler": "^4.2.0" } }, "sha512-w96Cjofp72M5IIhpjgobBimYEfoPjx1Vx0BSX9P30WBdZW2WIKU0T1Bd0kz2eNZ9ikjKgHbEyKx8BB6H1L3h3A=="],
 
@@ -2234,7 +2234,7 @@
 
     "isexe": ["isexe@2.0.0", "", {}, "sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw=="],
 
-    "isomorphic-dompurify": ["isomorphic-dompurify@3.15.0", "", { "dependencies": { "dompurify": "^3.4.7", "jsdom": "^29.1.1" } }, "sha512-9ZtkbQ8+SgNf6LuDAdu9bq23dVXMIGNM8ZYnyl2MufyZiSD5dqAUJcyjtYZz7B80HuPpEn/f0NCS6zKvavHtfA=="],
+    "isomorphic-dompurify": ["isomorphic-dompurify@3.16.0", "", { "dependencies": { "dompurify": "^3.4.8", "jsdom": "^29.1.1" } }, "sha512-KzTJsMuVPqPwBOD0F6jKXoV/+v8CSx0rxVp+/67KV6Xbw++0zD/avT3bZsgwR0M5QRMiOE+QqQtoZLEJYy1C4Q=="],
 
     "iterator.prototype": ["iterator.prototype@1.1.5", "", { "dependencies": { "define-data-property": "^1.1.4", "es-object-atoms": "^1.0.0", "get-intrinsic": "^1.2.6", "get-proto": "^1.0.0", "has-symbols": "^1.1.0", "set-function-name": "^2.0.2" } }, "sha512-H0dkQoCa3b2VEeKQBOxFph+JAbcrQdE7KC0UkqwpLmv2EC4P41QXP+rqo9wYodACiG5/WM5s9oDApTU8utwj9g=="],
 
