@@ -1,40 +1,25 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/material";
 @use "pkg:@snappy/theme/tokens/motion";
-
-$-material-blur: r(22);
-$-material-contrast: 1.05;
-$-material-fill: 0.44;
-$-material-saturate: 1.14;
-$-material-rim-white: 0.62;
-$-material-rim-tone: 0.38;
-$-material-rim-ratio: 18%;
-$-material-accent-ratio: 55%;
 
 @function -tone($color, $ratio) {
   @return color-mix(in srgb, #{$color} $ratio, color.surface());
 }
 
-@function border($tone) {
-  $background: color-mix(in srgb, $tone calc(100% * #{$-material-fill}), transparent);
-  $glow: color-mix(
-    in srgb,
-    color.rim() calc(100% * #{$-material-rim-white}),
-    $tone calc(100% * #{$-material-rim-tone})
-  );
+@function -bg($tone) {
+  @return color-mix(in srgb, $tone calc(100% * #{material.fill()}), transparent);
+}
 
-  @return color-mix(
-    in srgb,
-    $glow calc(#{color.rim-weight()} * 100%),
-    $background calc((1 - #{color.rim-weight()}) * 100%)
-  );
+@function border($tone) {
+  @return color-mix(in srgb, material.highlight() calc(100% * #{material.border-weight()}), -bg($tone));
 }
 
 @function accent-border($accent, $tone) {
-  $base: color-mix(in srgb, color.rim() calc(#{color.accent-border-rim()} * 100%), border($tone));
+  $base: color-mix(in srgb, material.highlight() calc(100% * #{material.accent-border-highlight()}), border($tone));
 
-  @return color-mix(in srgb, $accent calc(#{color.accent-border-mix()} * 100%), $base);
+  @return color-mix(in srgb, $accent calc(100% * #{material.accent-border-mix()}), $base);
 }
 
 @function elevation($n) {
@@ -42,7 +27,7 @@ $-material-accent-ratio: 55%;
 }
 
 @mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
-  background-color: color-mix(in srgb, $tone calc(100% * #{$-material-fill}), transparent);
+  background-color: -bg($tone);
   transition:
     background-color motion.default(),
     border-color motion.default(),
@@ -68,18 +53,18 @@ $-material-accent-ratio: 55%;
 }
 
 @mixin rim {
-  @include material(-tone(color.rim(), $-material-rim-ratio));
+  @include material(-tone(material.highlight(), material.tone-rim()));
 }
 
 @mixin accent($accent) {
-  @include material(-tone($accent, $-material-accent-ratio), $accent);
+  @include material(-tone($accent, material.tone-accent()), $accent);
 }
 
 @mixin accent-hover($accent, $no-border: false) {
-  @include material(-tone($accent, $-material-accent-ratio), $accent, $accent-text: false, $no-border: $no-border);
+  @include material(-tone($accent, material.tone-accent()), $accent, $accent-text: false, $no-border: $no-border);
 }
 
 @mixin glass-simple {
-  backdrop-filter: blur($-material-blur) saturate($-material-saturate) contrast($-material-contrast);
+  backdrop-filter: blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
   transition: backdrop-filter motion.default();
 }

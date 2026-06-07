@@ -8,10 +8,6 @@ declare const __Bg: {
   readonly surface: "surface";
   readonly text: "text";
   readonly outline: "outline";
-  readonly rim: "rim";
-  readonly rimWeight: "rimWeight";
-  readonly accentBorderMix: "accentBorderMix";
-  readonly accentBorderRim: "accentBorderRim";
   readonly inverse: "inverse";
   readonly accentIndigo: "accentIndigo";
   readonly accentViolet: "accentViolet";

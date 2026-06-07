@@ -7,5 +7,6 @@ declare const __Surface: {
   readonly success: "success";
   readonly warning: "warning";
   readonly header: "header";
+  readonly headerBorder: "headerBorder";
 };
 export default __Surface;

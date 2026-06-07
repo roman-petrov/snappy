@@ -2,7 +2,6 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/elevation";
 @use "pkg:@snappy/theme/material/glass";
-@use "pkg:@snappy/theme/material/material";
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
@@ -28,12 +27,12 @@
     @include surface.header;
     @include glass.simple;
     @include elevation.e1;
+    @include surface.header-border;
 
     position: absolute;
     inset: 0;
     z-index: -1;
     content: "";
-    border-bottom: 1px solid material.border(color.surface());
     opacity: 0;
     animation: header-glass 1ms linear both;
     animation-timeline: --layout-scroll;

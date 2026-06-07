@@ -38,22 +38,6 @@
   @return -color("outline");
 }
 
-@function rim() {
-  @return -color("rim");
-}
-
-@function rim-weight() {
-  @return -color("rim-weight");
-}
-
-@function accent-border-mix() {
-  @return -color("accent-border-mix");
-}
-
-@function accent-border-rim() {
-  @return -color("accent-border-rim");
-}
-
 @function inverse() {
   @return -color("inverse");
 }

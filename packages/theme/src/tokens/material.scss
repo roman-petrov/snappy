@@ -1,0 +1,43 @@
+@function -material($name) {
+  @return var(--material-#{$name});
+}
+
+@function fill() {
+  @return -material("fill");
+}
+
+@function highlight() {
+  @return -material("highlight");
+}
+
+@function border-weight() {
+  @return -material("border-weight");
+}
+
+@function accent-border-mix() {
+  @return -material("accent-border-mix");
+}
+
+@function accent-border-highlight() {
+  @return -material("accent-border-highlight");
+}
+
+@function tone-rim() {
+  @return -material("tone-rim");
+}
+
+@function tone-accent() {
+  @return -material("tone-accent");
+}
+
+@function glass-blur() {
+  @return -material("glass-blur");
+}
+
+@function glass-saturate() {
+  @return -material("glass-saturate");
+}
+
+@function glass-contrast() {
+  @return -material("glass-contrast");
+}

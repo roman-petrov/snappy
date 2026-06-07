@@ -1,18 +1,17 @@
 :root[data-theme="dark"] {
+  /* Palette */
   --color-text: #e7ebf4;
   --color-backdrop: #1e2838;
   --color-surface: #323f54;
   --color-outline: #3f4a5c;
-  --color-rim: #424e60;
-  --color-rim-weight: 0.6;
-  --color-accent-border-mix: 0.4;
-  --color-accent-border-rim: 0;
   --color-primary: #5a9eff;
   --color-error: #e07b7b;
   --color-warning: #c9a84d;
   --color-success: #5dbd7e;
   --color-info: #2ec9b8;
   --color-inverse: #fff;
+
+  /* Accent */
   --color-accent-indigo: #7370fa;
   --color-accent-violet: #b08dff;
   --color-accent-purple: #d07af5;
@@ -21,4 +20,16 @@
   --color-accent-orange: #ff9454;
   --color-accent-magenta: #ff6e74;
   --color-accent-plum: #eea743;
+
+  /* Material */
+  --material-fill: 0.44;
+  --material-highlight: #424e60;
+  --material-border-weight: 0.6;
+  --material-accent-border-mix: 0.4;
+  --material-accent-border-highlight: 0;
+  --material-tone-rim: 18%;
+  --material-tone-accent: 55%;
+  --material-glass-blur: 1.375rem;
+  --material-glass-saturate: 1.14;
+  --material-glass-contrast: 1.05;
 }
