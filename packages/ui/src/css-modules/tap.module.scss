@@ -1,5 +1,5 @@
 @use "sass:meta";
-@use "pkg:@snappy/theme/tap" as tap;
+@use "pkg:@snappy/theme/material/tap";
 
 @each $name, $mixin in meta.module-mixins("tap") {
   .#{$name} {

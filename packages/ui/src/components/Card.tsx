@@ -7,5 +7,5 @@ import { $ } from "../$";
 export type CardProps = { children: ReactNode; cn?: string };
 
 export const Card = ({ children, cn }: CardProps) => (
-  <div className={_.cn($.surface(`surface`), $.elevation(`e2`), $.radius(`md`), cn)}>{children}</div>
+  <div className={_.cn($.surface(`surface`), $.glass(`simple`), $.elevation(`e2`), $.radius(`md`), cn)}>{children}</div>
 );

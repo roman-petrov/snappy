@@ -13,7 +13,7 @@ export type MenuViewProps = ReturnType<typeof useMenuState>;
 
 export const MenuView = ({ items }: MenuViewProps) =>
   items.length === 0 ? undefined : (
-    <div className={_.cn($.tap(`soft`), $.radius(`lg`), styles.root)}>
+    <div className={_.cn($.surface(`surface`), $.glass(`simple`), $.elevation(`e2`), $.radius(`lg`), styles.root)}>
       {items.map(({ action, index, key, onClick, outIndex }) => (
         <div
           className={styles.action}

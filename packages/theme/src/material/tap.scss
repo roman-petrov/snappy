@@ -1,0 +1,71 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation" as elevation;
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/tokens/motion";
+
+@mixin -on-interactive {
+  @include hover {
+    @content;
+  }
+
+  @include pressed {
+    @content;
+  }
+}
+
+@mixin elevated {
+  @include elevation.e1;
+
+  @include -on-interactive {
+    @include elevation.e2;
+  }
+}
+
+@mixin -soft-base {
+  @include surface.surface;
+
+  @include -on-interactive {
+    @include surface.primary-hover;
+  }
+}
+
+@mixin menu {
+  @include -on-interactive {
+    @include surface.primary-hover($no-border: true);
+  }
+
+  border: 1px solid transparent;
+}
+
+@mixin soft {
+  @include -soft-base;
+  @include elevated;
+}
+
+@mixin accent {
+  @include surface.primary-hover;
+  @include elevated;
+}
+
+@mixin icon {
+  @include -on-interactive {
+    &::before {
+      @include surface.primary-hover;
+      @include elevation.e2;
+
+      opacity: 1;
+    }
+  }
+
+  transition: color motion.default();
+
+  &::before {
+    border: 1px solid transparent;
+    opacity: 0;
+    transition:
+      opacity motion.default(),
+      background-color motion.default(),
+      border-color motion.default(),
+      box-shadow motion.default();
+  }
+}

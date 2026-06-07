@@ -2,6 +2,7 @@ import { _ } from "@snappy/core";
 
 import type { ChipProps } from "./Chip";
 
+import { $ } from "../$";
 import styles from "./Chip.module.scss";
 
 export const useChipState = ({
@@ -28,7 +29,18 @@ export const useChipState = ({
       ? color
       : `soft`;
 
-  const rootCn = _.cn(styles.root, styles[resolvedColor], tile && styles.tile, cn);
+  const rootCn = _.cn(
+    styles.root,
+    interactive
+      ? resolvedColor === `accent`
+        ? _.cn(styles.accent, styles.interactive)
+        : $.tap(`soft`)
+      : resolvedColor === `soft`
+        ? $.surface(`surface`)
+        : styles[resolvedColor],
+    tile && styles.tile,
+    cn,
+  );
 
   const tapProps = interactive
     ? { disabled, keepFocus, link, onClick, submit, tip, vibrate: `segmentTick` as const }

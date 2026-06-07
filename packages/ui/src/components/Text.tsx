@@ -18,15 +18,7 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
 
 type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
 
-export const Text = ({
-  as = `span`,
-  cn = ``,
-  color = `text`,
-  html = false,
-  text,
-  typography = `body`,
-  ...rest
-}: TextProps) => {
+export const Text = ({ as = `span`, cn = ``, color, html = false, text, typography = `body`, ...rest }: TextProps) => {
   const Tag = as;
   const className = _.cn($.typography(typography), $.color(color), cn);
 

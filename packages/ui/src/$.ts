@@ -1,6 +1,7 @@
 import bgStyles from "./css-modules/bg.module.scss";
 import colorStyles from "./css-modules/color.module.scss";
 import elevationStyles from "./css-modules/elevation.module.scss";
+import glassStyles from "./css-modules/glass.module.scss";
 import iconSizeStyles from "./css-modules/icon-size.module.scss";
 import radiusStyles from "./css-modules/radius.module.scss";
 import surfaceStyles from "./css-modules/surface.module.scss";
@@ -12,6 +13,8 @@ export type Bg = keyof typeof bgStyles;
 export type Color = keyof typeof colorStyles;
 
 export type Elevation = keyof typeof elevationStyles;
+
+export type Glass = keyof typeof glassStyles;
 
 export type IconSize = keyof typeof iconSizeStyles;
 
@@ -26,10 +29,11 @@ export type Typography = keyof typeof typographyStyles;
 const bg = (name: Color) => bgStyles[name];
 const color = (name?: Color) => (name === undefined ? `` : colorStyles[name]);
 const elevation = (name: Elevation) => elevationStyles[name];
+const glass = (name: Glass) => glassStyles[name];
 const iconSize = (name: IconSize) => iconSizeStyles[name];
 const radius = (name: Radius) => radiusStyles[name];
 const surface = (name: Surface) => surfaceStyles[name];
 const tap = (name: TapKey) => tapStyles[name];
 const typography = (name?: Typography) => (name === undefined || name === `body` ? `` : typographyStyles[name]);
 
-export const $ = { bg, color, elevation, iconSize, radius, surface, tap, typography };
+export const $ = { bg, color, elevation, glass, iconSize, radius, surface, tap, typography };

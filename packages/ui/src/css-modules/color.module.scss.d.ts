@@ -10,6 +10,8 @@ declare const __Color: {
   readonly outline: "outline";
   readonly rim: "rim";
   readonly rimWeight: "rimWeight";
+  readonly accentBorderMix: "accentBorderMix";
+  readonly accentBorderRim: "accentBorderRim";
   readonly inverse: "inverse";
   readonly accentIndigo: "accentIndigo";
   readonly accentViolet: "accentViolet";

@@ -1,22 +1,9 @@
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
 .pill {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  overflow: hidden;
-}
-
-.pill-left {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.xs() space.sm();
+  align-items: center;
   padding: space.sm() space.md();
-}
-
-.pill-right {
-  padding: space.sm() space.md();
-}
-
-@include mobile {
-  .pill {
-    grid-template-columns: 1fr;
-  }
 }

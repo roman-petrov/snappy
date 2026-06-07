@@ -1,0 +1,34 @@
+@use "pkg:@snappy/theme/material/material" as material;
+@use "pkg:@snappy/theme/tokens/color";
+
+@mixin surface {
+  @include material.rim;
+}
+
+@mixin primary {
+  @include material.accent(color.primary());
+}
+
+@mixin primary-hover($no-border: false) {
+  @include material.accent-hover(color.primary(), $no-border: $no-border);
+}
+
+@mixin error {
+  @include material.accent(color.error());
+}
+
+@mixin info {
+  @include material.accent(color.info());
+}
+
+@mixin success {
+  @include material.accent(color.success());
+}
+
+@mixin warning {
+  @include material.accent(color.warning());
+}
+
+@mixin header {
+  @include material.material(color.surface(), null, $no-border: true);
+}

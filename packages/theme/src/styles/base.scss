@@ -3,7 +3,7 @@
 @use "pkg:@snappy/theme/tokens/motion";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
-@use "pkg:@snappy/theme/surface";
+@use "pkg:@snappy/theme/material/surface";
 
 html {
   scroll-behavior: smooth;
@@ -64,9 +64,6 @@ button {
 }
 
 :where(a:any-link) {
-  text-decoration: none;
-}
-
-:where(a:visited) {
   color: inherit;
+  text-decoration: none;
 }

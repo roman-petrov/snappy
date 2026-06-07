@@ -1,0 +1,10 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/material/material" as material;
+
+@mixin e1 {
+  box-shadow: material.elevation(1);
+}
+
+@mixin e2 {
+  box-shadow: material.elevation(2);
+}

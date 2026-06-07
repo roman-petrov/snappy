@@ -1,5 +1,5 @@
 @use "sass:meta";
-@use "pkg:@snappy/theme/surface" as surface;
+@use "pkg:@snappy/theme/material/surface";
 
 @each $name, $mixin in meta.module-mixins("surface") {
   .#{$name} {
