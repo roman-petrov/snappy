@@ -1,5 +1,6 @@
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/material/tap";
 @use "pkg:@snappy/theme/tokens/icon-size";
@@ -12,6 +13,7 @@ $-half-height: calc(#{$-height} / 2);
 
 .root {
   @include focus($radius: $-half-height);
+  @include elevation.e1;
 
   display: inline-flex;
   flex-wrap: wrap;
