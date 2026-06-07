@@ -27,7 +27,6 @@
     @include surface.header;
     @include glass.simple;
     @include elevation.e1;
-    @include surface.header-border;
 
     position: absolute;
     inset: 0;

@@ -27,18 +27,13 @@ $breakpoint-mobile: 768px;
   }
 }
 
-@mixin focus($ring-color: null, $radius: null) {
+@mixin focus($radius: null) {
   &:focus-visible {
+    outline: 2px solid color.primary();
     outline-offset: tokens.focus-offset();
 
     @if $radius {
       border-radius: $radius;
-    }
-
-    @if $ring-color {
-      outline: 2px solid $ring-color;
-    } @else {
-      outline: 2px solid color.primary();
     }
   }
 }
