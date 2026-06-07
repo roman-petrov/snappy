@@ -41,3 +41,11 @@
 @function glass-contrast() {
   @return -material("glass-contrast");
 }
+
+@function shadow() {
+  @return -material("shadow");
+}
+
+@function shadow-weight() {
+  @return -material("shadow-weight");
+}

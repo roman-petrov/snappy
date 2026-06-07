@@ -1,4 +1,5 @@
 /* stylelint-disable property-disallowed-list */
+@use "sass:string";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/material";
@@ -22,8 +23,16 @@
   @return color-mix(in srgb, $accent calc(100% * #{material.accent-border-mix()}), $base);
 }
 
+@function -shadow-opacity($a) {
+  @return string.unquote("calc(#{$a} * #{material.shadow-weight()} * 1%)");
+}
+
 @function elevation($n) {
-  @return 0 r($n) r($n * 4) rgb(0 0 0 / #{4% + $n * 4%}), 0 r($n * 2) r($n * 6) rgb(0 0 0 / #{2% + $n * 3%});
+  $a1: 4 + $n * 4;
+  $a2: 2 + $n * 3;
+
+  @return 0 r($n) r($n * 4) color-mix(in srgb, material.shadow() -shadow-opacity($a1), transparent),
+    0 r($n * 2) r($n * 6) color-mix(in srgb, material.shadow() -shadow-opacity($a2), transparent);
 }
 
 @mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
