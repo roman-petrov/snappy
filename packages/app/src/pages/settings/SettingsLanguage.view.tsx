@@ -13,8 +13,8 @@ export const SettingsLanguageView = (props: SettingsLanguageViewProps) => (
     <SettingsOptionList
       {...props}
       options={[
-        { icon: <Icon icon="🇷🇺" />, label: t(`settings.language.ru`), value: `ru` },
-        { icon: <Icon icon="🇬🇧" />, label: t(`settings.language.en`), value: `en` },
+        { icon: <Icon icon="🇷🇺" size="lg" />, label: t(`settings.language.ru`), value: `ru` },
+        { icon: <Icon icon="🇬🇧" size="lg" />, label: t(`settings.language.en`), value: `en` },
         {
           icon: <FilledIcon color="accentPlum" icon={Settings} />,
           label: t(`settings.language.system`),

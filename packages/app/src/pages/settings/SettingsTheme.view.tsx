@@ -13,8 +13,8 @@ export const SettingsThemeView = (props: SettingsThemeViewProps) => (
     <SettingsOptionList
       {...props}
       options={[
-        { icon: <Icon icon="☀️" />, label: t(`settings.theme.light`), value: `light` },
-        { icon: <Icon icon="🌙" />, label: t(`settings.theme.dark`), value: `dark` },
+        { icon: <Icon icon="☀️" size="lg" />, label: t(`settings.theme.light`), value: `light` },
+        { icon: <Icon icon="🌙" size="lg" />, label: t(`settings.theme.dark`), value: `dark` },
         { icon: <FilledIcon color="accentPlum" icon={Settings} />, label: t(`settings.theme.system`), value: `system` },
       ]}
     />
