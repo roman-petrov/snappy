@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.16"
+    "@types/react": "^19.2.17"
   }
 }
