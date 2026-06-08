@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-continue */
 /* eslint-disable functional/no-try-statements */
@@ -510,4 +509,3 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
 };
 
 export type Workspace = ReturnType<typeof Workspace>;
-/* jscpd:ignore-end */

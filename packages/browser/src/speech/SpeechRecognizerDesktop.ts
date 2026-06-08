@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
@@ -45,4 +44,3 @@ export const SpeechRecognizerDesktop: SpeechRecognizer = recognition => options 
     return pending.promise;
   };
 };
-/* jscpd:ignore-end */

@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 import { Button, Input, Page } from "@snappy/ui";
 
 import type { useSettingsProfileTopUpState } from "./SettingsProfileTopUp.state";
@@ -36,4 +35,3 @@ export const SettingsProfileTopUpView = ({
     </SettingsCard>
   </Page>
 );
-/* jscpd:ignore-end */

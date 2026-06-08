@@ -17,10 +17,17 @@ export type BuildOptions = { capture?: true };
 const runSpawn = async (cwd: string, argv: string[], capture: boolean) =>
   Process.spawn(cwd, argv, capture ? { capture: true } : {});
 
-const viteBuild = async (root: string, packageName: string, { capture }: BuildOptions = {}) => {
+const packageOut = (root: string, packageName: string) => {
   const cwd = packageDir(root, packageName);
   const out = outDir(root, packageName);
   fs.rmSync(out, { force: true, recursive: true });
+
+  return { cwd, out };
+};
+
+const viteBuild = async (root: string, packageName: string, { capture }: BuildOptions = {}) => {
+  const { cwd, out } = packageOut(root, packageName);
+
   const result = await runSpawn(
     cwd,
     Process.toolArgv(workflowRunner, `vite`, [`build`, `--outDir`, out]),
@@ -106,10 +113,7 @@ const ssr = async (root: string, { capture }: BuildOptions = {}) => {
 };
 
 const server = async (root: string, { capture }: BuildOptions = {}) => {
-  const packageName = `server`;
-  const cwd = packageDir(root, packageName);
-  const out = outDir(root, packageName);
-  fs.rmSync(out, { force: true, recursive: true });
+  const { cwd, out } = packageOut(root, `server`);
   const result = await runSpawn(cwd, Process.toolArgv(workflowRunner, `tsdown`, [`--out-dir`, out]), capture === true);
 
   return Process.exitCode(result) === 0 ? 0 : result;

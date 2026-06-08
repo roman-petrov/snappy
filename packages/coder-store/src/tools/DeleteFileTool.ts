@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 import { AgentTool } from "@snappy/agent";
 import { z } from "zod";
 
@@ -26,4 +25,3 @@ export const DeleteFileTool: WorkspaceAgentTool = workspace =>
           : `Deleted: ${path}`,
     inputSchema: z.object({ path: z.string().min(1).describe(`File or directory path relative to workspace root.`) }),
   });
-/* jscpd:ignore-end */

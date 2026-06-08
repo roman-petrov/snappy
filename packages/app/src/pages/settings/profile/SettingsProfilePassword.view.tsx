@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 import { Button, NewPasswordInput, Page, PasswordInput } from "@snappy/ui";
 
 import type { useSettingsProfilePasswordState } from "./SettingsProfilePassword.state";
@@ -57,4 +56,3 @@ export const SettingsProfilePasswordView = ({
     </SettingsCard>
   </Page>
 );
-/* jscpd:ignore-end */

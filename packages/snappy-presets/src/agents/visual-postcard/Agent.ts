@@ -1,5 +1,4 @@
 // cspell:disable
-/* jscpd:ignore-start */
 import { StaticVisualAgent } from "@snappy/snappy-sdk";
 
 import { Prompts } from "../../Prompts";
@@ -467,4 +466,3 @@ export const Agent = StaticVisualAgent(
       prompt: i18n(`meta.prompt`),
     }) as const,
 );
-/* jscpd:ignore-end */

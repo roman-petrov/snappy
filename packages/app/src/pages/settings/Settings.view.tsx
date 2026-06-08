@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 import { FilledIcon, Page, SwitchDisplay } from "@snappy/ui";
 import { CloudFog, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
 
@@ -93,4 +92,3 @@ export const SettingsView = ({
     </SettingsCards>
   </Page>
 );
-/* jscpd:ignore-end */

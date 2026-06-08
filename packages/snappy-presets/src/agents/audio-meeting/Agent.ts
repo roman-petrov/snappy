@@ -1,5 +1,4 @@
 // cspell:disable
-/* jscpd:ignore-start */
 import { StaticAudioAgent } from "@snappy/snappy-sdk";
 
 import { Prompts } from "../../Prompts";
@@ -124,4 +123,3 @@ export const Agent = StaticAudioAgent(
       prompt: i18n(`meta.prompt`),
     }) as const,
 );
-/* jscpd:ignore-end */

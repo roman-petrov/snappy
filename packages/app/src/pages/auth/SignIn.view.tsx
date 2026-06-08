@@ -1,4 +1,3 @@
-/* jscpd:ignore-start */
 import { Button, Input, PasswordInput } from "@snappy/ui";
 
 import type { useSignInState } from "./SignIn.state";
@@ -48,4 +47,3 @@ export const SignInView = ({
     </AuthSubmitActions>
   </AuthForm>
 );
-/* jscpd:ignore-end */
