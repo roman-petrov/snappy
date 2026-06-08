@@ -1,7 +1,6 @@
 /* jscpd:ignore-start */
 /* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "../typography" as typography;
@@ -93,27 +92,6 @@
   ol ol ol {
     padding-inline-start: space.md();
     list-style-type: lower-roman;
-  }
-
-  table {
-    font-size: 0.95em;
-    border: 1px solid color.outline();
-    border-radius: radius.sm();
-  }
-
-  th,
-  td {
-    padding: space.sm() space.md();
-    border: 1px solid color.outline();
-  }
-
-  th {
-    font-weight: 600;
-    background: color-mix(in oklch, color.surface() 88%, currentcolor 4%);
-  }
-
-  tbody tr:nth-child(even) td {
-    background: color-mix(in oklch, currentcolor 3%, transparent);
   }
 }
 

@@ -2,7 +2,13 @@ import { _ } from "@snappy/core";
 
 import type { TableAlign, TableCell, TableContent, TableProps } from "./Table";
 
-export const useTableState = ({ columns, rows: sourceRows }: TableProps) => {
+export const useTableState = (props: TableProps) => {
+  if (!(`columns` in props)) {
+    return { kind: `slot` as const, slots: props.slots };
+  }
+
+  const { columns, rows: sourceRows } = props;
+
   const isCell = (value: TableCell): value is { align?: TableAlign; content: TableContent } =>
     value !== null && _.isObject(value) && !_.isArray(value) && `content` in value;
 
@@ -29,5 +35,5 @@ export const useTableState = ({ columns, rows: sourceRows }: TableProps) => {
     id: row.id,
   }));
 
-  return { headers, rows };
+  return { headers, kind: `data` as const, rows };
 };

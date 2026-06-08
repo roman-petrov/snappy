@@ -38,12 +38,20 @@
   }
 
   table {
+    width: 100%;
     font-size: 0.95em;
+    table-layout: auto;
+    border-collapse: collapse;
   }
 
   th,
   td {
     padding: space.xs() space.sm();
+    vertical-align: top;
+    text-align: left;
+    word-break: normal;
+    overflow-wrap: normal;
+    white-space: normal;
     border: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
   }
 

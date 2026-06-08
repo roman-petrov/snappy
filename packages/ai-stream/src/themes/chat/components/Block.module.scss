@@ -1,42 +1,18 @@
 /* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/material/material" as material;
 @use "pkg:@snappy/theme/material/elevation";
 @use "pkg:@snappy/theme/material/surface";
-@use "pkg:@snappy/theme/table";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
-  @include table.frame;
   @include elevation.e1;
+  @include surface.surface;
 
   display: block;
   margin: space.md() 0;
-  border: 1px solid color-mix(in oklch, color.outline() 55%, transparent);
+  overflow: hidden;
+  border: 1px solid material.border(color.surface());
   border-radius: radius.md();
-}
-
-.scroll {
-  @include table.scroll;
-}
-
-.body {
-  @include table.body;
-}
-
-.body:not(:has(pre)) {
-  @include surface.surface;
-
-  padding: space.md();
-}
-
-.body:has(table) {
-  @include table.body-table;
-
-  padding: 0;
-  background: transparent;
-}
-
-.body:has(pre) {
-  padding: 0;
 }

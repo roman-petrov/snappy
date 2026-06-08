@@ -1,0 +1,88 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/material/material" as material;
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/typography";
+
+.scroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  overflow-x: auto;
+  border-radius: radius.sm();
+  -webkit-overflow-scrolling: touch;
+}
+
+.root {
+  width: fit-content;
+  min-width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+  border: 1px solid material.border(color.surface());
+}
+
+.root :is(th, td) {
+  padding: space.sm() space.md();
+  vertical-align: top;
+  text-align: left;
+  word-break: normal;
+  overflow-wrap: normal;
+  white-space: normal;
+  border: 0;
+  border-inline-end: 1px solid material.border(color.surface());
+  border-bottom: 1px solid material.border(color.surface());
+  transition: background-color motion.default();
+}
+
+.root :is(th, td):last-child {
+  border-inline-end: 0;
+}
+
+.root tbody tr:last-child :is(th, td) {
+  border-bottom: 0;
+}
+
+.root th {
+  @include surface.header;
+  @include typography.caption-bold;
+}
+
+.root td {
+  @include typography.body-sm;
+
+  color: color.text();
+}
+
+.root tbody tr:nth-child(even) td {
+  background-color: color.backdrop();
+}
+
+.root tbody tr:hover td {
+  @include surface.primary-hover($no-border: true);
+}
+
+.head-cell,
+.cell {
+  vertical-align: middle;
+}
+
+.head-cell {
+  @include surface.primary;
+}
+
+.cell-inner {
+  display: flex;
+  align-items: center;
+  min-height: space.xl();
+}
+
+.left .cell-inner {
+  justify-content: flex-start;
+}
+
+.right .cell-inner {
+  justify-content: flex-end;
+}

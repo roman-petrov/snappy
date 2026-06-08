@@ -1,5 +1,4 @@
 /* stylelint-disable property-disallowed-list */
-@use "pkg:@snappy/theme/table";
 
 .root {
   display: block;
@@ -46,15 +45,6 @@
 
   ol {
     list-style-type: decimal;
-  }
-
-  table {
-    @include table.layout;
-  }
-
-  th,
-  td {
-    @include table.cell;
   }
 }
 

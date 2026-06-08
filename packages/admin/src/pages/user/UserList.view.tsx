@@ -1,10 +1,10 @@
 import { i } from "@snappy/intl";
-import { Chip, IconButton, Link, Page } from "@snappy/ui";
+import { Chip, IconButton, Link, Page, Table } from "@snappy/ui";
 import { Pencil } from "lucide-react";
 
 import type { useUserListState } from "./UserList.state";
 
-import { Pager, Table } from "../../components";
+import { Pager } from "../../components";
 import { t } from "../../core";
 import { Routes } from "../../Routes";
 

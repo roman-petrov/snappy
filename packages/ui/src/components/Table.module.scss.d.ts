@@ -1,6 +1,5 @@
 declare const __Table: {
   readonly scroll: "scroll";
-  readonly pad: "pad";
   readonly root: "root";
   readonly headCell: "headCell";
   readonly cell: "cell";

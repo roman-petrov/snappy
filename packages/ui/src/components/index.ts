@@ -62,6 +62,8 @@ export * from "./SwitchDisplay";
 
 export * from "./SystemButtons";
 
+export * from "./Table";
+
 export * from "./Tabs";
 
 export * from "./Tap";
