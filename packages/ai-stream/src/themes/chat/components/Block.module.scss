@@ -1,3 +1,6 @@
+@use "pkg:@snappy/theme/tokens/space";
+
 .root {
+  margin-block: space.sm();
   overflow: hidden;
 }

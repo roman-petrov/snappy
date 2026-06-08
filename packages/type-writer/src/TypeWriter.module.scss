@@ -27,6 +27,7 @@ $-shadow: #0f172a;
     0 0 2px 0.5px color-mix(in srgb, $-shadow 58%, transparent),
     0 0 5px 1.5px color-mix(in srgb, $-shadow 40%, transparent);
   animation: shift 0.75s linear infinite;
+  will-change: background-position;
 }
 
 .hidden {

@@ -9,13 +9,13 @@ import styles from "./Code.module.scss";
 
 export type CodeViewState = ReturnType<typeof useCodeState>;
 
-export const CodeView = ({ closed, copy, html, tailHostRef }: CodeViewState) => (
+export const CodeView = ({ copy, copyable, html, tailHostRef }: CodeViewState) => (
   <Block>
     <div className={styles.root}>
       <div className={styles.scroll}>
         <StreamHtml html={html} tailHostRef={tailHostRef} />
       </div>
-      {closed ? (
+      {copyable ? (
         <div className={styles.copy}>
           <IconButton icon={Copy} onClick={copy} tip="Copy" />
         </div>

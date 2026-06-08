@@ -5,7 +5,7 @@ import type { Piece } from "./Types";
 
 import { type AnnotatedList, type AnnotatedTable, Stream } from "./Stream";
 
-const { annotate, apply, segments, tailHtml } = Stream;
+const { annotate, apply, fenceOpen, segments, tailHtml } = Stream;
 
 describe(`apply`, () => {
   it(`returns empty array unchanged`, () => {
@@ -46,6 +46,20 @@ describe(`apply`, () => {
           "html": "",
           "lang": "ts",
           "source": "const x = 1",
+          "type": "code",
+        },
+      ]
+    `);
+  });
+
+  it(`keeps last code closed when openLastCode is false`, () => {
+    expect(apply([{ closed: true, html: ``, lang: `js`, source: `x`, type: `code` }], false)).toMatchInlineSnapshot(`
+      [
+        {
+          "closed": true,
+          "html": "",
+          "lang": "js",
+          "source": "x",
           "type": "code",
         },
       ]
@@ -101,6 +115,13 @@ describe(`apply`, () => {
     apply(input);
 
     expect(input).toStrictEqual(before);
+  });
+});
+
+describe(`fenceOpen`, () => {
+  it(`detects unclosed fence`, () => {
+    expect(fenceOpen(`\`\`\`js\nx`)).toBe(true);
+    expect(fenceOpen(`\`\`\`js\nx\n\`\`\``)).toBe(false);
   });
 });
 

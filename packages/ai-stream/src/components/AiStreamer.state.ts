@@ -9,6 +9,7 @@ import { Markdown, Stream } from "../core";
 import { AiStreamTheme } from "../themes";
 
 const streamFps = 60;
+const frameMs = _.second / streamFps;
 
 export const useAiStreamerState = ({
   onTailBusyChange,
@@ -19,144 +20,87 @@ export const useAiStreamerState = ({
 }: AiStreamerProps) => {
   const theme = AiStreamTheme[themeKey];
   const typeWriter = typeWriterSpeed !== undefined;
-  const throttle = streaming && !typeWriter;
-  const frameMs = _.second / streamFps;
   const [renderText, setRenderText] = useState(text);
-  const [tailAnimating, setTailAnimating] = useState(false);
+  const [playStep, setPlayStep] = useState(0);
+  const [codeHtml, setCodeHtml] = useState(``);
+  const [pushing, setPushing] = useState(false);
   const latestRef = useRef(text);
-  const rafRef = useRef(0);
-  const lastPaintRef = useRef(0);
-  const pushTokenRef = useRef(0);
-
-  const syncRenderText = useCallback(
-    (next: string) => {
-      setRenderText(previous => (previous === next ? previous : next));
-    },
-    [setRenderText],
-  );
+  const paintRef = useRef(0);
+  const paintAtRef = useRef(0);
+  const twRef = useRef<TypeWriter | undefined>(undefined);
 
   latestRef.current = text;
 
   useEffect(() => {
-    if (streaming && typeWriter) {
-      return undefined;
-    }
-
-    if (!throttle) {
-      if (rafRef.current !== 0) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = 0;
-      }
-      lastPaintRef.current = 0;
-      syncRenderText(text);
+    if (!streaming) {
+      cancelAnimationFrame(paintRef.current);
+      paintRef.current = 0;
+      paintAtRef.current = 0;
+      setRenderText(text);
 
       return undefined;
     }
 
     const paint = (now: number) => {
-      rafRef.current = 0;
-      const elapsed = lastPaintRef.current === 0 ? frameMs : now - lastPaintRef.current;
-      if (elapsed >= frameMs) {
-        lastPaintRef.current = now;
-        syncRenderText(latestRef.current);
+      paintRef.current = 0;
+      const gap = paintAtRef.current === 0 ? frameMs : now - paintAtRef.current;
+      if (gap < frameMs) {
+        paintRef.current = requestAnimationFrame(paint);
 
         return;
       }
-
-      rafRef.current = requestAnimationFrame(paint);
+      paintAtRef.current = now;
+      setRenderText(value => (value === latestRef.current ? value : latestRef.current));
     };
 
-    const schedule = () => {
-      if (rafRef.current !== 0) {
-        return;
-      }
-      rafRef.current = requestAnimationFrame(paint);
-    };
-
-    schedule();
+    paintRef.current = requestAnimationFrame(paint);
 
     return () => {
-      if (rafRef.current !== 0) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = 0;
-      }
+      cancelAnimationFrame(paintRef.current);
+      paintRef.current = 0;
     };
-  }, [frameMs, streaming, syncRenderText, text, throttle, typeWriter]);
-
-  useEffect(() => {
-    if (!streaming || !typeWriter || tailAnimating) {
-      return;
-    }
-
-    syncRenderText(latestRef.current);
-  }, [streaming, syncRenderText, tailAnimating, text, typeWriter]);
+  }, [streaming, text]);
 
   const pieces = useMemo(() => {
     const parsed = Markdown.pieces(renderText);
 
-    return streaming ? Stream.apply(parsed) : parsed;
+    return streaming ? Stream.apply(parsed, Stream.fenceOpen(renderText)) : parsed;
   }, [streaming, renderText]);
 
   const { doc, segments } = useMemo(() => Stream.annotate(pieces), [pieces]);
-  const streamEnd = Math.max(0, segments.length - 1);
-  const twRef = useRef<TypeWriter | undefined>(undefined);
+  const end = Math.max(0, segments.length - 1);
+  const playIndex = typeWriter ? Math.min(playStep, end) : end;
+  const waitingHost = streaming && typeWriter && segments.length === 0;
+  const tailPlaying = streaming && typeWriter && (pushing || playStep < end);
 
   if (streaming && typeWriter && twRef.current === undefined) {
     twRef.current = TypeWriter();
   }
 
-  const [playIndexStep, setPlayIndexStep] = useState(0);
-  const codeHtmlRef = useRef(``);
-  const playIndex = typeWriter ? Math.min(playIndexStep, streamEnd) : streamEnd;
-
-  const tailHtml = useCallback(() => {
-    const segment = segments[playIndex];
-
-    return segment?.kind === `code` && codeHtmlRef.current === `` ? `` : Stream.tailHtml(segment, codeHtmlRef.current);
-  }, [playIndex, segments]);
-
-  const runPush = useCallback(async (html: string): Promise<boolean> => {
-    const tw = twRef.current;
-    if (tw === undefined) {
-      return false;
-    }
-
-    const token = ++pushTokenRef.current;
-    setTailAnimating(true);
-
-    try {
-      return await tw.push(Html.sanitize(html));
-    } finally {
-      if (pushTokenRef.current === token) {
-        setTailAnimating(false);
-      }
-    }
-  }, []);
+  useEffect(() => {
+    onTailBusyChange?.(tailPlaying);
+  }, [onTailBusyChange, tailPlaying]);
 
   useEffect(() => {
-    if (text !== `` && streaming) {
-      return;
-    }
+    twRef.current?.setWaiting(waitingHost);
+  }, [waitingHost]);
 
-    setPlayIndexStep(0);
+  useEffect(() => {
+    if (streaming && text === ``) {
+      setPlayStep(0);
+    }
   }, [streaming, text]);
 
   useEffect(() => {
     const tw = twRef.current;
     const speed = typeWriterSpeed;
-    if (!streaming || !typeWriter || tw === undefined || speed === undefined) {
+    if (!streaming || speed === undefined || tw === undefined) {
       return undefined;
     }
     tw.setSpeed(speed);
 
     return undefined;
-  }, [streaming, typeWriter, typeWriterSpeed]);
-
-  const tailPlaying = streaming && typeWriter && (tailAnimating || playIndexStep < streamEnd);
-
-  useEffect(() => {
-    onTailBusyChange?.(tailPlaying);
-  }, [tailPlaying, onTailBusyChange]);
+  }, [streaming, typeWriterSpeed]);
 
   useEffect(
     () => () => {
@@ -167,61 +111,64 @@ export const useAiStreamerState = ({
   );
 
   useEffect(() => {
-    if (!typeWriter || !streaming) {
+    setCodeHtml(``);
+  }, [playIndex]);
+
+  useEffect(() => {
+    if (!streaming || !typeWriter) {
       return undefined;
     }
 
-    const cancelledRef = { current: false };
+    const tw = twRef.current;
+    if (tw === undefined) {
+      return undefined;
+    }
 
-    void (async () => {
-      const finished = await runPush(tailHtml());
-      if (!finished || cancelledRef.current) {
-        return;
+    const segment = segments[playIndex];
+    const html = segment?.kind === `code` && codeHtml === `` ? `` : Stream.tailHtml(segment, codeHtml);
+
+    if (html === ``) {
+      return undefined;
+    }
+
+    let dead = false;
+    setPushing(true);
+
+    void tw.push(Html.sanitize(html)).then(finished => {
+      if (dead) {
+        return finished;
       }
 
-      const canAdvance =
-        playIndexStep < streamEnd && !(segments[playIndexStep]?.kind === `code` && codeHtmlRef.current === ``);
+      setPushing(false);
 
-      if (canAdvance) {
-        setPlayIndexStep(index => index + 1);
+      if (!finished) {
+        return finished;
       }
-    })();
+
+      if (playStep < end && !(segments[playStep]?.kind === `code` && codeHtml === ``)) {
+        setPlayStep(step => step + 1);
+      }
+
+      return finished;
+    });
 
     return () => {
-      cancelledRef.current = true;
+      dead = true;
+      setPushing(false);
     };
-  }, [doc, playIndexStep, runPush, segments, streamEnd, streaming, tailHtml, typeWriter]);
+  }, [codeHtml, doc, end, playIndex, playStep, segments, streaming, typeWriter]);
 
-  useEffect(() => {
-    if (segments[playIndex]?.kind !== `code`) {
-      codeHtmlRef.current = ``;
-    }
-  }, [playIndex, segments]);
-
-  const pushTailHtml = useCallback(
-    (html: string) => {
-      codeHtmlRef.current = html;
-      void runPush(Stream.tailHtml(segments[playIndex], html));
-    },
-    [playIndex, runPush, segments],
-  );
-
-  const waitingHost = streaming && typeWriter && segments.length === 0;
-
-  if (twRef.current !== undefined) {
-    twRef.current.setWaiting(waitingHost);
-  }
-
-  const attachTailHost = useCallback((host: HTMLDivElement | null) => {
-    const tw = twRef.current;
-    if (tw === undefined || host === null) {
-      return;
-    }
-
-    tw.attach(host);
+  const pushTailHtml = useCallback((html: string) => {
+    setCodeHtml(html);
   }, []);
 
-  const tailHost = streaming && typeWriter ? attachTailHost : undefined;
+  const attach = useCallback((host: HTMLDivElement | null) => {
+    if (host !== null) {
+      twRef.current?.attach(host);
+    }
+  }, []);
+
+  const tailHost = streaming && typeWriter ? attach : undefined;
 
   return { doc, playIndex, pushTailHtml, streaming, tailHost, theme, typeWriterSpeed, waitingHost };
 };

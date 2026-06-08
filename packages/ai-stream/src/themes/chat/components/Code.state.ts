@@ -46,6 +46,7 @@ export const useCodeState = ({ onTailHtml, piece, tailHostRef }: CodeViewProps) 
   }, [closed, lang, onTailHtml, source, tail, theme, themeName]);
 
   const copy = async () => Copy.html(await safeCodeHtml({ closed: true, lang, source, theme: themeName }));
+  const copyable = closed || tailHostRef === undefined;
 
-  return { closed, copy, html, tailHostRef };
+  return { copy, copyable, html, tailHostRef };
 };

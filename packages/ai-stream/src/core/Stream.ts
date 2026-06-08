@@ -186,7 +186,9 @@ const segments = (pieces: readonly Piece[]) => annotate(pieces).segments;
 const tailHtml = (segment: Segment | undefined, codeHtml: string) =>
   segment === undefined ? `` : segment.kind === `code` ? (codeHtml === `` ? segment.html : codeHtml) : segment.html;
 
-const apply = (pieces: readonly Piece[]): Piece[] => {
+const fenceOpen = (source: string) => (source.match(/```/gu)?.length ?? 0) % 2 === 1;
+
+const apply = (pieces: readonly Piece[], openLastCode = true): Piece[] => {
   let lastCode = -1;
 
   for (let index = pieces.length - 1; index >= 0; index -= 1) {
@@ -198,7 +200,9 @@ const apply = (pieces: readonly Piece[]): Piece[] => {
 
   return lastCode === -1
     ? [...pieces]
-    : pieces.map((piece, index) => (index === lastCode && piece.type === `code` ? { ...piece, closed: false } : piece));
+    : pieces.map((piece, index) =>
+        index === lastCode && piece.type === `code` && openLastCode ? { ...piece, closed: false } : piece,
+      );
 };
 
-export const Stream = { annotate, apply, segmentMode, segments, showNode, tailHtml };
+export const Stream = { annotate, apply, fenceOpen, segmentMode, segments, showNode, tailHtml };

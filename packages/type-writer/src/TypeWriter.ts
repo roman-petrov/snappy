@@ -516,9 +516,10 @@ export const TypeWriter = () => {
   };
 
   const startLoop = () => {
-    if (frame !== 0 || host === undefined || caughtUp()) {
+    if (host === undefined || caughtUp()) {
       return;
     }
+    stopLoop();
     clockLast = performance.now();
     frame = requestAnimationFrame(tick);
   };
@@ -533,10 +534,14 @@ export const TypeWriter = () => {
       paintWaiting();
     } else {
       paint();
+      if (caughtUp()) {
+        finishPush();
+      } else {
+        setAnimating(true);
+        startLoop();
+      }
     }
-    if (animating) {
-      startLoop();
-    }
+    updateCaret();
   };
 
   const push = async (nextHtml: string): Promise<boolean> => {
@@ -574,12 +579,20 @@ export const TypeWriter = () => {
     lastPaintedPartial = -1;
     textSlots = undefined;
 
-    const ready = host !== undefined && paint();
-    if (host === undefined || (ready && caughtUp())) {
-      finishPush();
+    if (host === undefined) {
+      if (newVisible === ``) {
+        finishPush();
+      } else {
+        setAnimating(true);
+      }
     } else {
-      setAnimating(true);
-      startLoop();
+      const ready = paint();
+      if (ready && caughtUp()) {
+        finishPush();
+      } else {
+        setAnimating(true);
+        startLoop();
+      }
     }
 
     return promise;

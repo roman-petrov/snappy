@@ -2,4 +2,10 @@ import { Table as UiTable } from "@snappy/ui";
 
 import type { TableViewProps } from "../../../core/Types";
 
-export const Table = ({ rows }: TableViewProps) => <UiTable slots={rows} />;
+import { Block } from "./Block";
+
+export const Table = ({ rows }: TableViewProps) => (
+  <Block>
+    <UiTable slots={rows} />
+  </Block>
+);
