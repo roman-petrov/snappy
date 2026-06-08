@@ -8,32 +8,41 @@ import surfaceStyles from "./css-modules/surface.module.scss";
 import tapStyles from "./css-modules/tap.module.scss";
 import typographyStyles from "./css-modules/typography.module.scss";
 
-export type Bg = keyof typeof bgStyles;
+export type Bg = WithNone<typeof bgStyles>;
 
-export type Color = keyof typeof colorStyles;
+export type Color = WithNone<typeof colorStyles>;
 
-export type Elevation = keyof typeof elevationStyles;
+export type Elevation = WithNone<typeof elevationStyles>;
 
-export type Glass = keyof typeof glassStyles;
+export type Glass = WithNone<typeof glassStyles>;
 
-export type IconSize = keyof typeof iconSizeStyles;
+export type IconSize = WithNone<typeof iconSizeStyles>;
 
-export type Radius = keyof typeof radiusStyles;
+export type Radius = WithNone<typeof radiusStyles>;
 
-export type Surface = keyof typeof surfaceStyles;
+export type StyleNone = `none`;
 
-export type TapKey = keyof typeof tapStyles;
+export type Surface = WithNone<typeof surfaceStyles>;
 
-export type Typography = keyof typeof typographyStyles;
+export type TapKey = WithNone<typeof tapStyles>;
 
-const bg = (name: Color) => bgStyles[name];
-const color = (name?: Color) => (name === undefined ? `` : colorStyles[name]);
-const elevation = (name: Elevation) => elevationStyles[name];
-const glass = (name: Glass) => glassStyles[name];
-const iconSize = (name: IconSize) => iconSizeStyles[name];
-const radius = (name: Radius) => radiusStyles[name];
-const surface = (name: Surface) => surfaceStyles[name];
-const tap = (name: TapKey) => tapStyles[name];
-const typography = (name?: Typography) => (name === undefined || name === `body` ? `` : typographyStyles[name]);
+export type Typography = WithNone<typeof typographyStyles>;
+
+type WithNone<T extends Record<string, string>> = keyof T | StyleNone;
+
+const pick = <T extends Record<string, string>>(styles: T, name: keyof T | StyleNone | undefined) =>
+  name === undefined || name === `none` ? `` : styles[name];
+
+const bg = (name: Bg) => pick(bgStyles, name);
+const color = (name?: Color) => pick(colorStyles, name);
+const elevation = (name: Elevation) => pick(elevationStyles, name);
+const glass = (name: Glass) => pick(glassStyles, name);
+const iconSize = (name: IconSize) => pick(iconSizeStyles, name);
+const radius = (name: Radius) => pick(radiusStyles, name);
+const surface = (name: Surface) => pick(surfaceStyles, name);
+const tap = (name: TapKey) => pick(tapStyles, name);
+
+const typography = (name?: Typography) =>
+  name === undefined || name === `none` || name === `body` ? `` : typographyStyles[name];
 
 export const $ = { bg, color, elevation, glass, iconSize, radius, surface, tap, typography };
