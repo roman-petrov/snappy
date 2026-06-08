@@ -8,7 +8,13 @@ import type { TextInputProps } from "./TextInput";
 import { Language } from "../core";
 import { useIsMobile, useSpeechRecognition } from "../hooks";
 
-export const useTextInputState = ({ afterMic, maxLines: maxLinesProp, onChange, ...textAreaRest }: TextInputProps) => {
+export const useTextInputState = ({
+  afterMic,
+  glass = false,
+  maxLines: maxLinesProp,
+  onChange,
+  ...textAreaRest
+}: TextInputProps) => {
   const { listening, speechSupported, start, stop } = useSpeechRecognition();
   const isMobile = useIsMobile();
   const maxLines = maxLinesProp ?? (isMobile ? 4 : 8);
@@ -47,5 +53,5 @@ export const useTextInputState = ({ afterMic, maxLines: maxLinesProp, onChange, 
     onClick: toggleRecording,
   };
 
-  return { afterMic, listening, micButton, speechSupported, textArea, wrapFocused: focused };
+  return { afterMic, glass, listening, micButton, speechSupported, textArea, wrapFocused: focused };
 };

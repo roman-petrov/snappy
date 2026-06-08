@@ -1,5 +1,8 @@
+import { _ } from "@snappy/core";
+
 import type { useTextInputState } from "./TextInput.state";
 
+import { $ } from "../$";
 import { t } from "../locales";
 import { IconButton } from "./IconButton";
 import { TextArea } from "./TextArea";
@@ -9,6 +12,7 @@ export type TextInputViewProps = ReturnType<typeof useTextInputState>;
 
 export const TextInputView = ({
   afterMic,
+  glass,
   listening,
   micButton,
   speechSupported,
@@ -16,7 +20,7 @@ export const TextInputView = ({
   wrapFocused,
 }: TextInputViewProps) => (
   <div className={`${styles.wrap} ${wrapFocused ? styles.wrapFocused : ``}`}>
-    <div className={`${styles.inputWrap} ${listening ? styles.inputWrapRecording : ``}`}>
+    <div className={_.cn(styles.inputWrap, glass && $.glass(`simple`), listening && styles.inputWrapRecording)}>
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
       </div>

@@ -9,6 +9,7 @@ export const Composer = ({ onSend, value, ...rest }: ComposerProps) => (
   <TextInput
     {...rest}
     afterMic={{ disabled: value.trim() === ``, icon: Send, onClick: onSend, tip: t(`snappy.composer.send`) }}
+    glass
     placeholder={t(`snappy.composer.placeholder`)}
     value={value}
   />
