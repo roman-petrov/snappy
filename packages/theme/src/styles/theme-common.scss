@@ -1,0 +1,73 @@
+@use "sass:list";
+@use "sass:map";
+@use "sass:string";
+
+$-hue: 262deg;
+$-hue-error: 25deg;
+$-hue-warning: 85deg;
+$-hue-success: 155deg;
+$-hue-info: 195deg;
+$-hue-accent-violet: 285deg;
+$-hue-accent-purple: 305deg;
+$-hue-accent-pink: 330deg;
+$-hue-accent-fuchsia: 130deg;
+$-hue-accent-orange: 45deg;
+$-hue-accent-magenta: 15deg;
+$-hue-accent-plum: 70deg;
+
+@function -oklch($tuple) {
+  @if list.length($tuple) == 2 {
+    @return string.unquote("oklch(#{list.nth($tuple, 1)} #{list.nth($tuple, 2)} #{$-hue})");
+  }
+
+  @return string.unquote("oklch(#{list.nth($tuple, 1)} #{list.nth($tuple, 2)} #{list.nth($tuple, 3)})");
+}
+
+@function -tone($l, $c, $h) {
+  @return string.unquote("oklch(#{$l} #{$c} #{$h})");
+}
+
+@mixin define($t) {
+  $-semantic: map.get($t, semantic);
+  $-accent: map.get($t, accent);
+  $-l-semantic: list.nth($-semantic, 1);
+  $-ch-semantic: list.nth($-semantic, 2);
+  $-l-accent: list.nth($-accent, 1);
+  $-ch-accent: list.nth($-accent, 2);
+
+  /* Palette */
+  --color-text: #{-oklch(map.get($t, text))};
+  --color-backdrop: #{-oklch(map.get($t, backdrop))};
+  --color-surface: #{-oklch(map.get($t, surface))};
+  --color-outline: #{-oklch(map.get($t, outline))};
+  --color-primary: #{-oklch(map.get($t, primary))};
+  --color-error: #{-tone($-l-semantic, $-ch-semantic, $-hue-error)};
+  --color-warning: #{-tone($-l-semantic, $-ch-semantic, $-hue-warning)};
+  --color-success: #{-tone($-l-semantic, $-ch-semantic, $-hue-success)};
+  --color-info: #{-tone($-l-semantic, $-ch-semantic, $-hue-info)};
+  --color-inverse: oklch(100% 0 0deg);
+
+  /* Accent */
+  --color-accent-indigo: #{-tone($-l-accent, $-ch-accent, $-hue)};
+  --color-accent-violet: #{-tone($-l-accent, $-ch-accent, $-hue-accent-violet)};
+  --color-accent-purple: #{-tone($-l-accent, $-ch-accent, $-hue-accent-purple)};
+  --color-accent-pink: #{-tone($-l-accent, $-ch-accent, $-hue-accent-pink)};
+  --color-accent-fuchsia: #{-tone($-l-accent, $-ch-accent, $-hue-accent-fuchsia)};
+  --color-accent-orange: #{-tone($-l-accent, $-ch-accent, $-hue-accent-orange)};
+  --color-accent-magenta: #{-tone($-l-accent, $-ch-accent, $-hue-accent-magenta)};
+  --color-accent-plum: #{-tone($-l-accent, $-ch-accent, $-hue-accent-plum)};
+
+  /* Material */
+  --material-fill: #{map.get($t, material-fill)};
+  --material-highlight: #{-oklch(map.get($t, highlight))};
+  --material-border-weight: #{map.get($t, material-border-weight)};
+  --material-accent-border-mix: #{map.get($t, material-accent-border-mix)};
+  --material-accent-border-highlight: #{map.get($t, material-accent-border-highlight)};
+  --material-tone-rim: #{map.get($t, material-tone-rim)};
+  --material-tone-accent: #{map.get($t, material-tone-accent)};
+  --material-glass-blur: #{map.get($t, material-glass-blur)};
+  --material-glass-saturate: #{map.get($t, material-glass-saturate)};
+  --material-glass-contrast: #{map.get($t, material-glass-contrast)};
+  --material-shadow: #{-oklch(map.get($t, shadow))};
+  --material-shadow-weight: #{map.get($t, material-shadow-weight)};
+}

@@ -10,21 +10,21 @@
 }
 
 @function -bg($tone) {
-  @return color-mix(in srgb, $tone calc(100% * #{material.fill()}), transparent);
+  @return color-mix(in srgb, $tone #{material.fill()}, transparent);
 }
 
 @function border($tone) {
-  @return color-mix(in srgb, material.highlight() calc(100% * #{material.border-weight()}), -bg($tone));
+  @return color-mix(in srgb, material.highlight() #{material.border-weight()}, -bg($tone));
 }
 
 @function accent-border($accent, $tone) {
-  $base: color-mix(in srgb, material.highlight() calc(100% * #{material.accent-border-highlight()}), border($tone));
+  $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, border($tone));
 
-  @return color-mix(in srgb, $accent calc(100% * #{material.accent-border-mix()}), $base);
+  @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
 }
 
 @function -shadow-opacity($a) {
-  @return string.unquote("calc(#{$a} * #{material.shadow-weight()} * 1%)");
+  @return string.unquote("calc(#{$a} * #{material.shadow-weight()})");
 }
 
 @function elevation($n) {

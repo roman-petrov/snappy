@@ -1,37 +1,27 @@
+@use "theme-common" as theme-common;
+
 :root[data-theme="dark"] {
-  /* Palette */
-  --color-text: #e7ebf4;
-  --color-backdrop: #1e2838;
-  --color-surface: #323f54;
-  --color-outline: #3f4a5c;
-  --color-primary: #5a9eff;
-  --color-error: #e07b7b;
-  --color-warning: #c9a84d;
-  --color-success: #5dbd7e;
-  --color-info: #2ec9b8;
-  --color-inverse: #fff;
-
-  /* Accent */
-  --color-accent-indigo: #7370fa;
-  --color-accent-violet: #b08dff;
-  --color-accent-purple: #d07af5;
-  --color-accent-fuchsia: #98be49;
-  --color-accent-pink: #fb8bd4;
-  --color-accent-orange: #ff9454;
-  --color-accent-magenta: #ff6e74;
-  --color-accent-plum: #eea743;
-
-  /* Material */
-  --material-fill: 0.44;
-  --material-highlight: #424e60;
-  --material-border-weight: 0.6;
-  --material-accent-border-mix: 0.4;
-  --material-accent-border-highlight: 0;
-  --material-tone-rim: 18%;
-  --material-tone-accent: 55%;
-  --material-glass-blur: 1.375rem;
-  --material-glass-saturate: 1.14;
-  --material-glass-contrast: 1.05;
-  --material-shadow: #060b12;
-  --material-shadow-weight: 3;
+  @include theme-common.define(
+    (
+      text: 94% 0.01,
+      backdrop: 22% 0.028,
+      surface: 32% 0.034,
+      outline: 38% 0.03,
+      primary: 72% 0.16,
+      semantic: 74% 0.12,
+      accent: 74% 0.15,
+      highlight: 40% 0.032,
+      shadow: 12% 0.015,
+      material-fill: 44%,
+      material-border-weight: 60%,
+      material-accent-border-mix: 40%,
+      material-accent-border-highlight: 0%,
+      material-tone-rim: 18%,
+      material-tone-accent: 55%,
+      material-glass-blur: 1.375rem,
+      material-glass-saturate: 1.14,
+      material-glass-contrast: 1.05,
+      material-shadow-weight: 3%,
+    )
+  );
 }
