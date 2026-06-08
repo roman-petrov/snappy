@@ -4,9 +4,5 @@ import { Block } from "./Block";
 import styles from "./List.module.scss";
 
 export const List = ({ children }: ListViewProps) => (
-  <Block>
-    <div className={styles.scroll}>
-      <div className={styles.body}>{children}</div>
-    </div>
-  </Block>
+  <Block children={<div className={styles.inner}>{children}</div>} />
 );

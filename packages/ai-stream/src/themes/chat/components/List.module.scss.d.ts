@@ -1,5 +1,4 @@
 declare const __List: {
-  readonly scroll: "scroll";
-  readonly body: "body";
+  readonly inner: "inner";
 };
 export default __List;

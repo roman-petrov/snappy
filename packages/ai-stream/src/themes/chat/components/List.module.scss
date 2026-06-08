@@ -1,14 +1,7 @@
 @use "pkg:@snappy/theme/tokens/space";
 
-.scroll {
-  min-width: 0;
-  max-width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.body {
-  width: 100%;
+.inner {
   min-width: 0;
   padding: space.md();
+  overflow-x: auto;
 }

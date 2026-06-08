@@ -17,7 +17,6 @@
   scrollbar-width: none;
   border: none;
   transition: height motion.default();
-  -webkit-overflow-scrolling: touch;
   field-sizing: fixed;
 
   &::-webkit-scrollbar {

@@ -13,9 +13,7 @@ export const CodeView = ({ closed, copy, html, tailHostRef }: CodeViewState) => 
   <Block>
     <div className={styles.root}>
       <div className={styles.scroll}>
-        <div className={styles.body}>
-          <StreamHtml html={html} tailHostRef={tailHostRef} />
-        </div>
+        <StreamHtml html={html} tailHostRef={tailHostRef} />
       </div>
       {closed ? (
         <div className={styles.copy}>
