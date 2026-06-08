@@ -13,6 +13,6 @@ export type PageHeaderViewProps = ReturnType<typeof usePageHeaderState>;
 export const PageHeaderView = ({ back, backAction, title }: PageHeaderViewProps) => (
   <Header cn={styles.root}>
     {back ? <IconButton icon={ArrowLeft} onClick={backAction} tip={t(`page.back`)} /> : undefined}
-    {title === undefined ? undefined : <Title level={1} title={title} />}
+    {title === undefined ? undefined : <Title level={2} title={title} />}
   </Header>
 );
