@@ -95,6 +95,8 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 
 ### Mail
 
+- [Setup guide](https://workspace.vk.ru/docs/saas/user-guides/mail/clients/)
+- [Post master](https://postmaster.mail.ru/)
 - [VK WorkSpace admin](https://app.workspace.vk.ru/admin)
 - [VK WorkSpace mail](https://app.workspace.vk.ru/mail)
 
