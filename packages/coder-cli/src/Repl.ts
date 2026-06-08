@@ -1,6 +1,7 @@
 /* eslint-disable require-atomic-updates */
 /* eslint-disable no-continue */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable functional/no-loop-statements */

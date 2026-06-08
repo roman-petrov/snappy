@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
+/* eslint-disable unicorn/prefer-string-repeat */
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";

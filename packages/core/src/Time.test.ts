@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/numeric-separators-style */
 import { describe, expect, it } from "vitest";
 
 import { Time } from "./Time";

@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-string-repeat */
 import { describe, expect, it } from "vitest";
 
 import { StaticAgentPrompt } from "./StaticAgentPrompt";

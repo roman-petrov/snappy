@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-try-statements */
+/* eslint-disable unicorn/try-complexity */
 import type { FastifyReply } from "fastify";
 
 import { Config } from "@snappy/config";

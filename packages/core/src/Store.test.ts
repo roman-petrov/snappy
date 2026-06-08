@@ -240,7 +240,8 @@ describe(`store`, () => {
         const userStore = Store({ id: 1, name: `Alice` });
         userStore.subscribe(onUserChange);
 
-        userStore.map(user => user.name);
+        const nameStore = userStore.map(user => user.name);
+        void nameStore;
 
         userStore.set({ id: 1, name: `Bob` });
 

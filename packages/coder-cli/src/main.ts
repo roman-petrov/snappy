@@ -1,6 +1,7 @@
 #!/usr/bin/env bun
 // cspell:words lancedb
 /* eslint-disable init-declarations */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 import "dotenv/config";

@@ -1,6 +1,7 @@
 /* eslint-disable functional/prefer-tacit */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable init-declarations */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */

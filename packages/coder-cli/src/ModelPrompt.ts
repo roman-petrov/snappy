@@ -1,4 +1,4 @@
-/* eslint-disable functional/no-expression-statements, functional/no-loop-statements, functional/no-try-statements, no-await-in-loop, no-continue */
+/* eslint-disable functional/no-expression-statements, functional/no-loop-statements, functional/no-try-statements, no-await-in-loop, no-continue, unicorn/try-complexity */
 import type { AiModelListItem } from "@snappy/ai";
 
 import { Console } from "@snappy/node";

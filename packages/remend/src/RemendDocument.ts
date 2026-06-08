@@ -25,7 +25,7 @@ const hrLine = (line: string) => {
 
   return (
     trimmed.length >= hrMinLength &&
-    (ch === `*` || ch === `-` || ch === `_`) &&
+    [`*`, `-`, `_`].includes(ch) &&
     RemendGrapheme.chars(trimmed).every(char => char === ch || RemendChar.isSpace(char))
   );
 };
@@ -121,15 +121,7 @@ const scan = (text: string) => {
   const markdownAt = (index: number) => {
     const char = text[index] ?? ``;
 
-    if (
-      char === `\n` ||
-      char === fenceTick ||
-      char === `*` ||
-      char === `_` ||
-      char === `~` ||
-      char === `#` ||
-      char === `[`
-    ) {
+    if ([`#`, `*`, `[`, `\n`, `_`, `~`, fenceTick].includes(char)) {
       return true;
     }
 

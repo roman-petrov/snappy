@@ -3,6 +3,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable init-declarations */
+/* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 /* eslint-disable no-continue */
 import type { TypeWriterSpeed } from "@snappy/domain";
 

@@ -41,8 +41,6 @@ const iconSize = (name: IconSize) => pick(iconSizeStyles, name);
 const radius = (name: Radius) => pick(radiusStyles, name);
 const surface = (name: Surface) => pick(surfaceStyles, name);
 const tap = (name: TapKey) => pick(tapStyles, name);
-
-const typography = (name?: Typography) =>
-  name === undefined || name === `none` || name === `body` ? `` : typographyStyles[name];
+const typography = (name?: Typography) => (name === `body` ? `` : pick(typographyStyles, name));
 
 export const $ = { bg, color, elevation, glass, iconSize, radius, surface, tap, typography };

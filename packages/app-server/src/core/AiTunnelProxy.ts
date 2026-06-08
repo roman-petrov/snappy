@@ -1,6 +1,7 @@
 // cspell:word aitunnel
 /* eslint-disable require-atomic-updates */
 /* eslint-disable init-declarations */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-try-statements */

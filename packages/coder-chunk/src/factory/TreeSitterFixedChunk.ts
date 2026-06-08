@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-iterator-concat */
 import type { TreeSitterLanguage } from "../TreeSitter";
 
 import { TreeSitterChunk } from "./TreeSitterChunk";

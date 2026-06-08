@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 const dataPrefix = `data: `;

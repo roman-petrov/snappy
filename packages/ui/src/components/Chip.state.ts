@@ -25,7 +25,7 @@ export const useChipState = ({
     ? color === `accent`
       ? `accent`
       : `soft`
-    : color === `primary` || color === `error` || color === `success`
+    : [`error`, `primary`, `success`].includes(color)
       ? color
       : `soft`;
 

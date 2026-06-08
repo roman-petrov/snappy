@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable unicorn/try-complexity */
 import type { Locale } from "@snappy/intl";
 
 import { Ai } from "@snappy/ai";

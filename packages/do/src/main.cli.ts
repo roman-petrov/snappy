@@ -7,7 +7,7 @@ import { Scripts } from "./Scripts";
 
 const [, , name] = process.argv;
 
-if (name === undefined || name === `` || name === `--help` || name === `-h`) {
+if (name === undefined || [`--help`, `-h`, ``].includes(name)) {
   Console.log(`Usage: do <command>\n\nCommands:\n${Runner.formatCommandsHelp()}\n`);
   process.exit(0);
 }

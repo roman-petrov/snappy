@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/try-complexity */
 import { Ai, type AiChatCompletionSession } from "@snappy/ai";
 import { _ } from "@snappy/core";
 import { useCallback, useEffect, useRef, useState } from "react";

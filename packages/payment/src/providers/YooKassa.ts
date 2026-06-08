@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable init-declarations */
 import { _, Json } from "@snappy/core";

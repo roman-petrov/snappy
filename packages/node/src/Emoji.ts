@@ -5,7 +5,7 @@ import { Unicode } from "@snappy/core";
 
 const buggy = [`🖥️`, `⚙️`, `🗄️`, `⬇️`, `🛡️`, `▶️`];
 const ansi = new RegExp(String.raw`${Unicode.escape}\[[0-9;]*m`, `gu`);
-const gapBeforeLetter = String.raw`(?:${ansi.source})*`;
+const gapBeforeLetter = `(?:${ansi.source})*`;
 
 const fix = (text: string) => {
   let result = text;

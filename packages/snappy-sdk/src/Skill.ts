@@ -5,11 +5,9 @@ const parse = (rawSkills: Record<string, string>) => {
     line === undefined
       ? ``
       : ((value: string) =>
-          value.startsWith(`"`) && value.endsWith(`"`)
+          (value.startsWith(`"`) && value.endsWith(`"`)) || (value.startsWith(`'`) && value.endsWith(`'`))
             ? value.slice(1, -1)
-            : value.startsWith(`'`) && value.endsWith(`'`)
-              ? value.slice(1, -1)
-              : value)(line.trimStart().slice(`${key}:`.length).trim());
+            : value)(line.trimStart().slice(`${key}:`.length).trim());
 
   return _.entries(rawSkills)
     .map(([path, raw]) => {

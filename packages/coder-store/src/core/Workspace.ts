@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-continue */
 /* eslint-disable functional/no-try-statements */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
@@ -103,21 +104,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
         index += 1;
         continue;
       }
-      regex +=
-        char === `\\` ||
-        char === `^` ||
-        char === `$` ||
-        char === `+` ||
-        char === `.` ||
-        char === `(` ||
-        char === `)` ||
-        char === `|` ||
-        char === `[` ||
-        char === `]` ||
-        char === `{` ||
-        char === `}`
-          ? `\\${char}`
-          : char;
+      regex += [`$`, `(`, `)`, `+`, `.`, `[`, `\\`, `]`, `^`, `{`, `|`, `}`].includes(char) ? `\\${char}` : char;
       index += 1;
     }
 

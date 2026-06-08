@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/try-complexity */
 import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 

@@ -6,7 +6,7 @@ export default defineConfig([
   {
     rules: {
       "unicorn/consistent-function-scoping": `off`,
-      "unicorn/filename-case": [`error`, { case: `pascalCase` }],
+      "unicorn/filename-case": [`error`, { case: `pascalCase`, checkDirectories: false }],
       "unicorn/import-style": `off`,
       "unicorn/no-anonymous-default-export": `off`,
       "unicorn/no-array-callback-reference": `off`,
@@ -64,6 +64,6 @@ export default defineConfig([
   },
   {
     files: [`**/index.*`, `**/*.{config,setup}*.*`, `**/main.*`, `**/use*.ts`],
-    rules: { "unicorn/filename-case": [`error`, { case: `camelCase` }] },
+    rules: { "unicorn/filename-case": [`error`, { case: `camelCase`, checkDirectories: false }] },
   },
 ]);

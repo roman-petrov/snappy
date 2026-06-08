@@ -34,7 +34,7 @@ export const pluginFontPreload = (): Plugin => ({
       const match = /<base\s+href=["'](?<baseHref>[^"']*)["']/iu.exec(html);
       const href = match?.groups?.[`baseHref`];
 
-      return href === undefined || href === `` || href === `/` ? `` : href.replace(/\/$/u, ``);
+      return href === undefined || [`/`, ``].includes(href) ? `` : href.replace(/\/$/u, ``);
     };
 
     const fileNames = preloadSubsets

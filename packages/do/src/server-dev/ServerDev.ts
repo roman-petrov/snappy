@@ -1,6 +1,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
