@@ -93,6 +93,8 @@ jobs:
           AI_TUNNEL_API_KEY: ${{ secrets.AI_TUNNEL_API_KEY }}
           YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
           YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
           SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
         run: |
@@ -108,6 +110,8 @@ jobs:
             AI_TUNNEL_API_KEY="${AI_TUNNEL_API_KEY}" \
             YOOKASSA_SECRET_KEY="${YOOKASSA_SECRET_KEY}" \
             YOOKASSA_SHOP_ID="${YOOKASSA_SHOP_ID}" \
+            SMTP_USER="${SMTP_USER}" \
+            SMTP_PASSWORD="${SMTP_PASSWORD}" \
             SSL_CERT_PEM="$(echo -n "$SSL_CERT_PEM" | base64 -w 0)" \
             SSL_KEY_PEM="$(echo -n "$SSL_KEY_PEM" | base64 -w 0)" \
             "bash -s" < <(cat .github/scripts/setup_node.sh .github/scripts/setup_bun.sh .github/scripts/setup_pm2.sh .github/scripts/deploy.sh)
