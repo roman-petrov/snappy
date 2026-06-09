@@ -10,10 +10,10 @@ export const AppServer: ServerModule = distDir => {
 
   return {
     mount: { prefix: `${spa.prefix}/assets/`, root: join(distDir, spa.distName, `assets`) },
-    run: async ({ app, cookie, serveSpa }) => {
+    run: async ({ app, serveSpa }) => {
       await App({ app });
       serveSpa(spa);
-      AppManifestHost.fastify(app, cookie);
+      AppManifestHost.fastify(app);
     },
   };
 };

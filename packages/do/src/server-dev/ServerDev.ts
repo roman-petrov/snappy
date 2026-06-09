@@ -7,8 +7,9 @@ import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
 import { _, HttpStatus } from "@snappy/core";
-import { Fastify, Html, SettingsCookie } from "@snappy/server";
+import { Fastify, Html } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
+import { Settings } from "@snappy/ui-core";
 import express from "express";
 import { readFileSync } from "node:fs";
 import * as http from "node:http";
@@ -95,14 +96,15 @@ export const ServerDev = async () => {
         return;
       }
       try {
-        const cookie = SettingsCookie(request.headers.cookie);
         const indexPath = join(dir, `index.html`);
 
         const template = await vite.transformIndexHtml(
           documentUrl ?? pathToFileURL(indexPath).href,
           readFileSync(indexPath, `utf8`),
         );
-        response.type(`html`).send(await Promise.resolve(body({ ...cookie, template })));
+        response
+          .type(`html`)
+          .send(await Promise.resolve(body({ ...Settings({ headers: request.headers }), template })));
       } catch (error) {
         vite.ssrFixStacktrace(error as Error);
         next(error);
@@ -112,7 +114,7 @@ export const ServerDev = async () => {
 
   app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
 
-  AppManifestHost.express(app, SettingsCookie);
+  AppManifestHost.express(app);
 
   const serverDevSpa = ServerDevSpa({ expressApp: app, faviconPath, html, projectRoot });
   serverDevSpa.register({ packageName: `app`, urlPrefix: `/app` });

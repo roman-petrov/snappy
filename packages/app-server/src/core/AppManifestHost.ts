@@ -1,26 +1,24 @@
 /* eslint-disable functional/no-expression-statements */
-import type { SettingsCookie } from "@snappy/server-module";
 import type { Express } from "express";
 import type { FastifyInstance } from "fastify";
+
+import { Settings } from "@snappy/ui-core";
 
 import { AppManifest } from "./AppManifest";
 
 const path = `/app/manifest.webmanifest`;
 const contentType = `application/manifest+json`;
 
-const body = (cookie: SettingsCookie, value?: string, acceptLanguage?: string) =>
-  AppManifest.body(cookie(value, acceptLanguage).locale);
-
-const express = (app: Express, cookie: SettingsCookie) => {
+const express = (app: Express) => {
   app.get(path, (request, response) => {
-    response.type(contentType).send(body(cookie, request.headers.cookie, request.headers[`accept-language`]));
+    response.type(contentType).send(AppManifest.body(Settings({ headers: request.headers }).locale));
   });
 };
 
-const fastify = (app: FastifyInstance, cookie: SettingsCookie) => {
+const fastify = (app: FastifyInstance) => {
   app.get(path, async (request, reply) => {
     reply.type(contentType);
-    await reply.send(body(cookie, request.headers.cookie, request.headers[`accept-language`]));
+    await reply.send(AppManifest.body(Settings(request).locale));
   });
 };
 

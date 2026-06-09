@@ -14,6 +14,8 @@ export * from "./Chip";
 
 export * from "./context-menu";
 
+export * from "./CooldownButton";
+
 export * from "./CustomHeaderPage";
 
 export * from "./DefaultHeader";

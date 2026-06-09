@@ -3,6 +3,7 @@
 export const ru = {
   agent: { stop: `Стоп` },
   auth: {
+    errors: { tooManyRequests: `Подождите {{seconds}} сек. перед повторной отправкой` },
     forgotPassword: {
       backToSignIn: `Вернуться ко входу`,
       checkEmail: `Проверьте почту`,
@@ -14,6 +15,9 @@ export const ru = {
       submitting: `Отправка…`,
       title: `Забыли пароль`,
     },
+    resendIn: `Отправить снова через {{seconds}} сек.`,
+    resendReset: `Отправить снова`,
+    resendVerification: `Отправить письмо снова`,
     resetPassword: {
       confirmPasswordLabel: `Подтверждение пароля`,
       done: `Пароль изменён`,
@@ -32,6 +36,7 @@ export const ru = {
       title: `Новый пароль`,
     },
     signIn: {
+      backToForm: `Назад`,
       email: `Email`,
       errors: {
         invalidCredentials: `Неверный email или пароль`,
@@ -44,8 +49,13 @@ export const ru = {
       submit: `Войти`,
       submitting: `Вход…`,
       title: `Вход`,
+      unverified: `Подтвердите email`,
+      unverifiedLead: `Подтвердите email, чтобы войти. Проверьте почту или отправьте письмо снова ниже.`,
     },
     signUp: {
+      backToSignIn: `Вернуться ко входу`,
+      checkEmail: `Проверьте почту`,
+      checkEmailLead: `Мы отправили ссылку для подтверждения. Откройте её, чтобы завершить регистрацию.`,
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `Аккаунт с таким email уже зарегистрирован`,

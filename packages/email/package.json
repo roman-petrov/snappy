@@ -1,0 +1,20 @@
+{
+  "name": "@snappy/email",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/core": "workspace:*",
+    "@snappy/intl": "workspace:*",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-email": "^6.3.3"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17"
+  }
+}

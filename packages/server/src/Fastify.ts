@@ -12,7 +12,7 @@ export type FastifyConfig = {
 export const Fastify = async ({ serverFactory }: FastifyConfig = {}) => {
   const bodyLimitMegaBytes = 50;
   const bodyLimit = _.mb(bodyLimitMegaBytes);
-  const app = fastify({ bodyLimit, routerOptions: { maxParamLength: 5000 }, serverFactory });
+  const app = fastify({ bodyLimit, routerOptions: { maxParamLength: 5000 }, serverFactory, trustProxy: true });
 
   await app.register(fastifyCookie);
 

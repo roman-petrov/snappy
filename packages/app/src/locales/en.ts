@@ -3,6 +3,7 @@
 export const en = {
   agent: { stop: `Stop` },
   auth: {
+    errors: { tooManyRequests: `Wait {{seconds}} sec. before sending again` },
     forgotPassword: {
       backToSignIn: `Back to sign in`,
       checkEmail: `Check your email`,
@@ -14,6 +15,9 @@ export const en = {
       submitting: `Sending…`,
       title: `Forgot password`,
     },
+    resendIn: `Send again in {{seconds}} sec.`,
+    resendReset: `Send again`,
+    resendVerification: `Resend verification email`,
     resetPassword: {
       confirmPasswordLabel: `Confirm password`,
       done: `Password changed`,
@@ -32,6 +36,7 @@ export const en = {
       title: `New password`,
     },
     signIn: {
+      backToForm: `Back`,
       email: `Email`,
       errors: {
         invalidCredentials: `Invalid email or password`,
@@ -44,8 +49,13 @@ export const en = {
       submit: `Sign in`,
       submitting: `Signing in…`,
       title: `Sign in`,
+      unverified: `Verify your email`,
+      unverifiedLead: `Confirm your email to sign in. Check your inbox or resend the verification email below.`,
     },
     signUp: {
+      backToSignIn: `Back to sign in`,
+      checkEmail: `Check your email`,
+      checkEmailLead: `We sent a verification link. Open it to finish signing up.`,
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `An account with this email already exists`,

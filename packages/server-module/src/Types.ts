@@ -1,5 +1,5 @@
 import type { Locale } from "@snappy/intl";
-import type { Theme } from "@snappy/ui-core";
+import type { ResolvedTheme } from "@snappy/ui-core";
 import type { FastifyInstance, FastifyReply } from "fastify";
 
 export type HtmlCache = (input: HtmlCacheReply) => Promise<void>;
@@ -11,11 +11,9 @@ export type HtmlCacheReply = {
   reply: FastifyReply;
 };
 
-export type InjectTheme = (html: string, theme: Theme | undefined) => string;
+export type InjectTheme = (html: string, theme: ResolvedTheme | undefined) => string;
 
-export type LocaleTheme = { locale: Locale; theme: Theme | undefined };
-
-export type PrepareIndex = (html: string, locale: Locale, theme: Theme | undefined) => string;
+export type PrepareIndex = (html: string, locale: Locale, theme: ResolvedTheme | undefined) => string;
 
 export type ServerModule = (distDir: string) => {
   mount: StaticMount;
@@ -24,7 +22,6 @@ export type ServerModule = (distDir: string) => {
 
 export type ServerModuleConfig = {
   app: FastifyInstance;
-  cookie: SettingsCookie;
   distDir: string;
   htmlCache: HtmlCache;
   injectTheme: InjectTheme;
@@ -35,7 +32,5 @@ export type ServerModuleConfig = {
 export type ServeSpa = (config: ServeSpaConfig) => void;
 
 export type ServeSpaConfig = { cacheKeyPrefix: string; distName: string; prefix: string };
-
-export type SettingsCookie = (cookie?: string, acceptLanguage?: string) => LocaleTheme;
 
 export type StaticMount = { prefix: string; root: string };

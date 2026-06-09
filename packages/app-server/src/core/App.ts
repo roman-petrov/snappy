@@ -35,10 +35,12 @@ export const App = async ({ app }: AppConfig) => {
   app.route({
     handler: async (request, reply) => {
       const url = new URL(request.url, `http://${request.headers.host ?? `localhost`}`);
+      const headers = new Headers(fromNodeHeaders(request.headers));
+      headers.set(`x-forwarded-for`, request.ip);
 
       const authRequest = new Request(url.toString(), {
         body: request.body === undefined ? undefined : JSON.stringify(request.body),
-        headers: fromNodeHeaders(request.headers),
+        headers,
         method: request.method,
       });
 

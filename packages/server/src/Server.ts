@@ -14,7 +14,6 @@ import { Fastify } from "./Fastify";
 import { Html } from "./Html";
 import { HtmlCache } from "./HtmlCache";
 import { Spa } from "./ServeSpa";
-import { SettingsCookie } from "./SettingsCookie";
 import { Static } from "./Static";
 
 export const Server = async () => {
@@ -35,16 +34,7 @@ export const Server = async () => {
   });
 
   const htmlCache = HtmlCache();
-
-  const shared = {
-    app,
-    cookie: SettingsCookie,
-    distDir,
-    htmlCache,
-    injectTheme: Html.injectTheme,
-    prepareIndex: Html.prepareIndex,
-  };
-
+  const shared = { app, distDir, htmlCache, injectTheme: Html.injectTheme, prepareIndex: Html.prepareIndex };
   const modules = [SiteServer(distDir), AppServer(distDir), AdminServer(distDir)];
 
   await Static.register(

@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { _ } from "@snappy/core";
 import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 
@@ -14,6 +15,7 @@ const dbName = env[`DB_NAME`] ?? ``;
 const dbAuth = `${dbUser}:${dbPassword}@${dbHost}:${dbPort}`;
 const dbUrl = `postgresql://${dbAuth}/${dbName}`;
 const dbShadowUrl = `postgresql://${dbAuth}/${dbName}_shadow`;
+const authEmailCooldownSec = _.minute.seconds;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 5000;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
@@ -34,6 +36,21 @@ const admin = () => {
 };
 
 const { adminPassword, adminUsername } = admin();
+
+const smtp = () => {
+  const smtpHost = `smtp.mail.ru`;
+  const smtpPort = 465;
+  const smtpUser = env[`SMTP_USER`] ?? ``;
+  const smtpPassword = env[`SMTP_PASSWORD`] ?? ``;
+  const smtpFrom = smtpUser;
+  if (isProduction && (smtpUser === `` || smtpPassword === ``)) {
+    throw new Error(`SMTP_USER and SMTP_PASSWORD must be set in production`);
+  }
+
+  return { smtpFrom, smtpHost, smtpPassword, smtpPort, smtpUser };
+};
+
+const { smtpFrom, smtpHost, smtpPassword, smtpPort, smtpUser } = smtp();
 
 const prodSsl = () => {
   const certB64 = env[`SSL_CERT_PEM`];
@@ -66,12 +83,18 @@ export const Config = {
   adminSessionSecret,
   adminUsername,
   aiTunnelKey,
+  authEmailCooldownSec,
   balancePaymentMaxRub,
   balancePaymentMinRub,
   betterAuthJwtSecret,
   dbShadowUrl,
   dbUrl,
   host,
+  smtpFrom,
+  smtpHost,
+  smtpPassword,
+  smtpPort,
+  smtpUser,
   ssl,
   yooKassaSecretKey,
   yooKassaShopId,

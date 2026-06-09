@@ -20,6 +20,7 @@ lancedb
 rerank
 reranker
 clusterize
+cooldown
 nprobes
 xhigh
 shiki

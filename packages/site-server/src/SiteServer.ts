@@ -13,9 +13,9 @@ export const SiteServer: ServerModule = distDir => {
 
   return {
     mount: { prefix: `/assets/`, root: join(distDir, distName, `assets`) },
-    run: async ({ app, cookie, htmlCache, injectTheme }) => {
+    run: async ({ app, htmlCache, injectTheme }) => {
       const siteRoot = join(distDir, distName);
-      const ssr = Ssr({ cookie, injectTheme });
+      const ssr = Ssr({ injectTheme });
 
       app.get(`/`, ssr.createCachedSsrHandler(siteRoot, htmlCache));
 

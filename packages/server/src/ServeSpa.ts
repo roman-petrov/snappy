@@ -2,13 +2,14 @@
 import type { ServerModuleConfig, ServeSpa, ServeSpaConfig } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import { Settings } from "@snappy/ui-core";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-export type SpaConfig = Pick<ServerModuleConfig, `app` | `cookie` | `distDir` | `htmlCache` | `prepareIndex`>;
+export type SpaConfig = Pick<ServerModuleConfig, `app` | `distDir` | `htmlCache` | `prepareIndex`>;
 
 export const Spa =
-  ({ app, cookie, distDir, htmlCache, prepareIndex }: SpaConfig): ServeSpa =>
+  ({ app, distDir, htmlCache, prepareIndex }: SpaConfig): ServeSpa =>
   ({ cacheKeyPrefix, distName, prefix }: ServeSpaConfig) => {
     const spaRoot = join(distDir, distName);
     const indexPath = join(spaRoot, `index.html`);
@@ -23,7 +24,7 @@ export const Spa =
 
         return;
       }
-      const { locale, theme } = cookie(request.headers.cookie);
+      const { locale, theme } = Settings(request);
       const key = `${cacheKeyPrefix}:${locale}:${theme ?? `system`}`;
       await htmlCache({
         contentType: `text/html`,

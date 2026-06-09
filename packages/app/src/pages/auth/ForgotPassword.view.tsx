@@ -1,42 +1,30 @@
-import { Button, Input } from "@snappy/ui";
+import { Button } from "@snappy/ui";
 
 import type { useForgotPasswordState } from "./ForgotPassword.state";
 
 import { t } from "../../core";
 import { Routes } from "../../Routes";
-import { AuthForm, AuthSubmitActions, MessageWithLink } from "./components";
+import { AuthEmailForm } from "./components";
 
 export type ForgotPasswordViewProps = ReturnType<typeof useForgotPasswordState>;
 
-export const ForgotPasswordView = ({ email, error, loading, screen, setEmail, submit }: ForgotPasswordViewProps) => (
-  <AuthForm lead={t(`auth.forgotPassword.lead`)} submit={submit} title={t(`auth.forgotPassword.title`)}>
-    {screen === `sent` ? (
-      <MessageWithLink
-        lead={t(`auth.forgotPassword.checkEmailLead`)}
-        linkText={t(`auth.forgotPassword.backToSignIn`)}
-        linkTo={Routes.signIn}
-        title={t(`auth.forgotPassword.checkEmail`)}
-      />
-    ) : (
-      <>
-        <Input
-          autoComplete="email"
-          label={t(`auth.forgotPassword.email`)}
-          onChange={setEmail}
-          required
-          type="email"
-          value={email}
-        />
-        <AuthSubmitActions
-          disabled={loading}
-          error={error === undefined ? `` : t(error.key, error.params)}
-          loading={loading}
-          submit={t(`auth.forgotPassword.submit`)}
-          submitting={t(`auth.forgotPassword.submitting`)}
-        >
-          <Button link={Routes.signIn} text={t(`auth.signIn.title`)} />
-        </AuthSubmitActions>
-      </>
-    )}
-  </AuthForm>
+export const ForgotPasswordView = ({ email, send, sent, setEmail }: ForgotPasswordViewProps) => (
+  <AuthEmailForm
+    email={email}
+    emailLabel={t(`auth.forgotPassword.email`)}
+    errorsKey="auth.forgotPassword.errors"
+    footer={
+      <Button link={Routes.signIn} text={sent ? t(`auth.forgotPassword.backToSignIn`) : t(`auth.signIn.title`)} />
+    }
+    formLead={t(`auth.forgotPassword.lead`)}
+    formTitle={t(`auth.forgotPassword.title`)}
+    resendLabel={t(`auth.resendReset`)}
+    send={send}
+    sendingLabel={t(`auth.forgotPassword.submitting`)}
+    sendLabel={t(`auth.forgotPassword.submit`)}
+    sent={sent}
+    sentLead={t(`auth.forgotPassword.checkEmailLead`)}
+    sentTitle={t(`auth.forgotPassword.checkEmail`)}
+    setEmail={setEmail}
+  />
 );

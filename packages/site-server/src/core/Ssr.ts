@@ -3,19 +3,20 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-promise-reject */
-import type { HtmlCache, InjectTheme, SettingsCookie } from "@snappy/server-module";
+import type { HtmlCache, InjectTheme } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _ } from "@snappy/core";
+import { Settings } from "@snappy/ui-core";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
 import { SiteSsr, type SsrEntry } from "./SiteSsr";
 
-export type SsrConfig = { cookie: SettingsCookie; injectTheme: InjectTheme };
+export type SsrConfig = { injectTheme: InjectTheme };
 
-export const Ssr = ({ cookie, injectTheme }: SsrConfig) => {
+export const Ssr = ({ injectTheme }: SsrConfig) => {
   const loadTemplateAndEntry = async (clientRoot: string): Promise<{ entry: SsrEntry; template: string }> => {
     const templatePath = join(clientRoot, `index.html`);
     const ssrEntryPath = pathToFileURL(join(clientRoot, `server`, `entry-server.js`)).href;
@@ -33,7 +34,7 @@ export const Ssr = ({ cookie, injectTheme }: SsrConfig) => {
   const createSsrHandler =
     (clientRoot: string) =>
     async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      const { locale, theme } = cookie(request.headers.cookie, request.headers[`accept-language`]);
+      const { locale, theme } = Settings(request);
       const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
       await reply.type(`text/html`).send(SiteSsr.build(locale, theme, template, entry, injectTheme));
@@ -49,7 +50,7 @@ export const Ssr = ({ cookie, injectTheme }: SsrConfig) => {
     };
 
     return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      const { locale, theme } = cookie(request.headers.cookie, request.headers[`accept-language`]);
+      const { locale, theme } = Settings(request);
       const key = `ssr:${locale}:${theme ?? `system`}`;
       await cache({
         contentType: `text/html`,

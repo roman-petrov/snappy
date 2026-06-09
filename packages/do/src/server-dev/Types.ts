@@ -1,11 +1,14 @@
-import type { SettingsCookie } from "@snappy/server";
+import type { Locale } from "@snappy/intl";
+import type { ResolvedTheme } from "@snappy/ui-core";
 import type { Request } from "express";
 
 export type ServerDevHtml = (input: ServerDevHtmlInput) => void;
 
-export type ServerDevHtmlBody = (
-  input: ReturnType<typeof SettingsCookie> & { template: string },
-) => Promise<string> | string;
+export type ServerDevHtmlBody = (input: {
+  locale: Locale;
+  template: string;
+  theme: ResolvedTheme | undefined;
+}) => Promise<string> | string;
 
 export type ServerDevHtmlInput = {
   body: ServerDevHtmlBody;

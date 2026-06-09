@@ -72,6 +72,8 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - 🖌️ [Stylelint](https://stylelint.io/)
 - 🎯 [Lucide](https://lucide.dev/)
 - 📦 [Zod](https://zod.dev/)
+- ✉️ [Nodemailer](https://nodemailer.com/)
+- 📧 [React Email](https://react.email/)
 - 🌐 [agent-browser](https://agent-browser.dev/)
 
 ## 📎 Service links

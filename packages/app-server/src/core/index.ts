@@ -14,6 +14,8 @@ export * from "./BetterAuth";
 
 export * from "./billing";
 
+export * from "./Mail";
+
 export * from "./PaymentLog";
 
 export type * from "./ServerApp";

@@ -1,6 +1,6 @@
 import type { Locale } from "@snappy/intl";
 import type { InjectTheme } from "@snappy/server-module";
-import type { Theme } from "@snappy/ui-core";
+import type { ResolvedTheme } from "@snappy/ui-core";
 
 const dataThemePlaceholder = /data-theme="[^"]*"/u;
 const htmlLangPlaceholder = /lang="[^"]*"/u;
@@ -10,12 +10,10 @@ const injectTheme: InjectTheme = (html, theme) => {
   const resolved = theme === `dark` || theme === `light` ? theme : `light`;
   const withTheme = html.replace(dataThemePlaceholder, `data-theme="${resolved}"`);
 
-  return theme === `system` || theme === undefined
-    ? withTheme.replace(`<head>`, `<head>${systemThemeScript}`)
-    : withTheme;
+  return theme === undefined ? withTheme.replace(`<head>`, `<head>${systemThemeScript}`) : withTheme;
 };
 
-const prepareIndex = (html: string, locale: Locale, theme: Theme | undefined) =>
+const prepareIndex = (html: string, locale: Locale, theme: ResolvedTheme | undefined) =>
   injectTheme(html.replace(htmlLangPlaceholder, `lang="${locale}"`), theme);
 
 export const Html = { injectTheme, prepareIndex };

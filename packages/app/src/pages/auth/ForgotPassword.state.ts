@@ -1,26 +1,17 @@
-import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
+import { AppBase } from "../../AppBase";
 import { Auth } from "../../core";
+import { useAuthEmailSend } from "./hooks";
 
 export const useForgotPasswordState = () => {
   const [email, setEmail] = useState(``);
   const [sent, setSent] = useState(false);
-  const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
-  const submit = () => {
-    void wrapSubmit(async () => {
-      const result = await Auth.requestPasswordReset(email.trim());
-      if (result.status !== `ok`) {
-        setError({ key: `auth.forgotPassword.errors.${result.status}` });
+  const { send } = useAuthEmailSend({
+    onSent: () => setSent(true),
+    request: async () => Auth.requestPasswordReset(email, AppBase.resetPasswordUrl),
+  });
 
-        return;
-      }
-      setSent(true);
-    });
-  };
-
-  const screen = sent ? (`sent` as const) : (`form` as const);
-
-  return { email, error, loading, screen, setEmail, submit };
+  return { email, send, sent, setEmail };
 };
