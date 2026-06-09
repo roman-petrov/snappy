@@ -1,5 +1,3 @@
-export * from "./AiTunnelProxy";
-
 export * from "./App";
 
 export * from "./AppManifest";
@@ -13,6 +11,8 @@ export * from "./Balance";
 export * from "./BalancePayment";
 
 export * from "./BetterAuth";
+
+export * from "./billing";
 
 export * from "./PaymentLog";
 

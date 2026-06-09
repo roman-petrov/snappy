@@ -4,6 +4,8 @@ export * from "./Console";
 
 export * from "./Emoji";
 
+export * from "./HttpServer";
+
 export * from "./Process";
 
 export * from "./Terminal";

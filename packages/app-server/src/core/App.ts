@@ -9,10 +9,10 @@ import { Payment } from "@snappy/payment";
 import { Trpc } from "@snappy/server-module";
 import { fromNodeHeaders } from "better-auth/node";
 
-import { AiTunnelProxy } from "./AiTunnelProxy";
 import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
 import { BetterAuth } from "./BetterAuth";
+import { AiTunnelProxy } from "./billing";
 import { PaymentLog } from "./PaymentLog";
 import { Session } from "./Session";
 import { UserSettings } from "./UserSettings";
