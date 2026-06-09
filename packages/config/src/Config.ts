@@ -14,7 +14,6 @@ const dbName = env[`DB_NAME`] ?? ``;
 const dbAuth = `${dbUser}:${dbPassword}@${dbHost}:${dbPort}`;
 const dbUrl = `postgresql://${dbAuth}/${dbName}`;
 const dbShadowUrl = `postgresql://${dbAuth}/${dbName}_shadow`;
-const balanceMinRub = -1000;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 5000;
 const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
@@ -67,7 +66,6 @@ export const Config = {
   adminSessionSecret,
   adminUsername,
   aiTunnelKey,
-  balanceMinRub,
   balancePaymentMaxRub,
   balancePaymentMinRub,
   betterAuthJwtSecret,

@@ -1,12 +1,10 @@
 /* eslint-disable functional/no-expression-statements */
 import type { DbBalanceHistoryMeta, DbUser } from "@snappy/db";
 
-import { Config } from "@snappy/config";
-
 import { AppTrpcAuth } from "./AppTrpc";
 
 const read = async (user: DbUser) => user.balance.read();
-const isLlmBlocked = async (user: DbUser) => (await read(user)) <= Config.balanceMinRub;
+const isLlmBlocked = async (user: DbUser) => (await read(user)) <= 0;
 
 const creditFromTopUp = async (user: DbUser, amountRub: number, meta?: DbBalanceHistoryMeta) =>
   user.balance.credit(amountRub, meta);
