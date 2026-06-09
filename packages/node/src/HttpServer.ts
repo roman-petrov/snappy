@@ -4,7 +4,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
 import {
   createServer,
   type IncomingHttpHeaders,
@@ -12,22 +12,54 @@ import {
   type Server,
   type ServerResponse,
 } from "node:http";
-import { gzipSync } from "node:zlib";
+import { gzipSync, zstdCompressSync } from "node:zlib";
+
+export type HttpServerBody = (Buffer | string)[] | Buffer | string;
+
+export type HttpServerReply = {
+  body: unknown;
+  contentType?: string;
+  encoding?: `gzip` | `zstd`;
+  headers?: Record<string, string>;
+  status?: number;
+};
 
 export const HttpServer = () => {
-  type Body = (Buffer | string)[] | Buffer | string;
-
   type Handler = (request: IncomingMessage, response: ServerResponse) => void;
 
   type RequestRecord = { headers: IncomingHttpHeaders; method: string; url: string };
 
   const host = `http://127.0.0.1`;
-  const gzipChunkSize = 16_384;
-  const chunks = (body: Body): (Buffer | string)[] => (Array.isArray(body) ? body : [body]);
+  const chunkSize = 16_384;
+  const parts = (body: HttpServerBody): (Buffer | string)[] => (_.isArray(body) ? body : [body]);
 
-  const write = (response: ServerResponse, status: number, headers: Record<string, string>, body: Body) => {
+  const isRawBody = (body: unknown): body is HttpServerBody =>
+    _.isString(body) ||
+    Buffer.isBuffer(body) ||
+    (_.isArray(body) && body.every(part => _.isString(part) || Buffer.isBuffer(part)));
+
+  const toBytes = (body: unknown) =>
+    Buffer.isBuffer(body)
+      ? body
+      : _.isString(body)
+        ? Buffer.from(body)
+        : _.isArray(body)
+          ? Buffer.concat(
+              body.map(part => (Buffer.isBuffer(part) ? part : Buffer.from(_.isString(part) ? part : String(part)))),
+            )
+          : Buffer.from(JSON.stringify(body));
+
+  const chunked = (bytes: Buffer): HttpServerBody => {
+    const partCount = Math.ceil(bytes.length / chunkSize);
+
+    return partCount <= 1
+      ? bytes
+      : _.gen(partCount, index => bytes.subarray(index * chunkSize, (index + 1) * chunkSize));
+  };
+
+  const write = (response: ServerResponse, status: number, headers: Record<string, string>, body: HttpServerBody) => {
     response.writeHead(status, headers);
-    for (const chunk of chunks(body)) {
+    for (const chunk of parts(body)) {
       response.write(chunk);
     }
     response.end();
@@ -55,7 +87,7 @@ export const HttpServer = () => {
       server.once(`error`, reject);
       server.listen(0, `127.0.0.1`, () => {
         const address = server?.address();
-        if (address === null || address === undefined || typeof address === `string`) {
+        if (address === null || address === undefined || _.isString(address)) {
           reject(new Error(`http server failed to bind`));
 
           return;
@@ -85,35 +117,32 @@ export const HttpServer = () => {
     handler = fn;
   };
 
-  const json =
-    (body: unknown, status: number = HttpStatus.ok, headers: Record<string, string> = {}) =>
+  const respond =
+    ({ body, contentType, encoding, headers = {}, status = HttpStatus.ok }: HttpServerReply) =>
     (_request: IncomingMessage, response: ServerResponse) => {
-      write(response, status, { "content-type": `application/json`, ...headers }, JSON.stringify(body));
-    };
+      const payload =
+        encoding === undefined
+          ? isRawBody(body)
+            ? body
+            : JSON.stringify(body)
+          : chunked(encoding === `gzip` ? gzipSync(toBytes(body)) : zstdCompressSync(toBytes(body)));
 
-  const raw =
-    (body: Body, status: number = HttpStatus.ok, headers: Record<string, string> = {}) =>
-    (_request: IncomingMessage, response: ServerResponse) => {
-      write(response, status, headers, body);
+      const type = contentType ?? (isRawBody(body) ? undefined : `application/json`);
+
+      write(
+        response,
+        status,
+        {
+          ...(type === undefined ? {} : { "content-type": type }),
+          ...(encoding === undefined ? {} : { "content-encoding": encoding }),
+          ...headers,
+        },
+        payload,
+      );
     };
 
   const sse = (lines: string[], headers: Record<string, string> = {}) =>
-    raw(lines.join(`\n`), HttpStatus.ok, { "content-type": `text/event-stream; charset=utf-8`, ...headers });
-
-  const gzipJson = (body: unknown, headers: Record<string, string> = {}) => {
-    const compressed = gzipSync(JSON.stringify(body));
-    const partCount = Math.ceil(compressed.length / gzipChunkSize);
-
-    const parts = Array.from({ length: partCount }, (_, index) =>
-      compressed.subarray(index * gzipChunkSize, (index + 1) * gzipChunkSize),
-    );
-
-    return raw(parts, HttpStatus.ok, {
-      "content-encoding": `gzip`,
-      "content-type": `application/json; charset=utf-8`,
-      ...headers,
-    });
-  };
+    respond({ body: lines.join(`\n`), contentType: `text/event-stream; charset=utf-8`, headers });
 
   const abort = () => (_request: IncomingMessage, response: ServerResponse) => {
     response.writeHead(HttpStatus.ok, { "content-type": `application/json` });
@@ -125,7 +154,7 @@ export const HttpServer = () => {
 
   const lastRequest = () => requests.at(-1);
 
-  return { abort, gzipJson, json, lastRequest, on, raw, sse, start, stop };
+  return { abort, lastRequest, on, respond, sse, start, stop };
 };
 
 export type HttpServer = ReturnType<typeof HttpServer>;

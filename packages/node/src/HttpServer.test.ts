@@ -7,6 +7,8 @@ import { HttpServer, type HttpServer as HttpServerType } from "./HttpServer";
 
 type ServerContext = { server: HttpServerType; url: string };
 
+const jsonContentType = `application/json; charset=utf-8`;
+
 const withServer = async (run: (context: ServerContext) => Promise<void> | void) => {
   const server = HttpServer();
   const { url } = await server.start();
@@ -29,7 +31,7 @@ describe(`HttpServer`, () => {
 
   it(`records method, path, and headers`, async () => {
     await withServer(async ({ server, url }) => {
-      server.on(server.json({ ok: true }));
+      server.on(server.respond({ body: { ok: true } }));
 
       await fetch(`${url}/resource`, { headers: { authorization: `Bearer token`, host: `ignored` }, method: `POST` });
 
@@ -41,10 +43,10 @@ describe(`HttpServer`, () => {
     });
   });
 
-  it(`json responds with JSON body`, async () => {
+  it(`respond sends JSON body`, async () => {
     await withServer(async ({ server, url }) => {
       const body = { value: 1 };
-      server.on(server.json(body));
+      server.on(server.respond({ body }));
 
       const response = await fetch(`${url}/`);
 
@@ -54,10 +56,10 @@ describe(`HttpServer`, () => {
     });
   });
 
-  it(`json accepts custom status and headers`, async () => {
+  it(`respond accepts custom status and headers`, async () => {
     await withServer(async ({ server, url }) => {
       const body = { error: { code: `bad_request` } };
-      server.on(server.json(body, HttpStatus.badRequest, { "x-test": `1` }));
+      server.on(server.respond({ body, headers: { "x-test": `1` }, status: HttpStatus.badRequest }));
 
       const response = await fetch(`${url}/`);
 
@@ -67,9 +69,9 @@ describe(`HttpServer`, () => {
     });
   });
 
-  it(`raw responds with body and headers`, async () => {
+  it(`respond sends raw body and content type`, async () => {
     await withServer(async ({ server, url }) => {
-      server.on(server.raw(`plain`, HttpStatus.ok, { "content-type": `text/plain` }));
+      server.on(server.respond({ body: `plain`, contentType: `text/plain` }));
 
       const response = await fetch(`${url}/`);
 
@@ -78,9 +80,9 @@ describe(`HttpServer`, () => {
     });
   });
 
-  it(`raw writes multiple chunks`, async () => {
+  it(`respond writes multiple chunks`, async () => {
     await withServer(async ({ server, url }) => {
-      server.on(server.raw([`hel`, `lo`]));
+      server.on(server.respond({ body: [`hel`, `lo`] }));
 
       const response = await fetch(`${url}/`);
 
@@ -100,14 +102,26 @@ describe(`HttpServer`, () => {
     });
   });
 
-  it(`gzipJson responds with gzip-encoded JSON`, async () => {
+  it(`respond sends gzip-encoded JSON`, async () => {
     await withServer(async ({ server, url }) => {
       const body = { rows: [{ blob: `x`.repeat(100) }] };
-      server.on(server.gzipJson(body));
+      server.on(server.respond({ body, contentType: jsonContentType, encoding: `gzip` }));
 
       const response = await fetch(`${url}/`);
 
       expect(response.headers.get(`content-encoding`)).toBe(`gzip`);
+      await expect(response.json()).resolves.toStrictEqual(body);
+    });
+  });
+
+  it(`respond sends zstd-encoded JSON`, async () => {
+    await withServer(async ({ server, url }) => {
+      const body = { rows: [{ blob: `x`.repeat(100) }] };
+      server.on(server.respond({ body, contentType: jsonContentType, encoding: `zstd` }));
+
+      const response = await fetch(`${url}/`);
+
+      expect(response.headers.get(`content-encoding`)).toBe(`zstd`);
       await expect(response.json()).resolves.toStrictEqual(body);
     });
   });
