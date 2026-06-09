@@ -16,9 +16,17 @@ import type { BetterAuth } from "../BetterAuth";
 import { Session } from "../Session";
 import { PayloadProxy } from "./PayloadProxy";
 
-export type AiTunnelProxyConfig = { balance: Balance; betterAuth: BetterAuth; db: ReturnType<typeof Db> };
+export type AiTunnelProxyConfig = {
+  balance: Balance;
+  betterAuth: BetterAuth;
+  db: ReturnType<typeof Db>;
+  upstream?: string;
+};
 
-export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth, db }: AiTunnelProxyConfig) => {
+export const AiTunnelProxy = async (
+  app: FastifyInstance,
+  { balance, betterAuth, db, upstream }: AiTunnelProxyConfig,
+) => {
   type State = { billingDone?: boolean; dbUser: DbUser };
 
   const upstreamHost = `api.aitunnel.ru`;
@@ -60,6 +68,6 @@ export const AiTunnelProxy = async (app: FastifyInstance, { balance, betterAuth,
       });
     },
     prefix: `/api/ai-tunnel`,
-    upstream: _.https(upstreamHost),
+    upstream: upstream ?? _.https(upstreamHost),
   });
 };
