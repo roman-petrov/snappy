@@ -27,6 +27,8 @@ echo '.'
 
 bun install --frozen-lockfile
 
+load_deploy_env
+
 pm2 delete snappy 2>/dev/null || true
 NODE_ENV=production NODE_OPTIONS="--use-system-ca" pm2 start "bun do deploy-run" --name snappy --update-env
 pm2 save
