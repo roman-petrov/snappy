@@ -13,11 +13,6 @@ export type BetterAuthConfig = { auth: DbAuth };
 export const BetterAuth = ({ auth }: BetterAuthConfig) => {
   const resetEmail = AuthEmail();
   const verifyEmail = AuthEmail();
-  const requestPasswordResetPath = `/request-password-reset`;
-  const sendVerificationEmailPath = `/send-verification-email`;
-  const signUpEmailPath = `/sign-up/email`;
-  const emailSendRateLimit = { max: 1, window: Config.authEmailCooldownSec };
-  const emailSendRateLimitPaths = [requestPasswordResetPath, sendVerificationEmailPath, signUpEmailPath] as const;
 
   return betterAuth({
     advanced: { cookiePrefix: `snappy` },
@@ -37,12 +32,7 @@ export const BetterAuth = ({ auth }: BetterAuthConfig) => {
       sendVerificationEmail: async ({ url, user }, request) =>
         verifyEmail.send(user.email, Email.verifyEmail({ locale: Settings(request).locale, url })),
     },
-    rateLimit: {
-      customRules: _.fromEntries(emailSendRateLimitPaths.map(path => [path, emailSendRateLimit])),
-      enabled: true,
-      max: 100,
-      window: Config.authEmailCooldownSec,
-    },
+    rateLimit: { enabled: true, max: 100, window: Config.authEmailCooldownSec },
     secret: Config.betterAuthJwtSecret(),
     trustedOrigins: [_.https(Config.host)],
   });
