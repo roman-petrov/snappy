@@ -26,7 +26,7 @@
   "devDependencies": {
     "@snappy/node": "workspace:*",
     "@types/express": "^5.0.6",
-    "@types/nodemailer": "^7.0.1",
+    "@types/nodemailer": "^8.0.0",
     "vitest": "^4.1.8"
   }
 }
