@@ -1,3 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
+/* eslint-disable init-declarations */
 import { _ } from "@snappy/core";
 import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
@@ -26,10 +29,18 @@ const load = () => {
   return result.value;
 };
 
-const values = load();
+const values = (() => {
+  let cached: Record<string, string> | undefined;
+
+  return () => {
+    cached ??= load();
+
+    return cached;
+  };
+})();
 
 const requiredKey = (name: string) => () => {
-  const value = values[name];
+  const value = values()[name];
   if (value === undefined || value === ``) {
     throw new Error(`${name} must be set`);
   }
@@ -37,7 +48,7 @@ const requiredKey = (name: string) => () => {
   return value;
 };
 
-const optionalKey = (name: string) => () => values[name];
+const optionalKey = (name: string) => () => values()[name];
 const dbHost = requiredKey(`DB_HOST`);
 const dbName = requiredKey(`DB_NAME`);
 const dbPassword = requiredKey(`DB_PASSWORD`);
