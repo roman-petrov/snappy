@@ -1,0 +1,22 @@
+{
+  "name": "@snappy/do-dev",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "@snappy/admin-server": "workspace:*",
+    "@snappy/app-server": "workspace:*",
+    "@snappy/config": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/do": "workspace:*",
+    "@snappy/intl": "workspace:*",
+    "@snappy/server": "workspace:*",
+    "@snappy/site-server": "workspace:*",
+    "@snappy/ui-core": "workspace:*",
+    "express": "^5.2.1",
+    "vite": "^8.0.14"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
+  }
+}

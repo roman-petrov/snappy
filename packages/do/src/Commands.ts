@@ -88,7 +88,7 @@ const defs = {
   [`server:frontend:dev`]: {
     description: `Run site, app, and admin in development.`,
     label: `🌐 Site + App + Admin`,
-    run: { background: true, command: `node ${tsxPreload} src/main.dev-server.ts`, cwd: `packages/do` },
+    run: { background: true, command: `node ${tsxPreload} src/main.ts`, cwd: `packages/do-dev` },
   },
   [`server:prod`]: {
     description: `Run API server in production.`,

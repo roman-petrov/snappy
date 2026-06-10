@@ -7,6 +7,7 @@ import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
 import { _, HttpStatus } from "@snappy/core";
+import { ViteConfig } from "@snappy/do/config/vite";
 import { Fastify, Html } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
 import { Settings } from "@snappy/ui-core";
@@ -20,11 +21,10 @@ import { createServer as createViteServer } from "vite";
 
 import type { ServerDevHtml } from "./Types";
 
-import { ViteConfig } from "../config/vite/ViteConfig";
 import { ServerDevSpa } from "./ServerDevSpa";
 
 export const ServerDev = async () => {
-  const projectRoot = join(import.meta.dirname, `..`, `..`, `..`, `..`);
+  const projectRoot = join(import.meta.dirname, `..`, `..`, `..`);
   const siteDir = join(projectRoot, `packages`, `site`);
   const faviconPath = join(projectRoot, `packages`, `ui`, `src`, `assets`, `favicon.svg`);
   const siteEntryPath = join(siteDir, `src`, `entry-server.tsx`);

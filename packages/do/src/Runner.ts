@@ -15,7 +15,7 @@ import type { CommandRun } from "./CommandTypes";
 import { Build } from "./Build";
 import { type CommandName, Commands } from "./Commands";
 import { Feature } from "./Feature";
-import { DevCert } from "./server-dev";
+import { DevCert } from "./DevCert";
 
 const ok = `✓`;
 const fail = `✗`;

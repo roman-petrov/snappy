@@ -22,7 +22,7 @@ const config: KnipConfig = {
       ],
     },
     "packages/do": {
-      entry: [`src/main.*.ts`],
+      entry: [`src/main.cli.ts`, `src/main.server.ts`],
       ignoreDependencies: [
         `@cspell/dict-ru_ru`,
         `@typescript-eslint/parser`,
@@ -37,6 +37,7 @@ const config: KnipConfig = {
         `tsdown`,
       ],
     },
+    "packages/do-dev": { entry: [`src/main.ts`] },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
     "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`] },
   },
