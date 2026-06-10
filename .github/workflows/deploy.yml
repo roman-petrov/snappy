@@ -75,8 +75,7 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
         run: |
-          ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" "bash -s" <<EOF
-          export SOPS_AGE_KEY=$(printf '%q' "${SOPS_AGE_KEY}")
+          ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" "SOPS_AGE_KEY=$(printf '%q' "${SOPS_AGE_KEY}") bash -s" <<EOF
           $(cat .github/scripts/setup_node.sh .github/scripts/setup_bun.sh .github/scripts/setup_sops.sh .github/scripts/setup_pm2.sh .github/scripts/deploy.sh)
           EOF
 
