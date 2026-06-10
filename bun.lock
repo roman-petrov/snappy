@@ -216,10 +216,10 @@
         "@snappy/coder": "workspace:*",
         "@snappy/coder-db": "workspace:*",
         "@snappy/coder-store": "workspace:*",
+        "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/node": "workspace:*",
-        "dotenv": "^17.4.2",
         "globby": "^16.2.0",
       },
       "devDependencies": {
@@ -258,7 +258,10 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
-        "dotenv": "^17.4.2",
+        "yaml": "^2.9.0",
+      },
+      "devDependencies": {
+        "vitest": "^4.1.8",
       },
     },
     "packages/core": {

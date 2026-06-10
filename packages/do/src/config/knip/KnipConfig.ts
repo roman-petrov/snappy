@@ -10,7 +10,7 @@ const config: KnipConfig = {
       ignoreDependencies: [`@knip/mcp`, `actions-up`, `@snappy/coder-cli`, `agent-browser`],
     },
     "packages/admin": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
-    "packages/ai-stream": { ignoreDependencies: [`@fontsource/google-sans-code`] },
+    "packages/ai-stream": { ignoreDependencies: [`@fontsource/google-sans-code`, `@snappy/theme`] },
     "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/coder-chunk": {
       ignoreDependencies: [
@@ -22,7 +22,6 @@ const config: KnipConfig = {
       ],
     },
     "packages/do": {
-      entry: [`src/main.cli.ts`, `src/main.server.ts`],
       ignoreDependencies: [
         `@cspell/dict-ru_ru`,
         `@typescript-eslint/parser`,

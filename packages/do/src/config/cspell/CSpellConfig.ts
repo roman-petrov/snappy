@@ -16,10 +16,10 @@ export const CSpellConfig = {
   enableGlobDot: true,
   ignorePaths: [
     `.git`,
-    `.sops.yaml`,
     `.vscode/**`,
-    `secrets.enc.yaml`,
-    `secrets.yaml`,
+    `secrets.dev.yaml`,
+    `secrets.prod.enc.yaml`,
+    `secrets.prod.yaml`,
     `**/node_modules/**`,
     `**/*.sql`,
     `**/packages/*/src/generated/**`,

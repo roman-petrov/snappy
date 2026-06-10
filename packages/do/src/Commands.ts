@@ -27,7 +27,7 @@ const defs = {
   [`db:container:up`]: {
     description: `Start local database.`,
     label: `🐳 Database container`,
-    run: { command: `docker compose up -d` },
+    run: { handler: `db:container:up` },
   },
   [`db:dev`]: {
     children: [`db:container:up`, `db:push:dev`],
@@ -88,7 +88,7 @@ const defs = {
   [`server:frontend:dev`]: {
     description: `Run site, app, and admin in development.`,
     label: `🌐 Site + App + Admin`,
-    run: { background: true, command: `node ${tsxPreload} src/main.ts`, cwd: `packages/do-dev` },
+    run: { background: true, command: `node ${tsxPreload} packages/do-dev/src/main.ts`, cwd: `.` },
   },
   [`server:prod`]: {
     description: `Run API server in production.`,
@@ -112,10 +112,22 @@ const defs = {
     label: `🔁 CI`,
   },
   cspell: { description: `Check CSpell issues.`, label: `📝 CSpell`, run: { args: [`.`], tool: `cspell` } },
+  decrypt: {
+    description: `Decrypt secrets.prod.enc.yaml to secrets.prod.yaml.`,
+    interactive: true,
+    label: `📤 Decrypt prod secrets`,
+    run: { handler: `decrypt` },
+  },
   dev: {
     children: [`env:dev`, `server:dev`],
     description: `Set up development environment and run servers.`,
     label: `🚀 Dev server`,
+  },
+  encrypt: {
+    description: `Generate key and encrypt secrets.prod.yaml to secrets.prod.enc.yaml.`,
+    interactive: true,
+    label: `🔒 Encrypt prod secrets`,
+    run: { handler: `encrypt` },
   },
   eslint: {
     description: `Check ESLint issues.`,

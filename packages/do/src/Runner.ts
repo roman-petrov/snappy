@@ -14,8 +14,10 @@ import type { CommandRun } from "./CommandTypes";
 
 import { Build } from "./Build";
 import { type CommandName, Commands } from "./Commands";
-import { Feature } from "./Feature";
+import { Db } from "./Db";
 import { DevCert } from "./DevCert";
+import { Feature } from "./Feature";
+import { SecretsCmd } from "./SecretsCmd";
 
 const ok = `✓`;
 const fail = `✗`;
@@ -167,9 +169,15 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
   const rawResult = await (`handler` in run
     ? run.handler === `cert`
       ? DevCert.write(Config.host).then(() => 0)
-      : run.handler === `finish-feature`
-        ? Feature.finish(root)
-        : buildHandlers[run.handler](root, buildOptions)
+      : run.handler === `db:container:up`
+        ? Db.containerUp(root)
+        : run.handler === `decrypt`
+          ? SecretsCmd.decrypt(root)
+          : run.handler === `encrypt`
+            ? SecretsCmd.encrypt(root)
+            : run.handler === `finish-feature`
+              ? Feature.finish(root)
+              : buildHandlers[run.handler](root, buildOptions)
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run

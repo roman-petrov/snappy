@@ -1,9 +1,9 @@
 # Dot files/folders
 .analyze
 .jscpd
-.env
 .snappy
-secrets.yaml
+secrets.dev.yaml
+secrets.prod.yaml
 # Others
 **/node_modules
 bun.lockb

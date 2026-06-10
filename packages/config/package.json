@@ -6,6 +6,6 @@
   "main": "./src/index.ts",
   "dependencies": {
     "@snappy/core": "workspace:*",
-    "dotenv": "^17.4.2"
+    "yaml": "^2.9.0"
   }
 }

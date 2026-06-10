@@ -8,4 +8,6 @@ export * from "./HttpServer";
 
 export * from "./Process";
 
+export * from "./Prompt";
+
 export * from "./Terminal";

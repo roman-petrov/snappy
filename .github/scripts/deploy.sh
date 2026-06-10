@@ -17,7 +17,6 @@ cd "${DEPLOY_PATH}"
 
 setup_node
 setup_bun
-setup_sops
 setup_pm2
 
 echo '.'
@@ -29,11 +28,8 @@ echo '.'
 bun install --frozen-lockfile
 
 pm2 delete snappy 2>/dev/null || true
-sops exec-env secrets.enc.yaml -- bash -c '
-  set -e
-  NODE_ENV=production bun do db:migrate:deploy
-  NODE_ENV=production NODE_OPTIONS="--use-system-ca" pm2 start "bun do server:prod" --name snappy --update-env
-'
+NODE_ENV=production bun do db:migrate:deploy
+NODE_ENV=production NODE_OPTIONS="--use-system-ca" pm2 start "bun do server:prod" --name snappy --update-env
 pm2 save
 pm2 status
 

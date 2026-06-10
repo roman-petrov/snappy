@@ -21,6 +21,9 @@ export type CommandRun =
   | { handler: `build:site` }
   | { handler: `build:ssr` }
   | { handler: `cert` }
+  | { handler: `db:container:up` }
+  | { handler: `decrypt` }
+  | { handler: `encrypt` }
   | { handler: `finish-feature` }
   | { handler: `java-format-fix` }
   | { handler: `java-format` };

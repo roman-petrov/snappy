@@ -1,15 +1,35 @@
-import "dotenv/config";
 import { _ } from "@snappy/core";
 import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 
 import { DevTls } from "./DevTls";
+import { Secrets } from "./Secrets";
 
-const { env } = process;
-const isProduction = env.NODE_ENV === `production`;
+const isProduction = process.env.NODE_ENV === `production`;
+const root = process.cwd();
+
+const load = () => {
+  const production = () => {
+    const secretsKey = process.env[`SECRETS_KEY`];
+
+    return secretsKey !== undefined && secretsKey !== ``
+      ? Secrets.prod(root, secretsKey)
+      : { error: `SECRETS_KEY must be set`, ok: false as const };
+  };
+
+  const result = isProduction ? production() : Secrets.dev(root);
+
+  if (!result.ok) {
+    throw new Error(result.error);
+  }
+
+  return result.value;
+};
+
+const values = load();
 
 const requiredKey = (name: string) => () => {
-  const value = env[name];
+  const value = values[name];
   if (value === undefined || value === ``) {
     throw new Error(`${name} must be set`);
   }
@@ -17,12 +37,13 @@ const requiredKey = (name: string) => () => {
   return value;
 };
 
-const optionalKey = (name: string) => () => env[name];
+const optionalKey = (name: string) => () => values[name];
+const dbHost = requiredKey(`DB_HOST`);
 const dbName = requiredKey(`DB_NAME`);
-
-const dbAuth = () =>
-  `${requiredKey(`DB_USER`)()}:${requiredKey(`DB_PASSWORD`)()}@${requiredKey(`DB_HOST`)()}:${Number(requiredKey(`DB_PORT`)())}`;
-
+const dbPassword = requiredKey(`DB_PASSWORD`);
+const dbPort = requiredKey(`DB_PORT`);
+const dbUser = requiredKey(`DB_USER`);
+const dbAuth = () => `${dbUser()}:${dbPassword()}@${dbHost()}:${Number(dbPort())}`;
 const dbUrl = () => `postgresql://${dbAuth()}/${dbName()}`;
 const dbShadowUrl = () => `postgresql://${dbAuth()}/${dbName()}_shadow`;
 const betterAuthJwtSecret = requiredKey(`JWT_SECRET`);
@@ -64,8 +85,13 @@ export const Config = {
   balancePaymentMaxRub,
   balancePaymentMinRub,
   betterAuthJwtSecret,
+  dbHost,
+  dbName,
+  dbPassword,
+  dbPort,
   dbShadowUrl,
   dbUrl,
+  dbUser,
   host,
   smtpFrom,
   smtpHost,

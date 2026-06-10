@@ -4,13 +4,13 @@
 /* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
-import "dotenv/config";
 import type { Locale } from "@snappy/intl";
 
 import { Ai } from "@snappy/ai";
 import { Coder } from "@snappy/coder";
 import { CoderDb } from "@snappy/coder-db";
 import { CoderStore } from "@snappy/coder-store";
+import { Config } from "@snappy/config";
 import { Console } from "@snappy/node";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -31,7 +31,7 @@ try {
 
   const projectRootResolved = path.resolve(projectRoot);
   const dbDirResolved = path.resolve(dbDir);
-  const aiTunnelKey = process.env[`AI_TUNNEL_API_KEY`] ?? ``;
+  const aiTunnelKey = Config.aiTunnelKey();
   const t = makeLocaleT(locale);
   const ai = Ai({ aiTunnelKey });
   const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models, t });
