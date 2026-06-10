@@ -1,0 +1,10 @@
+{
+  "name": "@snappy/s3",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "dependencies": {
+    "@snappy/s3-core": "workspace:*"
+  }
+}

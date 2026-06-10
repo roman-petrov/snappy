@@ -7,7 +7,6 @@
   "dependencies": {
     "@fastify/http-proxy": "^11.5.0",
     "@snappy/ai": "workspace:*",
-    "@snappy/app-server-api": "workspace:*",
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",

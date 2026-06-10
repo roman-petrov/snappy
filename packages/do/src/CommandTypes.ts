@@ -26,4 +26,6 @@ export type CommandRun =
   | { handler: `encrypt` }
   | { handler: `finish-feature` }
   | { handler: `java-format-fix` }
-  | { handler: `java-format` };
+  | { handler: `java-format` }
+  | { handler: `setup-s3-dev` }
+  | { handler: `setup-s3-prod` };

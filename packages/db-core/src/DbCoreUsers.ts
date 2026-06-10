@@ -1,3 +1,6 @@
+/* eslint-disable functional/no-expression-statements */
+import { S3Core } from "@snappy/s3-core";
+
 import type { PrismaClient } from "./generated/client";
 
 import { DbCoreConvert } from "./DbCoreConvert";
@@ -34,7 +37,10 @@ export const DbCoreUsers = (prisma: PrismaClient) => {
     return { ...user, balanceRub: DbCoreConvert.amount(userBalance?.amount) };
   };
 
-  const remove = async (id: string) => prisma.user.delete({ where: { id } });
+  const remove = async (id: string) => {
+    await S3Core.user(id).purge();
+    await prisma.user.delete({ where: { id } });
+  };
 
   return { list, read, remove };
 };

@@ -2,7 +2,6 @@ import { AiConstants } from "@snappy/ai";
 import { DataUrl } from "@snappy/browser";
 import { Copy, Share } from "@snappy/platform";
 import { useAsyncEffect } from "@snappy/ui";
-import { useRef } from "react";
 
 import type { ImageCardProps } from "./ImageCard";
 
@@ -17,16 +16,16 @@ export const useImageCardState = (props: ImageCardProps) => {
       ? []
       : Menu.copyShare({ copy: async () => Copy.image(content), share: async () => Share.image(content) });
 
-  const { actions, busy, complete, fail, pending, remove, running } = useFeedItem({ ...props, menu, saveField: `src` });
-  const handlers = useRef({ complete, fail });
-  handlers.current = { complete, fail };
+  const { actions, busy, complete, fail, generation, pending, remove, running } = useFeedItem({
+    ...props,
+    menu,
+    type: `image`,
+  });
 
   useAsyncEffect(async () => {
     if (!running) {
       return;
     }
-
-    const { current } = handlers;
 
     try {
       const result = await ai.images.generate({
@@ -35,11 +34,11 @@ export const useImageCardState = (props: ImageCardProps) => {
         quality: AiConstants.defaults.imageQuality,
         size: `1024x1024`,
       });
-      await current.complete(DataUrl.png(result.bytes));
+      await complete(DataUrl.png(result.bytes));
     } catch (error) {
-      current.fail(error);
+      fail(error);
     }
-  }, [ai, model, prompt, running]);
+  }, [ai, complete, fail, generation, model, prompt, running]);
 
   return { actions, busy, pending, remove, src: content };
 };

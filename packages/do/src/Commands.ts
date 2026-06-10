@@ -95,6 +95,17 @@ const defs = {
     label: `🏭 Server run`,
     run: { command: `node dist/server/main.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
   },
+  [`setup-s3-dev`]: {
+    description: `Apply S3 bucket policy and CORS for dev bucket.`,
+    label: `📦 S3 dev`,
+    run: { handler: `setup-s3-dev` },
+  },
+  [`setup-s3-prod`]: {
+    description: `Apply S3 bucket policy and CORS for prod bucket.`,
+    interactive: true,
+    label: `📦 S3 prod`,
+    run: { handler: `setup-s3-prod` },
+  },
   [`stylelint-fix`]: {
     description: `Fix Stylelint issues.`,
     label: `🎨 Stylelint`,

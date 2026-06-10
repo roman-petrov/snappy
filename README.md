@@ -60,6 +60,29 @@ again.
 | `SSH_PRIVATE_KEY` | Private SSH key (full PEM)  |
 | `SECRETS_KEY`     | Prod secrets encryption key |
 
+## 📦 S3 (Reg.ru)
+
+[Reg.ru cloud panel](https://cloud.reg.ru/panel/) → **Object storage S3**:
+
+- Create a **dev** bucket and access keys.
+- Create a **prod** bucket and access keys.
+
+### Dev bucket
+
+- Add to `secrets.dev.yaml`
+  - `S3_ACCESS_KEY`
+  - `S3_SECRET_KEY`
+  - `S3_BUCKET`
+- Run `bun do setup-s3-dev`.
+
+### Prod bucket
+
+- Add to prod secrets:
+  - `S3_ACCESS_KEY`
+  - `S3_SECRET_KEY`
+  - `S3_BUCKET`
+- Run `bun do setup-s3-prod`.
+
 ## 🌐 Local development
 
 Dev server (`bun do dev`) is always at **<https://home.local>** (site) and **<https://home.local/app>** (app). The

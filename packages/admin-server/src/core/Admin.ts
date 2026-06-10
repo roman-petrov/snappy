@@ -1,13 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
 import type { FastifyInstance } from "fastify";
 
-import { TrpcRouter } from "@snappy/admin-server-api";
 import { Config } from "@snappy/config";
 import { Db } from "@snappy/db";
 import { Trpc } from "@snappy/server-module";
 
 import { AdminAuth } from "./AdminAuth";
 import { AdminSession } from "./AdminSession";
+import { TrpcRouter } from "./TrpcRouter";
 import { Users } from "./Users";
 
 export type AdminConfig = { app: FastifyInstance };

@@ -1,17 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
 import { Secrets } from "@snappy/config";
-import { Console, Prompt, Terminal } from "@snappy/node";
+import { Console, Terminal } from "@snappy/node";
+
+import { SecretsKey } from "./SecretsKey";
 
 const fail = (message: string) => {
   Console.errorLine(`${Terminal.red(`✗`)} ${Terminal.red(message)}`);
 
   return 1;
-};
-
-const keyFromPrompt = async () => {
-  const key = (await Prompt.text(`Secrets key: `)).trim();
-
-  return key === `` ? fail(`Secrets key is required.`) : key;
 };
 
 const encrypt = (root: string) => {
@@ -29,14 +25,12 @@ const encrypt = (root: string) => {
 };
 
 const decrypt = async (root: string) => {
-  Console.logLine(``);
-  const key = await keyFromPrompt();
-  Console.logLine(``);
-  if (typeof key === `number`) {
-    return key;
+  const keyResult = await SecretsKey.prompt();
+  if (!keyResult.ok) {
+    return fail(keyResult.error);
   }
 
-  const result = Secrets.decryptFile(root, key);
+  const result = Secrets.decryptFile(root, keyResult.value);
   if (!result.ok) {
     return fail(result.error);
   }

@@ -30,6 +30,7 @@ model User {
   userBalance    UserBalance?
   balanceHistory BalanceHistory[]
   userSettings   UserSettings?
+  feedArtifacts  FeedArtifact[]
 
   @@unique([email])
   @@map("user")
@@ -137,4 +138,19 @@ model UserSettings {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_settings")
+}
+
+model FeedArtifact {
+  id               String   @id @default(uuid())
+  userId           String
+  type             String
+  generationPrompt String
+  text             String   @default("")
+  src              String   @default("")
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("feed_artifact")
 }

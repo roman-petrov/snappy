@@ -81,3 +81,8 @@ export type PaymentLog = Prisma.PaymentLogModel
  * 
  */
 export type UserSettings = Prisma.UserSettingsModel
+/**
+ * Model FeedArtifact
+ * 
+ */
+export type FeedArtifact = Prisma.FeedArtifactModel

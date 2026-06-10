@@ -4,25 +4,60 @@ import type { AgentAiConfig } from "@snappy/snappy-sdk";
 import { Ai, type Ai as AiClient } from "@snappy/ai";
 import { _ } from "@snappy/core";
 import { useAsyncEffect, useGo } from "@snappy/ui";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import type { FeedArtifact } from "../../snappy/components/Types";
 
 import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";
-import { ChatFeed, type FeedArtifact } from "./ChatFeed";
 
 export const useFeedState = () => {
-  const [artifacts, setArtifacts] = useState<FeedArtifact[]>([]);
+  const [items, setItems] = useState<FeedArtifact[]>([]);
+  const [cursor, setCursor] = useState<string | undefined>(undefined);
+  const [hasMore, setHasMore] = useState(true);
   const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
   const [ai, setAi] = useState<AiClient | undefined>(undefined);
   const [typeWriterSpeed, setTypeWriterSpeed] = useState<TypeWriterSpeed | undefined>(undefined);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    setArtifacts(await ChatFeed.read());
-  }, []);
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const page = await trpc.feed.list.query({ cursor, limit: 20 });
+      setItems(previous => [...previous, ...page.items]);
+      setCursor(page.nextCursor);
+      setHasMore(page.nextCursor !== undefined);
+    } finally {
+      setLoading(false);
+    }
+  }, [cursor, hasMore, loading]);
 
   useAsyncEffect(async () => {
-    await refresh();
-  }, [refresh]);
+    await loadMore();
+  }, []);
+
+  useEffect(() => {
+    const node = sentinelRef.current;
+    if (node === null) {
+      return _.noop;
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0]?.isIntersecting === true) {
+        void loadMore();
+      }
+    });
+
+    observer.observe(node);
+
+    return () => observer.disconnect();
+  }, [loadMore]);
 
   useAsyncEffect(async () => {
     const settings = await trpc.user.settings.get.query();
@@ -34,13 +69,13 @@ export const useFeedState = () => {
 
   const go = useGo();
 
-  const onPublish = useCallback(() => {
-    void refresh();
-  }, [refresh]);
+  const onPublish = useCallback((artifact: FeedArtifact) => {
+    setItems(previous => previous.map(item => (item.id === artifact.id ? artifact : item)));
+  }, []);
 
-  const onRemove = useCallback(() => {
-    void refresh();
-  }, [refresh]);
+  const removeItem = useCallback((artifactId: string) => {
+    setItems(previous => previous.filter(item => item.id !== artifactId));
+  }, []);
 
   const onError = useCallback(
     async (_artifactId: string, error: unknown) => {
@@ -57,14 +92,14 @@ export const useFeedState = () => {
     () =>
       ai === undefined || aiConfig === undefined
         ? undefined
-        : artifacts.map(item => {
+        : items.map(item => {
             const shared = {
               ai,
               aiOptions: aiConfig.options,
               id: item.id,
               onError,
               onPublish,
-              onRemove,
+              onRemove: () => removeItem(item.id),
               prompt: item.generationPrompt,
             };
 
@@ -72,8 +107,8 @@ export const useFeedState = () => {
               ? { ...shared, content: item.src, model: aiConfig.models.image, type: `image` as const }
               : { ...shared, content: item.text, model: aiConfig.models.chat, type: `text` as const, typeWriterSpeed };
           }),
-    [ai, aiConfig, artifacts, onError, onPublish, onRemove, typeWriterSpeed],
+    [ai, aiConfig, items, onError, onPublish, removeItem, typeWriterSpeed],
   );
 
-  return { cards };
+  return { cards, sentinelRef };
 };

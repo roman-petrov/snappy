@@ -1,11 +1,14 @@
+/* eslint-disable unicorn/try-complexity */
 import type { Ai, AiOptions } from "@snappy/ai";
 import type { MenuAction } from "@snappy/ui";
 
 import { RefreshCw, Trash2 } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
+import type { FeedArtifact } from "../components/Types";
+
+import { trpc } from "../../core";
 import { t } from "../../locales";
-import { ChatFeed } from "../../pages/feed/ChatFeed";
 
 export type FeedItemBindings = FeedItemNotify & {
   ai: Ai;
@@ -18,39 +21,28 @@ export type FeedItemBindings = FeedItemNotify & {
 
 export type FeedItemNotify = {
   onError?: (artifactId: string, error: unknown) => void;
-  onPublish?: (artifactId: string) => void;
-  onRemove?: (artifactId: string) => void;
+  onPublish?: (artifact: FeedArtifact) => void;
+  onRemove?: () => void;
 };
 
 export type UseFeedItemInput = FeedItemBase;
 
-type FeedItemBase = FeedItemBindings & { menu?: MenuAction[]; saveField: `src` | `text` };
+type FeedItemBase = FeedItemBindings & { menu?: MenuAction[]; type: `image` | `text` };
 
 export const useFeedItem = (input: UseFeedItemInput) => {
-  const { content, id, menu = [], onError, onPublish, onRemove, prompt, saveField } = input;
+  const { content, id, menu = [], onError, onPublish, onRemove, prompt, type } = input;
   const pending = content.trim() === ``;
-
-  const save = useCallback(
-    async (value: string) => ChatFeed.patch(id, saveField === `src` ? { src: value } : { text: value }),
-    [id, saveField],
-  );
-
-  const error = useCallback((cause: unknown) => onError?.(id, cause), [id, onError]);
-
-  const publish = useCallback(
-    async (value: string) => {
-      await save(value);
-      onPublish?.(id);
-    },
-    [id, onPublish, save],
-  );
+  const saved = id !== ``;
+  const notifyError = useCallback((cause: unknown) => onError?.(id, cause), [id, onError]);
 
   const remove = useCallback(() => {
     void (async () => {
-      await ChatFeed.remove(id);
-      onRemove?.(id);
+      if (saved) {
+        await trpc.feed.remove.mutate({ id });
+      }
+      onRemove?.();
     })();
-  }, [id, onRemove]);
+  }, [id, onRemove, saved]);
 
   const [busy, setBusy] = useState(false);
   const [generation, setGeneration] = useState(0);
@@ -67,18 +59,30 @@ export const useFeedItem = (input: UseFeedItemInput) => {
 
   const complete = useCallback(
     async (value: string) => {
-      await publish(value);
-      setBusy(false);
+      try {
+        const artifact = saved
+          ? await trpc.feed.patch.mutate(type === `image` ? { id, src: value, type } : { id, text: value, type })
+          : await trpc.feed.create.mutate(
+              type === `image`
+                ? { generationPrompt: prompt, src: value, type }
+                : { generationPrompt: prompt, text: value, type },
+            );
+        onPublish?.(artifact);
+      } catch (error) {
+        notifyError(error);
+      } finally {
+        setBusy(false);
+      }
     },
-    [publish],
+    [id, notifyError, onPublish, prompt, saved, type],
   );
 
   const fail = useCallback(
     (cause: unknown) => {
-      error(cause);
+      notifyError(cause);
       setBusy(false);
     },
-    [error],
+    [notifyError],
   );
 
   const actions = useMemo<MenuAction[]>(

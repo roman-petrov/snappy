@@ -1,5 +1,5 @@
 export * from "./AiModel";
 
-export { AiModelDeepSeek } from "./AiModelDeepSeek";
+export * from "./AiModelDeepSeek";
 
-export { AiModelDefault } from "./AiModelDefault";
+export * from "./AiModelDefault";

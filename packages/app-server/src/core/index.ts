@@ -14,6 +14,8 @@ export * from "./BetterAuth";
 
 export * from "./billing";
 
+export * from "./Feed";
+
 export * from "./Mail";
 
 export * from "./PaymentLog";
@@ -21,5 +23,7 @@ export * from "./PaymentLog";
 export type * from "./ServerApp";
 
 export * from "./Session";
+
+export * from "./TrpcRouter";
 
 export * from "./UserSettings";

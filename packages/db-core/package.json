@@ -9,6 +9,7 @@
     "@prisma/client": "^7.8.0",
     "@snappy/ai": "workspace:*",
     "@snappy/domain": "workspace:*",
+    "@snappy/s3-core": "workspace:*",
     "better-auth": "^1.6.16"
   },
   "devDependencies": {

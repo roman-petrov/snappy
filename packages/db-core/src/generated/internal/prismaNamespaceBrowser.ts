@@ -58,7 +58,8 @@ export const ModelName = {
   UserBalance: 'UserBalance',
   BalanceHistory: 'BalanceHistory',
   PaymentLog: 'PaymentLog',
-  UserSettings: 'UserSettings'
+  UserSettings: 'UserSettings',
+  FeedArtifact: 'FeedArtifact'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -185,6 +186,19 @@ export const UserSettingsScalarFieldEnum = {
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
+
+
+export const FeedArtifactScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  generationPrompt: 'generationPrompt',
+  text: 'text',
+  src: 'src',
+  createdAt: 'createdAt'
+} as const
+
+export type FeedArtifactScalarFieldEnum = (typeof FeedArtifactScalarFieldEnum)[keyof typeof FeedArtifactScalarFieldEnum]
 
 
 export const SortOrder = {

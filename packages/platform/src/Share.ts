@@ -16,14 +16,14 @@ const html = async (value: string, title = `Snappy`) => {
 };
 
 const image = async (src: string, title = `Snappy`) => {
+  const { base64, blob, extension, type } = await PlatformCommon.imageBlob(src);
+
   if (Bridge.available) {
-    const { base64, extension, mime } = PlatformCommon.imageInfo(src);
-    Bridge.shareImage(base64, mime, title, extension);
+    Bridge.shareImage(base64, type, title, extension);
 
     return;
   }
 
-  const { blob, extension, type } = await PlatformCommon.imageBlob(src);
   const file = new File([blob], `snappy-image.${extension}`, { type });
   await navigator.share({ files: [file], title });
 };

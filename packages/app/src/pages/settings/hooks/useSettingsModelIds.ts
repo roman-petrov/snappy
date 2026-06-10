@@ -1,3 +1,5 @@
+import type { TrpcOutputs } from "@snappy/app-server-api";
+
 import { Ai, type AiModelType } from "@snappy/ai";
 import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
@@ -7,9 +9,9 @@ import { AgentAiFromSettings, trpc } from "../../../core";
 export const useSettingsModelIds = (modelType: AiModelType) => {
   const [ids, setIds] = useState<string[]>([]);
 
-  const [settingsResponse, setSettingsResponse] = useState<
-    Awaited<ReturnType<typeof trpc.user.settings.get.query>> | undefined
-  >(undefined);
+  const [settingsResponse, setSettingsResponse] = useState<TrpcOutputs[`user`][`settings`][`get`] | undefined>(
+    undefined,
+  );
 
   useAsyncEffect(async () => {
     const settings = await trpc.user.settings.get.query();

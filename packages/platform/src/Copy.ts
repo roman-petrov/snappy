@@ -20,14 +20,13 @@ const html = async (value: string) => {
 };
 
 const image = async (src: string) => {
+  const { base64, blob, extension, type } = await PlatformCommon.imageBlob(src);
+
   if (Bridge.available) {
-    const { base64, extension } = PlatformCommon.imageInfo(src);
     Bridge.copyImage(base64, `clipboard`, extension);
 
     return;
   }
-
-  const { blob, type } = await PlatformCommon.imageBlob(src);
 
   await navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
 };

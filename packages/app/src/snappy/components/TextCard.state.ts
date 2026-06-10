@@ -4,14 +4,7 @@ import { useFeedItem } from "../hooks";
 
 export const useTextCardState = (props: TextCardProps) => {
   const { aiOptions, content, model, prompt, typeWriterSpeed } = props;
-
-  const {
-    actions: artifactActions,
-    complete,
-    generation,
-    remove,
-    running,
-  } = useFeedItem({ ...props, saveField: `text` });
+  const { actions: artifactActions, complete, generation, remove, running } = useFeedItem({ ...props, type: `text` });
 
   return {
     artifactActions,

@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 import type { FastifyInstance } from "fastify";
 
-import { TrpcRouter } from "@snappy/app-server-api";
 import { Config } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
 import { Db } from "@snappy/db";
@@ -13,8 +12,10 @@ import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
 import { BetterAuth } from "./BetterAuth";
 import { AiTunnelProxy } from "./billing";
+import { Feed } from "./Feed";
 import { PaymentLog } from "./PaymentLog";
 import { Session } from "./Session";
+import { TrpcRouter } from "./TrpcRouter";
 import { UserSettings } from "./UserSettings";
 
 export type AppConfig = { app: FastifyInstance };
@@ -30,7 +31,7 @@ export const App = async ({ app }: AppConfig) => {
 
   const paymentLog = PaymentLog(db);
   const balancePayment = BalancePayment({ db, payment, paymentLog });
-  const serverApp = { balance: Balance, balancePayment, betterAuth, userSettings: UserSettings };
+  const serverApp = { balance: Balance, balancePayment, betterAuth, feed: Feed, userSettings: UserSettings };
 
   app.route({
     handler: async (request, reply) => {

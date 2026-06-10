@@ -9,7 +9,7 @@ import styles from "./Feed.module.scss";
 
 export type FeedViewProps = ReturnType<typeof useFeedState>;
 
-export const FeedView = ({ cards }: FeedViewProps) => (
+export const FeedView = ({ cards, sentinelRef }: FeedViewProps) => (
   <Page back title={t(`feed.title`)}>
     <div className={styles.actionRow}>
       <Button link={Routes.$.home} text={t(`feed.openCatalog`)} />
@@ -18,6 +18,7 @@ export const FeedView = ({ cards }: FeedViewProps) => (
       {cards?.map(card =>
         card.type === `image` ? <ImageCard key={card.id} {...card} /> : <TextCard key={card.id} {...card} />,
       )}
+      <div ref={sentinelRef} />
     </div>
   </Page>
 );

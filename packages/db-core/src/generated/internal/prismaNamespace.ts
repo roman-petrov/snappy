@@ -391,7 +391,8 @@ export const ModelName = {
   UserBalance: 'UserBalance',
   BalanceHistory: 'BalanceHistory',
   PaymentLog: 'PaymentLog',
-  UserSettings: 'UserSettings'
+  UserSettings: 'UserSettings',
+  FeedArtifact: 'FeedArtifact'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "userBalance" | "balanceHistory" | "paymentLog" | "userSettings"
+    modelProps: "user" | "session" | "account" | "verification" | "userBalance" | "balanceHistory" | "paymentLog" | "userSettings" | "feedArtifact"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    FeedArtifact: {
+      payload: Prisma.$FeedArtifactPayload<ExtArgs>
+      fields: Prisma.FeedArtifactFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.FeedArtifactFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.FeedArtifactFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        findFirst: {
+          args: Prisma.FeedArtifactFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.FeedArtifactFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        findMany: {
+          args: Prisma.FeedArtifactFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>[]
+        }
+        create: {
+          args: Prisma.FeedArtifactCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        createMany: {
+          args: Prisma.FeedArtifactCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.FeedArtifactCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>[]
+        }
+        delete: {
+          args: Prisma.FeedArtifactDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        update: {
+          args: Prisma.FeedArtifactUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        deleteMany: {
+          args: Prisma.FeedArtifactDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.FeedArtifactUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.FeedArtifactUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>[]
+        }
+        upsert: {
+          args: Prisma.FeedArtifactUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$FeedArtifactPayload>
+        }
+        aggregate: {
+          args: Prisma.FeedArtifactAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateFeedArtifact>
+        }
+        groupBy: {
+          args: Prisma.FeedArtifactGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedArtifactGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.FeedArtifactCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.FeedArtifactCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1150,6 +1225,19 @@ export const UserSettingsScalarFieldEnum = {
 } as const
 
 export type UserSettingsScalarFieldEnum = (typeof UserSettingsScalarFieldEnum)[keyof typeof UserSettingsScalarFieldEnum]
+
+
+export const FeedArtifactScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  generationPrompt: 'generationPrompt',
+  text: 'text',
+  src: 'src',
+  createdAt: 'createdAt'
+} as const
+
+export type FeedArtifactScalarFieldEnum = (typeof FeedArtifactScalarFieldEnum)[keyof typeof FeedArtifactScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1393,6 +1481,7 @@ export type GlobalOmitConfig = {
   balanceHistory?: Prisma.BalanceHistoryOmit
   paymentLog?: Prisma.PaymentLogOmit
   userSettings?: Prisma.UserSettingsOmit
+  feedArtifact?: Prisma.FeedArtifactOmit
 }
 
 /* Types for Logging */

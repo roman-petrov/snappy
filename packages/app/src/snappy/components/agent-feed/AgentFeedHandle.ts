@@ -9,10 +9,9 @@ import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@sna
 import { _ } from "@snappy/core";
 import { createElement } from "react";
 
-import type { AgentArtifact } from "../Types";
+import type { AgentArtifact, FeedArtifact } from "../Types";
 import type { AgentFeedBadgeLabel, AgentFeedEntry, AgentFeedItem } from "./Types";
 
-import { ChatFeed } from "../../../pages/feed/ChatFeed";
 import { AgentFeedRow } from "./AgentFeedRow";
 
 export type AgentFeedHandleConfig = {
@@ -24,11 +23,6 @@ export type AgentFeedHandleConfig = {
 export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFeedHandleConfig) => {
   let keySeq = 0;
 
-  const seed = (type: AgentArtifact[`type`], id: string, prompt: string) =>
-    type === `image`
-      ? ({ generationPrompt: prompt, id, src: ``, type: `image` } as const)
-      : ({ generationPrompt: prompt, id, text: ``, type: `text` } as const);
-
   const addEntry = (entry: AgentFeedEntry) => {
     const key = keySeq;
     keySeq += 1;
@@ -39,10 +33,10 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
 
   const removeEntry = (key: number) => commit(previous => previous.filter(item => item.key !== key));
 
-  const updateArtifactEntry = (artifactId: string, patch: Partial<AgentArtifact>) =>
+  const updateArtifactEntry = (entryKey: number, patch: Partial<AgentArtifact>) =>
     commit(previous =>
       previous.map(item => {
-        if (item.entry.type !== `artifact` || item.entry.artifact.id !== artifactId) {
+        if (item.key !== entryKey || item.entry.type !== `artifact`) {
           return item;
         }
 
@@ -55,35 +49,22 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
       }),
     );
 
-  const failArtifact = (artifactId: string, error: unknown, done: PromiseWithResolvers<{ artifactId: string }>) => {
-    updateArtifactEntry(artifactId, {
+  const failArtifact = (entryKey: number, error: unknown, done: PromiseWithResolvers<{ artifactId: string }>) => {
+    updateArtifactEntry(entryKey, {
       error: error instanceof Error ? error.message : `generation_failed`,
       generationStatus: `error`,
     });
     done.reject(error);
   };
 
-  const publishArtifact = (artifactId: string, done: PromiseWithResolvers<{ artifactId: string }>) => {
-    void (async () => {
-      const row = (await ChatFeed.read()).find(item => item.id === artifactId);
-      if (row === undefined) {
-        return;
-      }
-
-      updateArtifactEntry(
-        artifactId,
-        row.type === `image`
-          ? { generationStatus: `done`, src: row.src, type: `image` }
-          : { generationStatus: `done`, text: row.text, type: `text` },
-      );
-      done.resolve({ artifactId });
-    })();
+  const publishArtifact = (
+    entryKey: number,
+    artifact: FeedArtifact,
+    done: PromiseWithResolvers<{ artifactId: string }>,
+  ) => {
+    updateArtifactEntry(entryKey, { ...artifact, generationStatus: `done` });
+    done.resolve({ artifactId: artifact.id });
   };
-
-  const onRemove = (artifactId: string) =>
-    commit(previous =>
-      previous.filter(item => item.entry.type !== `artifact` || item.entry.artifact.id !== artifactId),
-    );
 
   const generateArtifact = async ({
     ai,
@@ -96,15 +77,23 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
     prompt: string;
     type: AgentArtifact[`type`];
   }) => {
-    const id = crypto.randomUUID();
-    const base = seed(type, id, prompt);
     const done = Promise.withResolvers<{ artifactId: string }>();
 
-    await ChatFeed.upsert(base);
-    addEntry({ ai, artifact: { ...base, generationStatus: `running`, model }, done, model, type: `artifact` });
+    const base =
+      type === `image`
+        ? ({ generationPrompt: prompt, src: ``, type: `image` } as const)
+        : ({ generationPrompt: prompt, text: ``, type: `text` } as const);
+
+    const key = addEntry({
+      ai,
+      artifact: { ...base, generationStatus: `running`, model },
+      done,
+      model,
+      type: `artifact`,
+    });
 
     return done.promise.catch((error: unknown) => {
-      failArtifact(id, error, done);
+      failArtifact(key, error, done);
       throw error;
     });
   };
@@ -135,12 +124,11 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
           ai: entry.ai,
           aiOptions,
           content: item.type === `image` ? item.src : item.text,
-          id: item.id,
-          key,
+          id: `id` in item ? item.id : ``,
           model: entry.model ?? item.model ?? ``,
-          onError: (_id: string, error: unknown) => failArtifact(item.id, error, done),
-          onPublish: () => publishArtifact(item.id, done),
-          onRemove,
+          onError: (_id: string, error: unknown) => failArtifact(key, error, done),
+          onPublish: (artifact: FeedArtifact) => publishArtifact(key, artifact, done),
+          onRemove: () => removeEntry(key),
           prompt: item.generationPrompt,
         };
 

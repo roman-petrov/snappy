@@ -1,8 +1,7 @@
+import type { TrpcOutputs } from "@snappy/app-server-api";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
-import type { trpc } from "./Api";
-
-export type UserSettings = Awaited<ReturnType<typeof trpc.user.settings.get.query>>;
+export type UserSettings = TrpcOutputs[`user`][`settings`][`get`];
 
 export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
   const key = settings.aiTunnelKey.trim();

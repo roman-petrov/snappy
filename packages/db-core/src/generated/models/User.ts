@@ -203,6 +203,7 @@ export type UserWhereInput = {
   userBalance?: Prisma.XOR<Prisma.UserBalanceNullableScalarRelationFilter, Prisma.UserBalanceWhereInput> | null
   balanceHistory?: Prisma.BalanceHistoryListRelationFilter
   userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  feedArtifacts?: Prisma.FeedArtifactListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -218,6 +219,7 @@ export type UserOrderByWithRelationInput = {
   userBalance?: Prisma.UserBalanceOrderByWithRelationInput
   balanceHistory?: Prisma.BalanceHistoryOrderByRelationAggregateInput
   userSettings?: Prisma.UserSettingsOrderByWithRelationInput
+  feedArtifacts?: Prisma.FeedArtifactOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -236,6 +238,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   userBalance?: Prisma.XOR<Prisma.UserBalanceNullableScalarRelationFilter, Prisma.UserBalanceWhereInput> | null
   balanceHistory?: Prisma.BalanceHistoryListRelationFilter
   userSettings?: Prisma.XOR<Prisma.UserSettingsNullableScalarRelationFilter, Prisma.UserSettingsWhereInput> | null
+  feedArtifacts?: Prisma.FeedArtifactListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -277,6 +280,7 @@ export type UserCreateInput = {
   userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -292,6 +296,7 @@ export type UserUncheckedCreateInput = {
   userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -307,6 +312,7 @@ export type UserUpdateInput = {
   userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -322,6 +328,7 @@ export type UserUncheckedUpdateInput = {
   userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -475,6 +482,20 @@ export type UserUpdateOneRequiredWithoutUserSettingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutUserSettingsInput, Prisma.UserUpdateWithoutUserSettingsInput>, Prisma.UserUncheckedUpdateWithoutUserSettingsInput>
 }
 
+export type UserCreateNestedOneWithoutFeedArtifactsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedArtifactsInput, Prisma.UserUncheckedCreateWithoutFeedArtifactsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedArtifactsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutFeedArtifactsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutFeedArtifactsInput, Prisma.UserUncheckedCreateWithoutFeedArtifactsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutFeedArtifactsInput
+  upsert?: Prisma.UserUpsertWithoutFeedArtifactsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutFeedArtifactsInput, Prisma.UserUpdateWithoutFeedArtifactsInput>, Prisma.UserUncheckedUpdateWithoutFeedArtifactsInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id: string
   name: string
@@ -487,6 +508,7 @@ export type UserCreateWithoutSessionsInput = {
   userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -501,6 +523,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -531,6 +554,7 @@ export type UserUpdateWithoutSessionsInput = {
   userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -545,6 +569,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -559,6 +584,7 @@ export type UserCreateWithoutAccountsInput = {
   userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -573,6 +599,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -603,6 +630,7 @@ export type UserUpdateWithoutAccountsInput = {
   userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -617,6 +645,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserBalanceInput = {
@@ -631,6 +660,7 @@ export type UserCreateWithoutUserBalanceInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserBalanceInput = {
@@ -645,6 +675,7 @@ export type UserUncheckedCreateWithoutUserBalanceInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserBalanceInput = {
@@ -675,6 +706,7 @@ export type UserUpdateWithoutUserBalanceInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserBalanceInput = {
@@ -689,6 +721,7 @@ export type UserUncheckedUpdateWithoutUserBalanceInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBalanceHistoryInput = {
@@ -703,6 +736,7 @@ export type UserCreateWithoutBalanceHistoryInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBalanceHistoryInput = {
@@ -717,6 +751,7 @@ export type UserUncheckedCreateWithoutBalanceHistoryInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBalanceHistoryInput = {
@@ -747,6 +782,7 @@ export type UserUpdateWithoutBalanceHistoryInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBalanceHistoryInput = {
@@ -761,6 +797,7 @@ export type UserUncheckedUpdateWithoutBalanceHistoryInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutUserSettingsInput = {
@@ -775,6 +812,7 @@ export type UserCreateWithoutUserSettingsInput = {
   accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
   userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutUserSettingsInput = {
@@ -789,6 +827,7 @@ export type UserUncheckedCreateWithoutUserSettingsInput = {
   accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
   userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutUserSettingsInput = {
@@ -819,6 +858,7 @@ export type UserUpdateWithoutUserSettingsInput = {
   accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
   userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutUserSettingsInput = {
@@ -833,6 +873,83 @@ export type UserUncheckedUpdateWithoutUserSettingsInput = {
   accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
   userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
   balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
+  feedArtifacts?: Prisma.FeedArtifactUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutFeedArtifactsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceCreateNestedOneWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutFeedArtifactsInput = {
+  id: string
+  name: string
+  email: string
+  emailVerified?: boolean
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  userBalance?: Prisma.UserBalanceUncheckedCreateNestedOneWithoutUserInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedCreateNestedManyWithoutUserInput
+  userSettings?: Prisma.UserSettingsUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutFeedArtifactsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedArtifactsInput, Prisma.UserUncheckedCreateWithoutFeedArtifactsInput>
+}
+
+export type UserUpsertWithoutFeedArtifactsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutFeedArtifactsInput, Prisma.UserUncheckedUpdateWithoutFeedArtifactsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutFeedArtifactsInput, Prisma.UserUncheckedCreateWithoutFeedArtifactsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutFeedArtifactsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutFeedArtifactsInput, Prisma.UserUncheckedUpdateWithoutFeedArtifactsInput>
+}
+
+export type UserUpdateWithoutFeedArtifactsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUpdateOneWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutFeedArtifactsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  userBalance?: Prisma.UserBalanceUncheckedUpdateOneWithoutUserNestedInput
+  balanceHistory?: Prisma.BalanceHistoryUncheckedUpdateManyWithoutUserNestedInput
+  userSettings?: Prisma.UserSettingsUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -844,12 +961,14 @@ export type UserCountOutputType = {
   sessions: number
   accounts: number
   balanceHistory: number
+  feedArtifacts: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | UserCountOutputTypeCountSessionsArgs
   accounts?: boolean | UserCountOutputTypeCountAccountsArgs
   balanceHistory?: boolean | UserCountOutputTypeCountBalanceHistoryArgs
+  feedArtifacts?: boolean | UserCountOutputTypeCountFeedArtifactsArgs
 }
 
 /**
@@ -883,6 +1002,13 @@ export type UserCountOutputTypeCountBalanceHistoryArgs<ExtArgs extends runtime.T
   where?: Prisma.BalanceHistoryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountFeedArtifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.FeedArtifactWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -897,6 +1023,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   userBalance?: boolean | Prisma.User$userBalanceArgs<ExtArgs>
   balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
   userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
+  feedArtifacts?: boolean | Prisma.User$feedArtifactsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -937,6 +1064,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   userBalance?: boolean | Prisma.User$userBalanceArgs<ExtArgs>
   balanceHistory?: boolean | Prisma.User$balanceHistoryArgs<ExtArgs>
   userSettings?: boolean | Prisma.User$userSettingsArgs<ExtArgs>
+  feedArtifacts?: boolean | Prisma.User$feedArtifactsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -950,6 +1078,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     userBalance: Prisma.$UserBalancePayload<ExtArgs> | null
     balanceHistory: Prisma.$BalanceHistoryPayload<ExtArgs>[]
     userSettings: Prisma.$UserSettingsPayload<ExtArgs> | null
+    feedArtifacts: Prisma.$FeedArtifactPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1358,6 +1487,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   userBalance<T extends Prisma.User$userBalanceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userBalanceArgs<ExtArgs>>): Prisma.Prisma__UserBalanceClient<runtime.Types.Result.GetResult<Prisma.$UserBalancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   balanceHistory<T extends Prisma.User$balanceHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$balanceHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$BalanceHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   userSettings<T extends Prisma.User$userSettingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$userSettingsArgs<ExtArgs>>): Prisma.Prisma__UserSettingsClient<runtime.Types.Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  feedArtifacts<T extends Prisma.User$feedArtifactsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$feedArtifactsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FeedArtifactPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1894,6 +2024,30 @@ export type User$userSettingsArgs<ExtArgs extends runtime.Types.Extensions.Inter
    */
   include?: Prisma.UserSettingsInclude<ExtArgs> | null
   where?: Prisma.UserSettingsWhereInput
+}
+
+/**
+ * User.feedArtifacts
+ */
+export type User$feedArtifactsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the FeedArtifact
+   */
+  select?: Prisma.FeedArtifactSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the FeedArtifact
+   */
+  omit?: Prisma.FeedArtifactOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.FeedArtifactInclude<ExtArgs> | null
+  where?: Prisma.FeedArtifactWhereInput
+  orderBy?: Prisma.FeedArtifactOrderByWithRelationInput | Prisma.FeedArtifactOrderByWithRelationInput[]
+  cursor?: Prisma.FeedArtifactWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.FeedArtifactScalarFieldEnum | Prisma.FeedArtifactScalarFieldEnum[]
 }
 
 /**

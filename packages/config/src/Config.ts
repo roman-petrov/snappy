@@ -1,54 +1,12 @@
-/* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-let */
-/* eslint-disable init-declarations */
 import { _ } from "@snappy/core";
 import { createHmac } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 
+import { ConfigValues } from "./ConfigValues";
 import { DevTls } from "./DevTls";
-import { Secrets } from "./Secrets";
 
-const isProduction = process.env.NODE_ENV === `production`;
-const root = process.cwd();
-
-const load = () => {
-  const production = () => {
-    const secretsKey = process.env[`SECRETS_KEY`];
-
-    return secretsKey !== undefined && secretsKey !== ``
-      ? Secrets.prod(root, secretsKey)
-      : { error: `SECRETS_KEY must be set`, ok: false as const };
-  };
-
-  const result = isProduction ? production() : Secrets.dev(root);
-
-  if (!result.ok) {
-    throw new Error(result.error);
-  }
-
-  return result.value;
-};
-
-const values = (() => {
-  let cached: Record<string, string> | undefined;
-
-  return () => {
-    cached ??= load();
-
-    return cached;
-  };
-})();
-
-const requiredKey = (name: string) => () => {
-  const value = values()[name];
-  if (value === undefined || value === ``) {
-    throw new Error(`${name} must be set`);
-  }
-
-  return value;
-};
-
-const optionalKey = (name: string) => () => values()[name];
+const requiredKey = (name: string) => () => ConfigValues.required(ConfigValues.values(), name);
+const optionalKey = (name: string) => () => ConfigValues.values()[name];
 const dbHost = requiredKey(`DB_HOST`);
 const dbName = requiredKey(`DB_NAME`);
 const dbPassword = requiredKey(`DB_PASSWORD`);
@@ -79,11 +37,11 @@ const devSsl = () => {
   return { cert: readFileSync(DevTls.certPath, `utf8`), key: readFileSync(DevTls.keyPath, `utf8`) };
 };
 
-const ssl = () => (isProduction ? prodSsl() : devSsl());
+const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 5000;
-const host = isProduction ? `snappy-ai.ru` : `home.local`;
+const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
 const smtpHost = `smtp.mail.ru`;
 const smtpPort = 465;
 
