@@ -4,7 +4,7 @@
   "cursor.general.disableHttp2": true,
 
   // Window
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 0.4,
 
   // Workbench
   "workbench.colorTheme": "Default Dark Modern",
