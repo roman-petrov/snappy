@@ -17,6 +17,10 @@
   @return color-mix(in srgb, material.highlight() #{material.border-weight()}, -bg($tone));
 }
 
+@function primary-border() {
+  @return accent-border(color.primary(), -tone(color.primary(), material.tone-accent()));
+}
+
 @function accent-border($accent, $tone) {
   $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, border($tone));
 
