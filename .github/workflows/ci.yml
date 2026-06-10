@@ -19,6 +19,8 @@ jobs:
             arg: build:app
           - name: 🛡️ build:admin
             arg: build:admin
+          - name: 🏭 build:server
+            arg: build:server
           - name: 🤖 build:app-android
             arg: build:app-android
           - name: 🧪 test

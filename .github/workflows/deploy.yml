@@ -47,11 +47,11 @@ jobs:
       - name: 🛡️ Build admin
         run: bun do build:admin
 
-      - name: 🤖 Build Android app
-        run: bun do build:app-android
-
       - name: 🏭 Build server
         run: bun do build:server
+
+      - name: 🤖 Build Android app
+        run: bun do build:app-android
 
       - name: 📦 Create deploy archive
         run: |

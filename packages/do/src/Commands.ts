@@ -101,8 +101,8 @@ const defs = {
     run: { args: [`--fix`, `--max-warnings=0`, `**/*.scss`], tool: `stylelint` },
   },
   build: {
-    children: [`build:site`, `build:ssr`, `build:app`, `build:admin`, `build:app-android`, `build:server`],
-    description: `Build site, SSR, app, admin, Android, and API server for production.`,
+    children: [`build:site`, `build:ssr`, `build:app`, `build:admin`, `build:server`, `build:app-android`],
+    description: `Build site, SSR, app, admin, API server, and Android app for production.`,
     label: `📦 Build`,
   },
   cert: { description: `Set up HTTPS for local development.`, label: `🔐 Dev TLS`, run: { handler: `cert` } },
