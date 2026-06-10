@@ -2,7 +2,7 @@ export const AiConstants = {
   defaults: {
     imageQuality: `low`,
     models: {
-      chat: `gpt-5-mini`,
+      chat: `deepseek-v4-flash`,
       embedder: `text-embedding-3-small`,
       image: `gpt-image-1-mini`,
       speechRecognition: `gpt-4o-mini-transcribe`,
