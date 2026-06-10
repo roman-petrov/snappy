@@ -31,6 +31,18 @@ describe(`canSend`, () => {
     expect(email.canSend(`user@example.com`)).toBe(false);
   });
 
+  it(`allows send after cooldown window`, async () => {
+    let clock = 1_000_000;
+    const now = vi.spyOn(_, `now`).mockImplementation(() => clock);
+    const email = AuthEmail();
+    await email.send(`user@example.com`, message);
+    clock += (Config.authEmailCooldownSec + 1) * _.second;
+
+    expect(email.canSend(`user@example.com`)).toBe(true);
+
+    now.mockRestore();
+  });
+
   it(`does not share cooldown with another instance`, async () => {
     const reset = AuthEmail();
     const verify = AuthEmail();

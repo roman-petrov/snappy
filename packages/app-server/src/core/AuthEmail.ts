@@ -18,7 +18,7 @@ export const AuthEmail = () => {
       return 0;
     }
 
-    const elapsedSec = _.timeGet(_.now() - sentAt, `seconds`);
+    const elapsedSec = Math.floor((_.now() - sentAt) / _.second);
 
     return Math.max(0, Config.authEmailCooldownSec - elapsedSec);
   };
