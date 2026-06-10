@@ -79,8 +79,8 @@ MCP `workflow_run`: `tsc`, then `test`. On failure — include output in impact 
 ### 6️⃣ Research (internal only)
 
 Changelog is input for analysis — use internally, report only what affects this codebase. Read every release in
-`(previousVersion, targetVersion]`, not only the latest. When `@types` was bumped alongside the main package, research the
-main package only.
+`(previousVersion, targetVersion]`, not only the latest. When `@types` was bumped alongside the main package, research
+the main package only.
 
 1. `bun pm view <package> versions --json` → filter semver range
 2. Notes per version (oldest → newest): CHANGELOG, GitHub Releases, `bun pm view <package>@<version>`
@@ -102,7 +102,8 @@ skip unless obvious). Prefer Recommended when the upgrade unlocks a shorter repl
 
 Lists, not tables. Each bullet: **where → what → why**. At most one link to upstream changelog.
 
-1. **Upgrade summary** (≤4 lines) — `prev → target`, kind, edited manifests (incl. paired `@types` if bumped), `tsc`/`test`
+1. **Upgrade summary** (≤4 lines) — `prev → target`, kind, edited manifests (incl. paired `@types` if bumped),
+   `tsc`/`test`
 2. **Benefits** — wins for our code only; or _"Maintenance bump."_
 3. **Risks** — 🔴 blocks · 🟡 watch · 🟢 low; only for changes touching our usage
 4. **Required code changes** — 🔴 where / what / why; or _"None."_
