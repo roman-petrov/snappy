@@ -8,6 +8,10 @@
   - 🔌 Install recommended workspace `VSCode` extensions.
 - 📥 [Node.js](https://nodejs.org/) — version from [`.node-version`](.node-version).
 - 📥 [Bun](https://bun.com/).
+- 🔐 [SOPS](https://getsops.io/) - Download from GitHub releases and copy `sops.exe` into `C:\\Windows/system32`
+  directory.
+- 🔑 [age](https://github.com/FiloSottile/age) - Download from GitHub releases and copy binaries into
+  `C:\\Windows/system32` directory..
 - 📝 Fonts:
   - [Google Sans Code](https://fonts.google.com/specimen/Google+Sans+Code)
   - [Cascadia Code](https://fonts.microsoft.com/specimen/Cascadia+Code)
@@ -42,7 +46,34 @@ Schema source of truth: `packages/db-core/prisma/schema.prisma`.
 ⚠️ Note: after `bun do finish-feature`, do not modify `schema.prisma`. If schema changed, run `bun do finish-feature`
 again.
 
-## 🌐 Local development URL
+## 🚀 Deploy
+
+### 🔐 Secrets (SOPS)
+
+#### 🔑 Age key (once)
+
+1. `age-keygen -o age-key.txt`.
+2. Copy public key (`age1...`) into [`.sops.yaml`](.sops.yaml).
+3. Save private key line (`AGE-SECRET-KEY-...`) in your secure storage and in GitHub secret `SOPS_AGE_KEY`, then delete
+   `age-key.txt`.
+
+#### 📄 Secrets file
+
+> Set `$env:SOPS_AGE_KEY = "AGE-SECRET-KEY-..."` to decrypt.
+
+- 📤 Decrypt: `sops -d secrets.enc.yaml > secrets.yaml`
+- 🔒 Encrypt: `sops -e secrets.yaml > secrets.enc.yaml`
+
+### 🐙 GitHub Environment `production`
+
+| Secret            | Description                |
+| ----------------- | -------------------------- |
+| `SSH_HOST`        | Server hostname or IP      |
+| `SSH_USER`        | SSH username               |
+| `SSH_PRIVATE_KEY` | Private SSH key (full PEM) |
+| `SOPS_AGE_KEY`    | age private key            |
+
+## 🌐 Local development
 
 Dev server (`bun do dev`) is always at **<https://home.local>** (site) and **<https://home.local/app>** (app). The
 machine hostname should be **home** so phones and other devices on the LAN can resolve **home.local**. Android debug APK

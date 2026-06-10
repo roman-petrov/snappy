@@ -7,76 +7,53 @@ import { DevTls } from "./DevTls";
 
 const { env } = process;
 const isProduction = env.NODE_ENV === `production`;
-const dbHost = env[`DB_HOST`] ?? ``;
-const dbPort = Number(env[`DB_PORT`] ?? 0);
-const dbUser = env[`DB_USER`] ?? ``;
-const dbPassword = env[`DB_PASSWORD`] ?? ``;
-const dbName = env[`DB_NAME`] ?? ``;
-const dbAuth = `${dbUser}:${dbPassword}@${dbHost}:${dbPort}`;
-const dbUrl = `postgresql://${dbAuth}/${dbName}`;
-const dbShadowUrl = `postgresql://${dbAuth}/${dbName}_shadow`;
-const authEmailCooldownSec = _.minute.seconds;
-const balancePaymentMinRub = 10;
-const balancePaymentMaxRub = 5000;
-const yooKassaSecretKey = env[`YOOKASSA_SECRET_KEY`];
-const yooKassaShopId = env[`YOOKASSA_SHOP_ID`];
-const betterAuthJwtSecret = env[`JWT_SECRET`] ?? ``;
-const adminSessionSecret = createHmac(`sha256`, betterAuthJwtSecret).update(`snappy-admin-v1`).digest();
-const aiTunnelKey = env[`AI_TUNNEL_API_KEY`] ?? ``;
-const host = isProduction ? `snappy-ai.ru` : `home.local`;
 
-const admin = () => {
-  const adminUsername = env[`ADMIN_USERNAME`] ?? ``;
-  const adminPassword = env[`ADMIN_PASSWORD`] ?? ``;
-  if (isProduction && (adminUsername === `` || adminPassword === ``)) {
-    throw new Error(`ADMIN_USERNAME and ADMIN_PASSWORD must be set in production`);
+const requiredKey = (name: string) => () => {
+  const value = env[name];
+  if (value === undefined || value === ``) {
+    throw new Error(`${name} must be set`);
   }
 
-  return { adminPassword, adminUsername };
+  return value;
 };
 
-const { adminPassword, adminUsername } = admin();
+const optionalKey = (name: string) => () => env[name];
+const dbName = requiredKey(`DB_NAME`);
 
-const smtp = () => {
-  const smtpHost = `smtp.mail.ru`;
-  const smtpPort = 465;
-  const smtpUser = env[`SMTP_USER`] ?? ``;
-  const smtpPassword = env[`SMTP_PASSWORD`] ?? ``;
-  const smtpFrom = smtpUser;
-  if (isProduction && (smtpUser === `` || smtpPassword === ``)) {
-    throw new Error(`SMTP_USER and SMTP_PASSWORD must be set in production`);
-  }
+const dbAuth = () =>
+  `${requiredKey(`DB_USER`)()}:${requiredKey(`DB_PASSWORD`)()}@${requiredKey(`DB_HOST`)()}:${Number(requiredKey(`DB_PORT`)())}`;
 
-  return { smtpFrom, smtpHost, smtpPassword, smtpPort, smtpUser };
-};
-
-const { smtpFrom, smtpHost, smtpPassword, smtpPort, smtpUser } = smtp();
-
-const prodSsl = () => {
-  const certB64 = env[`SSL_CERT_PEM`];
-  const keyB64 = env[`SSL_KEY_PEM`];
-  if (certB64 === undefined || keyB64 === undefined) {
-    throw new Error(`SSL_CERT_PEM and SSL_KEY_PEM must be set in production`);
-  }
-
-  const cert = Buffer.from(certB64, `base64`).toString(`utf8`);
-  const key = Buffer.from(keyB64, `base64`).toString(`utf8`);
-
-  return { cert, key };
-};
+const dbUrl = () => `postgresql://${dbAuth()}/${dbName()}`;
+const dbShadowUrl = () => `postgresql://${dbAuth()}/${dbName()}_shadow`;
+const betterAuthJwtSecret = requiredKey(`JWT_SECRET`);
+const adminUsername = requiredKey(`ADMIN_USERNAME`);
+const adminPassword = requiredKey(`ADMIN_PASSWORD`);
+const aiTunnelKey = requiredKey(`AI_TUNNEL_API_KEY`);
+const smtpUser = requiredKey(`SMTP_USER`);
+const smtpPassword = requiredKey(`SMTP_PASSWORD`);
+const yooKassaSecretKey = optionalKey(`YOOKASSA_SECRET_KEY`);
+const yooKassaShopId = optionalKey(`YOOKASSA_SHOP_ID`);
+const adminSessionSecret = () => createHmac(`sha256`, betterAuthJwtSecret()).update(`snappy-admin-v1`).digest();
+const smtpFrom = smtpUser;
+const sslCertPem = requiredKey(`SSL_CERT_PEM`);
+const sslCertKey = requiredKey(`SSL_CERT_KEY`);
+const prodSsl = () => ({ cert: sslCertPem(), key: sslCertKey() });
 
 const devSsl = () => {
   if (!existsSync(DevTls.certPath) || !existsSync(DevTls.keyPath)) {
     throw new Error(`Dev TLS cert missing. Run: bun do cert`);
   }
 
-  const cert = readFileSync(DevTls.certPath, `utf8`);
-  const key = readFileSync(DevTls.keyPath, `utf8`);
-
-  return { cert, key };
+  return { cert: readFileSync(DevTls.certPath, `utf8`), key: readFileSync(DevTls.keyPath, `utf8`) };
 };
 
-const ssl = isProduction ? prodSsl : devSsl;
+const ssl = () => (isProduction ? prodSsl() : devSsl());
+const authEmailCooldownSec = _.minute.seconds;
+const balancePaymentMinRub = 10;
+const balancePaymentMaxRub = 5000;
+const host = isProduction ? `snappy-ai.ru` : `home.local`;
+const smtpHost = `smtp.mail.ru`;
+const smtpPort = 465;
 
 export const Config = {
   adminPassword,

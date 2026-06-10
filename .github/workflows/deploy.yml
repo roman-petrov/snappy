@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    name: 📦 Build and migrate
+    name: 📦 Build
     runs-on: ubuntu-latest
     environment: production
 
@@ -53,15 +53,6 @@ jobs:
       - name: 🏭 Build server
         run: bun do build:server
 
-      - name: 📥 Apply migrations
-        env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-        run: bun do db:migrate:deploy
-
       - name: 📦 Create deploy archive
         run: |
           tar --exclude=node_modules --exclude=.git --exclude=.jscpd --exclude=.cursor --exclude=.vscode --exclude=.analyze --exclude=.github -czf /tmp/snappy.tar.gz .
@@ -82,27 +73,11 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
           SSH_USER: ${{ secrets.SSH_USER }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
-          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-          AI_TUNNEL_API_KEY: ${{ secrets.AI_TUNNEL_API_KEY }}
-          YOOKASSA_SECRET_KEY: ${{ secrets.YOOKASSA_SECRET_KEY }}
-          YOOKASSA_SHOP_ID: ${{ secrets.YOOKASSA_SHOP_ID }}
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-          SSL_CERT_PEM: ${{ secrets.SSL_CERT_PEM }}
-          SSL_KEY_PEM: ${{ secrets.SSL_KEY_PEM }}
+          SOPS_AGE_KEY: ${{ secrets.SOPS_AGE_KEY }}
         run: |
-          source .github/scripts/deploy_env.sh
-          DEPLOY_ENV_B64=$(encode_deploy_env .github/production.env.keys)
           ssh -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" "bash -s" <<EOF
-          export DEPLOY_ENV_B64=$(printf '%q' "${DEPLOY_ENV_B64}")
-          $(cat .github/scripts/setup_node.sh .github/scripts/setup_bun.sh .github/scripts/setup_pm2.sh .github/scripts/deploy_env.sh .github/scripts/deploy.sh)
+          export SOPS_AGE_KEY=$(printf '%q' "${SOPS_AGE_KEY}")
+          $(cat .github/scripts/setup_node.sh .github/scripts/setup_bun.sh .github/scripts/setup_sops.sh .github/scripts/setup_pm2.sh .github/scripts/deploy.sh)
           EOF
 
       - name: 🩺 Health check

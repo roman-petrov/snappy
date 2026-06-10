@@ -23,7 +23,6 @@ export const McpToolWorkflowRun: McpTool = server => {
     `build:ssr`,
     `ci`,
     `cspell`,
-    `deploy-run`,
     `docker:start`,
     `eslint`,
     `eslint-fix`,

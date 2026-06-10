@@ -13,7 +13,7 @@ import { Users } from "./Users";
 export type AdminConfig = { app: FastifyInstance };
 
 export const Admin = async ({ app }: AdminConfig) => {
-  const db = Db(Config.dbUrl);
+  const db = Db(Config.dbUrl());
   const users = Users({ db });
 
   await Trpc.register({

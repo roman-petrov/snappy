@@ -13,7 +13,6 @@
   "workbench.activityBar.orientation": "vertical",
 
   // Explorer
-  "explorer.excludeGitIgnore": true,
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
@@ -56,8 +55,13 @@
   // Files
   "files.exclude": {
     "**/node_modules": true,
+    ".analyze": true,
     ".git": true,
-    "bun.lockb": true
+    ".jscpd": true,
+    ".snappy": true,
+    ".env": true,
+    "bun.lockb": true,
+    "dist": true
   },
 
   // Highlight

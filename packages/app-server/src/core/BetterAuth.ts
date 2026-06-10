@@ -43,7 +43,7 @@ export const BetterAuth = ({ auth }: BetterAuthConfig) => {
       max: 100,
       window: Config.authEmailCooldownSec,
     },
-    secret: Config.betterAuthJwtSecret,
+    secret: Config.betterAuthJwtSecret(),
     trustedOrigins: [_.https(Config.host)],
   });
 };

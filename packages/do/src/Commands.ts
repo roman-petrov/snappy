@@ -44,12 +44,6 @@ const defs = {
     label: `⬇️ Schema sync`,
     run: { args: [`db`, `push`, `--accept-data-loss`], tool: `prisma` },
   },
-  [`deploy-prepare`]: {
-    children: [`build`, `db:migrate:deploy`],
-    description: `Build for deploy and run database migrations.`,
-    label: `🔨 Deploy prepare`,
-  },
-  [`deploy-run`]: { children: [`server:prod`], description: `Run API server in production.`, label: `▶️ Deploy run` },
   [`docker:start`]: {
     description: `Start Docker for development.`,
     label: `🐳 Docker`,
@@ -146,7 +140,7 @@ const defs = {
     run: { args: [`--check`, `.`], tool: `prettier` },
   },
   run: {
-    children: [`env:dev`, `build`, `deploy-run`],
+    children: [`env:dev`, `build`, `server:prod`],
     description: `Build for production and run locally.`,
     label: `🏃 Run`,
   },

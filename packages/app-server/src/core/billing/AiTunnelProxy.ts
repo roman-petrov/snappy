@@ -46,7 +46,7 @@ export const AiTunnelProxy = async (
       void cookie;
       void host;
 
-      return { ...rest, authorization: `Bearer ${Config.aiTunnelKey}`, host: upstreamHost };
+      return { ...rest, authorization: `Bearer ${Config.aiTunnelKey()}`, host: upstreamHost };
     },
     onPayload: (payload, path, state) => {
       if (state === undefined || !(`dbUser` in state)) {

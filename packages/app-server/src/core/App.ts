@@ -20,11 +20,11 @@ import { UserSettings } from "./UserSettings";
 export type AppConfig = { app: FastifyInstance };
 
 export const App = async ({ app }: AppConfig) => {
-  const db = Db(Config.dbUrl);
+  const db = Db(Config.dbUrl());
   const betterAuth = BetterAuth({ auth: db.auth });
 
   const payment = Payment({
-    credentials: { secretKey: Config.yooKassaSecretKey, shopId: Config.yooKassaShopId },
+    credentials: { secretKey: Config.yooKassaSecretKey(), shopId: Config.yooKassaShopId() },
     type: `yoo-kassa`,
   });
 

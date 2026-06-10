@@ -3,6 +3,7 @@
 .jscpd
 .env
 .snappy
+secrets.yaml
 # Others
 **/node_modules
 bun.lockb

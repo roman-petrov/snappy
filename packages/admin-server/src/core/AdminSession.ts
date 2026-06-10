@@ -25,7 +25,7 @@ const isPayload = (value: unknown): value is AdminSessionPayload =>
 
 const signPayload = (payload: AdminSessionPayload) => {
   const body = Buffer.from(JSON.stringify(payload)).toString(`base64url`);
-  const signature = createHmac(`sha256`, Config.adminSessionSecret).update(body).digest(`base64url`);
+  const signature = createHmac(`sha256`, Config.adminSessionSecret()).update(body).digest(`base64url`);
 
   return `${body}.${signature}`;
 };
@@ -35,7 +35,7 @@ const parseToken = (token: string): AdminSessionPayload | undefined => {
   if (body === undefined || signature === undefined || body === `` || signature === ``) {
     return undefined;
   }
-  const expected = createHmac(`sha256`, Config.adminSessionSecret).update(body).digest(`base64url`);
+  const expected = createHmac(`sha256`, Config.adminSessionSecret()).update(body).digest(`base64url`);
   const a = Buffer.from(signature);
   const b = Buffer.from(expected);
   if (a.length !== b.length || !timingSafeEqual(a, b)) {
@@ -52,12 +52,12 @@ const parseToken = (token: string): AdminSessionPayload | undefined => {
 
 const credentialsMatch = (username: string, password: string) => {
   const usernameOk =
-    username.length === Config.adminUsername.length &&
-    timingSafeEqual(Buffer.from(username), Buffer.from(Config.adminUsername));
+    username.length === Config.adminUsername().length &&
+    timingSafeEqual(Buffer.from(username), Buffer.from(Config.adminUsername()));
 
   const passwordOk =
-    password.length === Config.adminPassword.length &&
-    timingSafeEqual(Buffer.from(password), Buffer.from(Config.adminPassword));
+    password.length === Config.adminPassword().length &&
+    timingSafeEqual(Buffer.from(password), Buffer.from(Config.adminPassword()));
 
   return usernameOk && passwordOk;
 };
