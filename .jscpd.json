@@ -1,8 +1,6 @@
 {
   "absolute": true,
-  "ignorePattern": [
-    "import.*from.*",
-
+  "ignore": [
     "*********** GLOBAL ***********",
 
     ".github/**",
@@ -47,9 +45,13 @@
     "packages/theme/src/styles/theme-dark.scss",
     "packages/theme/src/styles/theme-light.scss"
   ],
+  "ignorePattern": [
+    "import.*from.*"
+  ],
   "noGitignore": false,
   "mode": "strict",
   "output": ".jscpd",
+  "path": ["."],
   "reporters": ["console", "html"],
   "threshold": 0
 }

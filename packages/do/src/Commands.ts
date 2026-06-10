@@ -134,7 +134,7 @@ const defs = {
     label: `🔍 ESLint`,
     run: { args: [`--max-warnings=0`, `.`], tool: `eslint` },
   },
-  jscpd: { description: `Check JSCPD issues.`, label: `📋 JSCPD`, run: { args: [`.`], tool: `jscpd` } },
+  jscpd: { description: `Check JSCPD issues.`, label: `📋 JSCPD`, run: { args: [], tool: `jscpd` } },
   knip: { description: `Check Knip issues.`, label: `🧹 Knip`, run: { args: [], tool: `knip` } },
   lint: {
     children: [`tsc`, `eslint`, `prettier`, `java-format`, `stylelint`, `cspell`, `knip`, `markdownlint`, `jscpd`],
