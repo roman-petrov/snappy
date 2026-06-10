@@ -17,7 +17,7 @@ import { PayloadProxy, type PayloadProxyConfig } from "./PayloadProxy";
 
 vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
 
-vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: `test-ai-tunnel-key` } }));
+vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
 vi.mock(`./PayloadProxy`, () => ({ PayloadProxy: vi.fn() }));
 

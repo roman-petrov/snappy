@@ -24,7 +24,7 @@ import { AiTunnelProxy } from "./AiTunnelProxy";
 
 vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
 
-vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: `test-ai-tunnel-key` } }));
+vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
 const chatPath = `/api/ai-tunnel/v1/chat/completions`;
 const imagesPath = `/api/ai-tunnel/v1/images/generations`;
