@@ -1,4 +1,4 @@
-<!-- cspell:word neuro aiesa lmsys certutil addstore -->
+<!-- cspell:word neuro aiesa lmsys certutil addstore dmarc -->
 
 # Snappy
 
@@ -115,10 +115,11 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 
 ### Mail
 
-- [Setup guide](https://workspace.vk.ru/docs/saas/user-guides/mail/clients/)
-- [Post master](https://postmaster.mail.ru/)
 - [VK WorkSpace admin](https://app.workspace.vk.ru/admin)
 - [VK WorkSpace mail](https://app.workspace.vk.ru/mail)
+- [Setup guide](https://workspace.vk.ru/docs/saas/user-guides/mail/clients/)
+- [Post master](https://postmaster.mail.ru/)
+- [Domain security (SPF/DKIM/DMARC)](https://postmaster.mail.ru/security/snappy-ai.ru)
 
 ### 💳 Payments
 
