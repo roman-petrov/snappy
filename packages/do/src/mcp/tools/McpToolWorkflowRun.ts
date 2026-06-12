@@ -5,46 +5,18 @@ import { z } from "zod";
 
 import type { McpTool } from "../Types";
 
-import { type CommandName, Commands } from "../../Commands";
+import { Commands } from "../../Commands";
 import { Runner } from "../../Runner";
-import { Scripts } from "../../Scripts";
 
 export const McpToolWorkflowRun: McpTool = server => {
-  const root = Scripts.rootDir();
+  const fromEnv = process.env[`MCP_SERVER_ROOT`];
+  const root = fromEnv !== undefined && fromEnv !== `` ? fromEnv : Runner.repoRoot;
 
-  const scriptNames = [
-    `build`,
-    `build:admin`,
-    `build:app`,
-    `build:app-android`,
-    `build:app-android-debug`,
-    `build:server`,
-    `build:site`,
-    `build:ssr`,
-    `ci`,
-    `cspell`,
-    `docker:start`,
-    `eslint`,
-    `eslint-fix`,
-    `java-format`,
-    `java-format-fix`,
-    `jscpd`,
-    `knip`,
-    `lint`,
-    `markdownlint`,
-    `prettier`,
-    `prettier-fix`,
-    `server:dev`,
-    `server:frontend:dev`,
-    `server:prod`,
-    `shot`,
-    `stylelint`,
-    `stylelint-fix`,
-    `test`,
-    `tsc`,
-  ] as const satisfies readonly CommandName[];
+  const scripts = Commands.list().filter(({ name }) => {
+    const definition = Commands.byName(name);
 
-  const scripts = scriptNames.map(name => ({ description: Commands.byName(name).description, name }));
+    return definition.mcp !== false && !(`interactive` in definition && definition.interactive === true);
+  });
 
   const inputSchema = z.object({
     script: z

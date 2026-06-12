@@ -1,78 +1,58 @@
-/* eslint-disable @typescript-eslint/max-params */
-/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable unicorn/prefer-string-repeat */
-import { Config } from "@snappy/config";
+import type { ChildProcess } from "node:child_process";
+
 import { _ } from "@snappy/core";
-import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
-import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
-import { join } from "node:path";
+import { Console, Terminal } from "@snappy/node";
+import path from "node:path";
 
-import type { CommandRun } from "./CommandTypes";
+import type { RunResult as RawRunResult } from "./Run";
 
-import { Build } from "./Build";
 import { type CommandName, Commands } from "./Commands";
-import { Db } from "./Db";
-import { DevCert } from "./DevCert";
-import { Feature } from "./Feature";
-import { SecretsCmd } from "./SecretsCmd";
-import { SetupS3 } from "./SetupS3";
 
-const ok = `✓`;
+const repoRoot = path.resolve(import.meta.dirname, `..`, `..`, `..`);
 const fail = `✗`;
 const ellipsis = `…`;
 const br = `├`;
 const end = `└`;
 const bar = `│`;
-const devOriginLabelWidth = 6;
-
-const devOriginLine = (emoji: string, name: string, url: string) =>
-  `${emoji} ${Terminal.yellow(`${name}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
-
-const showDevOrigins = (name: CommandName) => name === `server:frontend:dev` || name === `server:prod:run`;
-
-const devOriginsBlock = () => {
-  const origin = _.https(Config.host);
-
-  return [
-    devOriginLine(`🌐`, `Site`, origin),
-    devOriginLine(`💻`, `App`, `${origin}/app`),
-    devOriginLine(`🛡️`, `Admin`, `${origin}/admin`),
-  ].join(`\n`);
-};
-
-const logDevOrigins = () => Console.log(`\n\n${devOriginsBlock()}\n`);
 
 type RunResult = { exitCode: number; message: string };
 
-type TreeNode = { children: TreeNode[]; name: string };
-
-const tree = (name: CommandName): TreeNode => {
-  const definition = Commands.byName(name);
-
-  return `run` in definition
-    ? { children: [], name }
-    : { children: definition.children.filter(Commands.has).map(tree), name };
-};
-
 type TreeContext = { connector: string; prefix: string };
 
-const treeLine = (prefix: string, connector: string, label: string, status: `fail` | `node` | `ok`) => {
-  const icon = status === `ok` ? Terminal.green(ok) : status === `fail` ? Terminal.red(fail) : ``;
-  Console.logLine(`${prefix}${connector}─ ${icon ? `${icon} ` : ``}${Terminal.cyan(label)}`);
+const treeLine = (prefix: string, connector: string, label: string) => {
+  Console.logLine(`${prefix}${connector}─ ${Terminal.cyan(label)}`);
 };
 
-type ShellResult = number | SpawnResult;
+const outcome = (raw: RawRunResult): RunResult => {
+  const exitCode = _.isObject(raw) ? raw.exitCode : raw;
 
-const runShell = async (
-  root: string,
-  command: string,
-  options: { capture?: true; silent?: true },
-): Promise<ShellResult> => Process.spawnShell(root, command, options);
+  const message =
+    _.isObject(raw) && `message` in raw
+      ? raw.message
+      : _.isObject(raw) && `stderr` in raw
+        ? [raw.stderr, raw.stdout].filter(Boolean).join(`\n`).trim()
+        : ``;
 
-type CwdCommandRun = Extract<CommandRun, { command: string; cwd: string }>;
+  return { exitCode, message };
+};
+
+const logLeafError = (label: string, raw: RawRunResult, message: string) => {
+  if (_.isObject(raw) && `stderr` in raw) {
+    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
+    if (raw.stderr.length > 0) {
+      Console.error(raw.stderr);
+    }
+    if (raw.stdout.length > 0) {
+      Console.log(raw.stdout);
+    }
+  } else if (message !== ``) {
+    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n${message}\n`);
+  }
+};
 
 type RunLeafOptions = {
   backgroundProcesses: ChildProcess[];
@@ -82,60 +62,7 @@ type RunLeafOptions = {
   withoutTree?: boolean;
 };
 
-const runCwdCommand = async (
-  root: string,
-  name: CommandName,
-  run: CwdCommandRun,
-  backgroundProcesses: ChildProcess[],
-  mcp: boolean,
-  verbose: boolean,
-): Promise<number | RunResult | ShellResult> => {
-  const background = run.background === true;
-  if (mcp && !background) {
-    return runShell(join(root, run.cwd), run.command, { capture: true });
-  }
-
-  const proc = nodeSpawn(run.command, [], {
-    cwd: join(root, run.cwd),
-    detached: mcp && background,
-    env: run.env === undefined ? process.env : { ...process.env, ...run.env },
-    shell: true,
-    stdio: mcp && background ? `ignore` : `inherit`,
-  });
-
-  if (background && mcp) {
-    proc.unref();
-    const origins = !verbose && showDevOrigins(name) ? `${devOriginsBlock()}\n\n` : ``;
-
-    return { exitCode: 0, message: `${origins}Started in background.` };
-  }
-  if (!verbose && showDevOrigins(name)) {
-    logDevOrigins();
-  }
-  if (background) {
-    backgroundProcesses.push(proc);
-
-    return 0;
-  }
-
-  const code = await new Promise<number>(resolve => {
-    proc.on(`exit`, (c: null | number) => {
-      resolve(c ?? 1);
-    });
-  });
-
-  for (const child of backgroundProcesses) {
-    child.kill(`SIGTERM`);
-  }
-
-  if (run.shutdown !== undefined) {
-    const shutdownResult = await runShell(root, run.shutdown.command, { silent: true });
-
-    return Process.exitCode(shutdownResult);
-  }
-
-  return code;
-};
+const skipLeafTiming = (name: CommandName) => name === `server:frontend:dev`;
 
 const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
@@ -153,67 +80,17 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
   }
 
   const start = _.now();
-  const buildOptions = capture ? { capture: true as const } : {};
+  const raw = await Promise.resolve(run(root, { backgroundProcesses, capture, mcp, name, verbose }));
+  const { exitCode, message } = outcome(raw);
 
-  const buildHandlers = {
-    "build:admin": Build.admin,
-    "build:app": Build.app,
-    "build:app-android": Build.appAndroid,
-    "build:app-android-debug": Build.appAndroidDebug,
-    "build:server": Build.server,
-    "build:site": Build.site,
-    "build:ssr": Build.ssr,
-    "java-format": Build.javaFormat,
-    "java-format-fix": Build.javaFormatFix,
-  } as const;
-
-  const rawResult = await (`handler` in run
-    ? run.handler === `cert`
-      ? DevCert.write(Config.host).then(() => 0)
-      : run.handler === `setup-s3`
-        ? SetupS3.setup()
-        : run.handler === `db:container:up`
-          ? Db.containerUp(root)
-          : run.handler === `decrypt`
-            ? SecretsCmd.decrypt(root)
-            : run.handler === `encrypt`
-              ? SecretsCmd.encrypt(root)
-              : run.handler === `finish-feature`
-                ? Feature.finish(root)
-                : buildHandlers[run.handler](root, buildOptions)
-    : `tool` in run
-      ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
-      : `command` in run && `cwd` in run
-        ? runCwdCommand(root, name, run, backgroundProcesses, mcp, verbose)
-        : runShell(root, run.command, capture ? { capture: true } : {}));
-
-  const exitCode = _.isObject(rawResult) ? rawResult.exitCode : rawResult;
-
-  const message =
-    _.isObject(rawResult) && `message` in rawResult
-      ? rawResult.message
-      : _.isObject(rawResult)
-        ? [rawResult.stderr, rawResult.stdout].filter(Boolean).join(`\n`).trim()
-        : ``;
-
-  if (!mcp && !verbose && !(`background` in run && run.background === true)) {
+  if (!mcp && !verbose && !skipLeafTiming(name)) {
     const seconds = Math.round((_.now() - start) / _.second);
     const statusIcon = exitCode === 0 ? `✅` : `❌`;
     Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
   }
 
   if (!mcp && exitCode !== 0) {
-    if (_.isObject(rawResult) && `stderr` in rawResult) {
-      Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
-      if (rawResult.stderr.length > 0) {
-        Console.error(rawResult.stderr);
-      }
-      if (rawResult.stdout.length > 0) {
-        Console.log(rawResult.stdout);
-      }
-    } else if (message !== ``) {
-      Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n${message}\n`);
-    }
+    logLeafError(label, raw, message);
   }
 
   return { exitCode, message };
@@ -238,7 +115,7 @@ const runNode = async (root: string, name: CommandName, options: RunNodeOptions)
   const { children, label } = definition;
 
   if (!mcp && isRoot !== true && !verbose) {
-    treeLine(context.prefix, context.connector, label, `node`);
+    treeLine(context.prefix, context.connector, label);
   }
 
   const childPrefix = context.prefix + (context.connector === end ? `   ` : `${bar}  `);
@@ -271,11 +148,10 @@ const run = async (
   { mcp, verbose: verboseOpt }: { mcp?: boolean; verbose?: boolean } = {},
 ) => {
   const definition = Commands.byName(name);
-  const verbose = verboseOpt ?? (mcp === true || definition.interactive === true);
-  const node = tree(name);
+  const verbose = verboseOpt ?? (mcp === true || (`interactive` in definition && definition.interactive === true));
   const isMcp = mcp === true;
   const start = _.now();
-  const withTree = node.children.length > 0;
+  const withTree = !(`run` in definition) && definition.children.some(Commands.has);
   if (!isMcp && !verbose && withTree) {
     Console.log(`\n`);
     Console.logLine(Terminal.cyan(definition.label));
@@ -319,4 +195,4 @@ const formatCommandsHelp = () =>
     .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
     .join(`\n`);
 
-export const Runner = { formatCommandsHelp, resolveCommand, run };
+export const Runner = { formatCommandsHelp, repoRoot, resolveCommand, run };

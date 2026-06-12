@@ -3,7 +3,6 @@
 import { Console } from "@snappy/node";
 
 import { Runner } from "./Runner";
-import { Scripts } from "./Scripts";
 
 const [, , name] = process.argv;
 
@@ -12,7 +11,6 @@ if (name === undefined || [`--help`, `-h`, ``].includes(name)) {
   process.exit(0);
 }
 
-const root = Scripts.rootDir();
 const resolved = Runner.resolveCommand(name);
 
 if (!resolved.ok) {
@@ -20,4 +18,4 @@ if (!resolved.ok) {
   process.exit(1);
 }
 
-process.exit((await Runner.run(root, resolved.name)).exitCode);
+process.exit((await Runner.run(Runner.repoRoot, resolved.name)).exitCode);
