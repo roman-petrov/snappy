@@ -81,7 +81,7 @@ const defs = {
     run: { args: [`--write`, `.`], tool: `prettier` },
   },
   [`server:dev`]: {
-    children: [`server:frontend:dev`],
+    children: [`setup-s3`, `server:frontend:dev`],
     description: `Run site, app, admin, and API in development.`,
     label: `🖥️ Server`,
   },
@@ -90,21 +90,20 @@ const defs = {
     label: `🌐 Site + App + Admin`,
     run: { background: true, command: `node ${tsxPreload} packages/do-dev/src/main.ts`, cwd: `.` },
   },
-  [`server:prod`]: {
+  [`server:prod:run`]: {
     description: `Run API server in production.`,
     label: `🏭 Server run`,
     run: { command: `node dist/server/main.js`, cwd: `.`, shutdown: { command: `docker compose down` } },
   },
-  [`setup-s3-dev`]: {
-    description: `Apply S3 bucket policy and CORS for dev bucket.`,
-    label: `📦 S3 dev`,
-    run: { handler: `setup-s3-dev` },
+  [`server:prod`]: {
+    children: [`setup-s3`, `server:prod:run`],
+    description: `Run API server in production.`,
+    label: `🏭 Server`,
   },
-  [`setup-s3-prod`]: {
-    description: `Apply S3 bucket policy and CORS for prod bucket.`,
-    interactive: true,
-    label: `📦 S3 prod`,
-    run: { handler: `setup-s3-prod` },
+  [`setup-s3`]: {
+    description: `Apply S3 bucket policy and CORS.`,
+    label: `📦 S3`,
+    run: { handler: `setup-s3` },
   },
   [`stylelint-fix`]: {
     description: `Fix Stylelint issues.`,

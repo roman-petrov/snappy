@@ -11,6 +11,7 @@ const root = process.cwd();
 const devHost = `home.local`;
 const prodHost = `snappy-ai.ru`;
 const production = () => process.env.NODE_ENV === `production`;
+const env = (): Environment => (production() ? `prod` : `dev`);
 
 const required = (source: Record<string, string>, name: string) => {
   const value = source[name];
@@ -21,16 +22,20 @@ const required = (source: Record<string, string>, name: string) => {
   return value;
 };
 
+const secretsFor = (mode: Environment): SecretsResult<Record<string, string>> => {
+  if (mode === `dev`) {
+    return Secrets.dev(root);
+  }
+
+  const secretsKey = process.env[`SECRETS_KEY`];
+
+  return secretsKey === undefined || secretsKey === ``
+    ? { error: `SECRETS_KEY must be set`, ok: false }
+    : Secrets.prod(root, secretsKey);
+};
+
 const load = () => {
-  const prodSecrets = () => {
-    const secretsKey = process.env[`SECRETS_KEY`];
-
-    return secretsKey !== undefined && secretsKey !== ``
-      ? Secrets.prod(root, secretsKey)
-      : { error: `SECRETS_KEY must be set`, ok: false as const };
-  };
-
-  const result = production() ? prodSecrets() : Secrets.dev(root);
+  const result = secretsFor(env());
 
   if (!result.ok) {
     throw new Error(result.error);
@@ -51,13 +56,6 @@ const values = (() => {
 
 const origin = (mode: Environment) => _.https(mode === `dev` ? devHost : prodHost);
 
-const secretsFor = (mode: Environment, secretsKey?: string): SecretsResult<Record<string, string>> =>
-  mode === `dev`
-    ? Secrets.dev(root)
-    : secretsKey === undefined || secretsKey === ``
-      ? { error: `Secrets key is required.`, ok: false }
-      : Secrets.prod(root, secretsKey);
-
-export const ConfigValues = { devHost, origin, prodHost, production, required, root, secretsFor, values };
+export const ConfigValues = { devHost, env, origin, prodHost, production, required, root, secretsFor, values };
 
 export type ConfigValues = typeof ConfigValues;

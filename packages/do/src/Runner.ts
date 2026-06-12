@@ -31,7 +31,7 @@ const devOriginLabelWidth = 6;
 const devOriginLine = (emoji: string, name: string, url: string) =>
   `${emoji} ${Terminal.yellow(`${name}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
 
-const showDevOrigins = (name: CommandName) => name === `server:frontend:dev` || name === `server:prod`;
+const showDevOrigins = (name: CommandName) => name === `server:frontend:dev` || name === `server:prod:run`;
 
 const devOriginsBlock = () => {
   const origin = _.https(Config.host);
@@ -170,11 +170,9 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
   const rawResult = await (`handler` in run
     ? run.handler === `cert`
       ? DevCert.write(Config.host).then(() => 0)
-      : run.handler === `setup-s3-dev`
-        ? SetupS3.dev()
-        : run.handler === `setup-s3-prod`
-          ? SetupS3.prod()
-          : run.handler === `db:container:up`
+      : run.handler === `setup-s3`
+        ? SetupS3.setup()
+        : run.handler === `db:container:up`
             ? Db.containerUp(root)
             : run.handler === `decrypt`
               ? SecretsCmd.decrypt(root)
@@ -204,13 +202,17 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
     Console.logLine(`${statusIcon} ${Terminal.dim(`${seconds}s`)}`);
   }
 
-  if (!mcp && exitCode !== 0 && _.isObject(rawResult) && `stderr` in rawResult) {
-    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
-    if (rawResult.stderr.length > 0) {
-      Console.error(rawResult.stderr);
-    }
-    if (rawResult.stdout.length > 0) {
-      Console.log(rawResult.stdout);
+  if (!mcp && exitCode !== 0) {
+    if (_.isObject(rawResult) && `stderr` in rawResult) {
+      Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
+      if (rawResult.stderr.length > 0) {
+        Console.error(rawResult.stderr);
+      }
+      if (rawResult.stdout.length > 0) {
+        Console.log(rawResult.stdout);
+      }
+    } else if (message !== ``) {
+      Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n${message}\n`);
     }
   }
 

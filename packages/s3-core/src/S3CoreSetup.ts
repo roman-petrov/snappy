@@ -1,12 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import { DeleteBucketPolicyCommand, HeadBucketCommand, PutBucketCorsCommand } from "@aws-sdk/client-s3";
-import { ConfigValues, type Environment } from "@snappy/config";
+import { ConfigValues } from "@snappy/config";
 
 import { S3CoreRuntime } from "./S3CoreRuntime";
 
-const setup = async (mode: Environment, secretsKey?: string) => {
-  const loaded = ConfigValues.secretsFor(mode, secretsKey);
+const setup = async () => {
+  const mode = ConfigValues.env();
+  const loaded = ConfigValues.secretsFor(mode);
   if (!loaded.ok) {
     return { error: loaded.error, ok: false as const };
   }
