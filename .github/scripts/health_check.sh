@@ -2,7 +2,7 @@
 set -euo pipefail
 
 MAX_ATTEMPTS=10
-RETRY_DELAY=10
+RETRY_DELAY=3
 URLS=(
   "https://snappy-ai.ru/"
   "https://snappy-ai.ru/app/"
