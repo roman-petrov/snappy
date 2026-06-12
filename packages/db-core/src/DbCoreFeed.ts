@@ -13,7 +13,6 @@ export type DbCoreFeedPatch = { src: string; type: `image` } | { text: string; t
 
 export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
   const imagePath = (id: string) => `feed/${id}.png`;
-  const imageBytes = (dataUrl: string) => Buffer.from(dataUrl.split(`,`)[1] ?? ``, `base64`);
 
   const toArtifact = async ({ generationPrompt, id, src, text, type }: FeedArtifact): Promise<DbCoreFeedArtifact> =>
     type === `image`
@@ -53,7 +52,7 @@ export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
     if (artifact.type === `image`) {
       const id = crypto.randomUUID();
       const path = imagePath(id);
-      await storage.put(path, imageBytes(artifact.src), `image/png`);
+      await storage.putPng(path, artifact.src);
 
       const data = { ...artifact, id, src: path, userId: storage.id };
 
@@ -71,7 +70,7 @@ export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
   const patch = async (id: string, delta: DbCoreFeedPatch) => {
     if (delta.type === `image`) {
       const path = imagePath(id);
-      await storage.put(path, imageBytes(delta.src), `image/png`);
+      await storage.putPng(path, delta.src);
 
       return toArtifact(await prisma.feedArtifact.update({ data: { src: path }, where: { id, userId: storage.id } }));
     }

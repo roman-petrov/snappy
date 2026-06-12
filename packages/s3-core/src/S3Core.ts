@@ -12,6 +12,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Config } from "@snappy/config";
+import { _ } from "@snappy/core";
 
 import { S3CoreRuntime } from "./S3CoreRuntime";
 import { S3CoreSetup } from "./S3CoreSetup";
@@ -28,11 +29,16 @@ const signedUrl = async (userId: string, path: string) => {
   });
 };
 
-const put = async (userId: string, path: string, body: Buffer, contentType: string) => {
+const putPng = async (userId: string, path: string, src: Buffer | string) => {
   const { bucket, sdk } = runtime();
 
   return sdk.send(
-    new PutObjectCommand({ Body: body, Bucket: bucket, ContentType: contentType, Key: objectKey(userId, path) }),
+    new PutObjectCommand({
+      Body: _.isString(src) ? Buffer.from(src.split(`,`)[1] ?? ``, `base64`) : src,
+      Bucket: bucket,
+      ContentType: `image/png`,
+      Key: objectKey(userId, path),
+    }),
   );
 };
 
@@ -64,7 +70,7 @@ const purge = async (userId: string) => {
 const user = (userId: string) => ({
   id: userId,
   purge: async () => purge(userId),
-  put: async (path: string, body: Buffer, contentType: string) => put(userId, path, body, contentType),
+  putPng: async (path: string, src: Buffer | string) => putPng(userId, path, src),
   remove: async (path: string) => remove(userId, path),
   url: async (path: string) => signedUrl(userId, path),
 });
