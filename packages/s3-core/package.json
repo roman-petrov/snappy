@@ -5,8 +5,8 @@
   "private": true,
   "main": "./src/index.ts",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.958.0",
-    "@aws-sdk/s3-request-presigner": "^3.958.0",
+    "@aws-sdk/client-s3": "^3.1067.0",
+    "@aws-sdk/s3-request-presigner": "^3.1067.0",
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*"
   }
