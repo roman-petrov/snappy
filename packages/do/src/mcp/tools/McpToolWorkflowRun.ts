@@ -1,22 +1,20 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Console } from "@snappy/node";
+import { Unicode } from "@snappy/core";
 import { z } from "zod";
 
 import type { McpTool } from "../Types";
 
-import { Commands } from "../../Commands";
+import { CommandRegistry } from "../../CommandRegistry";
 import { Runner } from "../../Runner";
 
 export const McpToolWorkflowRun: McpTool = server => {
   const fromEnv = process.env[`MCP_SERVER_ROOT`];
   const root = fromEnv !== undefined && fromEnv !== `` ? fromEnv : Runner.repoRoot;
 
-  const scripts = Commands.list().filter(({ name }) => {
-    const definition = Commands.byName(name);
-
-    return definition.mcp !== false && !(`interactive` in definition && definition.interactive === true);
-  });
+  const scripts = CommandRegistry.filter(
+    command => command.mcp !== false && !(`interactive` in command && command.interactive === true),
+  );
 
   const inputSchema = z.object({
     script: z
@@ -44,7 +42,7 @@ export const McpToolWorkflowRun: McpTool = server => {
         ? {
             content: [
               {
-                text: Console.stripAnsi((await Runner.run(root, resolved.name, { mcp: true })).message),
+                text: Unicode.stripAnsi((await Runner.run(root, resolved.name, { mcp: true })).message),
                 type: `text` as const,
               },
             ],

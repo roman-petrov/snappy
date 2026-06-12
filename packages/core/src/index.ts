@@ -24,6 +24,8 @@ export * from "./Store";
 
 export * from "./StructuredPrompt";
 
+export * from "./Table";
+
 export * from "./Time";
 
 export * from "./Timer";

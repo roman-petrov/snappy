@@ -3,33 +3,18 @@
 /* eslint-disable functional/no-loop-statements */
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
-import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
-import { type ChildProcess, spawn as nodeSpawn } from "node:child_process";
+import { Console, Process, Terminal } from "@snappy/node";
+import { spawn as nodeSpawn } from "node:child_process";
 import { join } from "node:path";
 
-import type { BuildOptions } from "./Build";
-import type { CommandName } from "./Commands";
-
-export type RunOptions = {
-  backgroundProcesses: ChildProcess[];
-  capture: boolean;
-  mcp: boolean;
-  name: CommandName;
-  verbose: boolean;
-};
-
-export type RunResult = number | SpawnResult | { exitCode: number; message: string };
-
-type BuildFn = (root: string, options?: BuildOptions) => Promise<number | SpawnResult>;
-
-type CommandRun = (root: string, options: RunOptions) => Promise<RunResult> | RunResult;
+import type { CommandRun } from "./Command";
 
 const devOriginLabelWidth = 6;
 
 const devOriginLine = (emoji: string, label: string, url: string) =>
   `${emoji} ${Terminal.yellow(`${label}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
 
-const showDevOrigins = (name: CommandName): boolean => name === `server:frontend:dev` || name === `server:prod:run`;
+const showDevOrigins = (name: string): boolean => name === `server:frontend:dev` || name === `server:prod:run`;
 
 const devOriginsBlock = () => {
   const origin = _.https(Config.host);
@@ -44,6 +29,12 @@ const devOriginsBlock = () => {
 const logDevOrigins = () => Console.log(`\n\n${devOriginsBlock()}\n`);
 const spawnOptions = (capture: boolean) => (capture ? { capture: true as const } : {});
 
+const fail = (message: string) => {
+  Console.errorLine(`${Terminal.red(`✗`)} ${Terminal.red(message)}`);
+
+  return 1;
+};
+
 const tool =
   (toolName: string, args: string[]): CommandRun =>
   async (root, { capture }) =>
@@ -53,11 +44,6 @@ const shell =
   (command: string): CommandRun =>
   async (root, { capture }) =>
     Process.spawnShell(root, command, spawnOptions(capture));
-
-const withCapture =
-  (fn: BuildFn): CommandRun =>
-  async (root, { capture }) =>
-    fn(root, capture ? { capture: true } : {});
 
 type BackgroundConfig = {
   background?: true;
@@ -117,8 +103,4 @@ const background =
     return code;
   };
 
-export const Run = { background, shell, tool, withCapture };
-
-export type CommandDefinition =
-  | { children: readonly string[]; description: string; label: string; mcp?: false }
-  | { description: string; interactive?: true; label: string; mcp?: false; run: CommandRun };
+export const Run = { background, fail, shell, tool };

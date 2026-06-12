@@ -4,13 +4,13 @@
 /* eslint-disable unicorn/prefer-string-repeat */
 import type { ChildProcess } from "node:child_process";
 
-import { _ } from "@snappy/core";
+import { _, Table } from "@snappy/core";
 import { Console, Terminal } from "@snappy/node";
 import path from "node:path";
 
-import type { RunResult as RawRunResult } from "./Run";
+import type { RunResult as RawRunResult } from "./Command";
 
-import { type CommandName, Commands } from "./Commands";
+import { type CommandName, CommandRegistry } from "./CommandRegistry";
 
 const repoRoot = path.resolve(import.meta.dirname, `..`, `..`, `..`);
 const fail = `✗`;
@@ -66,7 +66,10 @@ const skipLeafTiming = (name: CommandName) => name === `server:frontend:dev`;
 
 const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, mcp, verbose, withoutTree } = options;
-  const definition = Commands.byName(name);
+  const definition = CommandRegistry.find(command => command.name === name);
+  if (definition === undefined) {
+    return { exitCode: 1, message: `Unknown command: ${name}` };
+  }
   if (!(`run` in definition)) {
     return { exitCode: 1, message: `Unknown: ${name}` };
   }
@@ -106,7 +109,10 @@ type RunNodeOptions = {
 
 const runNode = async (root: string, name: CommandName, options: RunNodeOptions): Promise<RunResult> => {
   const { backgroundProcesses, context, isRoot, mcp = false, verbose } = options;
-  const definition = Commands.byName(name);
+  const definition = CommandRegistry.find(command => command.name === name);
+  if (definition === undefined) {
+    return { exitCode: 1, message: `Unknown command: ${name}` };
+  }
 
   if (`run` in definition) {
     return runLeaf(root, name, { backgroundProcesses, context, mcp, verbose, withoutTree: isRoot === true });
@@ -120,7 +126,10 @@ const runNode = async (root: string, name: CommandName, options: RunNodeOptions)
 
   const childPrefix = context.prefix + (context.connector === end ? `   ` : `${bar}  `);
   const childIndent = isRoot === true ? context.prefix : childPrefix;
-  const childNames = children.filter(Commands.has);
+
+  const childNames = children.filter((child): child is CommandName =>
+    CommandRegistry.some(command => command.name === child),
+  );
   for (const [index, child] of childNames.entries()) {
     const childConnector = index === childNames.length - 1 ? end : br;
 
@@ -139,19 +148,31 @@ const runNode = async (root: string, name: CommandName, options: RunNodeOptions)
   return { exitCode: 0, message: `` };
 };
 
-const resolveCommand = (name: string): { error: string; ok: false } | { name: CommandName; ok: true } =>
-  Commands.has(name) ? { name, ok: true } : { error: `Unknown command: ${name}`, ok: false };
+const resolveCommand = (name: string): { error: string; ok: false } | { name: CommandName; ok: true } => {
+  const unknown = name;
+
+  return CommandRegistry.some(command => command.name === name)
+    ? { name, ok: true }
+    : { error: `Unknown command: ${unknown}`, ok: false };
+};
 
 const run = async (
   root: string,
   name: CommandName,
   { mcp, verbose: verboseOpt }: { mcp?: boolean; verbose?: boolean } = {},
 ) => {
-  const definition = Commands.byName(name);
+  const definition = CommandRegistry.find(command => command.name === name);
+  if (definition === undefined) {
+    return { exitCode: 1, message: `Unknown command: ${name}` };
+  }
+
   const verbose = verboseOpt ?? (mcp === true || (`interactive` in definition && definition.interactive === true));
   const isMcp = mcp === true;
   const start = _.now();
-  const withTree = !(`run` in definition) && definition.children.some(Commands.has);
+
+  const withTree =
+    !(`run` in definition) &&
+    definition.children.some(child => CommandRegistry.some(command => command.name === child));
   if (!isMcp && !verbose && withTree) {
     Console.log(`\n`);
     Console.logLine(Terminal.cyan(definition.label));
@@ -190,9 +211,16 @@ const run = async (
   return { ...result, message };
 };
 
-const formatCommandsHelp = () =>
-  Commands.list()
-    .map(command => `  ${command.name.padEnd(16)} ${command.description}`)
+const formatCommandsHelp = () => {
+  const rows = [
+    [Terminal.bold(Terminal.cyan(`Command`)), Terminal.bold(`Description`)],
+    ...CommandRegistry.map(command => [Terminal.cyan(command.name), command.description]),
+  ];
+
+  return Table.format(rows)
+    .split(`\n`)
+    .map(line => `  ${line}`)
     .join(`\n`);
+};
 
 export const Runner = { formatCommandsHelp, repoRoot, resolveCommand, run };
