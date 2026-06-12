@@ -100,11 +100,7 @@ const defs = {
     description: `Run API server in production.`,
     label: `🏭 Server`,
   },
-  [`setup-s3`]: {
-    description: `Apply S3 bucket policy and CORS.`,
-    label: `📦 S3`,
-    run: { handler: `setup-s3` },
-  },
+  [`setup-s3`]: { description: `Apply S3 bucket policy and CORS.`, label: `📦 S3`, run: { handler: `setup-s3` } },
   [`stylelint-fix`]: {
     description: `Fix Stylelint issues.`,
     label: `🎨 Stylelint`,

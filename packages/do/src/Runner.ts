@@ -173,14 +173,14 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
       : run.handler === `setup-s3`
         ? SetupS3.setup()
         : run.handler === `db:container:up`
-            ? Db.containerUp(root)
-            : run.handler === `decrypt`
-              ? SecretsCmd.decrypt(root)
-              : run.handler === `encrypt`
-                ? SecretsCmd.encrypt(root)
-                : run.handler === `finish-feature`
-                  ? Feature.finish(root)
-                  : buildHandlers[run.handler](root, buildOptions)
+          ? Db.containerUp(root)
+          : run.handler === `decrypt`
+            ? SecretsCmd.decrypt(root)
+            : run.handler === `encrypt`
+              ? SecretsCmd.encrypt(root)
+              : run.handler === `finish-feature`
+                ? Feature.finish(root)
+                : buildHandlers[run.handler](root, buildOptions)
     : `tool` in run
       ? runShell(root, Process.toolCommand(`bun`, run.tool, run.args), capture ? { capture: true } : {})
       : `command` in run && `cwd` in run
