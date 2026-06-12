@@ -39,6 +39,8 @@ const devSsl = () => {
 
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
+const s3SignedUrlTtlDays = 3;
+const s3SignedUrlTtlSec = s3SignedUrlTtlDays * _.day.seconds;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 5000;
 const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
@@ -62,6 +64,7 @@ export const Config = {
   dbUrl,
   dbUser,
   host,
+  s3SignedUrlTtlSec,
   smtpFrom,
   smtpHost,
   smtpPassword,

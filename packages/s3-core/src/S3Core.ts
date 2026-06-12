@@ -8,11 +8,10 @@ import {
   DeleteObjectsCommand,
   GetObjectCommand,
   ListObjectsV2Command,
-  type ListObjectsV2CommandOutput,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { _ } from "@snappy/core";
+import { Config } from "@snappy/config";
 
 import { S3CoreRuntime } from "./S3CoreRuntime";
 import { S3CoreSetup } from "./S3CoreSetup";
@@ -20,14 +19,12 @@ import { S3CoreSetup } from "./S3CoreSetup";
 const { publicPrefix, runtime } = S3CoreRuntime;
 const prefix = (userId: string) => `${publicPrefix}/${userId}/`;
 const objectKey = (userId: string, path: string) => `${prefix(userId)}${path}`;
-const signedUrlTtlDays = 3;
-const urlTtlSec = signedUrlTtlDays * _.day.seconds;
 
 const signedUrl = async (userId: string, path: string) => {
   const { bucket, sdk } = runtime();
 
   return getSignedUrl(sdk, new GetObjectCommand({ Bucket: bucket, Key: objectKey(userId, path) }), {
-    expiresIn: urlTtlSec,
+    expiresIn: Config.s3SignedUrlTtlSec,
   });
 };
 
@@ -48,7 +45,7 @@ const purge = async (userId: string) => {
   let continuationToken: string | undefined;
 
   do {
-    const listed: ListObjectsV2CommandOutput = await sdk.send(
+    const listed = await sdk.send(
       new ListObjectsV2Command({ Bucket: bucket, ContinuationToken: continuationToken, Prefix: objectPrefix }),
     );
 
