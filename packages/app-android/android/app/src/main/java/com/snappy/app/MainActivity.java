@@ -1,12 +1,18 @@
 package com.snappy.app;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.PermissionRequest;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,6 +30,32 @@ public class MainActivity extends ComponentActivity {
     private Bridge bridge;
     private AppHost appHost;
     private PermissionRequest pendingPermissionRequest;
+    private ValueCallback<Uri[]> filePathCallback;
+
+    private final ActivityResultLauncher<Intent> fileChooserLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> {
+                        if (filePathCallback == null) {
+                            return;
+                        }
+                        Uri[] uris = null;
+                        if (result.getResultCode() == Activity.RESULT_OK
+                                && result.getData() != null) {
+                            Intent data = result.getData();
+                            ClipData clipData = data.getClipData();
+                            if (clipData != null) {
+                                uris = new Uri[clipData.getItemCount()];
+                                for (int i = 0; i < clipData.getItemCount(); i++) {
+                                    uris[i] = clipData.getItemAt(i).getUri();
+                                }
+                            } else if (data.getData() != null) {
+                                uris = new Uri[] {data.getData()};
+                            }
+                        }
+                        filePathCallback.onReceiveValue(uris);
+                        filePathCallback = null;
+                    });
 
     private final ActivityResultLauncher<String> microphonePermissionLauncher =
             registerForActivityResult(
@@ -61,6 +93,22 @@ public class MainActivity extends ComponentActivity {
         webView.addJavascriptInterface(bridge, "Bridge");
         webView.setWebChromeClient(
                 new WebChromeClient() {
+                    @Override
+                    public boolean onShowFileChooser(
+                            WebView view, ValueCallback<Uri[]> callback, FileChooserParams params) {
+                        if (filePathCallback != null) {
+                            filePathCallback.onReceiveValue(null);
+                        }
+                        filePathCallback = callback;
+                        try {
+                            fileChooserLauncher.launch(params.createIntent());
+                        } catch (ActivityNotFoundException e) {
+                            filePathCallback = null;
+                            return false;
+                        }
+                        return true;
+                    }
+
                     @Override
                     public void onPermissionRequest(final PermissionRequest request) {
                         runOnUiThread(
