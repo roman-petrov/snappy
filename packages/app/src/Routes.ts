@@ -12,6 +12,7 @@ import {
   SettingsModelsChat,
   SettingsModelsImage,
   SettingsModelsSpeech,
+  SettingsModelsVision,
   SettingsProfile,
   SettingsProfilePassword,
   SettingsProfileTopUp,
@@ -35,6 +36,7 @@ export const Routes = AppRoutes(
         chat: { page: SettingsModelsChat, path: `settings/models/chat` },
         image: { page: SettingsModelsImage, path: `settings/models/image` },
         speech: { page: SettingsModelsSpeech, path: `settings/models/speech` },
+        vision: { page: SettingsModelsVision, path: `settings/models/vision` },
       },
       profile: {
         password: { page: SettingsProfilePassword, path: `settings/profile/password` },

@@ -1,4 +1,5 @@
 ---
+id: interior-generation
 name:
   en: "🏠 Interior generation"
   ru: "🏠 Генерация интерьера"

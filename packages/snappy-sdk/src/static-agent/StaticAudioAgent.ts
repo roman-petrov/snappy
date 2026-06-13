@@ -1,28 +1,44 @@
 /* eslint-disable functional/no-expression-statements */
+import type { StaticFormField } from "../Schema";
+
 import { StaticAgentPrompt } from "../StaticAgentPrompt";
-import { StaticAgent } from "./StaticAgent";
+import {
+  StaticAgent,
+  type StaticAgentMetaCreateInput,
+  type StaticAgentMetaPayload,
+  type StaticAgentRunInput,
+} from "./StaticAgent";
 
-export const StaticAudioAgent = StaticAgent(async ({ ai, answers, feed, isStopped, locale, models, plan, prompt }) => {
-  const file = answers[`audio`];
-  if (!(file instanceof File)) {
-    return;
-  }
-  const transcribe = Promise.withResolvers<{ label: string }>();
+type Localization = Record<string, readonly [string, string]>;
 
-  feed.appendStatus(locale === `ru` ? `Расшифровываю аудиофайл…` : `Transcribing audio file…`, transcribe);
+export const StaticAudioAgent = <TLocalization extends Localization, const TFields extends readonly StaticFormField[]>(
+  localizationFactory: () => TLocalization,
+  create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload<TFields>,
+  resolve: (input: StaticAgentRunInput<TFields>) => File | undefined,
+) =>
+  StaticAgent(localizationFactory, create, async input => {
+    const file = resolve(input);
+    if (file === undefined || input.isStopped()) {
+      return;
+    }
 
-  const out = await ai.audio.transcriptions.create({ file, model: models.speech });
-  transcribe.resolve({ label: `` });
-  if (isStopped()) {
-    return;
-  }
+    const { answers, feed, isStopped, locale, models, plan, prompt } = input;
+    const transcribe = Promise.withResolvers<{ label: string }>();
 
-  const transcript = out.text;
-  await feed.appendChatText(transcript);
-  if (isStopped()) {
-    return;
-  }
+    feed.appendStatus(locale === `ru` ? `Расшифровываю аудиофайл…` : `Transcribing audio file…`, transcribe);
 
-  const generationPrompt = `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`;
-  await feed.generateText({ ai, model: models.chat, prompt: generationPrompt });
-});
+    const out = await models.speech.transcribe({ file });
+    transcribe.resolve({ label: `` });
+    if (isStopped()) {
+      return;
+    }
+
+    const transcript = out.text;
+    await feed.appendChatText(transcript);
+    if (isStopped()) {
+      return;
+    }
+
+    const generationPrompt = `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`;
+    await feed.generateText({ model: models.chat, prompt: generationPrompt });
+  });

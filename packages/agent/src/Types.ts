@@ -1,4 +1,4 @@
-import type { Ai, AiChatMessage } from "@snappy/ai";
+import type { AiChatMessage, AiChatModel } from "@snappy/ai";
 import type { StructuredPrompt } from "@snappy/core";
 import type { Locale } from "@snappy/intl";
 
@@ -12,8 +12,7 @@ export type AgentClient = {
 };
 
 export type AgentCreateInput = {
-  ai: Ai;
-  chatModel: string;
+  chatModel: AiChatModel;
   idleAfterSuccess?: boolean;
   locale: Locale;
   maxRounds: number;

@@ -1,12 +1,27 @@
 import { _ } from "@snappy/core";
 
-import type { StaticFormFieldByKind, StaticFormFieldKind, StaticFormPlan } from "./Schema";
+import type {
+  StaticFormAnswers,
+  StaticFormAnswersOf,
+  StaticFormFieldByKind,
+  StaticFormFieldKind,
+  StaticFormPlan,
+} from "./Schema";
 
-export type StaticAgentPromptInput = { answers: Record<string, unknown>; mainPrompt?: string; plan: StaticFormPlan };
+export type StaticAgentPromptInput<TPlan extends StaticFormPlan = StaticFormPlan> = {
+  answers: StaticFormAnswersOf<TPlan>;
+  mainPrompt?: string;
+  plan: TPlan;
+};
 
-type NonTextFieldKind = Exclude<StaticFormFieldKind, `file_input` | `text_input`>;
+type NonTextFieldKind = Exclude<StaticFormFieldKind, `audio_input` | `image_input` | `text_input`>;
 
-export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentPromptInput) => {
+export const StaticAgentPrompt = <TPlan extends StaticFormPlan>({
+  answers,
+  mainPrompt,
+  plan,
+}: StaticAgentPromptInput<TPlan>) => {
+  const values: StaticFormAnswers = answers;
   const head = (mainPrompt ?? ``).trim();
   const labelLine = (label: string, value: string) => `${label}: ${value}`;
 
@@ -58,14 +73,14 @@ export const StaticAgentPrompt = ({ answers, mainPrompt, plan }: StaticAgentProm
 
   const valueFields = plan.fields.filter(
     (field): field is StaticFormFieldByKind<NonTextFieldKind> =>
-      field.kind !== `text_input` && field.kind !== `file_input`,
+      field.kind !== `text_input` && field.kind !== `image_input` && field.kind !== `audio_input`,
   );
 
   const lines = [
-    ...valueFields.map(field => nonTextLine(field, answers[field.id])),
+    ...valueFields.map(field => nonTextLine(field, values[field.id])),
     ...plan.fields
       .filter((field): field is StaticFormFieldByKind<`text_input`> => field.kind === `text_input`)
-      .map(field => textLine(field, answers[field.id])),
+      .map(field => textLine(field, values[field.id])),
   ]
     .filter((line): line is string => line !== undefined)
     .map(line => `- ${line}`);

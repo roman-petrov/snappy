@@ -1,10 +1,9 @@
-/* eslint-disable functional/no-expression-statements */
 import { AgentTool } from "@snappy/agent";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const PublishTextTool: SnappyToolFactory = ({ ai, config, feed, isStopped }) =>
+export const PublishTextTool: SnappyToolFactory = ({ config, feed, isStopped }) =>
   AgentTool({
     description: [
       [
@@ -15,18 +14,15 @@ export const PublishTextTool: SnappyToolFactory = ({ ai, config, feed, isStopped
         `input`,
         `Pass a self-contained prompt with goal, audience, tone, format, constraints, and source excerpts when rewriting. Clarify first if critical facts are missing.`,
       ],
-      [
-        `output`,
-        `You only get success/failure text (no generated body). Show the full prompt in chat when calling this tool.`,
-      ],
+      [`output`, `After publish the full generated text is returned in the tool result for review and iteration.`],
     ],
     execute: async ({ prompt }) => {
       if (isStopped()) {
         return ``;
       }
-      await feed.generateText({ ai, model: config.models.chat, prompt });
+      const { content } = await feed.generateText({ model: config.models.chat, prompt });
 
-      return isStopped() ? `` : `Text generation completed successfully.`;
+      return isStopped() ? `` : content;
     },
     inputSchema: z.object({
       prompt: z

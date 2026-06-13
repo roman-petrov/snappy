@@ -130,6 +130,7 @@ model UserSettings {
   llmChatModel              String?
   llmImageModel             String?
   llmImageQuality           String?
+  llmVisionModel             String?
   llmSpeechRecognitionModel String?
   aiTunnelKey               String  @default("")
   aiTunnelDirect            Boolean @default(false)

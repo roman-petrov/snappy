@@ -1,9 +1,15 @@
+/* eslint-disable functional/immutable-data */
+/* eslint-disable functional/no-expression-statements */
+import type { AiContentPart } from "@snappy/ai";
+
 import { AgentTool } from "@snappy/agent";
+import { DataUrl } from "@snappy/browser";
+import { _ } from "@snappy/core";
 import { StaticFormPlanSchema } from "@snappy/snappy-sdk";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const AskTool: SnappyToolFactory = ({ feed, isStopped }) =>
+export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
   AgentTool({
     description: [
       [
@@ -12,11 +18,11 @@ export const AskTool: SnappyToolFactory = ({ feed, isStopped }) =>
       ],
       [
         `input`,
-        `Pass a concise clarification form plan (optional title + fields) and ask only for information required for the next step.`,
+        `Pass a clarification form plan (optional title + fields). Use image_input or audio_input when a file is needed.`,
       ],
       [
         `output`,
-        `Returns structured answers as JSON. Use these answers as the source of truth for subsequent tool calls.`,
+        `Returns structured answers as JSON. Uploaded files follow in the next user message, labeled by field id.`,
       ],
     ],
     execute: async plan => {
@@ -24,8 +30,81 @@ export const AskTool: SnappyToolFactory = ({ feed, isStopped }) =>
         return ``;
       }
       const formAnswers = await feed.ask(plan);
+      if (isStopped()) {
+        return ``;
+      }
 
-      return isStopped() ? `` : JSON.stringify({ answers: formAnswers }, undefined, 2);
+      type FieldAttachment = { answer: unknown; attachment: readonly AiContentPart[]; file?: File; url?: string };
+
+      const attachments = await Promise.all(
+        plan.fields.map(async (field): Promise<readonly [string, FieldAttachment]> => {
+          if (field.kind === `image_input` || field.kind === `audio_input`) {
+            const raw = formAnswers[field.id];
+            if (!(raw instanceof File)) {
+              return [field.id, { answer: undefined, attachment: [] }];
+            }
+
+            const { id, kind, label } = field;
+            const kiB = _.kb(1);
+            const miB = _.mb(1);
+            const { name, size } = raw;
+
+            const sizeLabel =
+              size < kiB ? `${size} B` : size < miB ? `${Math.round(size / kiB)} KB` : `${_.round(size / miB, 1)} MB`;
+
+            const image = kind === `image_input`;
+            const heading = `Field ${id} (${label.text})`;
+
+            const text: AiContentPart = {
+              text: `${heading}: ${image ? `image` : `audio`} "${name === `` ? `unnamed` : name}" (${sizeLabel}), id "${id}".`,
+              type: `text`,
+            };
+
+            if (!image) {
+              return [id, { answer: id, attachment: [text], file: raw }];
+            }
+
+            const url = await DataUrl.blob(raw);
+
+            return [id, { answer: id, attachment: [text, { type: `image`, url }], file: raw, url }];
+          }
+
+          return [field.id, { answer: formAnswers[field.id], attachment: [] }];
+        }),
+      );
+
+      const assign = <T>(target: Record<string, T>, pick: (item: FieldAttachment) => T | undefined) =>
+        Object.assign(
+          target,
+          _.fromEntries(
+            attachments.flatMap(([id, item]) => {
+              const value = pick(item);
+
+              return value === undefined ? [] : [[id, value]];
+            }),
+          ),
+        );
+
+      assign(files, item => item.file);
+      assign(media, item => item.url);
+
+      const answers = _.fromEntries(attachments.map(([id, item]) => [id, item.answer]));
+      const attachmentParts = attachments.flatMap(([, item]) => item.attachment);
+
+      const context: AiContentPart[] =
+        attachmentParts.length === 0
+          ? []
+          : [
+              {
+                text: plan.title === undefined ? `Form attachments:` : `Form "${plan.title}" attachments:`,
+                type: `text`,
+              },
+              ...attachmentParts,
+            ];
+
+      const tool = JSON.stringify({ answers }, undefined, 2);
+
+      return context.length === 0 ? tool : { context, tool };
     },
     inputSchema: StaticFormPlanSchema,
   });

@@ -1,9 +1,6 @@
 // cspell:word aitunnel
 import { _ } from "@snappy/core";
 
-import type { AiReasoning } from "./AiApi";
-import type { AiReasoningEffort } from "./Types";
-
 const baseUrlDefault = _.https(`api.aitunnel.ru/v1`);
 const baseUrl = (path?: string) => (path === undefined ? baseUrlDefault : path.replace(/\/$/u, ``));
 
@@ -35,12 +32,4 @@ const openRouterChatModel = (model: string) => {
   return provider === undefined ? id : `${provider}/${id}`;
 };
 
-/**
- * OpenRouter: `effort: "none"` disables reasoning; `exclude: true` only hides it (still slow).
- * @see https://openrouter.ai/docs/guides/best-practices/reasoning-tokens
- */
-const reasoningBody = (effort: AiReasoningEffort | undefined): AiReasoning => ({
-  effort: effort === undefined || effort === `none` ? `none` : effort,
-});
-
-export const AiTunnel = { baseUrl, baseUrlDefault, chatModelId, openRouterChatModel, reasoningBody };
+export const AiTunnel = { baseUrl, baseUrlDefault, chatModelId, openRouterChatModel };

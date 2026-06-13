@@ -7,26 +7,16 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
-import type { AiChatMessage, AiChatStreamSegment, AiToolCall } from "@snappy/ai";
-
+import { type AiChatMessage, type AiChatStreamSegment, type AiToolCall, AiToolResult } from "@snappy/ai";
 import { _, StructuredPrompt } from "@snappy/core";
 
-import type { AgentTool } from "./AgentTool";
 import type { AgentClient, AgentCreateInput, AgentRun, AgentStopReason } from "./Types";
 
 import { AgentToolInput } from "./AgentToolInput";
 
 type AgentStatus = `runningTool` | `streaming` | `thinking`;
 
-export const Agent = ({
-  ai,
-  chatModel,
-  idleAfterSuccess,
-  locale,
-  maxRounds,
-  systemPrompt,
-  tools,
-}: AgentCreateInput) => {
+export const Agent = ({ chatModel, idleAfterSuccess, locale, maxRounds, systemPrompt, tools }: AgentCreateInput) => {
   let stopped = false;
   const isStopped = () => stopped;
   let activeAppend = _.noop as (text: string) => void;
@@ -46,9 +36,6 @@ export const Agent = ({
       _.entries(groupTools).map(([name, agentTool]) => [`${group}_${name}`, agentTool]),
     ),
   );
-
-  const toolResultContent = (result: Awaited<ReturnType<AgentTool[`execute`]>>) =>
-    _.isString(result) ? result : `Tool failed: ${result.error}`;
 
   return {
     appendUserText,
@@ -114,7 +101,9 @@ export const Agent = ({
         }
       };
 
-      const executeTool = async (call: AiToolCall) => {
+      const chatInput = chatModel.capabilities.input;
+
+      const executeTool = async (call: AiToolCall): Promise<AiChatMessage[] | undefined> => {
         if (isStopped()) {
           return undefined;
         }
@@ -126,7 +115,7 @@ export const Agent = ({
 
         const parsed = AgentToolInput.parse(call.argumentsJson, agentTool.inputSchema);
         if (!parsed.ok) {
-          return { content: toolResultContent({ error: parsed.error }), role: `tool`, toolCallId: call.toolCallId };
+          return AiToolResult.messages({ error: parsed.error }, { chatInput, toolCallId: call.toolCallId });
         }
 
         const input = parsed.data;
@@ -152,7 +141,7 @@ export const Agent = ({
 
         setStatus(`thinking`);
 
-        return { content: toolResultContent(result), role: `tool`, toolCallId: call.toolCallId };
+        return AiToolResult.messages(result, { chatInput, toolCallId: call.toolCallId });
       };
 
       const run = async () => {
@@ -239,9 +228,8 @@ export const Agent = ({
             flushUser();
             setStatus(`thinking`);
 
-            const session = ai.chat.completions.create({
+            const session = chatModel.completions({
               messages,
-              model: chatModel,
               reasoningEffort: `high`,
               toolChoice: `auto`,
               tools: toolsByName,
@@ -267,10 +255,10 @@ export const Agent = ({
                 break;
               }
             } else {
-              const toolMessages = await Promise.all(toolCalls.map(executeTool));
+              const toolMessageGroups = await Promise.all(toolCalls.map(executeTool));
               messages = [
                 ...messages,
-                ...toolMessages.filter((row): row is Extract<AiChatMessage, { role: `tool` }> => row !== undefined),
+                ...toolMessageGroups.flatMap((group: AiChatMessage[] | undefined) => group ?? []),
               ];
               setStatus(`streaming`);
             }

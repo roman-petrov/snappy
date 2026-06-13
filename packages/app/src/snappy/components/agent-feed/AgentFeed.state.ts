@@ -5,13 +5,9 @@ import type { AgentFeedItem } from "./Types";
 
 import { AgentFeedHandle } from "./AgentFeedHandle";
 
-export const useAgentFeedState = ({ aiOptions, ref, typeWriterSpeed }: AgentFeedProps) => {
+export const useAgentFeedState = ({ ref, typeWriterSpeed }: AgentFeedProps) => {
   const [entries, setEntries] = useState<AgentFeedItem[]>([]);
-
-  const handle = useMemo(
-    () => AgentFeedHandle({ aiOptions, commit: setEntries, typeWriterSpeed }),
-    [aiOptions, typeWriterSpeed],
-  );
+  const handle = useMemo(() => AgentFeedHandle({ commit: setEntries, typeWriterSpeed }), [typeWriterSpeed]);
 
   useImperativeHandle(ref, () => handle, [handle]);
 

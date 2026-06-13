@@ -62,10 +62,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
   const ready = phase === `ready` && aiConfig !== undefined;
   const balanceLow = phase === `blocked`;
-
-  const feed = ready
-    ? createElement(AgentFeed, { aiOptions: aiConfig.options, ref: feedRef, typeWriterSpeed })
-    : undefined;
+  const feed = ready ? createElement(AgentFeed, { ref: feedRef, typeWriterSpeed }) : undefined;
 
   return { balanceLow, feed, showFeed, stop };
 };

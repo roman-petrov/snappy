@@ -396,13 +396,6 @@ describe(`StaticAgentPrompt`, () => {
               promptOff: ``,
               promptOn: ``,
             },
-            {
-              accept: `.pdf,.docx`,
-              id: `briefFile`,
-              kind: `file_input`,
-              label: { emoji: `🔹`, text: `Attachments` },
-              pickLabel: `Attach files`,
-            },
             { id: `source`, kind: `text_input`, label: { emoji: `🔹`, text: `Source text` } },
             { id: `extra`, kind: `text_input`, label: { emoji: `🔹`, text: `Extra constraints` }, omitWhenEmpty: true },
             { id: `cta`, kind: `text_input`, label: { emoji: `🔹`, text: `CTA line` } },

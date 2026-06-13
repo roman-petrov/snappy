@@ -9,7 +9,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-import type { Ai, AiChatMessage } from "@snappy/ai";
+import type { AiChatMessage, AiChatModel } from "@snappy/ai";
 import type { Coder } from "@snappy/coder";
 
 import { Unicode } from "@snappy/core";
@@ -25,14 +25,12 @@ const hideCursor = `${Unicode.escape}[?25l`;
 const showCursor = `${Unicode.escape}[?25h`;
 
 const run = async ({
-  ai,
   chatModel,
   coder,
   projectRoot,
   t,
 }: {
-  ai: Ai;
-  chatModel: string;
+  chatModel: AiChatModel;
   coder: (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) => ReturnType<typeof Coder>;
   projectRoot: string;
   t: TFunction;
@@ -81,7 +79,7 @@ const run = async ({
       await (async () => {
         const output = StatusOutput();
         try {
-          const engine = coder({ ai, chatModel });
+          const engine = coder({ chatModel });
 
           output.start();
           const agentRun = engine.start(session, {

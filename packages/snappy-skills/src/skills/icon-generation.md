@@ -1,4 +1,5 @@
 ---
+id: icon-generation
 name:
   en: "🧩 Icon generation"
   ru: "🧩 Генерация иконок"

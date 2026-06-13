@@ -3,16 +3,16 @@ import { Constants } from "./Constants";
 import { Reranker } from "./core/Reranker";
 import { Indexer, type IndexerConfig, SemanticSearch, VectorStore } from "./tools";
 
-export type CoderDbConfig = Pick<IndexerConfig, `aiEmbeddings` | `dbDir` | `embeddingModel` | `ignore` | `projectRoot`>;
+export type CoderDbConfig = Pick<IndexerConfig, `dbDir` | `embedder` | `ignore` | `projectRoot`>;
 
-export const CoderDb = async ({ aiEmbeddings, dbDir, embeddingModel, ignore, projectRoot }: CoderDbConfig) => {
+export const CoderDb = async ({ dbDir, embedder, ignore, projectRoot }: CoderDbConfig) => {
   const store = await VectorStore(dbDir);
-  const sync = Indexer({ aiEmbeddings, dbDir, embeddingModel, ignore, projectRoot, store });
+  const sync = Indexer({ dbDir, embedder, ignore, projectRoot, store });
 
   const search = async ({ query, topK = Constants.search.defaultK }: { query: string; topK?: number }) => {
     await sync();
 
-    const [vector] = (await aiEmbeddings.create({ input: query, model: embeddingModel })).vectors;
+    const [vector] = (await embedder.embed({ input: query })).vectors;
     if (vector === undefined) {
       return { kind: `no_results` as const };
     }
@@ -50,7 +50,7 @@ export const CoderDb = async ({ aiEmbeddings, dbDir, embeddingModel, ignore, pro
     }
 
     const snippets = mergedCandidates.map(candidate => candidate.text.slice(0, candidateSnippetMaxChars));
-    const { vectors } = await aiEmbeddings.create({ input: snippets, model: embeddingModel });
+    const { vectors } = await embedder.embed({ input: snippets });
 
     const hits = Reranker.rerank({
       candidates: mergedCandidates,

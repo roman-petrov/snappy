@@ -4,41 +4,38 @@
 /* eslint-disable unicorn/try-complexity */
 import type { Locale } from "@snappy/intl";
 
-import { Ai } from "@snappy/ai";
-
-import type { StaticFormAnswers, StaticFormPlan } from "../Schema";
+import type { StaticFormAnswersOfFields, StaticFormField, StaticFormPlanOf } from "../Schema";
 import type { AgentAiModels, AgentEntry, AgentFeedRuntime, AgentGroupId } from "../Types";
 
-type Localization = Record<string, readonly [string, string]>;
+export type StaticAgentMetaCreateInput<TLocalization extends Localization> = {
+  i18n: (key: keyof TLocalization) => string;
+};
 
-type StaticAgentMetaCreateInput<TLocalization extends Localization> = { i18n: (key: keyof TLocalization) => string };
-
-type StaticAgentMetaPayload = {
+export type StaticAgentMetaPayload<TFields extends readonly StaticFormField[]> = {
   description: string;
   emoji: string;
   group: AgentGroupId;
-  plan: StaticFormPlan & { title: string };
+  plan: StaticFormPlanOf<TFields> & { title: string };
   prompt: string;
 };
 
-type StaticAgentRun = (input: StaticAgentRunInput) => Promise<unknown>;
-
-type StaticAgentRunInput = {
-  ai: Ai;
-  answers: StaticFormAnswers;
+export type StaticAgentRunInput<TFields extends readonly StaticFormField[] = readonly StaticFormField[]> = {
+  answers: StaticFormAnswersOfFields<TFields>;
   feed: AgentFeedRuntime;
   isStopped: () => boolean;
   locale: Locale;
   models: AgentAiModels;
-  plan: StaticFormPlan;
+  plan: StaticFormPlanOf<TFields> & { title: string };
   prompt: string;
 };
 
+type Localization = Record<string, readonly [string, string]>;
+
 export const StaticAgent =
-  (run: StaticAgentRun) =>
-  <TLocalization extends Localization>(
+  <TLocalization extends Localization, const TFields extends readonly StaticFormField[]>(
     localizationFactory: () => TLocalization,
-    create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload,
+    create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload<TFields>,
+    run: (input: StaticAgentRunInput<TFields>) => Promise<unknown>,
   ): AgentEntry =>
   locale => {
     const localization = localizationFactory();
@@ -59,7 +56,6 @@ export const StaticAgent =
     return {
       meta: { ...meta, title: plan.title },
       module: ({ aiConfig, feed, onRunningChange }) => {
-        const ai = Ai(aiConfig.options);
         const { models } = aiConfig;
         let stopped = false;
         const isStopped = () => stopped;
@@ -73,7 +69,7 @@ export const StaticAgent =
               if (isStopped()) {
                 return;
               }
-              await run({ ai, answers, feed, isStopped, locale, models, plan, prompt });
+              await run({ answers, feed, isStopped, locale, models, plan, prompt });
             } finally {
               onRunningChange?.(false);
             }

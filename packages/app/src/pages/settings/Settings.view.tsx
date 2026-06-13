@@ -1,5 +1,5 @@
 import { FilledIcon, Page, SwitchDisplay } from "@snappy/ui";
-import { CloudFog, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
+import { CloudFog, Eye, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
@@ -16,6 +16,7 @@ export const SettingsView = ({
   llmChatEnd,
   llmImageEnd,
   llmSpeechEnd,
+  llmVisionEnd,
   locale,
   theme,
   toggleFog,
@@ -80,6 +81,13 @@ export const SettingsView = ({
           icon={<FilledIcon color="accentOrange" icon={Image} />}
           link={Routes.settings.models.image}
           text={t(`settings.models.image.title`)}
+        />
+        <SettingsCardSeparator />
+        <SettingsCardRow
+          bottom={llmVisionEnd}
+          icon={<FilledIcon color="accentViolet" icon={Eye} />}
+          link={Routes.settings.models.vision}
+          text={t(`settings.models.vision.title`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow

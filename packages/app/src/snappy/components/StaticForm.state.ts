@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import type {
-  StaticFormAnswers,
-  StaticFormAnswersOf,
-  StaticFormAnswerValue,
-  StaticFormField,
-  StaticFormFieldByKind,
-  StaticFormPlan,
-} from "@snappy/snappy-sdk";
-
 import { _ } from "@snappy/core";
+import {
+  type StaticFormAnswers,
+  StaticFormAnswersOf,
+  type StaticFormAnswerValueByKind,
+  type StaticFormField,
+  type StaticFormFieldByKind,
+  type StaticFormPlan,
+} from "@snappy/snappy-sdk";
 import { FileSelect, Switch, Tabs, TextInput } from "@snappy/ui";
 import { type ComponentProps, type ElementType, useRef, useState } from "react";
 
@@ -30,7 +29,7 @@ type FieldConfigInput<TKind extends FieldKind> = {
 
 type FieldKind = StaticFormField[`kind`];
 
-type ValueByKind<TKind extends FieldKind> = StaticFormAnswerValue<FieldByKind<TKind>>;
+type ValueByKind<TKind extends FieldKind> = StaticFormAnswerValueByKind<TKind>;
 
 const stringDefault = (value: StaticFormField[`default`], fallback: string) => (_.isString(value) ? value : fallback);
 const stringListDefault = (value: StaticFormField[`default`]) => (_.isArray(value) ? value.filter(_.isString) : []);
@@ -49,6 +48,17 @@ const fieldConfig = <TKind extends FieldKind, TComponent extends ElementType>(co
 }): FieldConfig<TKind> => config;
 
 const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
+  audio_input: fieldConfig<`audio_input`, typeof FileSelect>({
+    component: FileSelect,
+    default: () => undefined,
+    props: ({ field, setField, value }) => ({
+      accept: [`audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`],
+      fileName: value?.name ?? ``,
+      hint: field.hint,
+      onChange: files => setField(field.id, files[0]),
+      pickLabel: field.pickLabel ?? ``,
+    }),
+  }),
   binary_choice: fieldConfig({
     component: Switch,
     default: field => (_.isBoolean(field.default) ? field.default : false),
@@ -58,11 +68,11 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
       onChange: checked => setField(field.id, checked),
     }),
   }),
-  file_input: fieldConfig({
+  image_input: fieldConfig<`image_input`, typeof FileSelect>({
     component: FileSelect,
     default: () => undefined,
     props: ({ field, setField, value }) => ({
-      accept: field.accept === undefined ? [`audio/*`] : [field.accept],
+      accept: [`image/*,.png,.jpg,.jpeg,.webp,.gif`],
       fileName: value?.name ?? ``,
       hint: field.hint,
       onChange: files => setField(field.id, files[0]),
@@ -96,7 +106,7 @@ const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
       maxLines: 8,
       onChange: text => setField(field.id, text),
       placeholder: field.placeholder ?? ``,
-      value,
+      value: value ?? ``,
     }),
   }),
 };
@@ -125,7 +135,7 @@ export const useStaticFormState = <TPlan extends StaticFormPlan>({ onSubmit, pla
       return next;
     });
 
-  const submit = () => onSubmit(answersRef.current as StaticFormAnswersOf<TPlan>);
+  const submit = () => onSubmit(StaticFormAnswersOf<TPlan>(answersRef.current));
 
   const fieldView = <TKind extends FieldKind>(field: FieldByKind<TKind>) => {
     const config = fieldByKind[field.kind];

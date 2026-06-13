@@ -1,4 +1,5 @@
 ---
+id: postcard-generation
 name:
   en: "💌 Postcard generation"
   ru: "💌 Генерация открытки"

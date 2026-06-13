@@ -73,7 +73,7 @@ export const en = {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
   },
   catalog: {
-    groups: { audio: `Audio`, lab: `Lab`, text: `Text`, visual: `Graphics` },
+    groups: { audio: `Audio`, edit: `Image editing`, text: `Text`, visual: `Image generation` },
     openFeed: `Feed`,
     snappy: {
       description: `Free-form assistant with tools and markdown skills.`,
@@ -113,6 +113,7 @@ export const en = {
         title: `Image`,
       },
       speech: { title: `Speech recognition` },
+      vision: { title: `Vision` },
     },
     modelsGroup: `Models`,
     profile: {

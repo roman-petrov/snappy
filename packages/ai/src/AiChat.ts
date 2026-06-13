@@ -15,10 +15,12 @@ import { _ } from "@snappy/core";
 import { z } from "zod";
 
 import type { AiApiTool, AiChatCompletionBody, AiStreamChunk } from "./AiApi";
+import type { AiModelStreamSink } from "./core-model";
+import type { CatalogChat } from "./core-model/ModelChat";
 import type {
   AiChatAssistantMessage,
-  AiChatCompletionCreateInput,
   AiChatCompletionSession,
+  AiChatCompletionsInput,
   AiChatStream,
   AiChatStreamSegment,
   AiChatToolChoice,
@@ -33,7 +35,6 @@ import { AiHttp, type AiHttpConfig } from "./AiHttp";
 import { AiMessages, type ToolCallRow } from "./AiMessages";
 import { AiSse } from "./AiSse";
 import { AiTunnel } from "./AiTunnel";
-import { AiModel, type AiModelStreamSink } from "./models";
 
 type StreamCell<T> = { close: () => void; push: (value: T) => void; stream: AsyncIterable<T> };
 
@@ -129,21 +130,21 @@ type ToolCallDelta = NonNullable<NonNullable<NonNullable<AiStreamChunk[`choices`
 
 const completion = (
   http: AiHttpConfig,
-  { model, reasoningEffort, ...input }: AiChatCompletionCreateInput,
+  catalogChat: CatalogChat,
+  { reasoningEffort, ...input }: AiChatCompletionsInput,
 ): AiChatCompletionSession => {
-  const modelPlugin = AiModel.resolve(AiTunnel.chatModelId(model));
+  const modelPlugin = catalogChat;
   const sourceMessages = `prompt` in input ? [{ content: input.prompt, role: `user` as const }] : input.messages;
   const messages = AiMessages.chatToApi(sourceMessages, modelPlugin);
   const chatInput = `prompt` in input ? undefined : input;
-  const reasoning = AiTunnel.reasoningBody(reasoningEffort);
+  const reasoning = reasoningEffort === undefined ? undefined : { effort: reasoningEffort };
 
   const body: AiChatCompletionBody = {
     max_tokens: AiConstants.maxChatTokens,
     messages,
-    model: AiTunnel.openRouterChatModel(model),
-    reasoning,
+    model: AiTunnel.openRouterChatModel(catalogChat.name),
     stream: true,
-    ...modelPlugin.completionExtras(reasoning),
+    ...(reasoning === undefined ? {} : { reasoning }),
     ...(chatInput?.tools === undefined
       ? {}
       : { tool_choice: apiToolChoice(chatInput.toolChoice), tools: apiTools(chatInput.tools) }),

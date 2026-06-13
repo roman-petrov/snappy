@@ -1,7 +1,7 @@
 /* eslint-disable functional/no-expression-statements */
 import type { DbUser } from "@snappy/db";
 
-import { AiConstants } from "@snappy/ai";
+import { AiConstants, AiModels } from "@snappy/ai";
 import { TypeWriterSpeeds } from "@snappy/domain";
 import { z } from "zod";
 
@@ -15,10 +15,11 @@ const load = async (user: DbUser) => {
   const row = await user.settings.find();
   const aiTunnelDirect = row?.aiTunnelDirect ?? false;
   const aiTunnelKey = row?.aiTunnelKey ?? ``;
-  const llmChatModel = row?.llmChatModel ?? AiConstants.defaults.models.chat;
-  const llmImageModel = row?.llmImageModel ?? AiConstants.defaults.models.image;
+  const llmChatModel = row?.llmChatModel ?? AiModels.fallback.chat.name;
+  const llmImageModel = row?.llmImageModel ?? AiModels.fallback.image.name;
   const llmImageQuality = llmImageQualitySchema.catch(AiConstants.defaults.imageQuality).parse(row?.llmImageQuality);
-  const llmSpeechRecognitionModel = row?.llmSpeechRecognitionModel ?? AiConstants.defaults.models.speechRecognition;
+  const llmVisionModel = row?.llmVisionModel ?? AiModels.fallback.vision.name;
+  const llmSpeechRecognitionModel = row?.llmSpeechRecognitionModel ?? AiModels.fallback.speechRecognition.name;
   const typeWriterSpeedStored = row?.typeWriterSpeed ?? ``;
 
   const typeWriterSpeed =
@@ -33,6 +34,7 @@ const load = async (user: DbUser) => {
     llmImageModel,
     llmImageQuality,
     llmSpeechRecognitionModel,
+    llmVisionModel,
     typeWriterSpeed,
   };
 };
@@ -47,6 +49,7 @@ const trpc = {
       llmImageModel: z.string().optional(),
       llmImageQuality: llmImageQualitySchema.optional(),
       llmSpeechRecognitionModel: z.string().optional(),
+      llmVisionModel: z.string().optional(),
       typeWriterSpeed: typeWriterSpeedInput.optional(),
     }),
   ).mutation(async ({ ctx, input }) => {
@@ -56,6 +59,7 @@ const trpc = {
       input.llmChatModel === undefined &&
       input.llmImageQuality === undefined &&
       input.llmImageModel === undefined &&
+      input.llmVisionModel === undefined &&
       input.llmSpeechRecognitionModel === undefined &&
       input.typeWriterSpeed === undefined
     ) {

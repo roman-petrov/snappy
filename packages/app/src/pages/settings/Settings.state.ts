@@ -9,6 +9,7 @@ export const useSettingsState = () => {
   const [email, setEmail] = useState<string>();
   const [llmChatEnd, setLlmChatEnd] = useState<string>();
   const [llmImageEnd, setLlmImageEnd] = useState<string>();
+  const [llmVisionEnd, setLlmVisionEnd] = useState<string>();
   const [llmSpeechEnd, setLlmSpeechEnd] = useState<string>();
   const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
   const fog = useStoreValue($fog);
@@ -21,10 +22,23 @@ export const useSettingsState = () => {
     setEmail(profile?.email);
     setLlmChatEnd(settings.llmChatModel);
     setLlmImageEnd(`${settings.llmImageModel} · ${settings.llmImageQuality}`);
+    setLlmVisionEnd(settings.llmVisionModel);
     setLlmSpeechEnd(settings.llmSpeechRecognitionModel);
     setTypeWriterSpeed(settings.typeWriterSpeed);
   }, [locale]);
   const toggleFog = () => $fog.set(!fog);
 
-  return { aiTunnelEnd, email, fog, llmChatEnd, llmImageEnd, llmSpeechEnd, locale, theme, toggleFog, typeWriterSpeed };
+  return {
+    aiTunnelEnd,
+    email,
+    fog,
+    llmChatEnd,
+    llmImageEnd,
+    llmSpeechEnd,
+    llmVisionEnd,
+    locale,
+    theme,
+    toggleFog,
+    typeWriterSpeed,
+  };
 };

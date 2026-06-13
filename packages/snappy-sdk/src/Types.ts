@@ -1,13 +1,24 @@
-import type { Ai, AiConnectionOptions, AiImageQuality, AiImageSize } from "@snappy/ai";
+import type {
+  AiChatModel,
+  AiImageBackground,
+  AiImageModel,
+  AiImageQuality,
+  AiImageSize,
+  AiSpeechModel,
+} from "@snappy/ai";
 import type { Locale } from "@snappy/intl";
 
 import type { StaticFormAnswersOf, StaticFormPlan } from "./Schema";
 
-export type AgentAiConfig = { models: AgentAiModels; options: AgentAiOptions };
+export type AgentAiConfig = { models: AgentAiModels };
 
-export type AgentAiModels = { chat: string; image: string; imageQuality: AiImageQuality; speech: string };
-
-export type AgentAiOptions = AiConnectionOptions;
+export type AgentAiModels = {
+  chat: AiChatModel;
+  image: AiImageModel;
+  imageQuality: AiImageQuality;
+  speech: AiSpeechModel;
+  vision: AiChatModel;
+};
 
 export type AgentAsk = <TPlan extends StaticFormPlan>(plan: TPlan) => Promise<StaticFormAnswersOf<TPlan>>;
 
@@ -16,6 +27,8 @@ export type AgentCard = AgentInfo & { id: string };
 export type AgentDefinition = ReturnType<AgentEntry> & { id: string };
 
 export type AgentEntry = (locale: Locale) => { meta: AgentInfo; module: AgentModuleFactory };
+
+export type AgentFeedArtifactResult = { artifactId: string; content: string };
 
 export type AgentFeedRuntime = {
   appendChatStream: (stream: AsyncIterable<string>) => Promise<void>;
@@ -26,15 +39,17 @@ export type AgentFeedRuntime = {
   appendUserText: (text: string) => number;
   ask: AgentAsk;
   generateImage: (input: {
-    ai: Ai;
-    model: string;
+    edit?: AgentImageEdit;
+    model: AiImageModel;
     prompt: string;
     size?: AiImageSize;
-  }) => Promise<{ artifactId: string }>;
-  generateText: (input: { ai: Ai; model: string; prompt: string }) => Promise<{ artifactId: string }>;
+  }) => Promise<AgentFeedArtifactResult>;
+  generateText: (input: { model: AiChatModel; prompt: string }) => Promise<AgentFeedArtifactResult>;
 };
 
-export type AgentGroupId = `audio` | `lab` | `text` | `visual`;
+export type AgentGroupId = `audio` | `edit` | `text` | `visual`;
+
+export type AgentImageEdit = { background?: AiImageBackground; images: File[] };
 
 export type AgentInfo = { description: string; emoji: string; group: AgentGroupId; title: string };
 

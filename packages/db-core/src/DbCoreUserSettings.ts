@@ -13,6 +13,7 @@ export type DbCoreSettingsPatch = {
   llmImageModel?: string;
   llmImageQuality?: AiImageQuality;
   llmSpeechRecognitionModel?: string;
+  llmVisionModel?: string;
   typeWriterSpeed?: false | TypeWriterSpeed;
 };
 
@@ -30,6 +31,7 @@ export const DbCoreUserSettings = (prisma: PrismaClient, userId: string) => {
       llmImageModel: DbCoreConvert.optional(row.llmImageModel),
       llmImageQuality: DbCoreConvert.optional(row.llmImageQuality),
       llmSpeechRecognitionModel: DbCoreConvert.optional(row.llmSpeechRecognitionModel),
+      llmVisionModel: DbCoreConvert.optional(row.llmVisionModel),
       typeWriterSpeed: DbCoreConvert.optional(row.typeWriterSpeed),
     };
   };
@@ -41,6 +43,7 @@ export const DbCoreUserSettings = (prisma: PrismaClient, userId: string) => {
       ...(patch.llmChatModel === undefined ? {} : { llmChatModel: patch.llmChatModel }),
       ...(patch.llmImageModel === undefined ? {} : { llmImageModel: patch.llmImageModel }),
       ...(patch.llmImageQuality === undefined ? {} : { llmImageQuality: patch.llmImageQuality }),
+      ...(patch.llmVisionModel === undefined ? {} : { llmVisionModel: patch.llmVisionModel }),
       ...(patch.llmSpeechRecognitionModel === undefined
         ? {}
         : { llmSpeechRecognitionModel: patch.llmSpeechRecognitionModel }),

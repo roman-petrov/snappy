@@ -1,4 +1,5 @@
 ---
+id: visual-diagram-generation
 name:
   en: "📊 Visual diagram generation"
   ru: "📊 Генерация визуальных диаграмм"

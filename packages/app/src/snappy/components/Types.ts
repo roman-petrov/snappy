@@ -1,4 +1,6 @@
+import type { AiImageSize } from "@snappy/ai";
 import type { TrpcOutputs } from "@snappy/app-server-api";
+import type { AgentImageEdit } from "@snappy/snappy-sdk";
 
 export type AgentArtifact =
   | (AgentArtifactSession & Extract<FeedArtifact, { type: `image` }>)
@@ -8,6 +10,12 @@ export type AgentArtifact =
 
 export type AgentArtifactGenerationStatus = `done` | `error` | `running`;
 
-export type AgentArtifactSession = { error?: string; generationStatus: AgentArtifactGenerationStatus; model?: string };
+export type AgentArtifactSession = {
+  edit?: AgentImageEdit;
+  error?: string;
+  generationStatus: AgentArtifactGenerationStatus;
+  model?: string;
+  size?: AiImageSize;
+};
 
 export type FeedArtifact = TrpcOutputs[`feed`][`list`][`items`][number];

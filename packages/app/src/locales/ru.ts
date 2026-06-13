@@ -76,7 +76,7 @@ export const ru = {
     },
   },
   catalog: {
-    groups: { audio: `Аудио`, lab: `Лаборатория`, text: `Текст`, visual: `Графика` },
+    groups: { audio: `Аудио`, edit: `Редактирование изображений`, text: `Текст`, visual: `Генерация изображений` },
     openFeed: `Лента`,
     snappy: {
       description: `Свободный чат с инструментами и навыками из markdown.`,
@@ -123,6 +123,7 @@ export const ru = {
         title: `Изображение`,
       },
       speech: { title: `Распознавание речи` },
+      vision: { title: `Зрение` },
     },
     modelsGroup: `Модели`,
     profile: {

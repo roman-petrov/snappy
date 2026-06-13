@@ -1,6 +1,14 @@
-import { StaticAgentPrompt } from "../StaticAgentPrompt";
-import { StaticAgent } from "./StaticAgent";
+import type { StaticFormField } from "../Schema";
 
-export const StaticTextAgent = StaticAgent(async ({ ai, answers, feed, models, plan, prompt }) =>
-  feed.generateText({ ai, model: models.chat, prompt: StaticAgentPrompt({ answers, mainPrompt: prompt, plan }) }),
-);
+import { StaticAgentPrompt } from "../StaticAgentPrompt";
+import { StaticAgent, type StaticAgentMetaCreateInput, type StaticAgentMetaPayload } from "./StaticAgent";
+
+type Localization = Record<string, readonly [string, string]>;
+
+export const StaticTextAgent = <TLocalization extends Localization, const TFields extends readonly StaticFormField[]>(
+  localizationFactory: () => TLocalization,
+  create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload<TFields>,
+) =>
+  StaticAgent(localizationFactory, create, async ({ answers, feed, models, plan, prompt }) =>
+    feed.generateText({ model: models.chat, prompt: StaticAgentPrompt({ answers, mainPrompt: prompt, plan }) }),
+  );

@@ -1,7 +1,6 @@
 import type { TypeWriterSpeed } from "@snappy/domain";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
-import { Ai, type Ai as AiClient } from "@snappy/ai";
 import { _ } from "@snappy/core";
 import { useAsyncEffect, useGo } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -16,7 +15,6 @@ export const useFeedState = () => {
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [hasMore, setHasMore] = useState(true);
   const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
-  const [ai, setAi] = useState<AiClient | undefined>(undefined);
   const [typeWriterSpeed, setTypeWriterSpeed] = useState<TypeWriterSpeed | undefined>(undefined);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
@@ -63,7 +61,6 @@ export const useFeedState = () => {
     const settings = await trpc.user.settings.get.query();
     const config = AgentAiFromSettings(settings);
     setAiConfig(config);
-    setAi(Ai(config.options));
     setTypeWriterSpeed(settings.typeWriterSpeed);
   }, []);
 
@@ -90,12 +87,10 @@ export const useFeedState = () => {
 
   const cards = useMemo(
     () =>
-      ai === undefined || aiConfig === undefined
+      aiConfig === undefined
         ? undefined
         : items.map(item => {
-            const shared = {
-              ai,
-              aiOptions: aiConfig.options,
+            const bindings = {
               id: item.id,
               onError,
               onPublish,
@@ -104,10 +99,16 @@ export const useFeedState = () => {
             };
 
             return item.type === `image`
-              ? { ...shared, content: item.src, model: aiConfig.models.image, type: `image` as const }
-              : { ...shared, content: item.text, model: aiConfig.models.chat, type: `text` as const, typeWriterSpeed };
+              ? { ...bindings, content: item.src, model: aiConfig.models.image, type: `image` as const }
+              : {
+                  ...bindings,
+                  content: item.text,
+                  model: aiConfig.models.chat,
+                  type: `text` as const,
+                  typeWriterSpeed,
+                };
           }),
-    [ai, aiConfig, items, onError, onPublish, removeItem, typeWriterSpeed],
+    [aiConfig, items, onError, onPublish, removeItem, typeWriterSpeed],
   );
 
   return { cards, sentinelRef };

@@ -1,12 +1,12 @@
 import type { TrpcOutputs } from "@snappy/app-server-api";
 
-import { Ai, type AiModelType } from "@snappy/ai";
+import { type AiModelItem, AiModels, type AiModelType } from "@snappy/ai";
 import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { AgentAiFromSettings, trpc } from "../../../core";
+import { trpc } from "../../../core";
 
-export const useSettingsModelIds = (modelType: AiModelType) => {
+export const useSettingsModelIds = (modelType: AiModelType, modelFilter?: (model: AiModelItem) => boolean) => {
   const [ids, setIds] = useState<string[]>([]);
 
   const [settingsResponse, setSettingsResponse] = useState<TrpcOutputs[`user`][`settings`][`get`] | undefined>(
@@ -15,11 +15,14 @@ export const useSettingsModelIds = (modelType: AiModelType) => {
 
   useAsyncEffect(async () => {
     const settings = await trpc.user.settings.get.query();
-    const agentAi = Ai(AgentAiFromSettings(settings).options);
 
-    setIds(agentAi.models.filter(model => model.type === modelType).map(model => model.name));
+    setIds(
+      AiModels.items
+        .filter(entry => entry.type === modelType && (modelFilter === undefined || modelFilter(entry)))
+        .map(entry => entry.name),
+    );
     setSettingsResponse(settings);
-  }, [modelType]);
+  }, [modelFilter, modelType]);
 
   return { ids, settingsResponse };
 };

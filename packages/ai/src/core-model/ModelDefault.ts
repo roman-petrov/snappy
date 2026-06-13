@@ -1,11 +1,9 @@
 /* eslint-disable functional/no-expression-statements */
-import type { AiModel } from "./AiModel";
+import type { AiModelBehavior } from "./Entry";
 
-export const AiModelDefault: AiModel = {
+export const ModelDefault: AiModelBehavior = {
   assistantReasoningExtras: reasoning => (reasoning === `` ? {} : { reasoningContent: reasoning }),
   assistantToolCallsExtras: () => ({}),
-  completionExtras: () => ({}),
-  matches: () => false,
   streamDelta: (delta, { pushPlainReasoning }) => {
     pushPlainReasoning(delta.reasoning);
   },

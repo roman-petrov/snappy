@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/try-complexity */
-import { Ai, type AiChatCompletionSession } from "@snappy/ai";
+import type { AiChatCompletionSession } from "@snappy/ai";
+
 import { _ } from "@snappy/core";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -9,9 +10,8 @@ type Pump = { buffer: string; iterable: AsyncIterable<string>; networkDone: bool
 
 export const useAiStreamState = ({
   active = false,
-  aiOptions,
+  chatModel,
   generationKey = 0,
-  model,
   onComplete,
   prompt = ``,
   stream: externalStream,
@@ -23,13 +23,11 @@ export const useAiStreamState = ({
   const pumpRef = useRef<Pump | undefined>(undefined);
   const mountedRef = useRef(false);
   const doneRef = useRef(false);
-
-  const generating =
-    externalStream === undefined && active && aiOptions !== undefined && model !== undefined && prompt.trim() !== ``;
+  const generating = externalStream === undefined && active && chatModel !== undefined && prompt.trim() !== ``;
 
   if (generating && (sessionRef.current === undefined || generationRef.current !== generationKey)) {
     generationRef.current = generationKey;
-    const session = Ai(aiOptions).chat.completions.create({ model, prompt, reasoningEffort: `none` });
+    const session = chatModel.completions({ prompt });
     sessionRef.current = session;
     pumpRef.current = { buffer: ``, iterable: session.chatText(), networkDone: false, started: false };
   }

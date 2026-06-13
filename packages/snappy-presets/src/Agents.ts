@@ -12,7 +12,7 @@ const list = (locale: Locale) =>
     .map(([path, moduleObject]) => ({ entry: moduleObject.Agent(locale), id: path.split(`/`).at(-2) ?? `` }))
     .toSorted((left, right) => left.id.localeCompare(right.id));
 
-const groupOrder: AgentGroupId[] = [`text`, `audio`, `visual`, `lab`];
+const groupOrder: AgentGroupId[] = [`text`, `audio`, `visual`, `edit`];
 const cards = (locale: Locale) => list(locale).map(({ entry, id }) => ({ ...entry.meta, id }));
 
 const byId = (agentId: string, locale: Locale) => {

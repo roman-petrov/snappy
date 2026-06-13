@@ -1,5 +1,5 @@
 // cspell:disable
-import { StaticAudioAgent } from "@snappy/snappy-sdk";
+import { StaticAudioAgent, StaticFields } from "@snappy/snappy-sdk";
 
 import { Prompts } from "../../Prompts";
 import { UiCommon } from "../../UiCommon";
@@ -56,12 +56,11 @@ export const Agent = StaticAudioAgent(
       emoji: `📋`,
       group: `audio`,
       plan: {
-        fields: [
+        fields: StaticFields([
           {
-            accept: `audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`,
             hint: i18n(`ui.field.audio.hint`),
             id: `audio`,
-            kind: `file_input`,
+            kind: `audio_input`,
             label: { emoji: `🎵`, text: i18n(`ui.field.audio.label`) },
             pickLabel: i18n(`ui.field.audio.pickLabel`),
           },
@@ -117,9 +116,10 @@ export const Agent = StaticAudioAgent(
             placeholder: i18n(`ui.field.context.placeholder`),
             prompt: i18n(`ui.field.context.prompt`),
           },
-        ],
+        ]),
         title: i18n(`meta.title`),
       },
       prompt: i18n(`meta.prompt`),
     }) as const,
+  ({ answers: { audio } }) => audio,
 );

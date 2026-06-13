@@ -1,4 +1,5 @@
 ---
+id: text-improvement
 name:
   en: "✍️ Text improvement"
   ru: "✍️ Улучшение текста"

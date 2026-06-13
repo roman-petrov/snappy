@@ -1,26 +1,32 @@
+/* eslint-disable consistent-return */
+/* eslint-disable @typescript-eslint/consistent-return */
 /* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
-import type { Ai, AiOptions } from "@snappy/ai";
 import type { TypeWriterSpeed } from "@snappy/domain";
-import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
 
 import { _ } from "@snappy/core";
+import {
+  type AgentFeedArtifactResult,
+  type AgentFeedRuntime,
+  type StaticFormAnswers,
+  StaticFormAnswersOf,
+  type StaticFormPlan,
+} from "@snappy/snappy-sdk";
 import { createElement } from "react";
 
 import type { AgentArtifact, FeedArtifact } from "../Types";
-import type { AgentFeedBadgeLabel, AgentFeedEntry, AgentFeedItem } from "./Types";
+import type { AgentFeedArtifactEntry, AgentFeedBadgeLabel, AgentFeedEntry, AgentFeedItem } from "./Types";
 
 import { AgentFeedRow } from "./AgentFeedRow";
 
 export type AgentFeedHandleConfig = {
-  aiOptions: AiOptions;
   commit: (recipe: (previous: AgentFeedItem[]) => AgentFeedItem[]) => void;
   typeWriterSpeed?: TypeWriterSpeed;
 };
 
-export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFeedHandleConfig) => {
+export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConfig) => {
   let keySeq = 0;
 
   const addEntry = (entry: AgentFeedEntry) => {
@@ -35,21 +41,20 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
 
   const updateArtifactEntry = (entryKey: number, patch: Partial<AgentArtifact>) =>
     commit(previous =>
-      previous.map(item => {
-        if (item.key !== entryKey || item.entry.type !== `artifact`) {
-          return item;
-        }
-
-        const { artifact } = item.entry;
-
-        const next: AgentArtifact =
-          artifact.type === `text` ? { ...artifact, ...patch, type: `text` } : { ...artifact, ...patch, type: `image` };
-
-        return { ...item, entry: { ...item.entry, artifact: next } };
-      }),
+      previous.map(item =>
+        item.key === entryKey && item.entry.type === `artifact`
+          ? {
+              ...item,
+              entry:
+                item.entry.variant === `text`
+                  ? { ...item.entry, artifact: { ...item.entry.artifact, ...patch, type: `text` } }
+                  : { ...item.entry, artifact: { ...item.entry.artifact, ...patch, type: `image` } },
+            }
+          : item,
+      ),
     );
 
-  const failArtifact = (entryKey: number, error: unknown, done: PromiseWithResolvers<{ artifactId: string }>) => {
+  const failArtifact = (entryKey: number, error: unknown, done: PromiseWithResolvers<AgentFeedArtifactResult>) => {
     updateArtifactEntry(entryKey, {
       error: error instanceof Error ? error.message : `generation_failed`,
       generationStatus: `error`,
@@ -60,121 +65,120 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
   const publishArtifact = (
     entryKey: number,
     artifact: FeedArtifact,
-    done: PromiseWithResolvers<{ artifactId: string }>,
+    done: PromiseWithResolvers<AgentFeedArtifactResult>,
   ) => {
     updateArtifactEntry(entryKey, { ...artifact, generationStatus: `done` });
-    done.resolve({ artifactId: artifact.id });
+    done.resolve({ artifactId: artifact.id, content: artifact.type === `image` ? artifact.src : artifact.text });
   };
 
-  const generateArtifact = async ({
-    ai,
-    model,
-    prompt,
-    type,
-  }: {
-    ai: Ai;
-    model: string;
-    prompt: string;
-    type: AgentArtifact[`type`];
-  }) => {
-    const done = Promise.withResolvers<{ artifactId: string }>();
+  const runArtifact = async (entry: AgentFeedArtifactEntry) => {
+    const key = addEntry(entry);
 
-    const base =
-      type === `image`
-        ? ({ generationPrompt: prompt, src: ``, type: `image` } as const)
-        : ({ generationPrompt: prompt, text: ``, type: `text` } as const);
-
-    const key = addEntry({
-      ai,
-      artifact: { ...base, generationStatus: `running`, model },
-      done,
-      model,
-      type: `artifact`,
-    });
-
-    return done.promise.catch((error: unknown) => {
-      failArtifact(key, error, done);
+    return entry.done.promise.catch((error: unknown) => {
+      failArtifact(key, error, entry.done);
       throw error;
     });
   };
 
-  const generateText: AgentFeedRuntime[`generateText`] = async ({ ai, model, prompt }) =>
-    generateArtifact({ ai, model, prompt, type: `text` });
+  const generateText: AgentFeedRuntime[`generateText`] = async ({ model, prompt }) =>
+    runArtifact({
+      artifact: { generationPrompt: prompt, generationStatus: `running`, model: model.name, text: ``, type: `text` },
+      done: Promise.withResolvers(),
+      model,
+      type: `artifact`,
+      variant: `text`,
+    });
 
-  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt }) =>
-    generateArtifact({ ai, model, prompt, type: `image` });
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ edit, model, prompt, size }) =>
+    runArtifact({
+      artifact: {
+        generationPrompt: prompt,
+        generationStatus: `running`,
+        model: model.name,
+        src: ``,
+        type: `image`,
+        ...(edit === undefined ? {} : { edit }),
+        ...(size === undefined ? {} : { size }),
+      },
+      done: Promise.withResolvers(),
+      model,
+      type: `artifact`,
+      variant: `image`,
+    });
 
-  const ask: AgentFeedRuntime[`ask`] = async plan => {
-    const done = Promise.withResolvers<StaticFormAnswersOf<StaticFormPlan>>();
+  const ask: AgentFeedRuntime[`ask`] = async <TPlan extends StaticFormPlan>(plan: TPlan) => {
+    const done = Promise.withResolvers<StaticFormAnswers>();
     const key = addEntry({ done, plan, type: `form` });
 
-    return done.promise.finally(() => removeEntry(key));
+    return StaticFormAnswersOf<TPlan>(await done.promise.finally(() => removeEntry(key)));
   };
 
-  const rows = (items: AgentFeedItem[]) =>
-    items.map(({ entry, key }) => {
-      if (entry.type === `artifact`) {
-        if (entry.ai === undefined) {
-          return undefined;
-        }
+  const artifactRow = (key: number, entry: AgentFeedArtifactEntry) => {
+    const { artifact, done, model, variant } = entry;
 
-        const { artifact: item, done } = entry;
+    const shared = {
+      id: `id` in artifact ? artifact.id : ``,
+      key,
+      onError: (_id: string, error: unknown) => failArtifact(key, error, done),
+      onPublish: (published: FeedArtifact) => publishArtifact(key, published, done),
+      onRemove: () => removeEntry(key),
+      prompt: artifact.generationPrompt,
+    };
 
-        const props = {
-          ai: entry.ai,
-          aiOptions,
-          content: item.type === `image` ? item.src : item.text,
-          id: `id` in item ? item.id : ``,
-          model: entry.model ?? item.model ?? ``,
-          onError: (_id: string, error: unknown) => failArtifact(key, error, done),
-          onPublish: (artifact: FeedArtifact) => publishArtifact(key, artifact, done),
-          onRemove: () => removeEntry(key),
-          prompt: item.generationPrompt,
-        };
+    if (variant === `image`) {
+      return createElement(AgentFeedRow.image, {
+        ...shared,
+        content: artifact.src,
+        edit: artifact.edit,
+        model,
+        size: artifact.size,
+      });
+    }
 
-        if (item.type === `image`) {
-          return createElement(AgentFeedRow.image, { ...props, key });
-        }
+    return createElement(AgentFeedRow.text, { ...shared, content: artifact.text, model, typeWriterSpeed });
+  };
 
-        return createElement(AgentFeedRow.text, { ...props, key, typeWriterSpeed });
+  const row = ({ entry, key }: AgentFeedItem) => {
+    switch (entry.type) {
+      case `artifact`: {
+        return artifactRow(key, entry);
       }
-
-      if (entry.type === `status` || entry.type === `tool-badge`) {
-        return createElement(AgentFeedRow.badge, {
-          done: entry.done,
-          key,
-          ...(entry.type === `status` ? { hideOnSuccess: true as const } : {}),
-          text: entry.text,
-        });
-      }
-
-      if (entry.type === `form`) {
+      case `form`: {
         return createElement(AgentFeedRow.form, {
           key,
-          onSubmit: (value: StaticFormAnswersOf<StaticFormPlan>) => entry.done.resolve(value),
+          onSubmit: value => entry.done.resolve(value),
           plan: entry.plan,
         });
       }
-
-      if (entry.type === `user`) {
-        return createElement(AgentFeedRow.user, { key, text: entry.text });
-      }
-
-      if (entry.type === `reasoning`) {
+      case `reasoning`: {
         return createElement(AgentFeedRow.reasoning, {
           key,
           onComplete: () => entry.done.resolve(),
           stream: entry.stream,
         });
       }
+      case `status`: {
+        return createElement(AgentFeedRow.badge, { done: entry.done, hideOnSuccess: true, key, text: entry.text });
+      }
+      case `stream`: {
+        return createElement(AgentFeedRow.stream, {
+          key,
+          onComplete: () => entry.done.resolve(),
+          stream: entry.stream,
+          typeWriterSpeed,
+        });
+      }
+      case `tool-badge`: {
+        return createElement(AgentFeedRow.badge, { done: entry.done, key, text: entry.text });
+      }
+      case `user`: {
+        return createElement(AgentFeedRow.user, { key, text: entry.text });
+      }
+      // No default
+    }
+  };
 
-      return createElement(AgentFeedRow.stream, {
-        key,
-        onComplete: () => entry.done.resolve(),
-        stream: entry.stream,
-        typeWriterSpeed,
-      });
-    });
+  const rows = (items: AgentFeedItem[]) => items.map(row);
 
   const appendStream = async (source: AsyncIterable<string>, type: `reasoning` | `stream`) => {
     const done = Promise.withResolvers<void>();

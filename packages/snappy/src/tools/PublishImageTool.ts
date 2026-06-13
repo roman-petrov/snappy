@@ -1,11 +1,12 @@
-/* eslint-disable functional/no-expression-statements */
 import { AgentTool } from "@snappy/agent";
 import { AiConstants } from "@snappy/ai";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const PublishImageTool: SnappyToolFactory = ({ ai, config, feed, isStopped }) =>
+import { ToolContext } from "../ToolContext";
+
+export const PublishImageTool: SnappyToolFactory = ({ config, feed, isStopped, media }) =>
   AgentTool({
     description: [
       [
@@ -16,19 +17,12 @@ export const PublishImageTool: SnappyToolFactory = ({ ai, config, feed, isStoppe
         `input`,
         `Pass a self-contained prompt with required visual details and constraints. Set size only when the user requested dimensions or composition depends on resolution.`,
       ],
-      [
-        `output`,
-        `You only get success/failure text (no visual bytes). Show the full prompt in chat when calling this tool.`,
-      ],
+      [`output`, `Returns mediaId. The published image follows in the next user message.`],
     ],
-    execute: async ({ prompt, size }) => {
-      if (isStopped()) {
-        return ``;
-      }
-      await feed.generateImage({ ai, model: config.models.image, prompt, size });
-
-      return isStopped() ? `` : `Image generation completed successfully.`;
-    },
+    execute: async ({ prompt, size }) =>
+      isStopped()
+        ? ``
+        : ToolContext.publishImage({ feed, input: { model: config.models.image, prompt, size }, isStopped, media }),
     inputSchema: z.object({
       prompt: z
         .string()

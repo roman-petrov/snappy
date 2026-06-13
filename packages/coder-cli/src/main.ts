@@ -6,7 +6,7 @@
 /* eslint-disable functional/no-try-statements */
 import type { Locale } from "@snappy/intl";
 
-import { Ai } from "@snappy/ai";
+import { Ai, AiModels } from "@snappy/ai";
 import { Coder } from "@snappy/coder";
 import { CoderDb } from "@snappy/coder-db";
 import { CoderStore } from "@snappy/coder-store";
@@ -34,23 +34,15 @@ try {
   const aiTunnelKey = Config.aiTunnelKey();
   const t = makeLocaleT(locale);
   const ai = Ai({ aiTunnelKey });
-  const { chatModel, embeddingModel } = await ModelPrompt.prompt({ models: ai.models, t });
-
-  const db = await CoderDb({
-    aiEmbeddings: ai.embeddings,
-    dbDir: dbDirResolved,
-    embeddingModel,
-    ignore: Ignore,
-    projectRoot: projectRootResolved,
-  });
-
+  const { chat, embedder } = await ModelPrompt.prompt({ ai, models: AiModels.items, t });
+  const db = await CoderDb({ dbDir: dbDirResolved, embedder, ignore: Ignore, projectRoot: projectRootResolved });
   const store = CoderStore({ ignore: Ignore, projectRoot: projectRootResolved });
   const tools = { ...db.tools, ...store.tools };
 
   const coder = (props: Omit<Parameters<typeof Coder>[0], `locale` | `tools`>) =>
     Coder({ ...props, locale, tools: () => tools });
   Console.logLine(
-    `${Theme.indexStart(t(`startup.indexingStart`))} ${Theme.dim(t(`startup.indexingStatus`))} ${Theme.dim(`(${embeddingModel})`)}…`,
+    `${Theme.indexStart(t(`startup.indexingStart`))} ${Theme.dim(t(`startup.indexingStatus`))} ${Theme.dim(`(${embedder.name})`)}…`,
   );
   let lastIndexedPath: string | undefined;
   const indexStartedAt = performance.now();
@@ -84,7 +76,7 @@ try {
     Console.errorLine(Theme.error(error instanceof Error ? error.message : String(error)));
   }
 
-  await Repl.run({ ai, chatModel, coder, projectRoot: projectRootResolved, t });
+  await Repl.run({ chatModel: chat, coder, projectRoot: projectRootResolved, t });
   db.close();
   process.exit(0);
 } catch (error) {

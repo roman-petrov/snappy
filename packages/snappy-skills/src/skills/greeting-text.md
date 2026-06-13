@@ -1,4 +1,5 @@
 ---
+id: greeting-text
 name:
   en: "🎉 Text greeting generation"
   ru: "🎉 Генерация поздравительного текста"

@@ -1,4 +1,3 @@
-import { _ } from "@snappy/core";
 import { describe, expect, it } from "vitest";
 
 import { Skill } from "./Skill";
@@ -6,30 +5,24 @@ import { Skill } from "./Skill";
 describe(`Skill.parse`, () => {
   it(`parses frontmatter and sorts skills by id`, () => {
     expect(
-      Skill.parse(
-        _.fromEntries([
-          [
-            `../skills/zeta.md`,
-            `---
+      Skill.parse([
+        `---
+id: zeta
 description: "Zeta description"
 name:
   en: "Zeta title"
   ru: "Зета"
 ---
 Zeta body`,
-          ],
-          [
-            `../skills/alpha.md`,
-            `---
+        `---
+id: alpha
 description: "Alpha description"
 name:
   en: "Alpha title"
   ru: "Альфа"
 ---
 Alpha body`,
-          ],
-        ]),
-      ),
+      ]),
     ).toMatchInlineSnapshot(`
       [
         {
@@ -59,11 +52,11 @@ Alpha body`,
   });
 
   it(`returns empty meta fields when frontmatter is missing`, () => {
-    expect(Skill.parse({ [`../skills/plain.md`]: `Plain body` })).toMatchInlineSnapshot(`
+    expect(Skill.parse([`Plain body`])).toMatchInlineSnapshot(`
       [
         {
           "content": "Plain body",
-          "id": "plain",
+          "id": "",
           "meta": {
             "description": "",
             "name": {
@@ -78,13 +71,14 @@ Alpha body`,
 
   it(`returns empty strings for missing metadata keys`, () => {
     expect(
-      Skill.parse({
-        [`../skills/partial.md`]: `---
+      Skill.parse([
+        `---
+id: partial
 name:
   en: "Only EN"
 ---
 Body`,
-      }),
+      ]),
     ).toMatchInlineSnapshot(`
       [
         {
@@ -104,15 +98,16 @@ Body`,
 
   it(`unquotes both single and double quoted values`, () => {
     expect(
-      Skill.parse({
-        [`../skills/quotes.md`]: `---
+      Skill.parse([
+        `---
+id: quotes
 description: 'Single quoted description'
 name:
   en: "Double quoted en"
   ru: 'Single quoted ru'
 ---
 Body`,
-      }),
+      ]),
     ).toMatchInlineSnapshot(`
       [
         {

@@ -3,18 +3,11 @@ import type { z } from "zod";
 
 import type { AiConstants } from "./AiConstants";
 
-export type AiAudioTranscriptionsCreateInput = { file: File; model: string };
-
 export type AiChatAssistantMessage = {
   content: string;
   reasoningContent?: string;
   role: `assistant`;
   toolCalls?: AiToolCall[];
-};
-
-export type AiChatCompletionCreateInput = (AiChatInput | { prompt: string }) & {
-  model: string;
-  reasoningEffort?: AiReasoningEffort;
 };
 
 export type AiChatCompletionSession = {
@@ -26,11 +19,14 @@ export type AiChatCompletionSession = {
   stream: (stop?: AiSessionStop) => AiChatStream;
 };
 
+export type AiChatCompletionsInput = (AiChatInput | { prompt: string }) & { reasoningEffort?: AiReasoningEffort };
+
 export type AiChatInput = { messages: AiChatMessage[]; toolChoice?: AiChatToolChoice; tools?: AiToolSet };
 
 export type AiChatMessage =
+  | { content: AiChatUserContent; role: `user` }
   | { content: string; reasoningContent?: string; role: `assistant`; toolCalls?: AiToolCall[] }
-  | { content: string; role: `system` | `user` }
+  | { content: string; role: `system` }
   | { content: string; role: `tool`; toolCallId: string };
 
 export type AiChatStream = AsyncIterable<AiChatStreamSegment>;
@@ -42,21 +38,41 @@ export type AiChatStreamSegment =
 
 export type AiChatToolChoice = `auto` | `none` | { name: string };
 
-export type AiEmbeddingsCreateInput = { input: string | string[]; model: string };
+export type AiChatUserContent = AiContentPart[] | string;
 
-export type AiImageGenerateInput = ImageGenerationOptions & { model: string; prompt: string };
+export type AiContentPart = { text: string; type: `text` } | { type: `image`; url: string };
+
+export type AiEmbedderInput = { input: string | string[] };
+
+export type AiEmbedResult = { cost: number; vectors: number[][] };
+
+export type AiImageBackground = `auto` | `opaque` | `transparent`;
+
+export type AiImageBytesResult = { bytes: Uint8Array; cost: number };
+
+export type AiImageEditInput = ImageEditOptions & { images: File[]; prompt: string };
+
+export type AiImageGenerateInput = ImageGenerationOptions & { prompt: string };
 
 export type AiImageQuality = (typeof AiConstants.imageQuality)[number];
 
 export type AiImageSize = (typeof AiConstants.imageSize)[number];
 
-export type AiModelListItem = { name: string; source: string; type: AiModelType };
+export type AiModality = `audio` | `embeddings` | `image` | `text`;
+
+export type AiModelCapabilities = { input: readonly AiModality[]; output: readonly AiModality[] };
+
+export type AiModelItem = { capabilities: AiModelCapabilities; name: string; source: `ai-tunnel`; type: AiModelType };
 
 export type AiModelType = `chat` | `embedder` | `image` | `speech-recognition`;
 
 export type AiReasoningEffort = `high` | `low` | `medium` | `minimal` | `none` | `xhigh`;
 
 export type AiSessionStop = () => boolean;
+
+export type AiSpeechTranscribeInput = { file: File };
+
+export type AiSpeechTranscribeResult = { cost: number; text: string };
 
 export type AiTool<INPUT = unknown> = {
   description: string;
@@ -68,8 +84,10 @@ export type AiToolCall = { argumentsJson: string; toolCallId: string; toolName: 
 
 export type AiToolInput<T extends AiTool> = T extends AiTool<infer INPUT> ? INPUT : never;
 
-export type AiToolRunResult = string | { error: string };
+export type AiToolRunResult = string | { context?: readonly AiContentPart[]; tool: string } | { error: string };
 
 export type AiToolSet = Record<string, AiTool>;
 
-export type ImageGenerationOptions = { quality?: AiImageQuality; size: AiImageSize };
+export type ImageEditOptions = { background?: AiImageBackground; quality?: AiImageQuality; size?: AiImageSize };
+
+export type ImageGenerationOptions = { quality?: AiImageQuality; size?: AiImageSize };
