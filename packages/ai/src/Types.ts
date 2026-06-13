@@ -29,8 +29,9 @@ export type AiChatCompletionSession = {
 export type AiChatInput = { messages: AiChatMessage[]; toolChoice?: AiChatToolChoice; tools?: AiToolSet };
 
 export type AiChatMessage =
+  | { content: AiChatUserContent; role: `user` }
   | { content: string; reasoningContent?: string; role: `assistant`; toolCalls?: AiToolCall[] }
-  | { content: string; role: `system` | `user` }
+  | { content: string; role: `system` }
   | { content: string; role: `tool`; toolCallId: string };
 
 export type AiChatStream = AsyncIterable<AiChatStreamSegment>;
@@ -42,7 +43,15 @@ export type AiChatStreamSegment =
 
 export type AiChatToolChoice = `auto` | `none` | { name: string };
 
+export type AiChatUserContent = AiContentPart[] | string;
+
+export type AiContentPart = { text: string; type: `text` } | { type: `image`; url: string };
+
 export type AiEmbeddingsCreateInput = { input: string | string[]; model: string };
+
+export type AiImageBackground = `auto` | `opaque` | `transparent`;
+
+export type AiImageEditInput = ImageEditOptions & { images: File[]; model: string; prompt: string };
 
 export type AiImageGenerateInput = ImageGenerationOptions & { model: string; prompt: string };
 
@@ -72,4 +81,6 @@ export type AiToolRunResult = string | { error: string };
 
 export type AiToolSet = Record<string, AiTool>;
 
-export type ImageGenerationOptions = { quality?: AiImageQuality; size: AiImageSize };
+export type ImageEditOptions = { background?: AiImageBackground; quality?: AiImageQuality; size?: AiImageSize };
+
+export type ImageGenerationOptions = { quality?: AiImageQuality; size?: AiImageSize };

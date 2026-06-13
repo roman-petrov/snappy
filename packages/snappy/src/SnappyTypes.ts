@@ -7,8 +7,10 @@ export type SnappyToolContext = {
   ai: Ai;
   config: AgentAiConfig;
   feed: AgentFeedRuntime;
+  files: Record<string, File>;
   isStopped: () => boolean;
   locale: Locale;
+  media: Record<string, string>;
 };
 
 export type SnappyToolFactory = (context: SnappyToolContext) => AgentTool;

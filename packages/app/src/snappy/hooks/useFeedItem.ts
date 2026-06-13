@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/try-complexity */
-import type { Ai, AiOptions } from "@snappy/ai";
+import type { Ai, AiImageSize, AiOptions } from "@snappy/ai";
+import type { AgentImageEdit } from "@snappy/snappy-sdk";
 import type { MenuAction } from "@snappy/ui";
 
 import { RefreshCw, Trash2 } from "lucide-react";
@@ -14,9 +15,11 @@ export type FeedItemBindings = FeedItemNotify & {
   ai: Ai;
   aiOptions: AiOptions;
   content: string;
+  edit?: AgentImageEdit;
   id: string;
   model: string;
   prompt: string;
+  size?: AiImageSize;
 };
 
 export type FeedItemNotify = {

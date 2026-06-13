@@ -5,6 +5,7 @@ export const AiConstants = {
       chat: `deepseek-v4-flash`,
       embedder: `text-embedding-3-small`,
       image: `gpt-image-1-mini`,
+      look: `gemini-2.5-flash`,
       speechRecognition: `gpt-4o-mini-transcribe`,
     },
   },

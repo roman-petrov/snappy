@@ -27,6 +27,7 @@ vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
 const chatPath = `/api/ai-tunnel/v1/chat/completions`;
+const editsPath = `/api/ai-tunnel/v1/images/edits`;
 const imagesPath = `/api/ai-tunnel/v1/images/generations`;
 const jsonContentType = `application/json; charset=utf-8`;
 const model = `gpt-image-1-mini`;
@@ -133,6 +134,31 @@ describe(`AiTunnelProxy integration`, () => {
         await setImmediate();
 
         expect(api.balance.debitForLlm).toHaveBeenCalledExactlyOnceWith(api.dbUser, 1.2, { call: imagesPath, model });
+      });
+    });
+
+    it(`debits usage and forwards multipart image edits`, async () => {
+      await withTunnel({}, async ({ api, inject, upstream }) => {
+        const body = imageBody(0.8);
+        upstream.on(upstream.respond({ body, contentType: jsonContentType }));
+
+        const boundary = `----snappy-test`;
+
+        const payload = Buffer.from(
+          `--${boundary}\r\nContent-Disposition: form-data; name="model"\r\n\r\n${model}\r\n--${boundary}\r\nContent-Disposition: form-data; name="prompt"\r\n\r\nremove background\r\n--${boundary}--\r\n`,
+        );
+
+        const response = await inject(editsPath, {
+          headers: { "content-type": `multipart/form-data; boundary=${boundary}` },
+          payload,
+        });
+
+        expect(response.statusCode).toBe(HttpStatus.ok);
+        expect(response.json()).toStrictEqual(body);
+
+        await setImmediate();
+
+        expect(api.balance.debitForLlm).toHaveBeenCalledExactlyOnceWith(api.dbUser, 0.8, { call: editsPath, model });
       });
     });
 

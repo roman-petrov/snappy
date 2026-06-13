@@ -3,6 +3,7 @@ import type {
   AiAudioTranscriptionsCreateInput,
   AiChatCompletionCreateInput,
   AiEmbeddingsCreateInput,
+  AiImageEditInput,
   AiImageGenerateInput,
 } from "./Types";
 
@@ -30,6 +31,7 @@ export const Ai = (options: AiOptions) => {
   const models = AiModels.items;
   const transcriptionsCreate = async (input: AiAudioTranscriptionsCreateInput) => AiAudio.transcription(http, input);
   const embeddingsCreate = async (input: AiEmbeddingsCreateInput) => AiEmbeddings.create(http, input);
+  const imagesEdit = async (input: AiImageEditInput) => AiImages.edit(http, input);
   const imagesGenerate = async (input: AiImageGenerateInput) => AiImages.generate(http, input);
   const completionsCreate = (input: AiChatCompletionCreateInput) => AiChat.completion(http, input);
 
@@ -37,7 +39,7 @@ export const Ai = (options: AiOptions) => {
     audio: { transcriptions: { create: transcriptionsCreate } },
     chat: { completions: { create: completionsCreate } },
     embeddings: { create: embeddingsCreate },
-    images: { generate: imagesGenerate },
+    images: { edit: imagesEdit, generate: imagesGenerate },
     models,
   };
 };

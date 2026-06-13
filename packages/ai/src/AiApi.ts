@@ -6,9 +6,12 @@ export type AiApiAssistantMessage = {
   tool_calls?: AiApiToolCall[];
 };
 
+export type AiApiContentPart = { image_url: { url: string }; type: `image_url` } | { text: string; type: `text` };
+
 export type AiApiMessage =
   | AiApiAssistantMessage
-  | { content: string; role: `system` | `user` }
+  | { content: AiApiContentPart[] | string; role: `user` }
+  | { content: string; role: `system` }
   | { content: string; role: `tool`; tool_call_id: string };
 
 export type AiApiTool = {

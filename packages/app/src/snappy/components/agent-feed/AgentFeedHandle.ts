@@ -2,9 +2,14 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
-import type { Ai, AiOptions } from "@snappy/ai";
+import type { Ai, AiImageSize, AiOptions } from "@snappy/ai";
 import type { TypeWriterSpeed } from "@snappy/domain";
-import type { AgentFeedRuntime, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
+import type {
+  AgentFeedArtifactResult,
+  AgentFeedRuntime,
+  StaticFormAnswersOf,
+  StaticFormPlan,
+} from "@snappy/snappy-sdk";
 
 import { _ } from "@snappy/core";
 import { createElement } from "react";
@@ -49,7 +54,7 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
       }),
     );
 
-  const failArtifact = (entryKey: number, error: unknown, done: PromiseWithResolvers<{ artifactId: string }>) => {
+  const failArtifact = (entryKey: number, error: unknown, done: PromiseWithResolvers<AgentFeedArtifactResult>) => {
     updateArtifactEntry(entryKey, {
       error: error instanceof Error ? error.message : `generation_failed`,
       generationStatus: `error`,
@@ -60,33 +65,37 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
   const publishArtifact = (
     entryKey: number,
     artifact: FeedArtifact,
-    done: PromiseWithResolvers<{ artifactId: string }>,
+    done: PromiseWithResolvers<AgentFeedArtifactResult>,
   ) => {
     updateArtifactEntry(entryKey, { ...artifact, generationStatus: `done` });
-    done.resolve({ artifactId: artifact.id });
+    done.resolve({ artifactId: artifact.id, content: artifact.type === `image` ? artifact.src : artifact.text });
   };
 
   const generateArtifact = async ({
     ai,
+    edit,
     model,
     prompt,
+    size,
     type,
   }: {
     ai: Ai;
+    edit?: AgentArtifact[`edit`];
     model: string;
     prompt: string;
+    size?: AiImageSize;
     type: AgentArtifact[`type`];
   }) => {
-    const done = Promise.withResolvers<{ artifactId: string }>();
+    const done = Promise.withResolvers<AgentFeedArtifactResult>();
 
     const base =
       type === `image`
-        ? ({ generationPrompt: prompt, src: ``, type: `image` } as const)
+        ? ({ generationPrompt: prompt, src: ``, type: `image`, ...(edit === undefined ? {} : { edit }) } as const)
         : ({ generationPrompt: prompt, text: ``, type: `text` } as const);
 
     const key = addEntry({
       ai,
-      artifact: { ...base, generationStatus: `running`, model },
+      artifact: { ...base, generationStatus: `running`, model, ...(size === undefined ? {} : { size }) },
       done,
       model,
       type: `artifact`,
@@ -101,8 +110,8 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
   const generateText: AgentFeedRuntime[`generateText`] = async ({ ai, model, prompt }) =>
     generateArtifact({ ai, model, prompt, type: `text` });
 
-  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, model, prompt }) =>
-    generateArtifact({ ai, model, prompt, type: `image` });
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ ai, edit, model, prompt, size }) =>
+    generateArtifact({ ai, edit, model, prompt, size, type: `image` });
 
   const ask: AgentFeedRuntime[`ask`] = async plan => {
     const done = Promise.withResolvers<StaticFormAnswersOf<StaticFormPlan>>();
@@ -124,12 +133,14 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
           ai: entry.ai,
           aiOptions,
           content: item.type === `image` ? item.src : item.text,
+          edit: item.type === `image` ? item.edit : undefined,
           id: `id` in item ? item.id : ``,
           model: entry.model ?? item.model ?? ``,
           onError: (_id: string, error: unknown) => failArtifact(key, error, done),
           onPublish: (artifact: FeedArtifact) => publishArtifact(key, artifact, done),
           onRemove: () => removeEntry(key),
           prompt: item.generationPrompt,
+          size: item.type === `image` ? item.size : undefined,
         };
 
         if (item.type === `image`) {

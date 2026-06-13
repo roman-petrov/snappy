@@ -2,9 +2,9 @@
 /* eslint-disable unicorn/no-null */
 import { _ } from "@snappy/core";
 
-import type { AiApiAssistantMessage, AiApiMessage, AiApiToolCall } from "./AiApi";
+import type { AiApiAssistantMessage, AiApiContentPart, AiApiMessage, AiApiToolCall } from "./AiApi";
 import type { AiModel } from "./models/AiModel";
-import type { AiChatAssistantMessage, AiChatMessage, AiToolCall } from "./Types";
+import type { AiChatAssistantMessage, AiChatMessage, AiChatUserContent, AiContentPart, AiToolCall } from "./Types";
 
 export type ToolCallRow = { arguments: string; id: string; name: string };
 
@@ -58,10 +58,19 @@ const assistantToAi = (
   };
 };
 
+const partToApi = (part: AiContentPart): AiApiContentPart =>
+  part.type === `text` ? { text: part.text, type: `text` } : { image_url: { url: part.url }, type: `image_url` };
+
+const userContentToApi = (content: AiChatUserContent): AiApiContentPart[] | string =>
+  _.isString(content) ? content : content.map(partToApi);
+
 const chatToApi = (source: readonly AiChatMessage[], modelPlugin: AiModel): AiApiMessage[] =>
   source.map((message): AiApiMessage => {
-    if (message.role === `system` || message.role === `user`) {
-      return { content: message.content, role: message.role };
+    if (message.role === `system`) {
+      return { content: message.content, role: `system` };
+    }
+    if (message.role === `user`) {
+      return { content: userContentToApi(message.content), role: `user` };
     }
     if (message.role === `assistant`) {
       return assistantToApi(message, modelPlugin);

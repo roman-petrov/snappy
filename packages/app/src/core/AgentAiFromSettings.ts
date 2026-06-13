@@ -1,6 +1,8 @@
 import type { TrpcOutputs } from "@snappy/app-server-api";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
+import { AiConstants } from "@snappy/ai";
+
 export type UserSettings = TrpcOutputs[`user`][`settings`][`get`];
 
 export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
@@ -16,6 +18,7 @@ export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
       chat: settings.llmChatModel,
       image: settings.llmImageModel,
       imageQuality: settings.llmImageQuality,
+      look: AiConstants.defaults.models.look,
       speech: settings.llmSpeechRecognitionModel,
     },
     options,

@@ -13,6 +13,8 @@ export type SnappyAgentConfig = { aiConfig: AgentAiConfig; feed: AgentFeedRuntim
 
 export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
   const aiClient = Ai(aiConfig.options);
+  const files: Record<string, File> = {};
+  const media: Record<string, string> = {};
 
   const agent = Agent({
     ai: aiClient,
@@ -25,7 +27,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
       snappy: _.fromEntries(
         _.entries(tools).map(([toolId, tool]) => [
           toolId,
-          tool({ ai: aiClient, config: aiConfig, feed, isStopped, locale }),
+          tool({ ai: aiClient, config: aiConfig, feed, files, isStopped, locale, media }),
         ]),
       ),
     }),
