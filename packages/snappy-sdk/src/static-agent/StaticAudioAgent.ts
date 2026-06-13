@@ -9,7 +9,7 @@ export const StaticAudioAgent = StaticAgent(async ({ ai, answers, feed, isStoppe
   }
   const transcribe = Promise.withResolvers<{ label: string }>();
 
-  feed.appendStatus(locale === `ru` ? `Расшифровка…` : `Transcribing…`, transcribe);
+  feed.appendStatus(locale === `ru` ? `Расшифровываю аудиофайл…` : `Transcribing audio file…`, transcribe);
 
   const out = await ai.audio.transcriptions.create({ file, model: models.speech });
   transcribe.resolve({ label: `` });
