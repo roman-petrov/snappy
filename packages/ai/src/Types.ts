@@ -3,7 +3,7 @@ import type { z } from "zod";
 
 import type { AiConstants } from "./AiConstants";
 
-export type AiAudioTranscriptionsCreateInput = { file: AiSpeechRecognitionInput; model: string };
+export type AiAudioTranscriptionsCreateInput = { file: File; model: string };
 
 export type AiChatAssistantMessage = {
   content: string;
@@ -57,8 +57,6 @@ export type AiModelType = `chat` | `embedder` | `image` | `speech-recognition`;
 export type AiReasoningEffort = `high` | `low` | `medium` | `minimal` | `none` | `xhigh`;
 
 export type AiSessionStop = () => boolean;
-
-export type AiSpeechRecognitionInput = { bytes: Uint8Array; fileName: string; mimeType: string };
 
 export type AiTool<INPUT = unknown> = {
   description: string;

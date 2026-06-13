@@ -63,6 +63,34 @@ describe(`PayloadProxy`, () => {
     });
   });
 
+  it(`forwards multipart form-data requests`, async () => {
+    await withFixture(async ({ inject, upstream }) => {
+      const boundary = `----snappy-test`;
+
+      const body = [
+        `--${boundary}`,
+        `Content-Disposition: form-data; name="field"`,
+        ``,
+        `value`,
+        `--${boundary}--`,
+        ``,
+      ].join(`\r\n`);
+
+      const upstreamBody = { ok: true };
+      upstream.on(upstream.respond({ body: upstreamBody }));
+
+      const response = await inject({
+        headers: { "content-type": `multipart/form-data; boundary=${boundary}` },
+        method: `POST`,
+        payload: body,
+      });
+
+      expect(response.statusCode).toBe(HttpStatus.ok);
+      expect(response.json()).toStrictEqual(upstreamBody);
+      expect(upstream.lastRequest()?.headers[`content-type`]).toContain(`multipart/form-data`);
+    });
+  });
+
   describe(`json response`, () => {
     it(`emits parsed JSON once when body arrives in one piece`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {

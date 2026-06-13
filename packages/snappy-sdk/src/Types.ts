@@ -19,6 +19,7 @@ export type AgentEntry = (locale: Locale) => { meta: AgentInfo; module: AgentMod
 
 export type AgentFeedRuntime = {
   appendChatStream: (stream: AsyncIterable<string>) => Promise<void>;
+  appendChatText: (text: string) => Promise<void>;
   appendReasoningStream: (stream: AsyncIterable<string>) => Promise<void>;
   appendStatus: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;
   appendToolBadge: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;

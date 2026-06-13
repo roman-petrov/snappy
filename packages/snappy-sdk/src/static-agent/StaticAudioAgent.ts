@@ -7,19 +7,22 @@ export const StaticAudioAgent = StaticAgent(async ({ ai, answers, feed, isStoppe
   if (!(file instanceof File)) {
     return;
   }
-  const bytes = new Uint8Array(await file.arrayBuffer());
   const transcribe = Promise.withResolvers<{ label: string }>();
 
   feed.appendStatus(locale === `ru` ? `Расшифровка…` : `Transcribing…`, transcribe);
 
-  const out = await ai.audio.transcriptions.create({
-    file: { bytes, fileName: file.name, mimeType: file.type.trim() === `` ? `application/octet-stream` : file.type },
-    model: models.speech,
-  });
-  transcribe.resolve({ label: locale === `ru` ? `Расшифровано` : `Transcribed` });
+  const out = await ai.audio.transcriptions.create({ file, model: models.speech });
+  transcribe.resolve({ label: `` });
   if (isStopped()) {
     return;
   }
-  const generationPrompt = `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${out.text.trim()}`;
+
+  const transcript = out.text;
+  await feed.appendChatText(transcript);
+  if (isStopped()) {
+    return;
+  }
+
+  const generationPrompt = `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`;
   await feed.generateText({ ai, model: models.chat, prompt: generationPrompt });
 });

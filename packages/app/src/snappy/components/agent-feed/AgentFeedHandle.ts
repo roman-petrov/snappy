@@ -184,6 +184,14 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
 
   const appendChatStream: AgentFeedRuntime[`appendChatStream`] = async source => appendStream(source, `stream`);
 
+  const appendChatText: AgentFeedRuntime[`appendChatText`] = async text => {
+    const chunks = async function* chunks() {
+      yield await Promise.resolve(text);
+    };
+
+    await appendChatStream(chunks());
+  };
+
   const appendReasoningStream: AgentFeedRuntime[`appendReasoningStream`] = async source =>
     appendStream(source, `reasoning`);
 
@@ -209,6 +217,7 @@ export const AgentFeedHandle = ({ aiOptions, commit, typeWriterSpeed }: AgentFee
 
   return {
     appendChatStream,
+    appendChatText,
     appendReasoningStream,
     appendStatus,
     appendToolBadge,

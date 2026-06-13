@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/try-complexity */
+/* eslint-disable unicorn/no-null */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-try-statements */
@@ -35,6 +36,8 @@ export const PayloadProxy = async (
   { gate, headers, onPayload, prefix, upstream }: PayloadProxyConfig,
 ) => {
   const stateByRequest = new WeakMap<object, PayloadProxyState>();
+
+  app.addContentTypeParser(/^multipart\/form-data/iu, (_request, payload, done) => done(null, payload));
 
   await app.register(httpProxy, {
     prefix,
