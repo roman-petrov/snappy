@@ -9,9 +9,9 @@
 /* eslint-disable functional/no-expression-statements */
 import type { AiChatMessage, AiChatStreamSegment, AiToolCall } from "@snappy/ai";
 
+import { AiModels, AiToolResult } from "@snappy/ai";
 import { _, StructuredPrompt } from "@snappy/core";
 
-import type { AgentTool } from "./AgentTool";
 import type { AgentClient, AgentCreateInput, AgentRun, AgentStopReason } from "./Types";
 
 import { AgentToolInput } from "./AgentToolInput";
@@ -46,9 +46,6 @@ export const Agent = ({
       _.entries(groupTools).map(([name, agentTool]) => [`${group}_${name}`, agentTool]),
     ),
   );
-
-  const toolResultContent = (result: Awaited<ReturnType<AgentTool[`execute`]>>) =>
-    _.isString(result) ? result : `Tool failed: ${result.error}`;
 
   return {
     appendUserText,
@@ -114,7 +111,9 @@ export const Agent = ({
         }
       };
 
-      const executeTool = async (call: AiToolCall) => {
+      const chatInput = AiModels.capabilities(chatModel)?.input ?? [`text`];
+
+      const executeTool = async (call: AiToolCall): Promise<AiChatMessage[] | undefined> => {
         if (isStopped()) {
           return undefined;
         }
@@ -126,7 +125,7 @@ export const Agent = ({
 
         const parsed = AgentToolInput.parse(call.argumentsJson, agentTool.inputSchema);
         if (!parsed.ok) {
-          return { content: toolResultContent({ error: parsed.error }), role: `tool`, toolCallId: call.toolCallId };
+          return AiToolResult.messages({ error: parsed.error }, { chatInput, toolCallId: call.toolCallId });
         }
 
         const input = parsed.data;
@@ -152,7 +151,7 @@ export const Agent = ({
 
         setStatus(`thinking`);
 
-        return { content: toolResultContent(result), role: `tool`, toolCallId: call.toolCallId };
+        return AiToolResult.messages(result, { chatInput, toolCallId: call.toolCallId });
       };
 
       const run = async () => {
@@ -267,11 +266,8 @@ export const Agent = ({
                 break;
               }
             } else {
-              const toolMessages = await Promise.all(toolCalls.map(executeTool));
-              messages = [
-                ...messages,
-                ...toolMessages.filter((row): row is Extract<AiChatMessage, { role: `tool` }> => row !== undefined),
-              ];
+              const toolMessageGroups = await Promise.all(toolCalls.map(executeTool));
+              messages = [...messages, ...toolMessageGroups.flatMap(group => group ?? [])];
               setStatus(`streaming`);
             }
           }

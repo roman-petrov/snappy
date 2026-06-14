@@ -31,7 +31,10 @@ export const PublishImageTool: SnappyToolFactory = ({ ai, config, feed, isStoppe
 
       media[artifactId] = content;
 
-      return JSON.stringify({ artifactId, status: `published` }, undefined, 2);
+      return {
+        context: [{ type: `image`, url: content }],
+        tool: JSON.stringify({ artifactId, status: `published` }, undefined, 2),
+      };
     },
     inputSchema: z.object({
       prompt: z

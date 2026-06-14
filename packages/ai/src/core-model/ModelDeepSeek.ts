@@ -1,11 +1,13 @@
 /* eslint-disable functional/no-expression-statements */
-import type { AiModel } from "./AiModel";
+import type { AiModelBehavior } from "./Entry";
 
-export const AiModelDeepSeek: AiModel = {
+import { ModelDefault } from "./ModelDefault";
+
+export const ModelDeepSeek: AiModelBehavior = {
+  ...ModelDefault,
   assistantReasoningExtras: reasoning => ({ reasoningContent: reasoning }),
   assistantToolCallsExtras: message => ({ reasoning_content: message.reasoningContent ?? `` }),
   completionExtras: reasoning => (reasoning.effort === `none` ? { thinking: { type: `disabled` as const } } : {}),
-  matches: model => model.startsWith(`deepseek-`),
   streamDelta: (delta, sink) => {
     if (sink.pushPlainReasoning(delta.reasoning)) {
       return;

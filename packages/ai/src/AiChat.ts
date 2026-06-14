@@ -15,6 +15,7 @@ import { _ } from "@snappy/core";
 import { z } from "zod";
 
 import type { AiApiTool, AiChatCompletionBody, AiStreamChunk } from "./AiApi";
+import type { AiModelStreamSink } from "./core-model";
 import type {
   AiChatAssistantMessage,
   AiChatCompletionCreateInput,
@@ -31,9 +32,9 @@ import { AiConstants } from "./AiConstants";
 import { AiCost } from "./AiCost";
 import { AiHttp, type AiHttpConfig } from "./AiHttp";
 import { AiMessages, type ToolCallRow } from "./AiMessages";
+import { AiModel } from "./AiModel";
 import { AiSse } from "./AiSse";
 import { AiTunnel } from "./AiTunnel";
-import { AiModel, type AiModelStreamSink } from "./models";
 
 type StreamCell<T> = { close: () => void; push: (value: T) => void; stream: AsyncIterable<T> };
 

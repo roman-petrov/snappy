@@ -3,7 +3,7 @@
 import { _ } from "@snappy/core";
 
 import type { AiApiAssistantMessage, AiApiContentPart, AiApiMessage, AiApiToolCall } from "./AiApi";
-import type { AiModel } from "./models/AiModel";
+import type { AiModelBehavior } from "./core-model";
 import type { AiChatAssistantMessage, AiChatMessage, AiChatUserContent, AiContentPart, AiToolCall } from "./Types";
 
 export type ToolCallRow = { arguments: string; id: string; name: string };
@@ -27,7 +27,7 @@ const apiToolCalls = (calls: AiToolCall[]): AiApiToolCall[] =>
 
 const assistantToApi = (
   message: Extract<AiChatMessage, { role: `assistant` }>,
-  modelPlugin: AiModel,
+  modelPlugin: AiModelBehavior,
 ): AiApiAssistantMessage => {
   const calls = message.toolCalls;
   if (!hasToolCalls(calls)) {
@@ -43,7 +43,7 @@ const assistantToApi = (
 };
 
 const assistantToAi = (
-  modelPlugin: AiModel,
+  modelPlugin: AiModelBehavior,
   content: string,
   reasoning: string,
   toolCallRows?: ToolCallRow[],
@@ -64,7 +64,7 @@ const partToApi = (part: AiContentPart): AiApiContentPart =>
 const userContentToApi = (content: AiChatUserContent): AiApiContentPart[] | string =>
   _.isString(content) ? content : content.map(partToApi);
 
-const chatToApi = (source: readonly AiChatMessage[], modelPlugin: AiModel): AiApiMessage[] =>
+const chatToApi = (source: readonly AiChatMessage[], modelPlugin: AiModelBehavior): AiApiMessage[] =>
   source.map((message): AiApiMessage => {
     if (message.role === `system`) {
       return { content: message.content, role: `system` };

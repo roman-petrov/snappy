@@ -18,12 +18,14 @@ export * from "./AiImages";
 
 export * from "./AiMessages";
 
-export * from "./AiModels";
+export * from "./AiModel";
 
 export * from "./AiSse";
 
+export * from "./AiToolResult";
+
 export * from "./AiTunnel";
 
-export * from "./models";
+export * from "./core-model";
 
 export type * from "./Types";

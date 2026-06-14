@@ -11,7 +11,7 @@ import { AiAudio } from "./AiAudio";
 import { AiChat } from "./AiChat";
 import { AiEmbeddings } from "./AiEmbeddings";
 import { AiImages } from "./AiImages";
-import { AiModels } from "./AiModels";
+import { AiModels } from "./AiModel";
 import { AiTunnel } from "./AiTunnel";
 
 export type AiConnectionOptions = AiKeyPart | AiUrlPart;

@@ -2,6 +2,7 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-loop-statements */
 import { AgentTool } from "@snappy/agent";
+import { DataUrl } from "@snappy/browser";
 import { StaticFormPlanSchema } from "@snappy/snappy-sdk";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
@@ -29,6 +30,7 @@ export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
       }
 
       const answers: Record<string, unknown> = {};
+      const context: { type: `image`; url: string }[] = [];
 
       for (const field of plan.fields) {
         if (field.kind === `file_input`) {
@@ -37,7 +39,9 @@ export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
             files[field.id] = raw;
             answers[field.id] = field.id;
             if (raw.type.startsWith(`image/`)) {
-              media[field.id] = `data:${raw.type};base64,${new Uint8Array(await raw.arrayBuffer()).toBase64()}`;
+              const url = await DataUrl.blob(raw);
+              media[field.id] = url;
+              context.push({ type: `image`, url });
             }
           } else {
             answers[field.id] = undefined;
@@ -47,7 +51,9 @@ export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
         }
       }
 
-      return JSON.stringify({ answers }, undefined, 2);
+      const tool = JSON.stringify({ answers }, undefined, 2);
+
+      return context.length === 0 ? tool : { context, tool };
     },
     inputSchema: StaticFormPlanSchema,
   });

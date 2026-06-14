@@ -59,7 +59,16 @@ export type AiImageQuality = (typeof AiConstants.imageQuality)[number];
 
 export type AiImageSize = (typeof AiConstants.imageSize)[number];
 
-export type AiModelListItem = { name: string; source: string; type: AiModelType };
+export type AiModality = `audio` | `embeddings` | `image` | `text`;
+
+export type AiModelCapabilities = { input: readonly AiModality[]; output: readonly AiModality[] };
+
+export type AiModelListItem = {
+  capabilities: AiModelCapabilities;
+  name: string;
+  source: `ai-tunnel`;
+  type: AiModelType;
+};
 
 export type AiModelType = `chat` | `embedder` | `image` | `speech-recognition`;
 
@@ -77,7 +86,7 @@ export type AiToolCall = { argumentsJson: string; toolCallId: string; toolName: 
 
 export type AiToolInput<T extends AiTool> = T extends AiTool<infer INPUT> ? INPUT : never;
 
-export type AiToolRunResult = string | { error: string };
+export type AiToolRunResult = string | { context?: readonly AiContentPart[]; tool: string } | { error: string };
 
 export type AiToolSet = Record<string, AiTool>;
 

@@ -1,7 +1,12 @@
 import type { StructuredPrompt } from "@snappy/core";
 import type { Locale } from "@snappy/intl";
 
-const prompt = (locale: Locale): StructuredPrompt => [
+const visualContext = (locale: Locale) =>
+  locale === `ru`
+    ? `Изображения из ask, publish и edit уже в этом чате. Не вызывай look_image только чтобы их увидеть; look_image — только для целевого вопроса по изображению.`
+    : `Images from ask, publish, and edit are already in this chat. Do not call look_image just to view them; use look_image only for a focused inspection question.`;
+
+const prompt = (locale: Locale, imageInput = false): StructuredPrompt => [
   [
     `language_policy`,
     `IMPORTANT: Always respond in ${locale === `ru` ? `Russian` : `English`}. Use the same language for every user-visible string, including tool arguments and labels.`,
@@ -70,6 +75,7 @@ Strongly prefer emoji and use GitHub-Flavored Markdown for emphasis — **bold**
   ],
   [`accuracy`, `Do not invent facts, figures, source text, or decisions the user did not provide or confirm.`],
   [`closing`, `When the task is fully handled, close with a short note and avoid opening unnecessary new questions.`],
+  ...(imageInput ? [[`visual_context`, visualContext(locale)] as const] : []),
 ];
 
 export const System = { prompt } as const;

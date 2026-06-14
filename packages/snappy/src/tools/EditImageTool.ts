@@ -47,7 +47,10 @@ export const EditImageTool: SnappyToolFactory = ({ ai, config, feed, files, isSt
 
       media[artifactId] = content;
 
-      return JSON.stringify({ artifactId, status: `published` }, undefined, 2);
+      return {
+        context: [{ type: `image`, url: content }],
+        tool: JSON.stringify({ artifactId, status: `published` }, undefined, 2),
+      };
     },
     inputSchema: z.object({
       background: z.enum([`transparent`, `opaque`, `auto`]).optional().describe(`Output background when relevant.`),

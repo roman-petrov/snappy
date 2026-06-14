@@ -3,7 +3,7 @@ import type { Locale } from "@snappy/intl";
 import type { AgentAiConfig, AgentFeedRuntime } from "@snappy/snappy-sdk";
 
 import { Agent } from "@snappy/agent";
-import { Ai } from "@snappy/ai";
+import { Ai, AiModels } from "@snappy/ai";
 import { _ } from "@snappy/core";
 
 import { System } from "./System";
@@ -15,6 +15,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
   const aiClient = Ai(aiConfig.options);
   const files: Record<string, File> = {};
   const media: Record<string, string> = {};
+  const imageInput = AiModels.capabilities(aiConfig.models.chat)?.input.includes(`image`) === true;
 
   const agent = Agent({
     ai: aiClient,
@@ -22,7 +23,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale }: SnappyAgentConfig) => {
     idleAfterSuccess: true,
     locale,
     maxRounds: 32,
-    systemPrompt: System.prompt(locale),
+    systemPrompt: System.prompt(locale, imageInput),
     tools: ({ isStopped }) => ({
       snappy: _.fromEntries(
         _.entries(tools).map(([toolId, tool]) => [
