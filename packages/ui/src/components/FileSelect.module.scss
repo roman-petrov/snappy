@@ -3,8 +3,14 @@
 .root {
   display: flex;
   flex-direction: column;
-  gap: space.xs();
+  gap: space.sm();
   width: 100%;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
 }
 
 .file-name {

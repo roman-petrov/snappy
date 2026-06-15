@@ -16,6 +16,8 @@ export * from "./useIsMobile";
 
 export * from "./useMediaQuery";
 
+export * from "./useObjectUrl";
+
 export * from "./useSpeechRecognition";
 
 export * from "./useToggle";

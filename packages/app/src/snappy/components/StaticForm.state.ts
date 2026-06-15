@@ -8,20 +8,21 @@ import {
   type StaticFormFieldByKind,
   type StaticFormPlan,
 } from "@snappy/snappy-sdk";
-import { FileSelect, Switch, Tabs, TextInput } from "@snappy/ui";
-import { type ComponentProps, type ElementType, useRef, useState } from "react";
+import { AudioSelect, ImageSelect, Switch, Tabs, TextInput } from "@snappy/ui";
+import { type ElementType, useRef, useState } from "react";
 
 import type { StaticFormProps } from "./StaticForm";
 
+const display = {
+  audio: (file: File) => ({ file, type: `audio` }) as const,
+  binary: (value: boolean) => ({ type: `binary`, value }) as const,
+  image: (file: File) => ({ file, type: `image` }) as const,
+  text: (text: string) => ({ text, type: `text` }) as const,
+} as const;
+
 type FieldByKind<TKind extends FieldKind> = StaticFormFieldByKind<TKind>;
 
-type FieldConfig<TKind extends FieldKind> = {
-  component: ElementType;
-  default: (field: FieldByKind<TKind>) => ValueByKind<TKind>;
-  props: (input: FieldConfigInput<TKind>) => Record<string, unknown>;
-};
-
-type FieldConfigInput<TKind extends FieldKind> = {
+type FieldInput<TKind extends FieldKind> = {
   field: FieldByKind<TKind>;
   setField: (id: string, value: ValueByKind<TKind>) => void;
   value: ValueByKind<TKind>;
@@ -34,90 +35,129 @@ type ValueByKind<TKind extends FieldKind> = StaticFormAnswerValueByKind<TKind>;
 const stringDefault = (value: StaticFormField[`default`], fallback: string) => (_.isString(value) ? value : fallback);
 const stringListDefault = (value: StaticFormField[`default`]) => (_.isArray(value) ? value.filter(_.isString) : []);
 
+const optionLabel = (option: { label: { emoji: string; text: string } }) =>
+  `${option.label.emoji} ${option.label.text}`;
+
 const tabOptions = (field: FieldByKind<`multiple_choice`> | FieldByKind<`single_choice`>) =>
   (field.options ?? []).map(option => {
-    const label = `${option.label.emoji} ${option.label.text}`;
+    const label = optionLabel(option);
 
     return { label, title: label, value: option.value };
   });
 
-const fieldConfig = <TKind extends FieldKind, TComponent extends ElementType>(config: {
-  component: TComponent;
-  default: (field: FieldByKind<TKind>) => ValueByKind<TKind>;
-  props: (input: FieldConfigInput<TKind>) => ComponentProps<TComponent>;
-}): FieldConfig<TKind> => config;
+const fileSelect = ({ field, setField, value }: FieldInput<`audio_input` | `image_input`>) => ({
+  hint: field.hint,
+  onChange: (files: File[]) => setField(field.id, files[0]),
+  pickLabel: field.pickLabel ?? ``,
+  value,
+});
 
-const fieldByKind: { [TKind in FieldKind]: FieldConfig<TKind> } = {
-  audio_input: fieldConfig<`audio_input`, typeof FileSelect>({
-    component: FileSelect,
-    default: () => undefined,
-    props: ({ field, setField, value }) => ({
-      accept: [`audio/*,.mp3,.m4a,.wav,.webm,.ogg,.flac`],
-      fileName: value?.name ?? ``,
-      hint: field.hint,
-      onChange: files => setField(field.id, files[0]),
-      pickLabel: field.pickLabel ?? ``,
-    }),
-  }),
-  binary_choice: fieldConfig({
+const displayOf = (field: StaticFormField, raw: StaticFormAnswers[string]) => {
+  switch (field.kind) {
+    case `audio_input`: {
+      return raw instanceof File ? display.audio(raw) : display.text(``);
+    }
+    case `binary_choice`: {
+      return _.isBoolean(raw) ? display.binary(raw) : display.text(``);
+    }
+    case `image_input`: {
+      return raw instanceof File ? display.image(raw) : display.text(``);
+    }
+    case `multiple_choice`: {
+      const selected = new Set(_.isArray(raw) ? raw.filter(_.isString) : []);
+      const labels = (field.options ?? []).filter(option => selected.has(option.value)).map(optionLabel);
+
+      return display.text(labels.join(`, `));
+    }
+    case `single_choice`: {
+      const value = _.isString(raw) ? raw.trim() : ``;
+      if (value === ``) {
+        return display.text(``);
+      }
+      const option = (field.options ?? []).find(item => item.value === value);
+
+      return display.text(option === undefined ? value : optionLabel(option));
+    }
+    case `text_input`: {
+      const value = raw === undefined || !_.isString(raw) ? `` : raw.trim();
+
+      return display.text(value);
+    }
+    default: {
+      return display.text(``);
+    }
+  }
+};
+
+type KindConfig<TKind extends FieldKind> = {
+  component: ElementType;
+  default: (field: FieldByKind<TKind>) => ValueByKind<TKind>;
+  props: (input: FieldInput<TKind>) => Record<string, unknown>;
+};
+
+const fieldByKind: { [TKind in FieldKind]: KindConfig<TKind> } = {
+  audio_input: { component: AudioSelect, default: () => undefined, props: fileSelect },
+  binary_choice: {
     component: Switch,
-    default: field => (_.isBoolean(field.default) ? field.default : false),
-    props: ({ field, setField, value }) => ({
+    default: (field: FieldByKind<`binary_choice`>) => (_.isBoolean(field.default) ? field.default : false),
+    props: ({ field, setField, value }: FieldInput<`binary_choice`>) => ({
       checked: value,
-      label: `${field.label.emoji} ${field.label.text}`,
-      onChange: checked => setField(field.id, checked),
+      label: optionLabel(field),
+      onChange: (checked: boolean) => setField(field.id, checked),
     }),
-  }),
-  image_input: fieldConfig<`image_input`, typeof FileSelect>({
-    component: FileSelect,
-    default: () => undefined,
-    props: ({ field, setField, value }) => ({
-      accept: [`image/*,.png,.jpg,.jpeg,.webp,.gif`],
-      fileName: value?.name ?? ``,
-      hint: field.hint,
-      onChange: files => setField(field.id, files[0]),
-      pickLabel: field.pickLabel ?? ``,
-    }),
-  }),
-  multiple_choice: fieldConfig({
+  },
+  image_input: { component: ImageSelect, default: () => undefined, props: fileSelect },
+  multiple_choice: {
     component: Tabs,
-    default: field => stringListDefault(field.default),
-    props: ({ field, setField, value }) => ({
-      isActive: item => value.includes(item),
-      onChange: clicked =>
+    default: (field: FieldByKind<`multiple_choice`>) => stringListDefault(field.default),
+    props: ({ field, setField, value }: FieldInput<`multiple_choice`>) => ({
+      isActive: (item: string) => value.includes(item),
+      onChange: (clicked: string) =>
         setField(field.id, value.includes(clicked) ? value.filter(item => item !== clicked) : [...value, clicked]),
       options: tabOptions(field),
       value: field.options?.[0]?.value ?? ``,
     }),
-  }),
-  single_choice: fieldConfig({
+  },
+  single_choice: {
     component: Tabs,
-    default: field => stringDefault(field.default, field.options?.[0]?.value ?? ``),
-    props: ({ field, setField, value }) => ({
-      onChange: selected => setField(field.id, selected),
+    default: (field: FieldByKind<`single_choice`>) => stringDefault(field.default, field.options?.[0]?.value ?? ``),
+    props: ({ field, setField, value }: FieldInput<`single_choice`>) => ({
+      onChange: (selected: string) => setField(field.id, selected),
       options: tabOptions(field),
       value,
     }),
-  }),
-  text_input: fieldConfig({
+  },
+  text_input: {
     component: TextInput,
-    default: field => stringDefault(field.default, ``),
-    props: ({ field, setField, value }) => ({
+    default: (field: FieldByKind<`text_input`>) => stringDefault(field.default, ``),
+    props: ({ field, setField, value }: FieldInput<`text_input`>) => ({
       maxLines: 8,
-      onChange: text => setField(field.id, text),
+      onChange: (text: string) => setField(field.id, text),
       placeholder: field.placeholder ?? ``,
       value: value ?? ``,
     }),
-  }),
+  },
 };
 
-export const useStaticFormState = <TPlan extends StaticFormPlan>({ onSubmit, plan }: StaticFormProps<TPlan>) => {
+const isSubmitted = <TPlan extends StaticFormPlan>(
+  props: StaticFormProps<TPlan>,
+): props is { answers: StaticFormAnswers; plan: TPlan } => `answers` in props;
+
+export const useStaticFormState = <TPlan extends StaticFormPlan>(props: StaticFormProps<TPlan>) => {
+  const { plan } = props;
+  const submitted = isSubmitted(props);
+
   const [answers, setAnswers] = useState<StaticFormAnswers>(() => {
+    if (isSubmitted(props)) {
+      return props.answers;
+    }
+
     const initial: StaticFormAnswers = {};
 
     const setInitial = <TKind extends FieldKind>(field: FieldByKind<TKind>) => {
       initial[field.id] = fieldByKind[field.kind].default(field);
     };
+
     for (const field of plan.fields) {
       setInitial(field);
     }
@@ -135,7 +175,11 @@ export const useStaticFormState = <TPlan extends StaticFormPlan>({ onSubmit, pla
       return next;
     });
 
-  const submit = () => onSubmit(StaticFormAnswersOf<TPlan>(answersRef.current));
+  const submit = () => {
+    if (!isSubmitted(props)) {
+      props.onSubmit(StaticFormAnswersOf<TPlan>(answersRef.current));
+    }
+  };
 
   const fieldView = <TKind extends FieldKind>(field: FieldByKind<TKind>) => {
     const config = fieldByKind[field.kind];
@@ -150,7 +194,13 @@ export const useStaticFormState = <TPlan extends StaticFormPlan>({ onSubmit, pla
     };
   };
 
-  const fields = plan.fields.map(fieldView);
+  const rows = submitted
+    ? plan.fields.map(field => ({
+        display: displayOf(field, props.answers[field.id]),
+        id: field.id,
+        label: optionLabel(field),
+      }))
+    : [];
 
-  return { fields, submit, title: plan.title };
+  return { fields: submitted ? [] : plan.fields.map(fieldView), rows, submit, submitted, title: plan.title };
 };

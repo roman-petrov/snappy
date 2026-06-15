@@ -1,0 +1,56 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/material" as material;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+$-max-width: r(192);
+
+.root {
+  @include elevation.e1;
+
+  display: inline-flex;
+  flex-direction: column;
+  gap: space.sm();
+  align-items: stretch;
+  width: 100%;
+  max-width: $-max-width;
+  padding: space.sm();
+  background-color: color.surface();
+  border: 1px solid material.border(color.surface());
+  border-radius: radius.sm();
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+  width: 100%;
+  min-width: 0;
+}
+
+.name {
+  overflow-wrap: anywhere;
+}
+
+.size {
+  flex-shrink: 0;
+}
+
+.frame {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: color.backdrop();
+  border-radius: radius.xs();
+}
+
+.grid {
+  @include primitives.grid-center;
+}
+
+.row {
+  @include primitives.row-center;
+}

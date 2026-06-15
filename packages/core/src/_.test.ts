@@ -4,6 +4,7 @@ import { _ } from "./_";
 
 const {
   base64decode,
+  byteSize,
   camelCase,
   cn,
   dec,
@@ -58,6 +59,36 @@ describe(`cn`, () => {
 
   it(`single part returns as-is (trimmed)`, () => {
     expect(cn(`foo`)).toBe(`foo`);
+  });
+});
+
+describe(`byteSize`, () => {
+  it(`formats zero bytes`, () => {
+    expect(byteSize(0)).toBe(`0 B`);
+  });
+
+  it(`formats bytes without rounding`, () => {
+    expect(byteSize(512)).toBe(`512 B`);
+  });
+
+  it(`formats kilobytes with one decimal when under 10`, () => {
+    expect(byteSize(1536)).toBe(`1.5 KB`);
+  });
+
+  it(`formats kilobytes rounded when 10 or more`, () => {
+    expect(byteSize(15 * 1024)).toBe(`15 KB`);
+  });
+
+  it(`formats megabytes with one decimal when under 10`, () => {
+    expect(byteSize(2.5 * 1024 * 1024)).toBe(`2.5 MB`);
+  });
+
+  it(`formats megabytes rounded when 10 or more`, () => {
+    expect(byteSize(12 * 1024 * 1024)).toBe(`12 MB`);
+  });
+
+  it(`formats gigabytes`, () => {
+    expect(byteSize(3 * 1024 * 1024 * 1024)).toBe(`3 GB`);
   });
 });
 

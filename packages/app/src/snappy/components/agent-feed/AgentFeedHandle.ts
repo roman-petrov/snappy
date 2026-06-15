@@ -109,8 +109,13 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
   const ask: AgentFeedRuntime[`ask`] = async <TPlan extends StaticFormPlan>(plan: TPlan) => {
     const done = Promise.withResolvers<StaticFormAnswers>();
     const key = addEntry({ done, plan, type: `form` });
+    const answers = await done.promise;
 
-    return StaticFormAnswersOf<TPlan>(await done.promise.finally(() => removeEntry(key)));
+    commit(previous =>
+      previous.map(item => (item.key === key ? { ...item, entry: { answers, plan, type: `form` } } : item)),
+    );
+
+    return StaticFormAnswersOf<TPlan>(answers);
   };
 
   const artifactRow = (key: number, entry: AgentFeedArtifactEntry) => {
@@ -144,6 +149,10 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
         return artifactRow(key, entry);
       }
       case `form`: {
+        if (`answers` in entry) {
+          return createElement(AgentFeedRow.form, { answers: entry.answers, key, plan: entry.plan });
+        }
+
         return createElement(AgentFeedRow.form, {
           key,
           onSubmit: value => entry.done.resolve(value),

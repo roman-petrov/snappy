@@ -85,7 +85,10 @@ export const ru = {
     },
     title: `Каталог агентов`,
   },
-  chat: { continue: `Продолжить` },
+  chat: {
+    continue: `Продолжить`,
+    form: { label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
+  },
   feed: { openCatalog: `Каталог`, title: `Лента` },
   feedCard: {
     copy: `Копировать`,

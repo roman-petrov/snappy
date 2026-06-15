@@ -82,7 +82,10 @@ export const en = {
     },
     title: `Agent catalog`,
   },
-  chat: { continue: `Continue` },
+  chat: {
+    continue: `Continue`,
+    form: { label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
+  },
   feed: { openCatalog: `Catalog`, title: `Feed` },
   feedCard: {
     copy: `Copy`,

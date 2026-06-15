@@ -26,6 +26,7 @@ export type AgentFeedEntry =
   | (AgentFeedEntryDone<StaticFormAnswers> & { plan: StaticFormPlan; type: `form` })
   | (AgentFeedEntryDone<void> & { stream: AsyncIterable<string>; type: `reasoning` })
   | (AgentFeedEntryDone<void> & { stream: AsyncIterable<string>; type: `stream` })
+  | { answers: StaticFormAnswers; plan: StaticFormPlan; type: `form` }
   | { text: string; type: `user` };
 
 export type AgentFeedEntryDone<T> = { done: PromiseWithResolvers<T> };

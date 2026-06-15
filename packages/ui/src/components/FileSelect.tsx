@@ -1,12 +1,15 @@
-import type { FileSelectOptions } from "@snappy/browser";
+import type { ReactNode } from "react";
 
 import { useFileSelectState } from "./FileSelect.state";
 import { FileSelectView } from "./FileSelect.view";
 
-export type FileSelectProps = FileSelectOptions & {
+export type FileSelectProps = {
+  accept?: string[];
+  children?: ReactNode;
   disabled?: boolean;
   fileName?: string;
   hint?: string;
+  multiple?: boolean;
   onChange: (files: File[]) => void;
   pickLabel: string;
 };

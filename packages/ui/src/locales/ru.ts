@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/filename-case */
 export const ru = {
+  audio: { play: `Воспроизвести`, stop: `Остановить` },
   localeSwitcher: `Переключить на английский`,
   newPasswordInput: { generatePassword: `Сгенерировать пароль` },
   page: { back: `Назад` },

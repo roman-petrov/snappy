@@ -45,13 +45,8 @@ export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
             }
 
             const { id, kind, label } = field;
-            const kiB = _.kb(1);
-            const miB = _.mb(1);
             const { name, size } = raw;
-
-            const sizeLabel =
-              size < kiB ? `${size} B` : size < miB ? `${Math.round(size / kiB)} KB` : `${_.round(size / miB, 1)} MB`;
-
+            const sizeLabel = _.byteSize(size);
             const image = kind === `image_input`;
             const heading = `Field ${id} (${label.text})`;
 

@@ -1,0 +1,42 @@
+@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  interpolate-size: allow-keywords;
+  width: 100%;
+  min-width: 0;
+
+  .summary {
+    display: flex;
+    justify-content: flex-end;
+    cursor: pointer;
+    list-style: none;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+
+  .chevron {
+    transition: transform motion.soft();
+  }
+
+  &::details-content {
+    height: 0;
+    padding-block-start: space.sm();
+    overflow: clip;
+    transition:
+      height motion.soft(),
+      content-visibility motion.soft() allow-discrete;
+  }
+
+  &[open] {
+    .chevron {
+      transform: rotate(180deg);
+    }
+
+    &::details-content {
+      height: auto;
+    }
+  }
+}

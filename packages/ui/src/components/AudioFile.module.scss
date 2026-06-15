@@ -1,0 +1,13 @@
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.play {
+  @include primitives.row-center;
+  @include primitives.circle(tokens.icon-button-touch-size());
+  @include surface.primary;
+}
+
+.hidden {
+  display: none;
+}

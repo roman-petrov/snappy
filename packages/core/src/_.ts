@@ -89,6 +89,24 @@ const round = (value: number, fractionDigits: number) => {
 };
 
 const b1024 = 1024;
+
+const byteSize = (bytes: number) => {
+  const units = [`B`, `KB`, `MB`, `GB`] as const;
+
+  if (bytes === 0) {
+    return `0 B`;
+  }
+  let size = bytes;
+  let unit = 0;
+  while (size >= b1024 && unit < units.length - 1) {
+    size /= b1024;
+    unit += 1;
+  }
+  const rounded = unit === 0 || size >= 10 ? Math.round(size) : Math.round(size * 10) / 10;
+
+  return `${rounded} ${units[unit]}`;
+};
+
 const kb = (kiloBytes: number) => kiloBytes * b1024;
 const mb = (megaBytes: number) => kb(kb(megaBytes));
 const gb = (gigaBytes: number) => kb(mb(gigaBytes));
@@ -100,6 +118,7 @@ export const _ = {
   ...Stats,
   ...Time.constants,
   base64decode,
+  byteSize,
   camelCase,
   cn,
   daysInWeek: Time.daysInWeek,
