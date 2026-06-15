@@ -1,18 +1,19 @@
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: space.md();
   width: 100%;
 }
 
-.head {
+.actions {
   display: flex;
-  grid-column: 1 / -1;
-  justify-content: flex-end;
+  gap: space.sm();
+  align-items: stretch;
 }
 
-.heading {
-  grid-column: 1 / -1;
+.card {
+  flex: none;
+  width: 100%;
 }

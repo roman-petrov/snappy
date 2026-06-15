@@ -76,13 +76,9 @@ export const ru = {
     },
   },
   catalog: {
+    agent: { label: `Агент` },
+    feed: { label: `Лента` },
     groups: { audio: `Аудио`, edit: `Редактирование изображений`, text: `Текст`, visual: `Генерация изображений` },
-    openFeed: `Лента`,
-    snappy: {
-      description: `Свободный чат с инструментами и навыками из markdown.`,
-      sectionTitle: `Свободный чат`,
-      title: `Snappy`,
-    },
     title: `Каталог агентов`,
   },
   chat: {

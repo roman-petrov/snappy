@@ -1,0 +1,31 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.root {
+  @include focus($radius: radius.lg());
+
+  display: flex;
+  flex: 1;
+  gap: space.sm();
+  align-items: center;
+  align-self: stretch;
+  justify-content: center;
+  min-width: 0;
+  min-height: tokens.field-height();
+  border-radius: radius.lg();
+}
+
+.primary {
+  @include elevation.e2;
+
+  padding: space.sm() space.lg();
+}
+
+.soft {
+  @include elevation.e1;
+
+  padding-inline: space.lg();
+}

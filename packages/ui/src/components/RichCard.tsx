@@ -5,14 +5,10 @@ import { CardButton, type CardButtonProps } from "./CardButton";
 import { Icon } from "./Icon";
 import styles from "./RichCard.module.scss";
 
-export type RichCardProps = Omit<CardButtonProps, `children` | `cn`> & {
-  description: string;
-  icon: Icon;
-  title: string;
-};
+export type RichCardProps = Omit<CardButtonProps, `children`> & { description: string; icon: Icon; title: string };
 
-export const RichCard = ({ description, icon, title, ...tapProps }: RichCardProps) => (
-  <CardButton {...tapProps} cn={styles.root}>
+export const RichCard = ({ cn, description, icon, title, ...tapProps }: RichCardProps) => (
+  <CardButton {...tapProps} cn={_.cn(styles.root, cn)}>
     <span className={_.cn(styles.icon, $.surface(`primary`), $.elevation(`e2`), $.radius(`md`))}>
       <Icon icon={icon} size="xl" />
     </span>

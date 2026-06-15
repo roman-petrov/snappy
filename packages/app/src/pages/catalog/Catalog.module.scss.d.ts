@@ -1,6 +1,6 @@
 declare const __Catalog: {
   readonly root: "root";
-  readonly head: "head";
-  readonly heading: "heading";
+  readonly actions: "actions";
+  readonly card: "card";
 };
 export default __Catalog;

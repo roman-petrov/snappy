@@ -73,13 +73,9 @@ export const en = {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
   },
   catalog: {
+    agent: { label: `Agent` },
+    feed: { label: `Feed` },
     groups: { audio: `Audio`, edit: `Image editing`, text: `Text`, visual: `Image generation` },
-    openFeed: `Feed`,
-    snappy: {
-      description: `Free-form assistant with tools and markdown skills.`,
-      sectionTitle: `Free chat`,
-      title: `Snappy`,
-    },
     title: `Agent catalog`,
   },
   chat: {
