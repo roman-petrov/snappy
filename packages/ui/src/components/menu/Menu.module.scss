@@ -1,6 +1,6 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
 
 .root {
   display: flex;
@@ -8,13 +8,15 @@
   gap: space.xs();
   align-items: stretch;
   padding: space.sm();
-  transition: opacity motion.default();
+  transition: opacity animation.standard-sm();
 }
+
+$-action-in: animation.sharp-sm();
 
 .action {
   width: 100%;
   transform-origin: top right;
-  animation: action-in 280ms cubic-bezier(0.18, 0.88, 0.22, 1.12) both;
+  animation: action-in $-action-in both;
   animation-delay: calc(var(--action-index, 0) * 54ms);
 }
 

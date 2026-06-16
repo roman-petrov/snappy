@@ -1,18 +1,15 @@
 import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
-import { useContext, useEffect, useId } from "react";
+import { useEffect, useId } from "react";
 
 import type { ContextMenuProps } from "./ContextMenu";
 
 import { useIsMobile } from "../../hooks/useIsMobile";
+import { useRequiredContext } from "../../hooks/useRequiredContext";
 import { ContextMenuContext } from "./ContextMenuContext";
 
 export const useContextMenuState = ({ children, elementRef }: ContextMenuProps) => {
-  const context = useContext(ContextMenuContext);
-  if (context === undefined) {
-    throw new Error(`ContextMenu must be used within ContextMenuHost`);
-  }
-  const { close, toggle } = context;
+  const { close, toggle } = useRequiredContext(ContextMenuContext, `ContextMenu`, `ContextMenuContext`);
   const sourceId = useId();
   const mobile = useIsMobile();
 

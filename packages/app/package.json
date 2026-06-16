@@ -13,6 +13,7 @@
     "@snappy/domain": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/platform": "workspace:*",
+    "@snappy/router": "workspace:*",
     "@snappy/snappy": "workspace:*",
     "@snappy/snappy-presets": "workspace:*",
     "@snappy/snappy-sdk": "workspace:*",
@@ -21,8 +22,7 @@
     "@snappy/ui": "workspace:*",
     "better-auth": "^1.6.17",
     "lucide-react": "^1.17.0",
-    "react": "^19.2.7",
-    "react-router-dom": "^7.17.0"
+    "react": "^19.2.7"
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",

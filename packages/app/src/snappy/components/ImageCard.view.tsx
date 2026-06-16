@@ -1,5 +1,5 @@
 import { _ } from "@snappy/core";
-import { $, BusyShimmerOverlay, Icon } from "@snappy/ui";
+import { $, Icon } from "@snappy/ui";
 import { Wand2 } from "lucide-react";
 
 import type { useImageCardState } from "./ImageCard.state";
@@ -20,10 +20,10 @@ export const ImageCardView = ({ actions, busy, pending, remove, src }: ImageCard
         <p>{t(`feedCard.generatingImage`)}</p>
       </div>
     ) : (
-      <>
-        <img alt="" className={_.cn(styles.image, $.radius(`sm`))} src={src} />
-        {busy ? <BusyShimmerOverlay /> : undefined}
-      </>
+      <div className={_.cn(styles.frame, $.radius(`sm`))}>
+        <img alt="" className={styles.image} src={src} />
+        {busy ? <div aria-hidden className={styles.shimmer} /> : undefined}
+      </div>
     )}
   </FeedCard>
 );

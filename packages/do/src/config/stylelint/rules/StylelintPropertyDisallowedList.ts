@@ -24,7 +24,7 @@ const messages = {
   "outline": message(`This is already covered by global base styles; use the focus mixin for focus styles`),
   "text-transform": recommend(`typography mechanics`),
   "user-select": recommend(`tap/interaction mechanics`),
-  "z-index": message(`Avoid manual stacking`),
+  "z-index": recommend(`layer mixins from @snappy/theme/tokens/layer`),
 } as const;
 
 export const StylelintPropertyDisallowedList = [

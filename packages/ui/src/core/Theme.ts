@@ -6,7 +6,6 @@ import { Dom, MediaQuery } from "@snappy/browser";
 import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
-import { ThemeFog } from "./ThemeFog";
 import { ThemeTransition } from "./ThemeTransition";
 
 export type ResolvedTheme = CoreResolvedTheme;
@@ -16,13 +15,11 @@ export type Theme = CoreTheme;
 const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
 const systemDark = () => (Bridge.available ? Bridge.systemDark() === true : MediaQuery.matches(prefersDarkQuery));
 const effective = (value = $theme()): ResolvedTheme => (value === `system` ? (systemDark() ? `dark` : `light`) : value);
-const fog = ThemeFog(effective);
 
 const applyEffective = () => {
   const next = effective();
   document.documentElement.dataset[`theme`] = next;
   Bridge.setBarStyle(next === `dark` ? `dark` : `light`);
-  fog.sync();
 };
 
 const init = () => {

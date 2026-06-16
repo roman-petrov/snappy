@@ -2,8 +2,11 @@
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/tokens";
+
+$-surface: animation.standard-sm();
+$-thumb: animation.sharp-sm();
 
 .root {
   position: relative;
@@ -15,8 +18,8 @@
   border: 1px solid color.outline();
   border-radius: calc(#{space.lg()} * 0.5);
   transition:
-    background-color motion.default(),
-    border-color motion.default();
+    background-color $-surface,
+    border-color $-surface;
 
   &[data-disabled] {
     opacity: 0.5;
@@ -32,9 +35,9 @@
     border: 1px solid transparent;
     transform: translateY(-50%);
     transition:
-      transform motion.default(),
-      background-color motion.default(),
-      border-color motion.default();
+      transform $-thumb,
+      background-color $-thumb,
+      border-color $-thumb;
   }
 
   &.checked {

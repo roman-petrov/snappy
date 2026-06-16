@@ -1,8 +1,8 @@
-import { AppRoutes } from "@snappy/ui";
+import { Router } from "@snappy/router";
 
 import {
   Agent,
-  Catalog,
+  Agents,
   Feed,
   ForgotPassword,
   ResetPassword,
@@ -20,12 +20,15 @@ import {
   SettingsTypeWriterSpeed,
   SignIn,
   SignUp,
-  Snappy,
+  SnappyChat,
+  SnappyLanding,
 } from "./pages";
 
-export const Routes = AppRoutes(
-  {
+export const Routes = Router({
+  routes: {
     agent: { page: Agent, path: `agent/:agentId` },
+    agents: { page: Agents, path: `agents` },
+    chat: { page: SnappyChat, path: `chat` },
     feed: { page: Feed, path: `feed` },
     forgotPassword: { page: ForgotPassword, path: `forgot-password` },
     resetPassword: { page: ResetPassword, path: `reset-password` },
@@ -49,7 +52,10 @@ export const Routes = AppRoutes(
     },
     signIn: { page: SignIn, path: `login` },
     signUp: { page: SignUp, path: `register` },
-    snappy: { page: Snappy, path: `snappy` },
   },
-  { index: Catalog, public: r => [r.forgotPassword, r.resetPassword, r.signIn, r.signUp], signIn: r => r.signIn },
-);
+  start: {
+    index: SnappyLanding,
+    public: r => [r.forgotPassword, r.resetPassword, r.signIn, r.signUp],
+    signIn: r => r.signIn,
+  },
+});

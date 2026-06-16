@@ -1,10 +1,10 @@
+import { HeaderButtonGroup } from "./HeaderButtonGroup";
 import { IconButtonLocale } from "./IconButtonLocale";
 import { IconButtonTheme } from "./IconButtonTheme";
-import styles from "./SystemButtons.module.scss";
 
 export const SystemButtons = () => (
-  <div className={styles.root}>
+  <HeaderButtonGroup>
     <IconButtonTheme />
     <IconButtonLocale />
-  </div>
+  </HeaderButtonGroup>
 );

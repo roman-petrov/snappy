@@ -1,5 +1,7 @@
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/space";
+
+$-transition: animation.settle-lg();
 
 .root {
   interpolate-size: allow-keywords;
@@ -18,7 +20,7 @@
   }
 
   .chevron {
-    transition: transform motion.soft();
+    transition: transform $-transition;
   }
 
   &::details-content {
@@ -26,8 +28,8 @@
     padding-block-start: space.sm();
     overflow: clip;
     transition:
-      height motion.soft(),
-      content-visibility motion.soft() allow-discrete;
+      height $-transition,
+      content-visibility $-transition allow-discrete;
   }
 
   &[open] {

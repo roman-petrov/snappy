@@ -6,7 +6,7 @@ import styles from "./SafeArea.module.scss";
 
 export type SafeAreaProps = {
   bottom?: boolean;
-  children: ReactNode;
+  children?: ReactNode;
   cn?: string;
   left?: boolean;
   right?: boolean;

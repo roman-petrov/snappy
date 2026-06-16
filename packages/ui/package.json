@@ -13,6 +13,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/platform": "workspace:*",
+    "@snappy/router": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui-core": "workspace:*",
@@ -20,8 +21,7 @@
     "@trpc/server": "^11.17.0",
     "lucide-react": "^1.17.0",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7",
-    "react-router-dom": "^7.17.0"
+    "react-dom": "^19.2.7"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",

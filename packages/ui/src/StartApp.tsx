@@ -3,24 +3,28 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
+import type { Action, ReadonlyStore } from "@snappy/core";
+import type { RouterBundle } from "@snappy/router";
 import type { ReactNode } from "react";
 
-import { _, type Action, type ReadonlyStore } from "@snappy/core";
 import { createRoot, hydrateRoot } from "react-dom/client";
-import { createBrowserRouter, createRoutesFromElements, Navigate, Route } from "react-router-dom";
 
-import { App } from "./App";
-import { AuthLayout } from "./components/AuthLayout";
-import { Language, type StartAppRoutes, Theme } from "./core";
+import { App, AuthLayout, type TabPagerProps } from "./components";
+import { Language, Theme } from "./core";
+import { AppRouter, type RouteLayerOf, RouteStage } from "./router";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
 
 export type StartAppInput = {
   base: string;
   header?: ReactNode;
-  routes: StartAppRoutes;
+  layerOf?: RouteLayerOf;
+  routes: RouterBundle<unknown>;
   signedIn: ReadonlyStore<boolean>;
+  tabs?: Pick<TabPagerProps, `ease` | `items`>;
 };
+
+export type StartSiteInput = { children: ReactNode; header?: ReactNode };
 
 const container = () => {
   const element = document.querySelector(`#root`);
@@ -28,9 +32,9 @@ const container = () => {
   return element instanceof HTMLElement ? element : undefined;
 };
 
-export const startApp = ({ base, header, routes, signedIn }: StartAppInput) => {
-  const { $: meta } = routes;
-  const { home: path, index, pages, publicPaths, signInPath } = meta;
+export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: StartAppInput) => {
+  const { $: meta, router } = routes;
+  const { publicPaths, signInPath } = meta;
   let remount: Action | undefined;
 
   Theme.init();
@@ -42,32 +46,27 @@ export const startApp = ({ base, header, routes, signedIn }: StartAppInput) => {
   }
   history.scrollRestoration = `manual`;
 
-  const router = createBrowserRouter(
-    [
-      {
-        children: [
-          { element: index, index: true },
-          ..._.entries(pages).map(([routePath, element]) => ({ element, path: routePath })),
-          { element: <Navigate replace to={path} />, path: `*` },
-        ],
-        element: <AuthLayout header={header} publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath} />,
-        path,
-      },
-    ],
-    { basename: base },
+  const element = (
+    <AppRouter base={base} layerOf={layerOf} router={router}>
+      <App disableSelection header={header}>
+        <AuthLayout publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath}>
+          <RouteStage layerOf={layerOf} tabs={tabs} />
+        </AuthLayout>
+      </App>
+    </AppRouter>
   );
 
-  const element = <App disableSelection router={router} />;
   let reactRoot = createRoot(mountContainer);
   reactRoot.render(element);
   remount = () => {
     reactRoot.unmount();
+
     reactRoot = createRoot(mountContainer);
     reactRoot.render(element);
   };
 };
 
-export const startSite = (component: ReactNode) => {
+export const startSite = ({ children, header }: StartSiteInput) => {
   Theme.init();
   Language.init();
 
@@ -78,6 +77,8 @@ export const startSite = (component: ReactNode) => {
 
   hydrateRoot(
     mountContainer,
-    <App router={createBrowserRouter(createRoutesFromElements(<Route element={component} path="*" />))} />,
+    <AppRouter path="/" ssr>
+      <App header={header}>{children}</App>
+    </AppRouter>,
   );
 };

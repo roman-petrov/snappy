@@ -41,7 +41,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
                 visualizer({ filename: analyzeFilePath, gzipSize: true }),
               ]),
         ],
-        resolve: { dedupe: [`react`, `react-dom`, `react-router-dom`] },
+        resolve: { dedupe: [`react`, `react-dom`] },
       },
       override,
     );

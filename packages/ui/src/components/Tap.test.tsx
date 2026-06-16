@@ -2,12 +2,11 @@ import type { ReactElement } from "react";
 
 import { _ } from "@snappy/core";
 import { fireEvent, render, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
 import { Tap } from "./Tap";
 
-const renderTap = (ui: ReactElement) => render(<MemoryRouter>{ui}</MemoryRouter>);
+const renderTap = (ui: ReactElement) => render(ui);
 const navigate = vi.fn();
 
 const { bridgeState, vibrateTrigger } = vi.hoisted(() => ({
@@ -15,7 +14,7 @@ const { bridgeState, vibrateTrigger } = vi.hoisted(() => ({
   vibrateTrigger: vi.fn(),
 }));
 
-vi.mock(import(`../hooks/useGo`), () => ({ useGo: () => navigate }));
+vi.mock(`../router`, () => ({ useRouterGo: () => navigate, useRouterHref: () => (path: string) => path }));
 vi.mock(import(`@snappy/platform`), () => ({
   Bridge: {
     get available() {

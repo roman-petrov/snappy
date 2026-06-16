@@ -1,0 +1,84 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/glass";
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/tokens/layer";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.root {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.header {
+  @include layer.sticky;
+
+  position: sticky;
+  inset-block-start: 0;
+
+  &::before {
+    @include surface.header;
+    @include glass.simple;
+    @include elevation.e1;
+
+    position: absolute;
+    inset: 0;
+    content: "";
+    opacity: 0;
+    animation: header-glass 1ms linear both;
+    animation-timeline: scroll();
+    animation-range: 0 r(48);
+  }
+}
+
+.header-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: tokens.content-width();
+  height: r(56);
+  padding-inline: tokens.layout-gutter();
+  margin-inline: auto;
+}
+
+.header-slot {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+@keyframes header-glass {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.section {
+  @include desktop {
+    padding-block-end: space.md();
+  }
+
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  width: 100%;
+  max-width: tokens.content-width();
+  padding-block: space.sm() space.sm();
+  padding-inline: tokens.layout-gutter();
+  margin-inline: auto;
+  overflow-x: clip;
+}
+
+@include mobile {
+  .section {
+    max-width: none;
+  }
+}

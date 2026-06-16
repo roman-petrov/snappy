@@ -8,6 +8,7 @@
     "@snappy/admin-server-api": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/router": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",

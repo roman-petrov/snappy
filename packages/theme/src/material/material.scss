@@ -3,7 +3,7 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/material";
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
 
 @function -tone($color, $ratio) {
   @return color-mix(in srgb, #{$color} $ratio, color.surface());
@@ -42,9 +42,9 @@
 @mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
   background-color: -bg($tone);
   transition:
-    background-color motion.default(),
-    border-color motion.default(),
-    color motion.default();
+    background-color animation.standard-sm(),
+    border-color animation.standard-sm(),
+    color animation.standard-sm();
 
   @if $accent {
     @if $accent-text {
@@ -79,5 +79,5 @@
 
 @mixin glass-simple {
   backdrop-filter: blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
-  transition: backdrop-filter motion.default();
+  transition: backdrop-filter animation.standard-sm();
 }

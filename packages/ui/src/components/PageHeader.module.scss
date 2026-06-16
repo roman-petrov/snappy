@@ -1,7 +1,38 @@
+@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
   display: flex;
-  gap: space.md();
+  flex: 1;
+  align-items: center;
+  width: 100%;
   min-width: 0;
+}
+
+.leading {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  margin-inline-end: space.md();
+}
+
+.title {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  min-width: 0;
+}
+
+.trailing {
+  display: flex;
+  flex-shrink: 0;
+  gap: space.lg();
+  align-items: center;
+  margin-inline-start: auto;
+}
+
+@include mobile {
+  .trailing {
+    gap: space.md();
+  }
 }

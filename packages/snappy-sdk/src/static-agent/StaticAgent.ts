@@ -65,7 +65,7 @@ export const StaticAgent =
             stopped = false;
             onRunningChange?.(true);
             try {
-              const answers = await feed.ask(plan);
+              const answers = await feed.ask({ fields: plan.fields });
               if (isStopped()) {
                 return;
               }

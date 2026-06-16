@@ -1,0 +1,17 @@
+{
+  "name": "@snappy/router",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/browser": "workspace:*",
+    "@snappy/core": "workspace:*"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.8"
+  }
+}

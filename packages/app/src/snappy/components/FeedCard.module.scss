@@ -1,4 +1,6 @@
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
+
+$-transition: animation.settle-lg();
 
 .shell {
   contain: layout;
@@ -10,9 +12,9 @@
 
 .shell-inner {
   transition:
-    opacity motion.soft(),
-    filter motion.soft(),
-    transform motion.soft();
+    opacity $-transition,
+    filter $-transition,
+    transform $-transition;
 }
 
 .shell-exiting .shell-inner {

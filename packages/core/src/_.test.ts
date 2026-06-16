@@ -6,6 +6,7 @@ const {
   base64decode,
   byteSize,
   camelCase,
+  clamp,
   cn,
   dec,
   entries,
@@ -16,6 +17,7 @@ const {
   kb,
   kebabCase,
   keys,
+  lerp,
   list,
   mb,
   noop,
@@ -109,6 +111,19 @@ describe(`round`, () => {
 
   it(`leaves already rounded two-decimal values unchanged`, () => {
     expect(round(99.99, 2)).toBe(99.99);
+  });
+});
+
+describe(`lerp`, () => {
+  it(`interpolates between values`, () => {
+    expect(lerp(0, 1, 0.5)).toBe(0.5);
+    expect(lerp(10, 20, 0)).toBe(10);
+    expect(lerp(10, 20, 1)).toBe(20);
+  });
+
+  it(`extrapolates past the range`, () => {
+    expect(lerp(0, 1, 2)).toBe(2);
+    expect(lerp(0, 1, -1)).toBe(-1);
   });
 });
 
@@ -222,6 +237,20 @@ describe(`camelCase`, () => {
 
   it(`empty input yields empty string`, () => {
     expect(camelCase(``)).toBe(``);
+  });
+});
+
+describe(`clamp`, () => {
+  it(`returns value inside the range`, () => {
+    expect(clamp(5, 0, 10)).toBe(5);
+  });
+
+  it(`clamps below minimum`, () => {
+    expect(clamp(-5, 0, 10)).toBe(0);
+  });
+
+  it(`clamps above maximum`, () => {
+    expect(clamp(15, 0, 10)).toBe(10);
   });
 });
 

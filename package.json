@@ -4,6 +4,24 @@
   "workspaces": [
     "packages/*"
   ],
+  "scripts": {
+    "ci": "do ci",
+    "cspell": "do cspell",
+    "dev": "do dev",
+    "eslint": "do eslint",
+    "eslint-fix": "do eslint-fix",
+    "java-format": "do java-format",
+    "java-format-fix": "do java-format-fix",
+    "jscpd": "do jscpd",
+    "knip": "do knip",
+    "markdownlint": "do markdownlint",
+    "prettier": "do prettier",
+    "prettier-fix": "do prettier-fix",
+    "run": "do run",
+    "stylelint": "do stylelint",
+    "stylelint-fix": "do stylelint-fix",
+    "tsc": "do tsc"
+  },
   "dependencies": {
     "@snappy/app-server": "workspace:*",
     "@snappy/coder-cli": "workspace:*",

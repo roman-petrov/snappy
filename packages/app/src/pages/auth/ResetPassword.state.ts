@@ -1,12 +1,11 @@
-import { useAsyncSubmit } from "@snappy/ui";
+import { useAsyncSubmit, useRouterQuery } from "@snappy/ui";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import { Auth, Password } from "../../core";
 
 export const useResetPasswordState = () => {
-  const [searchParameters] = useSearchParams();
-  const token = searchParameters.get(`token`) ?? ``;
+  const query = useRouterQuery();
+  const token = query.get(`token`) ?? ``;
   const [password, setPassword] = useState(``);
   const [confirmPassword, setConfirmPassword] = useState(``);
   const [done, setDone] = useState(false);

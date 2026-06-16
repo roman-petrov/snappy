@@ -19,6 +19,7 @@ type Elements =
   | MediaQueryList
   | null
   | undefined
+  | VisualViewport
   | Window;
 
 type Events = DocumentEventMap &
@@ -27,6 +28,7 @@ type Events = DocumentEventMap &
   IDBRequestEventMap &
   IDBTransactionEventMap &
   MediaQueryListEventMap &
+  VisualViewportEventMap &
   WindowEventMap;
 
 type Types = keyof Events;

@@ -1,7 +1,5 @@
 export * from "./$";
 
-export * from "./App";
-
 export * from "./assets";
 
 export * from "./components";
@@ -11,6 +9,8 @@ export * from "./core";
 export * from "./hooks";
 
 export * from "./locales";
+
+export * from "./router";
 
 export * from "./SavedStore";
 

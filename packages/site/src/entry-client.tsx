@@ -3,5 +3,6 @@
 import { startSite } from "@snappy/ui";
 
 import { Landing } from "./components";
+import { SiteHeader } from "./components/SiteHeader";
 
-startSite(<Landing />);
+startSite({ children: <Landing />, header: <SiteHeader /> });

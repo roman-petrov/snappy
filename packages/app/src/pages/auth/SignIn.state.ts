@@ -1,4 +1,4 @@
-import { useAsyncSubmit, useGo } from "@snappy/ui";
+import { useAsyncSubmit, useRouterGo } from "@snappy/ui";
 import { useState } from "react";
 
 import { AppBase } from "../../AppBase";
@@ -11,7 +11,7 @@ export const useSignInState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
   const [screen, setScreen] = useState<`form` | `unverified`>(`form`);
-  const go = useGo();
+  const go = useRouterGo();
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
 
   const {

@@ -1,0 +1,19 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/layer";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.dock {
+  @include layer.chrome;
+
+  @include desktop {
+    padding-bottom: space.md();
+  }
+
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-inline: tokens.layout-gutter();
+  padding-bottom: calc(#{space.sm()} + env(safe-area-inset-bottom, 0px));
+}

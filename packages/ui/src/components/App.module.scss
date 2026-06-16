@@ -1,0 +1,31 @@
+/* stylelint-disable property-disallowed-list */
+
+.viewport {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  overflow-x: clip;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.disable-selection {
+  user-select: none;
+
+  a {
+    -webkit-user-drag: none;
+    user-select: none;
+  }
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  scroll-behavior: smooth;
+}
+
+.main-safe {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+}

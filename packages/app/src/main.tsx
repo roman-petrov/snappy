@@ -1,9 +1,29 @@
 /* eslint-disable functional/no-expression-statements */
+import { Ease } from "@snappy/core";
 import { startApp } from "@snappy/ui";
+import { Bot, Newspaper, Sparkles } from "lucide-react";
 
 import { AppBase } from "./AppBase";
-import { HeaderContent } from "./components";
+import { t } from "./core";
 import { Routes } from "./Routes";
 import { $signedIn } from "./Store";
 
-startApp({ base: AppBase.url(``), header: <HeaderContent />, routes: Routes, signedIn: $signedIn });
+startApp({
+  base: AppBase.url(``),
+  layerOf: pattern =>
+    new Set([`/`, `agents`, `feed`]).has(pattern)
+      ? undefined
+      : new Set([`forgot-password`, `login`, `register`, `reset-password`]).has(pattern)
+        ? `flip`
+        : `cover`,
+  routes: Routes,
+  signedIn: $signedIn,
+  tabs: {
+    ease: Ease.outCubic,
+    items: [
+      { color: `accentOrange`, icon: Newspaper, id: `feed`, label: t(`tabs.feed.label`), path: Routes.feed },
+      { color: `accentIndigo`, icon: Sparkles, id: `snappy`, label: t(`tabs.snappy.label`), path: Routes.$.home },
+      { color: `accentFuchsia`, icon: Bot, id: `agents`, label: t(`tabs.agents.label`), path: Routes.agents },
+    ],
+  },
+});

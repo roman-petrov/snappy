@@ -1,12 +1,12 @@
 export * from "./Alert";
 
+export * from "./App";
+
 export * from "./AudioFile";
 
 export * from "./AudioSelect";
 
 export * from "./AuthLayout";
-
-export * from "./BusyShimmerOverlay";
 
 export * from "./Button";
 
@@ -20,15 +20,11 @@ export * from "./context-menu";
 
 export * from "./CooldownButton";
 
-export * from "./CustomHeaderPage";
-
-export * from "./DefaultHeader";
-
 export * from "./FileSelect";
 
 export * from "./FilledIcon";
 
-export * from "./Header";
+export * from "./HeaderButtonGroup";
 
 export * from "./Icon";
 
@@ -44,8 +40,6 @@ export * from "./ImageSelect";
 
 export * from "./Input";
 
-export * from "./Layout";
-
 export * from "./Link";
 
 export * from "./Logo";
@@ -58,7 +52,7 @@ export * from "./NewPasswordInput";
 
 export * from "./Page";
 
-export * from "./PageHeader";
+export * from "./PageChrome";
 
 export * from "./PasswordInput";
 
@@ -77,6 +71,8 @@ export * from "./SwitchDisplay";
 export * from "./SystemButtons";
 
 export * from "./Table";
+
+export * from "./TabPager";
 
 export * from "./Tabs";
 

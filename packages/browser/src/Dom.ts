@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-expression-statements */
+import { _, type Action } from "@snappy/core";
+
 import type { DomSubscribe } from "./DomSubscribeTypes";
+
+export type DomSize = { height: number; width: number };
 
 const subscribe: DomSubscribe = (element, type, listener, options) => {
   element?.addEventListener(type, listener as never, options);
@@ -24,4 +28,24 @@ const subscribeOnce: DomSubscribe = (element, type, listener, options) => {
   return unsubscribe;
 };
 
-export const Dom = { subscribe, subscribeOnce };
+const size = (element: HTMLElement): DomSize => {
+  const { height, width } = element.getBoundingClientRect();
+
+  return { height, width };
+};
+
+const watchSize = (element: HTMLElement | null | undefined, onSize: (size: DomSize) => void): Action => {
+  if (element === null || element === undefined) {
+    return _.noop;
+  }
+
+  const sync = () => onSize(size(element));
+
+  sync();
+  const observer = new ResizeObserver(sync);
+  observer.observe(element);
+
+  return _.singleAction([() => observer.disconnect(), subscribe(window.visualViewport, `resize`, sync)]);
+};
+
+export const Dom = { size, subscribe, subscribeOnce, watchSize };

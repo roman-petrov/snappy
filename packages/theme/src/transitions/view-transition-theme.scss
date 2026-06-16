@@ -1,4 +1,3 @@
-/* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/tokens/animation";
 
 $-x: var(--theme-transition-x, 50%);
@@ -12,8 +11,7 @@ $-circle-radius: $-svg-size * 0.5 - $-blur;
 $-circle: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 #{$-view-size} #{$-view-size}'><defs><filter id='blur' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='#{$-blur}'/></filter></defs><circle cx='#{$-center}' cy='#{$-center}' r='#{$-circle-radius}' fill='white' filter='url(%23blur)'/></svg>");
 $-mask-end: 250vmax;
 $-mask-end-offset: $-mask-end * 0.5;
-$-duration: animation.duration-soft();
-$-easing: ease-in-out;
+$-motion: animation.soft-lg();
 
 /**
 * ? Cool effect from https://theme-toggle.rdsx.dev/
@@ -21,14 +19,26 @@ $-easing: ease-in-out;
 * ! Animations: https://theme-toggle.rdsx.dev/animations.txt
 */
 :root[data-theme-transition] {
+  &,
+  & *,
+  & *::before,
+  & *::after {
+    transition: none !important;
+  }
+
+  & *,
+  & *::before,
+  & *::after {
+    view-transition-name: none !important;
+  }
+
   &::view-transition-new(root) {
     mask: #{$-circle} #{$-x} #{$-y} / 0 no-repeat;
-    animation: view-transition-theme-scale $-duration $-easing both;
+    animation: view-transition-theme-scale $-motion both;
   }
 
   &::view-transition-old(root) {
-    z-index: -1;
-    animation: view-transition-theme-fade-out $-duration $-easing both;
+    animation: view-transition-theme-fade-out $-motion both;
   }
 }
 

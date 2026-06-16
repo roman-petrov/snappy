@@ -1,10 +1,9 @@
 import { _ } from "@snappy/core";
 import { Bridge, Vibrate } from "@snappy/platform";
-import { useHref } from "react-router-dom";
 
 import type { TapProps } from "./Tap";
 
-import { useGo } from "../hooks/useGo";
+import { useRouterGo, useRouterHref } from "../router";
 
 export const useTapState = ({
   children,
@@ -17,11 +16,12 @@ export const useTapState = ({
   tip,
   vibrate,
 }: TapProps) => {
-  const go = useGo();
+  const go = useRouterGo();
+  const href = useRouterHref();
   const isExternal = _.isObject(link);
   const isHash = _.isString(link) && link.startsWith(`#`);
   const spaPath = _.isString(link) && !isHash ? link : undefined;
-  const spaHref = useHref(spaPath ?? `/`);
+  const spaHref = href(spaPath ?? `/`);
   const useJsNavigation = Bridge.available && spaPath !== undefined;
 
   const handleLinkClick = (event: { preventDefault: () => void }) => {

@@ -21,5 +21,5 @@ export const useAgentState = ({ agentId }: AgentProps) => {
           session: [agentId, locale],
         };
 
-  return { chatProps, title: resolved?.meta.title };
+  return { agent: resolved, chatProps };
 };

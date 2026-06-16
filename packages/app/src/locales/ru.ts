@@ -1,7 +1,10 @@
 /* eslint-disable unicorn/filename-case */
 /* cspell:disable */
 export const ru = {
-  agent: { stop: `Стоп` },
+  agents: {
+    groups: { audio: `Аудио`, edit: `Редактирование изображений`, text: `Текст`, visual: `Генерация изображений` },
+    title: `Агенты`,
+  },
   auth: {
     errors: { tooManyRequests: `Подождите {{seconds}} сек. перед повторной отправкой` },
     forgotPassword: {
@@ -75,17 +78,11 @@ export const ru = {
       tapTip: `Пополнить баланс`,
     },
   },
-  catalog: {
-    agent: { label: `Агент` },
-    feed: { label: `Лента` },
-    groups: { audio: `Аудио`, edit: `Редактирование изображений`, text: `Текст`, visual: `Генерация изображений` },
-    title: `Каталог агентов`,
-  },
   chat: {
     continue: `Продолжить`,
     form: { label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
   },
-  feed: { openCatalog: `Каталог`, title: `Лента` },
+  feed: { title: `Лента` },
   feedCard: {
     copy: `Копировать`,
     delete: `Удалить`,
@@ -105,7 +102,6 @@ export const ru = {
       mode: { direct: `Прямой`, proxy: `Прокси` },
       title: `AI Tunnel`,
     },
-    fogBackground: `Туман`,
     language: { en: `English`, ru: `Русский`, system: `Системный`, title: `Язык` },
     models: {
       chat: { title: `Текст` },
@@ -162,5 +158,6 @@ export const ru = {
     title: `Настройки`,
     typeWriterSpeed: { fast: `Быстро`, medium: `Средне`, slow: `Медленно`, stream: `Поток`, title: `Скорость печати` },
   },
-  snappy: { composer: { placeholder: `Что нужно?`, send: `Отправить` } },
+  snappy: { composer: { placeholder: `Что нужно?`, send: `Отправить` }, landing: { start: `Начать` } },
+  tabs: { agents: { label: `Агенты` }, feed: { label: `Лента` }, snappy: { label: `Snappy` } },
 };

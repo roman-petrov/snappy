@@ -1,7 +1,10 @@
 /* eslint-disable unicorn/filename-case */
 /* cspell:disable */
 export const en = {
-  agent: { stop: `Stop` },
+  agents: {
+    groups: { audio: `Audio`, edit: `Image editing`, text: `Text`, visual: `Image generation` },
+    title: `Agents`,
+  },
   auth: {
     errors: { tooManyRequests: `Wait {{seconds}} sec. before sending again` },
     forgotPassword: {
@@ -72,17 +75,11 @@ export const en = {
   balance: {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
   },
-  catalog: {
-    agent: { label: `Agent` },
-    feed: { label: `Feed` },
-    groups: { audio: `Audio`, edit: `Image editing`, text: `Text`, visual: `Image generation` },
-    title: `Agent catalog`,
-  },
   chat: {
     continue: `Continue`,
     form: { label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
   },
-  feed: { openCatalog: `Catalog`, title: `Feed` },
+  feed: { title: `Feed` },
   feedCard: {
     copy: `Copy`,
     delete: `Delete`,
@@ -102,7 +99,6 @@ export const en = {
       mode: { direct: `Direct`, proxy: `Proxy` },
       title: `AI Tunnel`,
     },
-    fogBackground: `Fog`,
     language: { en: `English`, ru: `Русский`, system: `System`, title: `Language` },
     models: {
       chat: { title: `Text` },
@@ -152,5 +148,6 @@ export const en = {
     title: `Settings`,
     typeWriterSpeed: { fast: `Fast`, medium: `Medium`, slow: `Slow`, stream: `Stream`, title: `Typewriter speed` },
   },
-  snappy: { composer: { placeholder: `What do you need?`, send: `Send` } },
+  snappy: { composer: { placeholder: `What do you need?`, send: `Send` }, landing: { start: `Start` } },
+  tabs: { agents: { label: `Agents` }, feed: { label: `Feed` }, snappy: { label: `Snappy` } },
 };

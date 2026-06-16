@@ -1,15 +1,35 @@
-@function -animation($name) {
-  @return var(--animation-#{$name});
+@function -timing($ease, $duration) {
+  @return var(--animation-duration-#{$duration}) var(--animation-ease-#{$ease});
 }
 
-@function easing-function() {
-  @return -animation("easing-function");
+@function standard-sm() {
+  @return -timing("standard", "sm");
 }
 
-@function duration-default() {
-  @return -animation("duration-default");
+@function sharp-xs() {
+  @return -timing("sharp", "xs");
 }
 
-@function duration-soft() {
-  @return -animation("duration-soft");
+@function sharp-sm() {
+  @return -timing("sharp", "sm");
+}
+
+@function soft-lg() {
+  @return -timing("soft", "lg");
+}
+
+@function settle-sm() {
+  @return -timing("settle", "sm");
+}
+
+@function settle-lg() {
+  @return -timing("settle", "lg");
+}
+
+@function linear-lg() {
+  @return var(--animation-duration-lg) linear;
+}
+
+@function linear-xl() {
+  @return var(--animation-duration-xl) linear;
 }

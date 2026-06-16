@@ -1,5 +1,5 @@
 import { useStoreValue } from "@snappy/store";
-import { $fog, $locale, $theme, useAsyncEffect } from "@snappy/ui";
+import { $locale, $theme, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth, t, trpc, type UserSettings } from "../../core";
@@ -12,7 +12,6 @@ export const useSettingsState = () => {
   const [llmVisionEnd, setLlmVisionEnd] = useState<string>();
   const [llmSpeechEnd, setLlmSpeechEnd] = useState<string>();
   const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
-  const fog = useStoreValue($fog);
   const theme = useStoreValue($theme);
   const locale = useStoreValue($locale);
 
@@ -26,19 +25,6 @@ export const useSettingsState = () => {
     setLlmSpeechEnd(settings.llmSpeechRecognitionModel);
     setTypeWriterSpeed(settings.typeWriterSpeed);
   }, [locale]);
-  const toggleFog = () => $fog.set(!fog);
 
-  return {
-    aiTunnelEnd,
-    email,
-    fog,
-    llmChatEnd,
-    llmImageEnd,
-    llmSpeechEnd,
-    llmVisionEnd,
-    locale,
-    theme,
-    toggleFog,
-    typeWriterSpeed,
-  };
+  return { aiTunnelEnd, email, llmChatEnd, llmImageEnd, llmSpeechEnd, llmVisionEnd, locale, theme, typeWriterSpeed };
 };

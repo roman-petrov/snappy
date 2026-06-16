@@ -6,8 +6,7 @@ export type LogoProps = { title?: string };
 
 export const Logo = ({ title }: LogoProps = {}) => (
   <a className={styles.logo} href="/" title={title}>
-    <img alt="" className={styles.logoIcon} height={20} src={faviconUrl} width={20} />
-    {` `}
+    <img alt="" className={styles.logoIcon} src={faviconUrl} />
     <Text cn={styles.logoText} color="primary" text="Snappy" />
   </a>
 );

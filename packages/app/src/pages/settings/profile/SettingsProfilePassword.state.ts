@@ -1,11 +1,11 @@
-import { useAsyncSubmit, useGo } from "@snappy/ui";
+import { useAsyncSubmit, useRouterGo } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth, Password } from "../../../core";
 import { Routes } from "../../../Routes";
 
 export const useSettingsProfilePasswordState = () => {
-  const go = useGo();
+  const go = useRouterGo();
   const [currentPassword, setCurrentPassword] = useState(``);
   const [newPassword, setNewPassword] = useState(``);
   const [confirmPassword, setConfirmPassword] = useState(``);

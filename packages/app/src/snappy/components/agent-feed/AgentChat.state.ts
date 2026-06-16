@@ -1,18 +1,16 @@
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
 import { _, Unicode } from "@snappy/core";
-import { useAsyncEffect, useGo } from "@snappy/ui";
+import { useAsyncEffect } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
 import type { AgentChatProps, AgentChatRuntime } from "./AgentChat";
 import type { AgentFeedHandle } from "./AgentFeedHandle";
 
 import { AgentAiFromSettings, trpc, type UserSettings } from "../../../core";
-import { Routes } from "../../../Routes";
 import { AgentFeed } from "./AgentFeed";
 
 export const useAgentChatState = ({ runtime, session = [], showFeed = true }: AgentChatProps) => {
-  const go = useGo();
   const feedRef = useRef<AgentFeedHandle>(null);
   const runtimeRef = useRef<AgentChatRuntime | undefined>(undefined);
   const runtimeFn = useRef(runtime);
@@ -55,14 +53,9 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
     };
   }, [aiConfig, phase, sessionKey]);
 
-  const stop = async () => {
-    runtimeRef.current?.stop();
-    await go(Routes.$.home);
-  };
-
   const ready = phase === `ready` && aiConfig !== undefined;
   const balanceLow = phase === `blocked`;
   const feed = ready ? createElement(AgentFeed, { ref: feedRef, typeWriterSpeed }) : undefined;
 
-  return { balanceLow, feed, showFeed, stop };
+  return { balanceLow, feed, showFeed };
 };

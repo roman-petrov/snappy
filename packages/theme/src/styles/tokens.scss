@@ -13,16 +13,21 @@
 
   /* Layout */
   --layout-gutter: #{space.lg()};
-  --layout-header-height: #{r(56)};
   --icon-button-touch-size: #{r(40)};
   --field-height: #{r(48)};
   --accent-edge: 3px;
   --breakpoint-mobile: #{$breakpoint-mobile};
 
   /* Animation */
-  --animation-easing-function: cubic-bezier(0.25, 0.9, 0.35, 1);
-  --animation-duration-default: 260ms;
-  --animation-duration-soft: 720ms;
+  --animation-duration-xs: 180ms;
+  --animation-duration-sm: 260ms;
+  --animation-duration-lg: 720ms;
+  --animation-duration-xl: 960ms;
+  --animation-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-ease-soft: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --animation-ease-sharp: cubic-bezier(0.2, 0, 0, 1);
+  --animation-ease-settle: cubic-bezier(0.33, 0, 0.2, 1);
+  --flip-perspective: #{r(1200)};
 
   /* Focus */
   --focus-offset: 2px;

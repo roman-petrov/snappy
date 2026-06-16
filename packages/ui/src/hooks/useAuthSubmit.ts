@@ -1,10 +1,10 @@
+import { useRouterGo } from "../router";
 import { useAsyncSubmit } from "./useAsyncSubmit";
-import { useGo } from "./useGo";
 
 export type AuthSubmitInput = { homePath: string; setSignedIn: (value: boolean) => void };
 
 export const useAuthSubmit = ({ homePath, setSignedIn }: AuthSubmitInput) => {
-  const go = useGo();
+  const go = useRouterGo();
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
 
   const onSubmit = (submit: () => Promise<{ status: string }>) => {

@@ -1,9 +1,0 @@
-@use "animation";
-
-@function default() {
-  @return animation.duration-default() animation.easing-function();
-}
-
-@function soft() {
-  @return animation.duration-soft() animation.easing-function();
-}

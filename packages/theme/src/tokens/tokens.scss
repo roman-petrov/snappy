@@ -14,10 +14,6 @@
   @return var(--layout-gutter);
 }
 
-@function layout-header-height() {
-  @return var(--layout-header-height);
-}
-
 @function icon-button-touch-size() {
   @return var(--icon-button-touch-size);
 }
@@ -28,4 +24,8 @@
 
 @function focus-offset() {
   @return var(--focus-offset);
+}
+
+@function flip-perspective() {
+  @return var(--flip-perspective);
 }

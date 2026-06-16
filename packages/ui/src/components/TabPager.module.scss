@@ -1,0 +1,151 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/glass";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+@property --tab-index {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+.track {
+  display: flex;
+  flex: 1 1 0;
+  width: calc(100% * var(--tab-count));
+  min-width: 0;
+  min-height: 0;
+  touch-action: pan-y;
+  will-change: transform;
+
+  &-settling {
+    pointer-events: none;
+  }
+}
+
+.slide {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-self: stretch;
+  width: calc(100% / var(--tab-count));
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  touch-action: pan-y;
+}
+
+$-height: r(64);
+$-inset: space.xs();
+$-tab-gap: r(4);
+$-icon: icon-size.md();
+$-label: r(14);
+$-tab-padding: calc((#{$-height} - #{$-inset} * 2 - #{$-icon} - #{$-tab-gap} - #{$-label}) / 2);
+$-radius: radius.lg();
+$-inner-radius: calc(#{$-radius} - #{$-inset});
+
+.tint {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.bar {
+  position: relative;
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  height: $-height;
+  padding: $-inset;
+  margin-inline: auto;
+  overflow: hidden;
+  border-radius: $-radius;
+  view-transition-name: none;
+
+  &::before {
+    @include glass.simple;
+
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    border-radius: inherit;
+  }
+
+  &-animating {
+    .tint,
+    .indicator {
+      transition: none;
+    }
+  }
+}
+
+.indicator {
+  position: absolute;
+  inset-block: $-inset;
+  inset-inline-start: $-inset;
+  width: calc((100% - #{$-inset} * 2) / var(--tab-count));
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: $-inner-radius;
+  transform: translateX(calc(var(--tab-index) * 100%));
+  transition: transform animation.sharp-sm();
+}
+
+.tab {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: $-tab-gap;
+  align-items: center;
+  width: r(160);
+  height: calc(#{$-height} - #{$-inset} * 2);
+  padding-block: $-tab-padding;
+  color: color.text();
+
+  svg {
+    display: block;
+    flex-shrink: 0;
+    stroke-width: 1.75;
+  }
+}
+
+@include mobile {
+  .tab {
+    width: r(80);
+  }
+}
+
+@include desktop {
+  .track {
+    flex: 1 0 auto;
+    width: 100%;
+    min-height: auto;
+    will-change: auto;
+  }
+
+  .slide:not(.slide-active) {
+    display: none;
+  }
+
+  .slide-active {
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+.label {
+  flex-shrink: 0;
+  height: $-label;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}

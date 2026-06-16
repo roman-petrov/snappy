@@ -1,5 +1,5 @@
-import { FilledIcon, Page, SwitchDisplay } from "@snappy/ui";
-import { CloudFog, Eye, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
+import { FilledIcon, Page } from "@snappy/ui";
+import { Eye, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
@@ -12,14 +12,12 @@ export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 export const SettingsView = ({
   aiTunnelEnd,
   email,
-  fog,
   llmChatEnd,
   llmImageEnd,
   llmSpeechEnd,
   llmVisionEnd,
   locale,
   theme,
-  toggleFog,
   typeWriterSpeed,
 }: SettingsViewProps) => (
   <Page back title={t(`settings.title`)}>
@@ -38,13 +36,6 @@ export const SettingsView = ({
           icon={<FilledIcon color="accentOrange" icon={Palette} />}
           link={Routes.settings.theme}
           text={t(`settings.theme.title`)}
-        />
-        <SettingsCardSeparator />
-        <SettingsCardRow
-          icon={<FilledIcon color="accentViolet" icon={CloudFog} />}
-          onClick={toggleFog}
-          right={<SwitchDisplay checked={fog} />}
-          text={t(`settings.fogBackground`)}
         />
         <SettingsCardSeparator />
         <SettingsCardRow

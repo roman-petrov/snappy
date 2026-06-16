@@ -1,6 +1,6 @@
 import type { TrpcOutputs } from "@snappy/admin-server-api";
 
-import { useAsyncEffect, useAsyncSubmit, useGo } from "@snappy/ui";
+import { useAsyncEffect, useAsyncSubmit, useRouterGo } from "@snappy/ui";
 import { useState } from "react";
 
 import type { UserEditProps } from "./UserEdit";
@@ -9,7 +9,7 @@ import { Confirm, t, trpc } from "../../core";
 import { Routes } from "../../Routes";
 
 export const useUserEditState = ({ userId: id }: UserEditProps) => {
-  const go = useGo();
+  const go = useRouterGo();
   const [user, setUser] = useState<TrpcOutputs[`users`][`read`]>();
   const [balanceText, setBalanceText] = useState(``);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();

@@ -27,6 +27,7 @@
         "@snappy/admin-server-api": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/router": "workspace:*",
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui": "workspace:*",
@@ -114,6 +115,7 @@
         "@snappy/domain": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/platform": "workspace:*",
+        "@snappy/router": "workspace:*",
         "@snappy/snappy": "workspace:*",
         "@snappy/snappy-presets": "workspace:*",
         "@snappy/snappy-sdk": "workspace:*",
@@ -123,7 +125,6 @@
         "better-auth": "^1.6.17",
         "lucide-react": "^1.17.0",
         "react": "^19.2.7",
-        "react-router-dom": "^7.17.0",
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
@@ -176,9 +177,11 @@
       "dependencies": {
         "@snappy/core": "workspace:*",
         "isomorphic-dompurify": "^3.16.0",
+        "react-dom": "^19.2.7",
       },
       "devDependencies": {
         "@types/dom-speech-recognition": "^0.0.12",
+        "vitest": "^4.1.8",
       },
     },
     "packages/coder": {
@@ -431,6 +434,20 @@
         "vitest": "^4.1.8",
       },
     },
+    "packages/router": {
+      "name": "@snappy/router",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/browser": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "react": "^19.2.7",
+      },
+      "devDependencies": {
+        "@testing-library/react": "^16.0.0",
+        "@types/react": "^19.2.17",
+        "vitest": "^4.1.8",
+      },
+    },
     "packages/s3": {
       "name": "@snappy/s3",
       "version": "0.0.0",
@@ -582,6 +599,7 @@
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/platform": "workspace:*",
+        "@snappy/router": "workspace:*",
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui-core": "workspace:*",
@@ -590,7 +608,6 @@
         "lucide-react": "^1.17.0",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
-        "react-router-dom": "^7.17.0",
       },
       "devDependencies": {
         "@testing-library/dom": "^10.4.0",
@@ -1449,6 +1466,8 @@
     "@snappy/platform": ["@snappy/platform@workspace:packages/platform"],
 
     "@snappy/remend": ["@snappy/remend@workspace:packages/remend"],
+
+    "@snappy/router": ["@snappy/router@workspace:packages/router"],
 
     "@snappy/s3": ["@snappy/s3@workspace:packages/s3"],
 
@@ -2832,10 +2851,6 @@
 
     "react-is": ["react-is@16.13.1", "", {}, "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="],
 
-    "react-router": ["react-router@7.17.0", "", { "dependencies": { "cookie": "^1.0.1", "set-cookie-parser": "^2.6.0" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" }, "optionalPeers": ["react-dom"] }, "sha512-FDELK7rTMlCHO5+reyXsPlmfr7N1F91lPHsWYfMEGQm/KQ+F4JFM8jGoeQDmDvdTs93Fw9aSilH+uKRb4/jXvQ=="],
-
-    "react-router-dom": ["react-router-dom@7.17.0", "", { "dependencies": { "react-router": "7.17.0" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-fyU2yjGups/hE6Xz0I5ZYbVL8Gx29eCjgpHaRaTaVU+OOAdfRX05KsvyRm0GO8YQwOkhpU3MurW1jyMUJn+zSw=="],
-
     "readdirp": ["readdirp@4.1.2", "", {}, "sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg=="],
 
     "real-require": ["real-require@0.2.0", "", {}, "sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg=="],
@@ -3597,8 +3612,6 @@
     "react-email/marked": ["marked@15.0.12", "", { "bin": { "marked": "bin/marked.js" } }, "sha512-8dD6FusOQSrpv9Z1rdNMdlSgQOIP880DHqnohobOmYLElGEqAL/JvxvuxZO16r4HtjTlfPRDC1hbvxC9dPN2nA=="],
 
     "react-email/tsconfig-paths": ["tsconfig-paths@4.2.0", "", { "dependencies": { "json5": "^2.2.2", "minimist": "^1.2.6", "strip-bom": "^3.0.0" } }, "sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg=="],
-
-    "react-router/cookie": ["cookie@1.1.1", "", {}, "sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ=="],
 
     "rolldown-plugin-dts/@babel/generator": ["@babel/generator@8.0.0-rc.6", "", { "dependencies": { "@babel/parser": "^8.0.0-rc.6", "@babel/types": "^8.0.0-rc.6", "@jridgewell/gen-mapping": "^0.3.12", "@jridgewell/trace-mapping": "^0.3.28", "@types/jsesc": "^2.5.0", "jsesc": "^3.0.2" } }, "sha512-6mIzgVK8DgEzvIapoQwhXTMnnkuE4STQmVv9H03i/tZ2ml8oev3TRvZJgTenK2Bsq0YWNtzOrFdTyNzCMFtjJQ=="],
 

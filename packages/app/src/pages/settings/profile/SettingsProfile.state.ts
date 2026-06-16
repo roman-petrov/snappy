@@ -1,5 +1,5 @@
 import { i } from "@snappy/intl";
-import { useAsyncEffect, useGo } from "@snappy/ui";
+import { useAsyncEffect, useRouterGo } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth, trpc } from "../../../core";
@@ -7,7 +7,7 @@ import { Routes } from "../../../Routes";
 import { $signedIn } from "../../../Store";
 
 export const useSettingsProfileState = () => {
-  const go = useGo();
+  const go = useRouterGo();
   const [balanceEnd, setBalanceEnd] = useState<string>();
   const [email, setEmail] = useState<string>();
 

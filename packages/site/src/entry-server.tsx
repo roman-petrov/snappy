@@ -6,6 +6,7 @@ import { $locale, $theme, type Language, type Theme } from "@snappy/ui";
 import { renderApp } from "@snappy/ui/StartApp.server";
 
 import { Landing } from "./components/Landing";
+import { SiteHeader } from "./components/SiteHeader";
 import { localeData } from "./locales";
 
 export const getMeta = (locale: Locale) => {
@@ -18,5 +19,5 @@ export const render = (locale: Language = `system`, theme: Theme = `system`) => 
   $locale.set(locale);
   $theme.set(theme);
 
-  return renderApp(<Landing />);
+  return renderApp(<Landing />, { header: <SiteHeader /> });
 };

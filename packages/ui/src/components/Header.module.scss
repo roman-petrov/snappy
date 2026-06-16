@@ -1,9 +1,0 @@
-@use "pkg:@snappy/theme/tokens/tokens";
-
-.inner {
-  align-items: center;
-  max-width: tokens.content-width();
-  height: tokens.layout-header-height();
-  padding-inline: tokens.layout-gutter();
-  margin-inline: auto;
-}

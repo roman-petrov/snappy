@@ -4,9 +4,9 @@
 import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
 
+import { ThemeVar } from "./ThemeVar";
+
 const attribute = `data-theme-transition`;
-const originX = `--theme-transition-x`;
-const originY = `--theme-transition-y`;
 let pointer: undefined | { x: number; y: number };
 
 const applyOrigin = (root: HTMLElement) => {
@@ -14,13 +14,13 @@ const applyOrigin = (root: HTMLElement) => {
     return;
   }
 
-  root.style.setProperty(originX, _.px(pointer.x));
-  root.style.setProperty(originY, _.px(pointer.y));
+  ThemeVar.write(`theme-transition-x`, _.px(pointer.x), root);
+  ThemeVar.write(`theme-transition-y`, _.px(pointer.y), root);
 };
 
 const clearOrigin = (root: HTMLElement) => {
-  root.style.removeProperty(originX);
-  root.style.removeProperty(originY);
+  ThemeVar.remove(`theme-transition-x`, root);
+  ThemeVar.remove(`theme-transition-y`, root);
 };
 
 const init = () => {

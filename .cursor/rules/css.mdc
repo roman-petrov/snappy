@@ -49,8 +49,18 @@ Always **kebab-case** (e.g. `.card-header`, `.nav-item`, `.btn-primary`).
 
 ### Avoid `z-index`
 
-Do not use `z-index` unless it is strictly necessary for layering behavior that cannot be achieved by DOM order,
-positioning, or natural stacking. If needed, use the smallest possible value and keep layer levels minimal.
+Stacking is managed in `@snappy/theme/tokens/layer` — read that file for available mixins and the current global order.
+Component styles must not declare `z-index` (numeric values or `var()`).
+
+Prefer, in order:
+
+1. **DOM order** — later siblings paint above earlier ones within the same stacking context.
+2. **`position: relative` on content** — instead of negative `z-index` on decorative `::before`/`::after` layers.
+3. **`@include layer.<name>` from `@snappy/theme/tokens/layer`** — only when stacking spans separate contexts (e.g. sticky,
+   fixed, overlay, view-transition) and steps 1–2 are not enough.
+
+If a new shared layer is needed, add a mixin to `layer.scss` — do not hardcode values in components or introduce
+component-level CSS custom properties for stacking.
 
 ---
 
@@ -60,5 +70,5 @@ positioning, or natural stacking. If needed, use the smallest possible value and
 - [ ] No raw `var(--...)` — theme functions only
 - [ ] Sizes in rem; borders in px are ok
 - [ ] Class names in kebab-case
-- [ ] No `z-index` unless strictly necessary; minimal values only
+- [ ] No raw `z-index` in components — DOM order first, then `@snappy/theme/tokens/layer`
 - [ ] Missing values added to theme, not hardcoded in components

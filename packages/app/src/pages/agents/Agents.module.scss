@@ -1,0 +1,13 @@
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  width: 100%;
+}
+
+.card {
+  flex: none;
+  width: 100%;
+}

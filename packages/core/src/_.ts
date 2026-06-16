@@ -14,6 +14,7 @@ import { Time } from "./Time";
 
 const base64decode = (s: string) => Buffer.from(s, `base64`).toString(`utf8`);
 const camelCase = (s: string) => s.replaceAll(/-(?<c>[a-z])/gu, (_, c: string) => c.toUpperCase());
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 const kebabCase = (s: string) =>
   s
@@ -88,6 +89,7 @@ const round = (value: number, fractionDigits: number) => {
   return Math.round(value * factor) / factor;
 };
 
+const lerp = (start: number, end: number, ratio: number) => start + (end - start) * ratio;
 const b1024 = 1024;
 
 const byteSize = (bytes: number) => {
@@ -120,6 +122,7 @@ export const _ = {
   base64decode,
   byteSize,
   camelCase,
+  clamp,
   cn,
   daysInWeek: Time.daysInWeek,
   daysInYear: Time.daysInYear,
@@ -136,6 +139,7 @@ export const _ = {
   isString,
   kb,
   kebabCase,
+  lerp,
   list,
   mb,
   noop,

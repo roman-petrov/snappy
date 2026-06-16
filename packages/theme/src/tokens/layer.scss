@@ -1,0 +1,33 @@
+/* stylelint-disable property-disallowed-list */
+@use "sass:map";
+
+$-global: (
+  sticky: 10,
+  fade: 20,
+  chrome: 30,
+  overlay: 40,
+);
+
+@function -level($name) {
+  @return map.get($-global, $name);
+}
+
+@mixin sticky {
+  z-index: -level(sticky);
+}
+
+@mixin fade {
+  z-index: -level(fade);
+}
+
+@mixin chrome {
+  z-index: -level(chrome);
+}
+
+@mixin overlay {
+  z-index: -level(overlay);
+}
+
+@mixin transition {
+  z-index: 1;
+}

@@ -1,7 +1,7 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/elevation" as elevation;
 @use "pkg:@snappy/theme/material/surface";
-@use "pkg:@snappy/theme/tokens/motion";
+@use "pkg:@snappy/theme/tokens/animation";
 
 @mixin -on-interactive {
   @include hover {
@@ -57,15 +57,15 @@
     }
   }
 
-  transition: color motion.default();
+  transition: color animation.standard-sm();
 
   &::before {
     border: 1px solid transparent;
     opacity: 0;
     transition:
-      opacity motion.default(),
-      background-color motion.default(),
-      border-color motion.default(),
-      box-shadow motion.default();
+      opacity animation.standard-sm(),
+      background-color animation.standard-sm(),
+      border-color animation.standard-sm(),
+      box-shadow animation.standard-sm();
   }
 }

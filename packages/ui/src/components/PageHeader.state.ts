@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 
 import type { PageHeaderProps } from "./PageHeader";
 
+import { useRouterGo } from "../router";
+
 export const usePageHeaderState = ({ back = false, ...props }: PageHeaderProps) => {
-  const navigate = useNavigate();
-  const backAction = useCallback(async () => navigate(-1), [navigate]);
+  const go = useRouterGo();
+  const backAction = useCallback(async () => go(-1), [go]);
 
   return { ...props, back, backAction };
 };

@@ -8,6 +8,8 @@ export * from "./Cookie";
 
 export * from "./DateTime";
 
+export * from "./Ease";
+
 export * from "./HttpStatus";
 
 export * from "./I18n";

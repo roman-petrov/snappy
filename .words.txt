@@ -20,12 +20,14 @@ lancedb
 rerank
 reranker
 clusterize
+lerp
 cooldown
 nprobes
 xhigh
 shiki
 shikijs
 culori
+unstub
 
 // Ai Models
 deepseek
