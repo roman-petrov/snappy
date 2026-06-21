@@ -8,6 +8,7 @@
 @use "sass:map";
 
 $-timing: animation.sharp-xs();
+$-slide-edge-opacity: 0.4;
 
 @mixin -column {
   display: flex;
@@ -160,7 +161,7 @@ $-slides: (
   @keyframes #{$name} {
     #{$edge} {
       @if $fade {
-        opacity: 0.15;
+        opacity: $-slide-edge-opacity;
       }
 
       transform: translateX($x);
