@@ -1,4 +1,10 @@
-@use "pkg:@snappy/theme/tokens/animation";
+/* stylelint-disable property-disallowed-list */
+
+@property --mask-progress {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
 
 $-x: var(--theme-transition-x, 50%);
 $-y: var(--theme-transition-y, 50%);
@@ -10,8 +16,8 @@ $-center: $-view-size * 0.5;
 $-circle-radius: $-svg-size * 0.5 - $-blur;
 $-circle: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 #{$-view-size} #{$-view-size}'><defs><filter id='blur' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='#{$-blur}'/></filter></defs><circle cx='#{$-center}' cy='#{$-center}' r='#{$-circle-radius}' fill='white' filter='url(%23blur)'/></svg>");
 $-mask-end: 250vmax;
-$-mask-end-offset: $-mask-end * 0.5;
-$-motion: animation.soft-lg();
+$-mask-half: $-mask-end * 0.5;
+$-motion: 720ms linear;
 
 /**
 * ? Cool effect from https://theme-toggle.rdsx.dev/
@@ -33,24 +39,23 @@ $-motion: animation.soft-lg();
   }
 
   &::view-transition-new(root) {
+    --mask-progress: 0;
+
     mask: #{$-circle} #{$-x} #{$-y} / 0 no-repeat;
-    animation: view-transition-theme-scale $-motion both;
+    mask-position: calc(#{$-x} - var(--mask-progress) * var(--mask-progress) * #{$-mask-half})
+      calc(#{$-y} - var(--mask-progress) * var(--mask-progress) * #{$-mask-half});
+    mask-size: calc(var(--mask-progress) * var(--mask-progress) * #{$-mask-end});
+    animation: theme-mask-progress $-motion both;
   }
 
   &::view-transition-old(root) {
-    animation: view-transition-theme-fade-out $-motion both;
+    z-index: -1;
+    animation: none;
   }
 }
 
-@keyframes view-transition-theme-scale {
+@keyframes theme-mask-progress {
   to {
-    mask-position: calc(#{$-x} - #{$-mask-end-offset}) calc(#{$-y} - #{$-mask-end-offset});
-    mask-size: $-mask-end;
-  }
-}
-
-@keyframes view-transition-theme-fade-out {
-  to {
-    opacity: 0;
+    --mask-progress: 1;
   }
 }

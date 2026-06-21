@@ -51,7 +51,7 @@
 
 .spinner {
   display: inline-flex;
-  animation: spin animation.linear-xl() infinite;
+  animation: spin animation.sharp-xl() infinite;
 }
 
 @keyframes regenerate-shimmer {
