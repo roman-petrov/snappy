@@ -52,13 +52,11 @@ export * from "./NewPasswordInput";
 
 export * from "./Page";
 
-export * from "./PageChrome";
+export * from "./PageNarrow";
 
 export * from "./PasswordInput";
 
 export * from "./RichCard";
-
-export * from "./SafeArea";
 
 export * from "./Spinner";
 
@@ -85,3 +83,9 @@ export * from "./TextArea";
 export * from "./TextInput";
 
 export * from "./Title";
+
+export { ContentColumn, type ContentColumnProps } from "@snappy/app-router";
+
+export { PageChrome, type PageChromeProps } from "@snappy/app-router";
+
+export { SafeArea, type SafeAreaProps } from "@snappy/app-router";

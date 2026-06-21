@@ -7,11 +7,11 @@ import type { Action, ReadonlyStore } from "@snappy/core";
 import type { RouterBundle } from "@snappy/router";
 import type { ReactNode } from "react";
 
+import { AppRouter, type RouteLayerOf } from "@snappy/app-router";
 import { createRoot, hydrateRoot } from "react-dom/client";
 
-import { App, AuthLayout, type TabPagerProps } from "./components";
+import { App, AuthLayout, TabPager, type TabPagerItem } from "./components";
 import { Language, Theme } from "./core";
-import { AppRouter, type RouteLayerOf, RouteStage } from "./router";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
 
@@ -21,7 +21,7 @@ export type StartAppInput = {
   layerOf?: RouteLayerOf;
   routes: RouterBundle<unknown>;
   signedIn: ReadonlyStore<boolean>;
-  tabs?: Pick<TabPagerProps, `ease` | `items`>;
+  tabs?: TabPagerItem[];
 };
 
 export type StartSiteInput = { children: ReactNode; header?: ReactNode };
@@ -48,9 +48,9 @@ export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: Star
 
   const element = (
     <AppRouter base={base} layerOf={layerOf} router={router}>
-      <App disableSelection header={header}>
+      <App disableSelection header={header} track={tabs}>
         <AuthLayout publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath}>
-          <RouteStage layerOf={layerOf} tabs={tabs} />
+          {tabs === undefined ? undefined : <TabPager items={tabs} />}
         </AuthLayout>
       </App>
     </AppRouter>
@@ -78,7 +78,9 @@ export const startSite = ({ children, header }: StartSiteInput) => {
   hydrateRoot(
     mountContainer,
     <AppRouter path="/" ssr>
-      <App header={header}>{children}</App>
+      <App content header={header}>
+        {children}
+      </App>
     </AppRouter>,
   );
 };

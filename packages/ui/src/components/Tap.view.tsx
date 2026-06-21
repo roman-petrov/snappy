@@ -15,12 +15,12 @@ export const TapView = ({
   linkRelationship,
   linkTarget,
   onLinkClick,
-  onMouseDown,
+  pointerDown,
   renderAsLink,
   submit,
   title,
 }: TapViewProps) => {
-  const common = { children, className: _.cn(styles.root, cn), onMouseDown, title };
+  const common = { children, className: _.cn(styles.root, cn), onPointerDown: pointerDown, title };
 
   if (renderAsLink && linkHref !== undefined) {
     return (

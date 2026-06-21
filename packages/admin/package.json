@@ -6,6 +6,7 @@
   "main": "./src/main.tsx",
   "dependencies": {
     "@snappy/admin-server-api": "workspace:*",
+    "@snappy/app-router": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/router": "workspace:*",

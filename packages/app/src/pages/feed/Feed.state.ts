@@ -1,8 +1,9 @@
 import type { TypeWriterSpeed } from "@snappy/domain";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
+import { useRouterGo } from "@snappy/app-router";
 import { _ } from "@snappy/core";
-import { useAsyncEffect, useRouterGo } from "@snappy/ui";
+import { useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { FeedArtifact } from "../../snappy/components/Types";

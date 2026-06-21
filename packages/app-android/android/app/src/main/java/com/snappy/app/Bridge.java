@@ -11,6 +11,8 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import androidx.core.content.FileProvider;
+import androidx.core.view.RoundedCornerCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import java.io.File;
@@ -20,6 +22,7 @@ import java.io.IOException;
 public class Bridge {
     private final MainActivity activity;
     private final WebView webView;
+    private boolean keyboardOpen;
 
     public Bridge(MainActivity activity, WebView webView) {
         this.activity = activity;
@@ -37,6 +40,14 @@ public class Bridge {
                     controller.setAppearanceLightStatusBars(lightBars);
                     controller.setAppearanceLightNavigationBars(lightBars);
                 });
+    }
+
+    @JavascriptInterface
+    public float screenCornerRadius() {
+        return ViewCompat.getRootWindowInsets(activity.getWindow().getDecorView())
+                        .getRoundedCorner(RoundedCornerCompat.POSITION_TOP_LEFT)
+                        .getRadius()
+                / activity.getResources().getDisplayMetrics().density;
     }
 
     @JavascriptInterface
@@ -110,6 +121,21 @@ public class Bridge {
                         webView.evaluateJavascript(
                                 "window.dispatchEvent(new"
                                         + " CustomEvent('snappy:system-theme-changed'))",
+                                null));
+    }
+
+    public void keyboardChanged(boolean open) {
+        if (keyboardOpen == open) {
+            return;
+        }
+        keyboardOpen = open;
+        webView.post(
+                () ->
+                        webView.evaluateJavascript(
+                                "window.dispatchEvent(new CustomEvent('snappy:keyboard-changed',"
+                                        + " { detail: { open: "
+                                        + open
+                                        + " } }))",
                                 null));
     }
 

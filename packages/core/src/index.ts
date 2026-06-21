@@ -10,6 +10,8 @@ export * from "./DateTime";
 
 export * from "./Ease";
 
+export * from "./Gesture";
+
 export * from "./HttpStatus";
 
 export * from "./I18n";

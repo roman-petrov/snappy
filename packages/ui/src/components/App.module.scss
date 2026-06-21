@@ -3,8 +3,8 @@
 .viewport {
   display: flex;
   flex-direction: column;
-  min-height: 100dvh;
-  overflow-x: clip;
+  height: 100%;
+  overflow: clip;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -19,13 +19,15 @@
 
 .wrap {
   display: flex;
+  flex: 1;
   flex-direction: column;
-  min-height: 100dvh;
-  scroll-behavior: smooth;
+  min-height: 0;
 }
 
 .main-safe {
   display: flex;
-  flex: 1 0 auto;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }

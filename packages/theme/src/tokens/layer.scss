@@ -28,6 +28,14 @@ $-global: (
   z-index: -level(overlay);
 }
 
-@mixin transition {
+@mixin stack-base {
+  z-index: 0;
+}
+
+@mixin stack-top {
   z-index: 1;
+}
+
+@mixin behind {
+  z-index: -1;
 }

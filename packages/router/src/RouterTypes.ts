@@ -69,7 +69,6 @@ export type TransitionFn = (input: {
   back: boolean;
   commit: TransitionCommit;
   from: string;
-  parent: (pattern: string) => string;
   to: string;
 }) => Promise<void>;
 

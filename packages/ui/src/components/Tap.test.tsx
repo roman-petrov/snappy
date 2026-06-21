@@ -14,7 +14,7 @@ const { bridgeState, vibrateTrigger } = vi.hoisted(() => ({
   vibrateTrigger: vi.fn(),
 }));
 
-vi.mock(`../router`, () => ({ useRouterGo: () => navigate, useRouterHref: () => (path: string) => path }));
+vi.mock(`@snappy/app-router`, () => ({ useRouterGo: () => navigate, useRouterHref: () => (path: string) => path }));
 vi.mock(import(`@snappy/platform`), () => ({
   Bridge: {
     get available() {
@@ -23,6 +23,8 @@ vi.mock(import(`@snappy/platform`), () => ({
     copyHtml: vi.fn(),
     copyImage: vi.fn(),
     hapticImpact: vi.fn(),
+    keyboardChangedEvent: `snappy:keyboard-changed` as const,
+    screenCornerRadius: vi.fn(() => 0),
     setBarStyle: vi.fn(),
     shareHtml: vi.fn(),
     shareImage: vi.fn(),
@@ -244,7 +246,7 @@ describe(`tap`, () => {
     `);
   });
 
-  it(`calls Vibrate.trigger when vibrate is provided`, () => {
+  it(`calls Vibrate.trigger on pointer down when vibrate is provided`, () => {
     vibrateTrigger.mockReset();
     const onClick = vi.fn();
 
@@ -254,10 +256,25 @@ describe(`tap`, () => {
       </Tap>,
     );
 
+    fireEvent.pointerDown(within(container).getByRole(`button`));
     fireEvent.click(within(container).getByRole(`button`));
 
     expect(vibrateTrigger).toHaveBeenCalledWith(`confirm`);
     expect(vibrateTrigger).toHaveBeenCalledTimes(1);
+  });
+
+  it(`does not call Vibrate.trigger on pointer down when disabled`, () => {
+    vibrateTrigger.mockReset();
+
+    const { container } = renderTap(
+      <Tap disabled vibrate="confirm">
+        Click
+      </Tap>,
+    );
+
+    fireEvent.pointerDown(within(container).getByRole(`button`));
+
+    expect(vibrateTrigger).not.toHaveBeenCalled();
   });
 
   it(`passes tip to title`, () => {

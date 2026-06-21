@@ -1,4 +1,5 @@
-/* stylelint-disable property-disallowed-list */
+@use "../tokens/animation";
+@use "../tokens/layer";
 
 @property --mask-progress {
   syntax: "<number>";
@@ -17,7 +18,7 @@ $-circle-radius: $-svg-size * 0.5 - $-blur;
 $-circle: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 #{$-view-size} #{$-view-size}'><defs><filter id='blur' x='-50%' y='-50%' width='200%' height='200%'><feGaussianBlur stdDeviation='#{$-blur}'/></filter></defs><circle cx='#{$-center}' cy='#{$-center}' r='#{$-circle-radius}' fill='white' filter='url(%23blur)'/></svg>");
 $-mask-end: 250vmax;
 $-mask-half: $-mask-end * 0.5;
-$-motion: 720ms linear;
+$-motion: animation.linear-md();
 
 /**
 * ? Cool effect from https://theme-toggle.rdsx.dev/
@@ -49,7 +50,8 @@ $-motion: 720ms linear;
   }
 
   &::view-transition-old(root) {
-    z-index: -1;
+    @include layer.behind;
+
     animation: none;
   }
 }

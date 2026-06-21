@@ -1,9 +1,8 @@
+import { useRouterGo, useRouterHref } from "@snappy/app-router";
 import { _ } from "@snappy/core";
 import { Bridge, Vibrate } from "@snappy/platform";
 
 import type { TapProps } from "./Tap";
-
-import { useRouterGo, useRouterHref } from "../router";
 
 export const useTapState = ({
   children,
@@ -29,9 +28,6 @@ export const useTapState = ({
     if (disabled) {
       return;
     }
-    if (vibrate !== undefined) {
-      Vibrate.trigger(vibrate);
-    }
     if (spaPath !== undefined) {
       void go(spaPath);
     }
@@ -39,26 +35,23 @@ export const useTapState = ({
   };
 
   const renderAsLink = link !== undefined && !useJsNavigation;
-
-  const buttonOnClick =
-    link === undefined
-      ? onClick === undefined
-        ? undefined
-        : () => {
-            if (vibrate !== undefined) {
-              Vibrate.trigger(vibrate);
-            }
-            onClick();
-          }
-      : useJsNavigation
-        ? handleLinkClick
-        : undefined;
-
+  const buttonOnClick = link === undefined ? onClick : useJsNavigation ? handleLinkClick : undefined;
   const linkHref = link === undefined ? undefined : isHash ? link : isExternal ? link.href : spaHref;
   const linkRelationship = isExternal ? link.rel : undefined;
   const linkTarget = isExternal ? link.target : undefined;
   const onLinkClick = renderAsLink && !isExternal && !isHash ? handleLinkClick : undefined;
-  const onMouseDown = keepFocus ? (event: { preventDefault: () => void }) => event.preventDefault() : undefined;
+
+  const pointerDown =
+    keepFocus || vibrate !== undefined
+      ? (event: { preventDefault: () => void }) => {
+          if (keepFocus) {
+            event.preventDefault();
+          }
+          if (!disabled && vibrate !== undefined) {
+            Vibrate.trigger(vibrate);
+          }
+        }
+      : undefined;
 
   return {
     buttonOnClick,
@@ -69,7 +62,7 @@ export const useTapState = ({
     linkRelationship,
     linkTarget,
     onLinkClick,
-    onMouseDown,
+    pointerDown,
     renderAsLink,
     submit,
     title: tip,

@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 
+import { AppRouter } from "@snappy/app-router";
 import { renderToString } from "react-dom/server";
 
 import { App } from "./components";
-import { AppRouter } from "./router";
 
 export type RenderAppOptions = { base?: string; disableSelection?: boolean; header?: ReactNode; location?: string };
 
@@ -13,7 +13,7 @@ export const renderApp = (
 ) =>
   renderToString(
     <AppRouter base={base} path={location} ssr>
-      <App disableSelection={disableSelection} header={header}>
+      <App content disableSelection={disableSelection} header={header}>
         {app}
       </App>
     </AppRouter>,

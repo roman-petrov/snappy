@@ -1,0 +1,28 @@
+{
+  "name": "@snappy/app-router",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/browser": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/hooks": "workspace:*",
+    "@snappy/motion": "workspace:*",
+    "@snappy/platform": "workspace:*",
+    "@snappy/router": "workspace:*",
+    "@snappy/store": "workspace:*",
+    "@snappy/theme": "workspace:*",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.0.0",
+    "vitest": "^4.1.8"
+  }
+}

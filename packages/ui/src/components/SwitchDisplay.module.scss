@@ -5,8 +5,8 @@
 @use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/tokens";
 
-$-surface: animation.standard-sm();
-$-thumb: animation.sharp-sm();
+$-surface: animation.standard-md();
+$-thumb: animation.sharp-md();
 
 .root {
   position: relative;

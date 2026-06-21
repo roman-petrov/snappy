@@ -2,7 +2,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Vibrate } from "./Vibrate";
 
-const hapticFeedbackConstants: Record<Vibrate, number> = {
+type Haptic = Exclude<Vibrate, `none`>;
+
+const hapticFeedbackConstants: Record<Haptic, number> = {
   clockTick: 4,
   confirm: 16,
   contextClick: 6,
@@ -28,12 +30,16 @@ const hapticFeedbackConstants: Record<Vibrate, number> = {
 type BarStyle = `dark` | `light`;
 
 const systemThemeChangedEvent = `snappy:system-theme-changed` as const;
+const keyboardChangedEvent = `snappy:keyboard-changed` as const;
+
+type KeyboardChangedDetail = { open: boolean };
 
 type NativeBridge = {
   copyHtml: (html: string, plain: string) => void;
   copyImage: (base64: string, name: string, extension: string) => void;
   hapticImpact: (constant: number) => void;
   isSystemDark: () => boolean;
+  screenCornerRadius: () => number;
   setBarStyle: (theme: string) => void;
   shareHtml: (html: string, plain: string, title: string) => void;
   shareImage: (base64: string, mime: string, title: string, extension: string) => void;
@@ -45,14 +51,16 @@ declare global {
   }
 
   interface WindowEventMap {
+    [keyboardChangedEvent]: CustomEvent<KeyboardChangedDetail>;
     [systemThemeChangedEvent]: Event;
   }
 }
 
 const native = typeof window === `undefined` ? undefined : window.Bridge;
 const available = native !== undefined;
-const hapticImpact = (constant: Vibrate) => native?.hapticImpact(hapticFeedbackConstants[constant]);
+const hapticImpact = (constant: Haptic) => native?.hapticImpact(hapticFeedbackConstants[constant]);
 const systemDark = () => native?.isSystemDark();
+const screenCornerRadius = () => native?.screenCornerRadius() ?? 0;
 const setBarStyle = (style: BarStyle) => native?.setBarStyle(style);
 const copyHtml = (html: string, plain: string) => native?.copyHtml(html, plain);
 const copyImage = (base64: string, name: string, extension: string) => native?.copyImage(base64, name, extension);
@@ -66,6 +74,8 @@ export const Bridge = {
   copyHtml,
   copyImage,
   hapticImpact,
+  keyboardChangedEvent,
+  screenCornerRadius,
   setBarStyle,
   shareHtml,
   shareImage,

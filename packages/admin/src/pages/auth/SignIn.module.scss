@@ -1,11 +1,7 @@
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/tokens";
 
 .card {
-  width: 100%;
-  max-width: tokens.content-narrow();
   padding: space.xl();
-  margin-inline: auto;
 }
 
 .form {

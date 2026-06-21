@@ -1,8 +1,7 @@
+import { useRouterGo } from "@snappy/app-router";
 import { useCallback } from "react";
 
 import type { PageHeaderProps } from "./PageHeader";
-
-import { useRouterGo } from "../router";
 
 export const usePageHeaderState = ({ back = false, ...props }: PageHeaderProps) => {
   const go = useRouterGo();

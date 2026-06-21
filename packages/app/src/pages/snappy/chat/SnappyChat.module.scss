@@ -1,38 +1,28 @@
-@use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/tokens/layer";
 @use "pkg:@snappy/theme/tokens/animation";
-@use "pkg:@snappy/theme/tokens/tokens";
 
 $-transition: animation.settle-lg();
 
 .composer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   pointer-events: none;
   transition:
+    top $-transition,
     bottom $-transition,
-    transform $-transition;
+    transform $-transition,
+    padding-bottom $-transition;
 
   > * {
     width: 100%;
-    max-width: tokens.content-width();
-    margin-inline: auto;
     pointer-events: auto;
   }
-}
 
-.composer-idle {
-  @include layer.chrome;
+  &.composer-idle {
+    top: 50%;
+    bottom: auto;
+    transform: translateY(-50%);
+  }
 
-  position: fixed;
-  right: 0;
-  bottom: 50%;
-  left: 0;
-  padding-inline: tokens.layout-gutter();
-  transform: translateY(50%);
-}
-
-.composer-started {
-  transform: translateY(0);
+  &:not(.composer-idle) {
+    top: auto;
+    transform: none;
+  }
 }

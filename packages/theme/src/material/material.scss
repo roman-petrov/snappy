@@ -21,6 +21,10 @@
   @return accent-border(color.primary(), -tone(color.primary(), material.tone-accent()));
 }
 
+@function rim-border() {
+  @return border(-tone(material.highlight(), material.tone-rim()));
+}
+
 @function accent-border($accent, $tone) {
   $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, border($tone));
 
@@ -42,9 +46,9 @@
 @mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
   background-color: -bg($tone);
   transition:
-    background-color animation.standard-sm(),
-    border-color animation.standard-sm(),
-    color animation.standard-sm();
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    color animation.standard-md();
 
   @if $accent {
     @if $accent-text {
@@ -79,5 +83,5 @@
 
 @mixin glass-simple {
   backdrop-filter: blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
-  transition: backdrop-filter animation.standard-sm();
+  transition: backdrop-filter animation.standard-md();
 }

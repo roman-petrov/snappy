@@ -8,10 +8,10 @@
   gap: space.xs();
   align-items: stretch;
   padding: space.sm();
-  transition: opacity animation.standard-sm();
+  transition: opacity animation.standard-md();
 }
 
-$-action-in: animation.sharp-sm();
+$-action-in: animation.sharp-md();
 
 .action {
   width: 100%;

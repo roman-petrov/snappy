@@ -1,4 +1,5 @@
-import { useAsyncSubmit, useRouterGo } from "@snappy/ui";
+import { useRouterGo } from "@snappy/app-router";
+import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { AppBase } from "../../AppBase";

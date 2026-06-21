@@ -32,7 +32,7 @@
   border: 0;
   border-inline-end: 1px solid material.border(color.surface());
   border-bottom: 1px solid material.border(color.surface());
-  transition: background-color animation.standard-sm();
+  transition: background-color animation.standard-md();
 }
 
 .root :is(th, td):last-child {

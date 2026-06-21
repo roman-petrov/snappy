@@ -57,15 +57,15 @@
     }
   }
 
-  transition: color animation.standard-sm();
+  transition: color animation.standard-md();
 
   &::before {
     border: 1px solid transparent;
     opacity: 0;
     transition:
-      opacity animation.standard-sm(),
-      background-color animation.standard-sm(),
-      border-color animation.standard-sm(),
-      box-shadow animation.standard-sm();
+      opacity animation.standard-md(),
+      background-color animation.standard-md(),
+      border-color animation.standard-md(),
+      box-shadow animation.standard-md();
   }
 }

@@ -6,6 +6,7 @@ import { PageView } from "./Page.view";
 export type PageProps = {
   back?: boolean;
   children: ReactNode;
+  fill?: boolean;
   header?: ReactNode;
   title?: ReactNode;
   trailing?: ReactNode;

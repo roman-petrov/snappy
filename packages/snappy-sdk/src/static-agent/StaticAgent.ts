@@ -56,7 +56,6 @@ export const StaticAgent =
     return {
       meta: { ...meta, title: plan.title },
       module: ({ aiConfig, feed, onRunningChange }) => {
-        const { models } = aiConfig;
         let stopped = false;
         const isStopped = () => stopped;
 
@@ -69,7 +68,7 @@ export const StaticAgent =
               if (isStopped()) {
                 return;
               }
-              await run({ answers, feed, isStopped, locale, models, plan, prompt });
+              await run({ answers, feed, isStopped, locale, models: aiConfig.models, plan, prompt });
             } finally {
               onRunningChange?.(false);
             }

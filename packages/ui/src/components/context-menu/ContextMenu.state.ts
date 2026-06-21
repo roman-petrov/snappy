@@ -1,11 +1,10 @@
 import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
+import { useIsMobile, useRequiredContext } from "@snappy/hooks";
 import { useEffect, useId } from "react";
 
 import type { ContextMenuProps } from "./ContextMenu";
 
-import { useIsMobile } from "../../hooks/useIsMobile";
-import { useRequiredContext } from "../../hooks/useRequiredContext";
 import { ContextMenuContext } from "./ContextMenuContext";
 
 export const useContextMenuState = ({ children, elementRef }: ContextMenuProps) => {

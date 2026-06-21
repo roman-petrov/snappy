@@ -1,6 +1,5 @@
+import { BrowserChrome } from "@snappy/app-router";
 import { describe, expect, it } from "vitest";
-
-import { BrowserChrome } from "./BrowserChrome";
 
 const clearThemeColor = () => {
   for (const node of document.head.querySelectorAll(`meta[name="theme-color"]`)) {

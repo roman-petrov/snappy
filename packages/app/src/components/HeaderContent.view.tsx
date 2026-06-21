@@ -13,7 +13,7 @@ export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) =>
   signedIn ? (
     <HeaderButtonGroup compact>
       <IconButtonTheme />
-      <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.title`)} />
+      <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.title`)} vibrate="none" />
       <BalanceTap />
     </HeaderButtonGroup>
   ) : (

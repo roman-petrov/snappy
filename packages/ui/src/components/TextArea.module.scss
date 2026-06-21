@@ -16,7 +16,7 @@
   resize: none;
   scrollbar-width: none;
   border: none;
-  transition: height animation.settle-sm();
+  transition: height animation.settle-md();
   field-sizing: fixed;
 
   &::-webkit-scrollbar {

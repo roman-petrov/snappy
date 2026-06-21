@@ -1,0 +1,9 @@
+@use "pkg:@snappy/theme/core" as *;
+
+$-max-width: r(550);
+
+.root {
+  width: 100%;
+  max-width: $-max-width;
+  margin-inline: auto;
+}

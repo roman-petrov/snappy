@@ -1,0 +1,18 @@
+@use "pkg:@snappy/theme/tokens/layer";
+
+.dock {
+  @include layer.chrome;
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  &-passive {
+    pointer-events: none;
+  }
+}
+
+.content {
+  width: 100%;
+}

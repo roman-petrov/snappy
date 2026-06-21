@@ -6,6 +6,7 @@ import { Bridge } from "./Bridge";
  * @see https://developer.android.com/reference/android/view/HapticFeedbackConstants
  */
 const types = [
+  `none`,
   `clockTick`,
   `confirm`,
   `contextClick`,
@@ -31,9 +32,10 @@ const types = [
 export type Vibrate = (typeof types)[number];
 
 const trigger = (type: Vibrate) => {
-  if (!Bridge.available) {
+  if (type === `none` || !Bridge.available) {
     return;
   }
+
   Bridge.hapticImpact(type);
 };
 

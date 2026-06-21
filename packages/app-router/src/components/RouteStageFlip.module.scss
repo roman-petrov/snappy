@@ -1,0 +1,21 @@
+@use "pkg:@snappy/theme/tokens/color";
+
+.flip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: color.backdrop();
+}
+
+.page-out {
+  position: absolute;
+  inset: 0;
+}

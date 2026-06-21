@@ -4,8 +4,8 @@ import type { AppProps } from "./App";
 
 import { $locale } from "../Store";
 
-export const useAppState = ({ children, disableSelection = false, header }: AppProps) => {
+export const useAppState = ({ children, content = false, disableSelection = false, header, track }: AppProps) => {
   const locale = useStoreValue($locale);
 
-  return { children, disableSelection, header, locale };
+  return { children, content, disableSelection, header, locale, track };
 };

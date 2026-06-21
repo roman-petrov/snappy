@@ -11,11 +11,13 @@ export type FeedViewProps = ReturnType<typeof useFeedState>;
 
 export const FeedView = ({ cards, sentinelRef }: FeedViewProps) => (
   <Page title={t(`feed.title`)} trailing={<HeaderContent />}>
-    <div className={styles.cards}>
-      {cards?.map(card =>
-        card.type === `image` ? <ImageCard key={card.id} {...card} /> : <TextCard key={card.id} {...card} />,
-      )}
-      <div ref={sentinelRef} />
+    <div className={styles.root}>
+      <div className={styles.cards}>
+        {cards?.map(card =>
+          card.type === `image` ? <ImageCard key={card.id} {...card} /> : <TextCard key={card.id} {...card} />,
+        )}
+      </div>
+      <div className={styles.sentinel} ref={sentinelRef} />
     </div>
   </Page>
 );

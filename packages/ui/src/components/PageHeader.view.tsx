@@ -13,7 +13,7 @@ export const PageHeaderView = ({ back, backAction, title, trailing }: PageHeader
   <div className={styles.root}>
     {back ? (
       <div className={styles.leading}>
-        <IconButton icon={ArrowLeft} onClick={backAction} tip={t(`page.back`)} />
+        <IconButton icon={ArrowLeft} onClick={backAction} tip={t(`page.back`)} vibrate="none" />
       </div>
     ) : undefined}
     {title === undefined ? undefined : (

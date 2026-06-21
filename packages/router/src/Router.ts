@@ -350,7 +350,7 @@ const createRuntime = ({
       return;
     }
 
-    await state.transition({ back, commit, from, parent: pattern => parents[pattern] ?? home, to });
+    await state.transition({ back, commit, from, to });
   };
 
   const execNav = async (target: string, options: NavJob[`options`] = {}) => {

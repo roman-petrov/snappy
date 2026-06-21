@@ -2,14 +2,6 @@
   @return var(--field-height);
 }
 
-@function content-width() {
-  @return var(--content-width);
-}
-
-@function content-narrow() {
-  @return var(--content-narrow);
-}
-
 @function layout-gutter() {
   @return var(--layout-gutter);
 }
@@ -24,8 +16,4 @@
 
 @function focus-offset() {
   @return var(--focus-offset);
-}
-
-@function flip-perspective() {
-  @return var(--flip-perspective);
 }

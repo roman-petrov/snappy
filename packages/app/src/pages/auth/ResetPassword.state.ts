@@ -1,4 +1,5 @@
-import { useAsyncSubmit, useRouterQuery } from "@snappy/ui";
+import { useRouterQuery } from "@snappy/app-router";
+import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { Auth, Password } from "../../core";

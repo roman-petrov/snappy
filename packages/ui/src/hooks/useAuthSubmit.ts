@@ -1,5 +1,5 @@
-import { useRouterGo } from "../router";
-import { useAsyncSubmit } from "./useAsyncSubmit";
+import { useRouterGo } from "@snappy/app-router";
+import { useAsyncSubmit } from "@snappy/hooks";
 
 export type AuthSubmitInput = { homePath: string; setSignedIn: (value: boolean) => void };
 

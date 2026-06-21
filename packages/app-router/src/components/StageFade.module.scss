@@ -1,0 +1,17 @@
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/layer";
+
+.fade {
+  @include layer.fade;
+
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    in oklch to top,
+    color-mix(in oklch, #{color.backdrop()} 100%, transparent),
+    transparent
+  );
+}

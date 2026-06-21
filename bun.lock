@@ -25,6 +25,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/admin-server-api": "workspace:*",
+        "@snappy/app-router": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/router": "workspace:*",
@@ -109,6 +110,7 @@
       "dependencies": {
         "@snappy/ai": "workspace:*",
         "@snappy/ai-stream": "workspace:*",
+        "@snappy/app-router": "workspace:*",
         "@snappy/app-server-api": "workspace:*",
         "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
@@ -134,6 +136,28 @@
     "packages/app-android": {
       "name": "@snappy/app-android",
       "version": "0.0.0",
+    },
+    "packages/app-router": {
+      "name": "@snappy/app-router",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/browser": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "@snappy/hooks": "workspace:*",
+        "@snappy/motion": "workspace:*",
+        "@snappy/platform": "workspace:*",
+        "@snappy/router": "workspace:*",
+        "@snappy/store": "workspace:*",
+        "@snappy/theme": "workspace:*",
+        "react": "^19.2.7",
+        "react-dom": "^19.2.7",
+      },
+      "devDependencies": {
+        "@testing-library/react": "^16.0.0",
+        "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.0.0",
+        "vitest": "^4.1.8",
+      },
     },
     "packages/app-server": {
       "name": "@snappy/app-server",
@@ -176,8 +200,8 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
+        "@snappy/platform": "workspace:*",
         "isomorphic-dompurify": "^3.16.0",
-        "react-dom": "^19.2.7",
       },
       "devDependencies": {
         "@types/dom-speech-recognition": "^0.0.12",
@@ -395,9 +419,34 @@
         "@types/react": "^19.2.17",
       },
     },
+    "packages/hooks": {
+      "name": "@snappy/hooks",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/browser": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "react": "^19.2.7",
+      },
+      "devDependencies": {
+        "@types/react": "^19.2.17",
+        "vitest": "^4.1.8",
+      },
+    },
     "packages/intl": {
       "name": "@snappy/intl",
       "version": "0.0.0",
+    },
+    "packages/motion": {
+      "name": "@snappy/motion",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/browser": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "@snappy/platform": "workspace:*",
+      },
+      "devDependencies": {
+        "vitest": "^4.1.8",
+      },
     },
     "packages/node": {
       "name": "@snappy/node",
@@ -440,11 +489,8 @@
       "dependencies": {
         "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
-        "react": "^19.2.7",
       },
       "devDependencies": {
-        "@testing-library/react": "^16.0.0",
-        "@types/react": "^19.2.17",
         "vitest": "^4.1.8",
       },
     },
@@ -595,8 +641,10 @@
       "name": "@snappy/ui",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/app-router": "workspace:*",
         "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
+        "@snappy/hooks": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/platform": "workspace:*",
         "@snappy/router": "workspace:*",
@@ -1425,6 +1473,8 @@
 
     "@snappy/app-android": ["@snappy/app-android@workspace:packages/app-android"],
 
+    "@snappy/app-router": ["@snappy/app-router@workspace:packages/app-router"],
+
     "@snappy/app-server": ["@snappy/app-server@workspace:packages/app-server"],
 
     "@snappy/app-server-api": ["@snappy/app-server-api@workspace:packages/app-server-api"],
@@ -1457,7 +1507,11 @@
 
     "@snappy/email": ["@snappy/email@workspace:packages/email"],
 
+    "@snappy/hooks": ["@snappy/hooks@workspace:packages/hooks"],
+
     "@snappy/intl": ["@snappy/intl@workspace:packages/intl"],
+
+    "@snappy/motion": ["@snappy/motion@workspace:packages/motion"],
 
     "@snappy/node": ["@snappy/node@workspace:packages/node"],
 

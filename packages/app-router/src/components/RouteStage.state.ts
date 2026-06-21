@@ -1,0 +1,90 @@
+import type { RouterPageState } from "@snappy/router";
+
+import { useStoreValue } from "@snappy/store";
+import { useCallback, useContext, useRef, useState } from "react";
+
+import type { RouteStageProps } from "./RouteStage";
+
+import { type ChromeScope, RouterContext, RouteStack, type RouteStageValue } from "../core";
+import { useRouter } from "../hooks/useRouter";
+import { useRouterPath } from "../hooks/useRouterPath";
+import { useStageInsets } from "../hooks/useStageInsets";
+
+export type { RouteLayer, RouteLayerOf } from "../core";
+
+type ChromeInsets = Partial<Record<ChromeScope, number>>;
+
+export const useRouteStageState = ({ content = false, track }: RouteStageProps) => {
+  const { layerOf } = useContext(RouterContext) ?? {};
+  const [chrome, setChrome] = useState<ChromeInsets>({});
+  const [phase, setPhase] = useState<RouteStageValue[`motion`][`phase`]>({ closing: false, entering: false });
+  const [flipAnimating, setFlipAnimating] = useState(false);
+  const [shellDock, setShellDock] = useState<HTMLDivElement | undefined>();
+  const [pageDock, setPageDock] = useState<HTMLDivElement | undefined>();
+  const { $page, parent, pattern, stateAt } = useRouter();
+  const path = useRouterPath();
+  const state = useStoreValue($page);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const preservedTab = useRef<RouterPageState | undefined>(undefined);
+  const routePattern = pattern(path);
+  const layer = layerOf?.(routePattern);
+  const { insets, keyboard } = useStageInsets(chrome.shell, chrome.page);
+
+  const registerChrome = useCallback((scope: ChromeScope, height: number) => {
+    setChrome(previous => (previous[scope] === height ? previous : { ...previous, [scope]: height }));
+
+    return () => {
+      setChrome(previous =>
+        previous[scope] === undefined
+          ? previous
+          : Object.fromEntries(Object.entries(previous).filter(([key]) => key !== scope)),
+      );
+    };
+  }, []);
+
+  const shellDockRef = useCallback((node: HTMLDivElement | null) => {
+    setShellDock(node ?? undefined);
+  }, []);
+
+  const pageDockRef = useCallback((node: HTMLDivElement | null) => {
+    setPageDock(node ?? undefined);
+  }, []);
+
+  const stack = RouteStack.stage({
+    current: state,
+    layerOf,
+    parent,
+    path,
+    pattern: routePattern,
+    preserved: preservedTab.current,
+    stateAt,
+  });
+  preservedTab.current = stack.preserved;
+
+  const { panes } = stack;
+
+  const underlay = {
+    contentDimmed: (layer === `cover` && !phase.entering) || phase.closing,
+    shellPassive: layer === `cover` || phase.closing || phase.entering || flipAnimating,
+  };
+
+  const stage: RouteStageValue = {
+    contentRef,
+    insets,
+    keyboard,
+    layer,
+    motion: { flipAnimating, phase, setFlipAnimating, setPhase },
+    pageDock,
+    pageDockRef,
+    registerChrome,
+    shellDock,
+    shellDockRef,
+    underlay,
+  };
+
+  const slide = track !== undefined && layer !== `flip`;
+  const { idle } = stack;
+  const contentPage = idle ?? state;
+
+  return { content, contentPage, panes, slide, stage, trackItems: track };
+};

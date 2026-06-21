@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";
-import { Text } from "@snappy/ui";
+import { PageNarrow, Text } from "@snappy/ui";
 
 import styles from "./PromoBlock.module.scss";
 
@@ -16,7 +16,9 @@ export type PromoBlockProps = {
 export const PromoBlock = ({ actions, bordered = false, lead, title, titleTypography }: PromoBlockProps) => (
   <section className={_.cn(styles.root, bordered && styles.bordered)}>
     <Text text={title} typography={titleTypography} />
-    <Text cn={styles.lead} text={lead} typography="large" />
+    <PageNarrow>
+      <Text text={lead} typography="large" />
+    </PageNarrow>
     <div className={styles.actions}>{actions}</div>
   </section>
 );

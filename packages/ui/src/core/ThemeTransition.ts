@@ -3,8 +3,7 @@
 /* eslint-disable functional/no-expression-statements */
 import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
-
-import { ThemeVar } from "./ThemeVar";
+import { ThemeVar } from "@snappy/hooks";
 
 const attribute = `data-theme-transition`;
 let pointer: undefined | { x: number; y: number };

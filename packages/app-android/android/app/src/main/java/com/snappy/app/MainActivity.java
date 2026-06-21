@@ -23,6 +23,9 @@ import androidx.activity.SystemBarStyle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends ComponentActivity {
 
@@ -91,6 +94,18 @@ public class MainActivity extends ComponentActivity {
         settings.setDomStorageEnabled(true);
         bridge = new Bridge(this, webView);
         webView.addJavascriptInterface(bridge, "Bridge");
+
+        View container = findViewById(R.id.webview_container);
+        ViewCompat.setOnApplyWindowInsetsListener(
+                container,
+                (view, windowInsets) -> {
+                    Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+                    view.setPadding(0, 0, 0, ime.bottom);
+                    bridge.keyboardChanged(ime.bottom > 0);
+                    return new WindowInsetsCompat.Builder(windowInsets)
+                            .setInsets(WindowInsetsCompat.Type.ime(), Insets.NONE)
+                            .build();
+                });
         webView.setWebChromeClient(
                 new WebChromeClient() {
                     @Override

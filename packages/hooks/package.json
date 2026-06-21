@@ -1,0 +1,18 @@
+{
+  "name": "@snappy/hooks",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/browser": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "react": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17"
+  }
+}

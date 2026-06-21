@@ -1,9 +1,8 @@
+import { useRouterGo, useRouterPath } from "@snappy/app-router";
 import { useStoreValue } from "@snappy/store";
 import { useEffect } from "react";
 
 import type { AuthLayoutProps } from "./AuthLayout";
-
-import { useRouterGo, useRouterPath } from "../router";
 
 export const useAuthLayoutState = ({ children, publicPaths, signedIn, signInPath }: AuthLayoutProps) => {
   const path = useRouterPath();

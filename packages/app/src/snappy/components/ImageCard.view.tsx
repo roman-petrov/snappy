@@ -22,7 +22,7 @@ export const ImageCardView = ({ actions, busy, pending, remove, src }: ImageCard
     ) : (
       <div className={_.cn(styles.frame, $.radius(`sm`))}>
         <img alt="" className={styles.image} src={src} />
-        {busy ? <div aria-hidden className={styles.shimmer} /> : undefined}
+        {busy ? <div className={styles.shimmer} /> : undefined}
       </div>
     )}
   </FeedCard>

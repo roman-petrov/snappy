@@ -1,0 +1,14 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/tokens";
+
+$-max-width: r(1100);
+
+.root {
+  @include desktop {
+    max-width: $-max-width;
+    margin-inline: auto;
+  }
+
+  width: 100%;
+  padding-inline: tokens.layout-gutter();
+}

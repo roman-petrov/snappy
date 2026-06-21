@@ -13,32 +13,6 @@
   initial-value: 0;
 }
 
-.track {
-  display: flex;
-  flex: 1 1 0;
-  width: calc(100% * var(--tab-count));
-  min-width: 0;
-  min-height: 0;
-  touch-action: pan-y;
-  will-change: transform;
-
-  &-settling {
-    pointer-events: none;
-  }
-}
-
-.slide {
-  display: flex;
-  flex: none;
-  flex-direction: column;
-  align-self: stretch;
-  width: calc(100% / var(--tab-count));
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden auto;
-  touch-action: pan-y;
-}
-
 $-height: r(64);
 $-inset: space.xs();
 $-tab-gap: r(4);
@@ -94,7 +68,7 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
   pointer-events: none;
   border-radius: $-inner-radius;
   transform: translateX(calc(var(--tab-index) * 100%));
-  transition: transform animation.sharp-sm();
+  transition: transform animation.sharp-md();
 }
 
 .tab {
@@ -119,24 +93,6 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
 @include mobile {
   .tab {
     width: r(80);
-  }
-}
-
-@include desktop {
-  .track {
-    flex: 1 0 auto;
-    width: 100%;
-    min-height: auto;
-    will-change: auto;
-  }
-
-  .slide:not(.slide-active) {
-    display: none;
-  }
-
-  .slide-active {
-    width: 100%;
-    overflow: visible;
   }
 }
 

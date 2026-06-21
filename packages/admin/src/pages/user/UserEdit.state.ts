@@ -1,6 +1,7 @@
 import type { TrpcOutputs } from "@snappy/admin-server-api";
 
-import { useAsyncEffect, useAsyncSubmit, useRouterGo } from "@snappy/ui";
+import { useRouterGo } from "@snappy/app-router";
+import { useAsyncEffect, useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import type { UserEditProps } from "./UserEdit";

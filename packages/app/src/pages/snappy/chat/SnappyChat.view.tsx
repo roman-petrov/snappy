@@ -10,15 +10,12 @@ import styles from "./SnappyChat.module.scss";
 export type SnappyChatViewProps = ReturnType<typeof useSnappyChatState>;
 
 export const SnappyChatView = ({ chatProps, composer, started }: SnappyChatViewProps) => (
-  <Page back title={<Logo />} trailing={<BalanceTap />}>
-    <AgentChat {...chatProps} />
-    <PageChrome
-      active={started}
-      cn={_.cn(styles.composer, started ? styles.composerStarted : styles.composerIdle)}
-      fixed={started}
-      role="page"
-    >
+  <>
+    <Page back fill title={<Logo />} trailing={<BalanceTap />}>
+      <AgentChat {...chatProps} />
+    </Page>
+    <PageChrome active={started} cn={_.cn(styles.composer, !started && styles.composerIdle)}>
       <Composer onChange={composer.setDraft} onSend={composer.onSend} value={composer.draft} />
     </PageChrome>
-  </Page>
+  </>
 );

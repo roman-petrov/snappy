@@ -1,67 +1,63 @@
-@function -timing($ease, $duration) {
-  @return var(--animation-duration-#{$duration}) var(--animation-ease-#{$ease});
+@function -duration($size) {
+  @return var(--animation-duration-#{$size});
 }
 
-@function standard-xs() {
-  @return -timing("standard", "xs");
+@function -ease($name) {
+  @return var(--animation-ease-#{$name});
+}
+
+@function -timing($ease, $duration) {
+  @return -duration($duration) -ease($ease);
+}
+
+@function -linear($duration) {
+  @return -duration($duration) linear;
 }
 
 @function standard-sm() {
   @return -timing("standard", "sm");
 }
 
+@function standard-md() {
+  @return -timing("standard", "md");
+}
+
 @function standard-lg() {
   @return -timing("standard", "lg");
-}
-
-@function standard-xl() {
-  @return -timing("standard", "xl");
-}
-
-@function soft-xs() {
-  @return -timing("soft", "xs");
-}
-
-@function soft-sm() {
-  @return -timing("soft", "sm");
-}
-
-@function soft-lg() {
-  @return -timing("soft", "lg");
-}
-
-@function soft-xl() {
-  @return -timing("soft", "xl");
-}
-
-@function sharp-xs() {
-  @return -timing("sharp", "xs");
 }
 
 @function sharp-sm() {
   @return -timing("sharp", "sm");
 }
 
+@function sharp-md() {
+  @return -timing("sharp", "md");
+}
+
 @function sharp-lg() {
   @return -timing("sharp", "lg");
-}
-
-@function sharp-xl() {
-  @return -timing("sharp", "xl");
-}
-
-@function settle-xs() {
-  @return -timing("settle", "xs");
 }
 
 @function settle-sm() {
   @return -timing("settle", "sm");
 }
 
+@function settle-md() {
+  @return -timing("settle", "md");
+}
+
 @function settle-lg() {
   @return -timing("settle", "lg");
 }
 
-@function settle-xl() {
-  @return -timing("settle", "xl");
+@function linear-sm() {
+  @return -linear("sm");
+}
+
+@function linear-md() {
+  @return -linear("md");
+}
+
+@function linear-lg() {
+  @return -linear("lg");
 }

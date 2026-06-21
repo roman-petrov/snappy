@@ -9,8 +9,10 @@
     "./StartApp.server": "./src/StartApp.server.tsx"
   },
   "dependencies": {
+    "@snappy/app-router": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
+    "@snappy/hooks": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/platform": "workspace:*",
     "@snappy/router": "workspace:*",

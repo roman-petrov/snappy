@@ -1,8 +1,7 @@
+import { useObjectUrl } from "@snappy/hooks";
 import { useRef, useState } from "react";
 
 import type { AudioFileProps } from "./AudioFile";
-
-import { useObjectUrl } from "../hooks/useObjectUrl";
 
 export const useAudioFileState = ({ cn, file }: AudioFileProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);

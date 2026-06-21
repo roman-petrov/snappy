@@ -11,3 +11,7 @@ export * from "./Html";
 export * from "./MediaQuery";
 
 export * from "./speech";
+
+export * from "./ThemeVar";
+
+export * from "./Transform";

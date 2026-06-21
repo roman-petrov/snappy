@@ -6,8 +6,8 @@ export * from "./ReactRef";
 
 export * from "./Theme";
 
-export * from "./ThemeVar";
-
 export * from "./TranslateFunction";
 
 export * from "./TrpcClient";
+
+export { ThemeVar } from "@snappy/hooks";

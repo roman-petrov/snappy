@@ -1,0 +1,22 @@
+@use "pkg:@snappy/theme/core" as *;
+
+@mixin -column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.root {
+  @include -column;
+
+  position: relative;
+  flex: 1;
+}
+
+.shell-dock {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}

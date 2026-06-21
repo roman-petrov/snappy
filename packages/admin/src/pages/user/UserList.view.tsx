@@ -20,7 +20,12 @@ export const UserListView = ({ items, page, pageSize, setPage, total }: UserList
       }))}
       rows={items.map(item => ({
         actions: (
-          <IconButton icon={Pencil} link={Routes.user.edit({ userId: item.id })} tip={t(`users.list.editTip`)} />
+          <IconButton
+            icon={Pencil}
+            link={Routes.user.edit({ userId: item.id })}
+            tip={t(`users.list.editTip`)}
+            vibrate="none"
+          />
         ),
         balance: i.price(item.balanceRub),
         createdAt: i.date(item.createdAt),

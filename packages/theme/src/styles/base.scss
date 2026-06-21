@@ -6,7 +6,8 @@
 @use "pkg:@snappy/theme/material/surface";
 
 html {
-  overflow: clip scroll;
+  height: 100dvh;
+  overflow: clip;
   scroll-behavior: smooth;
 }
 
@@ -18,13 +19,21 @@ body {
   @include typography.body;
 
   width: 100%;
-  min-height: 100dvh;
+  height: 100%;
   margin: 0;
+  overflow: clip;
   color: color.text();
   background: color.backdrop();
   transition:
-    color animation.standard-sm(),
-    background-color animation.standard-sm();
+    color animation.standard-md(),
+    background-color animation.standard-md();
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: clip;
 }
 
 ::selection {

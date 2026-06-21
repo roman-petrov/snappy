@@ -1,5 +1,4 @@
 /* eslint-disable functional/no-expression-statements */
-import { Ease } from "@snappy/core";
 import { startApp } from "@snappy/ui";
 import { Bot, Newspaper, Sparkles } from "lucide-react";
 
@@ -18,12 +17,9 @@ startApp({
         : `cover`,
   routes: Routes,
   signedIn: $signedIn,
-  tabs: {
-    ease: Ease.outCubic,
-    items: [
-      { color: `accentOrange`, icon: Newspaper, id: `feed`, label: t(`tabs.feed.label`), path: Routes.feed },
-      { color: `accentIndigo`, icon: Sparkles, id: `snappy`, label: t(`tabs.snappy.label`), path: Routes.$.home },
-      { color: `accentFuchsia`, icon: Bot, id: `agents`, label: t(`tabs.agents.label`), path: Routes.agents },
-    ],
-  },
+  tabs: [
+    { color: `accentOrange`, icon: Newspaper, id: `feed`, label: t(`tabs.feed.label`), path: Routes.feed },
+    { color: `accentIndigo`, icon: Sparkles, id: `snappy`, label: t(`tabs.snappy.label`), path: Routes.$.home },
+    { color: `accentFuchsia`, icon: Bot, id: `agents`, label: t(`tabs.agents.label`), path: Routes.agents },
+  ],
 });

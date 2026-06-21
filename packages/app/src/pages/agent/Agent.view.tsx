@@ -1,4 +1,5 @@
-import { Page, Redirect } from "@snappy/ui";
+import { Redirect } from "@snappy/app-router";
+import { Page } from "@snappy/ui";
 
 import type { useAgentState } from "./Agent.state";
 
