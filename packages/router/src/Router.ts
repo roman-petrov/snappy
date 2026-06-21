@@ -292,10 +292,20 @@ const createRuntime = ({
   const navigate = async (
     from: string,
     to: string,
-    { pop = false, replace = false, syntheticBack = false }: NavJob[`options`],
+    { instant = false, pop = false, replace = false, syntheticBack = false }: NavJob[`options`],
     url?: string,
   ) => {
     if (from === to) {
+      return;
+    }
+
+    if (instant) {
+      if (url !== undefined) {
+        writeHistory(url, `replace`);
+      }
+      patch({ stack: [] });
+      syncLocation();
+
       return;
     }
 

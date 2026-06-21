@@ -45,7 +45,7 @@ export const useSignInState = () => {
         return;
       }
       $signedIn.set(true);
-      void go(Routes.$.home, { replace: true });
+      void go(Routes.$.home, { instant: true });
     });
   };
 

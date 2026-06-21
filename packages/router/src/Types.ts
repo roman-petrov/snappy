@@ -1,6 +1,6 @@
 export type Go = (to: number | string, options?: GoOptions) => Promise<void>;
 
-export type GoOptions = { replace?: boolean };
+export type GoOptions = { instant?: boolean; replace?: boolean };
 
 export type Page = (props?: PageProps) => unknown;
 

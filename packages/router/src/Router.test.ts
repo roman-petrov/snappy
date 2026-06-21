@@ -425,6 +425,15 @@ describe(`router`, () => {
       });
     });
 
+    it(`skips transition on instant navigation`, async () => {
+      await withGo(`/peer-a`, async ({ go }) => {
+        await go(`/peer-b`, { instant: true });
+
+        expect(navTransition).not.toHaveBeenCalled();
+        expect(window.location.pathname).toBe(`/peer-b`);
+      });
+    });
+
     it(`navigates with base prefix`, async () => {
       const app = Router({
         routes: { list: { page: staticPage, path: `items` }, signIn: { page: staticPage, path: `login` } },

@@ -16,7 +16,7 @@ export const useAuthSubmit = ({ homePath, setSignedIn }: AuthSubmitInput) => {
         return;
       }
       setSignedIn(true);
-      void go(homePath, { replace: true });
+      void go(homePath, { instant: true });
     });
   };
 

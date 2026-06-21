@@ -1,13 +1,21 @@
+/* eslint-disable functional/no-expression-statements */
 import { useStoreValue } from "@snappy/store";
+import { useEffect } from "react";
 
 import type { AuthLayoutProps } from "./AuthLayout";
 
-import { useRouterPath } from "../router";
+import { useRouterGo, useRouterPath } from "../router";
 
 export const useAuthLayoutState = ({ children, publicPaths, signedIn, signInPath }: AuthLayoutProps) => {
   const path = useRouterPath();
+  const go = useRouterGo();
   const isSignedIn = useStoreValue(signedIn);
-  const redirectTo = publicPaths.includes(path) || isSignedIn ? undefined : signInPath;
 
-  return { children, redirectTo };
+  useEffect(() => {
+    if (!publicPaths.includes(path) && !isSignedIn) {
+      void go(signInPath, { instant: true });
+    }
+  }, [go, isSignedIn, path, publicPaths, signInPath]);
+
+  return { children };
 };
