@@ -63,11 +63,11 @@ export const TabPagerView = ({
   indicatorTints,
   panelTints,
   select,
-  track,
+  slides,
 }: TabPagerViewProps) => (
   <>
     <TabPagerContentMemo {...content} />
-    {track && (
+    {slides && (
       <PageChrome active role="shell">
         <div
           className={_.cn(styles.bar, animating && styles.barAnimating, $.elevation(`e2`))}

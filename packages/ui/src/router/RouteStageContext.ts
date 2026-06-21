@@ -4,6 +4,7 @@ import type { RouterPageState } from "@snappy/router";
 import { createContext, type RefObject } from "react";
 
 import type { RouteLayer } from "./RouteOverlay";
+import type { RouteUnderlay } from "./RouteUnderlay";
 
 export type ChromeRole = `page` | `shell`;
 
@@ -14,7 +15,8 @@ export type RouteStageValue = {
   registerChrome: (role: ChromeRole, height: number) => Action;
   scrollPaddingBottom: number;
   scrollSafeArea: boolean;
-  shellBarHidden: boolean;
+  slides: boolean;
+  underlay: RouteUnderlay;
 };
 
 export const RouteStageContext = createContext<RouteStageValue | undefined>(undefined);

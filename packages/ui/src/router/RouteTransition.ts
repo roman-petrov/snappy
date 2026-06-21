@@ -4,17 +4,20 @@
 import type { TransitionFn } from "@snappy/router";
 
 import { _ } from "@snappy/core";
+import { flushSync } from "react-dom";
 
 import type { RouteLayer, RouteLayerOf } from "./RouteOverlay";
 
 const scopeAttribute = `data-route-scope`;
 
-type Hosts = { content?: HTMLElement; overlay?: HTMLElement };
+type Hosts = { content?: HTMLElement; onScope?: (scope: string | undefined) => void; overlay?: HTMLElement };
 
 const refs = { current: {} as Hosts };
+const scopeRef = { current: undefined as Hosts[`onScope`] };
 
 const install = (next: Hosts) => {
-  refs.current = next;
+  refs.current = { content: next.content, overlay: next.overlay };
+  scopeRef.current = next.onScope;
 };
 
 const scope = (
@@ -77,9 +80,17 @@ const layerOf =
 
     host.setAttribute(scopeAttribute, animation);
 
-    await scoped.call(host, push).finished.finally(() => {
-      host.removeAttribute(scopeAttribute);
-    });
+    await scoped
+      .call(host, () => {
+        flushSync(() => {
+          scopeRef.current?.(animation);
+          push();
+        });
+      })
+      .finished.finally(() => {
+        host.removeAttribute(scopeAttribute);
+        scopeRef.current?.(undefined);
+      });
   };
 
 export const RouteTransition = { install, layerOf };

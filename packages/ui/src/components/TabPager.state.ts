@@ -8,12 +8,10 @@ import { useRouterGo, useRouterPath, useRouteStage } from "../router";
 import { TabPagerDom } from "./TabPager.dom";
 
 export const useTabPagerState = ({ activeId, ease, items }: TabPagerProps) => {
-  const { contentRef, idlePage, layer, scrollPaddingBottom } = useRouteStage();
+  const { contentRef, idlePage, layer, scrollPaddingBottom, slides, underlay } = useRouteStage();
+  const onTabs = layer === undefined;
   const pathname = useRouterPath();
   const go = useRouterGo();
-  const track = layer === undefined;
-  const slides = layer !== `flip`;
-  const contentDimmed = layer === `cover`;
   const touch = useHasTouchInput();
   const domRef = useRef<TabPagerDom>(undefined);
   const [settling, setSettling] = useState(false);
@@ -47,19 +45,19 @@ export const useTabPagerState = ({ activeId, ease, items }: TabPagerProps) => {
   }, [dom, index, slides, touch]);
 
   useLayoutEffect(() => {
-    if (track) {
+    if (onTabs) {
       Theme.chrome(chromeColor);
     } else {
       Theme.resetChrome();
     }
-  }, [chromeColor, track]);
+  }, [chromeColor, onTabs]);
 
-  useEffect(() => (track && touch ? dom.pointer() : undefined), [dom, touch, track]);
+  useEffect(() => (onTabs && touch ? dom.pointer() : undefined), [dom, onTabs, touch]);
 
   const { trackRef } = dom;
 
   const content = {
-    contentDimmed,
+    contentDimmed: underlay.contentDimmed,
     contentRef,
     idlePage,
     index,
@@ -70,5 +68,5 @@ export const useTabPagerState = ({ activeId, ease, items }: TabPagerProps) => {
     trackRef,
   };
 
-  return { animating: barOffset !== undefined, barIndex, content, indicatorTints, panelTints, select, track };
+  return { animating: barOffset !== undefined, barIndex, content, indicatorTints, panelTints, select, slides };
 };

@@ -80,15 +80,16 @@ $-timing: animation.sharp-xs();
   overflow: clip;
   pointer-events: none;
 
-  &-open,
-  &[data-route-scope] {
+  &-open {
     @include layer.overlay;
 
     position: fixed;
-  }
-
-  &-open {
     pointer-events: auto;
+
+    &[data-route-scope="overlay-back"],
+    &[data-route-scope="overlay-pop"] {
+      pointer-events: none;
+    }
   }
 
   &[data-route-scope] .pane {
@@ -162,7 +163,7 @@ $-slides: (
         opacity: 0.15;
       }
 
-      transform: translateX($x) scale(0.92);
+      transform: translateX($x);
     }
   }
 }

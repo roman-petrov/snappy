@@ -11,6 +11,7 @@ import { useRouter } from "../hooks/useRouter";
 import { useRouterPath } from "../hooks/useRouterPath";
 import { type RouteLayerOf, RouteOverlay } from "../RouteOverlay";
 import { RouteTransition } from "../RouteTransition";
+import { RouteUnderlay } from "../RouteUnderlay";
 
 export type { RouteLayer, RouteLayerOf } from "../RouteOverlay";
 
@@ -23,6 +24,7 @@ type Fade = `chrome` | `hidden` | `safeArea`;
 export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
   const mobile = useIsMobile();
   const [chrome, setChrome] = useState<Chrome | undefined>();
+  const [overlayScope, setOverlayScope] = useState<string | undefined>();
   const { $page, parent, pattern, stateAt } = useRouter();
   const path = useRouterPath();
   const state = useStoreValue($page);
@@ -42,7 +44,6 @@ export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
   }, []);
 
   const chromeHeight = chrome?.height;
-  const shellBarHidden = chrome?.role === `page`;
   const fade: Fade = chromeHeight === undefined ? (mobile ? `safeArea` : `hidden`) : `chrome`;
   const edge = mobile ? 8 : 16;
   const scrollPaddingBottom = chromeHeight === undefined ? edge : edge * 2 + chromeHeight;
@@ -59,6 +60,8 @@ export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
   });
   preservedTab.current = overlay.preserved;
 
+  const underlay = RouteUnderlay.stage(layer, overlayScope);
+
   const stage: RouteStageValue = {
     contentRef,
     idlePage: overlay.idle,
@@ -66,12 +69,22 @@ export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
     registerChrome,
     scrollPaddingBottom,
     scrollSafeArea,
-    shellBarHidden,
+    slides: layer !== `flip`,
+    underlay,
   };
 
+  const onScopeRef = useRef(setOverlayScope);
+  onScopeRef.current = setOverlayScope;
+
   useLayoutEffect(() => {
-    RouteTransition.install({ content: contentRef.current ?? undefined, overlay: overlayRef.current ?? undefined });
-  });
+    RouteTransition.install({
+      content: contentRef.current ?? undefined,
+      onScope: scope => {
+        onScopeRef.current(scope);
+      },
+      overlay: overlayRef.current ?? undefined,
+    });
+  }, []);
 
   useEffect(
     () => () => {
@@ -85,5 +98,9 @@ export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
     document.documentElement.scrollTo({ behavior: `instant`, left: 0, top: 0 });
   }, [path]);
 
-  return { fade, overlayOpen: overlay.open, overlayRef, page: state, panes: overlay.panes, stage, tabs, topPaneRef };
+  const overlayOpen = overlay.open || underlay.exiting;
+  const { panes } = overlay;
+  const page = state;
+
+  return { fade, overlayOpen, overlayRef, page, panes, stage, tabs, topPaneRef };
 };
