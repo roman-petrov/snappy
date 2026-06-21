@@ -39,8 +39,8 @@ export const RouteStageView = ({
           ))}
         </div>
         {tabs === undefined ? (
-          <RouteScroll ref={stage.contentRef} scroll>
-            {page === undefined ? undefined : <RouterPage {...page} />}
+          <RouteScroll dimmed={stage.underlay.contentDimmed} ref={stage.contentRef} scroll>
+            {(stage.idlePage ?? page) === undefined ? undefined : <RouterPage {...(stage.idlePage ?? page)} />}
           </RouteScroll>
         ) : (
           <TabPager {...tabs} />
