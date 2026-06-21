@@ -1,4 +1,3 @@
-/* eslint-disable functional/no-expression-statements */
 import { useStoreValue } from "@snappy/store";
 import { useEffect } from "react";
 
