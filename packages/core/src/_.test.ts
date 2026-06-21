@@ -22,7 +22,10 @@ const {
   mb,
   noop,
   pascalCase,
+  percent,
+  percentScale,
   px,
+  ratio,
   round,
   sentenceCase,
   singleAction,
@@ -300,6 +303,39 @@ describe(`sentenceCase`, () => {
 
   it(`trims and collapses surrounding and repeated whitespace`, () => {
     expect(sentenceCase(`  foo  bar  `)).toBe(`Foo bar`);
+  });
+});
+
+describe(`ratio`, () => {
+  it(`returns a 0–1 share`, () => {
+    expect(ratio(1, 2)).toBe(0.5);
+    expect(ratio(3, 4)).toBe(0.75);
+    expect(ratio(2, 2)).toBe(1);
+  });
+
+  it(`returns zero for an empty total`, () => {
+    expect(ratio(5, 0)).toBe(0);
+  });
+});
+
+describe(`percent`, () => {
+  it(`converts a share to a 0–100 scale`, () => {
+    expect(percent(1, 2)).toBe(50);
+    expect(percent(3, 4)).toBe(75);
+    expect(percent(2, 2)).toBe(100);
+  });
+
+  it(`returns zero for an empty total`, () => {
+    expect(percent(5, 0)).toBe(0);
+  });
+
+  it(`returns zero for zero part`, () => {
+    expect(percent(0, 10)).toBe(0);
+  });
+
+  it(`uses percentScale`, () => {
+    expect(percentScale).toBe(100);
+    expect(percent(1, percentScale)).toBe(1);
   });
 });
 

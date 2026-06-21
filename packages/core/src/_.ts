@@ -79,6 +79,9 @@ const int = (s: string, radix: 10 | 16) => {
 const dec = (s: string) => int(s, 10);
 const hex = (s: string) => int(s, 16);
 const noop = () => {};
+const percentScale = 100;
+const ratio = (part: number, total: number) => (total === 0 ? 0 : part / total);
+const percent = (part: number, total: number) => ratio(part, total) * percentScale;
 
 const gen = <TItem>(count: number, map: (index: number) => TItem) =>
   Array.from({ length: Math.max(0, count) }, (_, index) => map(index));
@@ -89,7 +92,7 @@ const round = (value: number, fractionDigits: number) => {
   return Math.round(value * factor) / factor;
 };
 
-const lerp = (start: number, end: number, ratio: number) => start + (end - start) * ratio;
+const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
 const b1024 = 1024;
 
 const byteSize = (bytes: number) => {
@@ -144,7 +147,10 @@ export const _ = {
   mb,
   noop,
   pascalCase,
+  percent,
+  percentScale,
   px,
+  ratio,
   round,
   sentenceCase,
   singleAction,

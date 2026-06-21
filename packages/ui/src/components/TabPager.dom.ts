@@ -10,6 +10,7 @@ import { Vibrate } from "@snappy/platform";
 
 import type { Color } from "../$";
 
+import { ThemeVar } from "../core/ThemeVar";
 import { TabPagerLogic } from "./TabPager.logic";
 
 export type TabPagerTab = { color: Color; id: string; path: string };
@@ -24,6 +25,7 @@ export type TabPagerDomConfig = {
 
 export type TabPagerFrame = {
   barIndex: number;
+  chromeColor: string;
   index: number;
   indicatorTints: CSSProperties[];
   panelTints: CSSProperties[];
@@ -159,14 +161,11 @@ export const TabPagerDom = ({ contentRef, setBarOffset, setSettling }: TabPagerD
     lastTabId = resolvedActiveId ?? lastTabId;
     currentIndex = TabPagerLogic.routeIndex(items, resolvedActiveId, lastTabId);
 
-    const { barIndex, indicatorTints, panelTints } = TabPagerLogic.chrome(
-      items.map(item => item.color),
-      barOffset,
-      currentIndex,
-      count(),
-    );
+    const accents = items.map(item => ThemeVar.accent(item.color));
+    const backdrop = ThemeVar.ref(`color-backdrop`);
+    const chrome = TabPagerLogic.chrome(accents, backdrop, barOffset, currentIndex, count());
 
-    return { barIndex, index: currentIndex, indicatorTints, panelTints };
+    return { ...chrome, index: currentIndex };
   };
 
   const layout = (slides: boolean) => {

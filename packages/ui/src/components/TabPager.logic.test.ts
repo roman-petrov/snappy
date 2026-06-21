@@ -154,8 +154,10 @@ describe(`routeIndex`, () => {
 });
 
 describe(`chrome`, () => {
+  const backdrop = `var(--color-backdrop)`;
+
   it(`derives bar index and tints`, () => {
-    const result = chrome([`primary`, `success`], undefined, 0, 2);
+    const result = chrome([`var(--color-primary)`, `var(--color-success)`], backdrop, undefined, 0, 2);
 
     expect(result.barIndex).toBe(0);
     expect(result.panelTints[0]?.opacity).toBe(1);
@@ -163,7 +165,28 @@ describe(`chrome`, () => {
   });
 
   it(`uses barOffset when present`, () => {
-    expect(chrome([`primary`, `success`], 0.5, 0, 2).barIndex).toBe(0.5);
+    expect(chrome([`var(--color-primary)`, `var(--color-success)`], backdrop, 0.5, 0, 2).barIndex).toBe(0.5);
+  });
+});
+
+describe(`chromeColor`, () => {
+  const backdrop = `var(--color-backdrop)`;
+  const colors = [`var(--color-accent-orange)`, `var(--color-accent-indigo)`, `var(--color-accent-fuchsia)`] as const;
+
+  it(`returns backdrop when there are no tabs`, () => {
+    expect(chrome([], backdrop, undefined, 0, 0).chromeColor).toBe(backdrop);
+  });
+
+  it(`returns a panel tint for an integer bar index`, () => {
+    expect(chrome(colors, backdrop, undefined, 1, 3).chromeColor).toBe(
+      `color-mix(in srgb, var(--color-accent-indigo) 25%, var(--color-backdrop))`,
+    );
+  });
+
+  it(`interpolates between adjacent tabs`, () => {
+    expect(chrome(colors, backdrop, 0.25, 0, 3).chromeColor).toBe(
+      `color-mix(in srgb, color-mix(in srgb, var(--color-accent-orange) 25%, var(--color-backdrop)) 50%, color-mix(in srgb, var(--color-accent-indigo) 25%, var(--color-backdrop)))`,
+    );
   });
 });
 

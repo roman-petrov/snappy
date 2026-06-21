@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import { _ } from "@snappy/core";
 import { Terminal } from "@snappy/node";
 
 import { Theme } from "./Theme";
@@ -6,7 +7,6 @@ import { Theme } from "./Theme";
 const barWidth = 32;
 const labelMaxChars = 44;
 const pctPadWidth = 3;
-const percentFull = 100;
 const terminalClearWidth = 120;
 
 const shortenPath = (raw: string, max = labelMaxChars) =>
@@ -23,8 +23,8 @@ const writeIndexerProgressLine = ({
 }) => {
   const total = Math.max(filesTotal, 1);
   const step = Math.min(filesDone + 1, total);
-  const pct = Math.min(percentFull, Math.round((step / total) * percentFull));
-  const filled = Math.round((pct / percentFull) * barWidth);
+  const pct = Math.round(_.percent(step, total));
+  const filled = Math.round(_.ratio(pct, _.percentScale) * barWidth);
   const bar = `${`█`.repeat(filled)}${`░`.repeat(Math.max(barWidth - filled, 0))}`;
   const ratio = `${String(step).padStart(String(total).length, ` `)}/${String(total)}`;
   const line = `\r[${Theme.command(bar)}] ${Terminal.bold(`${String(pct).padStart(pctPadWidth, ` `)}%`)} ${Theme.dim(ratio)} ${shortenPath(filePath)}`;

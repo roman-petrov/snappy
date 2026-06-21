@@ -6,6 +6,7 @@ import { Dom, MediaQuery } from "@snappy/browser";
 import { Bridge } from "@snappy/platform";
 
 import { $theme } from "../Store";
+import { BrowserChrome } from "./BrowserChrome";
 import { ThemeTransition } from "./ThemeTransition";
 
 export type ResolvedTheme = CoreResolvedTheme;
@@ -13,6 +14,7 @@ export type ResolvedTheme = CoreResolvedTheme;
 export type Theme = CoreTheme;
 
 const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
+const { apply: chrome, reset: resetChrome, sync } = BrowserChrome();
 const systemDark = () => (Bridge.available ? Bridge.systemDark() === true : MediaQuery.matches(prefersDarkQuery));
 const effective = (value = $theme()): ResolvedTheme => (value === `system` ? (systemDark() ? `dark` : `light`) : value);
 
@@ -20,6 +22,7 @@ const applyEffective = () => {
   const next = effective();
   document.documentElement.dataset[`theme`] = next;
   Bridge.setBarStyle(next === `dark` ? `dark` : `light`);
+  sync();
 };
 
 const init = () => {
@@ -43,4 +46,4 @@ const set = (value: Theme) => {
 
 const toggle = () => set(effective() === `dark` ? `light` : `dark`);
 
-export const Theme = { effective, init, set, toggle };
+export const Theme = { chrome, effective, init, resetChrome, set, toggle };

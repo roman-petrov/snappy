@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 
 import type { TabPagerProps } from "./TabPager";
 
+import { Theme } from "../core/Theme";
 import { useHasTouchInput } from "../hooks/useHasTouchInput";
 import { useRouterGo, useRouterPath, useRouteStage } from "../router";
 import { TabPagerDom } from "./TabPager.dom";
@@ -29,7 +30,7 @@ export const useTabPagerState = ({ activeId, ease, items }: TabPagerProps) => {
 
   const dom = domRef.current;
 
-  const { barIndex, index, indicatorTints, panelTints } = dom.frame({
+  const { barIndex, chromeColor, index, indicatorTints, panelTints } = dom.frame({
     activeId,
     barOffset,
     ease,
@@ -44,6 +45,14 @@ export const useTabPagerState = ({ activeId, ease, items }: TabPagerProps) => {
   useLayoutEffect(() => {
     dom.layout(slides);
   }, [dom, index, slides, touch]);
+
+  useLayoutEffect(() => {
+    if (track) {
+      Theme.chrome(chromeColor);
+    } else {
+      Theme.resetChrome();
+    }
+  }, [chromeColor, track]);
 
   useEffect(() => (track && touch ? dom.pointer() : undefined), [dom, touch, track]);
 
