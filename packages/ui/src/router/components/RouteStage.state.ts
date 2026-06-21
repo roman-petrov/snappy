@@ -100,7 +100,7 @@ export const useRouteStageState = ({ layerOf, tabs }: RouteStageProps) => {
 
   const overlayOpen = overlay.open || underlay.exiting;
   const { panes } = overlay;
-  const page = state;
+  const contentPage = overlay.idle ?? state;
 
-  return { fade, overlayOpen, overlayRef, page, panes, stage, tabs, topPaneRef };
+  return { contentPage, fade, overlayOpen, overlayRef, panes, stage, tabs, topPaneRef };
 };

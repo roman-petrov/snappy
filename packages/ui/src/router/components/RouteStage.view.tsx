@@ -12,10 +12,10 @@ import styles from "./RouteStage.module.scss";
 export type RouteStageViewProps = ReturnType<typeof useRouteStageState>;
 
 export const RouteStageView = ({
+  contentPage,
   fade,
   overlayOpen,
   overlayRef,
-  page,
   panes,
   stage,
   tabs,
@@ -40,7 +40,7 @@ export const RouteStageView = ({
         </div>
         {tabs === undefined ? (
           <RouteScroll dimmed={stage.underlay.contentDimmed} ref={stage.contentRef} scroll>
-            {(stage.idlePage ?? page) === undefined ? undefined : <RouterPage {...(stage.idlePage ?? page)} />}
+            {contentPage === undefined ? undefined : <RouterPage {...contentPage} />}
           </RouteScroll>
         ) : (
           <TabPager {...tabs} />
