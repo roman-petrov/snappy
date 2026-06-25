@@ -71,3 +71,17 @@ describe(`remove`, () => {
     expect(cache.get(`a`)).toBe(1);
   });
 });
+
+describe(`prune`, () => {
+  it(`removes entries that fail keep`, () => {
+    const cache = Cache<number>();
+    cache.set(`a`, 1);
+    cache.set(`b`, 2);
+    cache.set(`c`, 3);
+    cache.prune(value => value > 1);
+
+    expect(cache.get(`a`)).toBeUndefined();
+    expect(cache.get(`b`)).toBe(2);
+    expect(cache.get(`c`)).toBe(3);
+  });
+});

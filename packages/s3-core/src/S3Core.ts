@@ -15,7 +15,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Config, ConfigValues } from "@snappy/config";
-import { _ } from "@snappy/core";
+import { _, Cache } from "@snappy/core";
 
 const clientFrom = (source: Record<string, string>) => ({
   bucket: ConfigValues.required(source, `S3_BUCKET`),
@@ -31,6 +31,7 @@ const clientFrom = (source: Record<string, string>) => ({
 });
 
 let cached: ReturnType<typeof clientFrom> | undefined;
+const urlCache = Cache<{ expiresAt: number; url: string }>();
 
 const withClient = async <T>(fn: (client: ReturnType<typeof clientFrom>) => Promise<T>) => {
   cached ??= clientFrom(ConfigValues.values());
@@ -63,7 +64,7 @@ const setup = async () => {
               AllowedHeaders: [`*`],
               AllowedMethods: [`GET`],
               AllowedOrigins: [ConfigValues.origin(mode)],
-              MaxAgeSeconds: 3600,
+              MaxAgeSeconds: Config.s3CorsMaxAgeSec,
             },
           ],
         },
@@ -79,27 +80,48 @@ const setup = async () => {
 const user = (userId: string) => {
   const key = (path: string) => `public/${userId}/${path}`;
 
-  const putPng = async (path: string, src: Buffer | string) =>
-    withClient(async ({ bucket, sdk }) =>
+  const putPng = async (path: string, src: Buffer | string) => {
+    urlCache.remove(key(path));
+
+    return withClient(async ({ bucket, sdk }) =>
       sdk.send(
         new PutObjectCommand({
           Body: _.isString(src) ? Buffer.from(src.split(`,`)[1] ?? ``, `base64`) : src,
           Bucket: bucket,
+          CacheControl: `public, max-age=${Config.s3SignedUrlTtlSec}`,
           ContentType: `image/png`,
           Key: key(path),
         }),
       ),
     );
+  };
 
-  const remove = async (path: string) =>
-    withClient(async ({ bucket, sdk }) => sdk.send(new DeleteObjectCommand({ Bucket: bucket, Key: key(path) })));
+  const remove = async (path: string) => {
+    urlCache.remove(key(path));
 
-  const url = async (path: string) =>
-    withClient(async ({ bucket, sdk }) =>
-      getSignedUrl(sdk, new GetObjectCommand({ Bucket: bucket, Key: key(path) }), {
-        expiresIn: Config.s3SignedUrlTtlSec,
-      }),
-    );
+    return withClient(async ({ bucket, sdk }) => sdk.send(new DeleteObjectCommand({ Bucket: bucket, Key: key(path) })));
+  };
+
+  const url = async (path: string) => {
+    const objectKey = key(path);
+    const now = _.now();
+    const entry = urlCache.get(objectKey);
+
+    if (entry !== undefined && entry.expiresAt > now) {
+      return entry.url;
+    }
+
+    urlCache.prune(({ expiresAt }) => expiresAt > now);
+
+    return urlCache.set(objectKey, {
+      expiresAt: now + Config.s3SignedUrlTtlSec * _.second - Config.s3UrlCacheMarginMs,
+      url: await withClient(async ({ bucket, sdk }) =>
+        getSignedUrl(sdk, new GetObjectCommand({ Bucket: bucket, Key: objectKey }), {
+          expiresIn: Config.s3SignedUrlTtlSec,
+        }),
+      ),
+    }).url;
+  };
 
   const purge = async () =>
     withClient(async ({ bucket, sdk }) => {
@@ -114,7 +136,14 @@ const user = (userId: string) => {
           await sdk.send(
             new DeleteObjectsCommand({
               Bucket: bucket,
-              Delete: { Objects: keys.map(item => ({ Key: item })), Quiet: true },
+              Delete: {
+                Objects: keys.map(objectKey => {
+                  urlCache.remove(objectKey);
+
+                  return { Key: objectKey };
+                }),
+                Quiet: true,
+              },
             }),
           );
         }
