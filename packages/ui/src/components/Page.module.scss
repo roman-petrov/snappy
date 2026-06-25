@@ -1,7 +1,6 @@
+/* stylelint-disable property-disallowed-list */
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/material/elevation";
-@use "pkg:@snappy/theme/material/glass";
-@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/material/material";
 @use "pkg:@snappy/theme/tokens/layer";
 @use "pkg:@snappy/theme/tokens/space";
 
@@ -23,12 +22,24 @@
   inset-block-start: 0;
 
   &::before {
-    @include surface.header;
-    @include glass.simple;
-    @include elevation.e1;
+    @include layer.behind;
 
     position: absolute;
     inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+    content: "";
+    animation: header-blur 1ms steps(1, jump-start) forwards;
+    animation-timeline: scroll();
+    animation-range: r(8) calc(r(8) + 1px);
+  }
+
+  &::after {
+    @include layer.behind;
+
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
     content: "";
     opacity: 0;
     animation: header-glass 1ms linear both;
@@ -51,12 +62,25 @@
   min-width: 0;
 }
 
+@keyframes header-blur {
+  to {
+    visibility: visible;
+    backdrop-filter: material.glass-filter();
+  }
+}
+
 @keyframes header-glass {
   from {
+    background-color: transparent;
+    border-bottom: 1px solid transparent;
+    box-shadow: none;
     opacity: 0;
   }
 
   to {
+    background-color: material.surface-bg();
+    border-bottom: material.surface-border();
+    box-shadow: material.elevation(1);
     opacity: 1;
   }
 }

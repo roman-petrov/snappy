@@ -1,4 +1,4 @@
-@use "pkg:@snappy/theme/material/material" as material;
+@use "pkg:@snappy/theme/material/material";
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/animation";
@@ -19,7 +19,7 @@
   min-width: 100%;
   table-layout: auto;
   border-collapse: collapse;
-  border: 1px solid material.border(color.surface());
+  border: material.surface-border();
 }
 
 .root :is(th, td) {
@@ -30,8 +30,8 @@
   overflow-wrap: normal;
   white-space: normal;
   border: 0;
-  border-inline-end: 1px solid material.border(color.surface());
-  border-bottom: 1px solid material.border(color.surface());
+  border-inline-end: material.surface-border();
+  border-bottom: material.surface-border();
   transition: background-color animation.standard-md();
 }
 

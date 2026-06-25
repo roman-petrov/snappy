@@ -81,7 +81,19 @@
   @include material(-tone($accent, material.tone-accent()), $accent, $accent-text: false, $no-border: $no-border);
 }
 
+@function surface-bg() {
+  @return -bg(color.surface());
+}
+
+@function surface-border() {
+  @return 1px solid border(color.surface());
+}
+
+@function glass-filter() {
+  @return blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
+}
+
 @mixin glass-simple {
-  backdrop-filter: blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
+  backdrop-filter: glass-filter();
   transition: backdrop-filter animation.standard-md();
 }

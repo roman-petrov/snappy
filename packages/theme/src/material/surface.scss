@@ -32,5 +32,5 @@
 @mixin header {
   @include material.material(color.surface(), null, $no-border: true);
 
-  border-bottom: 1px solid material.border(color.surface());
+  border-bottom: material.surface-border();
 }

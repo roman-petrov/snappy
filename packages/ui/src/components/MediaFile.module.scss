@@ -19,7 +19,7 @@ $-max-width: r(192);
   max-width: $-max-width;
   padding: space.sm();
   background-color: color.surface();
-  border: 1px solid material.border(color.surface());
+  border: material.surface-border();
   border-radius: radius.sm();
 }
 
