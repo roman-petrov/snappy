@@ -21,7 +21,7 @@ export const ImageCardView = ({ actions, busy, pending, remove, src }: ImageCard
       </div>
     ) : (
       <div className={_.cn(styles.frame, $.radius(`sm`))}>
-        <img alt="" className={styles.image} src={src} />
+        <img alt="" className={styles.image} key={src} src={src} />
         {busy ? <div className={styles.shimmer} /> : undefined}
       </div>
     )}

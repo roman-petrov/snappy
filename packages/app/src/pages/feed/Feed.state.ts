@@ -1,7 +1,7 @@
 import type { TypeWriterSpeed } from "@snappy/domain";
 import type { AgentAiConfig } from "@snappy/snappy-sdk";
 
-import { useRouterGo } from "@snappy/app-router";
+import { useRouterGo, useRouterPath } from "@snappy/app-router";
 import { _ } from "@snappy/core";
 import { useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -12,6 +12,8 @@ import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";
 
 export const useFeedState = () => {
+  const path = useRouterPath();
+  const active = path === Routes.feed;
   const [items, setItems] = useState<FeedArtifact[]>([]);
   const [cursor, setCursor] = useState<string | undefined>(undefined);
   const [hasMore, setHasMore] = useState(true);
@@ -20,14 +22,21 @@ export const useFeedState = () => {
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useAsyncEffect(async () => {
-    const [settings, page] = await Promise.all([trpc.user.settings.get.query(), trpc.feed.list.query({ limit: 20 })]);
-
+    const settings = await trpc.user.settings.get.query();
     setAiConfig(AgentAiFromSettings(settings));
     setTypeWriterSpeed(settings.typeWriterSpeed);
+  }, []);
+
+  useAsyncEffect(async () => {
+    if (!active) {
+      return;
+    }
+
+    const page = await trpc.feed.list.query({ limit: 20 });
     setItems(page.items);
     setCursor(page.nextCursor);
     setHasMore(page.nextCursor !== undefined);
-  }, []);
+  }, [active]);
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -65,7 +74,11 @@ export const useFeedState = () => {
   const go = useRouterGo();
 
   const onPublish = useCallback((artifact: FeedArtifact) => {
-    setItems(previous => previous.map(item => (item.id === artifact.id ? artifact : item)));
+    setItems(previous =>
+      previous.some(item => item.id === artifact.id)
+        ? previous.map(item => (item.id === artifact.id ? artifact : item))
+        : [artifact, ...previous],
+    );
   }, []);
 
   const removeItem = useCallback((artifactId: string) => {
