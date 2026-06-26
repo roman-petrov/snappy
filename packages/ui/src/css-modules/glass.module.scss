@@ -1,8 +1,0 @@
-@use "sass:meta";
-@use "pkg:@snappy/theme/material/glass" as glass;
-
-@each $name, $mixin in meta.module-mixins("glass") {
-  .#{$name} {
-    @include meta.apply($mixin);
-  }
-}

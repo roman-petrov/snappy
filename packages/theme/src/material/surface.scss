@@ -1,3 +1,4 @@
+@use "pkg:@snappy/theme/material/glass";
 @use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
 
@@ -7,6 +8,7 @@
 
 @mixin surface-glass {
   @include panel.panel-glass;
+  @include glass.simple;
 }
 
 @mixin primary {
