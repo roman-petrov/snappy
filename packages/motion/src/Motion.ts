@@ -5,7 +5,7 @@
 /* eslint-disable init-declarations */
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import { Transform, type TransformInput } from "@snappy/browser";
-import { _, Ease } from "@snappy/core";
+import { _ } from "@snappy/core";
 import { Vibrate } from "@snappy/platform";
 
 export type Motion = ReturnType<typeof Motion>;
@@ -29,9 +29,7 @@ export type MotionRunInput = {
 };
 
 export const Motion = () => {
-  const ease = Ease.outQuart;
-  const easeSteps = 64;
-  const easing = `linear(${_.gen(easeSteps + 1, step => ease(step / easeSteps).toFixed(4)).join(`, `)})`;
+  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
   let pending: (() => void) | undefined;
   let tickFrame: number | undefined;
 

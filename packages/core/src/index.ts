@@ -8,8 +8,6 @@ export * from "./Cookie";
 
 export * from "./DateTime";
 
-export * from "./Ease";
-
 export * from "./Gesture";
 
 export * from "./HttpStatus";
