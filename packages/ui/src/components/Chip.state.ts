@@ -29,15 +29,16 @@ export const useChipState = ({
       ? color
       : `soft`;
 
+  const surfaceCn =
+    resolvedColor === `soft`
+      ? $.surface(`surface`)
+      : resolvedColor === `accent`
+        ? $.surface(`primaryHover`)
+        : $.surface(resolvedColor);
+
   const rootCn = _.cn(
     styles.root,
-    interactive
-      ? resolvedColor === `accent`
-        ? _.cn(styles.accent, styles.interactive)
-        : $.tap(`soft`)
-      : resolvedColor === `soft`
-        ? $.surface(`surface`)
-        : styles[resolvedColor],
+    interactive ? (resolvedColor === `accent` ? _.cn(surfaceCn, styles.interactive) : $.tap(`soft`)) : surfaceCn,
     tile && styles.tile,
     cn,
   );

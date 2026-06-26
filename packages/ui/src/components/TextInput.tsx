@@ -1,6 +1,6 @@
 import type { Vibrate } from "@snappy/platform";
 
-import type { Color } from "../$";
+import type { Color, Surface } from "../$";
 import type { Icon } from "./Icon";
 import type { TextAreaProps } from "./TextArea";
 
@@ -18,8 +18,10 @@ export type TextInputAfterMic = {
 
 export type TextInputProps = Omit<TextAreaProps, `maxLines`> & {
   afterMic?: TextInputAfterMic;
-  glass?: boolean;
   maxLines?: number;
+  surface?: TextInputSurface;
 };
+
+export type TextInputSurface = Extract<Surface, `surface` | `surfaceGlass`>;
 
 export const TextInput = (props: TextInputProps) => <TextInputView {...useTextInputState(props)} />;

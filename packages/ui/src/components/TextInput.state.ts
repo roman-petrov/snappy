@@ -10,9 +10,9 @@ import { useIsMobile, useSpeechRecognition } from "../hooks";
 
 export const useTextInputState = ({
   afterMic,
-  glass = false,
   maxLines: maxLinesProp,
   onChange,
+  surface = `surface`,
   ...textAreaRest
 }: TextInputProps) => {
   const { listening, speechSupported, start, stop } = useSpeechRecognition();
@@ -54,5 +54,5 @@ export const useTextInputState = ({
     onClick: toggleRecording,
   };
 
-  return { afterMic, glass, listening, micButton, speechSupported, textArea };
+  return { afterMic, listening, micButton, speechSupported, surface, textArea };
 };

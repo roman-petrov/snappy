@@ -35,10 +35,6 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
     flex-shrink: 0;
   }
 
-  &:not(.input-wrap-glass, .input-wrap-recording) {
-    @include surface.surface;
-  }
-
   &:focus-within:not(.input-wrap-recording) {
     @include surface.primary-hover;
     @include elevation.e2;
@@ -48,10 +44,6 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
     @include surface.error;
     @include elevation.e2;
   }
-}
-
-.input-wrap-glass:not(.input-wrap-recording) {
-  @include surface.surface-glass;
 }
 
 .text-area-wrap {

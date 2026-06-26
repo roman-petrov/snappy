@@ -2,6 +2,7 @@ import { _ } from "@snappy/core";
 
 import type { useInputState } from "./Input.state";
 
+import { $ } from "../$";
 import styles from "./Input.module.scss";
 
 export type InputViewProps = ReturnType<typeof useInputState>;
@@ -44,7 +45,7 @@ export const InputView = ({
     </div>
   );
 
-  const surfaceClassName = _.cn(styles.surface, hasValue && styles.hasValue);
+  const surfaceClassName = _.cn(styles.surface, $.surface(`surface`), $.elevation(`e1`), hasValue && styles.hasValue);
 
   return (
     <div className={surfaceClassName}>

@@ -1,6 +1,5 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/elevation";
-@use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/material/tap";
 @use "pkg:@snappy/theme/tokens/icon-size";
 @use "pkg:@snappy/theme/primitives";
@@ -52,20 +51,4 @@ $-half-height: calc(#{$-height} / 2);
 
 .interactive {
   @include tap.elevated;
-}
-
-.accent {
-  @include surface.primary-hover;
-}
-
-.primary {
-  @include surface.primary;
-}
-
-.error {
-  @include surface.error;
-}
-
-.success {
-  @include surface.success;
 }
