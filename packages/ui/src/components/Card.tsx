@@ -21,7 +21,15 @@ export const Card = ({
   radius = `md`,
   surface = `surface`,
 }: CardProps) => (
-  <div className={_.cn($.surface(surface), $.glass(glass), $.elevation(elevation), $.radius(radius), cn)}>
+  <div
+    className={_.cn(
+      $.surface(glass === `simple` ? `surfaceGlass` : surface),
+      glass !== `none` && $.glass(glass),
+      $.elevation(elevation),
+      $.radius(radius),
+      cn,
+    )}
+  >
     {children}
   </div>
 );

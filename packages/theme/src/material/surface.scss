@@ -5,6 +5,10 @@
   @include panel.panel;
 }
 
+@mixin surface-glass {
+  @include panel.panel-glass;
+}
+
 @mixin primary {
   @include panel.panel(color.primary());
 }

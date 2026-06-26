@@ -50,6 +50,18 @@
   @return -rim-border(bg-soft());
 }
 
+@function border-glass($accent: null) {
+  $fill: bg-glass($accent);
+
+  @if $accent {
+    $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
+
+    @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
+  }
+
+  @return -rim-border($fill);
+}
+
 @mixin panel-soft {
   color: color.text();
   background-color: bg-soft();
@@ -82,6 +94,32 @@
 
     @if not $no-border {
       border: 1px solid border();
+    }
+  }
+}
+
+@mixin panel-glass($accent: null, $accent-text: true, $no-border: false) {
+  background-color: bg-glass($accent);
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    color animation.standard-md();
+
+  @if $accent {
+    @if $accent-text {
+      color: $accent;
+    } @else {
+      color: color.text();
+    }
+
+    @if not $no-border {
+      border: 1px solid border-glass($accent);
+    }
+  } @else {
+    color: color.text();
+
+    @if not $no-border {
+      border: 1px solid border-glass();
     }
   }
 }

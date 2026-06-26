@@ -4,6 +4,7 @@ declare const __TextInput: {
   readonly inputWrap: "inputWrap";
   readonly inputWrapRecording: "inputWrapRecording";
   readonly textAreaWrap: "textAreaWrap";
+  readonly inputWrapGlass: "inputWrapGlass";
   readonly actionWrap: "actionWrap";
 };
 export default __TextInput;

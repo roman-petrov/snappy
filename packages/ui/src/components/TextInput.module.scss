@@ -34,7 +34,6 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
 }
 
 .input-wrap {
-  @include surface.surface;
   @include elevation.e1;
 
   display: flex;
@@ -47,6 +46,14 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
   > :not(.text-area-wrap) {
     flex-shrink: 0;
   }
+
+  &:not(.input-wrap-glass) {
+    @include surface.surface;
+  }
+}
+
+.input-wrap-glass {
+  @include surface.surface-glass;
 }
 
 .input-wrap-recording {

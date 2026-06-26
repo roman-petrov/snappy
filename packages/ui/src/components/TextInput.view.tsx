@@ -20,7 +20,14 @@ export const TextInputView = ({
   wrapFocused,
 }: TextInputViewProps) => (
   <div className={`${styles.wrap} ${wrapFocused ? styles.wrapFocused : ``}`}>
-    <div className={_.cn(styles.inputWrap, glass && $.glass(`simple`), listening && styles.inputWrapRecording)}>
+    <div
+      className={_.cn(
+        styles.inputWrap,
+        glass && styles.inputWrapGlass,
+        glass && $.glass(`simple`),
+        listening && styles.inputWrapRecording,
+      )}
+    >
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
       </div>
