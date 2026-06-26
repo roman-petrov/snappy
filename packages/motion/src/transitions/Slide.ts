@@ -116,7 +116,7 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
     const total = count();
     const targetTranslate = translateForIndex(target, motion.width(), total);
 
-    await motion.animate(targetTranslate, undefined, true);
+    await motion.animate(targetTranslate);
     motion.reset();
     motion.setTranslate(targetTranslate);
     clearPageIndex();

@@ -20,8 +20,6 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
   const perspective = 75;
   const rotate = 180;
   const scaleFrom = 0.94;
-  const durationMs = 300;
-  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
   const motion = Motion();
   let active = false;
 
@@ -74,7 +72,7 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
           },
           { element: incoming, start: { rotateY: -rotate, scale: scaleFrom }, transformAtProgress: transformFlipIn },
         ],
-        { clear: true, durationMs, easing },
+        { clear: true },
       );
     } else if (back && out !== undefined) {
       await motion.play(
@@ -85,7 +83,7 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
             transformAtProgress: progress => transformFlipOut(-rotate, progress),
           },
         ],
-        { clear: true, durationMs, easing },
+        { clear: true },
       );
 
       if (incoming !== undefined) {

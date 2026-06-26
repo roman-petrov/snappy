@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
 /**
- * Reference: Telegram ViewPagerFixed
+ * ? Reference: Telegram ViewPagerFixed
  * https://github.com/DrKLO/Telegram/blob/master/TMessagesProj/src/main/java/org/telegram/ui/Components/ViewPagerFixed.java
  */
 import { Dom, Transform } from "@snappy/browser";
@@ -63,16 +63,6 @@ export const SlideTrack = ({
   const flingVelocity = 3;
   const slop = 12;
   const crossRatio = 3;
-  const distanceInfluence = (0.3 * Math.PI) / 2;
-  const distanceInfluenceMid = 0.5;
-  const durationFactor = 3.5;
-  const durationFallback = 85;
-  const durationMax = 300;
-  const durationMin = 150;
-  const velocityScale = 1000;
-  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
-  const manualDuration = 200;
-  const manualEasing = `cubic-bezier(0.4, 0, 0.2, 1)`;
   const snapEpsilon = 0.001;
   const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
   const stayRatio = 1 / 3;
@@ -190,10 +180,10 @@ export const SlideTrack = ({
           start?.(state());
           setTranslate(translate(flingDx, state()));
 
-          const duration = event.timeStamp - started;
+          const elapsed = event.timeStamp - started;
 
           const pointerData = Gesture.pointer(
-            duration,
+            elapsed,
             Vector.from(flingDx, delta.y),
             Vector.from(Math.max(travel.x, Math.abs(flingDx)), travel.y),
             Vector.from(speedX.value, speedY.value),
@@ -223,11 +213,11 @@ export const SlideTrack = ({
 
     setTranslate(translate(delta.x, state()));
 
-    const duration = event.timeStamp - started;
-    const average = duration > 0 ? Math.abs(delta.x / duration) : 0;
+    const elapsed = event.timeStamp - started;
+    const average = elapsed > 0 ? Math.abs(delta.x / elapsed) : 0;
     const magnitude = _.max([peakVelocityX, Math.abs(speedX.value), average]) ?? 0;
     const sign = delta.x === 0 ? Math.sign(speedX.value) : Math.sign(delta.x);
-    const data = Gesture.pointer(duration, delta, travel, Vector.from(sign === 0 ? 0 : sign * magnitude, speedY.value));
+    const data = Gesture.pointer(elapsed, delta, travel, Vector.from(sign === 0 ? 0 : sign * magnitude, speedY.value));
 
     gestureNavigation = true;
     commit(
@@ -281,7 +271,7 @@ export const SlideTrack = ({
     setTranslate(translate(delta.x, state()));
   };
 
-  const animate = async (targetTranslate: number, velocity?: number, manual = false) => {
+  const animate = async (targetTranslate: number) => {
     refresh();
     const startTranslate = translateX;
     const element = trackRef.current;
@@ -301,27 +291,6 @@ export const SlideTrack = ({
     };
 
     if (startTranslate !== targetTranslate) {
-      const distance = Math.abs(targetTranslate - startTranslate);
-      const ratio = Math.min(1, distance / trackWidth);
-
-      const influenced =
-        trackWidth / 2 + (trackWidth / 2) * Math.sin((ratio - distanceInfluenceMid) * distanceInfluence);
-
-      const velocityPxPerSecond = Math.abs(velocity ?? 0) * velocityScale;
-      const settleWidth = trackWidth > 0 ? trackWidth : distance;
-
-      const duration = manual
-        ? manualDuration
-        : velocity === undefined
-          ? durationMax
-          : velocityPxPerSecond > 0
-            ? _.clamp(
-                durationFactor * Math.round((velocityScale * influenced) / velocityPxPerSecond),
-                durationMin,
-                durationMax,
-              )
-            : _.clamp((distance / settleWidth + 1) * durationFallback, durationMin, durationMax);
-
       await motion.run({
         after: target => {
           onFrame(targetTranslate);
@@ -335,7 +304,6 @@ export const SlideTrack = ({
           { transform: Transform.css({ translateX: startTranslate }) },
           { transform: Transform.css({ translateX: targetTranslate }) },
         ],
-        options: { duration, easing: manual ? manualEasing : easing, fill: `forwards` },
         tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
       });
     }
@@ -368,7 +336,7 @@ export const SlideTrack = ({
     plan.before?.();
 
     void (async () => {
-      if (await animate(plan.target(trackWidth), plan.velocity)) {
+      if (await animate(plan.target(trackWidth))) {
         plan.after?.({ reset, setTranslate, width: width() });
       }
     })();
