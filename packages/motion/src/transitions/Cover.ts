@@ -30,7 +30,9 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
   const resolveOutcome = (release: TrackReleaseSnap) => {
     const dismiss = count() === 1 ? (`close` as const) : (`back` as const);
 
-    return release.stay ? (`stay` as const) : dismiss;
+    return (release.gesture.type === `swipe` && release.gesture.direction === `left`) || release.stay
+      ? (`stay` as const)
+      : dismiss;
   };
 
   const buildSnap = (release: TrackReleaseSnap) => {
@@ -60,6 +62,7 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
   const motion = SlideTrack({
     anchor: () => 0,
     blocked: () => isClosing || isEntering,
+    canDrag: (dx, { offset }) => dx >= 0 || offset > 0,
     drag,
     move: x => {
       if (!frame.dragging()) {
