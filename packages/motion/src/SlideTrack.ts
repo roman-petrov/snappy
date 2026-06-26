@@ -62,6 +62,7 @@ export const SlideTrack = ({
 }: SlideTrackConfig) => {
   const flingVelocity = 3;
   const slop = 12;
+  const crossRatio = 3;
   const distanceInfluence = (0.3 * Math.PI) / 2;
   const distanceInfluenceMid = 0.5;
   const durationFactor = 3.5;
@@ -151,6 +152,8 @@ export const SlideTrack = ({
     isSettling = false;
   };
 
+  const horizontal = (absX: number, absY: number) => absX >= slop && absX >= crossRatio * absY;
+  const scroll = (absX: number, absY: number) => absY >= slop && crossRatio * absY >= absX;
   const state = (): SlideTrackState => ({ busy: dragging || isSettling, offset: translateX, width: trackWidth });
 
   const buildReleaseSnap = (offset: number, pointer: GesturePointer): TrackReleaseSnap => {
@@ -193,20 +196,38 @@ export const SlideTrack = ({
     sampleVelocity(event);
 
     if (!dragging && pressArmed) {
+      const dx = event.clientX - pressOrigin.x;
+      const dy = event.clientY - pressOrigin.y;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
       const flingVelocityX = velocityX.value;
       const flingVelocityY = velocityY.value;
+      const peakX = Math.max(peak, absX);
+      const peakY = Math.max(peakCross, absY);
 
-      if (Math.abs(flingVelocityX) >= flingVelocity && Math.abs(flingVelocityX) > Math.abs(flingVelocityY)) {
-        const dx = flingVelocityX < 0 ? -slop - 1 : slop + 1;
+      if (
+        horizontal(peakX, peakY) &&
+        Math.abs(flingVelocityX) >= flingVelocity &&
+        Math.abs(flingVelocityX) >= crossRatio * Math.abs(flingVelocityY)
+      ) {
+        const flingDx = flingVelocityX < 0 ? -slop - 1 : slop + 1;
 
-        if (canDrag?.(dx, state()) !== false) {
+        if (canDrag?.(flingDx, state()) !== false) {
           dragging = true;
           refresh();
           start?.(state());
-          setTranslate(translate(dx, state()));
+          setTranslate(translate(flingDx, state()));
           const duration = event.timeStamp - started;
-          const peakDistance = Math.max(peak, Math.abs(dx));
-          const pointerData = { duration, dx, dy: 0, peak: peakDistance, peakCross: 0, velocity: flingVelocityX };
+          const peakDistance = Math.max(peak, Math.abs(flingDx));
+
+          const pointerData = {
+            duration,
+            dx: flingDx,
+            dy,
+            peak: peakDistance,
+            peakCross: peakY,
+            velocity: flingVelocityX,
+          };
 
           gestureNavigation = true;
           commit(
@@ -278,8 +299,15 @@ export const SlideTrack = ({
     const absX = Math.abs(dx);
     const absY = Math.abs(dy);
 
-    if (!dragging && pressArmed && absX >= slop && absX > absY && canDrag?.(dx, state()) !== false) {
-      startDrag(event, root);
+    if (pressArmed) {
+      peak = Math.max(peak, absX);
+      peakCross = Math.max(peakCross, absY);
+
+      if (scroll(absX, absY) || scroll(peak, peakCross)) {
+        pressArmed = false;
+      } else if (!dragging && horizontal(absX, absY) && canDrag?.(dx, state()) !== false) {
+        startDrag(event, root);
+      }
     }
 
     if (!dragging) {
@@ -417,11 +445,9 @@ export const SlideTrack = ({
 
           stopDocumentListeners();
           resetPointer();
-          let interrupted = false;
 
           if (isSettling) {
             interrupt();
-            interrupted = true;
           }
 
           peak = 0;
@@ -433,13 +459,6 @@ export const SlideTrack = ({
           pointerId = eventPointerId;
           velocityX = { sample: clientX, time: timestamp, value: 0 };
           velocityY = { sample: clientY, time: timestamp, value: 0 };
-
-          if (interrupted) {
-            dragging = true;
-            refresh();
-            start?.(state());
-            root.setPointerCapture(eventPointerId);
-          }
 
           documentDetach = _.singleAction([
             Dom.subscribe(document, `pointermove`, onPointerMove, moveOptions),
