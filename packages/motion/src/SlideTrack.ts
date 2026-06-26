@@ -10,7 +10,7 @@
  * https://github.com/DrKLO/Telegram/blob/master/TMessagesProj/src/main/java/org/telegram/ui/Components/ViewPagerFixed.java
  */
 import { Dom, Transform } from "@snappy/browser";
-import { _, Gesture, type GesturePointer, type Vec2, Vector } from "@snappy/core";
+import { _, Gesture, type GesturePointer, Vector } from "@snappy/core";
 
 import type { DomRef, TrackReleaseSnap } from "./Types";
 
@@ -66,12 +66,12 @@ export const SlideTrack = ({
   const distanceInfluence = (0.3 * Math.PI) / 2;
   const distanceInfluenceMid = 0.5;
   const durationFactor = 3.5;
-  const durationFallbackMs = 85;
+  const durationFallback = 85;
   const durationMax = 300;
   const durationMin = 150;
   const velocityScale = 1000;
   const easing = `cubic-bezier(0.2, 0, 0, 1)`;
-  const manualDurationMs = 200;
+  const manualDuration = 200;
   const manualEasing = `cubic-bezier(0.4, 0, 0.2, 1)`;
   const snapEpsilon = 0.001;
   const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
@@ -95,12 +95,12 @@ export const SlideTrack = ({
   let speedY = { sample: 0, time: 0, value: 0 };
   let peakVelocityX = 0;
   let pressArmed = false;
-  let dragging = false;
+  let isDragging = false;
   let documentDetach: (() => void) | undefined;
 
-  const resetPointer = () => {
+  const reset = () => {
     pressArmed = false;
-    dragging = false;
+    isDragging = false;
     peakVelocityX = 0;
     pointerId = undefined;
   };
@@ -110,24 +110,13 @@ export const SlideTrack = ({
     documentDetach = undefined;
   };
 
-  const speed = () => Vector.from(speedX.value, speedY.value);
+  const pointerDelta = (event: PointerEvent) => Vector.delta(pressOrigin, event.clientX, event.clientY);
 
   const sampleVelocity = (event: PointerEvent) => {
     speedX = Gesture.velocity(speedX, event.clientX, event.timeStamp);
     speedY = Gesture.velocity(speedY, event.clientY, event.timeStamp);
     peakVelocityX = _.max([peakVelocityX, Math.abs(speedX.value)]) ?? 0;
   };
-
-  const releaseSpeed = (delta: Vec2, duration: number) => {
-    const average = duration > 0 ? Math.abs(delta.x / duration) : 0;
-    const magnitude = _.max([peakVelocityX, Math.abs(speedX.value), average]) ?? 0;
-    const sign = delta.x === 0 ? Math.sign(speedX.value) : Math.sign(delta.x);
-
-    return Vector.from(sign === 0 ? 0 : sign * magnitude, speedY.value);
-  };
-
-  const pointerSample = (duration: number, delta: Vec2, travel: Vec2, speedValue = speed()) =>
-    Gesture.pointer(duration, delta, travel, speedValue);
 
   const pinTranslate = (element: HTMLElement, value: number, active = true) => {
     motion.pin(element, active ? { translateX: value } : {});
@@ -152,38 +141,26 @@ export const SlideTrack = ({
     trackWidth = rootRef.current?.clientWidth ?? 0;
   };
 
-  const stopSettle = () => {
-    isSettling = false;
-  };
+  const dragging = () => isDragging;
+  const offset = () => translateX;
+  const width = () => trackWidth;
+  const state = (): SlideTrackState => ({ busy: isDragging || isSettling, offset: offset(), width: width() });
 
-  const state = (): SlideTrackState => ({ busy: dragging || isSettling, offset: translateX, width: trackWidth });
-
-  const buildReleaseSnap = (offset: number, pointer: GesturePointer): TrackReleaseSnap => {
+  const buildReleaseSnap = (position: number, sample: GesturePointer): TrackReleaseSnap => {
     if (!trackWidth) {
       return noneRelease;
     }
 
-    const gesture = Gesture.detect(pointer);
-    const releaseVelocity = Gesture.releaseVelocity(pointer);
-    const crossVelocity = pointer.duration > 0 ? pointer.delta.y / pointer.duration : 0;
-    const pageOffset = offset - anchor(trackWidth);
+    const gesture = Gesture.detect(sample);
+    const releaseVelocity = Gesture.releaseVelocity(sample);
+    const crossVelocity = sample.duration > 0 ? sample.delta.y / sample.duration : 0;
+    const pageOffset = position - anchor(trackWidth);
 
     const stay =
       Math.abs(pageOffset) < trackWidth * stayRatio &&
       (Math.abs(releaseVelocity) < flipVelocity || Math.abs(releaseVelocity) < Math.abs(crossVelocity));
 
     return { gesture, stay };
-  };
-
-  const startDrag = (event: PointerEvent, root: HTMLElement) => {
-    const delta = Vector.delta(pressOrigin, event.clientX, event.clientY);
-
-    dragging = true;
-    refresh();
-    start?.(state());
-    root.setPointerCapture(event.pointerId);
-    event.preventDefault();
-    setTranslate(translate(delta.x, state()));
   };
 
   const onPointerEnd = (event: PointerEvent) => {
@@ -199,69 +176,68 @@ export const SlideTrack = ({
     stopDocumentListeners();
     sampleVelocity(event);
 
-    if (!dragging && pressArmed) {
-      const delta = Vector.delta(pressOrigin, event.clientX, event.clientY);
-      const size = Vector.abs(delta);
-      const travel = Vector.max(peak, size);
+    if (!isDragging && pressArmed) {
+      const delta = pointerDelta(event);
+      const travel = Vector.max(peak, Vector.abs(delta));
+      const absSpeed = Vector.abs(Vector.from(speedX.value, speedY.value));
 
-      if (
-        Vector.horizontal(travel, slop, crossRatio) &&
-        Vector.horizontal(Vector.abs(speed()), flingVelocity, crossRatio)
-      ) {
+      if (Vector.horizontal(travel, slop, crossRatio) && Vector.horizontal(absSpeed, flingVelocity, crossRatio)) {
         const flingDx = speedX.value < 0 ? -slop - 1 : slop + 1;
 
         if (canDrag?.(flingDx, state()) !== false) {
-          dragging = true;
+          isDragging = true;
           refresh();
           start?.(state());
           setTranslate(translate(flingDx, state()));
 
           const duration = event.timeStamp - started;
 
-          const pointerData = pointerSample(
+          const pointerData = Gesture.pointer(
             duration,
             Vector.from(flingDx, delta.y),
             Vector.from(Math.max(travel.x, Math.abs(flingDx)), travel.y),
+            Vector.from(speedX.value, speedY.value),
           );
 
           gestureNavigation = true;
           commit(snap({ release: buildReleaseSnap(translateX, pointerData), state: state(), velocity: speedX.value }));
-          resetPointer();
+          reset();
 
           return;
         }
       }
 
-      resetPointer();
+      reset();
 
       return;
     }
 
-    if (!dragging) {
-      resetPointer();
+    if (!isDragging) {
+      reset();
 
       return;
     }
 
-    const delta = Vector.delta(pressOrigin, event.clientX, event.clientY);
+    const delta = pointerDelta(event);
     const travel = Vector.max(peak, Vector.abs(delta));
 
     setTranslate(translate(delta.x, state()));
 
     const duration = event.timeStamp - started;
-    const data = pointerSample(duration, delta, travel, releaseSpeed(delta, duration));
+    const average = duration > 0 ? Math.abs(delta.x / duration) : 0;
+    const magnitude = _.max([peakVelocityX, Math.abs(speedX.value), average]) ?? 0;
+    const sign = delta.x === 0 ? Math.sign(speedX.value) : Math.sign(delta.x);
+    const data = Gesture.pointer(duration, delta, travel, Vector.from(sign === 0 ? 0 : sign * magnitude, speedY.value));
 
-    if (event.type === `pointercancel`) {
-      gestureNavigation = true;
-      commit(snap({ state: state() }));
-    } else {
-      gestureNavigation = true;
-      commit(
-        snap({ release: buildReleaseSnap(translateX, data), state: state(), velocity: Gesture.releaseVelocity(data) }),
-      );
-    }
-
-    resetPointer();
+    gestureNavigation = true;
+    commit(
+      snap(
+        event.type === `pointercancel`
+          ? { state: state() }
+          : { release: buildReleaseSnap(translateX, data), state: state(), velocity: Gesture.releaseVelocity(data) },
+      ),
+    );
+    reset();
   };
 
   const onPointerMove = (event: PointerEvent) => {
@@ -277,25 +253,31 @@ export const SlideTrack = ({
 
     sampleVelocity(event);
 
-    const delta = Vector.delta(pressOrigin, event.clientX, event.clientY);
+    const delta = pointerDelta(event);
     const size = Vector.abs(delta);
 
     if (pressArmed) {
       peak = Vector.max(peak, size);
 
-      if (Vector.vertical(size, slop, crossRatio) || Vector.vertical(peak, slop, crossRatio)) {
-        pressArmed = false;
-      } else if (!dragging && Vector.horizontal(size, slop, crossRatio) && canDrag?.(delta.x, state()) !== false) {
-        startDrag(event, root);
+      if (!isDragging) {
+        if (Vector.vertical(size, slop, crossRatio) || Vector.vertical(peak, slop, crossRatio)) {
+          pressArmed = false;
+        } else if (Vector.horizontal(size, slop, crossRatio) && canDrag?.(delta.x, state()) !== false) {
+          isDragging = true;
+          refresh();
+          start?.(state());
+          root.setPointerCapture(event.pointerId);
+          event.preventDefault();
+          setTranslate(translate(delta.x, state()));
+        }
       }
     }
 
-    if (!dragging) {
+    if (!isDragging) {
       return;
     }
 
     event.preventDefault();
-    peak = Vector.max(peak, size);
     setTranslate(translate(delta.x, state()));
   };
 
@@ -328,8 +310,8 @@ export const SlideTrack = ({
       const velocityPxPerSecond = Math.abs(velocity ?? 0) * velocityScale;
       const settleWidth = trackWidth > 0 ? trackWidth : distance;
 
-      const durationMs = manual
-        ? manualDurationMs
+      const duration = manual
+        ? manualDuration
         : velocity === undefined
           ? durationMax
           : velocityPxPerSecond > 0
@@ -338,7 +320,7 @@ export const SlideTrack = ({
                 durationMin,
                 durationMax,
               )
-            : _.clamp((distance / settleWidth + 1) * durationFallbackMs, durationMin, durationMax);
+            : _.clamp((distance / settleWidth + 1) * durationFallback, durationMin, durationMax);
 
       await motion.run({
         after: target => {
@@ -353,7 +335,7 @@ export const SlideTrack = ({
           { transform: Transform.css({ translateX: startTranslate }) },
           { transform: Transform.css({ translateX: targetTranslate }) },
         ],
-        options: { duration: durationMs, easing: manual ? manualEasing : easing, fill: `forwards` },
+        options: { duration, easing: manual ? manualEasing : easing, fill: `forwards` },
         tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
       });
     }
@@ -362,7 +344,7 @@ export const SlideTrack = ({
       return false;
     }
 
-    stopSettle();
+    isSettling = false;
     setTranslate(targetTranslate);
 
     return true;
@@ -378,7 +360,7 @@ export const SlideTrack = ({
       pinTranslate(element, translateX);
     }
 
-    stopSettle();
+    isSettling = false;
     refresh();
   };
 
@@ -387,13 +369,13 @@ export const SlideTrack = ({
 
     void (async () => {
       if (await animate(plan.target(trackWidth), plan.velocity)) {
-        plan.after?.({ reset: resetPointer, setTranslate, width: trackWidth });
+        plan.after?.({ reset, setTranslate, width: width() });
       }
     })();
   };
-  transformActive = () => dragging || isSettling || (visible === undefined ? translateX !== 0 : visible(state()));
+  transformActive = () => isDragging || isSettling || (visible === undefined ? translateX !== 0 : visible(state()));
 
-  const busy = () => dragging || isSettling;
+  const busy = () => isDragging || isSettling;
 
   const layout = () => {
     if (blocked?.() === true || busy()) {
@@ -423,7 +405,7 @@ export const SlideTrack = ({
           }
 
           stopDocumentListeners();
-          resetPointer();
+          reset();
 
           if (isSettling) {
             interrupt();
@@ -461,21 +443,17 @@ export const SlideTrack = ({
     return value;
   };
 
-  const draggingState = () => dragging;
-  const offset = () => translateX;
-  const width = () => trackWidth;
-
   return {
     animate,
     busy,
     consumeGestureLed,
-    dragging: draggingState,
+    dragging,
     interrupt,
     layout,
     offset,
     pointer,
     refresh,
-    reset: resetPointer,
+    reset,
     setTranslate,
     width,
   };
