@@ -148,6 +148,19 @@ export const en = {
     title: `Settings`,
     typeWriterSpeed: { fast: `Fast`, medium: `Medium`, slow: `Slow`, stream: `Stream`, title: `Typewriter speed` },
   },
-  snappy: { composer: { placeholder: `What do you need?`, send: `Send` }, landing: { start: `Start` } },
+  snappy: {
+    composer: { placeholder: `What do you need?`, send: `Send` },
+    landing: {
+      presets: { title: `Ready-made workflows` },
+      quickStart: {
+        cta: `Start from scratch`,
+        lead: `Open chat with every tool — describe any task in your own words.`,
+        title: `Quick start`,
+      },
+    },
+    presets: {
+      groups: { audio: `Audio`, edit: `Image editing`, plan: `Planning`, text: `Text`, visual: `Image generation` },
+    },
+  },
   tabs: { agents: { label: `Agents` }, feed: { label: `Feed` }, snappy: { label: `Snappy` } },
 };

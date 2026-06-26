@@ -28,7 +28,7 @@ export const Routes = Router({
   routes: {
     agent: { page: Agent, path: `agent/:agentId` },
     agents: { page: Agents, path: `agents` },
-    chat: { page: SnappyChat, path: `chat` },
+    chat: { page: SnappyChat, path: `chat/:presetId` },
     feed: { page: Feed, path: `feed` },
     forgotPassword: { page: ForgotPassword, path: `forgot-password` },
     resetPassword: { page: ResetPassword, path: `reset-password` },

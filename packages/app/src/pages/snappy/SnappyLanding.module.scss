@@ -1,0 +1,73 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/panel";
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: space.xl();
+  width: 100%;
+}
+
+.hero {
+  @include elevation.e1;
+  @include panel.panel-soft;
+
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  padding: space.lg();
+  border-left: r(4) solid color.accent-indigo();
+  border-radius: radius.lg();
+}
+
+.hero-head {
+  display: flex;
+  gap: space.md();
+  align-items: flex-start;
+}
+
+.hero-badge {
+  @include surface.primary-hover;
+  @include elevation.e1;
+  @include primitives.inline-row-center;
+
+  flex-shrink: 0;
+  padding: space.sm();
+  border-radius: radius.md();
+}
+
+.hero-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: space.xs();
+  min-width: 0;
+}
+
+.hero-action {
+  align-self: flex-start;
+}
+
+.presets {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+  width: 100%;
+}
+
+.presets-header {
+  padding-bottom: space.sm();
+  margin-bottom: space.xs();
+  border-bottom: 1px solid panel.border-soft();
+}
+
+.card {
+  flex: none;
+  width: 100%;
+}

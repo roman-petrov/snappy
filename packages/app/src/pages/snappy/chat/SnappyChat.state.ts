@@ -1,20 +1,38 @@
 import { _ } from "@snappy/core";
-import { SnappyAgent } from "@snappy/snappy";
+import { Presets, SnappyAgent } from "@snappy/snappy";
 import { Language } from "@snappy/ui";
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { AgentChatProps } from "../../../snappy/components";
+import type { SnappyChatProps } from "./SnappyChat";
 
-export const useSnappyChatState = () => {
+export const SnappyChatBlankPresetId = `_` as const;
+
+export const useSnappyChatState = ({ presetId }: SnappyChatProps) => {
   const locale = Language.locale();
+  const isBlank = presetId === SnappyChatBlankPresetId;
+  const preset = useMemo(() => (presetId === SnappyChatBlankPresetId ? undefined : Presets.byId(presetId)), [presetId]);
+  const invalidPreset = !isBlank && preset === undefined;
   const agentRef = useRef<SnappyAgent | undefined>(undefined);
-  const [starterText, setStarterText] = useState<string | undefined>(undefined);
+  const [sentText, setSentText] = useState<string | undefined>(undefined);
   const [splashDraft, setSplashDraft] = useState(``);
   const [sessionDraft, setSessionDraft] = useState(``);
+  const starterText = preset?.prompt[locale] ?? sentText;
   const started = starterText !== undefined;
+  const [showFeed, setShowFeed] = useState(false);
+
+  useEffect(() => {
+    setShowFeed(started);
+  }, [presetId, started]);
+
+  const runText = showFeed ? starterText : undefined;
 
   const splashSend = () => {
-    setStarterText(splashDraft.trim());
+    const text = splashDraft.trim();
+    if (text === ``) {
+      return;
+    }
+    setSentText(text);
     setSplashDraft(``);
   };
 
@@ -29,27 +47,29 @@ export const useSnappyChatState = () => {
 
   const chatProps: AgentChatProps = {
     runtime: ({ aiConfig, feed }) => {
-      if (starterText === undefined) {
+      if (runText === undefined) {
         return { run: _.noop, stop: _.noop };
       }
-      const agent = SnappyAgent({ aiConfig, feed, locale });
+      const agent = SnappyAgent({ aiConfig, feed, locale, preset });
       agentRef.current = agent;
 
       return {
-        run: async () => agent.run(starterText),
+        run: async () => agent.run(runText),
         stop: () => {
           agent.stop();
           agentRef.current = undefined;
         },
       };
     },
-    session: [locale, starterText],
-    showFeed: started,
+    session: [locale, presetId, runText],
+    showFeed,
   };
 
   const composer = started
     ? { draft: sessionDraft, onSend: sessionSend, setDraft: setSessionDraft }
     : { draft: splashDraft, onSend: splashSend, setDraft: setSplashDraft };
 
-  return { chatProps, composer, started };
+  const pageTitle = preset === undefined ? undefined : `${preset.meta.emoji} ${preset.meta.title[locale]}`;
+
+  return { chatProps, composer, invalidPreset, pageTitle, started };
 };

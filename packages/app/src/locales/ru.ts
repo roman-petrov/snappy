@@ -158,6 +158,25 @@ export const ru = {
     title: `Настройки`,
     typeWriterSpeed: { fast: `Быстро`, medium: `Средне`, slow: `Медленно`, stream: `Поток`, title: `Скорость печати` },
   },
-  snappy: { composer: { placeholder: `Что нужно?`, send: `Отправить` }, landing: { start: `Начать` } },
+  snappy: {
+    composer: { placeholder: `Что нужно?`, send: `Отправить` },
+    landing: {
+      presets: { title: `Готовые сценарии` },
+      quickStart: {
+        cta: `Начать с нуля`,
+        lead: `Откройте чат со всеми инструментами — опишите задачу своими словами.`,
+        title: `Быстрый старт`,
+      },
+    },
+    presets: {
+      groups: {
+        audio: `Аудио`,
+        edit: `Редактирование фото`,
+        plan: `Планирование`,
+        text: `Текст`,
+        visual: `Генерация изображений`,
+      },
+    },
+  },
   tabs: { agents: { label: `Агенты` }, feed: { label: `Лента` }, snappy: { label: `Snappy` } },
 };

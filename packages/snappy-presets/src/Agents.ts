@@ -29,14 +29,6 @@ const byId = (agentId: string, locale: Locale) => {
   return { ...agentModule, id: resolvedId } satisfies AgentDefinition;
 };
 
-const grouped = (items: readonly AgentCard[]) => {
-  const groupedItems = Object.groupBy(items, card => card.group);
-
-  return groupOrder.flatMap(id => {
-    const groupItems = groupedItems[id];
-
-    return groupItems === undefined || groupItems.length === 0 ? [] : [{ id, items: groupItems }];
-  });
-};
+const grouped = (items: readonly AgentCard[]) => _.groupsInOrder(items, groupOrder);
 
 export const Agents = { byId, cards, grouped };

@@ -8,4 +8,17 @@ const fromEntries = <TKey extends number | string | symbol, TValue>(value: (read
 const keys = <TKey extends keyof TObject, TObject extends Record<TKey, unknown>>(object: TObject) =>
   Object.keys(object) as TKey[];
 
-export const ObjectValue = { entries, fromEntries, keys };
+const groupsInOrder = <TGroup extends string, TItem extends { group: TGroup }>(
+  items: readonly TItem[],
+  order: readonly TGroup[],
+) => {
+  const byGroup = Object.groupBy(items, item => item.group);
+
+  return order.flatMap(id => {
+    const groupItems = byGroup[id];
+
+    return groupItems === undefined || groupItems.length === 0 ? [] : [{ id, items: groupItems }];
+  });
+};
+
+export const ObjectValue = { entries, fromEntries, groupsInOrder, keys };

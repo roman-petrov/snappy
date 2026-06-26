@@ -1,11 +1,4 @@
-import { Button, Page } from "@snappy/ui";
+import { useSnappyLandingState } from "./SnappyLanding.state";
+import { SnappyLandingView } from "./SnappyLanding.view";
 
-import { HeaderContent } from "../../components";
-import { t } from "../../core";
-import { Routes } from "../../Routes";
-
-export const SnappyLanding = () => (
-  <Page tab trailing={<HeaderContent />}>
-    <Button link={Routes.chat} text={t(`snappy.landing.start`)} type="primary" />
-  </Page>
-);
+export const SnappyLanding = () => <SnappyLandingView {...useSnappyLandingState()} />;
