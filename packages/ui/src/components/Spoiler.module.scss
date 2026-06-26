@@ -1,7 +1,7 @@
 @use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/space";
 
-$-transition: animation.settle-lg();
+$-transition: animation.settle-md();
 
 .root {
   interpolate-size: allow-keywords;

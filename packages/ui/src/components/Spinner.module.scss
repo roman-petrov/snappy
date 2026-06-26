@@ -7,7 +7,7 @@
 
   border: 2px solid currentcolor;
   border-top-color: transparent;
-  animation: spin animation.sharp-lg() infinite;
+  animation: spin animation.linear-lg() infinite;
 }
 
 @keyframes spin {
