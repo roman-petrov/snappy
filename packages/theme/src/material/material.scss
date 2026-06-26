@@ -2,17 +2,17 @@
 @use "sass:string";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/chrome";
-@use "pkg:@snappy/theme/material/mix";
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/material";
 @use "pkg:@snappy/theme/tokens/animation";
 
 @function primary-border() {
-  @return mix.accent-border(color.primary(), mix.tone(color.primary(), material.tone-accent()));
+  @return panel.border(color.primary());
 }
 
 @function rim-border() {
-  @return mix.border(mix.tone(material.highlight(), material.tone-rim()));
+  @return panel.border();
 }
 
 @function -shadow-opacity($a) {
@@ -27,46 +27,8 @@
     0 r($n * 2) r($n * 6) color-mix(in srgb, material.shadow() -shadow-opacity($a2), transparent);
 }
 
-@mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
-  background-color: mix.bg($tone);
-  transition:
-    background-color animation.standard-md(),
-    border-color animation.standard-md(),
-    color animation.standard-md();
-
-  @if $accent {
-    @if $accent-text {
-      color: $accent;
-    } @else {
-      color: color.text();
-    }
-
-    @if not $no-border {
-      border: 1px solid mix.accent-border($accent, $tone);
-    }
-  } @else {
-    color: color.text();
-
-    @if not $no-border {
-      border: 1px solid mix.border($tone);
-    }
-  }
-}
-
-@mixin rim {
-  @include material(mix.tone(material.highlight(), material.tone-rim()));
-}
-
-@mixin accent($accent) {
-  @include material(mix.tone($accent, material.tone-accent()), $accent);
-}
-
-@mixin accent-hover($accent, $no-border: false) {
-  @include material(mix.tone($accent, material.tone-accent()), $accent, $accent-text: false, $no-border: $no-border);
-}
-
 @function surface-bg() {
-  @return mix.bg(color.surface());
+  @return panel.bg-glass();
 }
 
 @function chrome-header-surface() {
@@ -78,7 +40,7 @@
 }
 
 @function surface-border() {
-  @return 1px solid mix.border(color.surface());
+  @return 1px solid panel.border();
 }
 
 @function glass-filter() {

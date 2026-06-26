@@ -1,17 +1,16 @@
-@use "pkg:@snappy/theme/material/mix";
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/material";
 
 @function accent() {
   @return var(--chrome-accent, #{color.surface()});
 }
 
 @function header-surface() {
-  @return mix.bg(mix.tone(accent(), material.tone-accent()));
+  @return panel.bg-glass(accent());
 }
 
 @function header-border($accent: accent()) {
-  @return mix.accent-border($accent, mix.tone($accent, material.tone-accent()));
+  @return panel.border($accent);
 }
 
 @function header-border-surface() {

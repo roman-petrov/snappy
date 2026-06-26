@@ -1,5 +1,6 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/elevation" as elevation;
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/animation";
 
@@ -22,7 +23,7 @@
 }
 
 @mixin -soft-base {
-  @include surface.surface;
+  @include panel.panel-soft;
 
   @include -on-interactive {
     @include surface.primary-hover;
@@ -51,7 +52,6 @@
   @include -on-interactive {
     &::before {
       @include surface.primary-hover;
-      @include elevation.e2;
 
       opacity: 1;
     }

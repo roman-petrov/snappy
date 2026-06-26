@@ -3,7 +3,6 @@
 @use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/tokens";
 @use "pkg:@snappy/theme/tokens/typography";
-@use "pkg:@snappy/theme/material/surface";
 
 html {
   height: 100dvh;
@@ -37,7 +36,8 @@ body {
 }
 
 ::selection {
-  @include surface.primary;
+  color: color.inverse();
+  background-color: color.primary();
 }
 
 input,

@@ -1,36 +1,36 @@
-@use "pkg:@snappy/theme/material/material" as material;
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
 
 @mixin surface {
-  @include material.rim;
+  @include panel.panel;
 }
 
 @mixin primary {
-  @include material.accent(color.primary());
+  @include panel.panel(color.primary());
 }
 
 @mixin primary-hover($no-border: false) {
-  @include material.accent-hover(color.primary(), $no-border: $no-border);
+  @include panel.panel(color.primary(), $accent-text: false, $no-border: $no-border);
 }
 
 @mixin error {
-  @include material.accent(color.error());
+  @include panel.panel(color.error());
 }
 
 @mixin info {
-  @include material.accent(color.info());
+  @include panel.panel(color.info());
 }
 
 @mixin success {
-  @include material.accent(color.success());
+  @include panel.panel(color.success());
 }
 
 @mixin warning {
-  @include material.accent(color.warning());
+  @include panel.panel(color.warning());
 }
 
 @mixin header {
-  @include material.material(color.surface(), null, $no-border: true);
+  @include panel.panel($no-border: true);
 
-  border-bottom: material.surface-border();
+  border-bottom: 1px solid panel.border();
 }

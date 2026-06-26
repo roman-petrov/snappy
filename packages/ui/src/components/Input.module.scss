@@ -71,11 +71,11 @@ $-transition: animation.standard-md();
   &:focus-within,
   &.has-value {
     .label {
-      @include surface.primary-hover;
+      @include surface.primary-hover($no-border: true);
       @include typography.caption-sm;
 
       top: 0;
-      padding: 0 0.25em;
+      padding-inline: space.xs();
       border-radius: radius.xs();
       transform: translateY(calc(-50% - r(1)));
       transition:

@@ -1,0 +1,87 @@
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/material";
+
+@function -mix-tone($color, $ratio) {
+  @return color-mix(in srgb, #{$color} $ratio, color.surface());
+}
+
+@function -tone($accent: null) {
+  @if $accent {
+    @return -mix-tone($accent, material.tone-accent());
+  }
+
+  @return -mix-tone(material.highlight(), material.tone-rim());
+}
+
+@function bg($accent: null) {
+  @return color-mix(in srgb, -tone($accent) #{material.fill()}, color.backdrop());
+}
+
+@function bg-soft() {
+  @return color-mix(in srgb, bg() 50%, color.surface());
+}
+
+@function bg-glass($accent: null) {
+  @if $accent {
+    @return color-mix(in srgb, -tone($accent) #{material.fill()}, transparent);
+  }
+
+  @return color-mix(in srgb, color.surface() #{material.fill()}, transparent);
+}
+
+@function -rim-border($fill) {
+  @return color-mix(in srgb, material.highlight() #{material.border-weight()}, $fill);
+}
+
+@function border($accent: null) {
+  $fill: bg($accent);
+
+  @if $accent {
+    $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
+
+    @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
+  }
+
+  @return -rim-border($fill);
+}
+
+@function border-soft() {
+  @return -rim-border(bg-soft());
+}
+
+@mixin panel-soft {
+  color: color.text();
+  background-color: bg-soft();
+  border: 1px solid border-soft();
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    color animation.standard-md();
+}
+
+@mixin panel($accent: null, $accent-text: true, $no-border: false) {
+  background-color: bg($accent);
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    color animation.standard-md();
+
+  @if $accent {
+    @if $accent-text {
+      color: $accent;
+    } @else {
+      color: color.text();
+    }
+
+    @if not $no-border {
+      border: 1px solid border($accent);
+    }
+  } @else {
+    color: color.text();
+
+    @if not $no-border {
+      border: 1px solid border();
+    }
+  }
+}

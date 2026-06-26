@@ -2,7 +2,6 @@
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/animation";
-@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/typography";
 
@@ -11,7 +10,6 @@
   max-width: 100%;
   overflow: hidden;
   overflow-x: auto;
-  border-radius: radius.sm();
 }
 
 .root {
@@ -44,8 +42,10 @@
 }
 
 .root th {
-  @include surface.header;
   @include typography.caption-bold;
+
+  color: color.inverse();
+  background-color: color.primary();
 }
 
 .root td {
@@ -65,10 +65,6 @@
 .head-cell,
 .cell {
   vertical-align: middle;
-}
-
-.head-cell {
-  @include surface.primary;
 }
 
 .cell-inner {

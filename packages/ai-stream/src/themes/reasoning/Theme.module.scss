@@ -25,7 +25,7 @@
 
   hr {
     margin: space.sm() 0;
-    border-top: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
+    border-top: 1px solid color-mix(in oklch, currentcolor 18%, color.outline());
   }
 
   ul,
@@ -52,7 +52,7 @@
     word-break: normal;
     overflow-wrap: normal;
     white-space: normal;
-    border: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
+    border: 1px solid color-mix(in oklch, currentcolor 18%, color.outline());
   }
 
   th {

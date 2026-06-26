@@ -1,5 +1,6 @@
 /* jscpd:ignore-start */
 /* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
@@ -20,7 +21,7 @@
 
   :is(h1, h2, h3, h4, h5, h6) {
     padding-left: space.sm();
-    border-left: tokens.accent-edge() solid color-mix(in oklch, color.primary() 55%, transparent);
+    border-left: tokens.accent-edge() solid panel.border(color.primary());
   }
 
   h1 {
@@ -56,7 +57,7 @@
 
   hr {
     margin: space.md() 0;
-    border-top: 1px solid color-mix(in oklch, currentcolor 18%, transparent);
+    border-top: 1px solid color-mix(in oklch, currentcolor 18%, color.outline());
   }
 
   ul,
