@@ -10,7 +10,7 @@ import { Vibrate } from "@snappy/platform";
 
 export type Motion = ReturnType<typeof Motion>;
 
-export type MotionPlayOptions = { clear?: boolean; durationMs: number };
+export type MotionPlayOptions = { clear?: boolean; durationMs: number; easing: string };
 
 export type MotionPlayShot = {
   element: HTMLElement;
@@ -24,12 +24,11 @@ export type MotionRunInput = {
   confirm?: boolean;
   element: HTMLElement;
   keyframes: Keyframe[];
-  options: Omit<KeyframeAnimationOptions, `easing`> & { duration: number };
+  options: Omit<KeyframeAnimationOptions, `easing`> & { duration: number; easing: string };
   tick?: (progress: number) => void;
 };
 
 export const Motion = () => {
-  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
   let pending: (() => void) | undefined;
   let tickFrame: number | undefined;
 
@@ -66,7 +65,7 @@ export const Motion = () => {
     cancel([element]);
     before?.(element);
 
-    const animation = element.animate(keyframes, { ...options, easing });
+    const animation = element.animate(keyframes, options);
     element.style.transform = ``;
 
     const wait = new Promise<void>(resolve => {
@@ -110,7 +109,7 @@ export const Motion = () => {
     await wait;
   };
 
-  const play = async (shots: readonly MotionPlayShot[], { clear = false, durationMs }: MotionPlayOptions) => {
+  const play = async (shots: readonly MotionPlayShot[], { clear = false, durationMs, easing }: MotionPlayOptions) => {
     if (shots.length === 0) {
       return;
     }
@@ -129,7 +128,7 @@ export const Motion = () => {
           confirm: false,
           element,
           keyframes: [{ transform: Transform.css(start) }, { transform: Transform.css(transformAtProgress(1)) }],
-          options: { duration: durationMs, fill: `forwards` },
+          options: { duration: durationMs, easing, fill: `forwards` },
         }),
       ),
     );

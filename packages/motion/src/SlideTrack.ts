@@ -69,10 +69,13 @@ export const SlideTrack = ({
   const durationMax = 300;
   const durationMin = 150;
   const velocityScale = 1000;
+  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
+  const manualDurationMs = 200;
+  const manualEasing = `cubic-bezier(0.4, 0, 0.2, 1)`;
   const snapEpsilon = 0.001;
   const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
   const stayRatio = 1 / 3;
-  const flipVelocity = 1.5;
+  const flipVelocity = 1;
   const motion = Motion();
   const downOptions = { passive: true } as const;
   const moveOptions = { passive: false } as const;
@@ -289,7 +292,7 @@ export const SlideTrack = ({
     setTranslate(translate(dx, state()));
   };
 
-  const animate = async (targetTranslate: number, velocity?: number) => {
+  const animate = async (targetTranslate: number, velocity?: number, manual = false) => {
     refresh();
     const startTranslate = translateX;
     const element = trackRef.current;
@@ -318,8 +321,9 @@ export const SlideTrack = ({
       const velocityPxPerSecond = Math.abs(velocity ?? 0) * velocityScale;
       const settleWidth = trackWidth > 0 ? trackWidth : distance;
 
-      const durationMs =
-        velocity === undefined
+      const durationMs = manual
+        ? manualDurationMs
+        : velocity === undefined
           ? durationMax
           : velocityPxPerSecond > 0
             ? _.clamp(
@@ -342,7 +346,7 @@ export const SlideTrack = ({
           { transform: Transform.css({ translateX: startTranslate }) },
           { transform: Transform.css({ translateX: targetTranslate }) },
         ],
-        options: { duration: durationMs, fill: `forwards` },
+        options: { duration: durationMs, easing: manual ? manualEasing : easing, fill: `forwards` },
         tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
       });
     }
