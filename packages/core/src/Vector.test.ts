@@ -2,7 +2,74 @@ import { describe, expect, it } from "vitest";
 
 import { Vector } from "./Vector";
 
-const { cosineSimilarity, dot, l2Norm } = Vector;
+const { abs, axis, cosineSimilarity, delta, dot, from, horizontal, l2Norm, max, sub, vertical } = Vector;
+
+describe(`from`, () => {
+  it(`builds a 2D vector`, () => {
+    expect(from(3, -4)).toStrictEqual({ x: 3, y: -4 });
+  });
+});
+
+describe(`sub`, () => {
+  it(`subtracts component-wise`, () => {
+    expect(sub(from(8, 6), from(3, 4))).toStrictEqual({ x: 5, y: 2 });
+  });
+});
+
+describe(`delta`, () => {
+  it(`returns displacement from origin to point`, () => {
+    expect(delta(from(10, 20), 14, 17)).toStrictEqual({ x: 4, y: -3 });
+  });
+});
+
+describe(`abs`, () => {
+  it(`returns component magnitudes`, () => {
+    expect(abs(from(-3, 4))).toStrictEqual({ x: 3, y: 4 });
+  });
+});
+
+describe(`max`, () => {
+  it(`returns component-wise maximum`, () => {
+    expect(max(from(5, 2), from(3, 8))).toStrictEqual({ x: 5, y: 8 });
+  });
+});
+
+describe(`axis`, () => {
+  it(`returns pending below threshold`, () => {
+    expect(axis(from(3, 3), 4)).toBe(`pending`);
+  });
+
+  it(`prefers horizontal on equal axes by default`, () => {
+    expect(axis(from(8, 8), 4)).toBe(`horizontal`);
+  });
+
+  it(`prefers vertical on equal axes when tied to scroll`, () => {
+    expect(axis(from(8, 8), 4, `vertical`)).toBe(`vertical`);
+  });
+
+  it(`returns vertical when y dominates`, () => {
+    expect(axis(from(2, 10), 4)).toBe(`vertical`);
+  });
+});
+
+describe(`horizontal`, () => {
+  it(`requires slop and ratio`, () => {
+    expect(horizontal(from(12, 0), 12, 3)).toBe(true);
+    expect(horizontal(from(36, 10), 12, 3)).toBe(true);
+    expect(horizontal(from(12, 5), 12, 3)).toBe(false);
+    expect(horizontal(from(8, 0), 12, 3)).toBe(false);
+  });
+});
+
+describe(`vertical`, () => {
+  it(`requires slop and ratio`, () => {
+    expect(vertical(from(0, 12), 12, 3)).toBe(true);
+    expect(vertical(from(4, 36), 12, 3)).toBe(true);
+    expect(vertical(from(5, 12), 12, 3)).toBe(true);
+    expect(vertical(from(40, 12), 12, 3)).toBe(false);
+    expect(vertical(from(0, 8), 12, 3)).toBe(false);
+  });
+});
 
 describe(`dot`, () => {
   it(`returns undefined for empty operands`, () => {

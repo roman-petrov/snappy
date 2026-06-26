@@ -1,6 +1,8 @@
+import { type Vec2, type Vec2Axis, Vector } from "./Vector";
+
 export type Gesture = { direction: GestureDirection; type: `swipe` } | { type: `none` };
 
-export type GestureAxis = `horizontal` | `pending` | `vertical`;
+export type GestureAxis = Vec2Axis;
 
 export type GestureConfig = {
   axisThreshold?: number;
@@ -12,14 +14,7 @@ export type GestureConfig = {
 
 export type GestureDirection = `left` | `right`;
 
-export type GesturePointer = {
-  duration: number;
-  dx: number;
-  dy: number;
-  peak: number;
-  peakCross: number;
-  velocity: number;
-};
+export type GesturePointer = { delta: Vec2; duration: number; peak: Vec2; speed: Vec2 };
 
 export type VelocitySample = { sample: number; time: number; value: number };
 
@@ -31,32 +26,35 @@ const defaults: Required<GestureConfig> = {
   swipeMinVelocity: 0.25,
 };
 
-const releaseVelocity = ({ duration, dx, velocity }: GesturePointer) => {
-  const average = duration > 0 ? dx / duration : 0;
+const pointer = (duration: number, delta: Vec2, peak: Vec2, speed: Vec2): GesturePointer => ({
+  delta,
+  duration,
+  peak,
+  speed,
+});
 
-  return velocity === 0 ? average : Math.abs(velocity) >= Math.abs(average) ? velocity : average;
+const releaseVelocity = ({ delta, duration, speed }: GesturePointer) => {
+  const average = duration > 0 ? delta.x / duration : 0;
+
+  return speed.x === 0 ? average : Math.abs(speed.x) >= Math.abs(average) ? speed.x : average;
 };
 
-const axis = (dx: number, dy: number, axisThreshold = defaults.axisThreshold): GestureAxis => {
-  const absX = Math.abs(dx);
-  const absY = Math.abs(dy);
+const axis = (vector: Vec2, axisThreshold = defaults.axisThreshold) => Vector.axis(vector, axisThreshold);
 
-  return absX < axisThreshold && absY < axisThreshold ? `pending` : absX >= absY ? `horizontal` : `vertical`;
-};
-
-const detect = (pointer: GesturePointer, config: GestureConfig = {}): Gesture => {
+const detect = (sample: GesturePointer, config: GestureConfig = {}): Gesture => {
   const { axisThreshold, swipeMaxDuration, swipeMaxRestraint, swipeMinDistance, swipeMinVelocity } = {
     ...defaults,
     ...config,
   };
 
-  const { duration, dx, dy, peak, peakCross } = pointer;
+  const { delta, duration, peak } = sample;
+  const travel = Vector.max(Vector.abs(delta), peak);
 
-  if (axis(dx, dy, axisThreshold) !== `horizontal`) {
+  if (Vector.axis(delta, axisThreshold) !== `horizontal`) {
     return { type: `none` };
   }
 
-  if (Math.max(Math.abs(dy), peakCross) > swipeMaxRestraint) {
+  if (travel.y > swipeMaxRestraint) {
     return { type: `none` };
   }
 
@@ -64,14 +62,13 @@ const detect = (pointer: GesturePointer, config: GestureConfig = {}): Gesture =>
     return { type: `none` };
   }
 
-  const travel = Math.max(Math.abs(dx), peak);
-  const absVelocity = Math.abs(releaseVelocity(pointer));
+  const absVelocity = Math.abs(releaseVelocity(sample));
 
-  if (travel < swipeMinDistance && absVelocity < swipeMinVelocity) {
+  if (travel.x < swipeMinDistance && absVelocity < swipeMinVelocity) {
     return { type: `none` };
   }
 
-  const sign = dx === 0 ? Math.sign(releaseVelocity(pointer)) : Math.sign(dx);
+  const sign = delta.x === 0 ? Math.sign(releaseVelocity(sample)) : Math.sign(delta.x);
 
   return sign === 0 ? { type: `none` } : { direction: sign < 0 ? `left` : `right`, type: `swipe` };
 };
@@ -84,4 +81,4 @@ const velocity = (previous: VelocitySample, clientX: number, timestamp: number):
     : { ...previous, sample: clientX, time: timestamp };
 };
 
-export const Gesture = { axis, defaults, detect, releaseVelocity, velocity };
+export const Gesture = { axis, defaults, detect, pointer, releaseVelocity, velocity };
