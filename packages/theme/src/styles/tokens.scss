@@ -1,4 +1,5 @@
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/chrome";
 @use "pkg:@snappy/theme/tokens/icon-size";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
@@ -33,6 +34,13 @@
 
   /* Icon size */
   @include icon-size.root;
+
+  /* Chrome */
+  --chrome-tint-ratio: 25%;
+  --chrome-indicator-ratio: 40%;
+  --chrome-header-border: #{chrome.header-border()};
+  --chrome-header-surface: #{chrome.header-surface()};
+  --chrome-meta-color: #{chrome.meta-color()};
 }
 
 @include mobile {

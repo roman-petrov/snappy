@@ -10,7 +10,7 @@ import styles from "./Feed.module.scss";
 export type FeedViewProps = ReturnType<typeof useFeedState>;
 
 export const FeedView = ({ cards, sentinelRef }: FeedViewProps) => (
-  <Page title={t(`feed.title`)} trailing={<HeaderContent />}>
+  <Page tab title={t(`feed.title`)} trailing={<HeaderContent />}>
     <div className={styles.root}>
       <div className={styles.cards}>
         {cards?.map(card =>

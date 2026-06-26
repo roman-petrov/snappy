@@ -2,11 +2,11 @@ import type { RouterPageState } from "@snappy/router";
 
 import { Flip, type Flip as FlipMotion } from "@snappy/motion";
 import { useStoreValue } from "@snappy/store";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { RouteStageFlipProps } from "./RouteStageFlip";
 
-import { Chrome, RouteMotion } from "../core";
+import { RouteMotion } from "../core";
 import { useRouter } from "../hooks/useRouter";
 import { useRouteStage } from "../hooks/useRouteStage";
 
@@ -14,7 +14,6 @@ export const useRouteStageFlipState = ({ children, page }: RouteStageFlipProps) 
   const {
     contentRef,
     insets,
-    layer,
     motion: { setFlipAnimating },
   } = useRouteStage();
 
@@ -32,12 +31,6 @@ export const useRouteStageFlipState = ({ children, page }: RouteStageFlipProps) 
   const flip = flipRef.current;
 
   useEffect(() => RouteMotion.bindFlip(flip, () => stateRef.current, setOutgoing), [flip]);
-
-  useLayoutEffect(() => {
-    if (layer === `flip`) {
-      Chrome.reset();
-    }
-  }, [layer]);
 
   return { children, contentRef, hostRef, inRef, outgoing, outRef, page, scrollPaddingBottom: insets.shell.scrollPad };
 };

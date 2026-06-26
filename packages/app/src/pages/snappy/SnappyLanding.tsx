@@ -5,7 +5,7 @@ import { t } from "../../core";
 import { Routes } from "../../Routes";
 
 export const SnappyLanding = () => (
-  <Page trailing={<HeaderContent />}>
+  <Page tab trailing={<HeaderContent />}>
     <Button link={Routes.chat} text={t(`snappy.landing.start`)} type="primary" />
   </Page>
 );

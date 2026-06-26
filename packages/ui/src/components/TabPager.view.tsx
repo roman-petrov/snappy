@@ -14,20 +14,20 @@ export type TabPagerViewProps = ReturnType<typeof useTabPagerState>;
 
 const tabCount = (count: number) => ({ [`--tab-count` as string]: count }) as CSSProperties;
 
-type TintsProps = { items: TabPagerViewProps[`items`]; tints: CSSProperties[] };
+type TintsProps = { cn: string; items: TabPagerViewProps[`items`]; opacities: number[] };
 
-const Tints = ({ items, tints }: TintsProps) =>
-  tints.map((style, slot) => <div className={styles.tint} key={items[slot]?.id} style={style} />);
+const Tints = ({ cn, items, opacities }: TintsProps) =>
+  opacities.map((opacity, slot) => <div className={cn} key={items[slot]?.id} style={{ opacity }} />);
 
-export const TabPagerView = ({ animating, indicatorTints, items, pageIndex, panelTints }: TabPagerViewProps) => (
+export const TabPagerView = ({ animating, items, opacities, pageIndex }: TabPagerViewProps) => (
   <PageChrome active shell>
     <div
       className={_.cn(styles.bar, animating && styles.barAnimating, $.elevation(`e2`))}
       style={{ ...tabCount(items.length), [`--tab-index` as string]: pageIndex }}
     >
-      <Tints items={items} tints={panelTints} />
+      <Tints cn={_.cn(styles.tint, styles.tintPanel)} items={items} opacities={opacities} />
       <div className={styles.indicator}>
-        <Tints items={items} tints={indicatorTints} />
+        <Tints cn={_.cn(styles.tint, styles.tintIndicator)} items={items} opacities={opacities} />
       </div>
       {items.map(item => (
         <Tap cn={styles.tab} key={item.id} link={item.path}>

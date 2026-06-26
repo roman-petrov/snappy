@@ -1,11 +1,12 @@
 import type { RouterPageState } from "@snappy/router";
 
+import { _ } from "@snappy/core";
 import { useStoreValue } from "@snappy/store";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useLayoutEffect, useRef, useState } from "react";
 
 import type { RouteStageProps } from "./RouteStage";
 
-import { type ChromeScope, RouterContext, RouteStack, type RouteStageValue } from "../core";
+import { Chrome, type ChromeScope, RouterContext, RouteStack, type RouteStageValue } from "../core";
 import { useRouter } from "../hooks/useRouter";
 import { useRouterPath } from "../hooks/useRouterPath";
 import { useStageInsets } from "../hooks/useStageInsets";
@@ -28,6 +29,13 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
   const preservedTab = useRef<RouterPageState | undefined>(undefined);
   const routePattern = pattern(path);
   const layer = layerOf?.(routePattern);
+
+  useLayoutEffect(() => {
+    Chrome.present(
+      track !== undefined && (layer === undefined || (layer === `cover` && (phase.entering || phase.closing))),
+    );
+  }, [layer, phase, track]);
+
   const { insets, keyboard } = useStageInsets(chrome.shell, chrome.page);
 
   const registerChrome = useCallback((scope: ChromeScope, height: number) => {
@@ -37,7 +45,7 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
       setChrome(previous =>
         previous[scope] === undefined
           ? previous
-          : Object.fromEntries(Object.entries(previous).filter(([key]) => key !== scope)),
+          : _.fromEntries(Object.entries(previous).filter(([key]) => key !== scope)),
       );
     };
   }, []);

@@ -1,6 +1,7 @@
 declare const __Page: {
   readonly root: "root";
   readonly rootFill: "rootFill";
+  readonly rootTab: "rootTab";
   readonly header: "header";
   readonly headerInner: "headerInner";
   readonly headerSlot: "headerSlot";

@@ -8,6 +8,7 @@ export type PageProps = {
   children: ReactNode;
   fill?: boolean;
   header?: ReactNode;
+  tab?: boolean;
   title?: ReactNode;
   trailing?: ReactNode;
 };

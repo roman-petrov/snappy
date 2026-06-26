@@ -1,34 +1,18 @@
 /* stylelint-disable property-disallowed-list */
 @use "sass:string";
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/chrome";
+@use "pkg:@snappy/theme/material/mix";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/material";
 @use "pkg:@snappy/theme/tokens/animation";
 
-@function -tone($color, $ratio) {
-  @return color-mix(in srgb, #{$color} $ratio, color.surface());
-}
-
-@function -bg($tone) {
-  @return color-mix(in srgb, $tone #{material.fill()}, transparent);
-}
-
-@function border($tone) {
-  @return color-mix(in srgb, material.highlight() #{material.border-weight()}, -bg($tone));
-}
-
 @function primary-border() {
-  @return accent-border(color.primary(), -tone(color.primary(), material.tone-accent()));
+  @return mix.accent-border(color.primary(), mix.tone(color.primary(), material.tone-accent()));
 }
 
 @function rim-border() {
-  @return border(-tone(material.highlight(), material.tone-rim()));
-}
-
-@function accent-border($accent, $tone) {
-  $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, border($tone));
-
-  @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
+  @return mix.border(mix.tone(material.highlight(), material.tone-rim()));
 }
 
 @function -shadow-opacity($a) {
@@ -44,7 +28,7 @@
 }
 
 @mixin material($tone, $accent: null, $no-border: false, $accent-text: true) {
-  background-color: -bg($tone);
+  background-color: mix.bg($tone);
   transition:
     background-color animation.standard-md(),
     border-color animation.standard-md(),
@@ -58,35 +42,43 @@
     }
 
     @if not $no-border {
-      border: 1px solid accent-border($accent, $tone);
+      border: 1px solid mix.accent-border($accent, $tone);
     }
   } @else {
     color: color.text();
 
     @if not $no-border {
-      border: 1px solid border($tone);
+      border: 1px solid mix.border($tone);
     }
   }
 }
 
 @mixin rim {
-  @include material(-tone(material.highlight(), material.tone-rim()));
+  @include material(mix.tone(material.highlight(), material.tone-rim()));
 }
 
 @mixin accent($accent) {
-  @include material(-tone($accent, material.tone-accent()), $accent);
+  @include material(mix.tone($accent, material.tone-accent()), $accent);
 }
 
 @mixin accent-hover($accent, $no-border: false) {
-  @include material(-tone($accent, material.tone-accent()), $accent, $accent-text: false, $no-border: $no-border);
+  @include material(mix.tone($accent, material.tone-accent()), $accent, $accent-text: false, $no-border: $no-border);
 }
 
 @function surface-bg() {
-  @return -bg(color.surface());
+  @return mix.bg(color.surface());
+}
+
+@function chrome-header-surface() {
+  @return var(--chrome-header-surface, #{surface-bg()});
+}
+
+@function chrome-header-border() {
+  @return var(--chrome-header-border, #{chrome.header-border-surface()});
 }
 
 @function surface-border() {
-  @return 1px solid border(color.surface());
+  @return 1px solid mix.border(color.surface());
 }
 
 @function glass-filter() {

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { Gesture, type GesturePointer } from "./Gesture";
-import { Vector, type Vec2 } from "./Vector";
+import { type Vec2, Vector } from "./Vector";
 
 const { axis, detect, pointer, releaseVelocity, velocity } = Gesture;
 const { from } = Vector;
@@ -12,18 +12,18 @@ type PointerInput = {
   dx: number;
   dy?: number;
   peak?: Vec2;
-  speed?: Vec2;
   sampleVelocity?: number;
+  speed?: Vec2;
 };
 
 const sample = ({
-  duration = 120,
   delta,
+  duration = 120,
   dx,
   dy = 0,
   peak,
-  speed,
   sampleVelocity = 0,
+  speed,
 }: PointerInput): GesturePointer => {
   const displacement = delta ?? from(dx, dy);
   const peaks = peak ?? Vector.abs(displacement);

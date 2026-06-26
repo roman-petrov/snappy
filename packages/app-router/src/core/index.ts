@@ -1,4 +1,4 @@
-export * from "./BrowserChrome";
+export * from "./Chrome";
 
 export * from "./RouteMotion";
 

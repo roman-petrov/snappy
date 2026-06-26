@@ -1,0 +1,31 @@
+@use "pkg:@snappy/theme/material/mix";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/material";
+
+@function accent() {
+  @return var(--chrome-accent, #{color.surface()});
+}
+
+@function header-surface() {
+  @return mix.bg(mix.tone(accent(), material.tone-accent()));
+}
+
+@function header-border($accent: accent()) {
+  @return mix.accent-border($accent, mix.tone($accent, material.tone-accent()));
+}
+
+@function header-border-surface() {
+  @return header-border(#{color.surface()});
+}
+
+@function meta-color() {
+  @return color-mix(in srgb, accent() var(--chrome-tint-ratio), color.backdrop());
+}
+
+@function panel-tint() {
+  @return color-mix(in oklch, accent() var(--chrome-tint-ratio), transparent);
+}
+
+@function indicator-tint() {
+  @return color-mix(in oklch, accent() var(--chrome-indicator-ratio), transparent);
+}

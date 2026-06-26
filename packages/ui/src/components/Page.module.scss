@@ -1,4 +1,5 @@
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/chrome";
 @use "pkg:@snappy/theme/material/glass";
 @use "pkg:@snappy/theme/material/material" as material;
 @use "pkg:@snappy/theme/tokens/color";
@@ -14,6 +15,11 @@
   &-fill {
     min-height: 100%;
   }
+
+  &-tab .header::before {
+    --header-surface-end: #{material.chrome-header-surface()};
+    --header-border-end: #{material.chrome-header-border()};
+  }
 }
 
 .header {
@@ -24,6 +30,9 @@
 
   &::before {
     @include layer.behind;
+
+    --header-surface-end: #{material.surface-bg()};
+    --header-border-end: #{chrome.header-border-surface()};
 
     position: absolute;
     inset: 0;
@@ -71,8 +80,8 @@
   }
 
   to {
-    background-color: material.surface-bg();
-    border-bottom-color: material.border(color.surface());
+    background-color: var(--header-surface-end);
+    border-bottom-color: var(--header-border-end);
   }
 }
 

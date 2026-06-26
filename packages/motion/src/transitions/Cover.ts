@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
 import { _ } from "@snappy/core";
@@ -54,15 +55,14 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
   };
 
   const snap = ({ release }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease);
-
-  let dragging = () => false;
+  const frame = { dragging: () => false };
 
   const motion = SlideTrack({
     anchor: () => 0,
     blocked: () => isClosing || isEntering,
     drag,
     move: x => {
-      if (!dragging()) {
+      if (!frame.dragging()) {
         onMove?.(0);
 
         return;
@@ -77,7 +77,7 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
     visible: ({ busy, offset }) => busy || isClosing || isEntering || offset > 0,
   });
 
-  dragging = motion.dragging;
+  frame.dragging = motion.dragging;
 
   const enter = async () => {
     motion.refresh();

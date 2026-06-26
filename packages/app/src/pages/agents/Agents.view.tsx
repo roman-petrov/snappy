@@ -10,7 +10,7 @@ import styles from "./Agents.module.scss";
 export type AgentsViewProps = ReturnType<typeof useAgentsState>;
 
 export const AgentsView = ({ groups }: AgentsViewProps) => (
-  <Page title={t(`tabs.agents.label`)} trailing={<HeaderContent />}>
+  <Page tab title={t(`tabs.agents.label`)} trailing={<HeaderContent />}>
     <div className={styles.root}>
       {groups.flatMap(group => [
         <h3 className={$.typography(`h3`)} key={group.id}>
