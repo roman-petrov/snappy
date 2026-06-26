@@ -11,7 +11,7 @@ export type MenuViewProps = ReturnType<typeof useMenuState>;
 
 export const MenuView = ({ items }: MenuViewProps) =>
   items.length === 0 ? undefined : (
-    <Card cn={styles.root} radius="lg">
+    <Card cn={styles.root} glass="simple" radius="lg">
       {items.map(({ action, index, key, onClick, outIndex }) => (
         <div
           className={styles.action}

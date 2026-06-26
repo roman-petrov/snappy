@@ -17,7 +17,7 @@ export const Card = ({
   children,
   cn,
   elevation = `e2`,
-  glass = `simple`,
+  glass = `none`,
   radius = `md`,
   surface = `surface`,
 }: CardProps) => (
