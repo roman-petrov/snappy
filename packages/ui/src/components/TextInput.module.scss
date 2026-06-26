@@ -21,18 +21,6 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
   min-width: 0;
 }
 
-.wrap-focused {
-  .input-wrap {
-    @include surface.primary-hover;
-    @include elevation.e2;
-  }
-
-  .input-wrap-recording {
-    @include surface.error;
-    @include elevation.e2;
-  }
-}
-
 .input-wrap {
   @include elevation.e1;
 
@@ -47,18 +35,23 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
     flex-shrink: 0;
   }
 
-  &:not(.input-wrap-glass) {
+  &:not(.input-wrap-glass, .input-wrap-recording) {
     @include surface.surface;
+  }
+
+  &:focus-within:not(.input-wrap-recording) {
+    @include surface.primary-hover;
+    @include elevation.e2;
+  }
+
+  &.input-wrap-recording {
+    @include surface.error;
+    @include elevation.e2;
   }
 }
 
-.input-wrap-glass {
+.input-wrap-glass:not(.input-wrap-recording) {
   @include surface.surface-glass;
-}
-
-.input-wrap-recording {
-  @include surface.error;
-  @include elevation.e1;
 }
 
 .text-area-wrap {

@@ -33,10 +33,11 @@ export const useTextInputState = ({
 
   const setInputBlurred = () => setFocused(false);
   const setInputFocused = () => setFocused(true);
+  const active = focused || listening;
 
   const textArea: TextAreaProps = {
     ...textAreaRest,
-    collapsed: !focused,
+    collapsed: !active,
     maxLines,
     onBlur: setInputBlurred,
     onChange,
@@ -53,5 +54,5 @@ export const useTextInputState = ({
     onClick: toggleRecording,
   };
 
-  return { afterMic, glass, listening, micButton, speechSupported, textArea, wrapFocused: focused };
+  return { afterMic, glass, listening, micButton, speechSupported, textArea };
 };

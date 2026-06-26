@@ -16,9 +16,8 @@ export const TextInputView = ({
   micButton,
   speechSupported,
   textArea,
-  wrapFocused,
 }: TextInputViewProps) => (
-  <div className={`${styles.wrap} ${wrapFocused ? styles.wrapFocused : ``}`}>
+  <div className={styles.wrap}>
     <div className={_.cn(styles.inputWrap, glass && styles.inputWrapGlass, listening && styles.inputWrapRecording)}>
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
