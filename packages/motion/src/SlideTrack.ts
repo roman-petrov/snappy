@@ -39,10 +39,9 @@ export type SlideTrackSnap = {
   after?: (control: SlideTrackControl) => void;
   before?: () => void;
   target: (width: number) => number;
-  velocity?: number;
 };
 
-export type SlideTrackSnapInput = { release?: TrackReleaseSnap; state: SlideTrackState; velocity?: number };
+export type SlideTrackSnapInput = { release?: TrackReleaseSnap; state: SlideTrackState };
 
 export type SlideTrackState = { busy: boolean; offset: number; width: number };
 
@@ -60,13 +59,11 @@ export const SlideTrack = ({
   translate,
   visible,
 }: SlideTrackConfig) => {
-  const flingVelocity = 3;
   const slop = 12;
   const crossRatio = 3;
   const snapEpsilon = 0.001;
-  const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
   const stayRatio = 1 / 3;
-  const flipVelocity = 1;
+  const flipVelocity = 0.3;
   const motion = Motion();
   const downOptions = { passive: true } as const;
   const moveOptions = { passive: false } as const;
@@ -81,9 +78,6 @@ export const SlideTrack = ({
   let started = 0;
   let pressOrigin = Vector.from(0, 0);
   let pointerId: number | undefined;
-  let speedX = { sample: 0, time: 0, value: 0 };
-  let speedY = { sample: 0, time: 0, value: 0 };
-  let peakVelocityX = 0;
   let pressArmed = false;
   let isDragging = false;
   let documentDetach: (() => void) | undefined;
@@ -91,7 +85,6 @@ export const SlideTrack = ({
   const reset = () => {
     pressArmed = false;
     isDragging = false;
-    peakVelocityX = 0;
     pointerId = undefined;
   };
 
@@ -102,10 +95,15 @@ export const SlideTrack = ({
 
   const pointerDelta = (event: PointerEvent) => Vector.delta(pressOrigin, event.clientX, event.clientY);
 
-  const sampleVelocity = (event: PointerEvent) => {
-    speedX = Gesture.velocity(speedX, event.clientX, event.timeStamp);
-    speedY = Gesture.velocity(speedY, event.clientY, event.timeStamp);
-    peakVelocityX = _.max([peakVelocityX, Math.abs(speedX.value)]) ?? 0;
+  const releasePointer = (
+    event: PointerEvent,
+    delta: ReturnType<typeof Vector.delta>,
+    travel: ReturnType<typeof Vector.abs>,
+  ) => {
+    const elapsed = event.timeStamp - started;
+    const speed = elapsed > 0 ? Vector.from(delta.x / elapsed, delta.y / elapsed) : Vector.from(0, 0);
+
+    return Gesture.pointer(elapsed, delta, travel, speed);
   };
 
   const pinTranslate = (element: HTMLElement, value: number, active = true) => {
@@ -138,7 +136,7 @@ export const SlideTrack = ({
 
   const buildReleaseSnap = (position: number, sample: GesturePointer): TrackReleaseSnap => {
     if (!trackWidth) {
-      return noneRelease;
+      return { gesture: { type: `none` }, stay: true };
     }
 
     const gesture = Gesture.detect(sample);
@@ -164,37 +162,16 @@ export const SlideTrack = ({
       root.releasePointerCapture(event.pointerId);
     }
     stopDocumentListeners();
-    sampleVelocity(event);
 
     if (!isDragging && pressArmed) {
       const delta = pointerDelta(event);
       const travel = Vector.max(peak, Vector.abs(delta));
-      const absSpeed = Vector.abs(Vector.from(speedX.value, speedY.value));
 
-      if (Vector.horizontal(travel, slop, crossRatio) && Vector.horizontal(absSpeed, flingVelocity, crossRatio)) {
-        const flingDx = speedX.value < 0 ? -slop - 1 : slop + 1;
-
-        if (canDrag?.(flingDx, state()) !== false) {
-          isDragging = true;
-          refresh();
-          start?.(state());
-          setTranslate(translate(flingDx, state()));
-
-          const elapsed = event.timeStamp - started;
-
-          const pointerData = Gesture.pointer(
-            elapsed,
-            Vector.from(flingDx, delta.y),
-            Vector.from(Math.max(travel.x, Math.abs(flingDx)), travel.y),
-            Vector.from(speedX.value, speedY.value),
-          );
-
-          gestureNavigation = true;
-          commit(snap({ release: buildReleaseSnap(translateX, pointerData), state: state(), velocity: speedX.value }));
-          reset();
-
-          return;
-        }
+      if (Vector.horizontal(travel, slop, crossRatio) && canDrag?.(delta.x, state()) !== false) {
+        refresh();
+        start?.(state());
+        gestureNavigation = true;
+        commit(snap({ release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() }));
       }
 
       reset();
@@ -212,19 +189,12 @@ export const SlideTrack = ({
     const travel = Vector.max(peak, Vector.abs(delta));
 
     setTranslate(translate(delta.x, state()));
-
-    const elapsed = event.timeStamp - started;
-    const average = elapsed > 0 ? Math.abs(delta.x / elapsed) : 0;
-    const magnitude = _.max([peakVelocityX, Math.abs(speedX.value), average]) ?? 0;
-    const sign = delta.x === 0 ? Math.sign(speedX.value) : Math.sign(delta.x);
-    const data = Gesture.pointer(elapsed, delta, travel, Vector.from(sign === 0 ? 0 : sign * magnitude, speedY.value));
-
     gestureNavigation = true;
     commit(
       snap(
         event.type === `pointercancel`
           ? { state: state() }
-          : { release: buildReleaseSnap(translateX, data), state: state(), velocity: Gesture.releaseVelocity(data) },
+          : { release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() },
       ),
     );
     reset();
@@ -240,8 +210,6 @@ export const SlideTrack = ({
     if (root === null) {
       return;
     }
-
-    sampleVelocity(event);
 
     const delta = pointerDelta(event);
     const size = Vector.abs(delta);
@@ -385,8 +353,6 @@ export const SlideTrack = ({
           pressOrigin = Vector.from(clientX, clientY);
           started = timestamp;
           pointerId = eventPointerId;
-          speedX = { sample: clientX, time: timestamp, value: 0 };
-          speedY = { sample: clientY, time: timestamp, value: 0 };
 
           documentDetach = _.singleAction([
             Dom.subscribe(document, `pointermove`, onPointerMove, moveOptions),

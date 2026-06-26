@@ -55,17 +55,29 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
 
   const snap = ({ release }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease);
 
+  let dragging = () => false;
+
   const motion = SlideTrack({
     anchor: () => 0,
     blocked: () => isClosing || isEntering,
     drag,
-    move: onMove,
+    move: x => {
+      if (!dragging()) {
+        onMove?.(0);
+
+        return;
+      }
+
+      onMove?.(x);
+    },
     root,
     snap,
     track,
     translate: (dx, { width }) => _.clamp(dx, 0, width),
     visible: ({ busy, offset }) => busy || isClosing || isEntering || offset > 0,
   });
+
+  dragging = motion.dragging;
 
   const enter = async () => {
     motion.refresh();

@@ -45,7 +45,7 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
     return steps ? Math.round(_.clamp(-offset / width, 0, steps)) : 0;
   };
 
-  const buildSnap = (release: TrackReleaseSnap, velocity?: number) => {
+  const buildSnap = (release: TrackReleaseSnap) => {
     const total = count();
 
     const delta = release.stay
@@ -66,11 +66,10 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
       },
       before: () => onIndex(target),
       target: (width: number) => translateForIndex(target, width, total),
-      velocity,
     };
   };
 
-  const snap = ({ release, velocity }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease, velocity);
+  const snap = ({ release }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease);
 
   const motion = SlideTrack({
     anchor: width => translateForIndex(currentIndex(), width, count()),
