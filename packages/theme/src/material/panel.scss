@@ -34,8 +34,16 @@
   @return color-mix(in srgb, color.surface() #{material.fill()}, transparent);
 }
 
-@function border($accent: null) {
-  $fill: bg($accent);
+@function -fill($accent: null, $glass: false) {
+  @if $glass {
+    @return bg-glass($accent);
+  }
+
+  @return bg($accent);
+}
+
+@function border($accent: null, $glass: false) {
+  $fill: -fill($accent, $glass);
 
   @if $accent {
     $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
@@ -50,18 +58,6 @@
   @return -rim-border(bg-soft());
 }
 
-@function border-glass($accent: null) {
-  $fill: bg-glass($accent);
-
-  @if $accent {
-    $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
-
-    @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
-  }
-
-  @return -rim-border($fill);
-}
-
 @mixin panel-soft {
   color: color.text();
   background-color: bg-soft();
@@ -72,8 +68,8 @@
     color animation.standard-md();
 }
 
-@mixin panel($accent: null, $accent-text: true, $no-border: false) {
-  background-color: bg($accent);
+@mixin panel($accent: null, $accent-text: true, $no-border: false, $glass: false) {
+  background-color: -fill($accent, $glass);
   transition:
     background-color animation.standard-md(),
     border-color animation.standard-md(),
@@ -87,39 +83,13 @@
     }
 
     @if not $no-border {
-      border: 1px solid border($accent);
+      border: 1px solid border($accent, $glass);
     }
   } @else {
     color: color.text();
 
     @if not $no-border {
-      border: 1px solid border();
-    }
-  }
-}
-
-@mixin panel-glass($accent: null, $accent-text: true, $no-border: false) {
-  background-color: bg-glass($accent);
-  transition:
-    background-color animation.standard-md(),
-    border-color animation.standard-md(),
-    color animation.standard-md();
-
-  @if $accent {
-    @if $accent-text {
-      color: $accent;
-    } @else {
-      color: color.text();
-    }
-
-    @if not $no-border {
-      border: 1px solid border-glass($accent);
-    }
-  } @else {
-    color: color.text();
-
-    @if not $no-border {
-      border: 1px solid border-glass();
+      border: 1px solid border(null, $glass);
     }
   }
 }

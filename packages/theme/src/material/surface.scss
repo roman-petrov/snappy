@@ -7,7 +7,7 @@
 }
 
 @mixin surface-glass {
-  @include panel.panel-glass;
+  @include panel.panel($glass: true);
   @include glass.simple;
 }
 
