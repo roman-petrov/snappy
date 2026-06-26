@@ -19,7 +19,13 @@ export const TextInputView = ({
   textArea,
 }: TextInputViewProps) => (
   <div className={styles.wrap}>
-    <div className={_.cn(styles.inputWrap, $.surface(surface), listening && styles.inputWrapRecording)}>
+    <div
+      className={_.cn(
+        styles.inputWrap,
+        surface === `surfaceGlass` ? $.surface(surface) : $.tap(`soft`),
+        listening && styles.inputWrapRecording,
+      )}
+    >
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
       </div>
