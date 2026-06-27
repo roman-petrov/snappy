@@ -56,7 +56,7 @@
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.6.0",
     "jscpd": "^5.0.8",
-    "knip": "^6.16.1",
+    "knip": "^6.21.0",
     "markdownlint-cli": "^0.48.0",
     "prettier": "^3.8.4",
     "prettier-plugin-pkg": "^0.22.1",

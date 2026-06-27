@@ -32,11 +32,11 @@
     "vite": "^8.0.14"
   },
   "devDependencies": {
-    "@knip/mcp": "^0.0.31",
-    "actions-up": "^1.14.2",
-    "agent-browser": "^0.27.2",
+    "@knip/mcp": "^0.0.32",
+    "actions-up": "^1.14.3",
+    "agent-browser": "^0.27.3",
     "jsdom": "^29.0.2",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   },
   "overrides": {
     "zod": "4.4.3"
