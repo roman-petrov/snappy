@@ -14,11 +14,7 @@ export type PaymentCreateRedirectPaymentSuccess = { providerPaymentId: string; r
 export type PaymentCreateRedirectPaymentSuccessResult = PaymentSuccess<PaymentCreateRedirectPaymentSuccess>;
 
 export type PaymentErrorCode =
-  | `http-error`
-  | `invalid-response`
-  | `invalid-webhook-payload`
-  | `network`
-  | `provider-error`;
+  `http-error` | `invalid-response` | `invalid-webhook-payload` | `network` | `provider-error`;
 
 export type PaymentFailure = { code: PaymentErrorCode; externalMessage?: string; httpStatus?: number; ok: false };
 
@@ -57,14 +53,7 @@ export type PaymentSnapshot = {
 export type PaymentSnapshotSuccess = PaymentSuccess<PaymentSnapshot>;
 
 export type PaymentStatus =
-  | `canceled`
-  | `failed`
-  | `pending`
-  | `processing`
-  | `requires-action`
-  | `succeeded`
-  | `unknown`
-  | `waiting-capture`;
+  `canceled` | `failed` | `pending` | `processing` | `requires-action` | `succeeded` | `unknown` | `waiting-capture`;
 
 export type PaymentSuccess<T> = T & { ok: true };
 

@@ -12,9 +12,7 @@ export type SemanticSearchFunction = (args: { query: string; topK?: number }) =>
 export type SemanticSearchHit = VectorSearchRow;
 
 export type SemanticSearchResult =
-  | { hits: SemanticSearchHit[]; kind: `hits` }
-  | { kind: `no_index` }
-  | { kind: `no_results` };
+  { hits: SemanticSearchHit[]; kind: `hits` } | { kind: `no_index` } | { kind: `no_results` };
 
 export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
   AgentTool({

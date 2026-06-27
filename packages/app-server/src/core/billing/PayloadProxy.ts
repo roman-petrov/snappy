@@ -24,8 +24,7 @@ export type PayloadProxyConfig = {
 };
 
 export type PayloadProxyGateResult =
-  | { allow: false; body: unknown; status: number }
-  | { allow: true; state?: PayloadProxyState };
+  { allow: false; body: unknown; status: number } | { allow: true; state?: PayloadProxyState };
 
 export type PayloadProxyHeaders = Record<string, string | string[] | undefined>;
 

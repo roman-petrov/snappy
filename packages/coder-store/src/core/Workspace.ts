@@ -169,8 +169,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
   };
 
   type FilesByGlob =
-    | { error: `glob_list_failed` | `glob_pattern_empty` | `path_traversal` }
-    | { files: string[]; normalized: string };
+    { error: `glob_list_failed` | `glob_pattern_empty` | `path_traversal` } | { files: string[]; normalized: string };
 
   const filesByGlob = async (pattern: string): Promise<FilesByGlob> => {
     const normalized = pattern
