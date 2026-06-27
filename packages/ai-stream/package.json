@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@fontsource/google-sans-code": "^5.2.4",
-    "@shikijs/stream": "^4.2.0",
+    "@shikijs/stream": "^4.3.0",
     "@snappy/ai": "workspace:*",
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
@@ -23,7 +23,7 @@
     "lucide-react": "^1.17.0",
     "marked": "^18.0.5",
     "react": "^19.2.7",
-    "shiki": "^4.2.0"
+    "shiki": "^4.3.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
