@@ -1,4 +1,5 @@
 @use "pkg:@snappy/theme/material/material";
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/animation";
@@ -44,8 +45,8 @@
 .root th {
   @include typography.caption-bold;
 
-  color: color.inverse();
-  background-color: color.primary();
+  color: color.text();
+  background-color: panel.bg-soft();
 }
 
 .root td {
