@@ -19,7 +19,7 @@ export type SnappyPresetDraft = {
   tools: readonly SnappyToolId[];
 };
 
-export type SnappyPresetGroupId = `audio` | `edit` | `plan` | `text` | `visual`;
+export type SnappyPresetGroupId = `audio` | `edit` | `plan` | `text` | `vision` | `visual`;
 
 export type SnappyPresetMeta = {
   description: Record<Locale, string>;

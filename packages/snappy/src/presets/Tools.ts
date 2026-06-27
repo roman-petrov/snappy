@@ -6,5 +6,6 @@ export const SnappyPresetTools = {
   help: [`ask`, `date-time`, `publish-text`, `skill`] as const satisfies readonly SnappyToolId[],
   plan: [`ask`, `date-time`, `publish-text`] as const satisfies readonly SnappyToolId[],
   text: [`ask`, `date-time`, `publish-text`] as const satisfies readonly SnappyToolId[],
+  vision: [`ask`, `date-time`, `look-image`, `publish-text`] as const satisfies readonly SnappyToolId[],
   visual: [`ask`, `date-time`, `look-image`, `publish-image`] as const satisfies readonly SnappyToolId[],
 } as const;

@@ -159,7 +159,14 @@ export const en = {
       },
     },
     presets: {
-      groups: { audio: `Audio`, edit: `Image editing`, plan: `Planning`, text: `Text`, visual: `Image generation` },
+      groups: {
+        audio: `Audio`,
+        edit: `Image editing`,
+        plan: `Planning`,
+        text: `Text`,
+        vision: `Photo analysis`,
+        visual: `Image generation`,
+      },
     },
   },
   tabs: { agents: { label: `Agents` }, feed: { label: `Feed` }, snappy: { label: `Snappy` } },

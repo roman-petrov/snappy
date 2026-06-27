@@ -7,7 +7,7 @@ import type { SnappyPreset, SnappyPresetCard, SnappyPresetDraft, SnappyPresetGro
 
 // eslint-disable-next-line @typescript-eslint/naming-convention -- entry point glob
 const modules = import.meta.glob<{ Preset: SnappyPresetDraft }>(`./items/*/Preset.ts`, { eager: true });
-const groupOrder: SnappyPresetGroupId[] = [`text`, `visual`, `edit`, `audio`, `plan`];
+const groupOrder: SnappyPresetGroupId[] = [`text`, `visual`, `vision`, `edit`, `audio`, `plan`];
 
 const list = () =>
   _.entries(modules)
