@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "@snappy/admin-server": "workspace:*",
-    "@trpc/server": "^11.17.0"
+    "@trpc/server": "^11.18.0"
   }
 }
