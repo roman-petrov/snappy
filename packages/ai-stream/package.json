@@ -20,7 +20,7 @@
     "@snappy/theme": "workspace:*",
     "@snappy/type-writer": "workspace:*",
     "@snappy/ui": "workspace:*",
-    "lucide-react": "^1.17.0",
+    "lucide-react": "^1.21.0",
     "marked": "^18.0.5",
     "react": "^19.2.7",
     "shiki": "^4.3.0"
