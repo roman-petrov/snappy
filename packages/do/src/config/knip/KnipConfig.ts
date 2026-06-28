@@ -12,6 +12,7 @@ const config: KnipConfig = {
     "packages/admin": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
     "packages/ai-stream": { ignoreDependencies: [`@fontsource/google-sans-code`, `@snappy/theme`] },
     "packages/app": { entry: [`index.html`], ignoreDependencies: [`@snappy/theme`] },
+    "packages/app-router": { ignoreDependencies: [`@snappy/theme`] },
     "packages/coder-chunk": {
       ignoreDependencies: [
         `tree-sitter-css`,
