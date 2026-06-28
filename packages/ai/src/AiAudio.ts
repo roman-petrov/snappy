@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable functional/no-expression-statements */
+import { MimeType } from "@snappy/core";
+
 import type { CatalogSpeech } from "./core-model/ModelSpeech";
 import type { AiSpeechTranscribeInput, AiSpeechTranscribeResult } from "./Types";
-
-import { MimeType } from "@snappy/core";
 
 import { AiCost } from "./AiCost";
 import { AiHttp, type AiHttpConfig } from "./AiHttp";
