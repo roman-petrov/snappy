@@ -14,7 +14,8 @@ export type DbCoreFeedCreate = DbCoreFeedPatch & { generationPrompt: string };
 export type DbCoreFeedPatch = { src: string; type: `image` } | { text: string; type: `text` };
 
 export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
-  const s3Path = (key: string) => `feed/${key}${MimeType.pngSuffix}`;
+  const s3Path = (file: string) => `feed/${file}`;
+  const pngFile = () => `${crypto.randomUUID()}${MimeType.pngSuffix}`;
 
   const toArtifact = ({ generationPrompt, id, src, text, type }: FeedArtifact): DbCoreFeedArtifact =>
     type === `image` ? { generationPrompt, id, src, type: `image` } : { generationPrompt, id, text, type: `text` };
@@ -51,11 +52,11 @@ export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
   const create = async (artifact: DbCoreFeedCreate) => {
     if (artifact.type === `image`) {
       const id = crypto.randomUUID();
-      const key = crypto.randomUUID();
-      const path = s3Path(key);
+      const file = pngFile();
+      const path = s3Path(file);
       await storage.putPng(path, artifact.src);
 
-      const data = { ...artifact, id, src: key, userId: storage.id };
+      const data = { ...artifact, id, src: file, userId: storage.id };
 
       try {
         return toArtifact(await prisma.feedArtifact.create({ data }));
@@ -76,15 +77,15 @@ export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
         throw new Error(`Feed artifact missing`);
       }
 
-      const key = crypto.randomUUID();
-      const path = s3Path(key);
+      const file = pngFile();
+      const path = s3Path(file);
       await storage.putPng(path, delta.src);
 
       if (row.src !== ``) {
         await storage.remove(s3Path(row.src));
       }
 
-      return toArtifact(await prisma.feedArtifact.update({ data: { src: key }, where: { id, userId: storage.id } }));
+      return toArtifact(await prisma.feedArtifact.update({ data: { src: file }, where: { id, userId: storage.id } }));
     }
 
     return toArtifact(
@@ -105,10 +106,10 @@ export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
     }
   };
 
-  const image = async (key: string) => {
-    const row = await prisma.feedArtifact.findFirst({ where: { src: key, type: `image`, userId: storage.id } });
+  const image = async (file: string) => {
+    const row = await prisma.feedArtifact.findFirst({ where: { src: file, type: `image`, userId: storage.id } });
 
-    return row === null ? undefined : storage.stream(s3Path(key));
+    return row === null ? undefined : storage.stream(s3Path(file));
   };
 
   return { create, image, list, patch, remove };

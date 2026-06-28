@@ -14,7 +14,7 @@ export type ImagesMountConfig = { app: FastifyInstance; betterAuth: BetterAuth; 
 
 const mount = ({ app, betterAuth, db }: ImagesMountConfig) => {
   // eslint-disable-next-line @typescript-eslint/naming-convention -- Fastify route generic
-  app.get<{ Params: { key: string } }>(ImageRoute.mount, async (request, reply) => {
+  app.get<{ Params: { file: string } }>(ImageRoute.mount, async (request, reply) => {
     const dbUser = await Session.dbUser(betterAuth, request.headers, db);
 
     if (dbUser === undefined) {
@@ -23,8 +23,8 @@ const mount = ({ app, betterAuth, db }: ImagesMountConfig) => {
       return;
     }
 
-    const { key } = request.params;
-    const stream = await dbUser.feed.image(key);
+    const { file } = request.params;
+    const stream = await dbUser.feed.image(file);
 
     if (stream === undefined) {
       reply.callNotFound();
