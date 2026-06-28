@@ -31,7 +31,6 @@
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/node": "workspace:*",
-    "@snappy/s3": "workspace:*",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/bun": "^1.3.14",
     "@types/node": "^26.0.1",

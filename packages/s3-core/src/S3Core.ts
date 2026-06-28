@@ -1,21 +1,17 @@
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
-/* eslint-disable functional/no-try-statements */
 import {
-  DeleteBucketPolicyCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
-  HeadBucketCommand,
   ListObjectsV2Command,
-  PutBucketCorsCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { Config, ConfigValues } from "@snappy/config";
-import { _, Cache } from "@snappy/core";
+import { _ } from "@snappy/core";
+import { Readable } from "node:stream";
 
 const clientFrom = (source: Record<string, string>) => ({
   bucket: ConfigValues.required(source, `S3_BUCKET`),
@@ -31,7 +27,6 @@ const clientFrom = (source: Record<string, string>) => ({
 });
 
 let cached: ReturnType<typeof clientFrom> | undefined;
-const urlCache = Cache<{ expiresAt: number; url: string }>();
 
 const withClient = async <T>(fn: (client: ReturnType<typeof clientFrom>) => Promise<T>) => {
   cached ??= clientFrom(ConfigValues.values());
@@ -39,89 +34,36 @@ const withClient = async <T>(fn: (client: ReturnType<typeof clientFrom>) => Prom
   return fn(cached);
 };
 
-const setup = async () => {
-  const mode = ConfigValues.env();
-  const loaded = ConfigValues.secretsFor(mode);
-  if (!loaded.ok) {
-    return { error: loaded.error, ok: false as const };
-  }
-
-  const { bucket, sdk } = clientFrom(loaded.value);
-
-  try {
-    await sdk.send(new HeadBucketCommand({ Bucket: bucket }));
-    await sdk.send(new DeleteBucketPolicyCommand({ Bucket: bucket })).catch((error: unknown) => {
-      if (!(error instanceof Error) || error.name !== `NoSuchBucketPolicy`) {
-        throw error;
-      }
-    });
-    await sdk.send(
-      new PutBucketCorsCommand({
-        Bucket: bucket,
-        CORSConfiguration: {
-          CORSRules: [
-            {
-              AllowedHeaders: [`*`],
-              AllowedMethods: [`GET`],
-              AllowedOrigins: [ConfigValues.origin(mode)],
-              MaxAgeSeconds: Config.s3CorsMaxAgeSec,
-            },
-          ],
-        },
-      }),
-    );
-
-    return { ok: true as const };
-  } catch (error) {
-    return { error: error instanceof Error ? error.message : String(error), ok: false as const };
-  }
-};
-
 const user = (userId: string) => {
   const key = (path: string) => `public/${userId}/${path}`;
 
-  const putPng = async (path: string, src: Buffer | string) => {
-    urlCache.remove(key(path));
-
-    return withClient(async ({ bucket, sdk }) =>
+  const putPng = async (path: string, src: Buffer | string) =>
+    withClient(async ({ bucket, sdk }) =>
       sdk.send(
         new PutObjectCommand({
           Body: _.isString(src) ? Buffer.from(src.split(`,`)[1] ?? ``, `base64`) : src,
           Bucket: bucket,
-          CacheControl: `public, max-age=${Config.s3SignedUrlTtlSec}`,
+          CacheControl: `private, max-age=${Config.s3ObjectMaxAgeSec}`,
           ContentType: `image/png`,
           Key: key(path),
         }),
       ),
     );
-  };
 
-  const remove = async (path: string) => {
-    urlCache.remove(key(path));
+  const stream = async (path: string) =>
+    withClient(async ({ bucket, sdk }) => {
+      const result = await sdk.send(new GetObjectCommand({ Bucket: bucket, Key: key(path) }));
+      const body = result.Body;
 
-    return withClient(async ({ bucket, sdk }) => sdk.send(new DeleteObjectCommand({ Bucket: bucket, Key: key(path) })));
-  };
+      if (body === undefined || !(body instanceof Readable)) {
+        return undefined;
+      }
 
-  const url = async (path: string) => {
-    const objectKey = key(path);
-    const now = _.now();
-    const entry = urlCache.get(objectKey);
+      return body;
+    });
 
-    if (entry !== undefined && entry.expiresAt > now) {
-      return entry.url;
-    }
-
-    urlCache.prune(({ expiresAt }) => expiresAt > now);
-
-    return urlCache.set(objectKey, {
-      expiresAt: now + Config.s3SignedUrlTtlSec * _.second - Config.s3UrlCacheMarginMs,
-      url: await withClient(async ({ bucket, sdk }) =>
-        getSignedUrl(sdk, new GetObjectCommand({ Bucket: bucket, Key: objectKey }), {
-          expiresIn: Config.s3SignedUrlTtlSec,
-        }),
-      ),
-    }).url;
-  };
+  const remove = async (path: string) =>
+    withClient(async ({ bucket, sdk }) => sdk.send(new DeleteObjectCommand({ Bucket: bucket, Key: key(path) })));
 
   const purge = async () =>
     withClient(async ({ bucket, sdk }) => {
@@ -136,14 +78,7 @@ const user = (userId: string) => {
           await sdk.send(
             new DeleteObjectsCommand({
               Bucket: bucket,
-              Delete: {
-                Objects: keys.map(objectKey => {
-                  urlCache.remove(objectKey);
-
-                  return { Key: objectKey };
-                }),
-                Quiet: true,
-              },
+              Delete: { Objects: keys.map(objectKey => ({ Key: objectKey })), Quiet: true },
             }),
           );
         }
@@ -156,13 +91,11 @@ const user = (userId: string) => {
       await page();
     });
 
-  return { id: userId, purge, putPng, remove, url };
+  return { id: userId, purge, putPng, remove, stream };
 };
 
-export const S3Core = { setup, user };
+export const S3Core = { user };
 
 export type S3Core = typeof S3Core;
-
-export type S3CoreSetupResult = Awaited<ReturnType<typeof setup>>;
 
 export type S3CoreUser = ReturnType<typeof user>;

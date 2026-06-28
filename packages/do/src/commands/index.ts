@@ -70,8 +70,6 @@ export * from "./ServerProd";
 
 export * from "./ServerProdRun";
 
-export * from "./SetupS3";
-
 export * from "./Shot";
 
 export * from "./Stylelint";

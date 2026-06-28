@@ -9,7 +9,7 @@ const userSettingsMethods = () => ({ find: vi.fn(), update: vi.fn() });
 
 const createDbUser = (id = `test-user`): DbUser => ({
   balance: balanceMethods(),
-  feed: { create: vi.fn(), list: vi.fn(), patch: vi.fn(), remove: vi.fn() },
+  feed: { create: vi.fn(), image: vi.fn(), list: vi.fn(), patch: vi.fn(), remove: vi.fn() },
   id,
   paymentLog: { create: paymentLogCreate() },
   settings: userSettingsMethods(),

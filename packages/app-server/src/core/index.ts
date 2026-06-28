@@ -16,6 +16,8 @@ export * from "./billing";
 
 export * from "./Feed";
 
+export * from "./Images";
+
 export * from "./Mail";
 
 export * from "./PaymentLog";

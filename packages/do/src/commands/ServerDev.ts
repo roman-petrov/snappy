@@ -1,7 +1,7 @@
 import type { Command } from "../Command";
 
 export const ServerDev: Command = {
-  children: [`setup-s3`, `server:frontend:dev`],
+  children: [`server:frontend:dev`],
   description: `Run site, app, admin, and API in development.`,
   label: `🖥️ Server`,
   name: `server:dev`,

@@ -13,6 +13,7 @@ import { BalancePayment } from "./BalancePayment";
 import { BetterAuth } from "./BetterAuth";
 import { AiTunnelProxy } from "./billing";
 import { Feed } from "./Feed";
+import { Images } from "./Images";
 import { PaymentLog } from "./PaymentLog";
 import { Session } from "./Session";
 import { TrpcRouter } from "./TrpcRouter";
@@ -63,6 +64,8 @@ export const App = async ({ app }: AppConfig) => {
     prefix: `/api/trpc`,
     router: TrpcRouter(serverApp),
   });
+
+  Images.mount({ app, betterAuth, db });
 
   app.post(`/api/webhooks/yookassa`, async (request, reply) => {
     await balancePayment.webhook(request.body);
