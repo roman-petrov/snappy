@@ -310,6 +310,7 @@
         "@prisma/adapter-pg": "^7.8.0",
         "@prisma/client": "^7.8.0",
         "@snappy/ai": "workspace:*",
+        "@snappy/core": "workspace:*",
         "@snappy/domain": "workspace:*",
         "@snappy/s3-core": "workspace:*",
         "better-auth": "^1.6.22",
@@ -468,6 +469,9 @@
     "packages/platform": {
       "name": "@snappy/platform",
       "version": "0.0.0",
+      "dependencies": {
+        "@snappy/core": "workspace:*",
+      },
     },
     "packages/remend": {
       "name": "@snappy/remend",
@@ -570,7 +574,6 @@
       "dependencies": {
         "@snappy/agent": "workspace:*",
         "@snappy/ai": "workspace:*",
-        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/snappy-sdk": "workspace:*",
