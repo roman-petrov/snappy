@@ -43,7 +43,7 @@ const user = (userId: string) => {
         new PutObjectCommand({
           Body: _.isString(src) ? Buffer.from(src.split(`,`)[1] ?? ``, `base64`) : src,
           Bucket: bucket,
-          CacheControl: `private, max-age=${Config.s3ObjectMaxAgeSec}`,
+          CacheControl: `private, max-age=${Config.s3ObjectMaxAgeSec}, immutable`,
           ContentType: `image/png`,
           Key: key(path),
         }),

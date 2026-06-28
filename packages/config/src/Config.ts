@@ -39,8 +39,7 @@ const devSsl = () => {
 
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
-const s3ObjectMaxAgeDays = 3;
-const s3ObjectMaxAgeSec = s3ObjectMaxAgeDays * _.day.seconds;
+const s3ObjectMaxAgeSec = _.day.seconds * _.daysInYear;
 const balancePaymentMinRub = 10;
 const balancePaymentMaxRub = 5000;
 const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
