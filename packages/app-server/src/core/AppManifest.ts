@@ -1,5 +1,6 @@
 import type { Locale } from "@snappy/intl";
 
+import { MimeType } from "@snappy/core";
 import { Theme } from "@snappy/ui-core";
 
 const body = (locale: Locale) => {
@@ -16,7 +17,7 @@ const body = (locale: Locale) => {
     description,
     display: `fullscreen`,
     display_override: [`fullscreen`, `standalone`],
-    icons: [{ purpose: `any`, sizes: `any`, src: `favicon.svg`, type: `image/svg+xml` }],
+    icons: [{ purpose: `any`, sizes: `any`, src: `favicon.svg`, type: MimeType.imageSvg }],
     lang: locale,
     name,
     orientation: `portrait-primary`,

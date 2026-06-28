@@ -3,8 +3,7 @@
 import type { AiContentPart } from "@snappy/ai";
 
 import { AgentTool } from "@snappy/agent";
-import { DataUrl } from "@snappy/browser";
-import { _ } from "@snappy/core";
+import { _, Mime } from "@snappy/core";
 import { StaticFormPlanSchema } from "@snappy/snappy-sdk";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
@@ -59,7 +58,7 @@ export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
               return [id, { answer: id, attachment: [text], file: raw }];
             }
 
-            const url = await DataUrl.blob(raw);
+            const url = await Mime.blob(raw);
 
             return [id, { answer: id, attachment: [text, { type: `image`, url }], file: raw, url }];
           }

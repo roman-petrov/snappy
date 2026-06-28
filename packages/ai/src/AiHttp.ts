@@ -1,5 +1,7 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import { MimeType } from "@snappy/core";
+
 export type AiHttpConfig = { apiKey: string; baseUrl: string };
 
 const headers = (apiKey: string, contentType?: string) => ({
@@ -21,13 +23,13 @@ const post = async (config: AiHttpConfig, path: string, body: BodyInit, contentT
 };
 
 const postJson = async <T>(config: AiHttpConfig, path: string, body: unknown): Promise<T> => {
-  const response = await post(config, path, JSON.stringify(body), `application/json`);
+  const response = await post(config, path, JSON.stringify(body), MimeType.json);
 
   return (await response.json()) as T;
 };
 
 const postStream = async (config: AiHttpConfig, path: string, body: unknown) => {
-  const response = await post(config, path, JSON.stringify(body), `application/json`);
+  const response = await post(config, path, JSON.stringify(body), MimeType.json);
   if (response.body === null) {
     throw new Error(`ai_http_no_body`);
   }

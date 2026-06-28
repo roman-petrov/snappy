@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
+import { MimeType } from "@snappy/core";
 import { Html } from "@snappy/server";
 import express, { type Express, type Request } from "express";
 import { join } from "node:path";
@@ -22,7 +23,7 @@ export const ServerDevSpa = ({ expressApp, faviconPath, html, projectRoot }: Ser
     registered.push({ packageName, urlPrefix });
 
     expressApp.get(`${urlPrefix}/favicon.svg`, (_request, response) => {
-      response.type(`image/svg+xml`).sendFile(faviconPath);
+      response.type(MimeType.imageSvg).sendFile(faviconPath);
     });
 
     html({

@@ -8,6 +8,7 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@snappy/ai": "workspace:*",
+    "@snappy/core": "workspace:*",
     "@snappy/domain": "workspace:*",
     "@snappy/s3-core": "workspace:*",
     "better-auth": "^1.6.22"

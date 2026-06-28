@@ -10,7 +10,7 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { Config, ConfigValues } from "@snappy/config";
-import { _ } from "@snappy/core";
+import { _, MimeType } from "@snappy/core";
 import { Readable } from "node:stream";
 
 const clientFrom = (source: Record<string, string>) => ({
@@ -44,7 +44,7 @@ const user = (userId: string) => {
           Body: _.isString(src) ? Buffer.from(src.split(`,`)[1] ?? ``, `base64`) : src,
           Bucket: bucket,
           CacheControl: `private, max-age=${Config.s3ObjectMaxAgeSec}, immutable`,
-          ContentType: `image/png`,
+          ContentType: MimeType.imagePng,
           Key: key(path),
         }),
       ),

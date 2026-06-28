@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/try-complexity */
 import { AiConstants } from "@snappy/ai";
-import { DataUrl } from "@snappy/browser";
+import { Mime } from "@snappy/core";
 import { Copy, Share } from "@snappy/platform";
 import { useAsyncEffect } from "@snappy/ui";
 
@@ -41,7 +41,7 @@ export const useImageCardState = (props: ImageCardProps) => {
               quality: AiConstants.defaults.imageQuality,
               size: imageSize,
             });
-      await complete(DataUrl.png(result.bytes));
+      await complete(Mime.pngDataUrl(result.bytes));
     } catch (error) {
       fail(error);
     }

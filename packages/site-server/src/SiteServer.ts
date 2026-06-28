@@ -3,6 +3,7 @@
 import type { ServerModule } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import { MimeType } from "@snappy/core";
 import { createReadStream, existsSync } from "node:fs";
 import { join } from "node:path";
 
@@ -27,7 +28,7 @@ export const SiteServer: ServerModule = distDir => {
           return;
         }
         reply.header(`Content-Disposition`, `attachment; filename="snappy.apk"`);
-        reply.type(`application/vnd.android.package-archive`);
+        reply.type(MimeType.apk);
         await reply.send(createReadStream(apkPath));
       });
 

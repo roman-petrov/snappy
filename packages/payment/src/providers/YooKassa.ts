@@ -4,7 +4,7 @@
 /* eslint-disable unicorn/try-complexity */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable init-declarations */
-import { _, Json } from "@snappy/core";
+import { _, Json, MimeType } from "@snappy/core";
 
 import type {
   PaymentFailure,
@@ -111,7 +111,7 @@ export const YooKassa = ({ returnUrl, secretKey, shopId }: YooKassaConfig): Paym
         ...(body === undefined ? {} : { body: Json.stringify(body) }),
         headers: {
           "Authorization": authHeader,
-          "Content-Type": `application/json`,
+          "Content-Type": MimeType.json,
           ...(idempotenceKey === undefined ? {} : { "Idempotence-Key": idempotenceKey }),
         },
         method,

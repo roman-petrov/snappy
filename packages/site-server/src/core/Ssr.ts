@@ -6,7 +6,7 @@
 import type { HtmlCache, InjectTheme } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-import { _ } from "@snappy/core";
+import { _, MimeType } from "@snappy/core";
 import { Settings } from "@snappy/ui-core";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -37,7 +37,7 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
       const { locale, theme } = Settings(request);
       const { entry, template } = await loadTemplateAndEntry(clientRoot);
 
-      await reply.type(`text/html`).send(SiteSsr.build(locale, theme, template, entry, injectTheme));
+      await reply.type(MimeType.textHtml).send(SiteSsr.build(locale, theme, template, entry, injectTheme));
     };
 
   const createCachedSsrHandler = (clientRoot: string, cache: HtmlCache) => {
@@ -53,7 +53,7 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
       const { locale, theme } = Settings(request);
       const key = `ssr:${locale}:${theme ?? `system`}`;
       await cache({
-        contentType: `text/html`,
+        contentType: MimeType.textHtml,
         key,
         load: async () => {
           const { entry: ssrEntry, template } = await ensureLoaded();

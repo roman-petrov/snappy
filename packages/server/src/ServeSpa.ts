@@ -2,6 +2,7 @@
 import type { ServerModuleConfig, ServeSpa, ServeSpaConfig } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import { MimeType } from "@snappy/core";
 import { Settings } from "@snappy/ui-core";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -27,7 +28,7 @@ export const Spa =
       const { locale, theme } = Settings(request);
       const key = `${cacheKeyPrefix}:${locale}:${theme ?? `system`}`;
       await htmlCache({
-        contentType: `text/html`,
+        contentType: MimeType.textHtml,
         key,
         load: () => prepareIndex(readFileSync(indexPath, `utf8`), locale, theme),
         reply,

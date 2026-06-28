@@ -1,5 +1,3 @@
-export * from "./DataUrl";
-
 export * from "./Dom";
 
 export type * from "./DomSubscribeTypes";

@@ -3,7 +3,7 @@ import type { Db } from "@snappy/db";
 import type { FastifyInstance } from "fastify";
 
 import { Config } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
+import { HttpStatus, MimeType } from "@snappy/core";
 
 import type { BetterAuth } from "./BetterAuth";
 
@@ -33,7 +33,7 @@ const mount = ({ app, betterAuth, db }: ImagesMountConfig) => {
     }
 
     reply.header(`Cache-Control`, `private, max-age=${Config.s3ObjectMaxAgeSec}, immutable`);
-    reply.type(`image/png`);
+    reply.type(MimeType.imagePng);
     await reply.send(stream);
   });
 };

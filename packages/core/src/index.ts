@@ -16,6 +16,10 @@ export * from "./I18n";
 
 export * from "./Json";
 
+export * from "./Mime";
+
+export * from "./MimeType";
+
 export * from "./Password";
 
 export * from "./Rgb";

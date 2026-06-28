@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
+import { MimeType } from "@snappy/core";
+
 import { Bridge } from "./Bridge";
 import { PlatformCommon } from "./PlatformCommon";
 
@@ -13,8 +15,8 @@ const html = async (value: string) => {
 
   await navigator.clipboard.write([
     new ClipboardItem({
-      "text/html": new Blob([value], { type: `text/html` }),
-      "text/plain": new Blob([plain], { type: `text/plain` }),
+      "text/html": new Blob([value], { type: MimeType.textHtml }),
+      "text/plain": new Blob([plain], { type: MimeType.textPlain }),
     }),
   ]);
 };

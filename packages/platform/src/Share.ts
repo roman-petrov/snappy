@@ -1,4 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
+import { MimeType } from "@snappy/core";
+
 import { Bridge } from "./Bridge";
 import { PlatformCommon } from "./PlatformCommon";
 
@@ -11,7 +13,7 @@ const html = async (value: string, title = `Snappy`) => {
     return;
   }
 
-  const file = new File([value], `snappy.html`, { type: `text/html` });
+  const file = new File([value], `snappy.html`, { type: MimeType.textHtml });
   await navigator.share({ files: [file], title });
 };
 

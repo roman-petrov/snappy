@@ -1,5 +1,7 @@
-const prefix = `/api/image/`;
-const suffix = `.png`;
-const url = (key: string) => `${prefix}${key}${suffix}`;
+import { MimeType } from "@snappy/core";
 
-export const ImageRoute = { mount: `${prefix}:key${suffix}`, url };
+const prefix = `/api/image/`;
+const mount = `${prefix}:key${MimeType.pngSuffix}`;
+const url = (key: string) => `${prefix}${key}${MimeType.pngSuffix}`;
+
+export const ImageRoute = { mount, url };

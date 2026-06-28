@@ -6,7 +6,7 @@
 import { Admin } from "@snappy/admin-server";
 import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
-import { _, HttpStatus } from "@snappy/core";
+import { _, HttpStatus, MimeType } from "@snappy/core";
 import { ViteConfig } from "@snappy/do/config/vite";
 import { Fastify, Html } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
@@ -112,7 +112,7 @@ export const ServerDev = async () => {
     });
   };
 
-  app.get(`/favicon.svg`, (_request, response) => response.type(`image/svg+xml`).sendFile(faviconPath));
+  app.get(`/favicon.svg`, (_request, response) => response.type(MimeType.imageSvg).sendFile(faviconPath));
 
   AppManifestHost.express(app);
 

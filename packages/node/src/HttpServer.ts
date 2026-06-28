@@ -4,7 +4,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
-import { _, HttpStatus } from "@snappy/core";
+import { _, HttpStatus, MimeType } from "@snappy/core";
 import {
   createServer,
   type IncomingHttpHeaders,
@@ -127,7 +127,7 @@ export const HttpServer = () => {
             : JSON.stringify(body)
           : chunked(encoding === `gzip` ? gzipSync(toBytes(body)) : zstdCompressSync(toBytes(body)));
 
-      const type = contentType ?? (isRawBody(body) ? undefined : `application/json`);
+      const type = contentType ?? (isRawBody(body) ? undefined : MimeType.json);
 
       write(
         response,
@@ -145,7 +145,7 @@ export const HttpServer = () => {
     respond({ body: lines.join(`\n`), contentType: `text/event-stream; charset=utf-8`, headers });
 
   const abort = () => (_request: IncomingMessage, response: ServerResponse) => {
-    response.writeHead(HttpStatus.ok, { "content-type": `application/json` });
+    response.writeHead(HttpStatus.ok, { "content-type": MimeType.json });
     response.write(`{"partial":`);
     queueMicrotask(() => {
       response.socket?.destroy(new Error(`upstream`));
