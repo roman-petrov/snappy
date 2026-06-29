@@ -18,7 +18,7 @@ export const ru = {
       submitting: `Отправка…`,
       title: `Забыли пароль`,
     },
-    resendIn: `Отправить снова через {{seconds}} сек.`,
+    resendIn: `Снова через {{seconds}} сек.`,
     resendReset: `Отправить снова`,
     resendVerification: `Отправить письмо снова`,
     resetPassword: {

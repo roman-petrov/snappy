@@ -18,7 +18,7 @@ export const en = {
       submitting: `Sending…`,
       title: `Forgot password`,
     },
-    resendIn: `Send again in {{seconds}} sec.`,
+    resendIn: `Again in {{seconds}}s`,
     resendReset: `Send again`,
     resendVerification: `Resend verification email`,
     resetPassword: {
