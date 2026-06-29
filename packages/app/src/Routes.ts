@@ -58,6 +58,6 @@ export const Routes = Router({
   start: {
     index: SnappyLanding,
     public: r => [r.emailVerified, r.forgotPassword, r.resetPassword, r.signIn, r.signUp],
-    signIn: r => r.signIn,
+    signIn: r => r.signUp,
   },
 });
