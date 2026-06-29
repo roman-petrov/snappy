@@ -29,7 +29,6 @@ export const SignUpView = ({ email, password, send, sent, setEmail, setPassword,
       disabled={send.loading}
       label={t(`auth.signUp.password`)}
       onChange={setPassword}
-      required
       value={password}
     />
   </AuthEmailForm>

@@ -27,14 +27,12 @@ export const SettingsProfilePasswordView = ({
         disabled={loading}
         label={t(`settings.profile.password.current`)}
         onChange={setCurrentPassword}
-        required
         value={currentPassword}
       />
       <NewPasswordInput
         disabled={loading}
         label={t(`settings.profile.password.new`)}
         onChange={setNewPassword}
-        required
         value={newPassword}
       />
       <PasswordInput
@@ -42,7 +40,6 @@ export const SettingsProfilePasswordView = ({
         disabled={loading}
         label={t(`settings.profile.password.confirm`)}
         onChange={setConfirmPassword}
-        required
         value={confirmPassword}
       />
       <FormErrorAndActions error={error === undefined ? `` : t(`settings.profile.password.errors.${error}`)}>

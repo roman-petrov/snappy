@@ -12,11 +12,9 @@ export const InputView = ({
   disabled = false,
   id,
   label,
-  minLength,
   onBlur,
   onChange,
   overlay,
-  required = false,
   suffix,
   type = `text`,
   value,
@@ -29,10 +27,8 @@ export const InputView = ({
       className={styles.control}
       disabled={disabled}
       id={id}
-      minLength={minLength}
       onBlur={onBlur}
       onChange={event => onChange(event.target.value)}
-      required={required}
       type={type}
       value={value}
     />

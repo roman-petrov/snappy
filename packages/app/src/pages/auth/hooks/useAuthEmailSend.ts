@@ -1,13 +1,13 @@
 /* eslint-disable react/hook-use-state */
-import { _, Timer } from "@snappy/core";
+import { _, Email, Timer } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useEffect, useState } from "react";
 
 import type { AuthStatus } from "../../../core";
 
-export type UseAuthEmailSendConfig = { onSent?: () => void; request: () => Promise<AuthStatus> };
+export type UseAuthEmailSendConfig = { email: string; onSent?: () => void; request: () => Promise<AuthStatus> };
 
-export const useAuthEmailSend = ({ onSent, request }: UseAuthEmailSendConfig) => {
+export const useAuthEmailSend = ({ email, onSent, request }: UseAuthEmailSendConfig) => {
   const [until, setUntil] = useState(0);
   const [, setTick] = useState(0);
   const cooldownSec = Math.max(0, Math.ceil((until - _.now()) / _.second));
@@ -21,6 +21,11 @@ export const useAuthEmailSend = ({ onSent, request }: UseAuthEmailSendConfig) =>
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
 
   const onSend = () => {
+    if (!Email.valid(email)) {
+      setError(`invalidEmail`);
+
+      return;
+    }
     void wrapSubmit(async () => {
       const result = await request();
       if (result.status === `tooManyRequests`) {

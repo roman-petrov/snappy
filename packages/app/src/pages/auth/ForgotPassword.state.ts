@@ -9,6 +9,7 @@ export const useForgotPasswordState = () => {
   const [sent, setSent] = useState(false);
 
   const { send } = useAuthEmailSend({
+    email,
     onSent: () => setSent(true),
     request: async () => Auth.requestPasswordReset(email, AppBase.resetPasswordUrl),
   });

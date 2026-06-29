@@ -42,4 +42,4 @@ const generate = () => {
   return password;
 };
 
-export const Password = { generate, minLength, strength, valid };
+export const Password = { generate, strength, valid };

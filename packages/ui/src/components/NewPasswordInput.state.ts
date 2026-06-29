@@ -6,7 +6,6 @@ import { useToggle } from "../hooks";
 
 export const useNewPasswordInputState = ({
   autoComplete = `new-password`,
-  minLength = Password.minLength,
   onChange,
   value,
   ...rest
@@ -20,7 +19,6 @@ export const useNewPasswordInputState = ({
     ...rest,
     autoComplete,
     generatePassword,
-    minLength,
     onChange,
     strength,
     strengthBarWidth,

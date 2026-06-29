@@ -42,8 +42,6 @@ export const SignInView = ({
           autoComplete="email"
           label={t(`auth.signIn.email`)}
           onChange={setEmail}
-          required
-          type="email"
           value={email}
         />
         <PasswordInput
@@ -51,7 +49,6 @@ export const SignInView = ({
           disabled={loading}
           label={t(`auth.signIn.password`)}
           onChange={setPassword}
-          required
           value={password}
         />
         <AuthSubmitActions

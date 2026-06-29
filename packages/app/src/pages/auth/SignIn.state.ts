@@ -1,3 +1,4 @@
+import { Email } from "@snappy/core";
 import { useRouterGo } from "@snappy/app-router";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
@@ -21,11 +22,17 @@ export const useSignInState = () => {
     setError: setResendError,
     startCooldown,
   } = useAuthEmailSend({
+    email,
     onSent: () => setScreen(`unverified`),
     request: async () => Auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const submit = () => {
+    if (!Email.valid(email)) {
+      setError(`invalidEmail`);
+
+      return;
+    }
     void wrapSubmit(async () => {
       const result = await Auth.signIn(email, password);
       if (result.status === `emailNotVerified`) {
@@ -56,7 +63,7 @@ export const useSignInState = () => {
     setResendError(undefined);
   };
 
-  const submitDisabled = loading || email.trim() === `` || password === ``;
+  const submitDisabled = loading || password === ``;
 
   return {
     back,

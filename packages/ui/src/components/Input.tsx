@@ -7,13 +7,11 @@ export type InputProps = {
   autoComplete?: HTMLInputAutoCompleteAttribute;
   disabled?: boolean;
   label: string;
-  minLength?: number;
   onBlur?: () => void;
   onChange: (value: string) => void;
   overlay?: ReactNode;
-  required?: boolean;
   suffix?: ReactNode;
-  type?: `email` | `password` | `text`;
+  type?: `password` | `text`;
   value: string;
 };
 

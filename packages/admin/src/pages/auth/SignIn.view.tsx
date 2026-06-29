@@ -25,7 +25,6 @@ export const SignInView = ({
             autoComplete="username"
             label={t(`auth.signIn.username`)}
             onChange={setUsername}
-            required
             value={username}
           />
           <PasswordInput
@@ -33,7 +32,6 @@ export const SignInView = ({
             disabled={loading}
             label={t(`auth.signIn.password`)}
             onChange={setPassword}
-            required
             value={password}
           />
           {error === undefined ? undefined : <Alert text={t(`auth.signIn.errors.${error}`)} type="error" />}

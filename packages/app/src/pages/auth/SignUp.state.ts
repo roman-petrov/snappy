@@ -1,3 +1,4 @@
+import { Email } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
@@ -11,12 +12,18 @@ export const useSignUpState = () => {
   const [sent, setSent] = useState(false);
 
   const { send: resend, startCooldown } = useAuthEmailSend({
+    email,
     request: async () => Auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
 
   const signUp = () => {
+    if (!Email.valid(email)) {
+      setError(`invalidEmail`);
+
+      return;
+    }
     void wrapSubmit(async () => {
       const result = await Auth.signUp(email, password, AppBase.verifyCallbackUrl);
       if (result.status === `tooManyRequests`) {

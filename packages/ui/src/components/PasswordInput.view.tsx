@@ -12,9 +12,7 @@ export const PasswordInputView = ({
   autoComplete = `current-password`,
   disabled = false,
   label,
-  minLength,
   onChange,
-  required = false,
   toggleVisible,
   value,
   visible,
@@ -23,9 +21,7 @@ export const PasswordInputView = ({
     autoComplete={autoComplete}
     disabled={disabled}
     label={label}
-    minLength={minLength}
     onChange={onChange}
-    required={required}
     suffix={
       <IconButton
         disabled={disabled}

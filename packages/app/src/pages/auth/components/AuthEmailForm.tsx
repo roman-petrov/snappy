@@ -49,7 +49,7 @@ export const AuthEmailForm = ({
       </AuthEmailActions>
     ) : (
       <>
-        <Input autoComplete="email" label={emailLabel} onChange={setEmail} required type="email" value={email} />
+        <Input autoComplete="email" label={emailLabel} onChange={setEmail} value={email} />
         {children}
         <AuthEmailActions
           errorsKey={errorsKey}

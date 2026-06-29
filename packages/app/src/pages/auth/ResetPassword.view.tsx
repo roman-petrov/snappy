@@ -26,7 +26,6 @@ export const ResetPasswordView = ({
           disabled={loading}
           label={t(`auth.resetPassword.passwordLabel`)}
           onChange={setPassword}
-          required
           value={password}
         />
         <PasswordInput
@@ -34,7 +33,6 @@ export const ResetPasswordView = ({
           disabled={loading}
           label={t(`auth.resetPassword.confirmPasswordLabel`)}
           onChange={setConfirmPassword}
-          required
           value={confirmPassword}
         />
         <AuthSubmitActions

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 import { Password } from "./Password";
 
-const { minLength, strength, valid } = Password;
+const { strength, valid } = Password;
 
 describe(`strength`, () => {
   it(`returns weak for empty input`, () => {
@@ -37,11 +37,5 @@ describe(`valid`, () => {
     expect(valid(`abcdefgh`)).toBe(true);
     expect(valid(`abcd1234`)).toBe(true);
     expect(valid(`Abcd1234efgh`)).toBe(true);
-  });
-});
-
-describe(`minLength`, () => {
-  it(`is 8`, () => {
-    expect(minLength).toBe(8);
   });
 });
