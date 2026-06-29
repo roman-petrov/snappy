@@ -10,6 +10,10 @@
                     android:scheme="https"
                     android:host="snappy-ai.ru"
                     android:pathPrefix="/api/auth" />
+                <data
+                    android:scheme="https"
+                    android:host="snappy-ai.ru"
+                    android:pathPrefix="/app" />
             </intent-filter>
         </activity>
     </application>

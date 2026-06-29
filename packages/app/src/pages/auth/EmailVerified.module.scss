@@ -1,0 +1,19 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/space";
+
+.panel {
+  @include primitives.grid-center;
+
+  flex: 1;
+  gap: space.lg();
+  min-height: space.x3xl();
+  padding-block: space.xl();
+  text-align: center;
+}
+
+.status {
+  @include primitives.grid-center;
+
+  gap: space.md();
+  width: 100%;
+}

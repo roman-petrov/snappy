@@ -6,6 +6,17 @@ export const en = {
     title: `Agents`,
   },
   auth: {
+    emailVerified: {
+      failed: {
+        expired: { lead: `Request a new confirmation email or sign in to your account.`, title: `Link expired` },
+        invalid: { lead: `Use the link from your latest email or sign in to your account.`, title: `Invalid link` },
+        signIn: { lead: `Sign in to open your dashboard.`, title: `Email confirmed` },
+      },
+      home: `Open dashboard`,
+      lead: `Your account is ready. You can start using Snappy.`,
+      loading: `Signing you in…`,
+      title: `Email confirmed`,
+    },
     errors: { tooManyRequests: `Wait {{seconds}} sec. before sending again` },
     forgotPassword: {
       backToSignIn: `Back to sign in`,

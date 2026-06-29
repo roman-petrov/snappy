@@ -1,3 +1,5 @@
+export * from "./EmailVerified";
+
 export * from "./ForgotPassword";
 
 export * from "./ResetPassword";

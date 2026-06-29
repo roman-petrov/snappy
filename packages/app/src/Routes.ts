@@ -3,6 +3,7 @@ import { Router } from "@snappy/router";
 import {
   Agent,
   Agents,
+  EmailVerified,
   Feed,
   ForgotPassword,
   ResetPassword,
@@ -29,6 +30,7 @@ export const Routes = Router({
     agent: { page: Agent, path: `agent/:agentId` },
     agents: { page: Agents, path: `agents` },
     chat: { page: SnappyChat, path: `chat/:presetId` },
+    emailVerified: { page: EmailVerified, path: `email-verified` },
     feed: { page: Feed, path: `feed` },
     forgotPassword: { page: ForgotPassword, path: `forgot-password` },
     resetPassword: { page: ResetPassword, path: `reset-password` },
@@ -55,7 +57,7 @@ export const Routes = Router({
   },
   start: {
     index: SnappyLanding,
-    public: r => [r.forgotPassword, r.resetPassword, r.signIn, r.signUp],
+    public: r => [r.emailVerified, r.forgotPassword, r.resetPassword, r.signIn, r.signUp],
     signIn: r => r.signIn,
   },
 });

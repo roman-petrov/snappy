@@ -12,7 +12,7 @@ startApp({
   layerOf: pattern =>
     new Set([`/`, `agents`, `feed`]).has(pattern)
       ? undefined
-      : new Set([`forgot-password`, `login`, `register`, `reset-password`]).has(pattern)
+      : new Set([`email-verified`, `forgot-password`, `login`, `register`, `reset-password`]).has(pattern)
         ? `flip`
         : `cover`,
   routes: Routes,
