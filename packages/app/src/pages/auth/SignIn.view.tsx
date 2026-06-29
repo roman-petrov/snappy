@@ -48,8 +48,8 @@ export const SignInView = ({
           submit={t(`auth.signIn.submit`)}
           submitting={t(`auth.signIn.submitting`)}
         >
-          <Button link={Routes.forgotPassword} text={t(`auth.signIn.forgotPassword`)} />
           <Button link={Routes.signUp} text={t(`auth.signIn.signUpLink`)} />
+          <Button link={Routes.forgotPassword} text={t(`auth.signIn.forgotPassword`)} />
         </AuthSubmitActions>
       </>
     )}
