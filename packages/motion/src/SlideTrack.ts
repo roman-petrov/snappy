@@ -1,3 +1,4 @@
+/* eslint-disable functional/immutable-data */
 /* eslint-disable prefer-const */
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-let */
@@ -45,6 +46,8 @@ export type SlideTrackSnapInput = { release?: TrackReleaseSnap; state: SlideTrac
 
 export type SlideTrackState = { busy: boolean; offset: number; width: number };
 
+type PressSample = Pick<PointerEvent, `clientX` | `clientY` | `timeStamp`>;
+
 export const SlideTrack = ({
   anchor,
   blocked,
@@ -65,8 +68,8 @@ export const SlideTrack = ({
   const stayRatio = 1 / 3;
   const flipVelocity = 0.3;
   const motion = Motion();
-  const downOptions = { passive: true } as const;
-  const moveOptions = { passive: false } as const;
+  const capture = { capture: true, passive: true } as const;
+  const active = { capture: true, passive: false } as const;
   let gestureNavigation = false;
   let trackWidth = 0;
   let translateX = 0;
@@ -77,41 +80,51 @@ export const SlideTrack = ({
   let peak = Vector.from(0, 0);
   let started = 0;
   let pressOrigin = Vector.from(0, 0);
-  let pointerId: number | undefined;
+  let touchId: number | undefined;
+  let lastTouchId: number | undefined;
   let pressArmed = false;
+  let skipFlick = false;
   let isDragging = false;
-  let documentDetach: (() => void) | undefined;
+  let moveDetach: (() => void) | undefined;
 
   const resetPress = () => {
     pressArmed = false;
+    skipFlick = false;
     isDragging = false;
   };
 
   const reset = () => {
     resetPress();
-    pointerId = undefined;
+    touchId = undefined;
+    lastTouchId = undefined;
   };
 
-  const stopDocumentListeners = () => {
-    documentDetach?.();
-    documentDetach = undefined;
+  const stopMoveListener = () => {
+    moveDetach?.();
+    moveDetach = undefined;
   };
 
-  const pointerDelta = (event: PointerEvent) => Vector.delta(pressOrigin, event.clientX, event.clientY);
+  const inRoot = (event: Event) => {
+    const root = rootRef.current;
 
-  const releasePointer = (
-    event: PointerEvent,
-    delta: ReturnType<typeof Vector.delta>,
+    return root !== null && event.composedPath().includes(root);
+  };
+
+  const delta = (sample: PressSample) => Vector.delta(pressOrigin, sample.clientX, sample.clientY);
+
+  const release = (
+    sample: PressSample,
+    offset: ReturnType<typeof Vector.delta>,
     travel: ReturnType<typeof Vector.abs>,
   ) => {
-    const elapsed = event.timeStamp - started;
-    const speed = elapsed > 0 ? Vector.from(delta.x / elapsed, delta.y / elapsed) : Vector.from(0, 0);
+    const elapsed = sample.timeStamp - started;
+    const speed = elapsed > 0 ? Vector.from(offset.x / elapsed, offset.y / elapsed) : Vector.from(0, 0);
 
-    return Gesture.pointer(elapsed, delta, travel, speed);
+    return Gesture.pointer(elapsed, offset, travel, speed);
   };
 
-  const pinTranslate = (element: HTMLElement, value: number, active = true) => {
-    motion.pin(element, active ? { translateX: value } : {});
+  const pinTranslate = (element: HTMLElement, value: number, activePin = true) => {
+    motion.pin(element, activePin ? { translateX: value } : {});
   };
 
   const setTranslate = (value: number) => {
@@ -155,28 +168,53 @@ export const SlideTrack = ({
     return { gesture, stay };
   };
 
-  const onPointerEnd = (event: PointerEvent) => {
-    if (pointerId !== event.pointerId) {
+  const onMove = (sample: PressSample, claim?: () => void) => {
+    const shift = delta(sample);
+    const size = Vector.abs(shift);
+
+    if (pressArmed) {
+      peak = Vector.max(peak, size);
+
+      if (!isDragging) {
+        if (Vector.vertical(size, slop, crossRatio) || Vector.vertical(peak, slop, crossRatio)) {
+          stopMoveListener();
+          reset();
+
+          return;
+        }
+
+        if (Vector.horizontal(size, slop, crossRatio) && canDrag?.(shift.x, state()) !== false) {
+          isDragging = true;
+          refresh();
+          start?.(state());
+          claim?.();
+          setTranslate(translate(shift.x, state()));
+        }
+      }
+    }
+
+    if (!isDragging) {
       return;
     }
 
-    const root = rootRef.current;
+    claim?.();
+    setTranslate(translate(shift.x, state()));
+  };
 
-    if (root?.hasPointerCapture(event.pointerId) === true) {
-      root.releasePointerCapture(event.pointerId);
-    }
-    stopDocumentListeners();
+  const onEnd = (sample: PressSample, cancel = false) => {
+    stopMoveListener();
 
     if (!isDragging && pressArmed) {
-      const delta = pointerDelta(event);
-      const travel = Vector.max(peak, Vector.abs(delta));
+      const shift = delta(sample);
+      const travel = Vector.max(peak, Vector.abs(shift));
 
-      if (Vector.horizontal(travel, slop, crossRatio) && canDrag?.(delta.x, state()) !== false) {
+      if (!skipFlick && Vector.horizontal(travel, slop, crossRatio) && canDrag?.(shift.x, state()) !== false) {
         refresh();
         start?.(state());
         gestureNavigation = true;
-        commit(snap({ release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() }));
+        commit(snap({ release: buildReleaseSnap(translateX, release(sample, shift, travel)), state: state() }));
         resetPress();
+        touchId = undefined;
 
         return;
       }
@@ -192,58 +230,21 @@ export const SlideTrack = ({
       return;
     }
 
-    const delta = pointerDelta(event);
-    const travel = Vector.max(peak, Vector.abs(delta));
+    const shift = delta(sample);
+    const travel = Vector.max(peak, Vector.abs(shift));
 
-    setTranslate(translate(delta.x, state()));
+    setTranslate(translate(shift.x, state()));
     gestureNavigation = true;
     commit(
       snap(
-        event.type === `pointercancel`
+        cancel
           ? { state: state() }
-          : { release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() },
+          : { release: buildReleaseSnap(translateX, release(sample, shift, travel)), state: state() },
       ),
     );
     resetPress();
-  };
-
-  const onPointerMove = (event: PointerEvent) => {
-    if (pointerId !== event.pointerId) {
-      return;
-    }
-
-    const root = rootRef.current;
-
-    if (root === null) {
-      return;
-    }
-
-    const delta = pointerDelta(event);
-    const size = Vector.abs(delta);
-
-    if (pressArmed) {
-      peak = Vector.max(peak, size);
-
-      if (!isDragging) {
-        if (Vector.vertical(size, slop, crossRatio) || Vector.vertical(peak, slop, crossRatio)) {
-          pressArmed = false;
-        } else if (Vector.horizontal(size, slop, crossRatio) && canDrag?.(delta.x, state()) !== false) {
-          isDragging = true;
-          refresh();
-          start?.(state());
-          root.setPointerCapture(event.pointerId);
-          event.preventDefault();
-          setTranslate(translate(delta.x, state()));
-        }
-      }
-    }
-
-    if (!isDragging) {
-      return;
-    }
-
-    event.preventDefault();
-    setTranslate(translate(delta.x, state()));
+    lastTouchId = touchId;
+    touchId = undefined;
   };
 
   const animate = async (targetTranslate: number) => {
@@ -321,7 +322,74 @@ export const SlideTrack = ({
     interrupt();
     gestureNavigation = true;
     commit(snap({ state: state() }));
-    reset();
+    stopMoveListener();
+    resetPress();
+    touchId = undefined;
+  };
+
+  const onTouchMove = (event: TouchEvent) => {
+    const id = touchId;
+    const touch = id === undefined ? undefined : [...event.touches].find(item => item.identifier === id);
+
+    if (touch === undefined) {
+      return;
+    }
+
+    onMove(
+      { clientX: touch.clientX, clientY: touch.clientY, timeStamp: event.timeStamp },
+      isDragging ? () => event.preventDefault() : undefined,
+    );
+  };
+
+  const onTouchEnd = (event: TouchEvent) => {
+    const id = touchId;
+    const touch = id === undefined ? undefined : [...event.changedTouches].find(item => item.identifier === id);
+
+    if (touch === undefined) {
+      return;
+    }
+
+    onEnd({ clientX: touch.clientX, clientY: touch.clientY, timeStamp: event.timeStamp }, event.type === `touchcancel`);
+  };
+
+  const onTouchStart = (event: TouchEvent) => {
+    if (!inRoot(event) || event.touches.length > 1) {
+      return;
+    }
+
+    const [touch] = event.changedTouches;
+
+    if (touch === undefined) {
+      return;
+    }
+
+    if (isSettling && touch.identifier !== lastTouchId) {
+      return;
+    }
+
+    if ((isDragging || pressArmed) && touchId !== undefined && touch.identifier !== touchId) {
+      return;
+    }
+
+    if (isSettling) {
+      interruptSettle();
+    } else {
+      stopMoveListener();
+      reset();
+    }
+
+    const { target, timeStamp } = event;
+
+    peak = Vector.from(0, 0);
+    pressArmed = true;
+    skipFlick =
+      target instanceof Element &&
+      target.closest(`input,textarea,select,button,a,[contenteditable],[role="button"]`) !== null;
+    pressOrigin = Vector.from(touch.clientX, touch.clientY);
+    started = timeStamp;
+    touchId = touch.identifier;
+
+    moveDetach = Dom.subscribe(document, `touchmove`, onTouchMove, active);
   };
 
   transformActive = () => isDragging || isSettling || (visible === undefined ? translateX !== 0 : visible(state()));
@@ -345,42 +413,19 @@ export const SlideTrack = ({
       return _.noop;
     }
 
+    const { touchAction } = root.style;
+
+    root.style.touchAction = `pan-y pinch-zoom`;
+
     const unbind = _.singleAction([
       Dom.watchSize(root, refresh),
-      Dom.subscribe(
-        root,
-        `pointerdown`,
-        (event: PointerEvent) => {
-          if (event.button !== 0 || (event.pointerType !== `touch` && event.pointerType !== `pen`)) {
-            return;
-          }
-
-          if ((isDragging || pressArmed || isSettling) && event.pointerId !== pointerId) {
-            return;
-          }
-
-          if (isSettling) {
-            interruptSettle();
-          } else {
-            stopDocumentListeners();
-            reset();
-          }
-
-          peak = Vector.from(0, 0);
-          pressArmed = true;
-          const { clientX, clientY, pointerId: eventPointerId, timeStamp: timestamp } = event;
-          pressOrigin = Vector.from(clientX, clientY);
-          started = timestamp;
-          pointerId = eventPointerId;
-
-          documentDetach = _.singleAction([
-            Dom.subscribe(document, `pointermove`, onPointerMove, moveOptions),
-            Dom.subscribe(document, `pointerup`, onPointerEnd, downOptions),
-            Dom.subscribe(document, `pointercancel`, onPointerEnd, downOptions),
-          ]);
-        },
-        downOptions,
-      ),
+      Dom.subscribe(document, `touchstart`, onTouchStart, capture),
+      Dom.subscribe(document, `touchend`, onTouchEnd, capture),
+      Dom.subscribe(document, `touchcancel`, onTouchEnd, capture),
+      () => {
+        stopMoveListener();
+        root.style.touchAction = touchAction;
+      },
       () => motion.cancel([]),
     ]);
 
