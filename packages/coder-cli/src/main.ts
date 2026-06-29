@@ -11,8 +11,7 @@ import { Coder } from "@snappy/coder";
 import { CoderDb } from "@snappy/coder-db";
 import { CoderStore } from "@snappy/coder-store";
 import { Config } from "@snappy/config";
-import { Console } from "@snappy/node";
-import { mkdir } from "node:fs/promises";
+import { Console, Directory } from "@snappy/node";
 import path from "node:path";
 
 import { Ignore } from "./Ignore";
@@ -27,7 +26,7 @@ try {
   const projectRoot = process.cwd();
   const dbDir = path.join(projectRoot, `.snappy/coder/lancedb`);
 
-  await mkdir(dbDir, { recursive: true });
+  await Directory.async.ensure(dbDir);
 
   const projectRootResolved = path.resolve(projectRoot);
   const dbDirResolved = path.resolve(dbDir);

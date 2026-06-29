@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 import { Config, DevTls } from "@snappy/config";
-import { Cert as CertUtility } from "@snappy/node";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { Cert as CertUtility, Directory, File } from "@snappy/node";
 import { join } from "node:path";
 
 import type { Command } from "../Command";
@@ -13,11 +12,11 @@ export const Cert: Command = {
   name: `cert`,
   run: async () => {
     const { ca, cert, key } = await CertUtility.generate(Config.host);
-    mkdirSync(DevTls.dir, { recursive: true });
-    writeFileSync(join(DevTls.dir, `ca.pem`), ca.cert);
-    writeFileSync(join(DevTls.dir, `ca-key.pem`), ca.key);
-    writeFileSync(DevTls.certPath, cert);
-    writeFileSync(DevTls.keyPath, key);
+    Directory.ensure(DevTls.dir);
+    File.write(join(DevTls.dir, `ca.pem`), ca.cert);
+    File.write(join(DevTls.dir, `ca-key.pem`), ca.key);
+    File.write(DevTls.certPath, cert);
+    File.write(DevTls.keyPath, key);
 
     return 0;
   },

@@ -3,8 +3,8 @@ import type { ServerModuleConfig, ServeSpa, ServeSpaConfig } from "@snappy/serve
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { MimeType } from "@snappy/core";
+import { File } from "@snappy/node";
 import { Settings } from "@snappy/ui-core";
-import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 export type SpaConfig = Pick<ServerModuleConfig, `app` | `distDir` | `htmlCache` | `prepareIndex`>;
@@ -20,7 +20,7 @@ export const Spa =
     });
 
     const serveShell = async (request: FastifyRequest, reply: FastifyReply) => {
-      if (!existsSync(indexPath)) {
+      if (!File.exists(indexPath)) {
         reply.callNotFound();
 
         return;
@@ -30,7 +30,7 @@ export const Spa =
       await htmlCache({
         contentType: MimeType.textHtml,
         key,
-        load: () => prepareIndex(readFileSync(indexPath, `utf8`), locale, theme),
+        load: () => prepareIndex(File.read(indexPath), locale, theme),
         reply,
       });
     };

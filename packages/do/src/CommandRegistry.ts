@@ -1,4 +1,7 @@
 import {
+  AndroidClean,
+  AndroidKeysDev,
+  AndroidKeysProd,
   Build,
   BuildAdmin,
   BuildApp,
@@ -43,6 +46,9 @@ import {
 } from "./commands";
 
 export const CommandRegistry = [
+  AndroidClean,
+  AndroidKeysDev,
+  AndroidKeysProd,
   BuildAdmin,
   BuildAppAndroidDebug,
   BuildAppAndroid,

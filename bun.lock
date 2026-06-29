@@ -263,6 +263,7 @@
         "@snappy/ai": "workspace:*",
         "@snappy/coder-chunk": "workspace:*",
         "@snappy/core": "workspace:*",
+        "@snappy/node": "workspace:*",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -275,6 +276,7 @@
       "dependencies": {
         "@snappy/agent": "workspace:*",
         "@snappy/core": "workspace:*",
+        "@snappy/node": "workspace:*",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -286,6 +288,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/core": "workspace:*",
+        "@snappy/node": "workspace:*",
         "yaml": "^2.9.0",
       },
     },
@@ -392,6 +395,7 @@
         "@snappy/core": "workspace:*",
         "@snappy/do": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/node": "workspace:*",
         "@snappy/server": "workspace:*",
         "@snappy/site-server": "workspace:*",
         "@snappy/ui-core": "workspace:*",
@@ -521,12 +525,14 @@
         "@snappy/config": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/node": "workspace:*",
         "@snappy/server-module": "workspace:*",
         "@snappy/site-server": "workspace:*",
         "@snappy/ui-core": "workspace:*",
         "fastify": "^5.8.5",
       },
       "devDependencies": {
+        "@snappy/node": "workspace:*",
         "tsdown": "^0.22.3",
       },
     },
@@ -563,6 +569,7 @@
       "dependencies": {
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/node": "workspace:*",
         "@snappy/server-module": "workspace:*",
         "@snappy/ui-core": "workspace:*",
         "fastify": "^5.8.5",

@@ -8,11 +8,11 @@ import { App, AppManifestHost } from "@snappy/app-server";
 import { Config } from "@snappy/config";
 import { _, HttpStatus, MimeType } from "@snappy/core";
 import { ViteConfig } from "@snappy/do/config/vite";
+import { File } from "@snappy/node";
 import { Fastify, Html } from "@snappy/server";
 import { SiteSsr, type SsrEntry } from "@snappy/site-server";
 import { Settings } from "@snappy/ui-core";
 import express from "express";
-import { readFileSync } from "node:fs";
 import * as http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
@@ -100,7 +100,7 @@ export const ServerDev = async () => {
 
         const template = await vite.transformIndexHtml(
           documentUrl ?? pathToFileURL(indexPath).href,
-          readFileSync(indexPath, `utf8`),
+          File.read(indexPath),
         );
         response
           .type(`html`)

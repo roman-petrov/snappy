@@ -7,6 +7,9 @@ jobs:
   ci:
     name: ${{ matrix.task.name }}
     runs-on: ubuntu-latest
+    environment: production
+    env:
+      SECRETS_KEY: ${{ secrets.SECRETS_KEY }}
     strategy:
       fail-fast: false
       matrix:

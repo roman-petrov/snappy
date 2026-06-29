@@ -4,7 +4,7 @@ import type { ServerModule } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { MimeType } from "@snappy/core";
-import { createReadStream, existsSync } from "node:fs";
+import { File } from "@snappy/node";
 import { join } from "node:path";
 
 import { Ssr } from "./core";
@@ -22,14 +22,14 @@ export const SiteServer: ServerModule = distDir => {
 
       const apkPath = join(distDir, `snappy.apk`);
       app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyReply) => {
-        if (!existsSync(apkPath)) {
+        if (!File.exists(apkPath)) {
           reply.callNotFound();
 
           return;
         }
         reply.header(`Content-Disposition`, `attachment; filename="snappy.apk"`);
         reply.type(MimeType.apk);
-        await reply.send(createReadStream(apkPath));
+        await reply.send(File.stream(apkPath));
       });
 
       app.get(`/favicon.svg`, async (_request, reply) => {

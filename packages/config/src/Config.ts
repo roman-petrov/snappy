@@ -1,6 +1,6 @@
 import { _ } from "@snappy/core";
+import { File } from "@snappy/node";
 import { createHmac } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
 
 import { ConfigValues } from "./ConfigValues";
 import { DevTls } from "./DevTls";
@@ -30,11 +30,11 @@ const sslCertKey = requiredKey(`SSL_CERT_KEY`);
 const prodSsl = () => ({ cert: sslCertPem(), key: sslCertKey() });
 
 const devSsl = () => {
-  if (!existsSync(DevTls.certPath) || !existsSync(DevTls.keyPath)) {
+  if (!File.exists(DevTls.certPath) || !File.exists(DevTls.keyPath)) {
     throw new Error(`Dev TLS cert missing. Run: bun do cert`);
   }
 
-  return { cert: readFileSync(DevTls.certPath, `utf8`), key: readFileSync(DevTls.keyPath, `utf8`) };
+  return { cert: File.read(DevTls.certPath), key: File.read(DevTls.keyPath) };
 };
 
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());

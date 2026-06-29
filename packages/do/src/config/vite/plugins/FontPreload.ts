@@ -3,7 +3,7 @@
 import type { Plugin } from "vite";
 
 import { _ } from "@snappy/core";
-import fs from "node:fs";
+import { File } from "@snappy/node";
 import { join } from "node:path";
 
 // ? See https://fontsource.org/docs/getting-started/preload
@@ -48,10 +48,10 @@ export const pluginFontPreload = (): Plugin => ({
       .filter((name): name is string => name !== undefined);
 
     const htmlPath = join(dir, `index.html`);
-    if (!fs.existsSync(htmlPath)) {
+    if (!File.exists(htmlPath)) {
       return;
     }
-    const html = fs.readFileSync(htmlPath, `utf8`);
+    const html = File.read(htmlPath);
     const base = baseFromHtml(html);
 
     const links = fileNames
@@ -61,6 +61,6 @@ export const pluginFontPreload = (): Plugin => ({
       )
       .join(`\n    `);
 
-    fs.writeFileSync(htmlPath, html.replace(placeholder, links));
+    File.write(htmlPath, html.replace(placeholder, links));
   },
 });

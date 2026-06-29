@@ -1,6 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
-import { Process } from "@snappy/node";
-import fs from "node:fs";
+import { Directory, Process } from "@snappy/node";
 import { join } from "node:path";
 
 import type { Command } from "../Command";
@@ -12,7 +11,7 @@ export const BuildServer: Command = {
   run: async (root, { capture }) => {
     const cwd = join(root, `packages`, `server`);
     const out = join(root, `dist`, `server`);
-    fs.rmSync(out, { force: true, recursive: true });
+    Directory.remove(out);
 
     const result = await Process.spawn(
       cwd,

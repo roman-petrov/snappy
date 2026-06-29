@@ -13,7 +13,6 @@ import type { RunResult as RawRunResult } from "./Command";
 import { type CommandName, CommandRegistry } from "./CommandRegistry";
 
 const repoRoot = path.resolve(import.meta.dirname, `..`, `..`, `..`);
-const fail = `✗`;
 const ellipsis = `…`;
 const br = `├`;
 const end = `└`;
@@ -38,20 +37,6 @@ const outcome = (raw: RawRunResult): RunResult => {
         : ``;
 
   return { exitCode, message };
-};
-
-const logLeafError = (label: string, raw: RawRunResult, message: string) => {
-  if (_.isObject(raw) && `stderr` in raw) {
-    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n`);
-    if (raw.stderr.length > 0) {
-      Console.error(raw.stderr);
-    }
-    if (raw.stdout.length > 0) {
-      Console.log(raw.stdout);
-    }
-  } else if (message !== ``) {
-    Console.error(`\n${Terminal.red(`${fail} Error running ${label}`)}\n\n${message}\n`);
-  }
 };
 
 type RunLeafOptions = {
@@ -93,7 +78,20 @@ const runLeaf = async (root: string, name: CommandName, options: RunLeafOptions)
   }
 
   if (!mcp && exitCode !== 0) {
-    logLeafError(label, raw, message);
+    const header = `${Terminal.red(`❌ Error running command `)}${Terminal.cyan(name)}.`;
+
+    if (_.isObject(raw) && `stderr` in raw) {
+      Console.error(`\n${header}\n\n`);
+      if (raw.stderr.length > 0) {
+        Console.error(raw.stderr);
+      }
+      if (raw.stdout.length > 0) {
+        Console.log(raw.stdout);
+      }
+    } else if (message !== ``) {
+      const text = _.isObject(raw) && `red` in raw && raw.red === true ? Terminal.red(message) : message;
+      Console.error(`\n${header}\n\n${text}\n`);
+    }
   }
 
   return { exitCode, message };

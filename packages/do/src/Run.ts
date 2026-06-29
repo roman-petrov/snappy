@@ -28,12 +28,7 @@ const devOriginsBlock = () => {
 
 const logDevOrigins = () => Console.log(`\n\n${devOriginsBlock()}\n`);
 const spawnOptions = (capture: boolean) => (capture ? { capture: true as const } : {});
-
-const fail = (message: string) => {
-  Console.errorLine(`${Terminal.red(`✗`)} ${Terminal.red(message)}`);
-
-  return 1;
-};
+const fail = (message: string, { red = true }: { red?: boolean } = {}) => ({ exitCode: 1, message, red });
 
 const tool =
   (toolName: string, args: string[]): CommandRun =>

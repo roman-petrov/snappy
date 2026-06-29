@@ -1,7 +1,6 @@
 /* eslint-disable functional/no-expression-statements */
 import { _ } from "@snappy/core";
-import { Console, Process, type SpawnResult, Terminal } from "@snappy/node";
-import fs from "node:fs";
+import { Console, Directory, File, Process, type SpawnResult, Terminal } from "@snappy/node";
 import { join } from "node:path";
 
 import type { Command } from "../Command";
@@ -96,12 +95,12 @@ export const FinishFeature: Command = {
     const created = emptySql(sql) ? undefined : migrationId(slug);
     if (created !== undefined) {
       const migrationPath = join(root, migrationsDir, created);
-      if (fs.existsSync(migrationPath)) {
+      if (File.exists(migrationPath)) {
         return Run.fail(`Migration folder already exists: ${created}`);
       }
 
-      fs.mkdirSync(migrationPath, { recursive: true });
-      fs.writeFileSync(join(migrationPath, `migration.sql`), `${sql}\n`);
+      Directory.ensure(migrationPath);
+      File.write(join(migrationPath, `migration.sql`), `${sql}\n`);
 
       const resolveResult = await prisma([`migrate`, `resolve`, `--applied`, created]);
       if (Process.exitCode(resolveResult) !== 0) {

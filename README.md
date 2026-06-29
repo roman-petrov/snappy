@@ -71,6 +71,11 @@ Dev server (`bun do dev`) is always at **<https://home.local>** (site) and **<ht
 machine hostname should be **home** so phones and other devices on the LAN can resolve **home.local**. Android debug APK
 uses the same URL.
 
+### 🤖 Android signing
+
+- Dev: `bun do android-keys-dev`
+- Prod: `bun do decrypt` → `bun do android-keys-prod` → `bun do encrypt`
+
 ### 🔐 Dev HTTPS
 
 1. `bun do cert`

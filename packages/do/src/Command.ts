@@ -15,4 +15,4 @@ export type RunOptions = {
   verbose: boolean;
 };
 
-export type RunResult = number | SpawnResult | { exitCode: number; message: string };
+export type RunResult = number | SpawnResult | { exitCode: number; message: string; red?: boolean };

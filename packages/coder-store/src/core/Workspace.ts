@@ -8,8 +8,8 @@
 /* eslint-disable functional/no-loop-statements */
 /* cspell:ignore unmatch */
 import { _ } from "@snappy/core";
+import { Directory, File } from "@snappy/node";
 import { spawn } from "node:child_process";
-import * as fs from "node:fs/promises";
 import path from "node:path";
 
 import type { CoderIgnore } from "./CoderIgnore";
@@ -142,7 +142,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     if (await isTrackedByGit(from)) {
       return runGit([`mv`, `-f`, `--`, toGitPath(from), toGitPath(to)]);
     }
-    const renameError = await fs.rename(from, to).catch(() => onRenameError);
+    const renameError = await File.async.rename(from, to).catch(() => onRenameError);
 
     return renameError === undefined ? undefined : ({ error: renameError } as const);
   };
@@ -154,8 +154,8 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     error: `move_mkdir_failed` | `write_mkdir_failed`;
     target: string;
   }) =>
-    fs
-      .mkdir(target, { recursive: true })
+    Directory.async
+      .ensure(target)
       .then(() => undefined)
       .catch(() => error);
 
@@ -202,7 +202,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
   }) => {
     for (const relativePathPosix of files) {
       const absolute = path.join(projectRoot, relativePathPosix.split(`/`).join(path.sep));
-      const raw = await fs.readFile(absolute).catch(() => undefined);
+      const raw = await File.async.bytes(absolute).catch(() => undefined);
       if (raw === undefined || raw.includes(0) || raw.byteLength > limits.maxFileBytes) {
         continue;
       }
@@ -298,7 +298,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
       if (current === undefined) {
         continue;
       }
-      const entries = await fs.readdir(current, { withFileTypes: true }).catch(() => undefined);
+      const entries = await Directory.async.entries(current).catch(() => undefined);
       if (entries === undefined) {
         continue;
       }
@@ -331,7 +331,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     if (!_.isString(absolute)) {
       return absolute;
     }
-    const names = await fs.readdir(absolute, { withFileTypes: true }).catch(() => undefined);
+    const names = await Directory.async.entries(absolute).catch(() => undefined);
     if (names === undefined) {
       return { error: `list_failed` } as const;
     }
@@ -347,7 +347,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     if (!_.isString(absolute)) {
       return absolute;
     }
-    const raw = await fs.readFile(absolute).catch(() => undefined);
+    const raw = await File.async.bytes(absolute).catch(() => undefined);
     if (raw === undefined) {
       return { error: `read_failed` } as const;
     }
@@ -390,8 +390,8 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
 
         const next = text.split(oldString).join(newString);
 
-        const failed = await fs
-          .writeFile(absolute, next, `utf8`)
+        const failed = await File.async
+          .write(absolute, next)
           .then(() => false)
           .catch(() => true);
         if (failed) {
@@ -429,7 +429,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     if (mkdirError !== undefined) {
       return { error: mkdirError } as const;
     }
-    const writeError = await fs.writeFile(absolute, content, `utf8`).catch(() => `write_failed` as const);
+    const writeError = await File.async.write(absolute, content).catch(() => `write_failed` as const);
     if (writeError !== undefined) {
       return { error: writeError } as const;
     }
@@ -483,7 +483,7 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     if (!_.isString(absolute)) {
       return absolute;
     }
-    const removeError = await fs.rm(absolute, { force: false, recursive: true }).catch(() => `delete_failed` as const);
+    const removeError = await Directory.async.remove(absolute, { force: false }).catch(() => `delete_failed` as const);
     if (removeError !== undefined) {
       return { error: removeError } as const;
     }

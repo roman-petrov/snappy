@@ -13,8 +13,8 @@ import type { AiEmbedderModel } from "@snappy/ai";
 
 import { CoderChunk } from "@snappy/coder-chunk";
 import { _, type Action, Json } from "@snappy/core";
+import { Directory, File } from "@snappy/node";
 import { createHash } from "node:crypto";
-import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import type { CoderIgnore } from "./CoderIgnore";
@@ -68,15 +68,15 @@ type WriteJob = EmbeddedBatch & { digest: string };
 
 const loadManifest = async (dbDir: string) => {
   try {
-    return Json.parse<IndexManifestState>(await readFile(manifestAbsolutePath(dbDir), `utf8`));
+    return Json.parse<IndexManifestState>(await File.async.read(manifestAbsolutePath(dbDir)));
   } catch {
     return { files: {} };
   }
 };
 
 const saveManifest = async (dbDir: string, manifest: IndexManifestState) => {
-  await mkdir(dbDir, { recursive: true });
-  await writeFile(manifestAbsolutePath(dbDir), Json.stringify(manifest), `utf8`);
+  await Directory.async.ensure(dbDir);
+  await File.async.write(manifestAbsolutePath(dbDir), Json.stringify(manifest));
 };
 
 const toQueue = (jobs: IndexedJob[]): QueueItem[] =>
@@ -136,12 +136,12 @@ export const Indexer =
     const filesSkipped: string[] = [];
     for (const relativePath of paths) {
       const abs = path.join(projectRoot, relativePath.split(`/`).join(path.sep));
-      const stats = await stat(abs).catch((): undefined => undefined);
+      const stats = await File.async.stat(abs).catch((): undefined => undefined);
       if (stats === undefined || !stats.isFile() || stats.size > Constants.indexing.maxFileBytes) {
         continue;
       }
 
-      const buf = await readFile(abs);
+      const buf = await File.async.bytes(abs);
       if (buf.includes(0)) {
         continue;
       }

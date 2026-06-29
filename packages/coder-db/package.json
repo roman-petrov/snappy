@@ -12,6 +12,7 @@
     "@snappy/ai": "workspace:*",
     "@snappy/coder-chunk": "workspace:*",
     "@snappy/core": "workspace:*",
+    "@snappy/node": "workspace:*",
     "zod": "^4.4.3"
   },
   "devDependencies": {

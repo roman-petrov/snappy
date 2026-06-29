@@ -1,7 +1,6 @@
 /* eslint-disable unicorn/prefer-string-repeat */
+import { Directory, File } from "@snappy/node";
 import { spawnSync } from "node:child_process";
-import * as fs from "node:fs/promises";
-import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
@@ -22,27 +21,22 @@ const withWorkspace = async (
     root: string;
     workspace: ReturnType<typeof Workspace>;
   }) => Promise<void>,
-) => {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), `snappy-workspace-test-`));
+) =>
+  Directory.withTemp(async root => {
+    const list = vi.fn(async (args: { cwd: string; globs?: string[] }) => {
+      if (listFiles !== undefined) {
+        return listFiles(args);
+      }
+      await Promise.resolve();
 
-  const list = vi.fn(async (args: { cwd: string; globs?: string[] }) => {
-    if (listFiles !== undefined) {
-      return listFiles(args);
+      return files ?? [];
+    });
+    if (prepare !== undefined) {
+      await prepare(root);
     }
-    await Promise.resolve();
-
-    return files ?? [];
-  });
-  if (prepare !== undefined) {
-    await prepare(root);
-  }
-  const workspace = Workspace({ ignore: { list }, projectRoot: root });
-  try {
+    const workspace = Workspace({ ignore: { list }, projectRoot: root });
     await run({ list, root, workspace });
-  } finally {
-    await fs.rm(root, { force: true, recursive: true });
-  }
-};
+  }, `snappy-workspace-test-`);
 
 const runGit = ({ args, cwd }: { args: string[]; cwd: string }) =>
   spawnSync(`git`, args, { cwd, encoding: `utf8`, windowsHide: true });
@@ -52,8 +46,8 @@ describe(`listDirectory`, () => {
     await withWorkspace(
       {
         prepare: async root => {
-          await fs.mkdir(path.join(root, `a-folder`), { recursive: true });
-          await fs.writeFile(path.join(root, `b.txt`), `b`, `utf8`);
+          await Directory.async.ensure(path.join(root, `a-folder`));
+          await File.async.write(path.join(root, `b.txt`), `b`);
         },
       },
       async ({ workspace }) => {
@@ -88,7 +82,7 @@ describe(`readFile`, () => {
     await withWorkspace(
       {
         prepare: async root => {
-          await fs.writeFile(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
+          await File.async.write(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
         },
       },
       async ({ workspace }) => {
@@ -102,7 +96,7 @@ describe(`readFile`, () => {
       {
         prepare: async root => {
           const content = `x`.repeat(600);
-          await fs.writeFile(path.join(root, `note.txt`), content, `utf8`);
+          await File.async.write(path.join(root, `note.txt`), content);
         },
       },
       async ({ workspace }) => {
@@ -128,7 +122,7 @@ describe(`writeFile`, () => {
   it(`writes content and creates nested directory`, async () => {
     await withWorkspace({}, async ({ root, workspace }) => {
       await expect(workspace.writeFile({ content: `hello`, path: `nested/file.txt` })).resolves.toStrictEqual({});
-      await expect(fs.readFile(path.join(root, `nested/file.txt`), `utf8`)).resolves.toBe(`hello`);
+      await expect(File.async.read(path.join(root, `nested/file.txt`))).resolves.toBe(`hello`);
     });
   });
 
@@ -156,7 +150,7 @@ describe(`grepReplace`, () => {
     await withWorkspace(
       {
         prepare: async root => {
-          await fs.writeFile(path.join(root, `story.txt`), `abc`, `utf8`);
+          await File.async.write(path.join(root, `story.txt`), `abc`);
         },
       },
       async ({ workspace }) => {
@@ -172,17 +166,17 @@ describe(`grepReplace`, () => {
       {
         files: [`src/a.txt`, `src/b.txt`],
         prepare: async root => {
-          await fs.mkdir(path.join(root, `src`), { recursive: true });
-          await fs.writeFile(path.join(root, `src/a.txt`), `a a a`, `utf8`);
-          await fs.writeFile(path.join(root, `src/b.txt`), `x a`, `utf8`);
+          await Directory.async.ensure(path.join(root, `src`));
+          await File.async.write(path.join(root, `src/a.txt`), `a a a`);
+          await File.async.write(path.join(root, `src/b.txt`), `x a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.grepReplace({ glob: `src/**`, newString: `b`, oldString: `a` })).resolves.toStrictEqual({
           result: { files: [`src/a.txt`, `src/b.txt`], scopeGlob: `src/**` },
         });
-        await expect(fs.readFile(path.join(root, `src/a.txt`), `utf8`)).resolves.toBe(`b b b`);
-        await expect(fs.readFile(path.join(root, `src/b.txt`), `utf8`)).resolves.toBe(`x b`);
+        await expect(File.async.read(path.join(root, `src/a.txt`))).resolves.toBe(`b b b`);
+        await expect(File.async.read(path.join(root, `src/b.txt`))).resolves.toBe(`x b`);
       },
     );
   });
@@ -226,15 +220,15 @@ describe(`grepReplace`, () => {
       {
         files: [`bin.dat`, `ok.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
-          await fs.writeFile(path.join(root, `ok.txt`), `a`, `utf8`);
+          await File.async.write(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
+          await File.async.write(path.join(root, `ok.txt`), `a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.grepReplace({ glob: `**/*`, newString: `b`, oldString: `a` })).resolves.toStrictEqual({
           result: { files: [`ok.txt`], scopeGlob: `**/*` },
         });
-        await expect(fs.readFile(path.join(root, `ok.txt`), `utf8`)).resolves.toBe(`b`);
+        await expect(File.async.read(path.join(root, `ok.txt`))).resolves.toBe(`b`);
       },
     );
   });
@@ -243,9 +237,9 @@ describe(`grepReplace`, () => {
     await withWorkspace(
       {
         prepare: async root => {
-          await fs.mkdir(path.join(root, `src`), { recursive: true });
-          await fs.writeFile(path.join(root, `story.txt`), `a`, `utf8`);
-          await fs.writeFile(path.join(root, `src/in-scope.txt`), `x`, `utf8`);
+          await Directory.async.ensure(path.join(root, `src`));
+          await File.async.write(path.join(root, `story.txt`), `a`);
+          await File.async.write(path.join(root, `src/in-scope.txt`), `x`);
         },
       },
       async ({ workspace }) => {
@@ -261,15 +255,15 @@ describe(`grepReplace`, () => {
       {
         files: [`src/story.txt`],
         prepare: async root => {
-          await fs.mkdir(path.join(root, `src`), { recursive: true });
-          await fs.writeFile(path.join(root, `src/story.txt`), `a`, `utf8`);
+          await Directory.async.ensure(path.join(root, `src`));
+          await File.async.write(path.join(root, `src/story.txt`), `a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(
           workspace.grepReplace({ glob: `src/story.txt`, newString: `b`, oldString: `a` }),
         ).resolves.toStrictEqual({ result: { files: [`src/story.txt`], scopeGlob: `src/story.txt` } });
-        await expect(fs.readFile(path.join(root, `src/story.txt`), `utf8`)).resolves.toBe(`b`);
+        await expect(File.async.read(path.join(root, `src/story.txt`))).resolves.toBe(`b`);
       },
     );
   });
@@ -281,7 +275,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `FoO`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `FoO`);
         },
       },
       async ({ workspace }) => {
@@ -297,7 +291,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `start\nmiddle\nend`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `start\nmiddle\nend`);
         },
       },
       async ({ workspace }) => {
@@ -313,7 +307,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `id-12\nid-abc\nid-9`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `id-12\nid-abc\nid-9`);
         },
       },
       async ({ workspace }) => {
@@ -329,7 +323,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `a.b\nabc\na-b`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `a.b\nabc\na-b`);
         },
       },
       async ({ workspace }) => {
@@ -345,7 +339,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `FOO\nfoo\nFoO`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `FOO\nfoo\nFoO`);
         },
       },
       async ({ workspace }) => {
@@ -361,8 +355,8 @@ describe(`grep`, () => {
       {
         files: [`a.txt`, `b.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `foo\nbar\nfoo`, `utf8`);
-          await fs.writeFile(path.join(root, `b.txt`), `foo`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `foo\nbar\nfoo`);
+          await File.async.write(path.join(root, `b.txt`), `foo`);
         },
       },
       async ({ list, workspace }) => {
@@ -383,7 +377,7 @@ describe(`grep`, () => {
       {
         files: [`a.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `a.txt`), `foo\nfoo`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `foo\nfoo`);
         },
       },
       async ({ workspace }) => {
@@ -427,8 +421,8 @@ describe(`grep`, () => {
       {
         files: [`src/a.txt`],
         prepare: async root => {
-          await fs.mkdir(path.join(root, `src`), { recursive: true });
-          await fs.writeFile(path.join(root, `src/a.txt`), `needle`, `utf8`);
+          await Directory.async.ensure(path.join(root, `src`));
+          await File.async.write(path.join(root, `src/a.txt`), `needle`);
         },
       },
       async ({ list, workspace }) => {
@@ -445,7 +439,7 @@ describe(`grep`, () => {
       {
         files: [`ok.txt`, `missing.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `ok.txt`), `needle`, `utf8`);
+          await File.async.write(path.join(root, `ok.txt`), `needle`);
         },
       },
       async ({ workspace }) => {
@@ -461,9 +455,9 @@ describe(`grep`, () => {
       {
         files: [`bin.dat`, `big.txt`, `ok.txt`],
         prepare: async root => {
-          await fs.writeFile(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
-          await fs.writeFile(path.join(root, `big.txt`), `x`.repeat(900_001), `utf8`);
-          await fs.writeFile(path.join(root, `ok.txt`), `needle`, `utf8`);
+          await File.async.write(path.join(root, `bin.dat`), Buffer.from([1, 0, 2]));
+          await File.async.write(path.join(root, `big.txt`), `x`.repeat(900_001));
+          await File.async.write(path.join(root, `ok.txt`), `needle`);
         },
       },
       async ({ workspace }) => {
@@ -485,9 +479,9 @@ describe(`glob`, () => {
           return globs?.[0] === `src/*` ? [`src/a.ts`] : [];
         },
         prepare: async root => {
-          await fs.mkdir(path.join(root, `src/dir`), { recursive: true });
-          await fs.writeFile(path.join(root, `src/a.ts`), `a`, `utf8`);
-          await fs.writeFile(path.join(root, `src/dir/b.ts`), `b`, `utf8`);
+          await Directory.async.ensure(path.join(root, `src/dir`));
+          await File.async.write(path.join(root, `src/a.ts`), `a`);
+          await File.async.write(path.join(root, `src/dir/b.ts`), `b`);
         },
       },
       async ({ workspace }) => {
@@ -549,7 +543,7 @@ describe(`renameFile`, () => {
       {
         prepare: async root => {
           runGit({ args: [`init`], cwd: root });
-          await fs.writeFile(path.join(root, `old.txt`), `a`, `utf8`);
+          await File.async.write(path.join(root, `old.txt`), `a`);
           runGit({ args: [`add`, `old.txt`], cwd: root });
         },
       },
@@ -557,7 +551,7 @@ describe(`renameFile`, () => {
         await expect(workspace.renameFile({ newName: `new.txt`, path: `old.txt` })).resolves.toStrictEqual({
           error: undefined,
         });
-        await expect(fs.readFile(path.join(root, `new.txt`), `utf8`)).resolves.toBe(`a`);
+        await expect(File.async.read(path.join(root, `new.txt`))).resolves.toBe(`a`);
       },
     );
   });
@@ -567,14 +561,14 @@ describe(`renameFile`, () => {
       {
         prepare: async root => {
           runGit({ args: [`init`], cwd: root });
-          await fs.writeFile(path.join(root, `old.txt`), `a`, `utf8`);
+          await File.async.write(path.join(root, `old.txt`), `a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.renameFile({ newName: `new.txt`, path: `old.txt` })).resolves.toStrictEqual({
           error: undefined,
         });
-        await expect(fs.readFile(path.join(root, `new.txt`), `utf8`)).resolves.toBe(`a`);
+        await expect(File.async.read(path.join(root, `new.txt`))).resolves.toBe(`a`);
       },
     );
   });
@@ -594,13 +588,13 @@ describe(`moveFile`, () => {
       {
         prepare: async root => {
           runGit({ args: [`init`], cwd: root });
-          await fs.writeFile(path.join(root, `a.txt`), `a`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `a`);
           runGit({ args: [`add`, `a.txt`], cwd: root });
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.moveFile({ directoryPath: `dir`, path: `a.txt` })).resolves.toStrictEqual({});
-        await expect(fs.readFile(path.join(root, `dir/a.txt`), `utf8`)).resolves.toBe(`a`);
+        await expect(File.async.read(path.join(root, `dir/a.txt`))).resolves.toBe(`a`);
       },
     );
   });
@@ -610,12 +604,12 @@ describe(`moveFile`, () => {
       {
         prepare: async root => {
           runGit({ args: [`init`], cwd: root });
-          await fs.writeFile(path.join(root, `a.txt`), `a`, `utf8`);
+          await File.async.write(path.join(root, `a.txt`), `a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.moveFile({ directoryPath: `dir`, path: `a.txt` })).resolves.toStrictEqual({});
-        await expect(fs.readFile(path.join(root, `dir/a.txt`), `utf8`)).resolves.toBe(`a`);
+        await expect(File.async.read(path.join(root, `dir/a.txt`))).resolves.toBe(`a`);
       },
     );
   });
@@ -642,12 +636,12 @@ describe(`deleteFile`, () => {
     await withWorkspace(
       {
         prepare: async root => {
-          await fs.writeFile(path.join(root, `gone.txt`), `x`, `utf8`);
+          await File.async.write(path.join(root, `gone.txt`), `x`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.deleteFile({ path: `gone.txt` })).resolves.toStrictEqual({});
-        await expect(fs.access(path.join(root, `gone.txt`))).rejects.toBeDefined();
+        await expect(File.async.access(path.join(root, `gone.txt`))).rejects.toBeDefined();
       },
     );
   });

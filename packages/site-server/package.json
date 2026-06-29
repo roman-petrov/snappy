@@ -7,6 +7,7 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/node": "workspace:*",
     "@snappy/server-module": "workspace:*",
     "@snappy/ui-core": "workspace:*",
     "fastify": "^5.8.5"

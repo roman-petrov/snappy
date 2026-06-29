@@ -7,8 +7,8 @@ import type { HtmlCache, InjectTheme } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 import { _, MimeType } from "@snappy/core";
+import { File } from "@snappy/node";
 import { Settings } from "@snappy/ui-core";
-import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -20,7 +20,7 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
   const loadTemplateAndEntry = async (clientRoot: string): Promise<{ entry: SsrEntry; template: string }> => {
     const templatePath = join(clientRoot, `index.html`);
     const ssrEntryPath = pathToFileURL(join(clientRoot, `server`, `entry-server.js`)).href;
-    const template = readFileSync(templatePath, `utf8`);
+    const template = File.read(templatePath);
     const ssrModule = await import(ssrEntryPath);
     const render = _.isFunction(ssrModule.render) ? ssrModule.render : undefined;
 

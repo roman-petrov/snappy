@@ -10,6 +10,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/do": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",
     "@snappy/site-server": "workspace:*",
     "@snappy/ui-core": "workspace:*",
