@@ -574,6 +574,9 @@
         "@snappy/ui-core": "workspace:*",
         "fastify": "^5.8.5",
       },
+      "devDependencies": {
+        "vitest": "^4.1.9",
+      },
     },
     "packages/snappy": {
       "name": "@snappy/snappy",

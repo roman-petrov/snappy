@@ -3,9 +3,12 @@ set -euo pipefail
 
 MAX_ATTEMPTS=10
 RETRY_DELAY=3
-URLS=(
-  "https://snappy-ai.ru/"
-  "https://snappy-ai.ru/app/"
+FINGERPRINT_PATTERN='"sha256_cert_fingerprints":\["[0-9A-F]{2}(:[0-9A-F]{2}){31}"\]'
+
+CHECKS=(
+  "https://snappy-ai.ru/|"
+  "https://snappy-ai.ru/app/|"
+  "https://snappy-ai.ru/.well-known/assetlinks.json|${FINGERPRINT_PATTERN}"
 )
 
 echo '.'
@@ -14,12 +17,14 @@ echo "🩺 Health check..."
 echo "🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠🟠"
 echo '.'
 
-check_url() {
+check() {
   local url="$1"
+  local pattern="${2:-}"
   local attempt=1
+  local body
 
   while (( attempt <= MAX_ATTEMPTS )); do
-    if curl -fsSL --max-time 30 "$url" -o /dev/null; then
+    if body="$(curl -fsSL --max-time 30 "$url" 2>/dev/null)" && { [[ -z "$pattern" ]] || printf '%s' "$body" | grep -Eq "$pattern"; }; then
       echo "✅ ${url}"
       return 0
     fi
@@ -36,8 +41,9 @@ check_url() {
   return 1
 }
 
-for url in "${URLS[@]}"; do
-  check_url "${url}"
+for entry in "${CHECKS[@]}"; do
+  IFS='|' read -r url pattern <<< "$entry"
+  check "$url" "$pattern"
 done
 
 echo '.'
