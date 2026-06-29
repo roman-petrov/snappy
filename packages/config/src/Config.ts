@@ -4,29 +4,31 @@ import { createHmac } from "node:crypto";
 
 import { ConfigValues } from "./ConfigValues";
 import { DevTls } from "./DevTls";
+import { type SecretKey, SecretKeys } from "./SecretKeys";
 
-const requiredKey = (name: string) => () => ConfigValues.required(ConfigValues.values(), name);
-const optionalKey = (name: string) => () => ConfigValues.values()[name];
-const dbHost = requiredKey(`DB_HOST`);
-const dbName = requiredKey(`DB_NAME`);
-const dbPassword = requiredKey(`DB_PASSWORD`);
-const dbPort = requiredKey(`DB_PORT`);
-const dbUser = requiredKey(`DB_USER`);
+const requiredKey = (name: SecretKey) => () => ConfigValues.required(ConfigValues.values(), name);
+const optionalKey = (name: SecretKey) => () => ConfigValues.values()[name];
+const dbHost = requiredKey(SecretKeys.dbHost);
+const dbName = requiredKey(SecretKeys.dbName);
+const dbPassword = requiredKey(SecretKeys.dbPassword);
+const dbPort = requiredKey(SecretKeys.dbPort);
+const dbUser = requiredKey(SecretKeys.dbUser);
 const dbAuth = () => `${dbUser()}:${dbPassword()}@${dbHost()}:${Number(dbPort())}`;
 const dbUrl = () => `postgresql://${dbAuth()}/${dbName()}`;
 const dbShadowUrl = () => `postgresql://${dbAuth()}/${dbName()}_shadow`;
-const betterAuthJwtSecret = requiredKey(`JWT_SECRET`);
-const adminUsername = requiredKey(`ADMIN_USERNAME`);
-const adminPassword = requiredKey(`ADMIN_PASSWORD`);
-const aiTunnelKey = requiredKey(`AI_TUNNEL_API_KEY`);
-const smtpUser = requiredKey(`SMTP_USER`);
-const smtpPassword = requiredKey(`SMTP_PASSWORD`);
-const yooKassaSecretKey = optionalKey(`YOOKASSA_SECRET_KEY`);
-const yooKassaShopId = optionalKey(`YOOKASSA_SHOP_ID`);
+const betterAuthJwtSecret = requiredKey(SecretKeys.jwtSecret);
+const adminUsername = requiredKey(SecretKeys.adminUsername);
+const adminPassword = requiredKey(SecretKeys.adminPassword);
+const aiTunnelKey = requiredKey(SecretKeys.aiTunnelApiKey);
+const smtpUser = requiredKey(SecretKeys.smtpUser);
+const smtpPassword = requiredKey(SecretKeys.smtpPassword);
+const yooKassaSecretKey = optionalKey(SecretKeys.yookassaSecretKey);
+const yooKassaShopId = optionalKey(SecretKeys.yookassaShopId);
+const androidCertSha256 = requiredKey(SecretKeys.androidCertSha256);
 const adminSessionSecret = () => createHmac(`sha256`, betterAuthJwtSecret()).update(`snappy-admin-v1`).digest();
 const smtpFrom = smtpUser;
-const sslCertPem = requiredKey(`SSL_CERT_PEM`);
-const sslCertKey = requiredKey(`SSL_CERT_KEY`);
+const sslCertPem = requiredKey(SecretKeys.sslCertPem);
+const sslCertKey = requiredKey(SecretKeys.sslCertKey);
 const prodSsl = () => ({ cert: sslCertPem(), key: sslCertKey() });
 
 const devSsl = () => {
@@ -51,6 +53,7 @@ export const Config = {
   adminSessionSecret,
   adminUsername,
   aiTunnelKey,
+  androidCertSha256,
   authEmailCooldownSec,
   balancePaymentMaxRub,
   balancePaymentMinRub,

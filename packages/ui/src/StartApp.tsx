@@ -48,10 +48,9 @@ export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: Star
 
   const element = (
     <AppRouter base={base} layerOf={layerOf} router={router}>
+      <AuthLayout publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath} />
       <App disableSelection header={header} track={tabs}>
-        <AuthLayout publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath}>
-          {tabs === undefined ? undefined : <TabPager items={tabs} />}
-        </AuthLayout>
+        {tabs === undefined ? undefined : <TabPager items={tabs} />}
       </App>
     </AppRouter>
   );

@@ -1,13 +1,15 @@
+// cspell:word assetlinks
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable functional/no-expression-statements */
 import type { ServerModule } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
+import { Config, ConfigValues } from "@snappy/config";
 import { MimeType } from "@snappy/core";
 import { File } from "@snappy/node";
 import { join } from "node:path";
 
-import { Ssr } from "./core";
+import { AssetLinks, Ssr } from "./core";
 
 export const SiteServer: ServerModule = distDir => {
   const distName = `site`;
@@ -35,6 +37,13 @@ export const SiteServer: ServerModule = distDir => {
       app.get(`/favicon.svg`, async (_request, reply) => {
         await reply.sendFile(`favicon.svg`, siteRoot);
       });
+
+      if (ConfigValues.production()) {
+        app.get(`/.well-known/assetlinks.json`, async (_request, reply) => {
+          reply.type(MimeType.json);
+          await reply.send(AssetLinks.body(Config.androidCertSha256()));
+        });
+      }
     },
   };
 };

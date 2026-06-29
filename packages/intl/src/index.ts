@@ -2,7 +2,9 @@
 /* eslint-disable init-declarations */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
-import type { Locale } from "./Locale";
+import { Locale } from "./Locale";
+
+export { Locale } from "./Locale";
 
 export type * from "./Locale";
 
@@ -28,7 +30,7 @@ const setLocale = (value: Locale) => {
   currentLocale = normalizeLocale(value) === `ru-RU` ? `ru` : `en`;
 };
 
-const getLocale = () => currentLocale ?? `en`;
+const getLocale = () => currentLocale ?? Locale.default;
 const resolveLocale = (locale?: Locale) => normalizeLocale(locale ?? getLocale());
 const dateFormats = { default: { dateStyle: `short` } } as const;
 const numberFormats = { default: {} } as const;

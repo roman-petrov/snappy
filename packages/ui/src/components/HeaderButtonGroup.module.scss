@@ -2,10 +2,6 @@
 
 .root {
   display: flex;
-  gap: space.md();
-  align-items: center;
-}
-
-.compact {
   gap: space.sm();
+  align-items: center;
 }

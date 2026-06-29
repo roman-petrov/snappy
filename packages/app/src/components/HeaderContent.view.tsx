@@ -11,7 +11,7 @@ export type HeaderContentViewProps = ReturnType<typeof useHeaderContentState>;
 
 export const HeaderContentView = ({ signedIn }: HeaderContentViewProps) =>
   signedIn ? (
-    <HeaderButtonGroup compact>
+    <HeaderButtonGroup>
       <IconButtonTheme />
       <IconButton icon={Settings} link={Routes.settings.root} tip={t(`settings.title`)} vibrate="none" />
       <BalanceTap />

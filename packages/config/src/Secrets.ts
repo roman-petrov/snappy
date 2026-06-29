@@ -7,6 +7,8 @@ import { createCipheriv, createDecipheriv, randomBytes, scryptSync } from "node:
 import { join } from "node:path";
 import { isMap, parseDocument, parse as yamlParse, stringify as yamlStringify } from "yaml";
 
+import type { SecretKey, SecretValues } from "./SecretKeys";
+
 export type SecretsResult<T> = { error: string; ok: false } | { ok: true; value: T };
 
 type EncPayload = { cipherText: string; format: 1; nonce: string };
@@ -69,7 +71,7 @@ const readEnc = (path: string): SecretsResult<EncPayload> => {
 
 const writeEnc = (path: string, payload: EncPayload) => File.write(path, `${yamlStringify(payload).trim()}\n`);
 
-const yamlToRecord = (text: string): SecretsResult<Record<string, string>> => {
+const yamlToRecord = (text: string): SecretsResult<SecretValues> => {
   const parsed: unknown = yamlParse(text);
 
   return isPlainObject(parsed)
@@ -105,7 +107,7 @@ const decryptFile = (root: string, secretsKey: string): SecretsResult<undefined>
     : failure(`Missing ${prodEnc}`);
 };
 
-const dev = (root: string): SecretsResult<Record<string, string>> => {
+const dev = (root: string): SecretsResult<SecretValues> => {
   const { dev: devPath } = paths(root);
 
   return File.exists(devPath)
@@ -113,7 +115,7 @@ const dev = (root: string): SecretsResult<Record<string, string>> => {
     : failure(`Missing secrets.dev.yaml. Copy secrets.dev.example.yaml.`);
 };
 
-const prod = (root: string, secretsKey: string): SecretsResult<Record<string, string>> => {
+const prod = (root: string, secretsKey: string): SecretsResult<SecretValues> => {
   const { prodEnc } = paths(root);
   const enc = readEnc(prodEnc);
   const decrypted = enc.ok ? plainText(enc.value, secretsKey) : enc;
@@ -127,7 +129,7 @@ const prod = (root: string, secretsKey: string): SecretsResult<Record<string, st
     : failure(`Missing ${prodEnc}`);
 };
 
-const mergeYaml = (path: string, keys: Record<string, string>): SecretsResult<undefined> => {
+const mergeYaml = (path: string, keys: Partial<Record<SecretKey, string>>): SecretsResult<undefined> => {
   if (!File.exists(path)) {
     return failure(`Missing ${path}.`);
   }
@@ -137,7 +139,7 @@ const mergeYaml = (path: string, keys: Record<string, string>): SecretsResult<un
     return failure(`Invalid secrets YAML.`);
   }
 
-  for (const [name, value] of _.entries(keys)) {
+  for (const [name, value] of Object.entries(keys)) {
     yamlDocument.set(name, value);
   }
 

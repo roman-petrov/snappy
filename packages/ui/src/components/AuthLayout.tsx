@@ -5,7 +5,7 @@ import { useAuthLayoutState } from "./AuthLayout.state";
 import { AuthLayoutView } from "./AuthLayout.view";
 
 export type AuthLayoutProps = {
-  children: ReactNode;
+  children?: ReactNode;
   publicPaths: readonly string[];
   signedIn: ReadonlyStore<boolean>;
   signInPath: string;

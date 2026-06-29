@@ -28,7 +28,7 @@ final class AppHost {
         connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     }
 
-    void bind() {
+    void bind(String link) {
         webView.setWebViewClient(
                 new WebViewClient() {
                     @Override
@@ -92,9 +92,15 @@ final class AppHost {
                 networkCallback);
 
         if (networkAvailable()) {
-            loadMain();
+            load(AppLink.start(link, appUrl));
         } else {
             showStartupError(true);
+        }
+    }
+
+    void open(String link) {
+        if (AppLink.trusted(link, appUrl)) {
+            webView.loadUrl(link);
         }
     }
 
@@ -110,10 +116,14 @@ final class AppHost {
     }
 
     private void loadMain() {
+        load(appUrl);
+    }
+
+    private void load(String url) {
         webReady = false;
         errorScreen.hide();
         splash.setVisibility(View.VISIBLE);
-        webView.loadUrl(appUrl);
+        webView.loadUrl(url);
     }
 
     private boolean isAppUrl(String url) {

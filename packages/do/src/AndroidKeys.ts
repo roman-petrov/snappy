@@ -1,6 +1,6 @@
 // cspell: word keytool storetype genkeypair keyalg keysize storepass keypass
-
-import { Secrets, type SecretsResult } from "@snappy/config";
+/* eslint-disable functional/no-expression-statements */
+import { SecretKeys, Secrets, type SecretsResult } from "@snappy/config";
 import { _, Password } from "@snappy/core";
 import { Console, Directory, File, Process, Terminal } from "@snappy/node";
 import { join } from "node:path";
@@ -42,46 +42,72 @@ const keytoolError = (result: number | { exitCode: number; stderr: string }) => 
   return detail === undefined ? `keytool failed.` : `keytool failed: ${detail}`;
 };
 
-const keystoreBase64 = async (dname: string, password: string): Promise<SecretsResult<string>> => {
+const withKeystore = async <T>(
+  prefix: string,
+  fn: (dir: string, keystore: string, tool: string) => Promise<SecretsResult<T>>,
+): Promise<SecretsResult<T>> => {
   const tool = keytoolPath();
 
   return tool === undefined
     ? { error: `JAVA_HOME must be set`, ok: false }
-    : Directory.withTemp(async dir => {
-        const keystore = join(dir, `keystore.p12`);
-
-        const result = await Process.spawn(
-          dir,
-          [
-            tool,
-            `-genkeypair`,
-            `-storetype`,
-            `PKCS12`,
-            `-keystore`,
-            keystore,
-            `-alias`,
-            AndroidSigning.alias,
-            `-keyalg`,
-            `RSA`,
-            `-keysize`,
-            `2048`,
-            `-validity`,
-            `10000`,
-            `-storepass`,
-            password,
-            `-keypass`,
-            password,
-            `-dname`,
-            dname,
-          ],
-          { capture: true },
-        );
-
-        return Process.exitCode(result) === 0
-          ? { ok: true, value: File.bytes(keystore).toString(`base64`) }
-          : { error: keytoolError(result), ok: false };
-      }, `snappy-keys-`);
+    : Directory.withTemp(async dir => fn(dir, join(dir, `keystore.p12`), tool), prefix);
 };
+
+const certSha256FromKeystore = async (base64: string, password: string): Promise<SecretsResult<string>> =>
+  withKeystore(`snappy-fp-`, async (dir, keystore, tool) => {
+    File.write(keystore, Buffer.from(base64, `base64`));
+
+    const result = await Process.spawn(
+      dir,
+      [tool, `-list`, `-v`, `-keystore`, keystore, `-storepass`, password, `-alias`, AndroidSigning.alias],
+      { capture: true },
+    );
+
+    if (Process.exitCode(result) !== 0) {
+      return { error: keytoolError(result), ok: false };
+    }
+
+    const stdout = _.isObject(result) ? result.stdout : ``;
+    const sha256 = /SHA256:\s*(?<sha256>[0-9:A-Fa-f]+)/u.exec(stdout)?.groups?.[`sha256`];
+
+    return sha256 === undefined
+      ? { error: `SHA256 fingerprint not found in keytool output.`, ok: false }
+      : { ok: true, value: sha256.replaceAll(`:`, ``).toUpperCase() };
+  });
+
+const keystoreBase64 = async (dname: string, password: string): Promise<SecretsResult<string>> =>
+  withKeystore(`snappy-keys-`, async (dir, keystore, tool) => {
+    const result = await Process.spawn(
+      dir,
+      [
+        tool,
+        `-genkeypair`,
+        `-storetype`,
+        `PKCS12`,
+        `-keystore`,
+        keystore,
+        `-alias`,
+        AndroidSigning.alias,
+        `-keyalg`,
+        `RSA`,
+        `-keysize`,
+        `2048`,
+        `-validity`,
+        `10000`,
+        `-storepass`,
+        password,
+        `-keypass`,
+        password,
+        `-dname`,
+        dname,
+      ],
+      { capture: true },
+    );
+
+    return Process.exitCode(result) === 0
+      ? { ok: true, value: File.bytes(keystore).toString(`base64`) }
+      : { error: keytoolError(result), ok: false };
+  });
 
 const update = async (root: string, mode: Mode) => {
   const config = modes[mode];
@@ -96,9 +122,15 @@ const update = async (root: string, mode: Mode) => {
     return Run.fail(generated.error);
   }
 
+  const fingerprint = await certSha256FromKeystore(generated.value, password);
+  if (!fingerprint.ok) {
+    return Run.fail(fingerprint.error);
+  }
+
   const merged = Secrets.mergeYaml(path, {
-    [AndroidSigning.keystoreBase64]: generated.value,
-    [AndroidSigning.keystorePassword]: password,
+    [SecretKeys.androidCertSha256]: fingerprint.value,
+    [SecretKeys.androidKeystoreBase64]: generated.value,
+    [SecretKeys.androidKeystorePassword]: password,
   });
 
   return merged.ok

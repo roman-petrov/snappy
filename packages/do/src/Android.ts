@@ -1,6 +1,6 @@
 /* cspell:word vectordrawable gradlew */
 /* eslint-disable functional/no-expression-statements */
-import { Secrets, type SecretsResult } from "@snappy/config";
+import { type SecretKey, SecretKeys, Secrets, type SecretsResult, type SecretValues } from "@snappy/config";
 import { Directory, File, Process } from "@snappy/node";
 import { join } from "node:path";
 import svg2vectordrawable from "svg2vectordrawable";
@@ -34,7 +34,7 @@ const apkOutPath = (root: string, variant: `debug` | `release`) =>
     variant === `release` ? `app-release.apk` : `app-debug.apk`,
   );
 
-const requiredKey = (source: Record<string, string>, name: string): SecretsResult<string> => {
+const requiredKey = (source: SecretValues, name: SecretKey): SecretsResult<string> => {
   const value = source[name];
 
   return value === undefined || value === `` ? { error: `${name} must be set`, ok: false } : { ok: true, value };
@@ -58,8 +58,8 @@ const gradleSigningEnv = (keystore: string, password: string) => ({
 
 const keys = (root: string, variant: `debug` | `release`): SecretsResult<{ base64: string; password: string }> => {
   const loaded = values(root, variant);
-  const base64 = loaded.ok ? requiredKey(loaded.value, AndroidSigning.keystoreBase64) : loaded;
-  const password = base64.ok && loaded.ok ? requiredKey(loaded.value, AndroidSigning.keystorePassword) : base64;
+  const base64 = loaded.ok ? requiredKey(loaded.value, SecretKeys.androidKeystoreBase64) : loaded;
+  const password = base64.ok && loaded.ok ? requiredKey(loaded.value, SecretKeys.androidKeystorePassword) : base64;
 
   return loaded.ok
     ? base64.ok

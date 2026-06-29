@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { _, Cookie } from "@snappy/core";
+import { Locale } from "@snappy/intl";
 
 import { Language, type Language as LanguageValue } from "./Language";
 import { Theme, type Theme as ThemeValue } from "./Theme";
@@ -23,10 +24,8 @@ export const Settings = (request?: {
 
   const headers = request?.headers;
   const cookie = header(headers, `cookie`);
-  const acceptLanguage = header(headers, `accept-language`);
   const stored = Cookie.value(cookie, Language.key) as LanguageValue | undefined;
-  const fallback = acceptLanguage?.toLowerCase().startsWith(`ru`) === true ? `ru` : `en`;
-  const locale = Language.resolve(stored ?? fallback);
+  const locale = Language.resolve(stored ?? Locale.default);
   const theme = Theme.resolve(Cookie.value(cookie, Theme.key) as ThemeValue | undefined);
 
   return { locale, theme };

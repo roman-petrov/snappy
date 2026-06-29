@@ -143,7 +143,7 @@ public class MainActivity extends ComponentActivity {
                 });
 
         appHost = new AppHost(this, webView, splash, errorScreen, BuildConfig.APP_URL);
-        appHost.bind();
+        appHost.bind(AppLink.from(getIntent()));
 
         getOnBackPressedDispatcher()
                 .addCallback(
@@ -162,6 +162,15 @@ public class MainActivity extends ComponentActivity {
                                 }
                             }
                         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (appHost != null) {
+            appHost.open(AppLink.from(intent));
+        }
     }
 
     @Override

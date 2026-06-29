@@ -6,5 +6,5 @@ export const EslintFix: Command = {
   description: `Fix ESLint issues.`,
   label: `🔧 ESLint`,
   name: `eslint-fix`,
-  run: Run.tool(`eslint`, [`--fix`, `--max-warnings=0`, `.`]),
+  run: Run.tool(`eslint`, [`--concurrency`, `auto`, `--fix`, `--max-warnings=0`, `.`]),
 };

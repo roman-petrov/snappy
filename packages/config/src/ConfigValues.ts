@@ -3,6 +3,7 @@
 /* eslint-disable init-declarations */
 import { _ } from "@snappy/core";
 
+import type { SecretKey, SecretValues } from "./SecretKeys";
 import type { Environment } from "./Types";
 
 import { Secrets, type SecretsResult } from "./Secrets";
@@ -13,7 +14,7 @@ const prodHost = `snappy-ai.ru`;
 const production = () => process.env.NODE_ENV === `production`;
 const env = (): Environment => (production() ? `prod` : `dev`);
 
-const required = (source: Record<string, string>, name: string) => {
+const required = (source: SecretValues, name: SecretKey) => {
   const value = source[name];
   if (value === undefined || value === ``) {
     throw new Error(`${name} must be set`);
@@ -22,7 +23,7 @@ const required = (source: Record<string, string>, name: string) => {
   return value;
 };
 
-const secretsFor = (mode: Environment): SecretsResult<Record<string, string>> => {
+const secretsFor = (mode: Environment): SecretsResult<SecretValues> => {
   if (mode === `dev`) {
     return Secrets.dev(root);
   }
@@ -45,7 +46,7 @@ const load = () => {
 };
 
 const values = (() => {
-  let cached: Record<string, string> | undefined;
+  let cached: SecretValues | undefined;
 
   return () => {
     cached ??= load();

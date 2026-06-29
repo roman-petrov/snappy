@@ -9,16 +9,16 @@ import {
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
-import { Config, ConfigValues } from "@snappy/config";
+import { Config, ConfigValues, SecretKeys, type SecretValues } from "@snappy/config";
 import { _, MimeType } from "@snappy/core";
 import { Readable } from "node:stream";
 
-const clientFrom = (source: Record<string, string>) => ({
-  bucket: ConfigValues.required(source, `S3_BUCKET`),
+const clientFrom = (source: SecretValues) => ({
+  bucket: ConfigValues.required(source, SecretKeys.s3Bucket),
   sdk: new S3Client({
     credentials: {
-      accessKeyId: ConfigValues.required(source, `S3_ACCESS_KEY`),
-      secretAccessKey: ConfigValues.required(source, `S3_SECRET_KEY`),
+      accessKeyId: ConfigValues.required(source, SecretKeys.s3AccessKey),
+      secretAccessKey: ConfigValues.required(source, SecretKeys.s3SecretKey),
     },
     endpoint: `https://s3.regru.cloud`,
     forcePathStyle: true,
