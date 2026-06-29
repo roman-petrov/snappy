@@ -39,6 +39,7 @@ export const NewPasswordInputView = ({
         <IconButton
           disabled={inputProps.disabled}
           icon={Dices}
+          keepFocus
           onClick={generatePassword}
           tip={t(`newPasswordInput.generatePassword`)}
         />
@@ -46,6 +47,7 @@ export const NewPasswordInputView = ({
         <IconButton
           disabled={inputProps.disabled}
           icon={visible ? EyeOff : Eye}
+          keepFocus
           onClick={toggleVisible}
           tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
         />

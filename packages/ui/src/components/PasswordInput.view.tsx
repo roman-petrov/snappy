@@ -26,6 +26,7 @@ export const PasswordInputView = ({
       <IconButton
         disabled={disabled}
         icon={visible ? EyeOff : Eye}
+        keepFocus
         onClick={toggleVisible}
         tip={visible ? t(`passwordInput.hidePassword`) : t(`passwordInput.showPassword`)}
       />
