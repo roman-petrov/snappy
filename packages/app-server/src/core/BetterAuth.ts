@@ -1,10 +1,13 @@
+/* eslint-disable functional/no-promise-reject */
+/* eslint-disable @typescript-eslint/require-await */
 import type { DbAuth } from "@snappy/db";
 
 import { Config } from "@snappy/config";
-import { _ } from "@snappy/core";
+import { _, Email as EmailCore } from "@snappy/core";
 import { Email } from "@snappy/email";
 import { Settings } from "@snappy/ui-core";
 import { betterAuth } from "better-auth";
+import { APIError } from "better-auth/api";
 
 import { AuthEmail } from "./AuthEmail";
 
@@ -19,6 +22,22 @@ export const BetterAuth = ({ auth }: BetterAuthConfig) => {
     basePath: `/api/auth`,
     baseURL: _.https(Config.host),
     database: auth,
+    databaseHooks: {
+      user: {
+        create: {
+          before: async user => {
+            if (EmailCore.foreignProvider(user.email)) {
+              throw APIError.from(`BAD_REQUEST`, {
+                code: `FOREIGN_EMAIL`,
+                message: `Foreign email provider is not allowed for registration`,
+              });
+            }
+
+            return { data: user };
+          },
+        },
+      },
+    },
     emailAndPassword: {
       autoSignIn: false,
       enabled: true,

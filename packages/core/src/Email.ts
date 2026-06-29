@@ -1,4 +1,30 @@
-const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/u;
+// cspell:word googlemail protonmail ymail
+const pattern = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/u;
+
+const foreignDomains = new Set([
+  `aol.com`,
+  `gmail.com`,
+  `googlemail.com`,
+  `hotmail.com`,
+  `icloud.com`,
+  `live.com`,
+  `mac.com`,
+  `mail.com`,
+  `me.com`,
+  `msn.com`,
+  `outlook.com`,
+  `proton.me`,
+  `protonmail.com`,
+  `yahoo.com`,
+  `ymail.com`,
+]);
+
+const domain = (email: string) => {
+  const normalized = email.trim().toLowerCase();
+  const at = normalized.lastIndexOf(`@`);
+
+  return at === -1 ? `` : normalized.slice(at + 1);
+};
 
 const valid = (email: string) => {
   const trimmed = email.trim();
@@ -6,4 +32,10 @@ const valid = (email: string) => {
   return trimmed.length > 0 && pattern.test(trimmed);
 };
 
-export const Email = { valid };
+const foreignProvider = (email: string) => {
+  const host = domain(email);
+
+  return host.length > 0 && foreignDomains.has(host);
+};
+
+export const Email = { foreignProvider, valid };

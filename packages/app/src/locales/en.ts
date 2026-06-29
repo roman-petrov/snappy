@@ -62,6 +62,7 @@ export const en = {
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `An account with this email already exists`,
+        foreignEmail: `Use a Russian email provider (for example, Yandex or Mail.ru)`,
         invalidCredentials: `Weak password`,
         invalidEmail: `Enter a valid email`,
         unknownError: `Could not complete sign up`,
