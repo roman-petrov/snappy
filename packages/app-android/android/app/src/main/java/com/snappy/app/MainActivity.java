@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
@@ -92,6 +93,7 @@ public class MainActivity extends ComponentActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        CookieManager.getInstance().setAcceptCookie(true);
         bridge = new Bridge(this, webView);
         webView.addJavascriptInterface(bridge, "Bridge");
 
@@ -162,6 +164,12 @@ public class MainActivity extends ComponentActivity {
                                 }
                             }
                         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        CookieManager.getInstance().flush();
     }
 
     @Override
