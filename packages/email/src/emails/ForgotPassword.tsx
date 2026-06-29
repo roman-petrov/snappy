@@ -3,7 +3,7 @@ import type { Locale } from "@snappy/intl";
 
 import { Text } from "react-email";
 
-import { Brand, EmailLayout, PrimaryButton, Title, UrlFallback } from "../components";
+import { Brand, EmailLayout, PrimaryButton, Title } from "../components";
 import { Colors, Layout } from "../core";
 import { t } from "../locales";
 
@@ -19,7 +19,6 @@ export const ForgotPasswordEmail = ({ locale, title, url }: ForgotPasswordInput)
       {t(locale, `forgotPassword.lead`)}
     </Text>
     <PrimaryButton href={url} text={t(locale, `forgotPassword.button`)} />
-    <UrlFallback href={url} label={t(locale, `forgotPassword.linkLabel`)} />
     <Text
       style={{ color: Colors.muted, fontSize: Layout.fontSize.small, lineHeight: 1.5, margin: Layout.margin.footer }}
     >

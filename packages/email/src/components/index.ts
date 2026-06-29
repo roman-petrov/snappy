@@ -5,5 +5,3 @@ export * from "./EmailLayout";
 export * from "./PrimaryButton";
 
 export * from "./Title";
-
-export * from "./UrlFallback";
