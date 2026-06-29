@@ -82,9 +82,13 @@ export const SlideTrack = ({
   let isDragging = false;
   let documentDetach: (() => void) | undefined;
 
-  const reset = () => {
+  const resetPress = () => {
     pressArmed = false;
     isDragging = false;
+  };
+
+  const reset = () => {
+    resetPress();
     pointerId = undefined;
   };
 
@@ -172,6 +176,9 @@ export const SlideTrack = ({
         start?.(state());
         gestureNavigation = true;
         commit(snap({ release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() }));
+        resetPress();
+
+        return;
       }
 
       reset();
@@ -197,7 +204,7 @@ export const SlideTrack = ({
           : { release: buildReleaseSnap(translateX, releasePointer(event, delta, travel)), state: state() },
       ),
     );
-    reset();
+    resetPress();
   };
 
   const onPointerMove = (event: PointerEvent) => {
@@ -309,6 +316,14 @@ export const SlideTrack = ({
       }
     })();
   };
+
+  const interruptSettle = () => {
+    interrupt();
+    gestureNavigation = true;
+    commit(snap({ state: state() }));
+    reset();
+  };
+
   transformActive = () => isDragging || isSettling || (visible === undefined ? translateX !== 0 : visible(state()));
 
   const busy = () => isDragging || isSettling;
@@ -340,11 +355,15 @@ export const SlideTrack = ({
             return;
           }
 
-          stopDocumentListeners();
-          reset();
+          if ((isDragging || pressArmed || isSettling) && event.pointerId !== pointerId) {
+            return;
+          }
 
           if (isSettling) {
-            interrupt();
+            interruptSettle();
+          } else {
+            stopDocumentListeners();
+            reset();
           }
 
           peak = Vector.from(0, 0);
