@@ -1,5 +1,5 @@
-import { Email } from "@snappy/core";
 import { useRouterGo } from "@snappy/app-router";
+import { Email } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
