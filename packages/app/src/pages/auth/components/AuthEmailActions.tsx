@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import { CooldownButton } from "@snappy/ui";
 
 import { FormActions, FormErrorAndActions } from "../../../components";
-import { t } from "../../../core";
 import { authError } from "./AuthError";
 
 export type AuthEmailActionsProps = {
@@ -15,7 +14,7 @@ export type AuthEmailActionsProps = {
   loading: boolean;
   onSend: () => void;
   sendingLabel: string;
-  sendLabel: string;
+  sendLabel?: string;
   submit?: boolean;
 };
 
@@ -35,7 +34,6 @@ export const AuthEmailActions = ({
     <FormActions>
       <CooldownButton
         cooldownSec={cooldownSec}
-        cooldownText={seconds => t(`auth.resendIn`, { seconds })}
         disabled={disabled}
         loading={loading}
         loadingText={sendingLabel}

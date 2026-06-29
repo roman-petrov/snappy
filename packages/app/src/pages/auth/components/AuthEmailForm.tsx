@@ -13,7 +13,6 @@ export type AuthEmailFormProps = {
   footer?: ReactNode;
   formLead?: string;
   formTitle: string;
-  resendLabel: string;
   send: Pick<AuthEmailActionsProps, `cooldownSec` | `disabled` | `error` | `loading` | `onSend`>;
   sendingLabel: string;
   sendLabel: string;
@@ -32,7 +31,6 @@ export const AuthEmailForm = ({
   footer,
   formLead,
   formTitle,
-  resendLabel,
   send,
   sendingLabel,
   sendLabel,
@@ -44,7 +42,7 @@ export const AuthEmailForm = ({
 }: AuthEmailFormProps) => (
   <AuthForm lead={sent ? sentLead : formLead} submit={send.onSend} title={sent ? sentTitle : formTitle}>
     {sent ? (
-      <AuthEmailActions errorsKey={errorsKey} {...send} sendingLabel={sendingLabel} sendLabel={resendLabel}>
+      <AuthEmailActions errorsKey={errorsKey} {...send} sendingLabel={sendingLabel}>
         {footer}
       </AuthEmailActions>
     ) : (

@@ -28,12 +28,7 @@ export const SignInView = ({
     title={screen === `unverified` ? t(`auth.signIn.unverified`) : t(`auth.signIn.title`)}
   >
     {screen === `unverified` ? (
-      <AuthEmailActions
-        errorsKey="auth.signIn.errors"
-        {...resend}
-        sendingLabel={t(`auth.signIn.submitting`)}
-        sendLabel={t(`auth.resendVerification`)}
-      >
+      <AuthEmailActions errorsKey="auth.signIn.errors" {...resend} sendingLabel={t(`auth.signIn.submitting`)}>
         <Button onClick={back} text={t(`auth.signIn.backToForm`)} />
       </AuthEmailActions>
     ) : (

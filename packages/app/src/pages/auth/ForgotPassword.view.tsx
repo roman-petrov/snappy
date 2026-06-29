@@ -18,7 +18,6 @@ export const ForgotPasswordView = ({ email, send, sent, setEmail }: ForgotPasswo
     }
     formLead={t(`auth.forgotPassword.lead`)}
     formTitle={t(`auth.forgotPassword.title`)}
-    resendLabel={t(`auth.resendReset`)}
     send={send}
     sendingLabel={t(`auth.forgotPassword.submitting`)}
     sendLabel={t(`auth.forgotPassword.submit`)}

@@ -1,12 +1,14 @@
 import type { CooldownButtonProps } from "./CooldownButton";
 
+import { t } from "../locales";
+
 export const useCooldownButtonState = ({
   cooldownSec,
-  cooldownText,
+  cooldownText = seconds => t(`cooldownButton.resendIn`, { seconds }),
   disabled = false,
   loading = false,
   loadingText,
-  text,
+  text = t(`cooldownButton.resend`),
   ...buttonProps
 }: CooldownButtonProps) => {
   const onCooldown = cooldownSec > 0;

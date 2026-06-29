@@ -5,11 +5,11 @@ import { CooldownButtonView } from "./CooldownButton.view";
 
 export type CooldownButtonProps = Omit<ButtonProps, `disabled` | `text`> & {
   cooldownSec: number;
-  cooldownText: (seconds: number) => string;
+  cooldownText?: (seconds: number) => string;
   disabled?: boolean;
   loading?: boolean;
   loadingText?: string;
-  text: string;
+  text?: string;
 };
 
 export const CooldownButton = (props: CooldownButtonProps) => <CooldownButtonView {...useCooldownButtonState(props)} />;

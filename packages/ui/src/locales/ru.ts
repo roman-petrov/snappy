@@ -1,6 +1,7 @@
 /* eslint-disable unicorn/filename-case */
 export const ru = {
   audio: { play: `Воспроизвести`, stop: `Остановить` },
+  cooldownButton: { resend: `Отправить снова`, resendIn: `Снова через {{seconds}} сек.` },
   localeSwitcher: `Переключить на английский`,
   newPasswordInput: { generatePassword: `Сгенерировать пароль` },
   page: { back: `Назад` },

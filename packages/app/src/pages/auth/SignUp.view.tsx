@@ -15,7 +15,6 @@ export const SignUpView = ({ email, password, send, sent, setEmail, setPassword,
     errorsKey="auth.signUp.errors"
     footer={<Button link={Routes.signIn} text={sent ? t(`auth.signUp.backToSignIn`) : t(`auth.signIn.title`)} />}
     formTitle={t(`auth.signUp.title`)}
-    resendLabel={t(`auth.resendVerification`)}
     send={send}
     sendingLabel={t(`auth.signUp.submitting`)}
     sendLabel={t(`auth.signUp.submit`)}
