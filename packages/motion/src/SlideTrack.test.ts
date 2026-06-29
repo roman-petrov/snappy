@@ -1,0 +1,488 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+/* eslint-disable vitest/prefer-spy-on */
+import { _, type Gesture } from "@snappy/core";
+import { describe, expect, it, vi } from "vitest";
+
+import type { DomRef, TrackReleaseSnap } from "./Types";
+
+import { SlideTrack, type SlideTrackSnapInput } from "./SlideTrack";
+
+vi.mock(import(`@snappy/platform`), () => ({ Vibrate: { trigger: vi.fn() } }));
+
+type Harness = {
+  dispatch: (type: `pointercancel` | `pointerdown` | `pointermove` | `pointerup`, input: PointerInput) => void;
+  motion: ReturnType<typeof SlideTrack>;
+  records: SnapRecord[];
+  settle: () => Promise<void>;
+};
+
+type PointerInput = { id?: number; pointerType?: `mouse` | `pen` | `touch`; time?: number; x: number; y?: number };
+
+type SnapRecord = { release?: TrackReleaseSnap; state: { busy: boolean; offset: number; width: number } };
+
+const pageWidth = 300;
+const pageCount = 3;
+
+const resizeObserver = function resizeObserver(callback: ResizeObserverCallback) {
+  resizeObserver.callback = callback;
+  resizeObserver.instance = { disconnect: vi.fn(), observe: vi.fn(), unobserve: vi.fn() };
+
+  return resizeObserver.instance;
+};
+resizeObserver.callback = (() => undefined) as ResizeObserverCallback;
+resizeObserver.instance = { disconnect: vi.fn(), observe: vi.fn(), unobserve: vi.fn() };
+
+const flushMicrotasks = async (rounds = 12) => {
+  for (let index = 0; index < rounds; index += 1) {
+    await Promise.resolve();
+  }
+};
+
+const gesture = (record: SnapRecord | undefined) => record?.release?.gesture;
+
+const harness = (index = 0): Harness => {
+  document.body.replaceChildren();
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  vi.stubGlobal(`ResizeObserver`, vi.fn(resizeObserver));
+
+  let clock = 0;
+  let currentIndex = index;
+  let dragIndex = 0;
+  let dragBaseline = 0;
+  let dragOffset = 0;
+  const records: SnapRecord[] = [];
+  const pending: (() => void)[] = [];
+  const translateForIndex = (page: number, offset = 0) => -page * pageWidth + offset;
+  const root = document.createElement(`div`);
+  const track = document.createElement(`div`);
+
+  document.body.append(root);
+  root.append(track);
+
+  Object.defineProperty(root, `clientWidth`, { configurable: true, value: pageWidth });
+  root.setPointerCapture = vi.fn();
+  root.releasePointerCapture = vi.fn();
+  root.hasPointerCapture = vi.fn(() => true);
+
+  track.animate = vi.fn(() => ({
+    cancel: vi.fn(),
+    commitStyles: vi.fn(),
+    effect: { getComputedTiming: () => ({ progress: 1 }) },
+    finished: new Promise<void>(resolve => {
+      pending.push(resolve);
+    }),
+    playState: `running`,
+  })) as unknown as typeof track.animate;
+
+  const snap = ({ release, state }: SlideTrackSnapInput) => {
+    records.push({ release, state: { ...state } });
+
+    const none: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
+    const sample = release ?? none;
+
+    const delta = sample.stay
+      ? 0
+      : sample.gesture.type === `swipe`
+        ? sample.gesture.direction === `right`
+          ? -1
+          : 1
+        : -Math.sign(dragOffset);
+
+    const target = _.clamp(dragIndex + delta, 0, pageCount - 1);
+
+    return {
+      after: ({ reset, setTranslate }: { reset: () => void; setTranslate: (value: number) => void }) => {
+        reset();
+        currentIndex = target;
+        setTranslate(translateForIndex(target));
+      },
+      before: () => {
+        currentIndex = target;
+      },
+      target: () => translateForIndex(target),
+    };
+  };
+
+  const rootRef: DomRef = { current: root };
+  const trackRef: DomRef = { current: track };
+
+  const motion = SlideTrack({
+    anchor: () => translateForIndex(currentIndex),
+    canDrag: (dx, { offset, width }) => {
+      const page = width ? Math.round(_.clamp(-offset / width, 0, pageCount - 1)) : currentIndex;
+
+      return !(dx > 0 && page === 0) && !(dx < 0 && page >= pageCount - 1);
+    },
+    move: () => undefined,
+    root: rootRef,
+    snap,
+    start: ({ offset, width }) => {
+      dragIndex = width ? Math.round(_.clamp(-offset / width, 0, pageCount - 1)) : currentIndex;
+      dragBaseline = offset - translateForIndex(dragIndex);
+    },
+    track: trackRef,
+    translate: (dx, { width }) => {
+      const offset = _.clamp(dragBaseline + dx, dragIndex < pageCount - 1 ? -width : 0, dragIndex > 0 ? width : 0);
+      dragOffset = offset;
+
+      return translateForIndex(dragIndex, offset);
+    },
+  });
+
+  motion.layout();
+  motion.pointer();
+
+  const dispatch = (type: `pointercancel` | `pointerdown` | `pointermove` | `pointerup`, input: PointerInput) => {
+    const { id = 1, pointerType = `touch`, time = 16, x, y = 0 } = input;
+    clock += time;
+
+    const target = type === `pointerdown` ? root : document;
+
+    const event = new PointerEvent(type, {
+      bubbles: true,
+      button: 0,
+      clientX: x,
+      clientY: y,
+      pointerId: id,
+      pointerType,
+    });
+    Object.defineProperty(event, `timeStamp`, { configurable: true, value: clock });
+    target.dispatchEvent(event);
+  };
+
+  const settle = async () => {
+    while (pending.length > 0) {
+      const finish = pending.shift();
+      finish?.();
+      await flushMicrotasks();
+    }
+
+    await flushMicrotasks();
+  };
+
+  return { dispatch, motion, records, settle };
+};
+
+const swipe = (session: Harness, from: number, to: number, steps = 1, id = 1) => {
+  session.dispatch(`pointerdown`, { id, x: from });
+  const delta = (to - from) / steps;
+
+  for (let step = 1; step <= steps; step += 1) {
+    session.dispatch(`pointermove`, { id, x: from + delta * step });
+  }
+};
+
+const expectPageAnchor = (offset: number) => {
+  expect(offset % pageWidth || 0).toBe(0);
+};
+
+const expectGesture = (record: SnapRecord | undefined, expected: Gesture) => {
+  expect(gesture(record)).toStrictEqual(expected);
+};
+
+describe(`pointer`, () => {
+  describe(`drag release`, () => {
+    it(`detects a left swipe and advances to the next page`, async () => {
+      const session = harness();
+      swipe(session, 200, 80, 4);
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 60 });
+
+      expect(session.motion.dragging()).toBe(false);
+      expect(session.records).toHaveLength(1);
+
+      expectGesture(session.records[0], { direction: `left`, type: `swipe` });
+
+      expect(session.records[0]?.release?.stay).toBe(false);
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+      expect(session.motion.busy()).toBe(false);
+      expect(session.motion.consumeGestureLed()).toBe(true);
+    });
+
+    it(`detects a right swipe and moves to the previous page`, async () => {
+      const session = harness(1);
+      session.motion.setTranslate(-pageWidth);
+      session.motion.layout();
+
+      swipe(session, 80, 200, 4);
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 220 });
+
+      expectGesture(session.records[0], { direction: `right`, type: `swipe` });
+
+      expect(session.records[0]?.release?.stay).toBe(false);
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(0);
+    });
+
+    it(`stays on the page after a slow short drag`, async () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, time: 0, x: 200 });
+      session.dispatch(`pointermove`, { id: 1, time: 80, x: 170 });
+      session.dispatch(`pointermove`, { id: 1, time: 80, x: 150 });
+      session.dispatch(`pointerup`, { id: 1, time: 200, x: 150 });
+
+      expect(session.records).toHaveLength(1);
+      expect(session.records[0]?.release?.stay).toBe(true);
+
+      expectGesture(session.records[0], { type: `none` });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(0);
+    });
+
+    it(`flips page from drag offset without a swipe gesture`, async () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, time: 0, x: 200 });
+      session.dispatch(`pointermove`, { id: 1, time: 200, x: 140 });
+      session.dispatch(`pointermove`, { id: 1, time: 200, x: 80 });
+      session.dispatch(`pointerup`, { id: 1, time: 100, x: 80 });
+
+      expect(session.records).toHaveLength(1);
+      expect(session.records[0]?.release?.stay).toBe(false);
+
+      expectGesture(session.records[0], { type: `none` });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+    });
+
+    it(`ignores mostly vertical movement`, () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, x: 100, y: 100 });
+      session.dispatch(`pointermove`, { id: 1, x: 102, y: 160 });
+      session.dispatch(`pointerup`, { id: 1, x: 102, y: 180 });
+
+      expect(session.records).toHaveLength(0);
+      expect(session.motion.offset()).toBe(0);
+      expect(session.motion.consumeGestureLed()).toBe(false);
+    });
+
+    it(`snaps back to the anchored page after pointercancel during drag`, async () => {
+      const session = harness();
+      swipe(session, 200, 120, 2);
+      session.dispatch(`pointercancel`, { id: 1, x: 120 });
+
+      expect(session.records).toHaveLength(1);
+      expect(session.records[0]?.release).toBeUndefined();
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(0);
+      expect(session.motion.busy()).toBe(false);
+    });
+  });
+
+  describe(`multi-touch`, () => {
+    it(`ignores a second finger during drag without snapping`, async () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, x: 200 });
+      session.dispatch(`pointermove`, { id: 1, x: 150 });
+      const offsetBeforeSecondFinger = session.motion.offset();
+
+      session.dispatch(`pointerdown`, { id: 2, x: 50 });
+
+      expect(session.records).toHaveLength(0);
+      expect(session.motion.dragging()).toBe(true);
+
+      session.dispatch(`pointermove`, { id: 1, x: 110 });
+
+      expect(session.motion.offset()).not.toBe(offsetBeforeSecondFinger);
+
+      session.dispatch(`pointerup`, { id: 2, x: 50 });
+
+      expect(session.records).toHaveLength(0);
+      expect(session.motion.dragging()).toBe(true);
+
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 100 });
+
+      expect(session.records).toHaveLength(1);
+
+      expectGesture(session.records[0], { direction: `left`, type: `swipe` });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+      expect(session.motion.busy()).toBe(false);
+    });
+
+    it(`ignores a second finger while press is armed`, () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, x: 200 });
+      session.dispatch(`pointerdown`, { id: 2, x: 80 });
+      session.dispatch(`pointermove`, { id: 1, x: 150 });
+
+      expect(session.motion.dragging()).toBe(true);
+      expect(session.records).toHaveLength(0);
+    });
+
+    it(`snaps when both fingers lift after the primary finger started the drag`, async () => {
+      const session = harness();
+      swipe(session, 200, 120, 2, 1);
+      session.dispatch(`pointerdown`, { id: 2, x: 40 });
+      session.dispatch(`pointerup`, { id: 2, x: 40 });
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 100 });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+      expect(session.motion.busy()).toBe(false);
+    });
+
+    it(`does not snap when only the secondary finger lifts during drag`, async () => {
+      const session = harness();
+      swipe(session, 200, 80, 4, 1);
+      session.dispatch(`pointerdown`, { id: 2, x: 60 });
+      session.dispatch(`pointerup`, { id: 2, x: 60 });
+
+      expect(session.records).toHaveLength(0);
+      expect(session.motion.dragging()).toBe(true);
+      expect(session.motion.offset()).toBeLessThan(0);
+
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 60 });
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+    });
+
+    it(`does not freeze mid-track after multi-touch release`, async () => {
+      const session = harness();
+      swipe(session, 200, 90, 3, 1);
+      session.dispatch(`pointerdown`, { id: 2, x: 40 });
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 80 });
+      session.dispatch(`pointerup`, { id: 2, x: 40 });
+
+      await session.settle();
+
+      expectPageAnchor(session.motion.offset());
+
+      expect(session.motion.busy()).toBe(false);
+    });
+  });
+
+  describe(`input filter`, () => {
+    it(`ignores mouse pointers`, () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { pointerType: `mouse`, x: 200 });
+
+      expect(session.motion.dragging()).toBe(false);
+      expect(session.records).toHaveLength(0);
+    });
+
+    it(`blocks dragging past the first page to the right`, () => {
+      const session = harness();
+      swipe(session, 100, 220, 4);
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 240 });
+
+      expect(session.motion.offset()).toBe(0);
+      expect(session.records).toHaveLength(0);
+    });
+  });
+
+  describe(`settle interrupt`, () => {
+    it(`snaps after a quick re-press during settling instead of freezing mid-track`, async () => {
+      const session = harness();
+      swipe(session, 200, 120, 2);
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 120 });
+
+      expect(session.records).toHaveLength(1);
+      expect(session.motion.busy()).toBe(true);
+
+      session.dispatch(`pointerdown`, { id: 1, time: 20, x: 120 });
+
+      expect(session.records.length).toBeGreaterThanOrEqual(2);
+
+      session.dispatch(`pointerup`, { id: 1, time: 20, x: 120 });
+      await session.settle();
+
+      expectPageAnchor(session.motion.offset());
+
+      expect(session.motion.busy()).toBe(false);
+    });
+
+    it(`re-snaps from the interrupted settle position on same-finger re-press`, async () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, time: 0, x: 200 });
+      session.dispatch(`pointermove`, { id: 1, time: 100, x: 140 });
+      session.dispatch(`pointerup`, { id: 1, time: 100, x: 140 });
+
+      expect(session.motion.busy()).toBe(true);
+
+      const midSettleOffset = session.motion.offset();
+
+      expect(midSettleOffset).toBeLessThan(0);
+      expect(midSettleOffset).toBeGreaterThan(-pageWidth);
+
+      session.dispatch(`pointerdown`, { id: 1, time: 20, x: 140 });
+      await session.settle();
+
+      expectPageAnchor(session.motion.offset());
+
+      expect(session.motion.busy()).toBe(false);
+    });
+
+    it(`ignores a second finger during settling`, async () => {
+      const session = harness();
+      swipe(session, 200, 120, 2);
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 120 });
+
+      expect(session.motion.busy()).toBe(true);
+
+      const recordsBefore = session.records.length;
+      session.dispatch(`pointerdown`, { id: 2, x: 40 });
+
+      expect(session.records).toHaveLength(recordsBefore);
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+      expect(session.motion.busy()).toBe(false);
+    });
+  });
+
+  describe(`tap flick`, () => {
+    it(`navigates from a short quick horizontal release without crossing drag threshold`, async () => {
+      const session = harness();
+      session.dispatch(`pointerdown`, { id: 1, time: 0, x: 200 });
+      session.dispatch(`pointerup`, { id: 1, time: 40, x: 170 });
+
+      expect(session.records).toHaveLength(1);
+
+      expectGesture(session.records[0], { direction: `left`, type: `swipe` });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+    });
+  });
+});
+
+describe(`layout`, () => {
+  it(`keeps the current offset while dragging`, () => {
+    const session = harness(1);
+    session.motion.setTranslate(-pageWidth);
+    session.motion.layout();
+
+    expect(session.motion.offset()).toBe(-pageWidth);
+
+    session.dispatch(`pointerdown`, { id: 1, x: 100 });
+    session.dispatch(`pointermove`, { id: 1, x: 60 });
+    session.motion.layout();
+
+    expect(session.motion.offset()).toBeLessThan(-pageWidth);
+  });
+});
+
+describe(`consumeGestureLed`, () => {
+  it(`returns false before a gesture-driven navigation`, () => {
+    const session = harness();
+
+    expect(session.motion.consumeGestureLed()).toBe(false);
+  });
+});
