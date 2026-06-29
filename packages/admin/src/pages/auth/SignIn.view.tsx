@@ -21,12 +21,7 @@ export const SignInView = ({
       <Card cn={styles.card}>
         <Title as="h1" level={2} title={t(`auth.signIn.title`)} />
         <form className={styles.form} onSubmit={signIn}>
-          <Input
-            autoComplete="username"
-            label={t(`auth.signIn.username`)}
-            onChange={setUsername}
-            value={username}
-          />
+          <Input autoComplete="username" label={t(`auth.signIn.username`)} onChange={setUsername} value={username} />
           <PasswordInput
             autoComplete="current-password"
             disabled={loading}

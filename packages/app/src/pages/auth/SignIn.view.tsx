@@ -38,12 +38,7 @@ export const SignInView = ({
       </AuthEmailActions>
     ) : (
       <>
-        <Input
-          autoComplete="email"
-          label={t(`auth.signIn.email`)}
-          onChange={setEmail}
-          value={email}
-        />
+        <Input autoComplete="email" label={t(`auth.signIn.email`)} onChange={setEmail} value={email} />
         <PasswordInput
           autoComplete="current-password"
           disabled={loading}
