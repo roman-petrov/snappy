@@ -35,19 +35,26 @@ export const SnappyView = ({ groups }: SnappyViewProps) => (
         <div className={styles.presetsHeader}>
           <Text text={t(`snappy.presets.title`)} typography="h2" />
         </div>
-        {groups.flatMap(group => [
-          <Text key={group.id} text={t(`snappy.presets.groups.${group.id}`)} typography="h3" />,
-          ...group.items.map(preset => (
-            <RichCard
-              cn={styles.card}
-              description={preset.description}
-              icon={preset.emoji}
-              key={preset.id}
-              link={Routes.snappy.preset.hub({ presetId: preset.id })}
-              title={preset.title}
+        {groups.map(group => (
+          <div className={styles.group} key={group.id}>
+            <Text
+              as="h3"
+              cn={styles.groupHeader}
+              text={t(`snappy.presets.groups.${group.id}`)}
+              typography="h3"
             />
-          )),
-        ])}
+            {group.items.map(preset => (
+              <RichCard
+                cn={styles.card}
+                description={preset.description}
+                icon={preset.emoji}
+                key={preset.id}
+                link={Routes.snappy.preset.hub({ presetId: preset.id })}
+                title={preset.title}
+              />
+            ))}
+          </div>
+        ))}
       </section>
     </div>
   </Page>

@@ -67,6 +67,16 @@
   border-bottom: 1px solid panel.border-soft();
 }
 
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+
+  &:not(:first-child) .group-header {
+    margin-top: space.lg();
+  }
+}
+
 .card {
   flex: none;
   width: 100%;
