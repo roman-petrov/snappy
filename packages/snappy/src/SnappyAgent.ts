@@ -3,11 +3,12 @@ import type { Locale } from "@snappy/intl";
 
 import { Agent } from "@snappy/agent";
 import { _ } from "@snappy/core";
-import { type AgentAiConfig, type AgentFeedRuntime, Skill } from "@snappy/snappy-sdk";
 import { Skills } from "@snappy/snappy-skills";
 
-import type { SnappyPreset } from "./presets";
+import type { SnappyPreset } from "./preset";
+import type { AgentAiConfig, AgentFeedRuntime } from "./Types";
 
+import { Skill } from "./Skill";
 import { System } from "./System";
 import tools from "./tools/index";
 

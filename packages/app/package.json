@@ -16,8 +16,6 @@
     "@snappy/platform": "workspace:*",
     "@snappy/router": "workspace:*",
     "@snappy/snappy": "workspace:*",
-    "@snappy/snappy-presets": "workspace:*",
-    "@snappy/snappy-sdk": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
@@ -28,6 +26,7 @@
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.17"
+    "@types/react": "^19.2.17",
+    "vitest": "^4.1.9"
   }
 }

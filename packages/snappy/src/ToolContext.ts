@@ -2,7 +2,8 @@
 /* eslint-disable functional/immutable-data */
 import type { AgentToolRunResult } from "@snappy/agent";
 import type { AiContentPart } from "@snappy/ai";
-import type { AgentFeedRuntime } from "@snappy/snappy-sdk";
+
+import type { AgentFeedRuntime } from "./Types";
 
 const mediaImage = (mediaId: string, url: string): AiContentPart[] => [
   { text: `Image (media id "${mediaId}"):`, type: `text` },

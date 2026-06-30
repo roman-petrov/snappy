@@ -13,7 +13,7 @@ import {
   type StaticFormAnswers,
   StaticFormAnswersOf,
   type StaticFormPlan,
-} from "@snappy/snappy-sdk";
+} from "@snappy/snappy";
 import { createElement } from "react";
 
 import type { AgentArtifact, FeedArtifact } from "../Types";

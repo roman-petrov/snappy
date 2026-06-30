@@ -7,7 +7,7 @@ import {
   type StaticFormField,
   type StaticFormFieldByKind,
   type StaticFormPlan,
-} from "@snappy/snappy-sdk";
+} from "@snappy/snappy";
 import { AudioSelect, ImageSelect, Switch, Tabs, TextInput } from "@snappy/ui";
 import { type ElementType, useRef, useState } from "react";
 

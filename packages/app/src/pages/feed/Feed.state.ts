@@ -1,5 +1,5 @@
 import type { TypeWriterSpeed } from "@snappy/domain";
-import type { AgentAiConfig } from "@snappy/snappy-sdk";
+import type { AgentAiConfig } from "@snappy/snappy";
 
 import { useRouterGo, useRouterPath } from "@snappy/app-router";
 import { _ } from "@snappy/core";

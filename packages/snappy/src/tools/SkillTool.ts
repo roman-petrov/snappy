@@ -2,11 +2,12 @@ import type { Locale } from "@snappy/intl";
 
 import { AgentTool } from "@snappy/agent";
 import { _ } from "@snappy/core";
-import { Skill } from "@snappy/snappy-sdk";
 import { Skills } from "@snappy/snappy-skills";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
+
+import { Skill } from "../Skill";
 
 export const SkillTool: SnappyToolFactory = ({ isStopped }) => {
   const registry = Skill.parse(Skills);

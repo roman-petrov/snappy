@@ -1,8 +1,0 @@
-@use "pkg:@snappy/theme/tokens/space";
-
-.root {
-  display: flex;
-  gap: space.sm();
-  align-items: center;
-  min-width: 0;
-}

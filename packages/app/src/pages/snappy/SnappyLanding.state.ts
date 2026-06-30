@@ -1,10 +1,11 @@
-import { Presets } from "@snappy/snappy";
 import { Language } from "@snappy/ui";
 import { useMemo } from "react";
 
+import { Catalog } from "../../catalog/registry";
+
 export const useSnappyLandingState = () => {
   const locale = Language.locale();
-  const groups = useMemo(() => Presets.grouped(Presets.cards(locale)), [locale]);
+  const groups = useMemo(() => Catalog.grouped(Catalog.cards(locale)), [locale]);
 
   return { groups };
 };

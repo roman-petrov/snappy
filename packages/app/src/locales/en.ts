@@ -1,10 +1,6 @@
 /* eslint-disable unicorn/filename-case */
 /* cspell:disable */
 export const en = {
-  agents: {
-    groups: { audio: `Audio`, edit: `Image editing`, text: `Text`, visual: `Image generation` },
-    title: `Agents`,
-  },
   auth: {
     emailVerified: {
       failed: {
@@ -84,10 +80,6 @@ export const en = {
   balance: {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
   },
-  chat: {
-    continue: `Continue`,
-    form: { label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
-  },
   feed: { title: `Feed` },
   feedCard: {
     copy: `Copy`,
@@ -159,12 +151,23 @@ export const en = {
   },
   snappy: {
     composer: { placeholder: `What do you need?`, send: `Send` },
+    form: { continue: `Continue`, label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
     landing: {
       presets: { title: `Ready-made workflows` },
       quickStart: {
         cta: `Start from scratch`,
         lead: `Open chat with every tool — describe any task in your own words.`,
         title: `Quick start`,
+      },
+    },
+    preset: {
+      modes: {
+        lead: `Choose how you want to run this workflow.`,
+        snappy: { description: `Tools, skills, and a free-form dialog with a starter prompt.`, title: `Snappy agent` },
+        static: {
+          description: `A guided form with clarifying questions and a single result.`,
+          title: `Step-by-step scenario`,
+        },
       },
     },
     presets: {
@@ -178,5 +181,5 @@ export const en = {
       },
     },
   },
-  tabs: { agents: { label: `Agents` }, feed: { label: `Feed` }, snappy: { label: `Snappy` } },
+  tabs: { feed: { label: `Feed` }, settings: { label: `Settings` }, snappy: { label: `Snappy` } },
 };

@@ -44,7 +44,7 @@ export const SnappyLandingView = ({ groups }: SnappyLandingViewProps) => (
               description={preset.description}
               icon={preset.emoji}
               key={preset.id}
-              link={Routes.chat({ presetId: preset.id })}
+              link={preset.hasStatic ? Routes.preset({ presetId: preset.id }) : Routes.chat({ presetId: preset.id })}
               title={preset.title}
             />
           )),

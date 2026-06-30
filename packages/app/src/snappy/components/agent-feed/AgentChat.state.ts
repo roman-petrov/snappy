@@ -1,4 +1,4 @@
-import type { AgentAiConfig } from "@snappy/snappy-sdk";
+import type { AgentAiConfig } from "@snappy/snappy";
 
 import { _, Unicode } from "@snappy/core";
 import { useAsyncEffect } from "@snappy/ui";

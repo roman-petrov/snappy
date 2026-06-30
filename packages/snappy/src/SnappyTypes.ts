@@ -1,6 +1,7 @@
 import type { AgentTool } from "@snappy/agent";
 import type { Locale } from "@snappy/intl";
-import type { AgentAiConfig, AgentFeedRuntime } from "@snappy/snappy-sdk";
+
+import type { AgentAiConfig, AgentFeedRuntime } from "./Types";
 
 export type SnappyToolContext = {
   config: AgentAiConfig;

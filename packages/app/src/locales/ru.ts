@@ -1,10 +1,6 @@
 /* eslint-disable unicorn/filename-case */
 /* cspell:disable */
 export const ru = {
-  agents: {
-    groups: { audio: `Аудио`, edit: `Редактирование изображений`, text: `Текст`, visual: `Генерация изображений` },
-    title: `Агенты`,
-  },
   auth: {
     emailVerified: {
       failed: {
@@ -87,10 +83,6 @@ export const ru = {
       tapTip: `Пополнить баланс`,
     },
   },
-  chat: {
-    continue: `Продолжить`,
-    form: { label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
-  },
   feed: { title: `Лента` },
   feedCard: {
     copy: `Копировать`,
@@ -169,12 +161,20 @@ export const ru = {
   },
   snappy: {
     composer: { placeholder: `Что нужно?`, send: `Отправить` },
+    form: { continue: `Продолжить`, label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
     landing: {
       presets: { title: `Готовые сценарии` },
       quickStart: {
         cta: `Начать с нуля`,
         lead: `Откройте чат со всеми инструментами — опишите задачу своими словами.`,
         title: `Быстрый старт`,
+      },
+    },
+    preset: {
+      modes: {
+        lead: `Выберите, как запустить этот сценарий.`,
+        snappy: { description: `Инструменты, навыки и свободный диалог со стартовым промптом.`, title: `Агент Snappy` },
+        static: { description: `Пошаговая форма с уточнениями и одним результатом.`, title: `Пошаговый сценарий` },
       },
     },
     presets: {
@@ -188,5 +188,5 @@ export const ru = {
       },
     },
   },
-  tabs: { agents: { label: `Агенты` }, feed: { label: `Лента` }, snappy: { label: `Snappy` } },
+  tabs: { feed: { label: `Лента` }, settings: { label: `Настройки` }, snappy: { label: `Snappy` } },
 };

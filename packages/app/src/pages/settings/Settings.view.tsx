@@ -20,7 +20,7 @@ export const SettingsView = ({
   theme,
   typeWriterSpeed,
 }: SettingsViewProps) => (
-  <Page back title={t(`settings.title`)}>
+  <Page tab title={t(`settings.title`)}>
     <SettingsCards>
       <SettingsCard title={t(`settings.accountGroup`)}>
         <SettingsCardRow

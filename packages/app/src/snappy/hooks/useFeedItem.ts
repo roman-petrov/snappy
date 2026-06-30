@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/try-complexity */
 import type { AiChatModel, AiImageModel, AiImageSize } from "@snappy/ai";
-import type { AgentImageEdit } from "@snappy/snappy-sdk";
+import type { AgentImageEdit } from "@snappy/snappy";
 import type { MenuAction } from "@snappy/ui";
 
 import { RefreshCw, Trash2 } from "lucide-react";

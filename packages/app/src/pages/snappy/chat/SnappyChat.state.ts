@@ -1,17 +1,24 @@
 import { _ } from "@snappy/core";
-import { Presets, SnappyAgent } from "@snappy/snappy";
+import { SnappyAgent } from "@snappy/snappy";
 import { Language } from "@snappy/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { AgentChatProps } from "../../../snappy/components";
 import type { SnappyChatProps } from "./SnappyChat";
 
+import { Catalog } from "../../../catalog/registry";
+
 export const SnappyChatBlankPresetId = `_` as const;
 
 export const useSnappyChatState = ({ presetId }: SnappyChatProps) => {
   const locale = Language.locale();
   const isBlank = presetId === SnappyChatBlankPresetId;
-  const preset = useMemo(() => (presetId === SnappyChatBlankPresetId ? undefined : Presets.byId(presetId)), [presetId]);
+
+  const preset = useMemo(
+    () => (presetId === SnappyChatBlankPresetId ? undefined : Catalog.byId(presetId, locale)?.preset),
+    [locale, presetId],
+  );
+
   const invalidPreset = !isBlank && preset === undefined;
   const agentRef = useRef<SnappyAgent | undefined>(undefined);
   const [sentText, setSentText] = useState<string | undefined>(undefined);

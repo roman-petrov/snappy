@@ -1,5 +1,5 @@
 import type { AiChatModel, AiImageModel } from "@snappy/ai";
-import type { AgentFeedArtifactResult, StaticFormAnswers, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { AgentFeedArtifactResult, StaticFormAnswers, StaticFormPlan } from "@snappy/snappy";
 
 import type { AgentArtifact } from "../Types";
 

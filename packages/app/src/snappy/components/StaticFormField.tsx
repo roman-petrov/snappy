@@ -1,4 +1,4 @@
-import type { StaticFormLabel } from "@snappy/snappy-sdk";
+import type { StaticFormLabel } from "@snappy/snappy";
 import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";

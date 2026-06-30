@@ -4,9 +4,10 @@ import type { AiContentPart } from "@snappy/ai";
 
 import { AgentTool } from "@snappy/agent";
 import { _, Mime } from "@snappy/core";
-import { StaticFormPlanSchema } from "@snappy/snappy-sdk";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
+
+import { StaticFormPlanSchema } from "../Schema";
 
 export const AskTool: SnappyToolFactory = ({ feed, files, isStopped, media }) =>
   AgentTool({

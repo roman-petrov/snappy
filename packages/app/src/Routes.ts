@@ -1,11 +1,10 @@
 import { Router } from "@snappy/router";
 
 import {
-  Agent,
-  Agents,
   EmailVerified,
   Feed,
   ForgotPassword,
+  PresetPicker,
   ResetPassword,
   Settings,
   SettingsAiTunnel,
@@ -23,16 +22,16 @@ import {
   SignUp,
   SnappyChat,
   SnappyLanding,
+  StaticChat,
 } from "./pages";
 
 export const Routes = Router({
   routes: {
-    agent: { page: Agent, path: `agent/:agentId` },
-    agents: { page: Agents, path: `agents` },
     chat: { page: SnappyChat, path: `chat/:presetId` },
     emailVerified: { page: EmailVerified, path: `email-verified` },
     feed: { page: Feed, path: `feed` },
     forgotPassword: { page: ForgotPassword, path: `forgot-password` },
+    preset: { page: PresetPicker, path: `preset/:presetId` },
     resetPassword: { page: ResetPassword, path: `reset-password` },
     settings: {
       aiTunnel: { page: SettingsAiTunnel, path: `settings/ai-tunnel` },
@@ -54,6 +53,7 @@ export const Routes = Router({
     },
     signIn: { page: SignIn, path: `login` },
     signUp: { page: SignUp, path: `register` },
+    static: { page: StaticChat, path: `static/:presetId` },
   },
   start: {
     index: SnappyLanding,

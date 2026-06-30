@@ -12,8 +12,10 @@
     "@snappy/ai": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
-    "@snappy/snappy-sdk": "workspace:*",
     "@snappy/snappy-skills": "workspace:*",
     "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "vitest": "^4.1.9"
   }
 }

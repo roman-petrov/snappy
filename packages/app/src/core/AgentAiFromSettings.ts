@@ -1,5 +1,5 @@
 import type { TrpcOutputs } from "@snappy/app-server-api";
-import type { AgentAiConfig } from "@snappy/snappy-sdk";
+import type { AgentAiConfig } from "@snappy/snappy";
 
 import { Ai } from "@snappy/ai";
 

@@ -1,4 +1,4 @@
-import type { StaticFormAnswers, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy-sdk";
+import type { StaticFormAnswers, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy";
 
 import { useStaticFormState } from "./StaticForm.state";
 import { StaticFormView } from "./StaticForm.view";

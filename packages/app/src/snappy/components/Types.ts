@@ -1,6 +1,6 @@
 import type { AiImageSize } from "@snappy/ai";
 import type { TrpcOutputs } from "@snappy/app-server-api";
-import type { AgentImageEdit } from "@snappy/snappy-sdk";
+import type { AgentImageEdit } from "@snappy/snappy";
 
 export type AgentArtifact =
   | (AgentArtifactSession & Extract<FeedArtifact, { type: `image` }>)

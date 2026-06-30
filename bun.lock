@@ -120,8 +120,6 @@
         "@snappy/platform": "workspace:*",
         "@snappy/router": "workspace:*",
         "@snappy/snappy": "workspace:*",
-        "@snappy/snappy-presets": "workspace:*",
-        "@snappy/snappy-sdk": "workspace:*",
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui": "workspace:*",
@@ -133,6 +131,7 @@
       "devDependencies": {
         "@snappy/do": "workspace:*",
         "@types/react": "^19.2.17",
+        "vitest": "^4.1.9",
       },
     },
     "packages/app-android": {
@@ -448,6 +447,9 @@
         "@snappy/core": "workspace:*",
         "@snappy/platform": "workspace:*",
       },
+      "devDependencies": {
+        "vitest": "^4.1.9",
+      },
     },
     "packages/node": {
       "name": "@snappy/node",
@@ -586,28 +588,7 @@
         "@snappy/ai": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
-        "@snappy/snappy-sdk": "workspace:*",
         "@snappy/snappy-skills": "workspace:*",
-        "zod": "^4.4.3",
-      },
-    },
-    "packages/snappy-presets": {
-      "name": "@snappy/snappy-presets",
-      "version": "0.0.0",
-      "dependencies": {
-        "@snappy/ai": "workspace:*",
-        "@snappy/core": "workspace:*",
-        "@snappy/intl": "workspace:*",
-        "@snappy/snappy-sdk": "workspace:*",
-      },
-    },
-    "packages/snappy-sdk": {
-      "name": "@snappy/snappy-sdk",
-      "version": "0.0.0",
-      "dependencies": {
-        "@snappy/ai": "workspace:*",
-        "@snappy/core": "workspace:*",
-        "@snappy/intl": "workspace:*",
         "zod": "^4.4.3",
       },
       "devDependencies": {
@@ -1541,10 +1522,6 @@
     "@snappy/site-server": ["@snappy/site-server@workspace:packages/site-server"],
 
     "@snappy/snappy": ["@snappy/snappy@workspace:packages/snappy"],
-
-    "@snappy/snappy-presets": ["@snappy/snappy-presets@workspace:packages/snappy-presets"],
-
-    "@snappy/snappy-sdk": ["@snappy/snappy-sdk@workspace:packages/snappy-sdk"],
 
     "@snappy/snappy-skills": ["@snappy/snappy-skills@workspace:packages/snappy-skills"],
 

@@ -17,8 +17,8 @@ export const StaticFormView = ({ fields, rows, submit, submitted, title }: Stati
           <div className={styles.answers}>
             <Table
               columns={[
-                { content: t(`chat.form.label`), key: `label` },
-                { content: t(`chat.form.value`), key: `value` },
+                { content: t(`snappy.form.label`), key: `label` },
+                { content: t(`snappy.form.value`), key: `value` },
               ]}
               rows={rows.map(({ display, id, label }) => ({
                 id,
@@ -29,7 +29,7 @@ export const StaticFormView = ({ fields, rows, submit, submitted, title }: Stati
                   ) : display.type === `image` ? (
                     <ImageFile file={display.file} />
                   ) : display.type === `binary` ? (
-                    <Text text={display.value ? t(`chat.form.yes`) : t(`chat.form.no`)} />
+                    <Text text={display.value ? t(`snappy.form.yes`) : t(`snappy.form.no`)} />
                   ) : (
                     <Text text={display.text === `` ? `—` : display.text} />
                   ),
@@ -45,7 +45,7 @@ export const StaticFormView = ({ fields, rows, submit, submitted, title }: Stati
         )}
         {submitted ? undefined : (
           <div className={styles.actions}>
-            <Button onClick={submit} text={t(`chat.continue`)} type="primary" />
+            <Button onClick={submit} text={t(`snappy.form.continue`)} type="primary" />
           </div>
         )}
       </div>
@@ -53,7 +53,7 @@ export const StaticFormView = ({ fields, rows, submit, submitted, title }: Stati
   );
 
   return submitted ? (
-    <Spoiler summary={title === undefined || title === `` ? t(`chat.form.summary`) : title}>{card}</Spoiler>
+    <Spoiler summary={title === undefined || title === `` ? t(`snappy.form.summary`) : title}>{card}</Spoiler>
   ) : (
     card
   );
