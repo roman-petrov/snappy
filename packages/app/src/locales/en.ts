@@ -152,12 +152,7 @@ export const en = {
   snappy: {
     composer: { placeholder: `What do you need?`, send: `Send` },
     form: { continue: `Continue`, label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
-    preset: {
-      hub: {
-        lead: `Same result — chat freely or fill a short form.`,
-        title: `How do you want to start?`,
-      },
-    },
+    preset: { hub: { lead: `Same result — chat freely or fill a short form.`, title: `How do you want to start?` } },
     presets: {
       groups: {
         audio: `Audio`,

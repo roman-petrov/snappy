@@ -80,10 +80,7 @@ export const preset: Preset = {
           `Сбалансированное объяснение для широкой аудитории.`,
         ],
         "ui.field.context.label": [`Context (optional)`, `Контекст (необязательно)`],
-        "ui.field.context.placeholder": [
-          `Q3 sales dashboard for exec review…`,
-          `Дашборд продаж Q3 для review…`,
-        ],
+        "ui.field.context.placeholder": [`Q3 sales dashboard for exec review…`, `Дашборд продаж Q3 для review…`],
         "ui.field.context.prompt": [`Context:`, `Контекст:`],
         "ui.field.image.label": [`Diagram`, `Диаграмма`],
         "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],

@@ -103,10 +103,7 @@ export const preset: Preset = {
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
         "ui.field.answerDepth.label": [`Answer depth`, `Глубина ответов`],
         "ui.field.answerDepth.option.concise.label": [`Concise`, `Кратко`],
-        "ui.field.answerDepth.option.concise.prompt": [
-          `1–3 sentences per answer.`,
-          `1–3 предложения на ответ.`,
-        ],
+        "ui.field.answerDepth.option.concise.prompt": [`1–3 sentences per answer.`, `1–3 предложения на ответ.`],
         "ui.field.answerDepth.option.detailed.label": [`Detailed`, `Подробно`],
         "ui.field.answerDepth.option.detailed.prompt": [
           `Full paragraphs with examples where helpful.`,

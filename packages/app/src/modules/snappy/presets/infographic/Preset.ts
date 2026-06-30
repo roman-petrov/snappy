@@ -96,7 +96,10 @@ export const preset: Preset = {
         "ui.field.colorScheme.option.green.label": [`Green`, `Зелёные`],
         "ui.field.colorScheme.option.green.prompt": [`Fresh green growth palette.`, `Свежая зелёная палитра.`],
         "ui.field.colorScheme.option.warm.label": [`Warm`, `Тёплые`],
-        "ui.field.colorScheme.option.warm.prompt": [`Warm orange/red accent palette.`, `Тёплая палитра с orange/red акцентами.`],
+        "ui.field.colorScheme.option.warm.prompt": [
+          `Warm orange/red accent palette.`,
+          `Тёплая палитра с orange/red акцентами.`,
+        ],
         "ui.field.layout.label": [`Layout`, `Вёрстка`],
         "ui.field.layout.option.horizontal.label": [`Horizontal`, `Горизонтальная`],
         "ui.field.layout.option.horizontal.prompt": [`Left-to-right flow.`, `Поток слева направо.`],

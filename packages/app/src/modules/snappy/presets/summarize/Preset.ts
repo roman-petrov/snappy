@@ -113,13 +113,25 @@ export const preset: Preset = {
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
         "ui.field.focusAspects.label": [`Emphasize`, `Акцент на`],
         "ui.field.focusAspects.option.dates.label": [`Dates`, `Даты`],
-        "ui.field.focusAspects.option.dates.prompt": [`Include important dates and timelines.`, `Включи важные даты и сроки.`],
+        "ui.field.focusAspects.option.dates.prompt": [
+          `Include important dates and timelines.`,
+          `Включи важные даты и сроки.`,
+        ],
         "ui.field.focusAspects.option.key_points.label": [`Key points`, `Главное`],
-        "ui.field.focusAspects.option.key_points.prompt": [`Lead with main conclusions and decisions.`, `Начни с главных выводов и решений.`],
+        "ui.field.focusAspects.option.key_points.prompt": [
+          `Lead with main conclusions and decisions.`,
+          `Начни с главных выводов и решений.`,
+        ],
         "ui.field.focusAspects.option.names.label": [`Names`, `Имена`],
-        "ui.field.focusAspects.option.names.prompt": [`Keep key people and organizations named.`, `Сохрани имена ключевых людей и организаций.`],
+        "ui.field.focusAspects.option.names.prompt": [
+          `Keep key people and organizations named.`,
+          `Сохрани имена ключевых людей и организаций.`,
+        ],
         "ui.field.focusAspects.option.quotes.label": [`Quotes`, `Цитаты`],
-        "ui.field.focusAspects.option.quotes.prompt": [`Preserve notable direct quotes.`, `Сохрани важные прямые цитаты.`],
+        "ui.field.focusAspects.option.quotes.prompt": [
+          `Preserve notable direct quotes.`,
+          `Сохрани важные прямые цитаты.`,
+        ],
         "ui.field.length.label": [`Summary length`, `Длина резюме`],
         "ui.field.length.option.detailed.label": [`Detailed`, `Подробно`],
         "ui.field.length.option.detailed.prompt": [

@@ -110,7 +110,10 @@ export const preset: Preset = {
         "ui.field.mood.option.cheerful.label": [`Cheerful`, `Радостное`],
         "ui.field.mood.option.cheerful.prompt": [`Bright, upbeat mood.`, `Светлое, позитивное настроение.`],
         "ui.field.mood.option.dramatic.label": [`Dramatic`, `Драматичное`],
-        "ui.field.mood.option.dramatic.prompt": [`Strong contrast and emotional tension.`, `Сильный контраст и эмоциональное напряжение.`],
+        "ui.field.mood.option.dramatic.prompt": [
+          `Strong contrast and emotional tension.`,
+          `Сильный контраст и эмоциональное напряжение.`,
+        ],
         "ui.field.palette.label": [`Palette`, `Палитра`],
         "ui.field.palette.option.muted.label": [`Muted`, `Приглушённая`],
         "ui.field.palette.option.muted.prompt": [`Soft, muted colors.`, `Мягкие, приглушённые цвета.`],

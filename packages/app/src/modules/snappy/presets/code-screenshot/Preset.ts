@@ -128,14 +128,14 @@ export const preset: Preset = {
         "ui.field.language.option.java.label": [`Java`, `Java`],
         "ui.field.language.option.java.prompt": [`Assume Java syntax.`, `Предполагай синтаксис Java.`],
         "ui.field.language.option.other.label": [`Other`, `Другой`],
-        "ui.field.language.option.other.prompt": [
-          `Infer language from the screenshot.`,
-          `Определи язык по скриншоту.`,
-        ],
+        "ui.field.language.option.other.prompt": [`Infer language from the screenshot.`, `Определи язык по скриншоту.`],
         "ui.field.language.option.python.label": [`Python`, `Python`],
         "ui.field.language.option.python.prompt": [`Assume Python syntax.`, `Предполагай синтаксис Python.`],
         "ui.field.language.option.typescript.label": [`TypeScript`, `TypeScript`],
-        "ui.field.language.option.typescript.prompt": [`Assume TypeScript/JavaScript syntax.`, `Предполагай синтаксис TypeScript/JavaScript.`],
+        "ui.field.language.option.typescript.prompt": [
+          `Assume TypeScript/JavaScript syntax.`,
+          `Предполагай синтаксис TypeScript/JavaScript.`,
+        ],
         "ui.field.mode.label": [`Task`, `Задача`],
         "ui.field.mode.option.debug.label": [`Find issues`, `Найти проблемы`],
         "ui.field.mode.option.debug.prompt": [

@@ -91,11 +91,17 @@ export const preset: Preset = {
         ]),
         "ui.field.eventDensity.label": [`Density`, `Плотность`],
         "ui.field.eventDensity.option.dense.label": [`Dense`, `Плотно`],
-        "ui.field.eventDensity.option.dense.prompt": [`Many milestones; compact spacing.`, `Много вех; компактные интервалы.`],
+        "ui.field.eventDensity.option.dense.prompt": [
+          `Many milestones; compact spacing.`,
+          `Много вех; компактные интервалы.`,
+        ],
         "ui.field.eventDensity.option.sparse.label": [`Sparse`, `Редко`],
         "ui.field.eventDensity.option.sparse.prompt": [`Few key milestones only.`, `Только ключевые вехи.`],
         "ui.field.eventDensity.option.standard.label": [`Standard`, `Стандарт`],
-        "ui.field.eventDensity.option.standard.prompt": [`Balanced spacing between events.`, `Сбалансированные интервалы между событиями.`],
+        "ui.field.eventDensity.option.standard.prompt": [
+          `Balanced spacing between events.`,
+          `Сбалансированные интервалы между событиями.`,
+        ],
         "ui.field.events.label": [`Events`, `События`],
         "ui.field.events.placeholder": [
           `Jan: launch; Mar: v2; Jun: expansion…`,
@@ -109,9 +115,15 @@ export const preset: Preset = {
         "ui.field.orientation.option.vertical.prompt": [`Top-to-bottom timeline.`, `Таймлайн сверху вниз.`],
         "ui.field.visualStyle.label": [`Style`, `Стиль`],
         "ui.field.visualStyle.option.modern.label": [`Modern`, `Современный`],
-        "ui.field.visualStyle.option.modern.prompt": [`Clean icons and gradient line.`, `Чистые иконки и gradient-линия.`],
+        "ui.field.visualStyle.option.modern.prompt": [
+          `Clean icons and gradient line.`,
+          `Чистые иконки и gradient-линия.`,
+        ],
         "ui.field.visualStyle.option.vintage.label": [`Vintage`, `Винтаж`],
-        "ui.field.visualStyle.option.vintage.prompt": [`Retro paper texture and serif labels.`, `Ретро-текстура бумаги и serif-подписи.`],
+        "ui.field.visualStyle.option.vintage.prompt": [
+          `Retro paper texture and serif labels.`,
+          `Ретро-текстура бумаги и serif-подписи.`,
+        ],
       }),
     }),
   ],

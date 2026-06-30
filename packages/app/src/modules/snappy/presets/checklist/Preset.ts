@@ -89,10 +89,7 @@ export const preset: Preset = {
           `Понятные шаги без микрозадач.`,
         ],
         "ui.field.markPriority.label": [`Priority marks`, `Приоритеты`],
-        "ui.field.markPriority.promptOff": [
-          `Flat list; no priority labels.`,
-          `Плоский список; без меток приоритета.`,
-        ],
+        "ui.field.markPriority.promptOff": [`Flat list; no priority labels.`, `Плоский список; без меток приоритета.`],
         "ui.field.markPriority.promptOn": [
           `Mark critical items with 🔥 or [high] prefix.`,
           `Отметь критичные пункты префиксом 🔥 или [high].`,

@@ -37,12 +37,7 @@ export const SnappyView = ({ groups }: SnappyViewProps) => (
         </div>
         {groups.map(group => (
           <div className={styles.group} key={group.id}>
-            <Text
-              as="h3"
-              cn={styles.groupHeader}
-              text={t(`snappy.presets.groups.${group.id}`)}
-              typography="h3"
-            />
+            <Text as="h3" cn={styles.groupHeader} text={t(`snappy.presets.groups.${group.id}`)} typography="h3" />
             {group.items.map(preset => (
               <RichCard
                 cn={styles.card}

@@ -69,10 +69,7 @@ export const preset: Preset = {
             `Убери объект или отвлекающий элемент по описанию ниже с загруженного изображения. Заполни область естественно; остальное не меняй. По возможности сохрани узнаваемость и композицию.`,
           ],
           "ui.field.context.label": [`Surroundings (optional)`, `Окружение (необязательно)`],
-          "ui.field.context.placeholder": [
-            `Brick wall behind, grass field…`,
-            `Кирпичная стена, трава…`,
-          ],
+          "ui.field.context.placeholder": [`Brick wall behind, grass field…`, `Кирпичная стена, трава…`],
           "ui.field.context.prompt": [`Background context:`, `Контекст фона:`],
           "ui.field.fillQuality.label": [`Fill`, `Заполнение`],
           "ui.field.fillQuality.option.blur.label": [`Soft blur`, `Мягкий blur`],

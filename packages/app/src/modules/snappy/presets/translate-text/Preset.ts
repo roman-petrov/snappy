@@ -105,10 +105,7 @@ export const preset: Preset = {
         ],
         "ui.field.register.label": [`Register`, `Регистр`],
         "ui.field.register.option.casual.label": [`Casual`, `Разговорный`],
-        "ui.field.register.option.casual.prompt": [
-          `Everyday spoken register.`,
-          `Повседневный разговорный регистр.`,
-        ],
+        "ui.field.register.option.casual.prompt": [`Everyday spoken register.`, `Повседневный разговорный регистр.`],
         "ui.field.register.option.formal.label": [`Formal`, `Формальный`],
         "ui.field.register.option.formal.prompt": [
           `Official or literary register.`,
