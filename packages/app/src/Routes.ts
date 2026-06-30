@@ -1,9 +1,6 @@
 import { Router } from "@snappy/router";
 
-import { AuthRoutes } from "./pages/auth";
-import { FeedRoutes } from "./pages/feed";
-import { SettingsRoutes } from "./pages/settings";
-import { Snappy, SnappyRoutes } from "./pages/snappy";
+import { AuthRoutes, FeedRoutes, SettingsRoutes, Snappy, SnappyRoutes } from "./modules";
 
 export const Routes = Router({
   routes: { auth: AuthRoutes, feed: FeedRoutes, settings: SettingsRoutes, snappy: SnappyRoutes },

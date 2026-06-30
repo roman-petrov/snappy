@@ -2,7 +2,7 @@ import { _ } from "@snappy/core";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export default _.fromEntries(
+const tools = _.fromEntries(
   Object.values(import.meta.glob<Record<string, SnappyToolFactory>>(`./*Tool.ts`, { eager: true })).flatMap(
     moduleObject =>
       _.entries(moduleObject)
@@ -10,3 +10,5 @@ export default _.fromEntries(
         .map(([name, tool]) => [_.kebabCase(name.replace(/Tool$/u, ``)), tool] as const),
   ),
 );
+
+export default tools;

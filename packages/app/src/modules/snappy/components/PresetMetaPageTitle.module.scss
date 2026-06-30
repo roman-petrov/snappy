@@ -1,0 +1,13 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  @include primitives.inline-row;
+
+  gap: space.sm();
+  min-width: 0;
+}
+
+.label {
+  min-width: 0;
+}

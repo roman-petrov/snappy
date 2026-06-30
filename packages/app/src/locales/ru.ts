@@ -162,13 +162,7 @@ export const ru = {
   snappy: {
     composer: { placeholder: `Что нужно?`, send: `Отправить` },
     form: { continue: `Продолжить`, label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
-    preset: {
-      modes: {
-        lead: `Выберите, как запустить этот сценарий.`,
-        snappy: { description: `Инструменты, навыки и свободный диалог со стартовым промптом.`, title: `Агент Snappy` },
-        static: { description: `Пошаговая форма с уточнениями и одним результатом.`, title: `Пошаговый сценарий` },
-      },
-    },
+    preset: { hub: { lead: `Выберите, как запустить этот сценарий.` } },
     presets: {
       groups: {
         audio: `Аудио`,

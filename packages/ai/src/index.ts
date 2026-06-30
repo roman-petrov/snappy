@@ -26,6 +26,8 @@ export * from "./AiToolResult";
 
 export * from "./AiTunnel";
 
+export * from "./AiVision";
+
 export * from "./core-model";
 
 export type * from "./Types";

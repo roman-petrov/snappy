@@ -101,7 +101,7 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
 
 @include mobile {
   .tab {
-    width: r(80);
+    width: r(96);
   }
 }
 

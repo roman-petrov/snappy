@@ -152,16 +152,7 @@ export const en = {
   snappy: {
     composer: { placeholder: `What do you need?`, send: `Send` },
     form: { continue: `Continue`, label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
-    preset: {
-      modes: {
-        lead: `Choose how you want to run this workflow.`,
-        snappy: { description: `Tools, skills, and a free-form dialog with a starter prompt.`, title: `Snappy agent` },
-        static: {
-          description: `A guided form with clarifying questions and a single result.`,
-          title: `Step-by-step scenario`,
-        },
-      },
-    },
+    preset: { hub: { lead: `Choose how you want to run this workflow.` } },
     presets: {
       groups: {
         audio: `Audio`,

@@ -22,10 +22,6 @@ export type AgentAiModels = {
 
 export type AgentAsk = <TPlan extends StaticFormPlan>(plan: TPlan) => Promise<StaticFormAnswersOf<TPlan>>;
 
-export type AgentCard = AgentInfo & { id: string };
-
-export type AgentDefinition = ReturnType<AgentEntry> & { id: string };
-
 export type AgentEntry = (locale: Locale) => { meta: AgentInfo; module: AgentModuleFactory };
 
 export type AgentFeedArtifactResult = { artifactId: string; content: string };
@@ -47,11 +43,9 @@ export type AgentFeedRuntime = {
   generateText: (input: { model: AiChatModel; prompt: string }) => Promise<AgentFeedArtifactResult>;
 };
 
-export type AgentGroupId = `audio` | `edit` | `text` | `visual`;
-
 export type AgentImageEdit = { background?: AiImageBackground; images: File[] };
 
-export type AgentInfo = { description: string; emoji: string; group: AgentGroupId; title: string };
+export type AgentInfo = { description: string; emoji: string; title: string };
 
 export type AgentModuleDeps = {
   aiConfig: AgentAiConfig;

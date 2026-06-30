@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { AiVision } from "@snappy/ai";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
@@ -32,21 +33,9 @@ export const LookImageTool: SnappyToolFactory = ({ config, isStopped, media }) =
         };
       }
 
-      const session = config.models.vision.completions({
-        messages: [
-          {
-            content: [
-              { text: prompt, type: `text` },
-              { type: `image`, url },
-            ],
-            role: `user`,
-          },
-        ],
-      });
+      const content = await AiVision.prompt(config.models.vision, { prompt, url });
 
-      const assistant = await session.assistant();
-
-      return isStopped() ? `` : assistant.content;
+      return isStopped() ? `` : content;
     },
     formatCall: (_input, status, loc) =>
       status === `running` ? (loc === `ru` ? `Изучаю изображение…` : `Inspecting image…`) : ``,
