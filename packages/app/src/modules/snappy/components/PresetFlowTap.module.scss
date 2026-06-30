@@ -1,0 +1,98 @@
+/* stylelint-disable property-disallowed-list -- emoji glyph size */
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/panel";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+$-art: calc(#{space.x3xl()} + #{space.md()});
+
+@mixin -on-tone {
+  @include hover {
+    @content;
+  }
+
+  @include pressed {
+    @content;
+  }
+}
+
+.root {
+  @include focus($radius: radius.lg());
+  @include elevation.e1;
+
+  @include hover {
+    @include elevation.e2;
+  }
+
+  @include pressed {
+    @include elevation.e1;
+  }
+
+  display: grid;
+  grid-template-columns: $-art 1fr;
+  align-items: stretch;
+  width: 100%;
+  overflow: hidden;
+  border-radius: radius.lg();
+  transition: box-shadow animation.settle-md();
+}
+
+@mixin -tone($accent) {
+  @include -on-tone {
+    .art {
+      background-color: color.surface();
+    }
+
+    .content {
+      background-color: panel.bg($accent);
+    }
+  }
+
+  border: 2px solid $accent;
+
+  .art {
+    background-color: panel.bg($accent);
+  }
+
+  .title {
+    color: $accent;
+  }
+}
+
+.fuchsia {
+  @include -tone(color.accent-fuchsia());
+}
+
+.orange {
+  @include -tone(color.accent-orange());
+}
+
+.art {
+  @include primitives.inline-row-center;
+
+  flex-shrink: 0;
+  padding: space.lg();
+  font-size: calc(#{icon-size.xl()} + #{icon-size.md()});
+  line-height: 1;
+}
+
+.art,
+.content {
+  transition: background-color animation.standard-md();
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  justify-content: center;
+  min-width: 0;
+  padding: space.lg();
+  background-color: color.surface();
+  border-left: 1px solid panel.border-soft();
+}

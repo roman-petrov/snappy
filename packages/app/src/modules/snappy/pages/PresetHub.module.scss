@@ -1,13 +1,29 @@
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/panel";
+@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
   display: flex;
   flex-direction: column;
-  gap: space.md();
+  gap: space.xl();
   width: 100%;
 }
 
-.card {
-  flex: none;
+.intro {
+  @include elevation.e1;
+  @include panel.panel-soft;
+
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  padding: space.lg();
+  border-radius: radius.lg();
+}
+
+.flows {
+  display: flex;
+  flex-direction: column;
+  gap: space.lg();
   width: 100%;
 }

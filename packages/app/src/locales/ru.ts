@@ -162,7 +162,12 @@ export const ru = {
   snappy: {
     composer: { placeholder: `Что нужно?`, send: `Отправить` },
     form: { continue: `Продолжить`, label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
-    preset: { hub: { lead: `Выберите, как запустить этот сценарий.` } },
+    preset: {
+      hub: {
+        lead: `Один результат — свободный чат или короткая форма.`,
+        title: `Как удобнее начать?`,
+      },
+    },
     presets: {
       groups: {
         audio: `Аудио`,

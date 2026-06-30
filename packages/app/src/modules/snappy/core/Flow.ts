@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { AgentEntry, StaticFormField } from "@snappy/snappy";
 
-import { ClipboardList, Sparkles } from "lucide-react";
 import { type ComponentType, createElement } from "react";
 
 import type { PresetFlow, PresetFlowMeta, PresetFlowPageProps, PresetMeta } from "./Preset";
@@ -25,11 +24,11 @@ const snappyFlow = {
   id: `snappy`,
   meta: {
     description: [
-      `Tools, skills, and a free-form dialog with a starter prompt.`,
-      `Инструменты, навыки и свободный диалог со стартовым промптом.`,
+      `Describe the task in your own words and refine the answer in dialogue.`,
+      `Опишите задачу своими словами и уточняйте ответ в диалоге.`,
     ],
-    icon: Sparkles,
-    title: [`Snappy agent`, `Агент Snappy`],
+    icon: `💬`,
+    title: [`Free chat`, `Свободный чат`],
   },
 } as const;
 
@@ -37,11 +36,11 @@ const staticFlow = {
   id: `static`,
   meta: {
     description: [
-      `A guided form with clarifying questions and a single result.`,
-      `Пошаговая форма с уточнениями и одним результатом.`,
+      `Answer a few questions — get the finished result right away.`,
+      `Ответьте на несколько вопросов — получите готовый результат сразу.`,
     ],
-    icon: ClipboardList,
-    title: [`Step-by-step scenario`, `Пошаговый сценарий`],
+    icon: `📋`,
+    title: [`Guided form`, `Пошаговая форма`],
   },
 } as const;
 

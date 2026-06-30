@@ -1,5 +1,6 @@
 declare const __PresetHub: {
   readonly root: "root";
-  readonly card: "card";
+  readonly intro: "intro";
+  readonly flows: "flows";
 };
 export default __PresetHub;
