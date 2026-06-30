@@ -34,6 +34,52 @@ export const preset: Preset = {
             label: { emoji: `📷`, text: i18n(`ui.field.photo.label`) },
             pickLabel: i18n(`ui.field.photo.pickLabel`),
           },
+          {
+            default: `medium`,
+            id: `intensity`,
+            kind: `single_choice`,
+            label: { emoji: `🎚️`, text: i18n(`ui.field.intensity.label`) },
+            options: [
+              {
+                label: { emoji: `💫`, text: i18n(`ui.field.intensity.option.subtle.label`) },
+                prompt: i18n(`ui.field.intensity.option.subtle.prompt`),
+                value: `subtle`,
+              },
+              {
+                label: { emoji: `⚖️`, text: i18n(`ui.field.intensity.option.medium.label`) },
+                prompt: i18n(`ui.field.intensity.option.medium.prompt`),
+                value: `medium`,
+              },
+              {
+                label: { emoji: `🔥`, text: i18n(`ui.field.intensity.option.strong.label`) },
+                prompt: i18n(`ui.field.intensity.option.strong.prompt`),
+                value: `strong`,
+              },
+            ],
+          },
+          {
+            default: `full`,
+            id: `areas`,
+            kind: `single_choice`,
+            label: { emoji: `🎯`, text: i18n(`ui.field.areas.label`) },
+            options: [
+              {
+                label: { emoji: `🖼️`, text: i18n(`ui.field.areas.option.full.label`) },
+                prompt: i18n(`ui.field.areas.option.full.prompt`),
+                value: `full`,
+              },
+              {
+                label: { emoji: `👤`, text: i18n(`ui.field.areas.option.subject.label`) },
+                prompt: i18n(`ui.field.areas.option.subject.prompt`),
+                value: `subject`,
+              },
+              {
+                label: { emoji: `🌄`, text: i18n(`ui.field.areas.option.background.label`) },
+                prompt: i18n(`ui.field.areas.option.background.prompt`),
+                value: `background`,
+              },
+            ],
+          },
         ]),
       {
         localization: () => ({
@@ -41,8 +87,40 @@ export const preset: Preset = {
             `The first image is a style and composition reference. The second is the user's photo. Create a version of the user's photo in the style of the reference while keeping the subject recognizable.`,
             `Первое изображение — референс стиля и оформления. Второе — фото пользователя. Создай версию фото пользователя в стиле референса, сохранив узнаваемость объекта.`,
           ],
+          "ui.field.areas.label": [`Apply to`, `Применить к`],
+          "ui.field.areas.option.background.label": [`Background`, `Фон`],
+          "ui.field.areas.option.background.prompt": [
+            `Style the background; keep subject natural.`,
+            `Стилизуй фон; объект оставь естественным.`,
+          ],
+          "ui.field.areas.option.full.label": [`Full image`, `Всё фото`],
+          "ui.field.areas.option.full.prompt": [
+            `Apply reference style to the entire image.`,
+            `Примени стиль референса ко всему изображению.`,
+          ],
+          "ui.field.areas.option.subject.label": [`Subject`, `Объект`],
+          "ui.field.areas.option.subject.prompt": [
+            `Style the main subject; lighter background treatment.`,
+            `Стилизуй главный объект; фон легче.`,
+          ],
           "ui.field.example.label": [`Style reference`, `Референс стиля`],
           "ui.field.example.pickLabel": [`Choose file`, `Выбрать файл`],
+          "ui.field.intensity.label": [`Intensity`, `Интенсивность`],
+          "ui.field.intensity.option.medium.label": [`Medium`, `Средне`],
+          "ui.field.intensity.option.medium.prompt": [
+            `Balanced transfer of reference style.`,
+            `Сбалансированный перенос стиля референса.`,
+          ],
+          "ui.field.intensity.option.strong.label": [`Strong`, `Сильно`],
+          "ui.field.intensity.option.strong.prompt": [
+            `Bold style transfer; reference dominates.`,
+            `Яркий перенос; референс доминирует.`,
+          ],
+          "ui.field.intensity.option.subtle.label": [`Subtle`, `Легко`],
+          "ui.field.intensity.option.subtle.prompt": [
+            `Light touch; keep photo mostly as-is.`,
+            `Лёгкий акцент; фото почти как есть.`,
+          ],
           "ui.field.photo.label": [`Your photo`, `Ваше фото`],
           "ui.field.photo.pickLabel": [`Choose file`, `Выбрать файл`],
         }),

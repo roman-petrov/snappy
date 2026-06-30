@@ -47,6 +47,37 @@ export const preset: Preset = {
             ],
           },
           {
+            default: `neutral`,
+            id: `register`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.register.label`) },
+            options: [
+              {
+                label: { emoji: `🎩`, text: i18n(`ui.field.register.option.formal.label`) },
+                prompt: i18n(`ui.field.register.option.formal.prompt`),
+                value: `formal`,
+              },
+              {
+                label: { emoji: `☕`, text: i18n(`ui.field.register.option.casual.label`) },
+                prompt: i18n(`ui.field.register.option.casual.prompt`),
+                value: `casual`,
+              },
+              {
+                label: { emoji: `⚖️`, text: i18n(`ui.field.register.option.neutral.label`) },
+                prompt: i18n(`ui.field.register.option.neutral.prompt`),
+                value: `neutral`,
+              },
+            ],
+          },
+          {
+            default: true,
+            id: `preserveFormatting`,
+            kind: `binary_choice`,
+            label: { emoji: `📝`, text: i18n(`ui.field.preserveFormatting.label`) },
+            promptOff: i18n(`ui.field.preserveFormatting.promptOff`),
+            promptOn: i18n(`ui.field.preserveFormatting.promptOn`),
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -63,6 +94,31 @@ export const preset: Preset = {
         "ui.field.addFormatting.label": [`Markup`, `Разметка`],
         "ui.field.addFormatting.promptOff": Prompts.formatting.off,
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
+        "ui.field.preserveFormatting.label": [`Keep markup`, `Сохранить разметку`],
+        "ui.field.preserveFormatting.promptOff": [
+          `Plain text output; drop source formatting.`,
+          `Простой текст; без исходной разметки.`,
+        ],
+        "ui.field.preserveFormatting.promptOn": [
+          `Preserve paragraphs, lists, and markdown structure.`,
+          `Сохрани абзацы, списки и структуру markdown.`,
+        ],
+        "ui.field.register.label": [`Register`, `Регистр`],
+        "ui.field.register.option.casual.label": [`Casual`, `Разговорный`],
+        "ui.field.register.option.casual.prompt": [
+          `Everyday spoken register.`,
+          `Повседневный разговорный регистр.`,
+        ],
+        "ui.field.register.option.formal.label": [`Formal`, `Формальный`],
+        "ui.field.register.option.formal.prompt": [
+          `Official or literary register.`,
+          `Официальный или книжный регистр.`,
+        ],
+        "ui.field.register.option.neutral.label": [`Neutral`, `Нейтральный`],
+        "ui.field.register.option.neutral.prompt": [
+          `Standard neutral register; match source tone.`,
+          `Стандартный нейтральный регистр; как в оригинале.`,
+        ],
         "ui.field.source.label": [`Source`, `Исходник`],
         "ui.field.source.placeholder": [`Paste text to translate…`, `Вставьте текст для перевода…`],
         "ui.field.source.prompt": [`Source:`, `Исходник:`],

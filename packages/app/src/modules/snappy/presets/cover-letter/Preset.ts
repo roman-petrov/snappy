@@ -36,6 +36,47 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.highlights.prompt`),
           },
           {
+            default: `professional`,
+            id: `tone`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.tone.label`) },
+            options: [
+              {
+                label: { emoji: `💼`, text: i18n(`ui.field.tone.option.professional.label`) },
+                prompt: i18n(`ui.field.tone.option.professional.prompt`),
+                value: `professional`,
+              },
+              {
+                label: { emoji: `🚀`, text: i18n(`ui.field.tone.option.enthusiastic.label`) },
+                prompt: i18n(`ui.field.tone.option.enthusiastic.prompt`),
+                value: `enthusiastic`,
+              },
+              {
+                label: { emoji: `🎯`, text: i18n(`ui.field.tone.option.concise.label`) },
+                prompt: i18n(`ui.field.tone.option.concise.prompt`),
+                value: `concise`,
+              },
+            ],
+          },
+          {
+            default: `standard`,
+            id: `length`,
+            kind: `single_choice`,
+            label: { emoji: `📏`, text: i18n(`ui.field.length.label`) },
+            options: [
+              {
+                label: { emoji: `📄`, text: i18n(`ui.field.length.option.standard.label`) },
+                prompt: i18n(`ui.field.length.option.standard.prompt`),
+                value: `standard`,
+              },
+              {
+                label: { emoji: `📝`, text: i18n(`ui.field.length.option.brief.label`) },
+                prompt: i18n(`ui.field.length.option.brief.prompt`),
+                value: `brief`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -61,6 +102,33 @@ export const preset: Preset = {
         "ui.field.job.label": [`Job & company`, `Вакансия и компания`],
         "ui.field.job.placeholder": [`Product designer at Acme, B2B SaaS…`, `Product designer в Acme, B2B SaaS…`],
         "ui.field.job.prompt": [`Job:`, `Вакансия:`],
+        "ui.field.length.label": [`Length`, `Длина`],
+        "ui.field.length.option.brief.label": [`Brief`, `Кратко`],
+        "ui.field.length.option.brief.prompt": [
+          `Half page max; punchy paragraphs only.`,
+          `Максимум полстраницы; только ёмкие абзацы.`,
+        ],
+        "ui.field.length.option.standard.label": [`Standard`, `Стандарт`],
+        "ui.field.length.option.standard.prompt": [
+          `Full page; opening, body, closing.`,
+          `Полная страница; вступление, основная часть, заключение.`,
+        ],
+        "ui.field.tone.label": [`Tone`, `Тон`],
+        "ui.field.tone.option.concise.label": [`Concise`, `Лаконично`],
+        "ui.field.tone.option.concise.prompt": [
+          `Direct and efficient; every sentence earns its place.`,
+          `Прямо и по делу; каждое предложение на счету.`,
+        ],
+        "ui.field.tone.option.enthusiastic.label": [`Enthusiastic`, `С энтузиазмом`],
+        "ui.field.tone.option.enthusiastic.prompt": [
+          `Show genuine interest in the role and company; still professional.`,
+          `Искренний интерес к роли и компании; профессионально.`,
+        ],
+        "ui.field.tone.option.professional.label": [`Professional`, `Деловой`],
+        "ui.field.tone.option.professional.prompt": [
+          `Formal business tone; polished and respectful.`,
+          `Формальный деловой тон; выверенно и уважительно.`,
+        ],
       }),
     }),
   ],

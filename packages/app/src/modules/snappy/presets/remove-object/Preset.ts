@@ -35,12 +35,55 @@ export const preset: Preset = {
             placeholder: i18n(`ui.field.target.placeholder`),
             prompt: i18n(`ui.field.target.prompt`),
           },
+          {
+            default: `natural`,
+            id: `fillQuality`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.fillQuality.label`) },
+            options: [
+              {
+                label: { emoji: `🌿`, text: i18n(`ui.field.fillQuality.option.natural.label`) },
+                prompt: i18n(`ui.field.fillQuality.option.natural.prompt`),
+                value: `natural`,
+              },
+              {
+                label: { emoji: `🌫️`, text: i18n(`ui.field.fillQuality.option.blur.label`) },
+                prompt: i18n(`ui.field.fillQuality.option.blur.prompt`),
+                value: `blur`,
+              },
+            ],
+          },
+          {
+            id: `context`,
+            kind: `text_input`,
+            label: { emoji: `💡`, text: i18n(`ui.field.context.label`) },
+            omitWhenEmpty: true,
+            placeholder: i18n(`ui.field.context.placeholder`),
+            prompt: i18n(`ui.field.context.prompt`),
+          },
         ]),
       {
         localization: () => ({
           "prompt": [
             `Remove the object or distraction described below from the uploaded image. Fill removed areas naturally; keep everything else unchanged. Preserve subject identity and composition where possible.`,
             `Убери объект или отвлекающий элемент по описанию ниже с загруженного изображения. Заполни область естественно; остальное не меняй. По возможности сохрани узнаваемость и композицию.`,
+          ],
+          "ui.field.context.label": [`Surroundings (optional)`, `Окружение (необязательно)`],
+          "ui.field.context.placeholder": [
+            `Brick wall behind, grass field…`,
+            `Кирпичная стена, трава…`,
+          ],
+          "ui.field.context.prompt": [`Background context:`, `Контекст фона:`],
+          "ui.field.fillQuality.label": [`Fill`, `Заполнение`],
+          "ui.field.fillQuality.option.blur.label": [`Soft blur`, `Мягкий blur`],
+          "ui.field.fillQuality.option.blur.prompt": [
+            `Gentle blur fill if texture is uncertain.`,
+            `Мягкий blur, если текстура неясна.`,
+          ],
+          "ui.field.fillQuality.option.natural.label": [`Natural`, `Естественно`],
+          "ui.field.fillQuality.option.natural.prompt": [
+            `Inpaint matching surrounding texture and light.`,
+            `Inpaint с совпадением текстуры и света.`,
           ],
           "ui.field.image.label": [`Photo`, `Фото`],
           "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],

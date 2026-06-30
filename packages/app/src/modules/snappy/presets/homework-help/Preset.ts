@@ -27,12 +27,50 @@ export const preset: Preset = {
             pickLabel: i18n(`ui.field.image.pickLabel`),
           },
           {
+            default: `middle`,
+            id: `gradeLevel`,
+            kind: `single_choice`,
+            label: { emoji: `🎓`, text: i18n(`ui.field.gradeLevel.label`) },
+            options: [
+              {
+                label: { emoji: `🌱`, text: i18n(`ui.field.gradeLevel.option.elementary.label`) },
+                prompt: i18n(`ui.field.gradeLevel.option.elementary.prompt`),
+                value: `elementary`,
+              },
+              {
+                label: { emoji: `📚`, text: i18n(`ui.field.gradeLevel.option.middle.label`) },
+                prompt: i18n(`ui.field.gradeLevel.option.middle.prompt`),
+                value: `middle`,
+              },
+              {
+                label: { emoji: `🎓`, text: i18n(`ui.field.gradeLevel.option.high.label`) },
+                prompt: i18n(`ui.field.gradeLevel.option.high.prompt`),
+                value: `high`,
+              },
+            ],
+          },
+          {
+            default: `math`,
             id: `subject`,
-            kind: `text_input`,
+            kind: `single_choice`,
             label: { emoji: `📖`, text: i18n(`ui.field.subject.label`) },
-            omitWhenEmpty: true,
-            placeholder: i18n(`ui.field.subject.placeholder`),
-            prompt: i18n(`ui.field.subject.prompt`),
+            options: [
+              {
+                label: { emoji: `🔢`, text: i18n(`ui.field.subject.option.math.label`) },
+                prompt: i18n(`ui.field.subject.option.math.prompt`),
+                value: `math`,
+              },
+              {
+                label: { emoji: `⚛️`, text: i18n(`ui.field.subject.option.science.label`) },
+                prompt: i18n(`ui.field.subject.option.science.prompt`),
+                value: `science`,
+              },
+              {
+                label: { emoji: `📜`, text: i18n(`ui.field.subject.option.humanities.label`) },
+                prompt: i18n(`ui.field.subject.option.humanities.prompt`),
+                value: `humanities`,
+              },
+            ],
           },
           {
             default: `steps`,
@@ -58,6 +96,22 @@ export const preset: Preset = {
           `Help with the problem shown in the image following every bullet in the parameter list. Teach the approach; do not just give a final answer without reasoning. Output only the help text—no preamble.`,
           `Помоги с задачей на изображении, строго следуя каждому пункту списка параметров. Объясни подход; не давай только ответ без рассуждений. Выведи только текст помощи — без вступления.`,
         ],
+        "ui.field.gradeLevel.label": [`Grade level`, `Класс / уровень`],
+        "ui.field.gradeLevel.option.elementary.label": [`Elementary`, `Начальная`],
+        "ui.field.gradeLevel.option.elementary.prompt": [
+          `Very simple language and small steps.`,
+          `Очень простой язык и маленькие шаги.`,
+        ],
+        "ui.field.gradeLevel.option.high.label": [`High school+`, `Старшие классы+`],
+        "ui.field.gradeLevel.option.high.prompt": [
+          `More formal reasoning; appropriate rigor.`,
+          `Более формальные рассуждения; нужная строгость.`,
+        ],
+        "ui.field.gradeLevel.option.middle.label": [`Middle school`, `Средняя школа`],
+        "ui.field.gradeLevel.option.middle.prompt": [
+          `Clear steps with moderate vocabulary.`,
+          `Понятные шаги со средним словарём.`,
+        ],
         "ui.field.image.label": [`Problem photo`, `Фото задачи`],
         "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],
         "ui.field.style.label": [`Help style`, `Стиль помощи`],
@@ -71,9 +125,22 @@ export const preset: Preset = {
           `Show numbered steps with reasoning through to the answer.`,
           `Пронумерованные шаги с рассуждениями до ответа.`,
         ],
-        "ui.field.subject.label": [`Subject (optional)`, `Предмет (необязательно)`],
-        "ui.field.subject.placeholder": [`Algebra, physics, history…`, `Алгебра, физика, история…`],
-        "ui.field.subject.prompt": [`Subject or topic:`, `Предмет или тема:`],
+        "ui.field.subject.label": [`Subject`, `Предмет`],
+        "ui.field.subject.option.humanities.label": [`Humanities`, `Гуманитарные`],
+        "ui.field.subject.option.humanities.prompt": [
+          `History, languages, literature approach.`,
+          `Подход для истории, языков, литературы.`,
+        ],
+        "ui.field.subject.option.math.label": [`Math`, `Математика`],
+        "ui.field.subject.option.math.prompt": [
+          `Show formulas and algebraic steps clearly.`,
+          `Ясно показывай формулы и алгебраические шаги.`,
+        ],
+        "ui.field.subject.option.science.label": [`Science`, `Естественные`],
+        "ui.field.subject.option.science.prompt": [
+          `Physics, chemistry, biology reasoning style.`,
+          `Стиль рассуждений для физики, химии, биологии.`,
+        ],
       }),
       resolve: ({ answers: { image } }) => image,
     }),

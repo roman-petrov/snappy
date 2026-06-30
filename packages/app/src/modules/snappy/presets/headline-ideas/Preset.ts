@@ -26,11 +26,39 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.topic.prompt`),
           },
           {
+            default: `informative`,
+            id: `style`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.style.label`) },
+            options: [
+              {
+                label: { emoji: `📖`, text: i18n(`ui.field.style.option.informative.label`) },
+                prompt: i18n(`ui.field.style.option.informative.prompt`),
+                value: `informative`,
+              },
+              {
+                label: { emoji: `🔍`, text: i18n(`ui.field.style.option.seo.label`) },
+                prompt: i18n(`ui.field.style.option.seo.prompt`),
+                value: `seo`,
+              },
+              {
+                label: { emoji: `⚡`, text: i18n(`ui.field.style.option.punchy.label`) },
+                prompt: i18n(`ui.field.style.option.punchy.prompt`),
+                value: `punchy`,
+              },
+            ],
+          },
+          {
             default: `5`,
             id: `count`,
             kind: `single_choice`,
             label: { emoji: `🔢`, text: i18n(`ui.field.count.label`) },
             options: [
+              {
+                label: { emoji: `3️⃣`, text: i18n(`ui.field.count.option.three.label`) },
+                prompt: i18n(`ui.field.count.option.three.prompt`),
+                value: `3`,
+              },
               {
                 label: { emoji: `5️⃣`, text: i18n(`ui.field.count.option.five.label`) },
                 prompt: i18n(`ui.field.count.option.five.prompt`),
@@ -54,6 +82,24 @@ export const preset: Preset = {
         "ui.field.count.option.five.prompt": [`Five distinct headlines.`, `Пять разных заголовков.`],
         "ui.field.count.option.ten.label": [`10 ideas`, `10 идей`],
         "ui.field.count.option.ten.prompt": [`Ten distinct headlines.`, `Десять разных заголовков.`],
+        "ui.field.count.option.three.label": [`3 ideas`, `3 идеи`],
+        "ui.field.count.option.three.prompt": [`Three distinct headlines.`, `Три разных заголовка.`],
+        "ui.field.style.label": [`Style`, `Стиль`],
+        "ui.field.style.option.informative.label": [`Informative`, `Информативный`],
+        "ui.field.style.option.informative.prompt": [
+          `Clear, accurate headlines that set expectations; no hype.`,
+          `Ясные, точные заголовки без хайпа; читатель понимает, о чём материал.`,
+        ],
+        "ui.field.style.option.punchy.label": [`Punchy`, `Цепляющий`],
+        "ui.field.style.option.punchy.prompt": [
+          `Short, energetic headlines with strong verbs; still honest.`,
+          `Короткие, энергичные заголовки с сильными глаголами; без обмана.`,
+        ],
+        "ui.field.style.option.seo.label": [`SEO`, `SEO`],
+        "ui.field.style.option.seo.prompt": [
+          `Include likely search keywords naturally; readable for humans first.`,
+          `Включи вероятные ключевые слова естественно; сначала читаемость для людей.`,
+        ],
         "ui.field.topic.label": [`Topic & angle`, `Тема и угол`],
         "ui.field.topic.placeholder": [`Guide to remote work for engineers…`, `Гайд по удалёнке для инженеров…`],
         "ui.field.topic.prompt": [`Topic:`, `Тема:`],

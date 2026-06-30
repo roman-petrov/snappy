@@ -37,6 +37,52 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.target.prompt`),
           },
           {
+            default: `chronological`,
+            id: `format`,
+            kind: `single_choice`,
+            label: { emoji: `📋`, text: i18n(`ui.field.format.label`) },
+            options: [
+              {
+                label: { emoji: `📅`, text: i18n(`ui.field.format.option.chronological.label`) },
+                prompt: i18n(`ui.field.format.option.chronological.prompt`),
+                value: `chronological`,
+              },
+              {
+                label: { emoji: `⭐`, text: i18n(`ui.field.format.option.skills.label`) },
+                prompt: i18n(`ui.field.format.option.skills.prompt`),
+                value: `skills`,
+              },
+              {
+                label: { emoji: `🔀`, text: i18n(`ui.field.format.option.hybrid.label`) },
+                prompt: i18n(`ui.field.format.option.hybrid.prompt`),
+                value: `hybrid`,
+              },
+            ],
+          },
+          {
+            default: `tech`,
+            id: `industry`,
+            kind: `single_choice`,
+            label: { emoji: `🏭`, text: i18n(`ui.field.industry.label`) },
+            options: [
+              {
+                label: { emoji: `💻`, text: i18n(`ui.field.industry.option.tech.label`) },
+                prompt: i18n(`ui.field.industry.option.tech.prompt`),
+                value: `tech`,
+              },
+              {
+                label: { emoji: `📊`, text: i18n(`ui.field.industry.option.business.label`) },
+                prompt: i18n(`ui.field.industry.option.business.prompt`),
+                value: `business`,
+              },
+              {
+                label: { emoji: `🎨`, text: i18n(`ui.field.industry.option.creative.label`) },
+                prompt: i18n(`ui.field.industry.option.creative.prompt`),
+                value: `creative`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -59,6 +105,38 @@ export const preset: Preset = {
           `Работа, навыки, образование, достижения…`,
         ],
         "ui.field.experience.prompt": [`Experience:`, `Опыт:`],
+        "ui.field.format.label": [`Format`, `Формат`],
+        "ui.field.format.option.chronological.label": [`Chronological`, `Хронология`],
+        "ui.field.format.option.chronological.prompt": [
+          `Reverse-chronological work history.`,
+          `Обратная хронология опыта работы.`,
+        ],
+        "ui.field.format.option.hybrid.label": [`Hybrid`, `Гибрид`],
+        "ui.field.format.option.hybrid.prompt": [
+          `Skills summary plus condensed experience.`,
+          `Блок навыков плюс сжатый опыт.`,
+        ],
+        "ui.field.format.option.skills.label": [`Skills-first`, `Навыки`],
+        "ui.field.format.option.skills.prompt": [
+          `Lead with skills and projects; lighter job history.`,
+          `Сначала навыки и проекты; опыт короче.`,
+        ],
+        "ui.field.industry.label": [`Industry`, `Отрасль`],
+        "ui.field.industry.option.business.label": [`Business`, `Бизнес`],
+        "ui.field.industry.option.business.prompt": [
+          `Emphasize metrics, leadership, and business impact.`,
+          `Акцент на метриках, лидерстве и бизнес-результатах.`,
+        ],
+        "ui.field.industry.option.creative.label": [`Creative`, `Креатив`],
+        "ui.field.industry.option.creative.prompt": [
+          `Highlight portfolio, projects, and creative outcomes.`,
+          `Портфолио, проекты и креативные результаты.`,
+        ],
+        "ui.field.industry.option.tech.label": [`Tech`, `IT`],
+        "ui.field.industry.option.tech.prompt": [
+          `Emphasize tech stack, systems, and engineering impact.`,
+          `Стек, системы и инженерный impact.`,
+        ],
         "ui.field.target.label": [`Target role (optional)`, `Целевая роль (необязательно)`],
         "ui.field.target.placeholder": [`Senior product manager…`, `Senior product manager…`],
         "ui.field.target.prompt": [`Target role:`, `Целевая роль:`],

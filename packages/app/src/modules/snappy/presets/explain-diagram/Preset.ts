@@ -49,6 +49,14 @@ export const preset: Preset = {
               },
             ],
           },
+          {
+            id: `context`,
+            kind: `text_input`,
+            label: { emoji: `💡`, text: i18n(`ui.field.context.label`) },
+            omitWhenEmpty: true,
+            placeholder: i18n(`ui.field.context.placeholder`),
+            prompt: i18n(`ui.field.context.prompt`),
+          },
         ]),
       localization: () => ({
         "prompt": [
@@ -71,6 +79,12 @@ export const preset: Preset = {
           `Balanced explanation for a mixed audience.`,
           `Сбалансированное объяснение для широкой аудитории.`,
         ],
+        "ui.field.context.label": [`Context (optional)`, `Контекст (необязательно)`],
+        "ui.field.context.placeholder": [
+          `Q3 sales dashboard for exec review…`,
+          `Дашборд продаж Q3 для review…`,
+        ],
+        "ui.field.context.prompt": [`Context:`, `Контекст:`],
         "ui.field.image.label": [`Diagram`, `Диаграмма`],
         "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],
       }),

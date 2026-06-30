@@ -44,6 +44,34 @@ export const preset: Preset = {
                 prompt: i18n(`ui.field.audience.option.customers.prompt`),
                 value: `customers`,
               },
+              {
+                label: { emoji: `🏢`, text: i18n(`ui.field.audience.option.company.label`) },
+                prompt: i18n(`ui.field.audience.option.company.prompt`),
+                value: `company`,
+              },
+            ],
+          },
+          {
+            default: `email`,
+            id: `channel`,
+            kind: `single_choice`,
+            label: { emoji: `📨`, text: i18n(`ui.field.channel.label`) },
+            options: [
+              {
+                label: { emoji: `📧`, text: i18n(`ui.field.channel.option.email.label`) },
+                prompt: i18n(`ui.field.channel.option.email.prompt`),
+                value: `email`,
+              },
+              {
+                label: { emoji: `💬`, text: i18n(`ui.field.channel.option.slack.label`) },
+                prompt: i18n(`ui.field.channel.option.slack.prompt`),
+                value: `slack`,
+              },
+              {
+                label: { emoji: `📋`, text: i18n(`ui.field.channel.option.intranet.label`) },
+                prompt: i18n(`ui.field.channel.option.intranet.prompt`),
+                value: `intranet`,
+              },
             ],
           },
           {
@@ -64,6 +92,11 @@ export const preset: Preset = {
         "ui.field.addFormatting.promptOff": Prompts.formatting.off,
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
         "ui.field.audience.label": [`Audience`, `Аудитория`],
+        "ui.field.audience.option.company.label": [`Whole company`, `Вся компания`],
+        "ui.field.audience.option.company.prompt": [
+          `Company-wide; inclusive tone for all departments.`,
+          `На всю компанию; inclusive-тон для всех отделов.`,
+        ],
         "ui.field.audience.option.customers.label": [`Customers`, `Клиенты`],
         "ui.field.audience.option.customers.prompt": [
           `External, customer-friendly tone.`,
@@ -71,6 +104,22 @@ export const preset: Preset = {
         ],
         "ui.field.audience.option.team.label": [`Team`, `Команда`],
         "ui.field.audience.option.team.prompt": [`Internal, direct tone.`, `Внутренний, прямой тон.`],
+        "ui.field.channel.label": [`Channel`, `Канал`],
+        "ui.field.channel.option.email.label": [`Email`, `Email`],
+        "ui.field.channel.option.email.prompt": [
+          `Email announcement: subject line + body; scannable paragraphs.`,
+          `Email-объявление: тема + тело; абзацы для быстрого чтения.`,
+        ],
+        "ui.field.channel.option.intranet.label": [`Intranet`, `Интранет`],
+        "ui.field.channel.option.intranet.prompt": [
+          `Wiki/intranet post: headline, summary, details, links placeholder.`,
+          `Пост в wiki/интранете: заголовок, summary, детали, placeholder ссылок.`,
+        ],
+        "ui.field.channel.option.slack.label": [`Slack`, `Slack`],
+        "ui.field.channel.option.slack.prompt": [
+          `Slack message: concise, emoji-friendly, clear CTA at end.`,
+          `Сообщение в Slack: кратко, с эмодзи где уместно, явный CTA в конце.`,
+        ],
         "ui.field.news.label": [`News & details`, `Новость и детали`],
         "ui.field.news.placeholder": [`We're launching v2 next Monday…`, `В понедельник запускаем v2…`],
         "ui.field.news.prompt": [`News:`, `Новость:`],

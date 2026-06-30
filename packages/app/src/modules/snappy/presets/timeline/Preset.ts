@@ -42,12 +42,60 @@ export const preset: Preset = {
               },
             ],
           },
+          {
+            default: `modern`,
+            id: `visualStyle`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.visualStyle.label`) },
+            options: [
+              {
+                label: { emoji: `◻️`, text: i18n(`ui.field.visualStyle.option.modern.label`) },
+                prompt: i18n(`ui.field.visualStyle.option.modern.prompt`),
+                value: `modern`,
+              },
+              {
+                label: { emoji: `📜`, text: i18n(`ui.field.visualStyle.option.vintage.label`) },
+                prompt: i18n(`ui.field.visualStyle.option.vintage.prompt`),
+                value: `vintage`,
+              },
+            ],
+          },
+          {
+            default: `standard`,
+            id: `eventDensity`,
+            kind: `single_choice`,
+            label: { emoji: `📏`, text: i18n(`ui.field.eventDensity.label`) },
+            options: [
+              {
+                label: { emoji: `🦅`, text: i18n(`ui.field.eventDensity.option.sparse.label`) },
+                prompt: i18n(`ui.field.eventDensity.option.sparse.prompt`),
+                value: `sparse`,
+              },
+              {
+                label: { emoji: `↔️`, text: i18n(`ui.field.eventDensity.option.standard.label`) },
+                prompt: i18n(`ui.field.eventDensity.option.standard.prompt`),
+                value: `standard`,
+              },
+              {
+                label: { emoji: `📊`, text: i18n(`ui.field.eventDensity.option.dense.label`) },
+                prompt: i18n(`ui.field.eventDensity.option.dense.prompt`),
+                value: `dense`,
+              },
+            ],
+          },
         ]),
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one timeline infographic image prompt from the events list and every bullet below. Clear dates, milestones, and flow.`,
           `Создай один промпт для таймлайна из списка событий и каждого пункта ниже. Даты, вехи и поток.`,
         ]),
+        "ui.field.eventDensity.label": [`Density`, `Плотность`],
+        "ui.field.eventDensity.option.dense.label": [`Dense`, `Плотно`],
+        "ui.field.eventDensity.option.dense.prompt": [`Many milestones; compact spacing.`, `Много вех; компактные интервалы.`],
+        "ui.field.eventDensity.option.sparse.label": [`Sparse`, `Редко`],
+        "ui.field.eventDensity.option.sparse.prompt": [`Few key milestones only.`, `Только ключевые вехи.`],
+        "ui.field.eventDensity.option.standard.label": [`Standard`, `Стандарт`],
+        "ui.field.eventDensity.option.standard.prompt": [`Balanced spacing between events.`, `Сбалансированные интервалы между событиями.`],
         "ui.field.events.label": [`Events`, `События`],
         "ui.field.events.placeholder": [
           `Jan: launch; Mar: v2; Jun: expansion…`,
@@ -59,6 +107,11 @@ export const preset: Preset = {
         "ui.field.orientation.option.horizontal.prompt": [`Left-to-right timeline.`, `Таймлайн слева направо.`],
         "ui.field.orientation.option.vertical.label": [`Vertical`, `Вертикальная`],
         "ui.field.orientation.option.vertical.prompt": [`Top-to-bottom timeline.`, `Таймлайн сверху вниз.`],
+        "ui.field.visualStyle.label": [`Style`, `Стиль`],
+        "ui.field.visualStyle.option.modern.label": [`Modern`, `Современный`],
+        "ui.field.visualStyle.option.modern.prompt": [`Clean icons and gradient line.`, `Чистые иконки и gradient-линия.`],
+        "ui.field.visualStyle.option.vintage.label": [`Vintage`, `Винтаж`],
+        "ui.field.visualStyle.option.vintage.prompt": [`Retro paper texture and serif labels.`, `Ретро-текстура бумаги и serif-подписи.`],
       }),
     }),
   ],

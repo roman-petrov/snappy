@@ -26,6 +26,47 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.source.prompt`),
           },
           {
+            default: `bullets`,
+            id: `format`,
+            kind: `single_choice`,
+            label: { emoji: `📋`, text: i18n(`ui.field.format.label`) },
+            options: [
+              {
+                label: { emoji: `•`, text: i18n(`ui.field.format.option.bullets.label`) },
+                prompt: i18n(`ui.field.format.option.bullets.prompt`),
+                value: `bullets`,
+              },
+              {
+                label: { emoji: `1️⃣`, text: i18n(`ui.field.format.option.numbered.label`) },
+                prompt: i18n(`ui.field.format.option.numbered.prompt`),
+                value: `numbered`,
+              },
+            ],
+          },
+          {
+            default: `medium`,
+            id: `length`,
+            kind: `single_choice`,
+            label: { emoji: `📏`, text: i18n(`ui.field.length.label`) },
+            options: [
+              {
+                label: { emoji: `⬇️`, text: i18n(`ui.field.length.option.brief.label`) },
+                prompt: i18n(`ui.field.length.option.brief.prompt`),
+                value: `brief`,
+              },
+              {
+                label: { emoji: `↔️`, text: i18n(`ui.field.length.option.medium.label`) },
+                prompt: i18n(`ui.field.length.option.medium.prompt`),
+                value: `medium`,
+              },
+              {
+                label: { emoji: `⬆️`, text: i18n(`ui.field.length.option.detailed.label`) },
+                prompt: i18n(`ui.field.length.option.detailed.prompt`),
+                value: `detailed`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -42,6 +83,33 @@ export const preset: Preset = {
         "ui.field.addFormatting.label": [`Markup`, `Разметка`],
         "ui.field.addFormatting.promptOff": Prompts.formatting.off,
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
+        "ui.field.format.label": [`Format`, `Формат`],
+        "ui.field.format.option.bullets.label": [`Bullets`, `Маркеры`],
+        "ui.field.format.option.bullets.prompt": [
+          `Use bullet markers (• or -) for each point.`,
+          `Используй маркеры (• или -) для каждого пункта.`,
+        ],
+        "ui.field.format.option.numbered.label": [`Numbered`, `Нумерация`],
+        "ui.field.format.option.numbered.prompt": [
+          `Use numbered list (1, 2, 3…) for each point.`,
+          `Используй нумерованный список (1, 2, 3…) для каждого пункта.`,
+        ],
+        "ui.field.length.label": [`Length`, `Длина`],
+        "ui.field.length.option.brief.label": [`Brief`, `Кратко`],
+        "ui.field.length.option.brief.prompt": [
+          `Keep bullets short—one line each, core facts only.`,
+          `Короткие тезисы — по одной строке, только суть.`,
+        ],
+        "ui.field.length.option.detailed.label": [`Detailed`, `Подробно`],
+        "ui.field.length.option.detailed.prompt": [
+          `Allow longer bullets with supporting detail where useful.`,
+          `Допускай более длинные пункты с уточняющими деталями.`,
+        ],
+        "ui.field.length.option.medium.label": [`Medium`, `Средне`],
+        "ui.field.length.option.medium.prompt": [
+          `Balanced length—enough context per bullet without fluff.`,
+          `Сбалансированная длина — достаточно контекста без воды.`,
+        ],
         "ui.field.source.label": [`Source`, `Исходник`],
         "ui.field.source.placeholder": [`Paste messy notes here…`, `Вставьте сырые заметки…`],
         "ui.field.source.prompt": [`Source:`, `Исходник:`],

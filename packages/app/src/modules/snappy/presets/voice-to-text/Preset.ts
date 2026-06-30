@@ -36,6 +36,32 @@ export const preset: Preset = {
             promptOn: i18n(`ui.field.addFormatting.promptOn`),
           },
           {
+            default: `standard`,
+            id: `punctuation`,
+            kind: `single_choice`,
+            label: { emoji: `✍️`, text: i18n(`ui.field.punctuation.label`) },
+            options: [
+              {
+                label: { emoji: `📝`, text: i18n(`ui.field.punctuation.option.standard.label`) },
+                prompt: i18n(`ui.field.punctuation.option.standard.prompt`),
+                value: `standard`,
+              },
+              {
+                label: { emoji: `📄`, text: i18n(`ui.field.punctuation.option.minimal.label`) },
+                prompt: i18n(`ui.field.punctuation.option.minimal.prompt`),
+                value: `minimal`,
+              },
+            ],
+          },
+          {
+            default: false,
+            id: `speakerLabels`,
+            kind: `binary_choice`,
+            label: { emoji: `👥`, text: i18n(`ui.field.speakerLabels.label`) },
+            promptOff: i18n(`ui.field.speakerLabels.promptOff`),
+            promptOn: i18n(`ui.field.speakerLabels.promptOn`),
+          },
+          {
             default: `match`,
             id: `outputLang`,
             kind: `single_choice`,
@@ -83,6 +109,23 @@ export const preset: Preset = {
         ],
         "ui.field.outputLang.option.ru.label": [`Russian`, `Русский`],
         "ui.field.outputLang.option.ru.prompt": [`Write the transcript in Russian.`, `Выведи расшифровку на русском.`],
+        "ui.field.punctuation.label": [`Punctuation`, `Пунктуация`],
+        "ui.field.punctuation.option.minimal.label": [`Minimal`, `Минимум`],
+        "ui.field.punctuation.option.minimal.prompt": [
+          `Light punctuation; preserve spoken flow.`,
+          `Минимум пунктуации; сохрани устный поток.`,
+        ],
+        "ui.field.punctuation.option.standard.label": [`Standard`, `Стандарт`],
+        "ui.field.punctuation.option.standard.prompt": [
+          `Full punctuation and paragraph breaks.`,
+          `Полная пунктуация и абзацы.`,
+        ],
+        "ui.field.speakerLabels.label": [`Speaker labels`, `Метки спикеров`],
+        "ui.field.speakerLabels.promptOff": [`No speaker labels.`, `Без меток спикеров.`],
+        "ui.field.speakerLabels.promptOn": [
+          `Label speakers as Speaker 1, Speaker 2 when distinct voices change.`,
+          `Помечай спикеров как Speaker 1, Speaker 2 при смене голосов.`,
+        ],
       }),
       resolve: ({ answers: { audio } }) => audio,
     }),

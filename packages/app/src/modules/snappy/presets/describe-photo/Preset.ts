@@ -27,6 +27,29 @@ export const preset: Preset = {
             pickLabel: i18n(`ui.field.image.pickLabel`),
           },
           {
+            default: `general`,
+            id: `purpose`,
+            kind: `single_choice`,
+            label: { emoji: `🎯`, text: i18n(`ui.field.purpose.label`) },
+            options: [
+              {
+                label: { emoji: `♿`, text: i18n(`ui.field.purpose.option.alt_text.label`) },
+                prompt: i18n(`ui.field.purpose.option.alt_text.prompt`),
+                value: `alt_text`,
+              },
+              {
+                label: { emoji: `📱`, text: i18n(`ui.field.purpose.option.social.label`) },
+                prompt: i18n(`ui.field.purpose.option.social.prompt`),
+                value: `social`,
+              },
+              {
+                label: { emoji: `👁️`, text: i18n(`ui.field.purpose.option.general.label`) },
+                prompt: i18n(`ui.field.purpose.option.general.prompt`),
+                value: `general`,
+              },
+            ],
+          },
+          {
             default: `detailed`,
             id: `detail`,
             kind: `single_choice`,
@@ -63,6 +86,22 @@ export const preset: Preset = {
         ],
         "ui.field.image.label": [`Photo`, `Фото`],
         "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],
+        "ui.field.purpose.label": [`Purpose`, `Назначение`],
+        "ui.field.purpose.option.alt_text.label": [`Alt text`, `Alt-текст`],
+        "ui.field.purpose.option.alt_text.prompt": [
+          `Concise accessibility description; focus on meaning for screen readers.`,
+          `Краткое описание для accessibility; смысл для screen readers.`,
+        ],
+        "ui.field.purpose.option.general.label": [`General`, `Общее`],
+        "ui.field.purpose.option.general.prompt": [
+          `Balanced description for any use.`,
+          `Сбалансированное описание для любого использования.`,
+        ],
+        "ui.field.purpose.option.social.label": [`Social caption`, `Подпись`],
+        "ui.field.purpose.option.social.prompt": [
+          `Engaging caption tone; highlight mood and story.`,
+          `Живая подпись; настроение и история кадра.`,
+        ],
       }),
       resolve: ({ answers: { image } }) => image,
     }),

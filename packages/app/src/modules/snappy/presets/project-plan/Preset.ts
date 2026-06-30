@@ -33,6 +33,47 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.deadline.prompt`),
           },
           {
+            default: `agile`,
+            id: `methodology`,
+            kind: `single_choice`,
+            label: { emoji: `🔄`, text: i18n(`ui.field.methodology.label`) },
+            options: [
+              {
+                label: { emoji: `🏃`, text: i18n(`ui.field.methodology.option.agile.label`) },
+                prompt: i18n(`ui.field.methodology.option.agile.prompt`),
+                value: `agile`,
+              },
+              {
+                label: { emoji: `📊`, text: i18n(`ui.field.methodology.option.waterfall.label`) },
+                prompt: i18n(`ui.field.methodology.option.waterfall.prompt`),
+                value: `waterfall`,
+              },
+              {
+                label: { emoji: `📋`, text: i18n(`ui.field.methodology.option.kanban.label`) },
+                prompt: i18n(`ui.field.methodology.option.kanban.prompt`),
+                value: `kanban`,
+              },
+            ],
+          },
+          {
+            default: `standard`,
+            id: `detailLevel`,
+            kind: `single_choice`,
+            label: { emoji: `📏`, text: i18n(`ui.field.detailLevel.label`) },
+            options: [
+              {
+                label: { emoji: `🦅`, text: i18n(`ui.field.detailLevel.option.high.label`) },
+                prompt: i18n(`ui.field.detailLevel.option.high.prompt`),
+                value: `high`,
+              },
+              {
+                label: { emoji: `↔️`, text: i18n(`ui.field.detailLevel.option.standard.label`) },
+                prompt: i18n(`ui.field.detailLevel.option.standard.prompt`),
+                value: `standard`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -52,6 +93,33 @@ export const preset: Preset = {
         "ui.field.deadline.label": [`Deadline (optional)`, `Срок (необязательно)`],
         "ui.field.deadline.placeholder": [`6 weeks, Q3 launch…`, `6 недель, запуск в Q3…`],
         "ui.field.deadline.prompt": [`Deadline:`, `Срок:`],
+        "ui.field.detailLevel.label": [`Detail`, `Детализация`],
+        "ui.field.detailLevel.option.high.label": [`High-level`, `Крупно`],
+        "ui.field.detailLevel.option.high.prompt": [
+          `Phases and milestones only; no task breakdown.`,
+          `Только фазы и вехи; без декомпозиции задач.`,
+        ],
+        "ui.field.detailLevel.option.standard.label": [`Standard`, `Стандарт`],
+        "ui.field.detailLevel.option.standard.prompt": [
+          `Phases, milestones, and key tasks with owners.`,
+          `Фазы, вехи и ключевые задачи с ответственными.`,
+        ],
+        "ui.field.methodology.label": [`Methodology`, `Методология`],
+        "ui.field.methodology.option.agile.label": [`Agile`, `Agile`],
+        "ui.field.methodology.option.agile.prompt": [
+          `Sprints, iterations, backlog-style phases.`,
+          `Спринты, итерации, фазы в стиле backlog.`,
+        ],
+        "ui.field.methodology.option.kanban.label": [`Kanban`, `Kanban`],
+        "ui.field.methodology.option.kanban.prompt": [
+          `Flow-based stages; WIP limits where relevant.`,
+          `Потоковые стадии; WIP-лимиты где уместно.`,
+        ],
+        "ui.field.methodology.option.waterfall.label": [`Waterfall`, `Waterfall`],
+        "ui.field.methodology.option.waterfall.prompt": [
+          `Sequential phases with gates and deliverables.`,
+          `Последовательные фазы с gate и deliverables.`,
+        ],
         "ui.field.scope.label": [`Scope`, `Объём`],
         "ui.field.scope.placeholder": [
           `MVP mobile app with auth and feed…`,

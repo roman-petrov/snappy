@@ -28,6 +28,29 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.brief.prompt`),
           },
           {
+            default: `meetup`,
+            id: `eventType`,
+            kind: `single_choice`,
+            label: { emoji: `🏷️`, text: i18n(`ui.field.eventType.label`) },
+            options: [
+              {
+                label: { emoji: `👥`, text: i18n(`ui.field.eventType.option.meetup.label`) },
+                prompt: i18n(`ui.field.eventType.option.meetup.prompt`),
+                value: `meetup`,
+              },
+              {
+                label: { emoji: `🎤`, text: i18n(`ui.field.eventType.option.conference.label`) },
+                prompt: i18n(`ui.field.eventType.option.conference.prompt`),
+                value: `conference`,
+              },
+              {
+                label: { emoji: `🎉`, text: i18n(`ui.field.eventType.option.party.label`) },
+                prompt: i18n(`ui.field.eventType.option.party.prompt`),
+                value: `party`,
+              },
+            ],
+          },
+          {
             default: `agenda`,
             id: `focus`,
             kind: `single_choice`,
@@ -42,6 +65,11 @@ export const preset: Preset = {
                 label: { emoji: `📦`, text: i18n(`ui.field.focus.option.logistics.label`) },
                 prompt: i18n(`ui.field.focus.option.logistics.prompt`),
                 value: `logistics`,
+              },
+              {
+                label: { emoji: `📋`, text: i18n(`ui.field.focus.option.full.label`) },
+                prompt: i18n(`ui.field.focus.option.full.prompt`),
+                value: `full`,
               },
             ],
           },
@@ -68,11 +96,32 @@ export const preset: Preset = {
           `Офсайт команды, 30 человек, 1 день, гибрид…`,
         ],
         "ui.field.brief.prompt": [`Brief:`, `Бриф:`],
-        "ui.field.focus.label": [`Focus`, `Фокус`],
+        "ui.field.eventType.label": [`Event type`, `Тип`],
+        "ui.field.eventType.option.conference.label": [`Conference`, `Конференция`],
+        "ui.field.eventType.option.conference.prompt": [
+          `Multi-track sessions, speakers, registration flow.`,
+          `Несколько треков, спикеры, регистрация.`,
+        ],
+        "ui.field.eventType.option.meetup.label": [`Meetup`, `Митап`],
+        "ui.field.eventType.option.meetup.prompt": [
+          `Informal gathering; networking and short talks.`,
+          `Неформальная встреча; нетворкинг и короткие доклады.`,
+        ],
+        "ui.field.eventType.option.party.label": [`Party`, `Праздник`],
+        "ui.field.eventType.option.party.prompt": [
+          `Celebration focus; entertainment and catering emphasis.`,
+          `Праздничный фокус; развлечения и кейтеринг.`,
+        ],
+        "ui.field.focus.label": [`Output`, `Результат`],
         "ui.field.focus.option.agenda.label": [`Agenda`, `Повестка`],
         "ui.field.focus.option.agenda.prompt": [
           `Timed agenda with sessions and breaks.`,
           `Повестка по времени с сессиями и перерывами.`,
+        ],
+        "ui.field.focus.option.full.label": [`Full plan`, `Полный план`],
+        "ui.field.focus.option.full.prompt": [
+          `Agenda plus logistics, roles, and checklist.`,
+          `Повестка плюс логистика, роли и чеклист.`,
         ],
         "ui.field.focus.option.logistics.label": [`Logistics`, `Логистика`],
         "ui.field.focus.option.logistics.prompt": [

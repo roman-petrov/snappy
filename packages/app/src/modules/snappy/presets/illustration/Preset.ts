@@ -69,6 +69,29 @@ export const preset: Preset = {
               },
             ],
           },
+          {
+            default: `calm`,
+            id: `mood`,
+            kind: `single_choice`,
+            label: { emoji: `🌙`, text: i18n(`ui.field.mood.label`) },
+            options: [
+              {
+                label: { emoji: `☀️`, text: i18n(`ui.field.mood.option.cheerful.label`) },
+                prompt: i18n(`ui.field.mood.option.cheerful.prompt`),
+                value: `cheerful`,
+              },
+              {
+                label: { emoji: `🌙`, text: i18n(`ui.field.mood.option.calm.label`) },
+                prompt: i18n(`ui.field.mood.option.calm.prompt`),
+                value: `calm`,
+              },
+              {
+                label: { emoji: `⚡`, text: i18n(`ui.field.mood.option.dramatic.label`) },
+                prompt: i18n(`ui.field.mood.option.dramatic.prompt`),
+                value: `dramatic`,
+              },
+            ],
+          },
         ]),
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
@@ -81,6 +104,13 @@ export const preset: Preset = {
           `Лис читает в уютной библиотеке ночью…`,
         ],
         "ui.field.brief.prompt": [`Brief:`, `Бриф:`],
+        "ui.field.mood.label": [`Mood`, `Настроение`],
+        "ui.field.mood.option.calm.label": [`Calm`, `Спокойное`],
+        "ui.field.mood.option.calm.prompt": [`Soft, peaceful atmosphere.`, `Мягкая, спокойная атмосфера.`],
+        "ui.field.mood.option.cheerful.label": [`Cheerful`, `Радостное`],
+        "ui.field.mood.option.cheerful.prompt": [`Bright, upbeat mood.`, `Светлое, позитивное настроение.`],
+        "ui.field.mood.option.dramatic.label": [`Dramatic`, `Драматичное`],
+        "ui.field.mood.option.dramatic.prompt": [`Strong contrast and emotional tension.`, `Сильный контраст и эмоциональное напряжение.`],
         "ui.field.palette.label": [`Palette`, `Палитра`],
         "ui.field.palette.option.muted.label": [`Muted`, `Приглушённая`],
         "ui.field.palette.option.muted.prompt": [`Soft, muted colors.`, `Мягкие, приглушённые цвета.`],

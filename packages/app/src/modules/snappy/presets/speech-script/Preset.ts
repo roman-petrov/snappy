@@ -47,6 +47,52 @@ export const preset: Preset = {
             ],
           },
           {
+            default: `colleagues`,
+            id: `audience`,
+            kind: `single_choice`,
+            label: { emoji: `👥`, text: i18n(`ui.field.audience.label`) },
+            options: [
+              {
+                label: { emoji: `👔`, text: i18n(`ui.field.audience.option.colleagues.label`) },
+                prompt: i18n(`ui.field.audience.option.colleagues.prompt`),
+                value: `colleagues`,
+              },
+              {
+                label: { emoji: `🎤`, text: i18n(`ui.field.audience.option.public.label`) },
+                prompt: i18n(`ui.field.audience.option.public.prompt`),
+                value: `public`,
+              },
+              {
+                label: { emoji: `🎓`, text: i18n(`ui.field.audience.option.students.label`) },
+                prompt: i18n(`ui.field.audience.option.students.prompt`),
+                value: `students`,
+              },
+            ],
+          },
+          {
+            default: `conversational`,
+            id: `deliveryStyle`,
+            kind: `single_choice`,
+            label: { emoji: `🎭`, text: i18n(`ui.field.deliveryStyle.label`) },
+            options: [
+              {
+                label: { emoji: `💬`, text: i18n(`ui.field.deliveryStyle.option.conversational.label`) },
+                prompt: i18n(`ui.field.deliveryStyle.option.conversational.prompt`),
+                value: `conversational`,
+              },
+              {
+                label: { emoji: `🎩`, text: i18n(`ui.field.deliveryStyle.option.formal.label`) },
+                prompt: i18n(`ui.field.deliveryStyle.option.formal.prompt`),
+                value: `formal`,
+              },
+              {
+                label: { emoji: `🔥`, text: i18n(`ui.field.deliveryStyle.option.inspirational.label`) },
+                prompt: i18n(`ui.field.deliveryStyle.option.inspirational.prompt`),
+                value: `inspirational`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -63,12 +109,44 @@ export const preset: Preset = {
         "ui.field.addFormatting.label": [`Markup`, `Разметка`],
         "ui.field.addFormatting.promptOff": Prompts.formatting.off,
         "ui.field.addFormatting.promptOn": Prompts.formatting.on,
+        "ui.field.audience.label": [`Audience`, `Аудитория`],
+        "ui.field.audience.option.colleagues.label": [`Colleagues`, `Коллеги`],
+        "ui.field.audience.option.colleagues.prompt": [
+          `Internal team; shared context OK.`,
+          `Внутренняя команда; общий контекст OK.`,
+        ],
+        "ui.field.audience.option.public.label": [`Public`, `Публика`],
+        "ui.field.audience.option.public.prompt": [
+          `General audience; explain context clearly.`,
+          `Широкая аудитория; контекст объясняй явно.`,
+        ],
+        "ui.field.audience.option.students.label": [`Students`, `Студенты`],
+        "ui.field.audience.option.students.prompt": [
+          `Educational tone; define terms when needed.`,
+          `Образовательный тон; термины поясняй при необходимости.`,
+        ],
         "ui.field.brief.label": [`Occasion & message`, `Повод и сообщение`],
         "ui.field.brief.placeholder": [
           `Team kickoff, thank the team, roadmap…`,
           `Кикофф команды, поблагодарить, роадмап…`,
         ],
         "ui.field.brief.prompt": [`Brief:`, `Бриф:`],
+        "ui.field.deliveryStyle.label": [`Delivery`, `Подача`],
+        "ui.field.deliveryStyle.option.conversational.label": [`Conversational`, `Разговорная`],
+        "ui.field.deliveryStyle.option.conversational.prompt": [
+          `Natural spoken rhythm; short sentences.`,
+          `Естественный устный ритм; короткие фразы.`,
+        ],
+        "ui.field.deliveryStyle.option.formal.label": [`Formal`, `Формальная`],
+        "ui.field.deliveryStyle.option.formal.prompt": [
+          `Structured, polished delivery; ceremonial if needed.`,
+          `Структурно, выверенно; церемониально если нужно.`,
+        ],
+        "ui.field.deliveryStyle.option.inspirational.label": [`Inspirational`, `Вдохновляющая`],
+        "ui.field.deliveryStyle.option.inspirational.prompt": [
+          `Motivating arc; rhetorical emphasis and pauses.`,
+          `Мотивирующая дуга; риторические акценты и паузы.`,
+        ],
         "ui.field.minutes.label": [`Length`, `Длина`],
         "ui.field.minutes.option.five.label": [`~5 min`, `~5 мин`],
         "ui.field.minutes.option.five.prompt": [`Roughly five minutes spoken.`, `Примерно пять минут речи.`],

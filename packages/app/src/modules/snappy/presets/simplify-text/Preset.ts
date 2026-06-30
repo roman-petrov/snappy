@@ -44,7 +44,20 @@ export const preset: Preset = {
                 prompt: i18n(`ui.field.audience.option.general.prompt`),
                 value: `general`,
               },
+              {
+                label: { emoji: `🎓`, text: i18n(`ui.field.audience.option.expert.label`) },
+                prompt: i18n(`ui.field.audience.option.expert.prompt`),
+                value: `expert`,
+              },
             ],
+          },
+          {
+            default: true,
+            id: `preserveTerms`,
+            kind: `binary_choice`,
+            label: { emoji: `🔤`, text: i18n(`ui.field.preserveTerms.label`) },
+            promptOff: i18n(`ui.field.preserveTerms.promptOff`),
+            promptOn: i18n(`ui.field.preserveTerms.promptOn`),
           },
           {
             default: true,
@@ -66,8 +79,22 @@ export const preset: Preset = {
         "ui.field.audience.label": [`Audience`, `Аудитория`],
         "ui.field.audience.option.beginner.label": [`Beginner`, `Новичок`],
         "ui.field.audience.option.beginner.prompt": [`Very simple language.`, `Очень простой язык.`],
+        "ui.field.audience.option.expert.label": [`Expert`, `Эксперт`],
+        "ui.field.audience.option.expert.prompt": [
+          `Keep technical terms; simplify structure only.`,
+          `Сохрани термины; упрости только структуру.`,
+        ],
         "ui.field.audience.option.general.label": [`General`, `Общая`],
         "ui.field.audience.option.general.prompt": [`Plain language for adults.`, `Простой язык для взрослых.`],
+        "ui.field.preserveTerms.label": [`Keep terms`, `Сохранить термины`],
+        "ui.field.preserveTerms.promptOff": [
+          `Replace jargon with plain words where possible.`,
+          `Заменяй жаргон простыми словами где можно.`,
+        ],
+        "ui.field.preserveTerms.promptOn": [
+          `Keep domain terms and proper nouns unchanged.`,
+          `Сохраняй отраслевые термины и имена без изменений.`,
+        ],
         "ui.field.source.label": [`Source`, `Исходник`],
         "ui.field.source.placeholder": [`Paste complex text…`, `Вставьте сложный текст…`],
         "ui.field.source.prompt": [`Source:`, `Исходник:`],

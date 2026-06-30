@@ -29,6 +29,34 @@ export const preset: Preset = {
             pickLabel: i18n(`ui.field.image.pickLabel`),
           },
           {
+            default: `custom`,
+            id: `editType`,
+            kind: `single_choice`,
+            label: { emoji: `⚙️`, text: i18n(`ui.field.editType.label`) },
+            options: [
+              {
+                label: { emoji: `🎨`, text: i18n(`ui.field.editType.option.color.label`) },
+                prompt: i18n(`ui.field.editType.option.color.prompt`),
+                value: `color`,
+              },
+              {
+                label: { emoji: `✨`, text: i18n(`ui.field.editType.option.enhance.label`) },
+                prompt: i18n(`ui.field.editType.option.enhance.prompt`),
+                value: `enhance`,
+              },
+              {
+                label: { emoji: `✂️`, text: i18n(`ui.field.editType.option.crop.label`) },
+                prompt: i18n(`ui.field.editType.option.crop.prompt`),
+                value: `crop`,
+              },
+              {
+                label: { emoji: `✏️`, text: i18n(`ui.field.editType.option.custom.label`) },
+                prompt: i18n(`ui.field.editType.option.custom.prompt`),
+                value: `custom`,
+              },
+            ],
+          },
+          {
             id: `instruction`,
             kind: `text_input`,
             label: { emoji: `✏️`, text: i18n(`ui.field.instruction.label`) },
@@ -41,6 +69,27 @@ export const preset: Preset = {
           "prompt": [
             `Edit the uploaded image. Apply the instruction below. Keep unchanged areas unless the instruction requires changing them. Preserve composition and subject identity when possible.`,
             `Отредактируй загруженное изображение по инструкции ниже. Не меняй то, что инструкция не затрагивает. По возможности сохраняй композицию и узнаваемость объекта.`,
+          ],
+          "ui.field.editType.label": [`Edit type`, `Тип правки`],
+          "ui.field.editType.option.color.label": [`Color`, `Цвет`],
+          "ui.field.editType.option.color.prompt": [
+            `Adjust colors, white balance, or saturation.`,
+            `Коррекция цвета, баланса белого или насыщенности.`,
+          ],
+          "ui.field.editType.option.crop.label": [`Crop / resize`, `Кроп / размер`],
+          "ui.field.editType.option.crop.prompt": [
+            `Crop, reframe, or resize composition.`,
+            `Кроп, reframe или изменение композиции.`,
+          ],
+          "ui.field.editType.option.custom.label": [`Custom`, `Своё`],
+          "ui.field.editType.option.custom.prompt": [
+            `Follow the instruction field exactly.`,
+            `Строго следуй полю инструкции.`,
+          ],
+          "ui.field.editType.option.enhance.label": [`Enhance`, `Улучшить`],
+          "ui.field.editType.option.enhance.prompt": [
+            `Sharpen, denoise, improve lighting overall.`,
+            `Резкость, шумоподавление, общий свет.`,
           ],
           "ui.field.image.label": [`Image`, `Изображение`],
           "ui.field.image.pickLabel": [`Choose file`, `Выбрать файл`],

@@ -35,6 +35,47 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.background.prompt`),
           },
           {
+            default: `hr`,
+            id: `interviewType`,
+            kind: `single_choice`,
+            label: { emoji: `🎯`, text: i18n(`ui.field.interviewType.label`) },
+            options: [
+              {
+                label: { emoji: `👔`, text: i18n(`ui.field.interviewType.option.hr.label`) },
+                prompt: i18n(`ui.field.interviewType.option.hr.prompt`),
+                value: `hr`,
+              },
+              {
+                label: { emoji: `💻`, text: i18n(`ui.field.interviewType.option.technical.label`) },
+                prompt: i18n(`ui.field.interviewType.option.technical.prompt`),
+                value: `technical`,
+              },
+              {
+                label: { emoji: `🤝`, text: i18n(`ui.field.interviewType.option.behavioral.label`) },
+                prompt: i18n(`ui.field.interviewType.option.behavioral.prompt`),
+                value: `behavioral`,
+              },
+            ],
+          },
+          {
+            default: `qa`,
+            id: `format`,
+            kind: `single_choice`,
+            label: { emoji: `📋`, text: i18n(`ui.field.format.label`) },
+            options: [
+              {
+                label: { emoji: `❓`, text: i18n(`ui.field.format.option.qa.label`) },
+                prompt: i18n(`ui.field.format.option.qa.prompt`),
+                value: `qa`,
+              },
+              {
+                label: { emoji: `📚`, text: i18n(`ui.field.format.option.study.label`) },
+                prompt: i18n(`ui.field.format.option.study.prompt`),
+                value: `study`,
+              },
+            ],
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -57,6 +98,33 @@ export const preset: Preset = {
           `5 лет бэкенд, вёл команду платежей…`,
         ],
         "ui.field.background.prompt": [`Background:`, `Опыт:`],
+        "ui.field.format.label": [`Format`, `Формат`],
+        "ui.field.format.option.qa.label": [`Q&A list`, `Список Q&A`],
+        "ui.field.format.option.qa.prompt": [
+          `Likely questions with answer outlines.`,
+          `Вероятные вопросы с планом ответов.`,
+        ],
+        "ui.field.format.option.study.label": [`Study plan`, `План подготовки`],
+        "ui.field.format.option.study.prompt": [
+          `Topics to review, stories to prepare, day-before checklist.`,
+          `Темы для повторения, истории, чеклист накануне.`,
+        ],
+        "ui.field.interviewType.label": [`Interview type`, `Тип интервью`],
+        "ui.field.interviewType.option.behavioral.label": [`Behavioral`, `Поведенческое`],
+        "ui.field.interviewType.option.behavioral.prompt": [
+          `STAR stories, teamwork, conflict, leadership.`,
+          `STAR-истории, командная работа, конфликты, лидерство.`,
+        ],
+        "ui.field.interviewType.option.hr.label": [`HR / screening`, `HR / скрининг`],
+        "ui.field.interviewType.option.hr.prompt": [
+          `Motivation, culture fit, salary, career goals.`,
+          `Мотивация, культурный fit, зарплата, карьерные цели.`,
+        ],
+        "ui.field.interviewType.option.technical.label": [`Technical`, `Техническое`],
+        "ui.field.interviewType.option.technical.prompt": [
+          `Technical depth, system design, coding topics.`,
+          `Техническая глубина, system design, coding-темы.`,
+        ],
         "ui.field.role.label": [`Role & company`, `Роль и компания`],
         "ui.field.role.placeholder": [`Senior engineer at a fintech startup…`, `Senior engineer в финтех-стартапе…`],
         "ui.field.role.prompt": [`Role:`, `Роль:`],

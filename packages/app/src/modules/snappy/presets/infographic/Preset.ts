@@ -61,12 +61,42 @@ export const preset: Preset = {
               },
             ],
           },
+          {
+            default: `blue`,
+            id: `colorScheme`,
+            kind: `single_choice`,
+            label: { emoji: `🎨`, text: i18n(`ui.field.colorScheme.label`) },
+            options: [
+              {
+                label: { emoji: `🔵`, text: i18n(`ui.field.colorScheme.option.blue.label`) },
+                prompt: i18n(`ui.field.colorScheme.option.blue.prompt`),
+                value: `blue`,
+              },
+              {
+                label: { emoji: `🟢`, text: i18n(`ui.field.colorScheme.option.green.label`) },
+                prompt: i18n(`ui.field.colorScheme.option.green.prompt`),
+                value: `green`,
+              },
+              {
+                label: { emoji: `🟠`, text: i18n(`ui.field.colorScheme.option.warm.label`) },
+                prompt: i18n(`ui.field.colorScheme.option.warm.prompt`),
+                value: `warm`,
+              },
+            ],
+          },
         ]),
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one infographic image prompt from the topic and every bullet below. Clear hierarchy, labels, icons, and readable layout.`,
           `Создай один промпт для инфографики из темы и каждого пункта ниже. Иерархия, подписи, иконки и читаемая вёрстка.`,
         ]),
+        "ui.field.colorScheme.label": [`Colors`, `Цвета`],
+        "ui.field.colorScheme.option.blue.label": [`Blue`, `Синие`],
+        "ui.field.colorScheme.option.blue.prompt": [`Professional blue/teal palette.`, `Деловая синяя/teal палитра.`],
+        "ui.field.colorScheme.option.green.label": [`Green`, `Зелёные`],
+        "ui.field.colorScheme.option.green.prompt": [`Fresh green growth palette.`, `Свежая зелёная палитра.`],
+        "ui.field.colorScheme.option.warm.label": [`Warm`, `Тёплые`],
+        "ui.field.colorScheme.option.warm.prompt": [`Warm orange/red accent palette.`, `Тёплая палитра с orange/red акцентами.`],
         "ui.field.layout.label": [`Layout`, `Вёрстка`],
         "ui.field.layout.option.horizontal.label": [`Horizontal`, `Горизонтальная`],
         "ui.field.layout.option.horizontal.prompt": [`Left-to-right flow.`, `Поток слева направо.`],

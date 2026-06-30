@@ -51,6 +51,14 @@ export const preset: Preset = {
             ],
           },
           {
+            default: false,
+            id: `markPriority`,
+            kind: `binary_choice`,
+            label: { emoji: `🔥`, text: i18n(`ui.field.markPriority.label`) },
+            promptOff: i18n(`ui.field.markPriority.promptOff`),
+            promptOn: i18n(`ui.field.markPriority.promptOn`),
+          },
+          {
             default: true,
             id: `addFormatting`,
             kind: `binary_choice`,
@@ -79,6 +87,15 @@ export const preset: Preset = {
         "ui.field.granularity.option.medium.prompt": [
           `Clear steps without micro-tasks.`,
           `Понятные шаги без микрозадач.`,
+        ],
+        "ui.field.markPriority.label": [`Priority marks`, `Приоритеты`],
+        "ui.field.markPriority.promptOff": [
+          `Flat list; no priority labels.`,
+          `Плоский список; без меток приоритета.`,
+        ],
+        "ui.field.markPriority.promptOn": [
+          `Mark critical items with 🔥 or [high] prefix.`,
+          `Отметь критичные пункты префиксом 🔥 или [high].`,
         ],
       }),
     }),

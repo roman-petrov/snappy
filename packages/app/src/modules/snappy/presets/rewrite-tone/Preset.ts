@@ -49,6 +49,16 @@ export const preset: Preset = {
                 prompt: i18n(`ui.field.tone.option.casual.prompt`),
                 value: `casual`,
               },
+              {
+                label: { emoji: `⚖️`, text: i18n(`ui.field.tone.option.neutral.label`) },
+                prompt: i18n(`ui.field.tone.option.neutral.prompt`),
+                value: `neutral`,
+              },
+              {
+                label: { emoji: `🛒`, text: i18n(`ui.field.tone.option.persuasive.label`) },
+                prompt: i18n(`ui.field.tone.option.persuasive.prompt`),
+                value: `persuasive`,
+              },
             ],
           },
           {
@@ -78,6 +88,16 @@ export const preset: Preset = {
         "ui.field.tone.option.formal.prompt": [`Professional and formal.`, `Профессиональный и формальный.`],
         "ui.field.tone.option.friendly.label": [`Friendly`, `Дружелюбный`],
         "ui.field.tone.option.friendly.prompt": [`Warm and approachable.`, `Тёплый и располагающий.`],
+        "ui.field.tone.option.neutral.label": [`Neutral`, `Нейтральный`],
+        "ui.field.tone.option.neutral.prompt": [
+          `Dry, factual tone; no emotional coloring.`,
+          `Сухой, фактический тон; без эмоциональной окраски.`,
+        ],
+        "ui.field.tone.option.persuasive.label": [`Persuasive`, `Убедительный`],
+        "ui.field.tone.option.persuasive.prompt": [
+          `Convincing and action-oriented; still honest.`,
+          `Убедительно и к действию; честно.`,
+        ],
       }),
     }),
   ],
