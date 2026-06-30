@@ -3,10 +3,10 @@ import { SnappyAgent } from "@snappy/snappy";
 import { Language } from "@snappy/ui";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import type { AgentChatProps } from "../../../snappy/components";
+import type { AgentChatProps } from "../ui";
 import type { SnappyChatProps } from "./SnappyChat";
 
-import { Catalog } from "../../../catalog/registry";
+import { Catalog } from "../catalog/registry";
 
 export const SnappyChatBlankPresetId = `_` as const;
 

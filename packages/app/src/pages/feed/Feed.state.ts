@@ -6,7 +6,7 @@ import { _ } from "@snappy/core";
 import { useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { FeedArtifact } from "../../snappy/components/Types";
+import type { FeedArtifact } from "../../components";
 
 import { AgentAiFromSettings, trpc } from "../../core";
 import { Routes } from "../../Routes";

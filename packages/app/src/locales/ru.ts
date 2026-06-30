@@ -162,14 +162,6 @@ export const ru = {
   snappy: {
     composer: { placeholder: `Что нужно?`, send: `Отправить` },
     form: { continue: `Продолжить`, label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
-    landing: {
-      presets: { title: `Готовые сценарии` },
-      quickStart: {
-        cta: `Начать с нуля`,
-        lead: `Откройте чат со всеми инструментами — опишите задачу своими словами.`,
-        title: `Быстрый старт`,
-      },
-    },
     preset: {
       modes: {
         lead: `Выберите, как запустить этот сценарий.`,
@@ -186,6 +178,12 @@ export const ru = {
         vision: `Анализ фото`,
         visual: `Генерация изображений`,
       },
+      title: `Готовые сценарии`,
+    },
+    quickStart: {
+      cta: `Начать с нуля`,
+      lead: `Откройте чат со всеми инструментами — опишите задачу своими словами.`,
+      title: `Быстрый старт`,
     },
   },
   tabs: { feed: { label: `Лента` }, settings: { label: `Настройки` }, snappy: { label: `Snappy` } },

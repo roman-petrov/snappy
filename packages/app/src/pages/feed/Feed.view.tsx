@@ -2,9 +2,8 @@ import { Page } from "@snappy/ui";
 
 import type { useFeedState } from "./Feed.state";
 
-import { HeaderContent } from "../../components";
+import { HeaderContent, ImageCard, TextCard } from "../../components";
 import { t } from "../../core";
-import { ImageCard, TextCard } from "../../snappy/components";
 import styles from "./Feed.module.scss";
 
 export type FeedViewProps = ReturnType<typeof useFeedState>;

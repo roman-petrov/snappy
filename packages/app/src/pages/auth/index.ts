@@ -1,3 +1,5 @@
+export * from "./AuthRoutes";
+
 export * from "./EmailVerified";
 
 export * from "./ForgotPassword";

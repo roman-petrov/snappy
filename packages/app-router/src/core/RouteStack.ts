@@ -18,7 +18,31 @@ type StageInput = {
 
 const stage = ({ current, layerOf, parent, path, pattern, preserved: previous, stateAt }: StageInput) => {
   const layer = layerOf?.(pattern);
-  const preserved = layer === `flip` ? undefined : layer === undefined && current !== undefined ? current : previous;
+  const parts = path === `/` ? [] : path.replace(/^\//u, ``).split(`/`);
+
+  const pathname = (stackPattern: string) =>
+    stackPattern === `/` ? `/` : `/${parts.slice(0, stackPattern.split(`/`).length).join(`/`)}`;
+
+  const tabRoot = (stackPattern: string): string =>
+    layerOf?.(stackPattern) === undefined
+      ? stackPattern
+      : (() => {
+          const ancestor = parent(stackPattern);
+
+          return ancestor === stackPattern ? stackPattern : tabRoot(ancestor);
+        })();
+
+  const tabRootState = stateAt(pathname(tabRoot(pattern)));
+
+  const preserved =
+    layer === `flip`
+      ? undefined
+      : layer === undefined && current !== undefined
+        ? current
+        : layer === `cover`
+          ? (tabRootState ?? previous ?? current)
+          : previous;
+
   const idle = layer === undefined ? undefined : layer === `cover` ? preserved : current;
 
   if (layer !== `cover`) {
@@ -36,16 +60,8 @@ const stage = ({ current, layerOf, parent, path, pattern, preserved: previous, s
     return root ? [stack] : [...coverPatterns(ancestor), stack];
   };
 
-  const parts = path === `/` ? [] : path.replace(/^\//u, ``).split(`/`);
-
   const items = coverPatterns(pattern).flatMap(stackPattern => {
-    const pathname = stackPattern.includes(`:`)
-      ? path
-      : stackPattern === `/`
-        ? `/`
-        : `/${parts.slice(0, stackPattern.split(`/`).length).join(`/`)}`;
-
-    const state = stackPattern === pattern && current !== undefined ? current : stateAt(pathname);
+    const state = stackPattern === pattern && current !== undefined ? current : stateAt(pathname(stackPattern));
 
     return state === undefined ? [] : [{ pattern: stackPattern, state }];
   });

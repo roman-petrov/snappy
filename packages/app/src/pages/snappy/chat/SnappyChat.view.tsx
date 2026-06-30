@@ -6,7 +6,7 @@ import type { useSnappyChatState } from "./SnappyChat.state";
 
 import { BalanceTap } from "../../../components";
 import { Routes } from "../../../Routes";
-import { AgentChat, Composer } from "../../../snappy/components";
+import { AgentChat, Composer } from "../ui";
 import styles from "./SnappyChat.module.scss";
 
 export type SnappyChatViewProps = ReturnType<typeof useSnappyChatState>;

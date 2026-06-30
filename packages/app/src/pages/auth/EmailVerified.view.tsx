@@ -33,7 +33,7 @@ export const EmailVerifiedView = ({ failedReason, home, screen }: EmailVerifiedV
         <MessageWithLink
           lead={t(`auth.emailVerified.failed.${failedReason}.lead`)}
           linkText={t(`auth.signIn.title`)}
-          linkTo={Routes.signIn}
+          linkTo={Routes.auth.signIn}
           title={t(`auth.emailVerified.failed.${failedReason}.title`)}
         />
       ) : undefined}

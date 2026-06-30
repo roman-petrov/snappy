@@ -14,7 +14,7 @@ export const ForgotPasswordView = ({ email, send, sent, setEmail }: ForgotPasswo
     emailLabel={t(`auth.forgotPassword.email`)}
     errorsKey="auth.forgotPassword.errors"
     footer={
-      <Button link={Routes.signIn} text={sent ? t(`auth.forgotPassword.backToSignIn`) : t(`auth.signIn.title`)} />
+      <Button link={Routes.auth.signIn} text={sent ? t(`auth.forgotPassword.backToSignIn`) : t(`auth.signIn.title`)} />
     }
     formLead={t(`auth.forgotPassword.lead`)}
     formTitle={t(`auth.forgotPassword.title`)}

@@ -152,14 +152,6 @@ export const en = {
   snappy: {
     composer: { placeholder: `What do you need?`, send: `Send` },
     form: { continue: `Continue`, label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
-    landing: {
-      presets: { title: `Ready-made workflows` },
-      quickStart: {
-        cta: `Start from scratch`,
-        lead: `Open chat with every tool — describe any task in your own words.`,
-        title: `Quick start`,
-      },
-    },
     preset: {
       modes: {
         lead: `Choose how you want to run this workflow.`,
@@ -179,6 +171,12 @@ export const en = {
         vision: `Photo analysis`,
         visual: `Image generation`,
       },
+      title: `Ready-made workflows`,
+    },
+    quickStart: {
+      cta: `Start from scratch`,
+      lead: `Open chat with every tool — describe any task in your own words.`,
+      title: `Quick start`,
     },
   },
   tabs: { feed: { label: `Feed` }, settings: { label: `Settings` }, snappy: { label: `Snappy` } },
