@@ -1,44 +1,29 @@
-import { useAsyncEffect } from "@snappy/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { trpc } from "../../../core";
+import { $data } from "../../../data";
 
 export const useSettingsAiTunnelState = () => {
-  const [aiTunnelDirect, setAiTunnelDirect] = useState(false);
+  const { patch, settings } = $data.settings();
+  const aiTunnelDirect = settings?.aiTunnelDirect ?? false;
+  const loading = settings === undefined;
   const [tunnelKey, setTunnelKey] = useState(``);
-  const [loading, setLoading] = useState(true);
 
-  useAsyncEffect(async () => {
-    setLoading(true);
-    const settings = await trpc.user.settings.get.query();
-    setAiTunnelDirect(settings.aiTunnelDirect);
-    setTunnelKey(settings.aiTunnelKey);
-    setLoading(false);
-  }, []);
-
-  const saveDirect = async (direct: boolean) => {
-    setAiTunnelDirect(direct);
-    await trpc.user.settings.set.mutate({ aiTunnelDirect: direct });
-  };
-
-  const persistKeyOnBlur = async () => {
-    if (loading || !aiTunnelDirect) {
-      return;
-    }
-    await trpc.user.settings.set.mutate({ aiTunnelKey: tunnelKey });
-    const settings = await trpc.user.settings.get.query();
-    setTunnelKey(settings.aiTunnelKey);
-  };
+  useEffect(() => {
+    setTunnelKey(settings?.aiTunnelKey ?? ``);
+  }, [settings?.aiTunnelKey]);
 
   const toggleDirect = () => {
     if (loading) {
       return;
     }
-    saveDirect(!aiTunnelDirect).catch(() => undefined);
+    void patch({ aiTunnelDirect: !aiTunnelDirect });
   };
 
   const tunnelKeyBlur = () => {
-    persistKeyOnBlur().catch(() => undefined);
+    if (loading || !aiTunnelDirect) {
+      return;
+    }
+    void patch({ aiTunnelKey: tunnelKey });
   };
 
   return { aiTunnelDirect, loading, setTunnelKey, toggleDirect, tunnelKey, tunnelKeyBlur };

@@ -16,6 +16,13 @@ describe(`store`, () => {
     expect(someStore()).toBe(`World`);
   });
 
+  it(`returns value from set`, () => {
+    const someStore = Store(`Hello`);
+
+    expect(someStore.set(`World`)).toBe(`World`);
+    expect(someStore.set(`Hello`)).toBe(`Hello`);
+  });
+
   it(`notifies about updates`, () => {
     const callback = vi.fn<StoreListener<string>>();
     const someStore = Store(`Hello`);

@@ -3,7 +3,7 @@ import { _, Email, Timer } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useEffect, useState } from "react";
 
-import type { AuthStatus } from "../../../core";
+import type { AuthStatus } from "../../../data";
 
 export type UseAuthEmailSendConfig = { email: string; onSent?: () => void; request: () => Promise<AuthStatus> };
 

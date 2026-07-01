@@ -50,6 +50,8 @@ export * from "./menu";
 
 export * from "./NewPasswordInput";
 
+export * from "./NumberInput";
+
 export * from "./Page";
 
 export * from "./PageNarrow";

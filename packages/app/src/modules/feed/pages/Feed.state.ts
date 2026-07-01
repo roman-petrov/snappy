@@ -1,42 +1,25 @@
-import type { TypeWriterSpeed } from "@snappy/domain";
-import type { AgentAiConfig } from "@snappy/snappy";
-
-import { useRouterGo, useRouterPath } from "@snappy/app-router";
+import { useRouterGo } from "@snappy/app-router";
 import { _ } from "@snappy/core";
 import { useAsyncEffect } from "@snappy/ui";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
-import type { FeedArtifact } from "../../../components";
-
-import { AgentAiFromSettings, trpc } from "../../../core";
+import { $data } from "../../../data";
 import { Routes } from "../../../Routes";
 
 export const useFeedState = () => {
-  const path = useRouterPath();
-  const active = path === Routes.feed;
-  const [items, setItems] = useState<FeedArtifact[]>([]);
-  const [cursor, setCursor] = useState<string | undefined>(undefined);
-  const [hasMore, setHasMore] = useState(true);
-  const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
-  const [typeWriterSpeed, setTypeWriterSpeed] = useState<TypeWriterSpeed | undefined>(undefined);
+  const { append, load, page } = $data.feed();
+  const items = useMemo(() => page?.items ?? [], [page]);
+  const hasMore = page?.hasMore ?? false;
+  const aiConfig = $data.aiConfig();
+  const { settings } = $data.settings();
+  const typeWriterSpeed = settings?.typeWriterSpeed;
   const sentinelRef = useRef<HTMLDivElement>(null);
 
   useAsyncEffect(async () => {
-    const settings = await trpc.user.settings.get.query();
-    setAiConfig(AgentAiFromSettings(settings));
-    setTypeWriterSpeed(settings.typeWriterSpeed);
-  }, []);
-
-  useAsyncEffect(async () => {
-    if (!active) {
-      return;
+    if ($data.feed.read() === undefined) {
+      await load();
     }
-
-    const page = await trpc.feed.list.query({ limit: 20 });
-    setItems(page.items);
-    setCursor(page.nextCursor);
-    setHasMore(page.nextCursor !== undefined);
-  }, [active]);
+  }, [load]);
 
   useEffect(() => {
     const node = sentinelRef.current;
@@ -55,11 +38,7 @@ export const useFeedState = () => {
       loading = true;
       void (async () => {
         try {
-          const page = await trpc.feed.list.query({ cursor, limit: 20 });
-
-          setItems(previous => [...previous, ...page.items]);
-          setCursor(page.nextCursor);
-          setHasMore(page.nextCursor !== undefined);
+          await append();
         } finally {
           loading = false;
         }
@@ -69,21 +48,9 @@ export const useFeedState = () => {
     observer.observe(node);
 
     return () => observer.disconnect();
-  }, [cursor, hasMore, items.length]);
+  }, [append, hasMore, items.length]);
 
   const go = useRouterGo();
-
-  const onPublish = useCallback((artifact: FeedArtifact) => {
-    setItems(previous =>
-      previous.some(item => item.id === artifact.id)
-        ? previous.map(item => (item.id === artifact.id ? artifact : item))
-        : [artifact, ...previous],
-    );
-  }, []);
-
-  const removeItem = useCallback((artifactId: string) => {
-    setItems(previous => previous.filter(item => item.id !== artifactId));
-  }, []);
 
   const onError = useCallback(
     async (_artifactId: string, error: unknown) => {
@@ -101,13 +68,7 @@ export const useFeedState = () => {
       aiConfig === undefined
         ? undefined
         : items.map(item => {
-            const bindings = {
-              id: item.id,
-              onError,
-              onPublish,
-              onRemove: () => removeItem(item.id),
-              prompt: item.generationPrompt,
-            };
+            const bindings = { id: item.id, onError, prompt: item.generationPrompt };
 
             return item.type === `image`
               ? { ...bindings, content: item.src, model: aiConfig.models.image, type: `image` as const }
@@ -119,7 +80,7 @@ export const useFeedState = () => {
                   typeWriterSpeed,
                 };
           }),
-    [aiConfig, items, onError, onPublish, removeItem, typeWriterSpeed],
+    [aiConfig, items, onError, typeWriterSpeed],
   );
 
   return { cards, sentinelRef };

@@ -2,9 +2,8 @@ import { useRouterGo, useRouterQuery } from "@snappy/app-router";
 import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth } from "../../../core";
+import { $data } from "../../../data";
 import { Routes } from "../../../Routes";
-import { $signedIn } from "../../../Store";
 
 export type EmailVerifiedFailedReason = `expired` | `invalid` | `signIn`;
 
@@ -28,9 +27,8 @@ export const useEmailVerifiedState = () => {
   const [screen, setScreen] = useState<`done` | `failed` | `loading`>(`loading`);
 
   useAsyncEffect(async () => {
-    const ok = await Auth.signedIn();
-    if (ok) {
-      $signedIn.set(true);
+    await $data.auth.sync();
+    if ($data.auth.read()) {
       setScreen(`done`);
 
       return;
@@ -39,9 +37,7 @@ export const useEmailVerifiedState = () => {
     setScreen(`failed`);
   }, [linkError]);
 
-  const home = () => {
-    void go(Routes.$.home, { instant: true });
-  };
+  const home = async () => go(Routes.$.home, { instant: true });
 
   return { failedReason, home, screen };
 };

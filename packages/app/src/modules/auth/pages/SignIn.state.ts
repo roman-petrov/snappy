@@ -4,9 +4,8 @@ import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
-import { Auth } from "../../../core";
+import { $data } from "../../../data";
 import { Routes } from "../../../Routes";
-import { $signedIn } from "../../../Store";
 import { useAuthEmailSend } from "../hooks";
 
 export const useSignInState = () => {
@@ -24,7 +23,7 @@ export const useSignInState = () => {
   } = useAuthEmailSend({
     email,
     onSent: () => setScreen(`unverified`),
-    request: async () => Auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
+    request: async () => $data.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const submit = () => {
@@ -34,7 +33,7 @@ export const useSignInState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await Auth.signIn(email, password);
+      const result = await $data.auth.login(email, password);
       if (result.status === `emailNotVerified`) {
         setScreen(`unverified`);
 
@@ -52,7 +51,6 @@ export const useSignInState = () => {
 
         return;
       }
-      $signedIn.set(true);
       void go(Routes.$.home, { instant: true });
     });
   };

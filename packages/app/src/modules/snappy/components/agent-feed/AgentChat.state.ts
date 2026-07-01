@@ -1,13 +1,12 @@
 import type { AgentAiConfig } from "@snappy/snappy";
 
 import { _, Unicode } from "@snappy/core";
-import { useAsyncEffect } from "@snappy/ui";
 import { createElement, useEffect, useRef, useState } from "react";
 
 import type { AgentChatProps } from "./AgentChat";
 import type { AgentFeedHandle } from "./AgentFeedHandle";
 
-import { AgentAiFromSettings, trpc, type UserSettings } from "../../../../core";
+import { $data } from "../../../../data";
 import { AgentFeed } from "./AgentFeed";
 
 export const useAgentChatState = ({ runtime, session = [], showFeed = true }: AgentChatProps) => {
@@ -17,8 +16,10 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
   const aiConfigRef = useRef<AgentAiConfig | undefined>(undefined);
   const gated = useRef(!showFeed).current;
   const [phase, setPhase] = useState<`blocked` | `booting` | `ready`>(gated ? `booting` : `ready`);
-  const [aiConfig, setAiConfig] = useState<AgentAiConfig | undefined>(undefined);
-  const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
+  const { balance } = $data.balance();
+  const { settings } = $data.settings();
+  const aiConfig = $data.aiConfig();
+  const typeWriterSpeed = settings?.typeWriterSpeed;
   const sessionKey = session.map(token => token ?? ``).join(Unicode.null);
 
   const aiConfigLazy = useRef({
@@ -31,21 +32,26 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
     },
   }).current;
 
-  useAsyncEffect(async () => {
-    if (gated) {
-      setPhase(`booting`);
+  useEffect(() => {
+    aiConfigRef.current = aiConfig;
+  }, [aiConfig]);
+
+  useEffect(() => {
+    if (!gated) {
+      return;
     }
-    const [balance, settings] = await Promise.all([trpc.user.balance.query(), trpc.user.settings.get.query()]);
-    aiConfigRef.current = AgentAiFromSettings(settings);
-    setAiConfig(aiConfigRef.current);
-    setTypeWriterSpeed(settings.typeWriterSpeed);
-    if (gated && !(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``) && balance <= 0) {
+    if (settings === undefined || balance === undefined) {
+      setPhase(`booting`);
+
+      return;
+    }
+    if (!(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``) && balance <= 0) {
       setPhase(`blocked`);
 
       return;
     }
     setPhase(`ready`);
-  }, [gated]);
+  }, [balance, gated, settings]);
 
   const ready = phase === `ready` && (!gated || aiConfig !== undefined);
   const balanceLow = gated && phase === `blocked`;

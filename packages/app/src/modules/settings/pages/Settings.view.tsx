@@ -10,7 +10,7 @@ import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } f
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
 export const SettingsView = ({
-  aiTunnelEnd,
+  aiTunnelDirect,
   email,
   llmChatEnd,
   llmImageEnd,
@@ -54,7 +54,11 @@ export const SettingsView = ({
       </SettingsCard>
       <SettingsCard title={t(`settings.modelsGroup`)}>
         <SettingsCardRow
-          bottom={aiTunnelEnd}
+          bottom={
+            aiTunnelDirect === undefined
+              ? undefined
+              : t(aiTunnelDirect ? `settings.aiTunnel.mode.direct` : `settings.aiTunnel.mode.proxy`)
+          }
           icon={<FilledIcon color="accentMagenta" icon={KeyRound} />}
           link={Routes.settings.aiTunnel}
           text={t(`settings.aiTunnel.title`)}

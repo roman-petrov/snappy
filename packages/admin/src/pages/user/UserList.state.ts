@@ -1,28 +1,19 @@
-import type { TrpcOutputs } from "@snappy/admin-server-api";
-
-import { useRouterPath } from "@snappy/app-router";
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable no-void */
 import { useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { trpc } from "../../core";
-import { Routes } from "../../Routes";
+import { $data } from "../../data";
 
 export const useUserListState = () => {
-  const path = useRouterPath();
-  const active = path === Routes.user.list;
   const pageSize = 20;
   const [page, setPage] = useState(1);
-  const [data, setData] = useState<TrpcOutputs[`users`][`list`] | undefined>(undefined);
+  const { load, users } = $data.users();
 
-  useAsyncEffect(async () => {
-    if (!active) {
-      return;
-    }
-    setData(await trpc.users.list.query({ page, pageSize }));
-  }, [active, page]);
+  useAsyncEffect(async () => void load({ page, pageSize }), [load, page]);
 
-  const items = data?.items ?? [];
-  const total = data?.total ?? 0;
+  const items = users?.items ?? [];
+  const total = users?.total ?? 0;
 
   return { items, page, pageSize, setPage, total };
 };

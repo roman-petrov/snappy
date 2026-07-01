@@ -4,8 +4,8 @@ import { Newspaper, Settings, Sparkles } from "lucide-react";
 
 import { AppBase } from "./AppBase";
 import { t } from "./core";
+import { $data } from "./data";
 import { Routes } from "./Routes";
-import { $signedIn } from "./Store";
 
 startApp({
   base: AppBase.url(``),
@@ -16,7 +16,7 @@ startApp({
         ? `flip`
         : `cover`,
   routes: Routes,
-  signedIn: $signedIn,
+  signedIn: $data.auth.read,
   tabs: [
     { color: `accentOrange`, icon: Newspaper, id: `feed`, label: t(`tabs.feed.label`), path: Routes.feed },
     { color: `accentIndigo`, icon: Sparkles, id: `snappy`, label: t(`tabs.snappy.label`), path: Routes.$.home },

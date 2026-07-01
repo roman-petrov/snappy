@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-
 import type { SettingsModelsBaseProps } from "./SettingsModelsBase";
 
-import { trpc } from "../../../core";
-import { useSettingsModelIds } from "../hooks";
+import { $data } from "../../../data";
+import { ModelNames } from "../core";
 
 export const useSettingsModelsBaseState = ({
   modelFilter,
@@ -11,25 +9,12 @@ export const useSettingsModelsBaseState = ({
   settingsField,
   title,
 }: SettingsModelsBaseProps) => {
-  const { ids, settingsResponse } = useSettingsModelIds(modelType, modelFilter);
-  const [value, setValue] = useState(``);
-  const options = ids.map(modelId => ({ label: modelId, value: modelId }));
-
-  useEffect(() => {
-    if (settingsResponse === undefined) {
-      setValue(``);
-
-      return;
-    }
-
-    const selected = settingsResponse[settingsField];
-    setValue(ids.includes(selected) ? selected : (ids[0] ?? ``));
-  }, [ids, settingsField, settingsResponse]);
-
-  const select = async (modelId: string) => {
-    const settingsSetResponse = await trpc.user.settings.set.mutate({ [settingsField]: modelId });
-    setValue(settingsSetResponse[settingsField]);
-  };
+  const { patch, settings } = $data.settings();
+  const names = ModelNames.forType(modelType, modelFilter);
+  const options = names.map(modelId => ({ label: modelId, value: modelId }));
+  const selected = settings?.[settingsField] ?? ``;
+  const value = names.includes(selected) ? selected : (names[0] ?? ``);
+  const select = async (modelId: string) => patch({ [settingsField]: modelId });
 
   return { options, select, title, value };
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
-import { Auth } from "../../../core";
+import { $data } from "../../../data";
 import { useAuthEmailSend } from "../hooks";
 
 export const useForgotPasswordState = () => {
@@ -11,7 +11,7 @@ export const useForgotPasswordState = () => {
   const { send } = useAuthEmailSend({
     email,
     onSent: () => setSent(true),
-    request: async () => Auth.requestPasswordReset(email, AppBase.resetPasswordUrl),
+    request: async () => $data.auth.requestPasswordReset(email, AppBase.resetPasswordUrl),
   });
 
   return { email, send, sent, setEmail };

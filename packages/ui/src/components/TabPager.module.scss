@@ -24,21 +24,6 @@ $-tab-padding: calc((#{$-height} - #{$-inset} * 2 - #{$-icon} - #{$-tab-gap} - #
 $-radius: radius.lg();
 $-inner-radius: calc(#{$-radius} - #{$-inset});
 
-.tint {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: inherit;
-
-  &-panel {
-    background-color: chrome.panel-tint();
-  }
-
-  &-indicator {
-    background-color: chrome.indicator-tint();
-  }
-}
-
 .bar {
   position: relative;
   display: flex;
@@ -61,11 +46,17 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
     border-radius: inherit;
   }
 
-  &-animating {
-    .tint,
-    .indicator {
-      transition: none;
-    }
+  &::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    content: "";
+    background-color: chrome.panel-tint();
+    border-radius: inherit;
+  }
+
+  &-animating .indicator {
+    transition: none;
   }
 }
 
@@ -74,8 +65,8 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
   inset-block: $-inset;
   inset-inline-start: $-inset;
   width: calc((100% - #{$-inset} * 2) / var(--tab-count));
-  overflow: hidden;
   pointer-events: none;
+  background-color: chrome.indicator-tint();
   border-radius: $-inner-radius;
   transform: translateX(calc(var(--tab-index) * 100%));
   transition: transform animation.sharp-md();

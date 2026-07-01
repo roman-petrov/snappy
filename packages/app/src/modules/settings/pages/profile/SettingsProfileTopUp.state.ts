@@ -1,21 +1,21 @@
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
-import { trpc } from "../../../../core";
+import { $data } from "../../../../data";
 
 export const useSettingsProfileTopUpState = () => {
-  const [amountText, setAmountText] = useState(``);
+  const { paymentUrl } = $data.balance();
+  const [amount, setAmount] = useState<number | undefined>(undefined);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
   const submit = () => {
-    const amount = Number(amountText.replace(`,`, `.`));
-    if (!Number.isFinite(amount) || amount <= 0) {
+    if (amount === undefined || amount <= 0) {
       setError({ key: `settings.profile.topUp.errors.invalid` });
 
       return;
     }
     void wrapSubmit(async () => {
-      const result = await trpc.balance.paymentUrl.mutate({ amount });
+      const result = await paymentUrl(amount);
       if (result.status === `ok`) {
         window.location.assign(result.url);
 
@@ -30,5 +30,5 @@ export const useSettingsProfileTopUpState = () => {
     });
   };
 
-  return { amountText, error, loading, setAmountText, submit };
+  return { amount, error, loading, setAmount, submit };
 };

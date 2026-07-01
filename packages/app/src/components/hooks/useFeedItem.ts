@@ -8,7 +8,8 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { FeedArtifact } from "../Types";
 
-import { t, trpc } from "../../core";
+import { t } from "../../core";
+import { $data } from "../../data";
 
 export type FeedItemBindings = FeedItemNotify & {
   content: string;
@@ -30,6 +31,7 @@ export type UseFeedItemInput = FeedItemBase;
 type FeedItemBase = FeedItemBindings & { menu?: MenuAction[]; type: `image` | `text` };
 
 export const useFeedItem = (input: UseFeedItemInput) => {
+  const { create, patch, remove: removeFeed } = $data.feed();
   const { content, id, menu = [], onError, onPublish, onRemove, prompt, type } = input;
   const pending = content.trim() === ``;
   const saved = id !== ``;
@@ -38,11 +40,11 @@ export const useFeedItem = (input: UseFeedItemInput) => {
   const remove = useCallback(() => {
     void (async () => {
       if (saved) {
-        await trpc.feed.remove.mutate({ id });
+        await removeFeed({ id });
       }
       onRemove?.();
     })();
-  }, [id, onRemove, saved]);
+  }, [id, onRemove, removeFeed, saved]);
 
   const [busy, setBusy] = useState(false);
   const [generation, setGeneration] = useState(0);
@@ -61,8 +63,8 @@ export const useFeedItem = (input: UseFeedItemInput) => {
     async (value: string) => {
       try {
         const artifact = saved
-          ? await trpc.feed.patch.mutate(type === `image` ? { id, src: value, type } : { id, text: value, type })
-          : await trpc.feed.create.mutate(
+          ? await patch(type === `image` ? { id, src: value, type } : { id, text: value, type })
+          : await create(
               type === `image`
                 ? { generationPrompt: prompt, src: value, type }
                 : { generationPrompt: prompt, text: value, type },
@@ -74,7 +76,7 @@ export const useFeedItem = (input: UseFeedItemInput) => {
         setBusy(false);
       }
     },
-    [id, notifyError, onPublish, prompt, saved, type],
+    [create, id, notifyError, onPublish, patch, prompt, saved, type],
   );
 
   const fail = useCallback(

@@ -1,37 +1,36 @@
-import type { TrpcOutputs } from "@snappy/admin-server-api";
-
 import { useRouterGo } from "@snappy/app-router";
 import { useAsyncEffect, useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import type { UserEditProps } from "./UserEdit";
 
-import { Confirm, t, trpc } from "../../core";
+import { Confirm, t } from "../../core";
+import { $data, type User } from "../../data";
 import { Routes } from "../../Routes";
 
 export const useUserEditState = ({ userId: id }: UserEditProps) => {
   const go = useRouterGo();
-  const [user, setUser] = useState<TrpcOutputs[`users`][`read`]>();
-  const [balanceText, setBalanceText] = useState(``);
+  const { fetch, remove: removeUser, update } = $data.users();
+  const [user, setUser] = useState<User>();
+  const [balanceRub, setBalanceRub] = useState<number | undefined>(undefined);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
   useAsyncEffect(async () => {
-    const data = await trpc.users.read.query({ id });
+    const data = await fetch(id);
     setUser(data);
     if (data !== undefined) {
-      setBalanceText(String(data.balanceRub));
+      setBalanceRub(data.balanceRub);
     }
-  }, [id]);
+  }, [fetch, id]);
 
   const save = () => {
-    const balanceRub = Number(balanceText.replace(`,`, `.`));
-    if (!Number.isFinite(balanceRub) || balanceRub < 0) {
+    if (balanceRub === undefined || balanceRub < 0) {
       setError({ key: `users.edit.errors.invalid` });
 
       return;
     }
     void wrapSubmit(async () => {
-      await trpc.users.update.mutate({ balanceRub, id });
+      await update({ balanceRub, id });
       await go(Routes.user.list);
     });
   };
@@ -40,9 +39,9 @@ export const useUserEditState = ({ userId: id }: UserEditProps) => {
     if (!Confirm(t(`users.edit.deleteConfirm`))) {
       return;
     }
-    await trpc.users.delete.mutate({ id });
+    await removeUser(id);
     await go(Routes.user.list);
   };
 
-  return { balanceText, error, loading, remove, save, setBalanceText, user };
+  return { balanceRub, error, loading, remove, save, setBalanceRub, user };
 };

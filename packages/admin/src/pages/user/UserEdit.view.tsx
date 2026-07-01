@@ -1,5 +1,5 @@
 import { _ } from "@snappy/core";
-import { Alert, Button, Input, Page } from "@snappy/ui";
+import { Alert, Button, Input, NumberInput, Page } from "@snappy/ui";
 
 import type { useUserEditState } from "./UserEdit.state";
 
@@ -8,18 +8,12 @@ import styles from "./UserEdit.module.scss";
 
 export type UserEditViewProps = ReturnType<typeof useUserEditState>;
 
-export const UserEditView = ({ balanceText, error, loading, remove, save, setBalanceText, user }: UserEditViewProps) =>
+export const UserEditView = ({ balanceRub, error, loading, remove, save, setBalanceRub, user }: UserEditViewProps) =>
   user === undefined ? undefined : (
     <Page back title={t(`users.edit.title`)}>
       <div className={styles.form}>
         <Input disabled label={t(`users.edit.email`)} onChange={_.noop} value={user.email} />
-        <Input
-          disabled={loading}
-          label={t(`users.edit.balance`)}
-          onChange={setBalanceText}
-          type="text"
-          value={balanceText}
-        />
+        <NumberInput disabled={loading} label={t(`users.edit.balance`)} onChange={setBalanceRub} value={balanceRub} />
         {error === undefined ? undefined : <Alert text={t(error.key)} type="error" />}
         <div className={styles.actions}>
           <Button

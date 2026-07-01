@@ -1,4 +1,4 @@
-import { Button, Input, Page } from "@snappy/ui";
+import { Button, NumberInput, Page } from "@snappy/ui";
 
 import type { useSettingsProfileTopUpState } from "./SettingsProfileTopUp.state";
 
@@ -9,20 +9,19 @@ import { SettingsCard } from "../../components";
 export type SettingsProfileTopUpViewProps = ReturnType<typeof useSettingsProfileTopUpState>;
 
 export const SettingsProfileTopUpView = ({
-  amountText,
+  amount,
   error,
   loading,
-  setAmountText,
+  setAmount,
   submit,
 }: SettingsProfileTopUpViewProps) => (
   <Page back title={t(`settings.profile.topUp.title`)}>
     <SettingsCard form lead={t(`settings.profile.topUp.lead`)}>
-      <Input
+      <NumberInput
         disabled={loading}
         label={t(`settings.profile.topUp.amountLabel`)}
-        onChange={setAmountText}
-        type="text"
-        value={amountText}
+        onChange={setAmount}
+        value={amount}
       />
       <FormErrorAndActions error={error === undefined ? `` : t(error.key, error.params)}>
         <Button

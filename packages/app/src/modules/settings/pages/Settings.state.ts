@@ -2,29 +2,22 @@ import { useStoreValue } from "@snappy/store";
 import { $locale, $theme, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth, t, trpc, type UserSettings } from "../../../core";
+import { $data } from "../../../data";
 
 export const useSettingsState = () => {
-  const [aiTunnelEnd, setAiTunnelEnd] = useState<string>();
   const [email, setEmail] = useState<string>();
-  const [llmChatEnd, setLlmChatEnd] = useState<string>();
-  const [llmImageEnd, setLlmImageEnd] = useState<string>();
-  const [llmVisionEnd, setLlmVisionEnd] = useState<string>();
-  const [llmSpeechEnd, setLlmSpeechEnd] = useState<string>();
-  const [typeWriterSpeed, setTypeWriterSpeed] = useState<UserSettings[`typeWriterSpeed`]>(undefined);
+  const { settings } = $data.settings();
   const theme = useStoreValue($theme);
   const locale = useStoreValue($locale);
 
-  useAsyncEffect(async () => {
-    const [settings, profile] = await Promise.all([trpc.user.settings.get.query(), Auth.user()]);
-    setAiTunnelEnd(settings.aiTunnelDirect ? t(`settings.aiTunnel.mode.direct`) : t(`settings.aiTunnel.mode.proxy`));
-    setEmail(profile?.email);
-    setLlmChatEnd(settings.llmChatModel);
-    setLlmImageEnd(`${settings.llmImageModel} · ${settings.llmImageQuality}`);
-    setLlmVisionEnd(settings.llmVisionModel);
-    setLlmSpeechEnd(settings.llmSpeechRecognitionModel);
-    setTypeWriterSpeed(settings.typeWriterSpeed);
-  }, [locale]);
+  useAsyncEffect(async () => setEmail((await $data.auth.user())?.email), [locale]);
 
-  return { aiTunnelEnd, email, llmChatEnd, llmImageEnd, llmSpeechEnd, llmVisionEnd, locale, theme, typeWriterSpeed };
+  const aiTunnelDirect = settings?.aiTunnelDirect;
+  const llmChatEnd = settings?.llmChatModel;
+  const llmImageEnd = settings === undefined ? undefined : `${settings.llmImageModel} · ${settings.llmImageQuality}`;
+  const llmSpeechEnd = settings?.llmSpeechRecognitionModel;
+  const llmVisionEnd = settings?.llmVisionModel;
+  const typeWriterSpeed = settings?.typeWriterSpeed;
+
+  return { aiTunnelDirect, email, llmChatEnd, llmImageEnd, llmSpeechEnd, llmVisionEnd, locale, theme, typeWriterSpeed };
 };

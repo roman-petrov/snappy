@@ -1,9 +1,8 @@
-import type { TrpcOutputs } from "@snappy/app-server-api";
 import type { AgentAiConfig } from "@snappy/snappy";
 
 import { Ai } from "@snappy/ai";
 
-export type UserSettings = TrpcOutputs[`user`][`settings`][`get`];
+import type { UserSettings } from "../data/UserSettings";
 
 export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
   const key = settings.aiTunnelKey.trim();

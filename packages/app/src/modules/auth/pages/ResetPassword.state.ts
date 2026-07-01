@@ -1,8 +1,9 @@
 import { useRouterQuery } from "@snappy/app-router";
+import { Password } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
-import { Auth, Password } from "../../../core";
+import { $data } from "../../../data";
 
 export const useResetPasswordState = () => {
   const query = useRouterQuery();
@@ -18,7 +19,7 @@ export const useResetPasswordState = () => {
 
   const submit = () => {
     void wrapSubmit(async () => {
-      const result = await Auth.resetPassword(token, password);
+      const result = await $data.auth.resetPassword(token, password);
       if (result.status !== `ok`) {
         setError(result.status);
 

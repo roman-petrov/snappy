@@ -1,9 +1,9 @@
-import { Email } from "@snappy/core";
+import { Email, Password } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
-import { Auth, Password } from "../../../core";
+import { $data } from "../../../data";
 import { useAuthEmailSend } from "../hooks";
 
 export const useSignUpState = () => {
@@ -13,7 +13,7 @@ export const useSignUpState = () => {
 
   const { send: resend, startCooldown } = useAuthEmailSend({
     email,
-    request: async () => Auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
+    request: async () => $data.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
@@ -25,7 +25,7 @@ export const useSignUpState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await Auth.signUp(email, password, AppBase.verifyCallbackUrl);
+      const result = await $data.auth.signUp(email, password, AppBase.verifyCallbackUrl);
       if (result.status === `tooManyRequests`) {
         startCooldown(result.retryAfterSec);
         setError(`tooManyRequests`);
