@@ -5,6 +5,7 @@ import { ModelDefault } from "./ModelDefault";
 
 export const ModelDeepSeek: AiModelBehavior = {
   ...ModelDefault,
+  reasoningOff: `none`,
   assistantReasoningExtras: reasoning => ({ reasoningContent: reasoning }),
   assistantToolCallsExtras: message => ({ reasoning_content: message.reasoningContent ?? `` }),
   streamDelta: (delta, sink) => {

@@ -14,7 +14,7 @@
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
-import type { AiApiTool, AiChatCompletionBody, AiStreamChunk } from "./AiApi";
+import type { AiApiTool, AiChatCompletionBody, AiReasoning, AiStreamChunk } from "./AiApi";
 import type { AiModelStreamSink } from "./core-model";
 import type { CatalogChat } from "./core-model/ModelChat";
 import type {
@@ -128,6 +128,17 @@ const apiToolChoice = (toolChoice: AiChatToolChoice | undefined) => {
 
 type ToolCallDelta = NonNullable<NonNullable<NonNullable<AiStreamChunk[`choices`]>[0][`delta`]>[`tool_calls`]>[number];
 
+const reasoningBody = (
+  effort: AiChatCompletionsInput[`reasoningEffort`],
+  off: CatalogChat[`reasoningOff`],
+): AiReasoning | undefined => {
+  if (effort !== undefined && effort !== `none`) {
+    return { effort };
+  }
+
+  return off === `none` ? { effort: `none` } : undefined;
+};
+
 const completion = (
   http: AiHttpConfig,
   catalogChat: CatalogChat,
@@ -137,14 +148,15 @@ const completion = (
   const sourceMessages = `prompt` in input ? [{ content: input.prompt, role: `user` as const }] : input.messages;
   const messages = AiMessages.chatToApi(sourceMessages, modelPlugin);
   const chatInput = `prompt` in input ? undefined : input;
-  const reasoningEnabled = reasoningEffort !== undefined && reasoningEffort !== `none`;
+  const reasoning = reasoningBody(reasoningEffort, modelPlugin.reasoningOff);
+  const reasoningEnabled = reasoning !== undefined && reasoning.effort !== `none`;
 
   const body: AiChatCompletionBody = {
     max_tokens: AiConstants.maxChatTokens,
     messages,
     model: AiTunnel.openRouterChatModel(catalogChat.name),
-    reasoning: reasoningEnabled ? { effort: reasoningEffort } : { effort: `none` },
     stream: true,
+    ...(reasoning === undefined ? {} : { reasoning }),
     ...(chatInput?.tools === undefined
       ? {}
       : { tool_choice: apiToolChoice(chatInput.toolChoice), tools: apiTools(chatInput.tools) }),
