@@ -1,24 +1,23 @@
-/* eslint-disable unicorn/try-complexity */
-/* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
 import { AiVision } from "@snappy/ai";
+import { Mime } from "@snappy/core";
 
 import { StaticAgentFile } from "./StaticAgentFile";
 import { StaticAgentPrompt } from "./StaticAgentPrompt";
 
 export const StaticVisionAgent = StaticAgentFile(async (input, file) => {
-  const url = URL.createObjectURL(file);
+  const { answers, feed, isStopped, locale, models, plan, prompt } = input;
+  const vision = Promise.withResolvers<{ label: string }>();
 
-  try {
-    const prompt = StaticAgentPrompt({ answers: input.answers, mainPrompt: input.prompt, plan: input.plan });
-    const content = await AiVision.prompt(input.models.vision, { prompt, url });
+  feed.appendStatus(locale === `ru` ? `Изучаю изображение…` : `Inspecting image…`, vision);
 
-    if (input.isStopped()) {
-      return;
-    }
-
-    await input.feed.generateText({ model: input.models.chat, prompt: content });
-  } finally {
-    URL.revokeObjectURL(url);
+  const visionPrompt = StaticAgentPrompt({ answers, mainPrompt: prompt, plan });
+  const url = await Mime.blob(file);
+  const content = await AiVision.prompt(models.vision, { prompt: visionPrompt, url });
+  vision.resolve({ label: `` });
+  if (isStopped()) {
+    return;
   }
+
+  await feed.appendChatText(content);
 });
