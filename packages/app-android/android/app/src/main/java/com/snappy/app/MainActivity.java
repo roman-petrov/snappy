@@ -17,7 +17,6 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;

@@ -137,14 +137,14 @@ const completion = (
   const sourceMessages = `prompt` in input ? [{ content: input.prompt, role: `user` as const }] : input.messages;
   const messages = AiMessages.chatToApi(sourceMessages, modelPlugin);
   const chatInput = `prompt` in input ? undefined : input;
-  const reasoning = reasoningEffort === undefined ? undefined : { effort: reasoningEffort };
+  const reasoningEnabled = reasoningEffort !== undefined && reasoningEffort !== `none`;
 
   const body: AiChatCompletionBody = {
     max_tokens: AiConstants.maxChatTokens,
     messages,
     model: AiTunnel.openRouterChatModel(catalogChat.name),
+    reasoning: reasoningEnabled ? { effort: reasoningEffort } : { effort: `none` },
     stream: true,
-    ...(reasoning === undefined ? {} : { reasoning }),
     ...(chatInput?.tools === undefined
       ? {}
       : { tool_choice: apiToolChoice(chatInput.toolChoice), tools: apiTools(chatInput.tools) }),
@@ -264,10 +264,12 @@ const completion = (
         }
         const { delta, finish_reason: finishReason } = choice;
         if (delta !== undefined) {
-          modelPlugin.streamDelta(
-            { reasoning: delta.reasoning, reasoningDetails: delta.reasoning_details },
-            streamSink,
-          );
+          if (reasoningEnabled) {
+            modelPlugin.streamDelta(
+              { reasoning: delta.reasoning, reasoningDetails: delta.reasoning_details },
+              streamSink,
+            );
+          }
           const contentDelta = delta.content;
           if (_.isString(contentDelta) && contentDelta !== ``) {
             pushText(`chat`, contentDelta);
