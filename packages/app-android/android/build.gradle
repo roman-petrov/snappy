@@ -1,30 +1,13 @@
-// cspell:word buildscript allprojects diffplug aosp
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:9.2.0'
-    }
-}
-
+// cspell:word diffplug aosp
 plugins {
-    id 'com.diffplug.spotless' version '8.6.0'
+    id 'com.diffplug.spotless'
 }
 
-apply from: "variables.gradle"
+apply from: 'variables.gradle'
 
 spotless {
     java {
         target 'app/src/main/java/**/*.java'
         googleJavaFormat(rootProject.ext.googleJavaFormatVersion).aosp()
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
     }
 }
