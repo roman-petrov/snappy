@@ -7,6 +7,7 @@
 @use "pkg:@snappy/theme/tokens/icon-size";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/typography";
 
 @property --tab-index {
   syntax: "<number>";
@@ -101,7 +102,14 @@ $-inner-radius: calc(#{$-radius} - #{$-inset});
 
 @include mobile {
   .tab {
-    width: r(96);
+    width: r(88);
+    padding-inline: space.xs();
+  }
+
+  .label {
+    @include typography.caption-sm;
+
+    max-width: 100%;
   }
 }
 
