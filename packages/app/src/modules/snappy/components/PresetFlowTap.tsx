@@ -13,7 +13,7 @@ export type PresetFlowTapProps = Omit<TapProps, `children` | `cn`> & {
 export type PresetFlowTapTone = Exclude<keyof typeof styles, `art` | `content` | `description` | `root` | `title`>;
 
 export const PresetFlowTap = ({ description, emoji, title, tone, ...tapProps }: PresetFlowTapProps) => (
-  <Tap {...tapProps} cn={_.cn(styles.root, styles[tone])} vibrate="confirm">
+  <Tap {...tapProps} cn={_.cn(styles.root, styles[tone])}>
     <span className={styles.art}>{emoji}</span>
     <span className={styles.content}>
       <Text cn={styles.title} text={title} typography="h3" />
