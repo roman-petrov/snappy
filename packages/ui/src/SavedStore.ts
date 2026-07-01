@@ -14,7 +14,6 @@ export const SavedStore = async <T extends boolean | string>(
       const stored = format(value);
       if (stored !== undefined) {
         void cookieStore.set({ expires: _.now() + cookieExpiresMs, name, path: `/`, value: stored });
-        localStorage.setItem(name, stored);
       }
     });
     const cookieValue = await cookieStore.get(name);

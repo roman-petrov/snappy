@@ -1,4 +1,3 @@
-/* eslint-disable no-void */
 /* eslint-disable functional/no-expression-statements */
 import type { TrpcRouter } from "@snappy/app-server-api";
 
@@ -6,6 +5,7 @@ import { Store } from "@snappy/core";
 import { ReactiveStore } from "@snappy/store";
 import { TrpcClient } from "@snappy/ui";
 
+import { KnownUser } from "../core";
 import { Auth } from "./Auth";
 import { Balance } from "./Balance";
 import { Feed } from "./Feed";
@@ -52,9 +52,17 @@ export const $data = await (async () => {
   });
 
   if ($signedIn()) {
+    KnownUser.mark();
     void load();
   }
-  $signedIn.subscribe(ok => (ok ? void load() : clear()));
+  $signedIn.subscribe(ok => {
+    if (ok) {
+      KnownUser.mark();
+      void load();
+    } else {
+      clear();
+    }
+  });
 
   return {
     aiConfig: userSettings.aiConfig,
