@@ -13,3 +13,5 @@ export * from "./useRouteStage";
 export * from "./useStageInsets";
 
 export * from "./useTabTrack";
+
+export * from "./useTrackMotion";

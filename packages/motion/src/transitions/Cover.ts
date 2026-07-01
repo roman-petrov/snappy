@@ -134,6 +134,7 @@ export const Cover = ({ count, drag, onClose, onIndex, onMove, onPhase, root, tr
   const { consumeGestureLed } = motion;
   const { layout } = motion;
   const { pointer } = motion;
+  const { resize } = motion;
 
-  return { closing, consumeGestureLed, enter, entering, layout, leave, pointer, prepareEnter, release };
+  return { closing, consumeGestureLed, enter, entering, layout, leave, pointer, prepareEnter, release, resize };
 };

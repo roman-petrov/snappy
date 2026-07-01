@@ -15,6 +15,7 @@ type Harness = {
   field: HTMLInputElement;
   motion: ReturnType<typeof SlideTrack>;
   records: SnapRecord[];
+  root: HTMLDivElement;
   settle: () => Promise<void>;
 };
 
@@ -64,7 +65,7 @@ const harness = (index = 0): Harness => {
   let dragOffset = 0;
   const records: SnapRecord[] = [];
   const pending: (() => void)[] = [];
-  const translateForIndex = (page: number, offset = 0) => -page * pageWidth + offset;
+  const translateForIndex = (page: number, width = pageWidth, offset = 0) => -page * width + offset;
   const root = document.createElement(`div`);
   const track = document.createElement(`div`);
   const field = document.createElement(`input`);
@@ -121,7 +122,7 @@ const harness = (index = 0): Harness => {
   const trackRef: DomRef = { current: track };
 
   const motion = SlideTrack({
-    anchor: () => translateForIndex(currentIndex),
+    anchor: width => translateForIndex(currentIndex, width),
     canDrag: (dx, { offset, width }) => {
       const page = width ? Math.round(_.clamp(-offset / width, 0, pageCount - 1)) : currentIndex;
 
@@ -132,18 +133,19 @@ const harness = (index = 0): Harness => {
     snap,
     start: ({ offset, width }) => {
       dragIndex = width ? Math.round(_.clamp(-offset / width, 0, pageCount - 1)) : currentIndex;
-      dragBaseline = offset - translateForIndex(dragIndex);
+      dragBaseline = offset - translateForIndex(dragIndex, width);
     },
     track: trackRef,
     translate: (dx, { width }) => {
       const offset = _.clamp(dragBaseline + dx, dragIndex < pageCount - 1 ? -width : 0, dragIndex > 0 ? width : 0);
       dragOffset = offset;
 
-      return translateForIndex(dragIndex, offset);
+      return translateForIndex(dragIndex, width, offset);
     },
   });
 
   motion.layout();
+  motion.resize();
   motion.pointer();
 
   const touches = new Map<number, { target: EventTarget; x: number; y: number }>();
@@ -239,7 +241,7 @@ const harness = (index = 0): Harness => {
     await flushMicrotasks();
   };
 
-  return { dispatch, field, motion, records, settle };
+  return { dispatch, field, motion, records, root, settle };
 };
 
 const swipe = (session: Harness, from: number, to: number, steps = 1, id = 1, on: TouchInput[`on`] = `root`) => {
@@ -568,6 +570,19 @@ describe(`layout`, () => {
     session.motion.layout();
 
     expect(session.motion.offset()).toBeLessThan(-pageWidth);
+  });
+});
+
+describe(`resize`, () => {
+  it(`re-anchors translate when root width changes`, () => {
+    const session = harness(1);
+
+    expect(session.motion.offset()).toBe(-pageWidth);
+
+    Object.defineProperty(session.root, `clientWidth`, { configurable: true, value: 600 });
+    resizeObserver.callback([], resizeObserver.instance);
+
+    expect(session.motion.offset()).toBe(-600);
   });
 });
 

@@ -1,4 +1,4 @@
-import { ThemeVar, useHasTouchInput } from "@snappy/hooks";
+import { ThemeVar } from "@snappy/hooks";
 import { Cover, type Cover as CoverMotion } from "@snappy/motion";
 import { Bridge } from "@snappy/platform";
 import { useEffect, useLayoutEffect, useRef } from "react";
@@ -9,6 +9,7 @@ import { type OverlayPane, RouteMotion } from "../core";
 import { useRouterGo } from "../hooks/useRouterGo";
 import { useRouterPath } from "../hooks/useRouterPath";
 import { useRouteStage } from "../hooks/useRouteStage";
+import { useTrackMotion } from "../hooks/useTrackMotion";
 
 type CoverPaneItem = { base: boolean; fadeMinHeight: string; pane: OverlayPane; scrollPad: string; track: boolean };
 
@@ -23,7 +24,6 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
   } = useRouteStage();
 
   const cornerRadius = Bridge.screenCornerRadius();
-  const touch = useHasTouchInput();
   const go = useRouterGo();
   const path = useRouterPath();
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -92,7 +92,7 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
     }
   }, [cover, hasPanes, paneCount]);
 
-  useEffect(() => (hasPanes && touch ? cover.pointer() : undefined), [cover, hasPanes, touch]);
+  useTrackMotion(cover, hasPanes);
 
   useEffect(() => {
     topScrollRef.current?.scrollTo({ behavior: `instant`, left: 0, top: 0 });

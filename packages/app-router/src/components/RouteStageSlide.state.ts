@@ -9,6 +9,7 @@ import { useRouter } from "../hooks/useRouter";
 import { useRouterGo } from "../hooks/useRouterGo";
 import { useRouterPath } from "../hooks/useRouterPath";
 import { useRouteStage } from "../hooks/useRouteStage";
+import { useTrackMotion } from "../hooks/useTrackMotion";
 
 export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProps) => {
   const base = useRouteStage();
@@ -66,7 +67,7 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
     motion.layout();
   }, [index, items, motion, touch]);
 
-  useEffect(() => (layer === undefined && touch ? motion.pointer() : undefined), [layer, motion, touch]);
+  useTrackMotion(motion, layer === undefined);
 
   const pageIndex = livePageIndex ?? index;
   const track: TrackValue = { animating: livePageIndex !== undefined, index, pageIndex };

@@ -406,6 +406,12 @@ export const SlideTrack = ({
     sync?.();
   };
 
+  const resize = () => {
+    const root = rootRef.current;
+
+    return root === null ? _.noop : Dom.watchSize(root, layout);
+  };
+
   const pointer = () => {
     const root = rootRef.current;
 
@@ -418,7 +424,6 @@ export const SlideTrack = ({
     root.style.touchAction = `pan-y pinch-zoom`;
 
     const unbind = _.singleAction([
-      Dom.watchSize(root, refresh),
       Dom.subscribe(document, `touchstart`, onTouchStart, capture),
       Dom.subscribe(document, `touchend`, onTouchEnd, capture),
       Dom.subscribe(document, `touchcancel`, onTouchEnd, capture),
@@ -452,6 +457,7 @@ export const SlideTrack = ({
     pointer,
     refresh,
     reset,
+    resize,
     setTranslate,
     width,
   };

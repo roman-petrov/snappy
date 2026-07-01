@@ -128,6 +128,7 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
   const { consumeGestureLed } = motion;
   const { layout } = motion;
   const { pointer } = motion;
+  const { resize } = motion;
 
-  return { consumeGestureLed, frame, layout, pointer, select };
+  return { consumeGestureLed, frame, layout, pointer, resize, select };
 };
