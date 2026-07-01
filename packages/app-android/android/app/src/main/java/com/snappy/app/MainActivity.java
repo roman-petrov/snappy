@@ -17,6 +17,7 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
 import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
@@ -159,8 +160,7 @@ public class MainActivity extends ComponentActivity {
                                 if (webView.canGoBack()) {
                                     webView.goBack();
                                 } else {
-                                    setEnabled(false);
-                                    getOnBackPressedDispatcher().onBackPressed();
+                                    moveTaskToBack(true);
                                 }
                             }
                         });
