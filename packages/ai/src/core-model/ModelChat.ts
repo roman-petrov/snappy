@@ -1,6 +1,6 @@
 import type { AiHttpConfig } from "../AiHttp";
 import type { AiChatCompletionSession, AiChatCompletionsInput, AiModelCapabilities } from "../Types";
-import type { AiModelEntry } from "./Entry";
+import type { AiModelBehavior, AiModelEntry } from "./Entry";
 
 import { AiChat } from "../AiChat";
 import { ModelEntry } from "./ModelEntry";
@@ -14,7 +14,7 @@ export const ModelChat = ({
   capabilities,
   name,
 }: {
-  behavior?: Pick<AiModelEntry, `assistantReasoningExtras` | `assistantToolCallsExtras` | `streamDelta`>;
+  behavior?: Partial<AiModelBehavior>;
   capabilities: AiModelCapabilities;
   name: string;
 }): CatalogChat & { of: (http: AiHttpConfig) => AiChatModel } =>

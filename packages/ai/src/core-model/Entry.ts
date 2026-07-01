@@ -1,8 +1,6 @@
 import type { AiApiAssistantMessage } from "../AiApi";
 import type { AiChatAssistantMessage, AiChatMessage, AiModelItem } from "../Types";
 
-export type AiReasoningOff = `none` | `omit`;
-
 export type AiModelBehavior = {
   assistantReasoningExtras: (reasoning: string) => Partial<Pick<AiChatAssistantMessage, `reasoningContent`>>;
   assistantToolCallsExtras: (
@@ -23,3 +21,5 @@ export type AiModelStreamSink = {
   pushDetailsReasoning: (details: AiModelStreamDelta[`reasoningDetails`]) => void;
   pushPlainReasoning: (reasoning: AiModelStreamDelta[`reasoning`]) => boolean;
 };
+
+export type AiReasoningOff = `none` | `omit`;

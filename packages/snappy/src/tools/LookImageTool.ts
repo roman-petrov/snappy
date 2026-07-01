@@ -1,10 +1,11 @@
+/* eslint-disable functional/no-expression-statements */
 import { AgentTool } from "@snappy/agent";
 import { AiVision } from "@snappy/ai";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const LookImageTool: SnappyToolFactory = ({ config, isStopped, media }) => {
+export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, media }) => {
   if (config.models.chat.capabilities.input.includes(`image`)) {
     return undefined;
   }
@@ -33,12 +34,14 @@ export const LookImageTool: SnappyToolFactory = ({ config, isStopped, media }) =
         };
       }
 
-      const content = await AiVision.prompt(config.models.vision, { prompt, url });
+      const session = AiVision.completions(config.models.vision, { prompt, url });
+      await feed.appendChatStream(session.chatText(isStopped));
+      if (isStopped()) {
+        return ``;
+      }
 
-      return isStopped() ? `` : content;
+      return (await session.assistant()).content;
     },
-    formatCall: (_input, status, loc) =>
-      status === `running` ? (loc === `ru` ? `Изучаю изображение…` : `Inspecting image…`) : ``,
     inputSchema: z.object({
       id: z.string().min(1).describe(`Media id from ask field id or mediaId from publish_image / edit_image.`),
       prompt: z.string().min(1).describe(`What to inspect or answer about the image.`),

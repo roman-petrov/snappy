@@ -1,20 +1,21 @@
 import type { AiChatModel } from "./core-model";
+import type { AiChatCompletionSession } from "./Types";
 
-const prompt = async (model: AiChatModel, { prompt: text, url }: { prompt: string; url: string }) =>
-  (
-    await model
-      .completions({
-        messages: [
-          {
-            content: [
-              { text, type: `text` },
-              { type: `image`, url },
-            ],
-            role: `user`,
-          },
+type VisionInput = { prompt: string; url: string };
+
+const completions = (model: AiChatModel, { prompt: text, url }: VisionInput): AiChatCompletionSession =>
+  model.completions({
+    messages: [
+      {
+        content: [
+          { text, type: `text` },
+          { type: `image`, url },
         ],
-      })
-      .assistant()
-  ).content;
+        role: `user`,
+      },
+    ],
+  });
 
-export const AiVision = { prompt };
+const prompt = async (model: AiChatModel, input: VisionInput) => (await completions(model, input).assistant()).content;
+
+export const AiVision = { completions, prompt };

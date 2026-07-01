@@ -5,11 +5,11 @@ import type { AiModelBehavior, AiModelEntry } from "./Entry";
 import { Matches } from "./Matches";
 import { ModelDefault } from "./ModelDefault";
 
-type EntryProps = { behavior?: AiModelBehavior; capabilities: AiModelCapabilities; name: string };
+type EntryProps = { behavior?: Partial<AiModelBehavior>; capabilities: AiModelCapabilities; name: string };
 
 const bind = <Type extends AiModelType, Bound>(
   type: Type,
-  { behavior = ModelDefault, capabilities, name }: EntryProps,
+  { behavior, capabilities, name }: EntryProps,
   api: (http: AiHttpConfig, catalog: AiModelEntry & { type: Type }) => Bound,
 ) => {
   const catalog: AiModelEntry & { type: Type } = {
@@ -18,6 +18,7 @@ const bind = <Type extends AiModelType, Bound>(
     name,
     source: `ai-tunnel`,
     type,
+    ...ModelDefault,
     ...behavior,
   };
 
