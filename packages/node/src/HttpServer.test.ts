@@ -1,6 +1,7 @@
 /* @vitest-environment node */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { HttpStatus } from "@snappy/core";
+import { zstdDecompressSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
 import { HttpServer, type HttpServer as HttpServerType } from "./HttpServer";
@@ -122,7 +123,9 @@ describe(`HttpServer`, () => {
       const response = await fetch(`${url}/`);
 
       expect(response.headers.get(`content-encoding`)).toBe(`zstd`);
-      await expect(response.json()).resolves.toStrictEqual(body);
+      const raw = Buffer.from(await response.arrayBuffer());
+      const text = (raw[0] === 0x7b ? raw : zstdDecompressSync(raw)).toString();
+      expect(JSON.parse(text)).toStrictEqual(body);
     });
   });
 
