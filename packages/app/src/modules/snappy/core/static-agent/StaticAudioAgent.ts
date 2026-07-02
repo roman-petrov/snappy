@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import { StaticAgentChat } from "./StaticAgentChat";
 import { StaticAgentFile } from "./StaticAgentFile";
 import { StaticAgentPrompt } from "./StaticAgentPrompt";
 
@@ -20,6 +21,9 @@ export const StaticAudioAgent = StaticAgentFile(async (input, file) => {
     return;
   }
 
-  const generationPrompt = `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`;
+  const generationPrompt = StaticAgentChat.withPolicy(
+    locale,
+    `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`,
+  );
   await feed.generateText({ model: models.chat, prompt: generationPrompt });
 });
