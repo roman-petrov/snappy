@@ -27,10 +27,5 @@ export const StaticImageEditAgent = <
       return;
     }
 
-    await feed.generateImage({
-      edit,
-      locale,
-      model: models.image,
-      prompt: prompt?.(input) ?? input.prompt,
-    });
+    await feed.generateImage({ edit, locale, model: models.image, prompt: prompt?.(input) ?? input.prompt });
   });

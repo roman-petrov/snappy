@@ -1,12 +1,22 @@
 import { AgentTool } from "@snappy/agent";
-import { AiConstants } from "@snappy/ai";
+import { ImageSize } from "@snappy/ai";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
+import { ImageTool } from "../ImageTool";
 import { ToolContext } from "../ToolContext";
 
-export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStopped, locale, media }) =>
+export const EditImageTool: SnappyToolFactory = ({
+  config: {
+    models: { image: model },
+  },
+  feed,
+  files,
+  isStopped,
+  locale,
+  media,
+}) =>
   AgentTool({
     description: [
       [
@@ -15,11 +25,11 @@ export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStoppe
       ],
       [
         `input`,
-        `Pass a self-contained edit prompt, field ids from ask image_input answers (in API order), and optional background/size. Request files via ask first.`,
+        `Pass a self-contained edit prompt, field ids from ask image_input answers (in API order), and optional background/sizing fields. Request files via ask first.`,
       ],
       [`output`, `Returns mediaId. The edited image follows in the next user message.`],
     ],
-    execute: async ({ background, files: fieldIds, prompt, size }) => {
+    execute: async ({ background, files: fieldIds, prompt, ...fields }) => {
       if (isStopped()) {
         return ``;
       }
@@ -34,19 +44,23 @@ export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStoppe
         ? { error: `No image files for fields: ${fieldIds.join(`, `)}. Run ask first.` }
         : ToolContext.publishImage({
             feed,
-            input: { edit: { background, images }, locale, model: config.models.image, prompt, size },
+            input: {
+              edit: { background, images },
+              locale,
+              model,
+              prompt,
+              ...ImageSize.request(model.imageConfigKind, fields),
+            },
             isStopped,
             media,
           });
     },
-    inputSchema: z.object({
+    inputSchema: ImageTool.inputSchema(model, `Self-contained edit instruction for the image model.`, {
       background: z.enum([`transparent`, `opaque`, `auto`]).optional().describe(`Output background when relevant.`),
       files: z
         .array(z.string().min(1))
         .min(1)
         .max(16)
         .describe(`Field ids from ask image_input answers, in the order required by the edit API.`),
-      prompt: z.string().min(1).describe(`Self-contained edit instruction for the image model.`),
-      size: z.enum(AiConstants.imageSize).optional().describe(`Output resolution in pixels.`),
     }),
   });

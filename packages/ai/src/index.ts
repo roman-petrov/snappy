@@ -30,4 +30,6 @@ export * from "./AiVision";
 
 export * from "./core-model";
 
+export * from "./ImageSize";
+
 export type * from "./Types";

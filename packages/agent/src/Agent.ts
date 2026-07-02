@@ -136,7 +136,9 @@ export const Agent = ({ chatModel, idleAfterSuccess, locale, maxRounds, systemPr
           }
         }
 
-        const result = await agentTool.execute(input);
+        const result = await agentTool
+          .execute(input)
+          .catch((error: unknown) => ({ error: error instanceof Error ? error.message : `tool_failed` }));
 
         if (formatCall !== undefined) {
           badge?.resolve({ label: formatCall(input, `completed`, locale) });

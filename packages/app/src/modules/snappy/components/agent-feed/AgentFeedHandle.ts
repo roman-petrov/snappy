@@ -91,7 +91,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
       variant: `text`,
     });
 
-  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ edit, locale, model, prompt, size }) =>
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ edit, imageConfig, locale, model, prompt, size }) =>
     runArtifact({
       artifact: {
         generationPrompt: prompt,
@@ -100,6 +100,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
         src: ``,
         type: `image`,
         ...(edit === undefined ? {} : { edit }),
+        ...(imageConfig === undefined ? {} : { imageConfig }),
         ...(size === undefined ? {} : { size }),
       },
       done: Promise.withResolvers(),
@@ -139,6 +140,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
         ...shared,
         content: artifact.src,
         edit: artifact.edit,
+        imageConfig: artifact.imageConfig,
         model,
         size: artifact.size,
       });

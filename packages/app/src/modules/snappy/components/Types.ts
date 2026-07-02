@@ -1,4 +1,4 @@
-import type { AiImageSize } from "@snappy/ai";
+import type { AiImageConfig, AiImageSize } from "@snappy/ai";
 import type { AgentImageEdit } from "@snappy/snappy";
 
 export type AgentArtifact =
@@ -11,6 +11,7 @@ export type AgentArtifactSession = {
   edit?: AgentImageEdit;
   error?: string;
   generationStatus: AgentArtifactGenerationStatus;
+  imageConfig?: AiImageConfig;
   model?: string;
   size?: AiImageSize;
 };

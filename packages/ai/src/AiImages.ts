@@ -2,11 +2,11 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { CatalogImage } from "./core-model/ModelImage";
 import type { AiImageBytesResult, AiImageEditInput, AiImageGenerateInput } from "./Types";
 
 import { AiCost } from "./AiCost";
 import { AiHttp, type AiHttpConfig } from "./AiHttp";
+import { ImageSize } from "./ImageSize";
 
 type ImageResponse = { data: { b64_json?: string; url?: string }[]; usage?: { cost_rub?: number } };
 
@@ -28,25 +28,26 @@ const bytesFromResult = async (result: ImageResponse) => {
 
 const generate = async (
   http: AiHttpConfig,
-  catalog: CatalogImage,
-  { prompt, quality, size }: AiImageGenerateInput,
+  model: string,
+  { imageConfig, prompt, quality, size }: AiImageGenerateInput,
 ): Promise<AiImageBytesResult> =>
   bytesFromResult(
     await AiHttp.postJson<ImageResponse>(http, `/images/generations`, {
-      model: catalog.name,
+      model,
       prompt,
       ...(quality === undefined ? {} : { quality }),
       ...(size === undefined ? {} : { size }),
+      ...(imageConfig === undefined ? {} : { image_config: ImageSize.apiBody(imageConfig) }),
     }),
   );
 
 const edit = async (
   http: AiHttpConfig,
-  catalog: CatalogImage,
-  { background, images, prompt, quality, size }: AiImageEditInput,
+  model: string,
+  { background, imageConfig, images, prompt, quality, size }: AiImageEditInput,
 ): Promise<AiImageBytesResult> => {
   const form = new FormData();
-  form.append(`model`, catalog.name);
+  form.append(`model`, model);
   form.append(`prompt`, prompt);
   if (background !== undefined) {
     form.append(`background`, background);
@@ -56,6 +57,9 @@ const edit = async (
   }
   if (size !== undefined) {
     form.append(`size`, size);
+  }
+  if (imageConfig !== undefined) {
+    form.append(`image_config`, JSON.stringify(ImageSize.apiBody(imageConfig)));
   }
   const field = images.length === 1 ? `image` : `image[]`;
   for (const file of images) {

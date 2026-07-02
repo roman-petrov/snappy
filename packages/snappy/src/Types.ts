@@ -1,6 +1,7 @@
 import type {
   AiChatModel,
   AiImageBackground,
+  AiImageConfig,
   AiImageModel,
   AiImageQuality,
   AiImageSize,
@@ -36,6 +37,7 @@ export type AgentFeedRuntime = {
   ask: AgentAsk;
   generateImage: (input: {
     edit?: AgentImageEdit;
+    imageConfig?: AiImageConfig;
     locale: Locale;
     model: AiImageModel;
     prompt: string;

@@ -46,17 +46,30 @@ export type AiEmbedderInput = { input: string | string[] };
 
 export type AiEmbedResult = { cost: number; vectors: number[][] };
 
+export type AiImageAspectRatio =
+  (typeof AiConstants.imageAspectRatio)[number] | (typeof AiConstants.imageAspectRatioExtended)[number];
+
 export type AiImageBackground = `auto` | `opaque` | `transparent`;
 
 export type AiImageBytesResult = { bytes: Uint8Array; cost: number };
 
+export type AiImageConfig = AiImageFluxConfig | AiImageGeminiConfig;
+
+export type AiImageConfigKind = `flux` | `gemini` | `gpt`;
+
 export type AiImageEditInput = ImageEditOptions & { images: File[]; prompt: string };
+
+export type AiImageFluxConfig = { height: number; width: number };
+
+export type AiImageGeminiConfig = { aspectRatio: AiImageAspectRatio; resolution?: AiImageResolution };
 
 export type AiImageGenerateInput = ImageGenerationOptions & { prompt: string };
 
 export type AiImageQuality = (typeof AiConstants.imageQuality)[number];
 
-export type AiImageSize = (typeof AiConstants.imageSize)[number];
+export type AiImageResolution = (typeof AiConstants.imageResolution)[number];
+
+export type AiImageSize = (typeof AiConstants.imageSizePreset)[keyof typeof AiConstants.imageSizePreset][number];
 
 export type AiModality = `audio` | `embeddings` | `image` | `text`;
 
@@ -88,6 +101,11 @@ export type AiToolRunResult = string | { context?: readonly AiContentPart[]; too
 
 export type AiToolSet = Record<string, AiTool>;
 
-export type ImageEditOptions = { background?: AiImageBackground; quality?: AiImageQuality; size?: AiImageSize };
+export type ImageEditOptions = {
+  background?: AiImageBackground;
+  imageConfig?: AiImageConfig;
+  quality?: AiImageQuality;
+  size?: AiImageSize;
+};
 
-export type ImageGenerationOptions = { quality?: AiImageQuality; size?: AiImageSize };
+export type ImageGenerationOptions = { imageConfig?: AiImageConfig; quality?: AiImageQuality; size?: AiImageSize };
