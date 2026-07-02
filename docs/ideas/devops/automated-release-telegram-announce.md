@@ -12,7 +12,7 @@
 After a successful production deploy, automatically:
 
 1. Analyze code changes since the last release (via git diff + repo context, **not** commit messages).
-2. Decide the next **SemVer** bump (`patch` | `minor` | `major`) using an AI agent.
+2. Decide the next **SemVer** bump using an AI agent (bump semantics — see SemVer).
 3. Publish a formatted **Telegram** post to a product channel.
 4. Create and push git tag **`vX.Y.Z`** on the deployed commit.
 5. Sync **`runtime-version.json`** on the prod server so Web and Android WebView SPA can read the version via HTTP.
@@ -214,24 +214,18 @@ files.
 Agent must call a tool with Zod schema (do not parse free-form JSON from assistant text):
 
 ```typescript
-type Analysis = {
-  bump: `patch` | `minor` | `major`;
-  highlights: string[]; // 3–5 user-facing bullets, Russian
-};
+type Bump = `patch` | `minor` | `major`;
+type Analysis = { bump: Bump; highlights: string[] }; // 3–5 bullets, Russian
 ```
 
-Bump rules (in system prompt):
-
-- **patch** — fixes, tweaks, internal refactors with no user-visible change
-- **minor** — new features, noticeable UX improvements
-- **major** — breaking changes (rare)
+Include bump semantics from SemVer in the system prompt.
 
 `maxRounds`: 12. Locale: `ru`. Model: `Ai({ aiTunnelKey }).defaults.chat`.
 
 ### System prompt (summary)
 
 - Role: Snappy product manager writing for Telegram channel subscribers.
-- Task: Analyze changes from `<fromTag>` to `<commit>` using tools; return `bump` + `highlights`.
+- Task: Analyze changes from `<fromTag>` to `<commit>` using tools; return structured result via `submit` tool.
 - Rules: Only facts supported by diff/code; no invented features; ignore merge/chore noise; highlights in **Russian**.
 
 ### Console output
@@ -262,6 +256,12 @@ Deterministic HTML (`parse_mode: HTML`):
 - **Baseline if no tags** — `0.0.0`
 - **Legacy tags** — ignore `release-<sha>` tags
 - **Tag message** — first line = post title
+
+**Bump semantics** (for agent system prompt):
+
+- **patch** — fixes, tweaks, internal refactors with no user-visible change
+- **minor** — new features, noticeable UX improvements
+- **major** — breaking changes (rare)
 
 `Version.next(current, bump)` uses `semver` package.
 
@@ -365,25 +365,13 @@ not forward args today):
 Register in [`packages/do/src/CommandRegistry.ts`](../../../packages/do/src/CommandRegistry.ts). Add `@snappy/release`
 to [`packages/do/package.json`](../../../packages/do/package.json).
 
-**Orchestrator (`Publish.run`):**
+**Orchestrator (`Publish.run`):** Implement the flow from the Architecture sequence diagram.
 
-```text
-1. commit = --commit ?? HEAD
-2. if Git.isReleased(commit) → exit 0
-3. clone = Clone.run({ commit, token: GITHUB_TOKEN, repo: GITHUB_REPOSITORY })
-4. fromTag = Git.latestVersionTag(clone.root)
-5. analysis = await Analyze.run({ root: clone.root, fromTag, commit, ... })
-6. version = Version.next(fromTag, analysis.bump)
-7. post = Post.format({ version, highlights: analysis.highlights })
-8. if dryRun → print version + post; exit 0
-9. Telegram.send(post)
-10. Git.tagAndPush({ version, commit })
-11. SyncProd.write({ version, commit })
-12. exit 0
-```
-
-Load secrets via `Secrets.prod(root)` when `process.env.SECRETS_KEY` is set (same as Android release build — do not rely
-on `NODE_ENV` alone in CI).
+- **Idempotency:** `Git.isReleased(commit)` → exit 0
+- **`--dry-run`:** print version + post; skip Telegram, tag, and SSH
+- **Secrets:** `Secrets.prod(root)` when `process.env.SECRETS_KEY` is set (same as Android release build — do not rely
+  on `NODE_ENV` alone in CI)
+- **Ordering:** Telegram before tag push (see Error handling)
 
 ---
 
