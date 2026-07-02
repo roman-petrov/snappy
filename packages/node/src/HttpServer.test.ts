@@ -123,8 +123,10 @@ describe(`HttpServer`, () => {
       const response = await fetch(`${url}/`);
 
       expect(response.headers.get(`content-encoding`)).toBe(`zstd`);
+
       const raw = Buffer.from(await response.arrayBuffer());
       const text = (raw[0] === 0x7b ? raw : zstdDecompressSync(raw)).toString();
+
       expect(JSON.parse(text)).toStrictEqual(body);
     });
   });
