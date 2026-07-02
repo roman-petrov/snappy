@@ -1,8 +1,18 @@
 name: Setup Android
-description: Fix gradlew permissions and Java 21 for Gradle (Android build, Spotless)
+description: Gradle cache, gradlew permissions, and Java 21 for Android build and Spotless
+inputs:
+  cache-disabled:
+    description: Disable Gradle cache
+    required: false
+    default: "false"
 runs:
   using: composite
   steps:
+    - uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
+      with:
+        cache-provider: basic
+        cache-disabled: ${{ inputs.cache-disabled }}
+
     - name: 🔧 Fix gradlew permissions
       shell: bash
       run: chmod +x packages/app-android/android/gradlew

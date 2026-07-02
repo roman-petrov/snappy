@@ -25,13 +25,10 @@ jobs:
       - name: 🔧 Setup repository
         uses: ./.github/actions/setup-repo
 
-      - name: 🔧 Setup Gradle (cache)
-        uses: gradle/actions/setup-gradle@3f131e8634966bd73d06cc69884922b02e6faf92 # v6.2.0
-        with:
-          cache-disabled: ${{ inputs.disable-cache }}
-
       - name: 🔧 Setup Android
         uses: ./.github/actions/setup-android
+        with:
+          cache-disabled: ${{ inputs.disable-cache }}
 
       - name: 🧹 Clean Android (full rebuild)
         if: ${{ inputs.disable-cache }}
