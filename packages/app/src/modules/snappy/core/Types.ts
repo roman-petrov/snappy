@@ -1,3 +1,4 @@
+import type { ImageOrientation } from "@snappy/ai";
 import type { Bilingual, Locale } from "@snappy/intl";
 import type { AgentImageEdit, SkillId, SnappyToolId, StaticFields, StaticFormField } from "@snappy/snappy";
 
@@ -34,10 +35,13 @@ export type StaticImageEditBlock<
   TFields extends readonly StaticFormField[] = readonly StaticFormField[],
 > = {
   fields: (input: StaticPlanInput<TStaticLoc>) => TFields;
+  format?: StaticImageFormat;
   kind: `imageEdit`;
   localization: (deps: StaticLocalizationDeps) => TStaticLoc;
   resolve?: (input: StaticAgentRunInput<NoInfer<TFields>>) => AgentImageEdit | undefined;
 };
+
+export type StaticImageFormat = boolean | ImageOrientation;
 
 export type StaticLoc = Record<string, Bilingual> & { prompt: Bilingual };
 
@@ -50,7 +54,7 @@ export type StaticTextOrVisualBlock<
   TKind extends `text` | `visual`,
   TStaticLoc extends StaticLoc = StaticLoc,
   TFields extends readonly StaticFormField[] = readonly StaticFormField[],
-> = {
+> = (TKind extends `visual` ? { format?: StaticImageFormat } : Record<never, never>) & {
   fields: (input: StaticPlanInput<TStaticLoc>) => TFields;
   kind: TKind;
   localization: (deps: StaticLocalizationDeps) => TStaticLoc;

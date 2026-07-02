@@ -2,6 +2,8 @@ export * from "./AgentChat";
 
 export * from "./AgentGroupId";
 
+export * from "./ImageFormat";
+
 export type * from "./Preset";
 
 export * from "./Prompts";

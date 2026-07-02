@@ -3,32 +3,41 @@
 import type { AgentToolRunResult } from "@snappy/agent";
 import type { AiContentPart } from "@snappy/ai";
 
-import type { AgentFeedRuntime } from "./Types";
+import { Mime } from "@snappy/core";
+
+import type { AgentFeedArtifactResult } from "./Types";
 
 const mediaImage = (mediaId: string, url: string): AiContentPart[] => [
   { text: `Image (media id "${mediaId}"):`, type: `text` },
   { type: `image`, url },
 ];
 
-const publishImage = async ({
-  feed,
+const dataUrl = async (url: string) => (url.startsWith(`data:`) ? url : Mime.blob(await (await fetch(url)).blob()));
+
+const publishImage = async <Input>({
+  generate,
   input,
   isStopped,
   media,
 }: {
-  feed: AgentFeedRuntime;
-  input: Parameters<AgentFeedRuntime[`generateImage`]>[0];
+  generate: (input: Input) => Promise<AgentFeedArtifactResult>;
+  input: Input;
   isStopped: () => boolean;
   media: Record<string, string>;
 }): Promise<AgentToolRunResult> => {
-  const { artifactId, content } = await feed.generateImage(input);
+  const { artifactId, content } = await generate(input);
   if (isStopped()) {
     return ``;
   }
 
-  media[artifactId] = content;
+  const url = await dataUrl(content);
+  if (isStopped()) {
+    return ``;
+  }
 
-  const context = mediaImage(artifactId, content);
+  media[artifactId] = url;
+
+  const context = mediaImage(artifactId, url);
   const tool = JSON.stringify({ mediaId: artifactId, status: `published` }, undefined, 2);
 
   return { context, tool };

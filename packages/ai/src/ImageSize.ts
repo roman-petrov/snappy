@@ -1,5 +1,7 @@
 import type { AiImageAspectRatio, AiImageConfig, AiImageConfigKind, AiImageResolution, AiImageSize } from "./Types";
 
+export type ImageOrientation = `landscape` | `portrait` | `square`;
+
 export type ImageRequest = { imageConfig?: AiImageConfig; size?: AiImageSize };
 
 export type ImageToolFields = {
@@ -22,6 +24,15 @@ const request = (
         ? {}
         : { size };
 
+const orientationOf = (size: AiImageSize): ImageOrientation => {
+  const [width = 0, height = 0] = size.split(`x`).map(Number);
+
+  return width === height ? `square` : width > height ? `landscape` : `portrait`;
+};
+
+const orientation = (sizes: readonly AiImageSize[], value: string): AiImageSize | undefined =>
+  sizes.find(size => orientationOf(size) === value);
+
 const apiBody = (imageConfig: AiImageConfig) =>
   `width` in imageConfig
     ? { height: imageConfig.height, width: imageConfig.width }
@@ -30,4 +41,4 @@ const apiBody = (imageConfig: AiImageConfig) =>
         ...(imageConfig.resolution === undefined ? {} : { image_size: imageConfig.resolution }),
       };
 
-export const ImageSize = { apiBody, request };
+export const ImageSize = { apiBody, orientation, request };

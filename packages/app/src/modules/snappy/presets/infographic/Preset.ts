@@ -26,24 +26,6 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.topic.prompt`),
           },
           {
-            default: `vertical`,
-            id: `layout`,
-            kind: `single_choice`,
-            label: { emoji: `📐`, text: i18n(`ui.field.layout.label`) },
-            options: [
-              {
-                label: { emoji: `⬇️`, text: i18n(`ui.field.layout.option.vertical.label`) },
-                prompt: i18n(`ui.field.layout.option.vertical.prompt`),
-                value: `vertical`,
-              },
-              {
-                label: { emoji: `➡️`, text: i18n(`ui.field.layout.option.horizontal.label`) },
-                prompt: i18n(`ui.field.layout.option.horizontal.prompt`),
-                value: `horizontal`,
-              },
-            ],
-          },
-          {
             default: `clean`,
             id: `look`,
             kind: `single_choice`,
@@ -85,6 +67,7 @@ export const preset: Preset = {
             ],
           },
         ]),
+      format: `portrait`,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one infographic image prompt from the topic and every bullet below. Clear hierarchy, labels, icons, and readable layout.`,
@@ -100,11 +83,6 @@ export const preset: Preset = {
           `Warm orange/red accent palette.`,
           `Тёплая палитра с orange/red акцентами.`,
         ],
-        "ui.field.layout.label": [`Layout`, `Вёрстка`],
-        "ui.field.layout.option.horizontal.label": [`Horizontal`, `Горизонтальная`],
-        "ui.field.layout.option.horizontal.prompt": [`Left-to-right flow.`, `Поток слева направо.`],
-        "ui.field.layout.option.vertical.label": [`Vertical`, `Вертикальная`],
-        "ui.field.layout.option.vertical.prompt": [`Top-to-bottom flow.`, `Поток сверху вниз.`],
         "ui.field.look.label": [`Look`, `Стиль`],
         "ui.field.look.option.bold.label": [`Bold colors`, `Яркие цвета`],
         "ui.field.look.option.bold.prompt": [`Bold color blocks and contrast.`, `Яркие блоки и контраст.`],

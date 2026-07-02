@@ -43,7 +43,7 @@ export const EditImageTool: SnappyToolFactory = ({
       return images.length === 0
         ? { error: `No image files for fields: ${fieldIds.join(`, `)}. Run ask first.` }
         : ToolContext.publishImage({
-            feed,
+            generate: feed.generateImage,
             input: {
               edit: { background, images },
               locale,

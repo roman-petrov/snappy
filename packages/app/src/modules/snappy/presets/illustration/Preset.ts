@@ -93,6 +93,7 @@ export const preset: Preset = {
             ],
           },
         ]),
+      format: true,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one illustration image prompt from the brief and every bullet below. Describe composition, subjects, mood, lighting, and palette. Single centered scene.`,

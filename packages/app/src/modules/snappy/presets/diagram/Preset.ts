@@ -242,6 +242,7 @@ export const preset: Preset = {
             ],
           },
         ]),
+      format: `landscape`,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `You build image-generation prompts. From the **data** text (required — numbers and labels) and every bullet below, write **one** detailed prompt **for image generation**—a single clear chart image (it will be sent to the image model). Encode chart type, 2D/3D, **palette by name from tabs**, theme, background, legend placement, grid style. Demand legible axis labels and honest numbers—only what the user typed.`,

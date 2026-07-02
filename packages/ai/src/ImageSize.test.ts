@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { ImageSize } from "./ImageSize";
 
-const { apiBody, request } = ImageSize;
+const { apiBody, orientation, request } = ImageSize;
 
 describe(`request`, () => {
   it(`passes size through for gpt models`, () => {
@@ -31,6 +31,24 @@ describe(`request`, () => {
 
   it(`ignores partial flux dimensions`, () => {
     expect(request(`flux`, { width: 1024 })).toStrictEqual({});
+  });
+});
+
+describe(`orientation`, () => {
+  const sizes = [`1024x1024`, `1024x1536`, `1536x1024`] as const;
+
+  it(`picks the matching size for each orientation`, () => {
+    expect(orientation(sizes, `square`)).toBe(`1024x1024`);
+    expect(orientation(sizes, `portrait`)).toBe(`1024x1536`);
+    expect(orientation(sizes, `landscape`)).toBe(`1536x1024`);
+  });
+
+  it(`returns undefined for an unknown orientation`, () => {
+    expect(orientation(sizes, `centered`)).toBeUndefined();
+  });
+
+  it(`returns undefined when the model has no matching size`, () => {
+    expect(orientation([`1024x1024`], `portrait`)).toBeUndefined();
   });
 });
 

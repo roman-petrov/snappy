@@ -31,7 +31,7 @@ export const PublishImageTool: SnappyToolFactory = ({
       isStopped()
         ? ``
         : ToolContext.publishImage({
-            feed,
+            generate: feed.generateImage,
             input: { locale, model, prompt, ...ImageSize.request(model.imageConfigKind, fields) },
             isStopped,
             media,

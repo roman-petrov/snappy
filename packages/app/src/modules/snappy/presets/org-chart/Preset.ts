@@ -82,6 +82,7 @@ export const preset: Preset = {
             ],
           },
         ]),
+      format: `landscape`,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one org-chart image prompt from the structure description and every bullet below. Boxes, names/roles, and clear reporting lines.`,

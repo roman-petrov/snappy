@@ -15,6 +15,7 @@ import { Bilingual, type Locale } from "@snappy/intl";
 
 export type StaticAgentMetaCreateInput<TLocalization extends Localization> = {
   i18n: (key: keyof TLocalization) => string;
+  locale: Locale;
 };
 
 export type StaticAgentMetaPayload<TFields extends readonly StaticFormField[]> = {
@@ -51,7 +52,7 @@ export const StaticAgent =
       return value === undefined ? `` : Bilingual.pick(locale, value);
     };
 
-    const { plan, prompt, ...meta } = create({ i18n });
+    const { plan, prompt, ...meta } = create({ i18n, locale });
     const agentMeta = { ...meta, title: plan.title };
 
     return {

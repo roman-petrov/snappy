@@ -153,34 +153,6 @@ export const preset: Preset = {
             ],
           },
           {
-            default: `portrait`,
-            id: `layout`,
-            kind: `single_choice`,
-            label: { emoji: `📐`, text: i18n(`ui.field.layout.label`) },
-            options: [
-              {
-                label: { emoji: `📄`, text: i18n(`ui.field.layout.option.portrait.label`) },
-                prompt: i18n(`ui.field.layout.option.portrait.prompt`),
-                value: `portrait`,
-              },
-              {
-                label: { emoji: `🖼️`, text: i18n(`ui.field.layout.option.landscape.label`) },
-                prompt: i18n(`ui.field.layout.option.landscape.prompt`),
-                value: `landscape`,
-              },
-              {
-                label: { emoji: `⬜`, text: i18n(`ui.field.layout.option.centered.label`) },
-                prompt: i18n(`ui.field.layout.option.centered.prompt`),
-                value: `centered`,
-              },
-              {
-                label: { emoji: `🖼️`, text: i18n(`ui.field.layout.option.fullbleed.label`) },
-                prompt: i18n(`ui.field.layout.option.fullbleed.prompt`),
-                value: `fullbleed`,
-              },
-            ],
-          },
-          {
             default: `illustration`,
             id: `style`,
             kind: `single_choice`,
@@ -267,6 +239,7 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.extra.prompt`),
           },
         ]),
+      format: `portrait`,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `You build image-generation prompts. From every bullet below, write **one** detailed prompt **for image generation**: a **greeting-card front illustration** (not a photo of a printed card unless asked). It will be sent to the image model. Apply: occasion, mood, layout, art style, **palette from tabs**, decoration level, and text-on-card rule. Describe composition, focal motif, and border.`,
@@ -293,27 +266,6 @@ export const preset: Preset = {
         "ui.field.extra.prompt": [
           `Optional motif or symbol to weave in (one line):`,
           `Необязательный мотив или символ (одна строка):`,
-        ],
-        "ui.field.layout.label": [`Layout`, `Формат`],
-        "ui.field.layout.option.centered.label": [`Centered icon`, `Центр`],
-        "ui.field.layout.option.centered.prompt": [
-          `Strong centered focal illustration with even margins.`,
-          `Сильный центр, ровные поля.`,
-        ],
-        "ui.field.layout.option.fullbleed.label": [`Full bleed`, `В край`],
-        "ui.field.layout.option.fullbleed.prompt": [
-          `Full-bleed art edge to edge; motif extends to borders.`,
-          `В край: мотив до краёв.`,
-        ],
-        "ui.field.layout.option.landscape.label": [`Landscape`, `Альбомная`],
-        "ui.field.layout.option.landscape.prompt": [
-          `Horizontal greeting card composition.`,
-          `Горизонтальная композиция открытки.`,
-        ],
-        "ui.field.layout.option.portrait.label": [`Portrait`, `Книжная`],
-        "ui.field.layout.option.portrait.prompt": [
-          `Vertical greeting card composition.`,
-          `Вертикальная композиция открытки.`,
         ],
         "ui.field.mood.label": [`Mood`, `Настроение`],
         "ui.field.mood.option.calm.label": [`Calm`, `Спокойное`],

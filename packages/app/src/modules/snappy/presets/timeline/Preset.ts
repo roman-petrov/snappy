@@ -25,24 +25,6 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.events.prompt`),
           },
           {
-            default: `horizontal`,
-            id: `orientation`,
-            kind: `single_choice`,
-            label: { emoji: `↔️`, text: i18n(`ui.field.orientation.label`) },
-            options: [
-              {
-                label: { emoji: `↔️`, text: i18n(`ui.field.orientation.option.horizontal.label`) },
-                prompt: i18n(`ui.field.orientation.option.horizontal.prompt`),
-                value: `horizontal`,
-              },
-              {
-                label: { emoji: `↕️`, text: i18n(`ui.field.orientation.option.vertical.label`) },
-                prompt: i18n(`ui.field.orientation.option.vertical.prompt`),
-                value: `vertical`,
-              },
-            ],
-          },
-          {
             default: `modern`,
             id: `visualStyle`,
             kind: `single_choice`,
@@ -84,6 +66,7 @@ export const preset: Preset = {
             ],
           },
         ]),
+      format: `landscape`,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `Create one timeline infographic image prompt from the events list and every bullet below. Clear dates, milestones, and flow.`,
@@ -108,11 +91,6 @@ export const preset: Preset = {
           `Янв: запуск; Мар: v2; Июн: расширение…`,
         ],
         "ui.field.events.prompt": [`Events:`, `События:`],
-        "ui.field.orientation.label": [`Orientation`, `Ориентация`],
-        "ui.field.orientation.option.horizontal.label": [`Horizontal`, `Горизонтальная`],
-        "ui.field.orientation.option.horizontal.prompt": [`Left-to-right timeline.`, `Таймлайн слева направо.`],
-        "ui.field.orientation.option.vertical.label": [`Vertical`, `Вертикальная`],
-        "ui.field.orientation.option.vertical.prompt": [`Top-to-bottom timeline.`, `Таймлайн сверху вниз.`],
         "ui.field.visualStyle.label": [`Style`, `Стиль`],
         "ui.field.visualStyle.option.modern.label": [`Modern`, `Современный`],
         "ui.field.visualStyle.option.modern.prompt": [
