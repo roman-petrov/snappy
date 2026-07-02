@@ -49,6 +49,8 @@ const analysisProcess = (withSkillCatalog: boolean) =>
     questionStrategy,
   ].join(`\n`);
 
+const language = (locale: Locale) => Bilingual.pick(locale, languagePolicy);
+
 const prompt = (locale: Locale, withSkillCatalog = true): StructuredPrompt => [
   [`language_policy`, Bilingual.pick(locale, languagePolicy)],
   [`reasoning_language`, Bilingual.pick(locale, reasoningLanguage)],
@@ -82,4 +84,4 @@ Strongly prefer emoji and use GitHub-Flavored Markdown for emphasis — **bold**
   [`closing`, `When the task is fully handled, close with a short note and avoid opening unnecessary new questions.`],
 ];
 
-export const System = { prompt } as const;
+export const System = { language, prompt } as const;

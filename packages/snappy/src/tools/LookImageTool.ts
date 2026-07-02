@@ -5,12 +5,12 @@ import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, media }) => {
-  if (config.models.chat.capabilities.input.includes(`image`)) {
-    return undefined;
-  }
+import { System } from "../System";
 
-  return AgentTool({
+export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, locale, media }) =>
+  config.models.chat.capabilities.input.includes(`image`)
+    ? undefined
+    : AgentTool({
     description: [
       [
         `when`,
@@ -34,7 +34,11 @@ export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, medi
         };
       }
 
-      const session = AiVision.completions(config.models.vision, { prompt, url });
+      const session = AiVision.completions(config.models.vision, {
+        prompt,
+        system: System.language(locale),
+        url,
+      });
       await feed.appendChatStream(session.chatText(isStopped));
       if (isStopped()) {
         return ``;
@@ -47,4 +51,3 @@ export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, medi
       prompt: z.string().min(1).describe(`What to inspect or answer about the image.`),
     }),
   });
-};
