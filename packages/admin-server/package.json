@@ -9,7 +9,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
     "@snappy/server-module": "workspace:*",
-    "fastify": "^5.8.5",
+    "fastify": "^5.9.0",
     "zod": "^4.4.3"
   }
 }

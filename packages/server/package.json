@@ -16,7 +16,7 @@
     "@snappy/server-module": "workspace:*",
     "@snappy/site-server": "workspace:*",
     "@snappy/ui-core": "workspace:*",
-    "fastify": "^5.8.5"
+    "fastify": "^5.9.0"
   },
   "devDependencies": {
     "tsdown": "^0.22.3"
