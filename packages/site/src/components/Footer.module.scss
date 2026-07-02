@@ -1,0 +1,37 @@
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/color";
+@use "../scss/layout";
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: space.lg();
+  align-items: center;
+  padding-block: space.xl();
+  border-top: 1px solid color.outline();
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  gap: space.lg();
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.sm() space.lg();
+  align-items: center;
+  justify-content: center;
+}
+
+.tagline {
+  @include layout.muted;
+
+  text-align: center;
+}
+
+.rights {
+  @include layout.muted(0.6);
+}

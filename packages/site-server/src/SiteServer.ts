@@ -9,7 +9,7 @@ import { MimeType } from "@snappy/core";
 import { File } from "@snappy/node";
 import { join } from "node:path";
 
-import { AssetLinks, Ssr } from "./core";
+import { AssetLinks, Seo, Ssr } from "./core";
 
 export const SiteServer: ServerModule = distDir => {
   const distName = `site`;
@@ -36,6 +36,16 @@ export const SiteServer: ServerModule = distDir => {
 
       app.get(`/favicon.svg`, async (_request, reply) => {
         await reply.sendFile(`favicon.svg`, siteRoot);
+      });
+
+      app.get(`/robots.txt`, async (_request, reply) => {
+        reply.type(MimeType.textPlain);
+        await reply.send(Seo.robots());
+      });
+
+      app.get(`/sitemap.xml`, async (_request, reply) => {
+        reply.type(`application/xml`);
+        await reply.send(Seo.sitemap());
       });
 
       if (ConfigValues.production()) {

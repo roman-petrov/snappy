@@ -1,9 +1,0 @@
-@use "pkg:@snappy/theme/tokens/space";
-
-.pill {
-  display: flex;
-  flex-wrap: wrap;
-  gap: space.xs() space.sm();
-  align-items: center;
-  padding: space.sm() space.md();
-}

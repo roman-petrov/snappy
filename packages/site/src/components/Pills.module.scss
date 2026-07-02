@@ -1,0 +1,23 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "../scss/layout";
+
+.pills {
+  @include layout.reset-list;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.sm();
+}
+
+.pill {
+  @include primitives.inline-row;
+
+  gap: space.sm();
+  padding: space.sm() space.md();
+  background: color.surface();
+  border: 1px solid color.outline();
+  border-radius: radius.lg();
+}

@@ -1,12 +1,12 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
-.main {
-  padding: 0 space.lg() space.xl();
+.panel {
+  padding: space.xl();
 }
 
 @include mobile {
-  .main {
-    padding-inline: space.md();
+  .panel {
+    padding: space.lg();
   }
 }

@@ -1,0 +1,28 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "../scss/layout";
+
+.list {
+  @include layout.grid;
+  @include layout.reset-list;
+}
+
+.item {
+  @include layout.icon-row;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+}
+
+.desc {
+  @include layout.muted(0.75);
+}
+
+@include mobile {
+  .list {
+    grid-template-columns: 1fr;
+  }
+}

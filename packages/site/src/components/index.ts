@@ -1,25 +1,35 @@
-export * from "./Block";
+export * from "./Capabilities";
+
+export * from "./Compare";
+
+export * from "./Concept";
 
 export * from "./CtaBlock";
 
-export * from "./ExampleBlock";
+export * from "./FeatureList";
 
-export * from "./Examples";
-
-export * from "./Faq";
-
-export * from "./Features";
+export * from "./Footer";
 
 export * from "./Hero";
 
+export * from "./IconBadge";
+
 export * from "./Landing";
 
-export * from "./Pill";
+export * from "./Modes";
+
+export * from "./Pills";
+
+export * from "./Presets";
+
+export * from "./PromoBlock";
 
 export * from "./Section";
 
 export * from "./Steps";
 
-export * from "./StylesSection";
+export * from "./Tile";
 
 export * from "./Who";
+
+export * from "./Why";

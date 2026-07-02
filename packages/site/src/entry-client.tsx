@@ -4,5 +4,6 @@ import { startSite } from "@snappy/ui";
 
 import { Landing } from "./components";
 import { SiteHeader } from "./components/SiteHeader";
+import "./scss/scroll.scss";
 
 startSite({ children: <Landing />, header: <SiteHeader /> });

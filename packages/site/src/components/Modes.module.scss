@@ -1,0 +1,14 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: space.lg();
+}
+
+@include mobile {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

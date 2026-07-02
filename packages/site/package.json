@@ -8,6 +8,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/theme": "workspace:*",
@@ -18,6 +19,8 @@
   },
   "devDependencies": {
     "@snappy/do": "workspace:*",
-    "@types/react": "^19.2.17"
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^19.2.17",
+    "vitest": "^4.1.9"
   }
 }

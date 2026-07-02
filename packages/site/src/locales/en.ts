@@ -1,122 +1,171 @@
 /* eslint-disable unicorn/filename-case */
+/* cspell:disable */
 export const en = {
-  cta: { button: `Open web app`, lead: `Sign in and process your first text in a minute.`, title: `💬 Try Snappy` },
-  examples: {
-    after: `After`,
-    before: `Before`,
-    friendlyStyle: `Friendly style + emoji`,
-    friendlyStyleAfter: `Hey everyone! 👋 We're moving the seminar to <strong>3 PM</strong> — giving a heads-up so you can make it. See you there! ✨`,
-    friendlyStyleBefore: `Seminar rescheduled to 3 PM. Notifying all participants.`,
-    lead: `Results include HTML formatting and emoji — same as shown below.`,
-    readability: `Readability and structure`,
-    readabilityAfter: `City delivery — <strong>within 2 hours</strong> 🚚<br><br>• Orders over 1000 ₽<br>•<em>10% discount</em> for new customers 🎁`,
-    readabilityBefore: `We provide city delivery within 2 hours for orders over 1000 rubles and we offer a 10% discount for new customers.`,
-    title: `📝 Examples: before → after`,
+  capabilities: {
+    audio: {
+      desc: `Transcribes a recording, pulls out the key points and turns the conversation into a list of tasks.`,
+      title: `Audio and meetings`,
+    },
+    images: {
+      desc: `Logos, icons, illustrations and infographics from a short description — in one style and the format you need.`,
+      title: `Images and graphics`,
+    },
+    lead: `One assistant instead of a dozen services: it draws images, edits and reads photos, writes text, transcribes audio and helps with plans — all in one window.`,
+    photo: {
+      desc: `Removes the background and clutter, restores old shots and boosts quality in a couple of clicks.`,
+      title: `Photo editing`,
+    },
+    plan: {
+      desc: `Breaks a goal into steps, builds a checklist, runs a brainstorm and helps you choose a solution.`,
+      title: `Plans and ideas`,
+    },
+    recognize: {
+      desc: `Extracts text and data from a photo: receipt, document, notes, sign or table.`,
+      title: `Recognition`,
+    },
+    text: {
+      desc: `Emails, posts, product descriptions and CVs — right in the tone you need and without fluff.`,
+      title: `Text and communication`,
+    },
+    title: `What Snappy can do`,
   },
-  faq: {
-    difference: {
-      a: `A focused web UI and Android app: pick an action and get results with formatting and emoji for posts and ads.`,
-      q: `How is Snappy different from other editors?`,
+  compare: {
+    lead: `What used to take a day and several services, Snappy does in one window.`,
+    new: {
+      four: `A finished result you can use right away.`,
+      one: `One window for text, photos, graphics, audio and plans.`,
+      three: `Plain words instead of prompts — the assistant clarifies.`,
+      title: `With Snappy`,
+      two: `Do it all yourself — without contractors or extra costs.`,
     },
-    free: {
-      a: `Yes. Basic use is free. Some features may be limited or extended by subscription — see your account for current terms.`,
-      q: `Is Snappy free?`,
+    old: {
+      four: `Drafts you have to keep polishing.`,
+      one: `Separate services and subscriptions for each task.`,
+      three: `Complex prompts and settings for every tool.`,
+      title: `The usual way`,
+      two: `You need a designer, copywriter or editor.`,
     },
-    languages: {
-      a: `Snappy is focused on Russian: editing, shortening and style changes follow Russian spelling and norms. Some actions may support other languages — check in the app.`,
-      q: `What languages does Snappy support?`,
-    },
-    lead: `Short answers to the most common questions about Snappy.`,
-    length: {
-      a: `Yes. The service and the model have limits. Very long texts may need to be split. Exact limits are shown in your account.`,
-      q: `Is there a text length limit?`,
-    },
-    privacy: {
-      a: `Texts are processed to produce results and are not used to train models. Details are in the site privacy policy.`,
-      q: `Are my texts stored?`,
-    },
-    registration: {
-      a: `Yes: sign up with email in the web app so you get an account and request history.`,
-      q: `Do I need to register?`,
-    },
-    title: `❓ FAQ`,
+    title: `Snappy makes it simpler`,
   },
-  features: {
-    emoji: {
-      desc: `Snappy returns HTML: bold, italic, monospace and fitting emoji. Easy to paste into posts and messengers.`,
-      title: `Emoji and formatting`,
-    },
-    expand: {
-      desc: `Add detail, examples and explanations. Turn a draft into a full text without losing style.`,
-      title: `Expand`,
-    },
-    lead: `One tool for edits, shortening, expanding and changing tone. Ideal for posts, emails, ads and any text where accuracy and tone matter.`,
-    readability: {
-      desc: `Short sentences, clear paragraphs, lists. Simplify complex wording without losing meaning.`,
-      title: `Readability`,
-    },
-    shorten: {
-      desc: `Cut by 40–50% while keeping main points. Removes filler — text becomes concise.`,
-      title: `Shorten`,
-    },
-    styles: { desc: `One draft — different tones: business, friendly, neutral, selling or humorous.`, title: `Styles` },
-    title: `🛠️ What Snappy can do`,
+  concept: {
+    hintText: `No prompt engineering needed: if there isn't enough detail, the assistant asks and offers options — you just pick the best one.`,
+    hintTitle: `It asks instead of guessing`,
+    lead: `No complex prompts or settings. Describe the goal in plain words — Snappy figures out what's needed and takes the task to a finished result.`,
+    step1: `Describe the task in your own words — just like to a colleague.`,
+    step2: `Snappy asks a couple of clarifying questions to understand the details and context.`,
+    step3: `Get a finished result you can send, publish or download right away.`,
+    title: `How it works`,
   },
-  footer: { appLink: `Web app`, tagline: `Smart text processing with AI.` },
+  cta: {
+    button: `Get started`,
+    lead: `Describe your first task — and get a finished result in a couple of minutes. Signing up takes a minute.`,
+    note: `Sign in with email — history and results are saved`,
+    title: `Try Snappy`,
+  },
+  footer: {
+    android: `Android`,
+    app: `Web app`,
+    rights: `© Snappy`,
+    tagline: `A universal AI assistant for any task: images, text, photo and audio work, plans and ideas.`,
+  },
   hero: {
-    androidApp: `Download Android app`,
-    cta: `Open web app`,
-    lead: `Snappy is an AI text assistant in the browser and on Android. Paste text, pick an action — get a polished result in seconds.`,
-    title: `✨ Text as you need — one tap`,
+    android: `Download for Android`,
+    cta: `Get started`,
+    lead: `Describe the task in plain words — Snappy clarifies the details and returns a finished result. Images and graphics, photo editing and recognition, text, audio and plans — in one place, without a dozen different services.`,
+    note: `Sign in with email — sign up in a minute`,
+    title: `Your AI assistant for any task`,
   },
   meta: {
-    description: `Fix errors, shorten and change the tone of text in seconds. Snappy is an AI editor for posts, emails and ads.`,
-    keywords: `text editor, fix errors, shorten text, change text style, AI for text, text editing`,
-    title: `Snappy — AI for text: edit, shorten, change style in seconds`,
+    description: `A universal AI assistant in Russian: create a logo and icons, a social avatar, interior design from a photo, a greeting card, text improvement, background removal and photo recognition. Describe the task — get a finished result. Web and Android.`,
+    keywords: `AI assistant, neural network online, create logo, icon generator, social avatar, interior design from photo, greeting card, improve text, remove background, recognize text from photo, photo restoration, meeting notes, AI in Russian`,
+    title: `Snappy — AI assistant: logos, icons, avatars, interior, text`,
+  },
+  modes: {
+    chat: {
+      desc: `Describe the task in your own words and refine the result in a dialogue: ask to redo, extend or change the style until it's exactly right.`,
+      title: `Free chat`,
+    },
+    form: {
+      desc: `Answer a few guiding questions — Snappy assembles the task from them and delivers a finished result without extra back-and-forth.`,
+      title: `Step-by-step form`,
+    },
+    lead: `Work the way that suits you best: have a free dialogue or go through a short form with prompts.`,
+    title: `Two ways to work`,
   },
   nav: {
-    cabinet: `Personal account`,
-    examples: `Examples`,
-    faq: `FAQ`,
-    features: `Features`,
-    start: `How to start`,
+    can: `Features`,
+    close: `Close menu`,
+    compare: `Comparison`,
+    cta: `Sign in`,
+    how: `How it works`,
+    menu: `Menu`,
+    tasks: `Tasks`,
     who: `For whom`,
   },
-  start: {
-    lead: `Good for social media, emails, ads and any task where speed and text quality matter. Faster and simpler than manual editing or moving text between services.`,
-    step1: `Open the web app via the link below and sign in.`,
-    step2: `Paste any text — a message, post or draft.`,
-    step3: `Choose an action: fix, shorten, expand, change style, etc.`,
-    step4: `Copy the result or keep editing.`,
-    title: `🚀 How to start`,
-  },
-  styles: {
-    business: { hint: `formal and to the point`, name: `💼 Business` },
-    friendly: { hint: `warm and informal`, name: `🤝 Friendly` },
-    humorous: { hint: `light and fitting jokes`, name: `😄 Humorous` },
-    lead: `Pick a tone — Snappy rewrites text in that style in seconds.`,
-    neutral: { hint: `objective and factual`, name: `⚖️ Neutral` },
-    selling: { hint: `benefits and calls to action`, name: `🎯 Selling` },
-    title: `🎭 Ready text styles`,
+  presets: {
+    avatar: `Avatar for social media`,
+    document: `Document scan`,
+    greeting: `Greeting card`,
+    icons: `Icons in one style`,
+    improve: `Improve text`,
+    infographic: `Infographic from data`,
+    interior: `Interior design`,
+    lead: `Common tasks Snappy handles in minutes — from logos and photo editing to meeting notes.`,
+    logo: `Create a logo`,
+    meeting: `Meeting notes from audio`,
+    receipt: `Parse a receipt`,
+    removeBg: `Remove background`,
+    restore: `Restore old photos`,
+    resume: `Resume and cover letter`,
+    title: `Popular tasks`,
   },
   who: {
-    ads: {
-      desc: `Text for classifieds, product cards: cut filler, add structure, adjust style.`,
-      title: `Ads and descriptions`,
+    business: {
+      desc: `Logo, text, social visuals and plans — without contractors or extra costs.`,
+      title: `Small business`,
     },
-    emails: {
-      desc: `Short replies to clients, notices to colleagues, ads — fix tone and errors before you send.`,
-      title: `Emails and chats`,
+    lead: `Snappy covers tasks that used to require a designer, a copywriter or separate services.`,
+    personal: { desc: `Cards, photo editing, trip plans and answers to everyday questions.`, title: `Personal tasks` },
+    sellers: {
+      desc: `Turnkey product cards: clean background, selling descriptions and spec infographics.`,
+      title: `Marketplace sellers`,
     },
-    lead: `For anyone who writes in messengers and social media and wants to spend less time on edits and packaging.`,
     smm: {
-      desc: `Posts, stories, ads — one draft and several tones or lengths without copying to other tools.`,
-      title: `SMM and content managers`,
+      desc: `Posts, cards, covers and content ideas — a steady stream of materials every day.`,
+      title: `Marketing and SMM`,
     },
     study: {
-      desc: `Messages to teachers, CV, cover letters — check spelling and tone without leaving the messenger.`,
-      title: `Study and personal`,
+      desc: `Notes, help with tough problems and tidy formatting of papers and presentations.`,
+      title: `Studies`,
     },
-    title: `👥 For whom Snappy`,
+    title: `For whom`,
+  },
+  why: {
+    ask: {
+      desc: `Clarifying questions help hit the task on the first try and save time on redoing.`,
+      title: `It asks, not guesses`,
+    },
+    cross: {
+      desc: `Works in the browser and on the phone — your task and history are always at hand.`,
+      title: `Web and Android`,
+    },
+    lead: `Why Snappy is faster and simpler than piecing a result together from several separate tools.`,
+    one: {
+      desc: `Text, photos, graphics, audio and plans — in one window, without switching between services and subscriptions.`,
+      title: `One instead of a dozen`,
+    },
+    privacy: {
+      desc: `Your materials are used only to complete the task and are not used to train models.`,
+      title: `Privacy`,
+    },
+    ready: {
+      desc: `Not a raw draft, but material you can send, publish or download right away.`,
+      title: `Finished result`,
+    },
+    ru: {
+      desc: `Understands the context and norms of the Russian language — text sounds lively and natural.`,
+      title: `Russian-native`,
+    },
+    title: `Why Snappy`,
   },
 };

@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 import { AppRouter, type RouteLayerOf } from "@snappy/app-router";
 import { createRoot, hydrateRoot } from "react-dom/client";
 
-import { App, AuthLayout, TabPager, type TabPagerItem } from "./components";
+import { App, AppSite, AuthLayout, TabPager, type TabPagerItem } from "./components";
 import { Language, Theme } from "./core";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
@@ -77,9 +77,7 @@ export const startSite = ({ children, header }: StartSiteInput) => {
   hydrateRoot(
     mountContainer,
     <AppRouter path="/" ssr>
-      <App content header={header}>
-        {children}
-      </App>
+      <AppSite header={header}>{children}</AppSite>
     </AppRouter>,
   );
 };

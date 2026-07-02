@@ -1,12 +1,12 @@
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/space";
+@use "../scss/layout";
 
 .steps {
+  @include layout.reset-list;
+
   display: grid;
   gap: space.md();
-  padding: 0;
-  margin: 0;
-  list-style: none;
 }
 
 .steps li {

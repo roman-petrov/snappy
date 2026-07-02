@@ -1,0 +1,15 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+
+.hint {
+  display: flex;
+  gap: space.md();
+  align-items: flex-start;
+  padding: space.lg();
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+}

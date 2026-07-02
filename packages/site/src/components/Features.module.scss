@@ -1,8 +1,0 @@
-@use "pkg:@snappy/theme/tokens/space";
-@use "../scss/layout";
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(layout.$feature-grid-min-track, 1fr));
-  gap: space.lg();
-}

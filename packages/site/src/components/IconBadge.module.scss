@@ -1,0 +1,10 @@
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.badge {
+  @include primitives.inline-row-center;
+  @include primitives.square(tokens.field-height());
+
+  border-radius: radius.md();
+}

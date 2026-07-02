@@ -1,0 +1,42 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+@use "../scss/layout";
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: space.lg();
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: space.md();
+}
+
+.win {
+  padding: space.lg();
+}
+
+.list {
+  @include layout.reset-list;
+
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+}
+
+.item {
+  @include layout.icon-row(space.sm());
+}
+
+.mute {
+  opacity: 0.4;
+}
+
+@include mobile {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

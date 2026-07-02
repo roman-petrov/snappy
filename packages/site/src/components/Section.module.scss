@@ -2,12 +2,16 @@
 @use "pkg:@snappy/theme/tokens/space";
 
 .section {
-  padding-block: space.xl();
+  display: flex;
+  flex-direction: column;
+  gap: space.lg();
+  padding-block: space.x2xl();
   scroll-margin-top: space.x2xl();
 }
 
 @include mobile {
   .section {
-    padding-block: space.lg();
+    gap: space.md();
+    padding-block: space.xl();
   }
 }

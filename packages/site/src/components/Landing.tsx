@@ -1,26 +1,29 @@
 import { Page } from "@snappy/ui";
 
+import { Capabilities } from "./Capabilities";
+import { Compare } from "./Compare";
+import { Concept } from "./Concept";
 import { CtaBlock } from "./CtaBlock";
-import { Examples } from "./Examples";
-import { Faq } from "./Faq";
-import { Features } from "./Features";
+import { Footer } from "./Footer";
 import { Hero } from "./Hero";
-import styles from "./Landing.module.scss";
-import { Start } from "./Start";
-import { StylesSection } from "./StylesSection";
+import { Modes } from "./Modes";
+import { Presets } from "./Presets";
 import { Who } from "./Who";
+import { Why } from "./Why";
 
 export const Landing = () => (
   <Page>
-    <main className={styles.main} id="main">
+    <main id="main">
       <Hero />
-      <Features />
-      <Examples />
-      <StylesSection />
+      <Concept />
+      <Capabilities />
+      <Presets />
+      <Modes />
       <Who />
-      <Faq />
-      <Start />
+      <Why />
+      <Compare />
       <CtaBlock />
     </main>
+    <Footer />
   </Page>
 );

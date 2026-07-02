@@ -564,6 +564,7 @@
       "name": "@snappy/site",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
         "@snappy/theme": "workspace:*",
@@ -574,7 +575,9 @@
       },
       "devDependencies": {
         "@snappy/do": "workspace:*",
+        "@testing-library/react": "^16.0.0",
         "@types/react": "^19.2.17",
+        "vitest": "^4.1.9",
       },
     },
     "packages/site-server": {
