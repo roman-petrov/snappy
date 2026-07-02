@@ -65,11 +65,11 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
 
   const publishArtifact = (
     entryKey: number,
-    artifact: FeedArtifact,
+    published: FeedArtifact,
     done: PromiseWithResolvers<AgentFeedArtifactResult>,
   ) => {
-    updateArtifactEntry(entryKey, { ...artifact, generationStatus: `done` });
-    done.resolve({ artifactId: artifact.id, content: artifact.type === `image` ? artifact.src : artifact.text });
+    updateArtifactEntry(entryKey, { ...published, generationStatus: `done` });
+    done.resolve({ artifactId: published.id, content: published.type === `image` ? published.src : published.text });
   };
 
   const runArtifact = async (entry: AgentFeedArtifactEntry) => {
@@ -81,16 +81,17 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
     });
   };
 
-  const generateText: AgentFeedRuntime[`generateText`] = async ({ model, prompt }) =>
+  const generateText: AgentFeedRuntime[`generateText`] = async ({ locale, model, prompt }) =>
     runArtifact({
       artifact: { generationPrompt: prompt, generationStatus: `running`, model: model.name, text: ``, type: `text` },
       done: Promise.withResolvers(),
+      locale,
       model,
       type: `artifact`,
       variant: `text`,
     });
 
-  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ edit, model, prompt, size }) =>
+  const generateImage: AgentFeedRuntime[`generateImage`] = async ({ edit, locale, model, prompt, size }) =>
     runArtifact({
       artifact: {
         generationPrompt: prompt,
@@ -102,6 +103,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
         ...(size === undefined ? {} : { size }),
       },
       done: Promise.withResolvers(),
+      locale,
       model,
       type: `artifact`,
       variant: `image`,
@@ -120,11 +122,12 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
   };
 
   const artifactRow = (key: number, entry: AgentFeedArtifactEntry) => {
-    const { artifact, done, model, variant } = entry;
+    const { artifact, done, locale, model, variant } = entry;
 
     const shared = {
-      id: `id` in artifact ? artifact.id : ``,
+      id: artifact.id ?? ``,
       key,
+      locale,
       onError: (_id: string, error: unknown) => failArtifact(key, error, done),
       onPublish: (published: FeedArtifact) => publishArtifact(key, published, done),
       onRemove: () => removeEntry(key),

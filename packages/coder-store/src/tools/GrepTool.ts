@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import { ToolSchema, type WorkspaceAgentTool } from "../core";
@@ -22,13 +23,12 @@ export const GrepTool: WorkspaceAgentTool = workspace =>
           : result.result.files.join(`\n`);
     },
     formatCall: ({ glob, pattern }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Ищу "${pattern}" в ${glob}`
-          : `Нашел "${pattern}" в ${glob}`
-        : status === `running`
-          ? `Searching "${pattern}" in ${glob}`
-          : `Searched "${pattern}" in ${glob}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Searching "${pattern}" in ${glob}`, `Ищу "${pattern}" в ${glob}`],
+        [`Searched "${pattern}" in ${glob}`, `Нашел "${pattern}" в ${glob}`],
+      ),
     inputSchema: z.object({
       caseInsensitive: z.boolean().optional().describe(`Enable case-insensitive search when true.`),
       glob: ToolSchema.glob(workspace.limits.globPatternMaxChars),

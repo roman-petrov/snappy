@@ -2,7 +2,6 @@
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable unicorn/try-complexity */
-import type { Locale } from "@snappy/intl";
 import type {
   AgentAiModels,
   AgentEntry,
@@ -11,6 +10,8 @@ import type {
   StaticFormField,
   StaticFormPlanOf,
 } from "@snappy/snappy";
+
+import { Bilingual, type Locale } from "@snappy/intl";
 
 export type StaticAgentMetaCreateInput<TLocalization extends Localization> = {
   i18n: (key: keyof TLocalization) => string;
@@ -33,7 +34,7 @@ export type StaticAgentRunInput<TFields extends readonly StaticFormField[] = rea
   prompt: string;
 };
 
-type Localization = Record<string, readonly [string, string]>;
+type Localization = Record<string, Bilingual>;
 
 export const StaticAgent =
   <TLocalization extends Localization, const TFields extends readonly StaticFormField[]>(
@@ -47,7 +48,7 @@ export const StaticAgent =
     const i18n = (key: keyof TLocalization) => {
       const value = localization[key];
 
-      return value === undefined ? `` : locale === `ru` ? value[1] : value[0];
+      return value === undefined ? `` : Bilingual.pick(locale, value);
     };
 
     const { plan, prompt, ...meta } = create({ i18n });

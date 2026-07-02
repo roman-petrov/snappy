@@ -1,6 +1,12 @@
-import { FeedStreamCard, type FeedStreamCardContentProps } from "../../../../../components";
+import type { TypeWriterSpeed } from "@snappy/domain";
 
-export type AgentFeedMessageStreamProps = Omit<Extract<FeedStreamCardContentProps, { text?: never }>, `theme`>;
+import { FeedStreamCard } from "../../../../../components";
+
+export type AgentFeedMessageStreamProps = {
+  onComplete?: (text: string) => void;
+  stream: AsyncIterable<string>;
+  typeWriterSpeed?: TypeWriterSpeed;
+};
 
 export const AgentFeedMessageStream = (props: AgentFeedMessageStreamProps) => (
   <FeedStreamCard {...props} theme="chat" />

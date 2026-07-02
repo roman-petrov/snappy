@@ -1,4 +1,4 @@
-import type { AiChatModel } from "@snappy/ai";
+import type { AiChatMessage, AiChatModel } from "@snappy/ai";
 import type { TypeWriterSpeed } from "@snappy/domain";
 
 import type { AiStreamTheme } from "../themes";
@@ -6,13 +6,15 @@ import type { AiStreamTheme } from "../themes";
 import { useAiStreamState } from "./AiStream.state";
 import { AiStreamView } from "./AiStream.view";
 
-export type AiStreamProps = {
+export type AiStreamProps =
+  | (AiStreamPropsBase & { messages: AiChatMessage[]; stream?: never })
+  | (AiStreamPropsBase & { messages?: never; stream: AsyncIterable<string> });
+
+type AiStreamPropsBase = {
   active?: boolean;
   chatModel?: AiChatModel;
   generationKey?: number;
   onComplete?: (text: string) => void;
-  prompt?: string;
-  stream?: AsyncIterable<string>;
   theme: AiStreamTheme;
   typeWriterSpeed?: TypeWriterSpeed;
 };

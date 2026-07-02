@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { VectorSearchRow } from "../core/VectorStore";
@@ -50,13 +51,12 @@ export const SemanticSearch = ({ search }: SemanticSearchConfig) =>
               .join(`\n\n---\n\n`);
     },
     formatCall: ({ query }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Ищу по смыслу: "${query}"`
-          : `Завершил поиск по смыслу: "${query}"`
-        : status === `running`
-          ? `Searching semantic: "${query}"`
-          : `Searched semantic: "${query}"`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Searching semantic: "${query}"`, `Ищу по смыслу: "${query}"`],
+        [`Searched semantic: "${query}"`, `Завершил поиск по смыслу: "${query}"`],
+      ),
     inputSchema: z.object({
       query: z
         .string()

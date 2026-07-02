@@ -4,6 +4,10 @@
 /* eslint-disable functional/no-expression-statements */
 import { Locale } from "./Locale";
 
+export { Bilingual } from "./Bilingual";
+
+export type * from "./Bilingual";
+
 export { Locale } from "./Locale";
 
 export type * from "./Locale";

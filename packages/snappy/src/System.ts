@@ -1,5 +1,16 @@
 import type { StructuredPrompt } from "@snappy/core";
-import type { Locale } from "@snappy/intl";
+
+import { Bilingual, type Locale } from "@snappy/intl";
+
+const languagePolicy = [
+  `IMPORTANT: Always respond in English. Use the same language for every user-visible string, including tool arguments and labels.`,
+  `IMPORTANT: Always respond in Russian. Use the same language for every user-visible string, including tool arguments and labels.`,
+] as const satisfies Bilingual;
+
+const reasoningLanguage = [
+  `CRITICAL (internal reasoning stream): Write every reasoning / chain-of-thought / planning step in English only — the same language as the user. Do not switch to another language in the reasoning channel.`,
+  `CRITICAL (internal reasoning stream): Write every reasoning / chain-of-thought / planning step in Russian only — the same language as the user. Do not switch to English in the reasoning channel; English there is a failure for this product. If you must quote an English identifier or API name, keep the surrounding explanation in Russian.`,
+] as const satisfies Bilingual;
 
 const intakeProtocol = `Intake protocol:
 1) Assume high uncertainty. Ask comprehensive questions about objectives, context, preferences, constraints, and output requirements.
@@ -39,16 +50,8 @@ const analysisProcess = (withSkillCatalog: boolean) =>
   ].join(`\n`);
 
 const prompt = (locale: Locale, withSkillCatalog = true): StructuredPrompt => [
-  [
-    `language_policy`,
-    `IMPORTANT: Always respond in ${locale === `ru` ? `Russian` : `English`}. Use the same language for every user-visible string, including tool arguments and labels.`,
-  ],
-  [
-    `reasoning_language`,
-    locale === `ru`
-      ? `CRITICAL (internal reasoning stream): Write every reasoning / chain-of-thought / planning step in Russian only — the same language as the user. Do not switch to English in the reasoning channel; English there is a failure for this product. If you must quote an English identifier or API name, keep the surrounding explanation in Russian.`
-      : `CRITICAL (internal reasoning stream): Write every reasoning / chain-of-thought / planning step in English only — the same language as the user. Do not switch to another language in the reasoning channel.`,
-  ],
+  [`language_policy`, Bilingual.pick(locale, languagePolicy)],
+  [`reasoning_language`, Bilingual.pick(locale, reasoningLanguage)],
   [
     `role`,
     `You are a universal assistant for open-ended user goals: conversation, analysis, content creation, ideation, planning, rewriting, and decision support. Work only from this chat and stay accurate.`,

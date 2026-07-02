@@ -1,7 +1,7 @@
+import type { Bilingual } from "@snappy/intl";
+
 // cspell:word промпта
 import { AiConstants } from "@snappy/ai";
-
-import type { Bilingual } from "./Bilingual";
 
 const { maxImagePromptLength } = AiConstants;
 const visualNoWatermark = [`End: no watermark.`, `Без водяного знака.`] as const satisfies Bilingual;

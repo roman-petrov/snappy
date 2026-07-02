@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -20,13 +21,12 @@ export const RenameFileTool: WorkspaceAgentTool = workspace =>
         : `Renamed ${input.path} to ${input.newName}.`;
     },
     formatCall: ({ newName, path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Переименовываю: ${path} -> ${newName}`
-          : `Переименовал: ${path} -> ${newName}`
-        : status === `running`
-          ? `Renaming: ${path} -> ${newName}`
-          : `Renamed: ${path} -> ${newName}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Renaming: ${path} -> ${newName}`, `Переименовываю: ${path} -> ${newName}`],
+        [`Renamed: ${path} -> ${newName}`, `Переименовал: ${path} -> ${newName}`],
+      ),
     inputSchema: z.object({
       newName: z.string().min(1).describe(`New name only, without a directory path.`),
       path: z.string().min(1).describe(`Source file or directory path relative to workspace root.`),

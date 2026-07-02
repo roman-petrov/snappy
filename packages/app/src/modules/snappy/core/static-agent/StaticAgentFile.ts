@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import type { Bilingual } from "@snappy/intl";
 import type { StaticFormField } from "@snappy/snappy";
 
 import {
@@ -8,7 +9,7 @@ import {
   type StaticAgentRunInput,
 } from "./StaticAgent";
 
-type Localization = Record<string, readonly [string, string]>;
+type Localization = Record<string, Bilingual>;
 
 export const StaticAgentFile =
   (run: (input: StaticAgentRunInput, file: File) => Promise<unknown>) =>

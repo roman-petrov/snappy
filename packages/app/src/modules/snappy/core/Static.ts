@@ -27,7 +27,7 @@ const mediaFieldKinds = new Set<StaticFormField[`kind`]>([`audio_input`, `image_
 
 const imageEditPrompt = <const TFields extends readonly StaticFormField[]>(input: StaticAgentRunInput<TFields>) =>
   input.plan.fields.some(field => !mediaFieldKinds.has(field.kind))
-    ? StaticAgentPrompt({ answers: input.answers, mainPrompt: input.prompt, plan: input.plan })
+    ? StaticAgentPrompt({ answers: input.answers, locale: input.locale, mainPrompt: input.prompt, plan: input.plan })
     : undefined;
 
 const agentParts = <TStaticLoc extends StaticLoc, const TFields extends readonly StaticFormField[]>(

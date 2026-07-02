@@ -1,4 +1,5 @@
 /* eslint-disable functional/no-expression-statements */
+import type { Bilingual } from "@snappy/intl";
 import type { AgentImageEdit, StaticFormField } from "@snappy/snappy";
 
 import {
@@ -8,7 +9,7 @@ import {
   type StaticAgentRunInput,
 } from "./StaticAgent";
 
-type Localization = Record<string, readonly [string, string]>;
+type Localization = Record<string, Bilingual>;
 
 export const StaticImageEditAgent = <
   TLocalization extends Localization,
@@ -20,10 +21,16 @@ export const StaticImageEditAgent = <
   prompt?: (input: StaticAgentRunInput<TFields>) => string | undefined,
 ) =>
   StaticAgent(localizationFactory, create, async input => {
+    const { feed, isStopped, locale, models } = input;
     const edit = resolve(input);
-    if (edit === undefined || input.isStopped()) {
+    if (edit === undefined || isStopped()) {
       return;
     }
 
-    await input.feed.generateImage({ edit, model: input.models.image, prompt: prompt?.(input) ?? input.prompt });
+    await feed.generateImage({
+      edit,
+      locale,
+      model: models.image,
+      prompt: prompt?.(input) ?? input.prompt,
+    });
   });

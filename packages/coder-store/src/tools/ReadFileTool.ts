@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -18,13 +19,12 @@ export const ReadFileTool: WorkspaceAgentTool = workspace =>
         : result.result;
     },
     formatCall: ({ path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Читаю: ${path}`
-          : `Прочитал: ${path}`
-        : status === `running`
-          ? `Reading: ${path}`
-          : `Read: ${path}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Reading: ${path}`, `Читаю: ${path}`],
+        [`Read: ${path}`, `Прочитал: ${path}`],
+      ),
     inputSchema: z.object({
       maxChars: z
         .number()

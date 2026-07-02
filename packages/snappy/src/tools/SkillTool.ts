@@ -1,7 +1,6 @@
-import type { Locale } from "@snappy/intl";
-
 import { AgentTool } from "@snappy/agent";
 import { _ } from "@snappy/core";
+import { Bilingual, type Locale } from "@snappy/intl";
 import { Skills } from "@snappy/snappy-skills";
 import { z } from "zod";
 
@@ -16,7 +15,7 @@ export const SkillTool: SnappyToolFactory = ({ isStopped }) => {
   const name = (id: string, locale: Locale) => {
     const value = skillById[id]?.meta.name;
 
-    return value === undefined ? id : locale === `ru` ? value.ru : value.en;
+    return value === undefined ? id : Bilingual.named(locale, value);
   };
 
   return AgentTool({
@@ -60,23 +59,21 @@ export const SkillTool: SnappyToolFactory = ({ isStopped }) => {
     },
     formatCall: (input, status, locale) => {
       if (input.mode === `list`) {
-        return locale === `ru`
-          ? status === `running`
-            ? `Открываю каталог навыков`
-            : `Каталог навыков загружен`
-          : status === `running`
-            ? `Opening skills catalog`
-            : `Skills catalog loaded`;
+        return Bilingual.status(
+          locale,
+          status === `running`,
+          [`Opening skills catalog`, `Открываю каталог навыков`],
+          [`Skills catalog loaded`, `Каталог навыков загружен`],
+        );
       }
       const id = input.id ?? ``;
 
-      return locale === `ru`
-        ? status === `running`
-          ? `Загружаю навык: ${name(id, `ru`)}`
-          : `Навык загружен: ${name(id, `ru`)}`
-        : status === `running`
-          ? `Loading skill: ${name(id, `en`)}`
-          : `Skill loaded: ${name(id, `en`)}`;
+      return Bilingual.status(
+        locale,
+        status === `running`,
+        [`Loading skill: ${name(id, `en`)}`, `Загружаю навык: ${name(id, `ru`)}`],
+        [`Skill loaded: ${name(id, `en`)}`, `Навык загружен: ${name(id, `ru`)}`],
+      );
     },
     inputSchema: z.object({
       id: z

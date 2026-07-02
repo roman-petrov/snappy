@@ -1,7 +1,6 @@
-import type { Locale } from "@snappy/intl";
+import type { Bilingual, Locale } from "@snappy/intl";
 import type { AgentImageEdit, SkillId, SnappyToolId, StaticFields, StaticFormField } from "@snappy/snappy";
 
-import type { Bilingual } from "./Bilingual";
 import type { PresetMeta } from "./Preset";
 import type { Prompts } from "./Prompts";
 import type { StaticAgentRunInput } from "./static-agent/StaticAgent";

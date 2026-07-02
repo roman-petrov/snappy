@@ -6,7 +6,7 @@ import { StaticAgentPrompt } from "./StaticAgentPrompt";
 describe(`StaticAgentPrompt`, () => {
   it(`returns only trimmed instruction when form has no fields`, () => {
     expect(
-      StaticAgentPrompt({ answers: {}, mainPrompt: `  Improve this text  `, plan: { fields: [] } }),
+      StaticAgentPrompt({ answers: {}, locale: `en`, mainPrompt: `  Improve this text  `, plan: { fields: [] } }),
     ).toMatchInlineSnapshot(`"Improve this text"`);
   });
 
@@ -14,6 +14,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { emoji: true, points: [`price`, `support`], source: `  We launch next Monday.  `, tone: `friendly` },
+        locale: `en`,
         mainPrompt: `Prepare message`,
         plan: {
           fields: [
@@ -51,6 +52,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { tone: `friendly` },
+        locale: `en`,
         mainPrompt: `Draft customer reply`,
         plan: {
           fields: [
@@ -73,10 +75,11 @@ describe(`StaticAgentPrompt`, () => {
     `);
   });
 
-  it(`falls back to raw single_choice value when option is unknown`, () => {
+  it(`omits single_choice when option is unknown`, () => {
     expect(
       StaticAgentPrompt({
         answers: { tone: `casual` },
+        locale: `en`,
         mainPrompt: `Draft reply`,
         plan: {
           fields: [
@@ -89,17 +92,14 @@ describe(`StaticAgentPrompt`, () => {
           ],
         },
       }),
-    ).toMatchInlineSnapshot(`
-      "Draft reply
-
-      - Tone: casual"
-    `);
+    ).toMatchInlineSnapshot(`"Draft reply"`);
   });
 
   it(`uses custom prompts for selected multiple_choice options`, () => {
     expect(
       StaticAgentPrompt({
         answers: { focus: [`price`, `support`] },
+        locale: `en`,
         mainPrompt: `Prepare proposal summary`,
         plan: {
           fields: [
@@ -127,6 +127,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { focus: [`unknown`, `support`] },
+        locale: `en`,
         mainPrompt: `Prepare proposal summary`,
         plan: {
           fields: [
@@ -153,6 +154,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { emoji: true },
+        locale: `en`,
         mainPrompt: `Write social caption`,
         plan: {
           fields: [
@@ -174,6 +176,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { emoji: false },
+        locale: `en`,
         mainPrompt: `Write social caption`,
         plan: {
           fields: [
@@ -198,6 +201,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { emoji: true },
+        locale: `en`,
         mainPrompt: `Write social caption`,
         plan: {
           fields: [
@@ -216,12 +220,29 @@ describe(`StaticAgentPrompt`, () => {
 
       - Emoji usage: yes"
     `);
+    expect(
+      StaticAgentPrompt({
+        answers: { emoji: false },
+        locale: `ru`,
+        mainPrompt: `Подпись`,
+        plan: {
+          fields: [
+            { id: `emoji`, kind: `binary_choice`, label: { emoji: `🔹`, text: `Эмодзи` }, promptOff: ``, promptOn: `` },
+          ],
+        },
+      }),
+    ).toMatchInlineSnapshot(`
+      "Подпись
+
+      - Эмодзи: нет"
+    `);
   });
 
   it(`keeps escaped quotes in text values`, () => {
     expect(
       StaticAgentPrompt({
         answers: { source: `She said "launch now"` },
+        locale: `en`,
         mainPrompt: `Rewrite in simpler English`,
         plan: { fields: [{ id: `source`, kind: `text_input`, label: { emoji: `🔹`, text: `Source text` } }] },
       }),
@@ -236,6 +257,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { source: `` },
+        locale: `en`,
         mainPrompt: `Rewrite in simpler English`,
         plan: { fields: [{ id: `source`, kind: `text_input`, label: { emoji: `🔹`, text: `Source text` } }] },
       }),
@@ -246,6 +268,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { source: undefined },
+        locale: `en`,
         mainPrompt: `Rewrite in simpler English`,
         plan: { fields: [{ id: `source`, kind: `text_input`, label: { emoji: `🔹`, text: `Source text` } }] },
       }),
@@ -256,6 +279,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: {},
+        locale: `en`,
         mainPrompt: `Draft reply`,
         plan: {
           fields: [
@@ -275,6 +299,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { points: [] },
+        locale: `en`,
         mainPrompt: `Prepare summary`,
         plan: {
           fields: [
@@ -294,6 +319,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: {},
+        locale: `en`,
         mainPrompt: `Write a short Instagram caption`,
         plan: { fields: [{ id: `emoji`, kind: `binary_choice`, label: { emoji: `🔹`, text: `Use emoji` } }] },
       }),
@@ -304,6 +330,7 @@ describe(`StaticAgentPrompt`, () => {
     expect(
       StaticAgentPrompt({
         answers: { tone: `friendly` },
+        locale: `en`,
         plan: {
           fields: [
             {
@@ -333,6 +360,7 @@ describe(`StaticAgentPrompt`, () => {
           source: `  We are launching a new plan next Monday. Keep it clear and short.  `,
           tone: `professional`,
         },
+        locale: `en`,
         mainPrompt: `Create final campaign brief for launch`,
         plan: {
           fields: [

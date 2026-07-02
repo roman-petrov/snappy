@@ -1,5 +1,7 @@
 /* eslint-disable functional/no-expression-statements */
-import { StaticAgentChat } from "./StaticAgentChat";
+import { Bilingual } from "@snappy/intl";
+
+import { AgentChat } from "..";
 import { StaticAgentFile } from "./StaticAgentFile";
 import { StaticAgentPrompt } from "./StaticAgentPrompt";
 
@@ -7,7 +9,7 @@ export const StaticAudioAgent = StaticAgentFile(async (input, file) => {
   const { answers, feed, isStopped, locale, models, plan, prompt } = input;
   const transcribe = Promise.withResolvers<{ label: string }>();
 
-  feed.appendStatus(locale === `ru` ? `Расшифровываю аудиофайл…` : `Transcribing audio file…`, transcribe);
+  feed.appendStatus(Bilingual.pick(locale, [`Transcribing audio file…`, `Расшифровываю аудиофайл…`]), transcribe);
 
   const out = await models.speech.transcribe({ file });
   transcribe.resolve({ label: `` });
@@ -21,9 +23,7 @@ export const StaticAudioAgent = StaticAgentFile(async (input, file) => {
     return;
   }
 
-  const generationPrompt = StaticAgentChat.withPolicy(
-    locale,
-    `${StaticAgentPrompt({ answers, mainPrompt: prompt, plan })}\n\nTranscript:\n${transcript}`,
-  );
-  await feed.generateText({ model: models.chat, prompt: generationPrompt });
+  const brief = StaticAgentPrompt({ answers, locale, mainPrompt: prompt, plan });
+  const generationPrompt = `${brief}\n\n${AgentChat.transcriptSection(locale, transcript)}`;
+  await feed.generateText({ locale, model: models.chat, prompt: generationPrompt });
 });

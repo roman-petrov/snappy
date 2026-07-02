@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import { ToolSchema, type WorkspaceAgentTool } from "../core";
@@ -20,13 +21,12 @@ export const GrepReplaceTool: WorkspaceAgentTool = workspace =>
         : result.result.files.join(`\n`);
     },
     formatCall: ({ glob, oldString }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Заменяю "${oldString}" в ${glob}`
-          : `Заменил "${oldString}" в ${glob}`
-        : status === `running`
-          ? `Replacing "${oldString}" in ${glob}`
-          : `Replaced "${oldString}" in ${glob}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Replacing "${oldString}" in ${glob}`, `Заменяю "${oldString}" в ${glob}`],
+        [`Replaced "${oldString}" in ${glob}`, `Заменил "${oldString}" в ${glob}`],
+      ),
     inputSchema: z.object({
       glob: ToolSchema.glob(workspace.limits.globPatternMaxChars),
       newString: z.string().describe(`Replacement text. Can be empty.`),

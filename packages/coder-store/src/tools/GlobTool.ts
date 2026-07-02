@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import { ToolSchema, type WorkspaceAgentTool } from "../core";
@@ -20,12 +21,11 @@ export const GlobTool: WorkspaceAgentTool = workspace =>
           : result.result;
     },
     formatCall: ({ pattern }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Ищу по glob: ${pattern}`
-          : `Нашел по glob: ${pattern}`
-        : status === `running`
-          ? `Globbing: ${pattern}`
-          : `Globbed: ${pattern}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Globbing: ${pattern}`, `Ищу по glob: ${pattern}`],
+        [`Globbed: ${pattern}`, `Нашел по glob: ${pattern}`],
+      ),
     inputSchema: z.object({ pattern: ToolSchema.glob(workspace.limits.globPatternMaxChars) }),
   });

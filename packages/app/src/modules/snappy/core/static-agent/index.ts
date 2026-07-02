@@ -1,7 +1,5 @@
 export * from "./StaticAgent";
 
-export * from "./StaticAgentChat";
-
 export * from "./StaticAgentPrompt";
 
 export * from "./StaticAudioAgent";

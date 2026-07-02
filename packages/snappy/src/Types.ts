@@ -36,11 +36,12 @@ export type AgentFeedRuntime = {
   ask: AgentAsk;
   generateImage: (input: {
     edit?: AgentImageEdit;
+    locale: Locale;
     model: AiImageModel;
     prompt: string;
     size?: AiImageSize;
   }) => Promise<AgentFeedArtifactResult>;
-  generateText: (input: { model: AiChatModel; prompt: string }) => Promise<AgentFeedArtifactResult>;
+  generateText: (input: { locale: Locale; model: AiChatModel; prompt: string }) => Promise<AgentFeedArtifactResult>;
 };
 
 export type AgentImageEdit = { background?: AiImageBackground; images: File[] };

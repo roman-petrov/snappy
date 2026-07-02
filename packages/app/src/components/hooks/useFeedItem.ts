@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/try-complexity */
 import type { AiChatModel, AiImageModel, AiImageSize } from "@snappy/ai";
+import type { Locale } from "@snappy/intl";
 import type { AgentImageEdit } from "@snappy/snappy";
 import type { MenuAction } from "@snappy/ui";
 
@@ -15,6 +16,7 @@ export type FeedItemBindings = FeedItemNotify & {
   content: string;
   edit?: AgentImageEdit;
   id: string;
+  locale: Locale;
   model: AiChatModel | AiImageModel;
   prompt: string;
   size?: AiImageSize;

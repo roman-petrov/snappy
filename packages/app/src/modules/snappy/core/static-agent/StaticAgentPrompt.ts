@@ -7,6 +7,7 @@ import type {
 } from "@snappy/snappy";
 
 import { _ } from "@snappy/core";
+import { Bilingual, type Locale } from "@snappy/intl";
 
 import { StaticFormValues } from "../StaticFormValues";
 
@@ -14,12 +15,14 @@ type NonTextFieldKind = Exclude<StaticFormFieldKind, `audio_input` | `image_inpu
 
 type StaticAgentPromptInput<TPlan extends StaticFormPlan = StaticFormPlan> = {
   answers: StaticFormAnswersOf<TPlan>;
+  locale: Locale;
   mainPrompt?: string;
   plan: TPlan;
 };
 
 export const StaticAgentPrompt = <TPlan extends StaticFormPlan>({
   answers,
+  locale,
   mainPrompt,
   plan,
 }: StaticAgentPromptInput<TPlan>) => {
@@ -37,7 +40,13 @@ export const StaticAgentPrompt = <TPlan extends StaticFormPlan>({
     switch (field.kind) {
       case `binary_choice`: {
         return _.isBoolean(raw)
-          ? labelLine(field.label.text, promptValue(raw ? field.promptOn : field.promptOff, raw ? `yes` : `no`))
+          ? labelLine(
+              field.label.text,
+              promptValue(
+                raw ? field.promptOn : field.promptOff,
+                Bilingual.binary(locale, raw, [`yes`, `да`], [`no`, `нет`]),
+              ),
+            )
           : undefined;
       }
       case `multiple_choice`: {
@@ -56,10 +65,11 @@ export const StaticAgentPrompt = <TPlan extends StaticFormPlan>({
 
         const selectedOption = StaticFormValues.findOption({ field, value });
 
-        const label =
-          selectedOption === undefined ? value : promptValue(selectedOption.prompt, selectedOption.label.text);
+        if (selectedOption === undefined) {
+          return undefined;
+        }
 
-        return labelLine(field.label.text, label);
+        return labelLine(field.label.text, promptValue(selectedOption.prompt, selectedOption.label.text));
       }
       default: {
         return undefined;

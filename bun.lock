@@ -264,6 +264,7 @@
         "@snappy/ai": "workspace:*",
         "@snappy/coder-chunk": "workspace:*",
         "@snappy/core": "workspace:*",
+        "@snappy/intl": "workspace:*",
         "@snappy/node": "workspace:*",
         "zod": "^4.4.3",
       },
@@ -277,6 +278,7 @@
       "dependencies": {
         "@snappy/agent": "workspace:*",
         "@snappy/core": "workspace:*",
+        "@snappy/intl": "workspace:*",
         "@snappy/node": "workspace:*",
         "zod": "^4.4.3",
       },
@@ -440,6 +442,9 @@
     "packages/intl": {
       "name": "@snappy/intl",
       "version": "0.0.0",
+      "devDependencies": {
+        "vitest": "^4.1.9",
+      },
     },
     "packages/motion": {
       "name": "@snappy/motion",

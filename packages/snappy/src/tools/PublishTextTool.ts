@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
 
-export const PublishTextTool: SnappyToolFactory = ({ config, feed, isStopped }) =>
+export const PublishTextTool: SnappyToolFactory = ({ config, feed, isStopped, locale }) =>
   AgentTool({
     description: [
       [
@@ -20,7 +20,7 @@ export const PublishTextTool: SnappyToolFactory = ({ config, feed, isStopped }) 
       if (isStopped()) {
         return ``;
       }
-      const { content } = await feed.generateText({ model: config.models.chat, prompt });
+      const { content } = await feed.generateText({ locale, model: config.models.chat, prompt });
 
       return isStopped() ? `` : content;
     },

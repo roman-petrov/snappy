@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -18,13 +19,12 @@ export const MoveFileTool: WorkspaceAgentTool = workspace =>
         : `Moved ${input.path} to ${input.directoryPath}.`;
     },
     formatCall: ({ directoryPath, path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Перемещаю: ${path} -> ${directoryPath}`
-          : `Переместил: ${path} -> ${directoryPath}`
-        : status === `running`
-          ? `Moving: ${path} -> ${directoryPath}`
-          : `Moved: ${path} -> ${directoryPath}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Moving: ${path} -> ${directoryPath}`, `Перемещаю: ${path} -> ${directoryPath}`],
+        [`Moved: ${path} -> ${directoryPath}`, `Переместил: ${path} -> ${directoryPath}`],
+      ),
     inputSchema: z.object({
       directoryPath: z.string().min(1).describe(`Target directory path relative to workspace root.`),
       path: z.string().min(1).describe(`Source file or directory path relative to workspace root.`),

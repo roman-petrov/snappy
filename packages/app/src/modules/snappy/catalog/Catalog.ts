@@ -1,12 +1,10 @@
-import type { Locale } from "@snappy/intl";
-
 import { _ } from "@snappy/core";
+import { Bilingual, type Locale } from "@snappy/intl";
 
 import type { Preset, PresetFlowMeta, PresetMeta } from "../core/Preset";
 import type { CatalogCard, CatalogEntry, CatalogFlow } from "./CatalogTypes";
 
 import { AgentGroupId } from "../core/AgentGroupId";
-import { Bilingual } from "../core/Bilingual";
 
 const presetModules = import.meta.glob<{ preset: Preset }>(`../presets/*/Preset.ts`, { eager: true });
 const presetIdIndex = -2;
@@ -18,16 +16,16 @@ const entries = () =>
     .toSorted((left, right) => left.id.localeCompare(right.id));
 
 const at = (meta: PresetMeta, locale: Locale) => ({
-  description: Bilingual.pick(meta.description, locale),
+  description: Bilingual.pick(locale, meta.description),
   emoji: meta.emoji,
   group: meta.group,
-  title: Bilingual.pick(meta.title, locale),
+  title: Bilingual.pick(locale, meta.title),
 });
 
 const flowAt = (meta: PresetFlowMeta, locale: Locale) => ({
-  description: Bilingual.pick(meta.description, locale),
+  description: Bilingual.pick(locale, meta.description),
   icon: meta.icon,
-  title: Bilingual.pick(meta.title, locale),
+  title: Bilingual.pick(locale, meta.title),
 });
 
 const flow = (definition: Preset[`flows`][number], locale: Locale): CatalogFlow => ({

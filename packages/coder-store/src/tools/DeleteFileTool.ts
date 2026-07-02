@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -16,12 +17,11 @@ export const DeleteFileTool: WorkspaceAgentTool = workspace =>
         : `Deleted ${input.path}.`;
     },
     formatCall: ({ path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Удаляю: ${path}`
-          : `Удалил: ${path}`
-        : status === `running`
-          ? `Deleting: ${path}`
-          : `Deleted: ${path}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Deleting: ${path}`, `Удаляю: ${path}`],
+        [`Deleted: ${path}`, `Удалил: ${path}`],
+      ),
     inputSchema: z.object({ path: z.string().min(1).describe(`File or directory path relative to workspace root.`) }),
   });

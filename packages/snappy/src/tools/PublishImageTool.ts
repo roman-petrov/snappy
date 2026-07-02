@@ -6,7 +6,7 @@ import type { SnappyToolFactory } from "../SnappyTypes";
 
 import { ToolContext } from "../ToolContext";
 
-export const PublishImageTool: SnappyToolFactory = ({ config, feed, isStopped, media }) =>
+export const PublishImageTool: SnappyToolFactory = ({ config, feed, isStopped, locale, media }) =>
   AgentTool({
     description: [
       [
@@ -22,7 +22,12 @@ export const PublishImageTool: SnappyToolFactory = ({ config, feed, isStopped, m
     execute: async ({ prompt, size }) =>
       isStopped()
         ? ``
-        : ToolContext.publishImage({ feed, input: { model: config.models.image, prompt, size }, isStopped, media }),
+        : ToolContext.publishImage({
+            feed,
+            input: { locale, model: config.models.image, prompt, size },
+            isStopped,
+            media,
+          }),
     inputSchema: z.object({
       prompt: z
         .string()

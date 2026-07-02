@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -18,13 +19,12 @@ export const WriteFileTool: WorkspaceAgentTool = workspace =>
         : `Wrote ${input.path}.`;
     },
     formatCall: ({ path }, status, locale) =>
-      locale === `ru`
-        ? status === `running`
-          ? `Записываю: ${path}`
-          : `Записал: ${path}`
-        : status === `running`
-          ? `Writing: ${path}`
-          : `Wrote: ${path}`,
+      Bilingual.status(
+        locale,
+        status === `running`,
+        [`Writing: ${path}`, `Записываю: ${path}`],
+        [`Wrote: ${path}`, `Записал: ${path}`],
+      ),
     inputSchema: z.object({
       content: z.string().describe(`Full text content to write into the file.`),
       path: z.string().min(1).describe(`File path relative to workspace root.`),

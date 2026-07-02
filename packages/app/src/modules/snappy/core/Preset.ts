@@ -1,7 +1,7 @@
+import type { Bilingual } from "@snappy/intl";
 import type { ComponentType } from "react";
 
 import type { AgentGroupId } from "./AgentGroupId";
-import type { Bilingual } from "./Bilingual";
 
 export type Preset = { flows: readonly PresetFlow[]; meta: PresetMeta };
 

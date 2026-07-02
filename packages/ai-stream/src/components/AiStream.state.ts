@@ -12,8 +12,8 @@ export const useAiStreamState = ({
   active = false,
   chatModel,
   generationKey = 0,
+  messages: chatMessages,
   onComplete,
-  prompt = ``,
   stream: externalStream,
   theme,
   typeWriterSpeed,
@@ -23,11 +23,11 @@ export const useAiStreamState = ({
   const pumpRef = useRef<Pump | undefined>(undefined);
   const mountedRef = useRef(false);
   const doneRef = useRef(false);
-  const generating = externalStream === undefined && active && chatModel !== undefined && prompt.trim() !== ``;
+  const generating = active && chatModel !== undefined && chatMessages !== undefined && chatMessages.length > 0;
 
   if (generating && (sessionRef.current === undefined || generationRef.current !== generationKey)) {
     generationRef.current = generationKey;
-    const session = chatModel.completions({ prompt });
+    const session = chatModel.completions({ messages: chatMessages });
     sessionRef.current = session;
     pumpRef.current = { buffer: ``, iterable: session.chatText(), networkDone: false, started: false };
   }

@@ -9,6 +9,7 @@
 /* eslint-disable functional/no-expression-statements */
 import { type AiChatMessage, type AiChatStreamSegment, type AiToolCall, AiToolResult } from "@snappy/ai";
 import { _, StructuredPrompt } from "@snappy/core";
+import { Bilingual } from "@snappy/intl";
 
 import type { AgentClient, AgentCreateInput, AgentRun, AgentStopReason } from "./Types";
 
@@ -28,8 +29,10 @@ export const Agent = ({ chatModel, idleAfterSuccess, locale, maxRounds, systemPr
     activeStop();
   };
 
-  const thinkingLabels =
-    locale === `ru` ? { done: `Мысль`, running: `Думаю...` } : { done: `Thought`, running: `Thinking...` };
+  const thinkingLabels = {
+    done: Bilingual.pick(locale, [`Thought`, `Мысль`]),
+    running: Bilingual.pick(locale, [`Thinking...`, `Думаю...`]),
+  };
 
   const toolsByName = _.fromEntries(
     _.entries(tools({ isStopped })).flatMap(([group, groupTools]) =>

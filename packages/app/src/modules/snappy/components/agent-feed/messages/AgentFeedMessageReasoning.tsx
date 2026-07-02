@@ -1,9 +1,6 @@
-import { FeedStreamCard, type FeedStreamCardContentProps } from "../../../../../components";
+import { FeedStreamCard } from "../../../../../components";
 
-export type AgentFeedMessageReasoningProps = Omit<
-  Extract<FeedStreamCardContentProps, { text?: never }>,
-  `theme` | `typeWriterSpeed`
->;
+export type AgentFeedMessageReasoningProps = { onComplete?: (text: string) => void; stream: AsyncIterable<string> };
 
 export const AgentFeedMessageReasoning = (props: AgentFeedMessageReasoningProps) => (
   <FeedStreamCard {...props} theme="reasoning" />

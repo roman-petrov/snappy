@@ -1,6 +1,6 @@
 import { useRouterGo } from "@snappy/app-router";
 import { _ } from "@snappy/core";
-import { useAsyncEffect } from "@snappy/ui";
+import { Language, useAsyncEffect } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
 import { $data } from "../../../data";
@@ -63,25 +63,21 @@ export const useFeedState = () => {
     [go],
   );
 
-  const cards = useMemo(
-    () =>
-      aiConfig === undefined
-        ? undefined
-        : items.map(item => {
-            const bindings = { id: item.id, onError, prompt: item.generationPrompt };
+  const cards = useMemo(() => {
+    if (aiConfig === undefined) {
+      return undefined;
+    }
 
-            return item.type === `image`
-              ? { ...bindings, content: item.src, model: aiConfig.models.image, type: `image` as const }
-              : {
-                  ...bindings,
-                  content: item.text,
-                  model: aiConfig.models.chat,
-                  type: `text` as const,
-                  typeWriterSpeed,
-                };
-          }),
-    [aiConfig, items, onError, typeWriterSpeed],
-  );
+    const locale = Language.locale();
+
+    return items.map(item => {
+      const bindings = { id: item.id, locale, onError, prompt: item.generationPrompt };
+
+      return item.type === `image`
+        ? { ...bindings, content: item.src, model: aiConfig.models.image, type: `image` as const }
+        : { ...bindings, content: item.text, model: aiConfig.models.chat, type: `text` as const, typeWriterSpeed };
+    });
+  }, [aiConfig, items, onError, typeWriterSpeed]);
 
   return { cards, sentinelRef };
 };

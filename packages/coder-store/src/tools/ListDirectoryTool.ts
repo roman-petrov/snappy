@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { WorkspaceAgentTool } from "../core";
@@ -18,13 +19,12 @@ export const ListDirectoryTool: WorkspaceAgentTool = workspace =>
     formatCall: ({ path }, status, locale) => {
       const value = path ?? `.`;
 
-      return locale === `ru`
-        ? status === `running`
-          ? `Читаю список: ${value}`
-          : `Прочитал список: ${value}`
-        : status === `running`
-          ? `Listing: ${value}`
-          : `Listed: ${value}`;
+      return Bilingual.status(
+        locale,
+        status === `running`,
+        [`Listing: ${value}`, `Читаю список: ${value}`],
+        [`Listed: ${value}`, `Прочитал список: ${value}`],
+      );
     },
     inputSchema: z.object({
       path: z

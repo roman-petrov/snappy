@@ -1,10 +1,9 @@
+import { Bilingual } from "@snappy/intl";
 import { Language } from "@snappy/ui";
 import { useMemo } from "react";
 
 import type { AgentChatProps } from "./agent-feed/AgentChat";
 import type { StaticFlowPageProps } from "./StaticFlowPage";
-
-import { Bilingual } from "../core/Bilingual";
 
 export const useStaticFlowPageState = ({ agent, meta, presetId }: StaticFlowPageProps) => {
   const locale = Language.locale();
@@ -19,7 +18,7 @@ export const useStaticFlowPageState = ({ agent, meta, presetId }: StaticFlowPage
     session: [presetId, locale],
   };
 
-  const title = { emoji: meta.emoji, title: Bilingual.pick(meta.title, locale) };
+  const title = { emoji: meta.emoji, title: Bilingual.pick(locale, meta.title) };
 
   return { chatProps, title };
 };

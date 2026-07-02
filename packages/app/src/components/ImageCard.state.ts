@@ -6,11 +6,12 @@ import { useAsyncEffect } from "@snappy/ui";
 
 import type { ImageCardProps } from "./ImageCard";
 
+import { AgentChat } from "../modules/snappy/core";
 import { useFeedItem } from "./hooks";
 import { Menu } from "./Menu";
 
 export const useImageCardState = (props: ImageCardProps) => {
-  const { content, edit, model, prompt, size } = props;
+  const { content, edit, locale, model, prompt, size } = props;
 
   const menu =
     content.trim() === ``
@@ -30,14 +31,15 @@ export const useImageCardState = (props: ImageCardProps) => {
 
     try {
       const imageSize = size ?? `1024x1024`;
+      const imagePrompt = AgentChat.prefixed(locale, prompt);
 
       const result =
         edit === undefined
-          ? await model.generate({ prompt, quality: AiConstants.defaults.imageQuality, size: imageSize })
+          ? await model.generate({ prompt: imagePrompt, quality: AiConstants.defaults.imageQuality, size: imageSize })
           : await model.edit({
               background: edit.background,
               images: edit.images,
-              prompt,
+              prompt: imagePrompt,
               quality: AiConstants.defaults.imageQuality,
               size: imageSize,
             });
@@ -45,7 +47,7 @@ export const useImageCardState = (props: ImageCardProps) => {
     } catch (error) {
       fail(error);
     }
-  }, [complete, edit, fail, generation, model, prompt, running, size]);
+  }, [complete, edit, fail, generation, locale, model, prompt, running, size]);
 
   return { actions, busy, pending, remove, running, src: content };
 };

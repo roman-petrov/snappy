@@ -1,6 +1,6 @@
-import { AiConstants } from "@snappy/ai";
+import type { Bilingual } from "@snappy/intl";
 
-import type { Bilingual } from "./Bilingual";
+import { AiConstants } from "@snappy/ai";
 
 const { maxSpeechFileMegaBytes } = AiConstants;
 

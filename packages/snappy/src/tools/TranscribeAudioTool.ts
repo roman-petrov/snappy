@@ -1,4 +1,5 @@
 import { AgentTool } from "@snappy/agent";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
@@ -27,7 +28,7 @@ export const TranscribeAudioTool: SnappyToolFactory = ({ config, files, isStoppe
 
       return isStopped() ? `` : out.text;
     },
-    formatCall: (_input, status, loc) =>
-      status === `running` ? (loc === `ru` ? `Расшифровываю аудиофайл…` : `Transcribing audio file…`) : ``,
+    formatCall: (_input, status, locale) =>
+      Bilingual.running(locale, status === `running`, [`Transcribing audio file…`, `Расшифровываю аудиофайл…`]),
     inputSchema: z.object({ file: z.string().min(1).describe(`Field id from ask audio_input answer.`) }),
   });

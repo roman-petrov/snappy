@@ -1,4 +1,5 @@
 import type { AiChatModel, AiImageModel } from "@snappy/ai";
+import type { Locale } from "@snappy/intl";
 import type { AgentFeedArtifactResult, StaticFormAnswers, StaticFormPlan } from "@snappy/snappy";
 
 import type { AgentArtifact } from "../Types";
@@ -6,12 +7,14 @@ import type { AgentArtifact } from "../Types";
 export type AgentFeedArtifactEntry =
   | (AgentFeedEntryDone<AgentFeedArtifactResult> & {
       artifact: AgentImageArtifact;
+      locale: Locale;
       model: AiImageModel;
       type: `artifact`;
       variant: `image`;
     })
   | (AgentFeedEntryDone<AgentFeedArtifactResult> & {
       artifact: AgentTextArtifact;
+      locale: Locale;
       model: AiChatModel;
       type: `artifact`;
       variant: `text`;

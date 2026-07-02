@@ -6,7 +6,7 @@ import type { SnappyToolFactory } from "../SnappyTypes";
 
 import { ToolContext } from "../ToolContext";
 
-export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStopped, media }) =>
+export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStopped, locale, media }) =>
   AgentTool({
     description: [
       [
@@ -34,7 +34,7 @@ export const EditImageTool: SnappyToolFactory = ({ config, feed, files, isStoppe
         ? { error: `No image files for fields: ${fieldIds.join(`, `)}. Run ask first.` }
         : ToolContext.publishImage({
             feed,
-            input: { edit: { background, images }, model: config.models.image, prompt, size },
+            input: { edit: { background, images }, locale, model: config.models.image, prompt, size },
             isStopped,
             media,
           });
