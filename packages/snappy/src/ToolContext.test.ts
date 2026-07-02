@@ -3,7 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 import { ToolContext } from "./ToolContext";
 
-const { publishImage } = ToolContext;const generate = (content: string) => vi.fn().mockResolvedValue({ artifactId: `art-1`, content });
+const { publishImage } = ToolContext;
+const generate = (content: string) => vi.fn().mockResolvedValue({ artifactId: `art-1`, content });
 
 describe(`publishImage`, () => {
   it(`feeds a data url to models for relative published urls`, async () => {

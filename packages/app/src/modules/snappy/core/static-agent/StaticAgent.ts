@@ -68,15 +68,20 @@ export const StaticAgent =
             onRunningChange?.(true);
             try {
               const dynamic = extraFields?.(locale, aiConfig.models) ?? [];
-
-              const fields =
-                dynamic.length === 0 ? plan.fields : ([...plan.fields, ...dynamic] as unknown as TFields);
-
+              const fields = dynamic.length === 0 ? plan.fields : ([...plan.fields, ...dynamic] as unknown as TFields);
               const answers = await feed.ask({ fields });
               if (isStopped()) {
                 return;
               }
-              await run({ answers, feed, isStopped, locale, models: aiConfig.models, plan: { ...plan, fields }, prompt });
+              await run({
+                answers,
+                feed,
+                isStopped,
+                locale,
+                models: aiConfig.models,
+                plan: { ...plan, fields },
+                prompt,
+              });
             } finally {
               onRunningChange?.(false);
             }

@@ -42,10 +42,7 @@ export type StaticImageEditBlock<
 
 export type StaticImageFormat = boolean | ImageOrientation | StaticImageFormatOptions;
 
-export type StaticImageFormatOptions = {
-  default?: ImageOrientation;
-  orientation?: ImageOrientation;
-};
+export type StaticImageFormatOptions = { default?: ImageOrientation; orientation?: ImageOrientation };
 
 export type StaticLoc = Record<string, Bilingual> & { prompt: Bilingual };
 

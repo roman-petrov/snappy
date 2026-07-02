@@ -29,6 +29,7 @@ shikijs
 culori
 unstub
 browsable
+rescan
 
 // Ai Models
 deepseek

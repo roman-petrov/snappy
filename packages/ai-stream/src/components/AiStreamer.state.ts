@@ -8,8 +8,8 @@ import type { AiStreamerProps } from "./AiStreamer";
 import { Markdown, Stream } from "../core";
 import { AiStreamTheme } from "../themes";
 
+const typeWriterFps = 15;
 const streamFps = 60;
-const frameMs = _.second / streamFps;
 
 export const useAiStreamerState = ({
   onTailBusyChange,
@@ -20,10 +20,12 @@ export const useAiStreamerState = ({
 }: AiStreamerProps) => {
   const theme = AiStreamTheme[themeKey];
   const typeWriter = typeWriterSpeed !== undefined;
+  const frameMs = _.second / (typeWriter ? typeWriterFps : streamFps);
   const [renderText, setRenderText] = useState(text);
   const [playStep, setPlayStep] = useState(0);
   const [codeHtml, setCodeHtml] = useState(``);
   const [pushing, setPushing] = useState(false);
+  const [playedHtml, setPlayedHtml] = useState(``);
   const latestRef = useRef(text);
   const paintRef = useRef(0);
   const paintAtRef = useRef(0);
@@ -59,7 +61,7 @@ export const useAiStreamerState = ({
       cancelAnimationFrame(paintRef.current);
       paintRef.current = 0;
     };
-  }, [streaming, text]);
+  }, [frameMs, streaming, text]);
 
   const pieces = useMemo(() => {
     const parsed = Markdown.pieces(renderText);
@@ -71,7 +73,16 @@ export const useAiStreamerState = ({
   const end = Math.max(0, segments.length - 1);
   const playIndex = typeWriter ? Math.min(playStep, end) : end;
   const waitingHost = streaming && typeWriter && segments.length === 0;
-  const tailPlaying = streaming && typeWriter && (pushing || playStep < end);
+  const tail = segments[playIndex];
+
+  const tailHtml = useMemo(() => {
+    const html = tail?.kind === `code` && codeHtml === `` ? `` : Stream.tailHtml(tail, codeHtml);
+
+    return html === `` ? `` : Html.sanitize(html);
+  }, [codeHtml, tail]);
+
+  const tailPending = tail !== undefined && (tailHtml === `` || tailHtml !== playedHtml);
+  const tailPlaying = streaming && typeWriter && (pushing || playStep < end || tailPending);
 
   if (streaming && typeWriter && twRef.current === undefined) {
     twRef.current = TypeWriter();
@@ -82,12 +93,13 @@ export const useAiStreamerState = ({
   }, [onTailBusyChange, tailPlaying]);
 
   useEffect(() => {
-    twRef.current?.setWaiting(waitingHost);
-  }, [waitingHost]);
+    twRef.current?.setWaiting(streaming && typeWriter);
+  }, [streaming, typeWriter]);
 
   useEffect(() => {
     if (streaming && text === ``) {
       setPlayStep(0);
+      setPlayedHtml(``);
     }
   }, [streaming, text]);
 
@@ -120,21 +132,14 @@ export const useAiStreamerState = ({
     }
 
     const tw = twRef.current;
-    if (tw === undefined) {
-      return undefined;
-    }
-
-    const segment = segments[playIndex];
-    const html = segment?.kind === `code` && codeHtml === `` ? `` : Stream.tailHtml(segment, codeHtml);
-
-    if (html === ``) {
+    if (tw === undefined || tailHtml === ``) {
       return undefined;
     }
 
     let dead = false;
     setPushing(true);
 
-    void tw.push(Html.sanitize(html)).then(finished => {
+    void tw.push(tailHtml).then(finished => {
       if (dead) {
         return finished;
       }
@@ -144,6 +149,8 @@ export const useAiStreamerState = ({
       if (!finished) {
         return finished;
       }
+
+      setPlayedHtml(tailHtml);
 
       if (playStep < end && !(segments[playStep]?.kind === `code` && codeHtml === ``)) {
         setPlayStep(step => step + 1);
@@ -156,7 +163,7 @@ export const useAiStreamerState = ({
       dead = true;
       setPushing(false);
     };
-  }, [codeHtml, doc, end, playIndex, playStep, segments, streaming, typeWriter]);
+  }, [codeHtml, doc, end, playStep, segments, streaming, tailHtml, typeWriter]);
 
   const pushTailHtml = useCallback((html: string) => {
     setCodeHtml(html);

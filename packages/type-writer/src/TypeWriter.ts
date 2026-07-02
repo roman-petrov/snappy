@@ -5,6 +5,7 @@
 /* eslint-disable init-declarations */
 /* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 /* eslint-disable no-continue */
+
 import type { TypeWriterSpeed } from "@snappy/domain";
 
 import { _ } from "@snappy/core";
@@ -22,17 +23,18 @@ type RevealSlice = { full: number; partial: number };
 
 type Slot = { end: number; graphemes: readonly string[]; node: Text; start: number; text: string };
 
-type WidthCache = { cumulative: Float32Array; totalPx: number };
-
 export const TypeWriter = () => {
   const segmenter = new Intl.Segmenter();
   const partialSpans = new Map<Text, HTMLSpanElement>();
   const voidTags = new Set([`br`, `hr`, `img`]);
   const pixelsPerSecond = { fast: 0x4_00, medium: 0x2_00, slow: 0x1_00 } as const;
+  const caretPeriodMs = 750;
+  const maxTickMs = 50;
   let host: HTMLElement | undefined;
   let caretElement: HTMLSpanElement | undefined;
   let body: HTMLElement | undefined;
   let previousVisible = ``;
+  let lastHtml = ``;
   let revealedPx = 0;
   let totalPx = 0;
   let speed: TypeWriterSpeed = `medium`;
@@ -46,11 +48,10 @@ export const TypeWriter = () => {
   let lastPaintedPartial = -1;
   let contentMount: HTMLElement | undefined;
   let mountedSignature = ``;
-  let widthCache: undefined | WidthCache;
   let textSlots: readonly Slot[] | undefined;
-  let pendingPrefixGraphemes = 0;
-  let pendingOldAtPrefixPx = 0;
-  let pendingVisibleUnchanged = false;
+  let cumulative: Float32Array | undefined;
+  let totalGraphemes = 0;
+  let carry = 0;
   let partialCaretAnchor: HTMLElement | undefined;
   const graphemes = (source: string) => [...segmenter.segment(source)].map(part => part.segment);
 
@@ -119,12 +120,16 @@ export const TypeWriter = () => {
     return _.gen(max, index => index).find(index => a[index] !== b[index]) ?? max;
   };
 
-  const applyRevealToSlots = (slots: readonly Slot[], { full, partial }: RevealSlice) => {
+  const applyRevealToSlots = (slots: readonly Slot[], { full, partial }: RevealSlice, fromFull: number) => {
+    const incremental = fromFull >= 0 && fromFull <= full;
     partialCaretAnchor = undefined;
     for (const slot of slots) {
+      if (incremental && (slot.end < fromFull || slot.start > full)) {
+        continue;
+      }
       const parts = slot.graphemes;
       const { length } = parts;
-      const localFull = Math.max(0, Math.min(length, full - slot.start));
+      const localFull = _.clamp(full - slot.start, 0, length);
       const showPartial = partial > 0 && full >= slot.start && full < slot.end;
 
       if (showPartial) {
@@ -157,45 +162,41 @@ export const TypeWriter = () => {
     return offset;
   };
 
-  const widths = (root: HTMLElement, slots: readonly Slot[], total: number): WidthCache => {
-    if (total === 0) {
-      return { cumulative: new Float32Array(0), totalPx: 0 };
+  const measureFrom = (from: number) => {
+    if (textSlots === undefined || cumulative === undefined || from >= totalGraphemes) {
+      return;
     }
 
-    const cumulative = new Float32Array(total);
     const range = document.createRange();
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let index = from;
 
-    if (!(walker.nextNode() instanceof Text)) {
-      return { cumulative, totalPx: 0 };
-    }
-
-    _.gen(total, index => {
-      let step = 0;
-      for (const slot of slots) {
-        if (index < slot.end) {
-          const local = index - slot.start;
-          const startOffset = utf16Offset(slot.graphemes, local);
-          const endOffset = utf16Offset(slot.graphemes, local + 1);
-          range.setStart(slot.node, startOffset);
-          range.setEnd(slot.node, endOffset);
-          step = _.sum([...range.getClientRects()].map(rect => rect.width)) ?? 0;
-          break;
-        }
+    for (const slot of textSlots) {
+      if (index >= totalGraphemes) {
+        break;
       }
-      const previous = index > 0 ? cumulative[index - 1] : undefined;
-      cumulative[index] = index > 0 ? (previous ?? 0) + step : step;
-    });
+      if (slot.end <= index) {
+        continue;
+      }
 
-    return { cumulative, totalPx: cumulative[total - 1] ?? 0 };
+      while (index < slot.end) {
+        const local = index - slot.start;
+        range.setStart(slot.node, utf16Offset(slot.graphemes, local));
+        range.setEnd(slot.node, utf16Offset(slot.graphemes, local + 1));
+        const step = _.sum([...range.getClientRects()].map(rect => rect.width)) ?? 0;
+        cumulative[index] = (index > 0 ? (cumulative[index - 1] ?? 0) : 0) + step;
+        index += 1;
+      }
+    }
   };
 
-  const countAtPx = (cache: WidthCache, px: number): RevealSlice => {
-    if (px <= 0 || cache.cumulative.length === 0) {
+  const pxAt = (graphemeCount: number) =>
+    graphemeCount <= 0 ? 0 : (cumulative?.[Math.min(graphemeCount, cumulative.length) - 1] ?? 0);
+
+  const countAtPx = (px: number): RevealSlice => {
+    if (px <= 0 || cumulative === undefined || cumulative.length === 0) {
       return { full: 0, partial: 0 };
     }
 
-    const { cumulative } = cache;
     let low = 0;
     let high = cumulative.length - 1;
     let floor = -1;
@@ -216,9 +217,6 @@ export const TypeWriter = () => {
 
     return { full: floor + 1, partial: Math.max(0, px - (floorValue ?? 0)) };
   };
-
-  const pxAt = (cache: WidthCache, graphemeCount: number) =>
-    graphemeCount <= 0 ? 0 : (cache.cumulative[graphemeCount - 1] ?? cache.totalPx);
 
   const shellFromBody = (source: HTMLElement): BodyShell | undefined => {
     const nodes = [...source.childNodes].filter(
@@ -322,6 +320,12 @@ export const TypeWriter = () => {
     return undefined;
   };
 
+  const syncCaretPhase = () => {
+    if (caretElement !== undefined) {
+      caretElement.style.animationDelay = `-${performance.now() % caretPeriodMs}ms`;
+    }
+  };
+
   const placeCaret = () => {
     if (caretElement === undefined || contentMount === undefined) {
       return;
@@ -330,6 +334,7 @@ export const TypeWriter = () => {
     if (partialCaretAnchor !== undefined) {
       if (caretElement.previousSibling !== partialCaretAnchor) {
         partialCaretAnchor.after(caretElement);
+        syncCaretPhase();
       }
 
       return;
@@ -343,6 +348,7 @@ export const TypeWriter = () => {
         }
         if (caretElement.previousSibling !== slot.node) {
           slot.node.after(caretElement);
+          syncCaretPhase();
         }
 
         return;
@@ -351,6 +357,45 @@ export const TypeWriter = () => {
 
     if (caretElement.parentElement !== contentMount || caretElement !== contentMount.lastElementChild) {
       contentMount.append(caretElement);
+      syncCaretPhase();
+    }
+  };
+
+  const hideUnrevealed = () => {
+    if (contentMount === undefined || caretElement === undefined || !contentMount.contains(caretElement)) {
+      return;
+    }
+
+    const write = (element: HTMLElement, property: `display` | `marginBlockEnd`, value: string) => {
+      if (element.style[property] !== value) {
+        element.style[property] = value;
+      }
+    };
+
+    let passedCaret = false;
+    let lastVisible: HTMLElement | undefined;
+    let hiddenAfter = false;
+
+    for (const child of contentMount.children) {
+      if (child === caretElement) {
+        passedCaret = true;
+        continue;
+      }
+      if (!(child instanceof HTMLElement)) {
+        continue;
+      }
+      write(child, `display`, passedCaret ? `none` : ``);
+      write(child, `marginBlockEnd`, ``);
+      if (passedCaret) {
+        hiddenAfter = true;
+      } else {
+        lastVisible = child;
+        passedCaret = child.contains(caretElement);
+      }
+    }
+
+    if (hiddenAfter && lastVisible !== undefined) {
+      write(lastVisible, `marginBlockEnd`, _.px(0));
     }
   };
 
@@ -387,59 +432,54 @@ export const TypeWriter = () => {
     contentMount = undefined;
     mountedSignature = ``;
     textSlots = undefined;
+    cumulative = undefined;
+    totalGraphemes = 0;
+    totalPx = 0;
+    carry = 0;
     partialSpans.clear();
     partialCaretAnchor = undefined;
   };
 
-  const revealSlice = (): RevealSlice =>
-    widthCache === undefined ? { full: 0, partial: 0 } : countAtPx(widthCache, Math.min(revealedPx, totalPx));
+  const revealSlice = () =>
+    revealedPx >= totalPx ? { full: totalGraphemes, partial: 0 } : countAtPx(Math.min(revealedPx, totalPx));
 
   const applyReveal = (slice = revealSlice()) => {
-    if (contentMount === undefined || widthCache === undefined || textSlots === undefined) {
+    if (contentMount === undefined || cumulative === undefined || textSlots === undefined) {
       return;
     }
 
-    applyRevealToSlots(textSlots, slice);
+    applyRevealToSlots(textSlots, slice, lastPaintedFull);
     lastPaintedFull = slice.full;
     lastPaintedPartial = slice.partial;
     placeCaret();
     updateCaret();
+    hideUnrevealed();
   };
 
-  const buildWidthCache = () => {
+  const rebuild = (shell: BodyShell | undefined) => {
     if (contentMount === undefined || body === undefined) {
       return;
     }
 
-    caretElement?.remove();
     partialSpans.clear();
     partialCaretAnchor = undefined;
-    contentMount.style.visibility = `hidden`;
-    const shell = shellFromBody(body);
+    lastPaintedFull = -1;
+    lastPaintedPartial = -1;
     contentMount.innerHTML = shell?.kind === `pre` || shell?.kind === `prePlain` ? shell.inner : body.innerHTML;
     textSlots = collect(contentMount);
-    const slotTotal = textSlots.reduce((sum, slot) => sum + slot.graphemes.length, 0);
-    widthCache = widths(contentMount, textSlots, slotTotal);
-    ({ totalPx } = widthCache);
+    totalGraphemes = textSlots.reduce((sum, slot) => sum + slot.graphemes.length, 0);
 
-    if (pendingPrefixGraphemes > 0) {
-      const newAtPrefix = pxAt(widthCache, pendingPrefixGraphemes);
-
-      if (pendingVisibleUnchanged && pendingOldAtPrefixPx > 0) {
-        revealedPx =
-          revealedPx >= pendingOldAtPrefixPx ? newAtPrefix : (revealedPx / pendingOldAtPrefixPx) * newAtPrefix;
-      } else {
-        revealedPx = Math.min(revealedPx, newAtPrefix);
-      }
-
-      pendingPrefixGraphemes = 0;
-      pendingOldAtPrefixPx = 0;
-      pendingVisibleUnchanged = false;
+    const keep = Math.min(carry, totalGraphemes);
+    carry = 0;
+    const previous = cumulative;
+    cumulative = new Float32Array(totalGraphemes);
+    if (previous !== undefined && keep > 0) {
+      cumulative.set(previous.subarray(0, keep));
     }
-
+    measureFrom(keep);
+    totalPx = cumulative[totalGraphemes - 1] ?? 0;
     revealedPx = Math.min(revealedPx, totalPx);
     applyReveal();
-    contentMount.style.visibility = ``;
   };
 
   const paint = (): boolean => {
@@ -453,7 +493,6 @@ export const TypeWriter = () => {
     if (contentMount === undefined || mountedSignature !== nextSignature) {
       contentMount = mountBody(host, shell);
       mountedSignature = nextSignature;
-      widthCache = undefined;
       textSlots = undefined;
       placeCaret();
     }
@@ -462,11 +501,11 @@ export const TypeWriter = () => {
       return false;
     }
 
-    if (widthCache === undefined) {
-      buildWidthCache();
+    if (textSlots === undefined) {
+      rebuild(shell);
     }
 
-    return widthCache !== undefined;
+    return textSlots !== undefined;
   };
 
   const paintWaiting = () => {
@@ -477,6 +516,7 @@ export const TypeWriter = () => {
     resetMount();
     if (caretElement !== undefined) {
       host.replaceChildren(caretElement);
+      syncCaretPhase();
     }
     updateCaret();
   };
@@ -489,13 +529,13 @@ export const TypeWriter = () => {
   };
 
   const tick = (now: number) => {
-    if (host === undefined || body === undefined || widthCache === undefined) {
+    if (host === undefined || body === undefined || cumulative === undefined) {
       stopLoop();
 
       return;
     }
 
-    const elapsed = Math.max(0, now - clockLast);
+    const elapsed = _.clamp(now - clockLast, 0, maxTickMs);
     clockLast = now;
     revealedPx = Math.min(revealedPx + (elapsed / _.second) * pixelsPerSecond[speed], totalPx);
 
@@ -516,10 +556,9 @@ export const TypeWriter = () => {
   };
 
   const startLoop = () => {
-    if (host === undefined || caughtUp()) {
+    if (host === undefined || frame !== 0 || caughtUp()) {
       return;
     }
-    stopLoop();
     clockLast = performance.now();
     frame = requestAnimationFrame(tick);
   };
@@ -530,6 +569,14 @@ export const TypeWriter = () => {
     }
     host = element;
     resetMount();
+
+    if (pendingResolve === undefined) {
+      body = undefined;
+      previousVisible = ``;
+      lastHtml = ``;
+      revealedPx = 0;
+    }
+
     if (body === undefined) {
       paintWaiting();
     } else {
@@ -554,30 +601,28 @@ export const TypeWriter = () => {
       }
     };
 
-    const newBody = new DOMParser().parseFromString(nextHtml, `text/html`).body;
-    const newSlots = collect(newBody);
-    const newVisible = newSlots.map(slot => slot.text).join(``);
-    const prefixGraphemes = prefix(previousVisible, newVisible);
-    const cacheBeforePush = widthCache;
+    if (nextHtml === lastHtml && contentMount !== undefined && textSlots !== undefined) {
+      if (caughtUp()) {
+        finishPush();
+      } else {
+        setAnimating(true);
+        startLoop();
+      }
 
-    if (previousVisible === `` || prefixGraphemes === 0) {
-      revealedPx = 0;
-      pendingPrefixGraphemes = 0;
-      pendingOldAtPrefixPx = 0;
-      pendingVisibleUnchanged = false;
-    } else if (cacheBeforePush !== undefined) {
-      pendingPrefixGraphemes = prefixGraphemes;
-      pendingOldAtPrefixPx = pxAt(cacheBeforePush, prefixGraphemes);
-      pendingVisibleUnchanged = previousVisible === newVisible;
+      return promise;
     }
+
+    lastHtml = nextHtml;
+    const newBody = new DOMParser().parseFromString(nextHtml, `text/html`).body;
+    const newVisible = newBody.textContent;
+    carry = Math.min(prefix(previousVisible, newVisible), cumulative?.length ?? 0);
+    revealedPx = Math.min(revealedPx, pxAt(carry));
 
     body = newBody;
     previousVisible = newVisible;
-    widthCache = undefined;
-    totalPx = 0;
+    textSlots = undefined;
     lastPaintedFull = -1;
     lastPaintedPartial = -1;
-    textSlots = undefined;
 
     if (host === undefined) {
       if (newVisible === ``) {
@@ -587,7 +632,7 @@ export const TypeWriter = () => {
       }
     } else {
       const ready = paint();
-      if (ready && caughtUp()) {
+      if (!ready || caughtUp()) {
         finishPush();
       } else {
         setAnimating(true);
@@ -609,9 +654,8 @@ export const TypeWriter = () => {
     body = undefined;
     resetMount();
     previousVisible = ``;
+    lastHtml = ``;
     revealedPx = 0;
-    totalPx = 0;
-    widthCache = undefined;
     lastPaintedFull = -1;
     lastPaintedPartial = -1;
     animating = false;
@@ -624,7 +668,7 @@ export const TypeWriter = () => {
     }
     speed = value;
     updateCaret();
-    if (animating && frame === 0 && host !== undefined) {
+    if (animating && host !== undefined) {
       startLoop();
     }
   };

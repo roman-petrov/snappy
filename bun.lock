@@ -79,6 +79,9 @@
         "@snappy/core": "workspace:*",
         "zod": "^4.4.3",
       },
+      "devDependencies": {
+        "vitest": "^4.1.9",
+      },
     },
     "packages/ai-stream": {
       "name": "@snappy/ai-stream",
@@ -102,7 +105,10 @@
         "shiki": "^4.3.0",
       },
       "devDependencies": {
+        "@testing-library/react": "^16.0.0",
         "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.0.0",
+        "react-dom": "^19.2.7",
         "vitest": "^4.1.9",
       },
     },
@@ -632,6 +638,9 @@
       "dependencies": {
         "@snappy/core": "workspace:*",
         "@snappy/domain": "workspace:*",
+      },
+      "devDependencies": {
+        "vitest": "^4.1.9",
       },
     },
     "packages/ui": {
