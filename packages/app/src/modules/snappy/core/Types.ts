@@ -35,13 +35,17 @@ export type StaticImageEditBlock<
   TFields extends readonly StaticFormField[] = readonly StaticFormField[],
 > = {
   fields: (input: StaticPlanInput<TStaticLoc>) => TFields;
-  format?: StaticImageFormat;
   kind: `imageEdit`;
   localization: (deps: StaticLocalizationDeps) => TStaticLoc;
   resolve?: (input: StaticAgentRunInput<NoInfer<TFields>>) => AgentImageEdit | undefined;
 };
 
-export type StaticImageFormat = boolean | ImageOrientation;
+export type StaticImageFormat = boolean | ImageOrientation | StaticImageFormatOptions;
+
+export type StaticImageFormatOptions = {
+  default?: ImageOrientation;
+  orientation?: ImageOrientation;
+};
 
 export type StaticLoc = Record<string, Bilingual> & { prompt: Bilingual };
 

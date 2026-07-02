@@ -259,6 +259,7 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.tagline.prompt`),
           },
         ]),
+      format: true,
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `You build image-generation prompts. From the **brand** line (required text), every tab below, and optional tagline line, write **one** detailed prompt **for image generation**: a **single logo artwork** on a simple background (it will be sent to the image model). Reflect industry, mark type, complexity, **palette by tab name**, style, and layout. Demand legibility at small sizes. No laptop/phone mockups—logo only.`,

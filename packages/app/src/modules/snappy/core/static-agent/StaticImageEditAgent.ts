@@ -1,5 +1,4 @@
 /* eslint-disable functional/no-expression-statements */
-import type { AiImageSize } from "@snappy/ai";
 import type { Bilingual } from "@snappy/intl";
 import type { AgentImageEdit, StaticFormField } from "@snappy/snappy";
 
@@ -20,20 +19,17 @@ export const StaticImageEditAgent = <
   create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload<TFields>,
   resolve: (input: StaticAgentRunInput<TFields>) => AgentImageEdit | undefined,
   prompt?: (input: StaticAgentRunInput<TFields>) => string | undefined,
-  size?: (input: StaticAgentRunInput<TFields>) => AiImageSize | undefined,
 ) =>
   StaticAgent(localizationFactory, create, async input => {
-    const { feed, isStopped, locale, models } = input;
     const edit = resolve(input);
-    if (edit === undefined || isStopped()) {
+    if (edit === undefined || input.isStopped()) {
       return;
     }
 
-    await feed.generateImage({
+    await input.feed.generateImage({
       edit,
-      locale,
-      model: models.image,
+      locale: input.locale,
+      model: input.models.image,
       prompt: prompt?.(input) ?? input.prompt,
-      size: size?.(input),
     });
   });

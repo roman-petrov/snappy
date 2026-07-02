@@ -41,4 +41,4 @@ const apiBody = (imageConfig: AiImageConfig) =>
         ...(imageConfig.resolution === undefined ? {} : { image_size: imageConfig.resolution }),
       };
 
-export const ImageSize = { apiBody, orientation, request };
+export const ImageSize = { apiBody, orientation, orientationOf, request };

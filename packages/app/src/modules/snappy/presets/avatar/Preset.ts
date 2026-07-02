@@ -283,6 +283,7 @@ export const preset: Preset = {
             prompt: i18n(`ui.field.extra.prompt`),
           },
         ]),
+      format: { orientation: `square` },
       localization: () => ({
         "prompt": Prompts.visual.joinMeta([
           `You build image-generation prompts. From the latest user message, the optional one-line detail (if any), and every bullet below, write **one** detailed prompt **for image generation** (it will be sent to the image model). Merge: subject type, mood, framing, art style, **exact palette name from the tabs**, background treatment, lighting implied by choices. If optional detail adds a trait, fold it into the description. No random text on image unless detail asks for text.`,

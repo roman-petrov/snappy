@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable functional/no-expression-statements */
@@ -15,7 +16,6 @@ import { Bilingual, type Locale } from "@snappy/intl";
 
 export type StaticAgentMetaCreateInput<TLocalization extends Localization> = {
   i18n: (key: keyof TLocalization) => string;
-  locale: Locale;
 };
 
 export type StaticAgentMetaPayload<TFields extends readonly StaticFormField[]> = {
@@ -42,6 +42,7 @@ export const StaticAgent =
     localizationFactory: () => TLocalization,
     create: (input: StaticAgentMetaCreateInput<TLocalization>) => StaticAgentMetaPayload<TFields>,
     run: (input: StaticAgentRunInput<TFields>) => Promise<unknown>,
+    extraFields?: (locale: Locale, models: AgentAiModels) => readonly StaticFormField[],
   ): AgentEntry =>
   locale => {
     const localization = localizationFactory();
@@ -52,7 +53,7 @@ export const StaticAgent =
       return value === undefined ? `` : Bilingual.pick(locale, value);
     };
 
-    const { plan, prompt, ...meta } = create({ i18n, locale });
+    const { plan, prompt, ...meta } = create({ i18n });
     const agentMeta = { ...meta, title: plan.title };
 
     return {
@@ -66,11 +67,16 @@ export const StaticAgent =
             stopped = false;
             onRunningChange?.(true);
             try {
-              const answers = await feed.ask({ fields: plan.fields });
+              const dynamic = extraFields?.(locale, aiConfig.models) ?? [];
+
+              const fields =
+                dynamic.length === 0 ? plan.fields : ([...plan.fields, ...dynamic] as unknown as TFields);
+
+              const answers = await feed.ask({ fields });
               if (isStopped()) {
                 return;
               }
-              await run({ answers, feed, isStopped, locale, models: aiConfig.models, plan, prompt });
+              await run({ answers, feed, isStopped, locale, models: aiConfig.models, plan: { ...plan, fields }, prompt });
             } finally {
               onRunningChange?.(false);
             }

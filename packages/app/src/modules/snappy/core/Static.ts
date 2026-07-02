@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import { type AgentEntry, StaticFields, type StaticFormField } from "@snappy/snappy";
 
 import type { PresetMeta } from "./Preset";
@@ -7,13 +6,11 @@ import type {
   MetaLoc,
   StaticAudioBlock,
   StaticImageEditBlock,
-  StaticImageFormat,
   StaticLoc,
   StaticTextOrVisualBlock,
   StaticVisionBlock,
 } from "./Types";
 
-import { ImageFormat } from "./ImageFormat";
 import { Prompts } from "./Prompts";
 import {
   StaticAudioAgent,
@@ -26,7 +23,7 @@ import { StaticAgentPrompt } from "./static-agent/StaticAgentPrompt";
 import { UiCommon } from "./UiCommon";
 
 const locDeps = { prompts: Prompts, uiCommon: UiCommon };
-const mediaFieldKinds = new Set<StaticFormField[`kind`]>([`audio_input`, `image_input`]);const formatEnabled = (format?: StaticImageFormat) => format !== undefined && format !== false;
+const mediaFieldKinds = new Set<StaticFormField[`kind`]>([`audio_input`, `image_input`]);
 
 const imageEditPrompt = <const TFields extends readonly StaticFormField[]>(input: StaticAgentRunInput<TFields>) =>
   input.plan.fields.some(field => !mediaFieldKinds.has(field.kind))
@@ -36,7 +33,6 @@ const imageEditPrompt = <const TFields extends readonly StaticFormField[]>(input
 const agentParts = <TStaticLoc extends StaticLoc, const TFields extends readonly StaticFormField[]>(
   meta: PresetMeta,
   block: Pick<StaticTextOrVisualBlock<`text`, TStaticLoc, TFields>, `fields` | `localization`>,
-  format?: StaticImageFormat,
 ) => {
   const localization = (): MetaLoc<TStaticLoc> => {
     const { description, title } = meta;
@@ -45,15 +41,12 @@ const agentParts = <TStaticLoc extends StaticLoc, const TFields extends readonly
     return { ...ui, description, prompt, title };
   };
 
-  const create = ({ i18n, locale }: StaticAgentMetaCreateInput<MetaLoc<TStaticLoc>>) => {
-    const base = block.fields({ form: StaticFields, i18n });
-
-    const fields = formatEnabled(format)
-      ? ([...base, ImageFormat.field(locale, format === true ? undefined : format)] as unknown as TFields)
-      : base;
-
-    return { description: i18n(`description`), emoji: meta.emoji, plan: { fields, title: i18n(`title`) }, prompt: i18n(`prompt`) };
-  };
+  const create = ({ i18n }: StaticAgentMetaCreateInput<MetaLoc<TStaticLoc>>) => ({
+    description: i18n(`description`),
+    emoji: meta.emoji,
+    plan: { fields: block.fields({ form: StaticFields, i18n }), title: i18n(`title`) },
+    prompt: i18n(`prompt`),
+  });
 
   return { create, localization };
 };
@@ -71,24 +64,18 @@ const buildVisualAgent = <TStaticLoc extends StaticLoc, const TFields extends re
   meta: PresetMeta,
   block: Omit<StaticTextOrVisualBlock<`visual`, TStaticLoc, TFields>, `kind`>,
 ): AgentEntry => {
-  const { create, localization } = agentParts(meta, block, block.format);
+  const { create, localization } = agentParts(meta, block);
 
-  return StaticVisualAgent(localization, create, formatEnabled(block.format) ? ImageFormat.size : undefined);
+  return StaticVisualAgent(localization, create, block.format);
 };
 
 const buildImageEditAgent = <TStaticLoc extends StaticLoc, const TFields extends readonly StaticFormField[]>(
   meta: PresetMeta,
   block: Omit<StaticImageEditBlock<TStaticLoc, TFields>, `kind`>,
 ): AgentEntry => {
-  const { create, localization } = agentParts(meta, block, block.format);
+  const { create, localization } = agentParts(meta, block);
 
-  return StaticImageEditAgent(
-    localization,
-    create,
-    block.resolve ?? (() => undefined),
-    imageEditPrompt,
-    formatEnabled(block.format) ? ImageFormat.size : undefined,
-  );
+  return StaticImageEditAgent(localization, create, block.resolve ?? (() => undefined), imageEditPrompt);
 };
 
 const buildAudioAgent = <TStaticLoc extends StaticLoc, const TFields extends readonly StaticFormField[]>(
