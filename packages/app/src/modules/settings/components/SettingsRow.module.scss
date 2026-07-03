@@ -1,0 +1,17 @@
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/tokens";
+
+.row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: space.sm();
+  align-items: center;
+  width: 100%;
+  height: calc(#{tokens.field-height()} + #{space.md()});
+  padding-inline: space.md();
+  text-align: left;
+}
+
+.row-no-icon {
+  grid-template-columns: 1fr auto;
+}

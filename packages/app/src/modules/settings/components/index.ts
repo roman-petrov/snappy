@@ -13,3 +13,5 @@ export * from "./SettingsModelsBase";
 export * from "./SettingsOptionList";
 
 export * from "./SettingsOptionRows";
+
+export * from "./SettingsRow";
