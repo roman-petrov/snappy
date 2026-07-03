@@ -1,0 +1,5 @@
+@use "pkg:@snappy/theme/tokens/space";
+
+.title {
+  margin: 0 0 space.lg();
+}

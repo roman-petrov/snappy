@@ -13,10 +13,11 @@ export const useTabTrack = <TItem extends { color: string }>(items: readonly TIt
   const { animating, pageIndex } = track;
   const accents = useMemo(() => items.map(item => ThemeVar.accent(item.color)), [items]);
   const accent = useMemo(() => Chrome.blend(accents, pageIndex), [accents, pageIndex]);
+  const opacities = useMemo(() => Chrome.opacities(items.length, pageIndex), [items.length, pageIndex]);
 
   useLayoutEffect(() => {
     Chrome.publish(accent);
   }, [accent]);
 
-  return { animating, items, pageIndex };
+  return { animating, items, opacities, pageIndex };
 };

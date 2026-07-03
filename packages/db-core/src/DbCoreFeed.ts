@@ -3,7 +3,7 @@
 /* eslint-disable functional/no-try-statements */
 import type { S3CoreUser } from "@snappy/s3-core";
 
-import { MimeType } from "@snappy/core";
+import { Png } from "@snappy/core";
 
 import type { FeedArtifact, PrismaClient } from "./generated/client";
 
@@ -15,7 +15,7 @@ export type DbCoreFeedPatch = { src: string; type: `image` } | { text: string; t
 
 export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
   const s3Path = (file: string) => `feed/${file}`;
-  const pngFile = () => `${crypto.randomUUID()}${MimeType.pngSuffix}`;
+  const pngFile = () => `${crypto.randomUUID()}${Png.suffix}`;
 
   const toArtifact = ({ generationPrompt, id, src, text, type }: FeedArtifact): DbCoreFeedArtifact =>
     type === `image` ? { generationPrompt, id, src, type: `image` } : { generationPrompt, id, text, type: `text` };

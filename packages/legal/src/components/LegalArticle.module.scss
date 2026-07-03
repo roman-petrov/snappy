@@ -1,0 +1,65 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/typography";
+
+$-section-gap: space.lg();
+
+.root {
+  h2 {
+    @include typography.h2;
+
+    padding-top: $-section-gap;
+    margin: $-section-gap 0 space.md();
+    scroll-margin-top: space.x2xl();
+    border-top: 1px solid color.outline();
+  }
+
+  h2:first-of-type {
+    padding-top: 0;
+    margin-top: space.md();
+    border-top: none;
+  }
+
+  p {
+    @include typography.body;
+
+    margin: 0 0 space.md();
+  }
+
+  em {
+    @include typography.body-sm;
+
+    opacity: 0.7;
+  }
+
+  ul {
+    @include typography.body;
+
+    padding-inline-start: space.lg();
+    margin: 0 0 space.md();
+  }
+
+  li {
+    margin-bottom: space.sm();
+  }
+
+  li:last-child {
+    margin-bottom: 0;
+  }
+
+  strong {
+    @include typography.body-bold;
+  }
+
+  p:last-child,
+  ul:last-child {
+    margin-bottom: 0;
+  }
+
+  a {
+    color: color.primary();
+    text-decoration: underline;
+    text-underline-offset: r(2);
+  }
+}

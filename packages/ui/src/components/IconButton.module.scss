@@ -1,24 +1,7 @@
-@use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/primitives";
-@use "pkg:@snappy/theme/tokens/icon-size";
-@use "pkg:@snappy/theme/tokens/tokens";
+@use "pkg:@snappy/theme/material/icon-button";
 
 .root {
-  @include primitives.inline-row-center;
-  @include focus($radius: calc(#{tokens.icon-button-touch-size()} * 0.5));
-
-  position: relative;
-
-  &::before {
-    @include primitives.circle(tokens.icon-button-touch-size());
-
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    pointer-events: none;
-    content: "";
-    transform: translate(-50%, -50%);
-  }
+  @include icon-button.touch;
 
   > span,
   > svg {

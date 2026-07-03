@@ -1,8 +1,8 @@
+/* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable functional/no-promise-reject */
 import type { HtmlCache, InjectTheme } from "@snappy/server-module";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
@@ -23,24 +23,23 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
     const template = File.read(templatePath);
     const ssrModule = await import(ssrEntryPath);
     const render = _.isFunction(ssrModule.render) ? ssrModule.render : undefined;
+    const pages = _.isObject(ssrModule.pages) ? ssrModule.pages : undefined;
 
     if (render === undefined) {
       throw new Error(`SSR entry did not export render`);
     }
 
-    return { entry: { getMeta: _.isFunction(ssrModule.getMeta) ? ssrModule.getMeta : undefined, render }, template };
+    if (pages === undefined || !_.isArray(pages.paths)) {
+      throw new Error(`SSR entry did not export pages`);
+    }
+
+    return {
+      entry: { getMeta: _.isFunction(ssrModule.getMeta) ? ssrModule.getMeta : undefined, pages, render },
+      template,
+    };
   };
 
-  const createSsrHandler =
-    (clientRoot: string) =>
-    async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
-      const { locale, theme } = Settings(request);
-      const { entry, template } = await loadTemplateAndEntry(clientRoot);
-
-      await reply.type(MimeType.textHtml).send(SiteSsr.build(locale, theme, template, entry, injectTheme));
-    };
-
-  const createCachedSsrHandler = (clientRoot: string, cache: HtmlCache) => {
+  const createCachedSsrHandler = (clientRoot: string, cache: HtmlCache, path: string) => {
     const loadedRef: { promise?: Promise<{ entry: SsrEntry; template: string }> } = {};
 
     const ensureLoaded = async (): Promise<{ entry: SsrEntry; template: string }> => {
@@ -51,21 +50,21 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
 
     return async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
       const { locale, theme } = Settings(request);
-      const key = `ssr:${locale}:${theme ?? `system`}`;
+      const key = `ssr:${path}:${locale}:${theme ?? `system`}`;
       await cache({
         contentType: MimeType.textHtml,
         key,
         load: async () => {
           const { entry: ssrEntry, template } = await ensureLoaded();
 
-          return SiteSsr.build(locale, theme, template, ssrEntry, injectTheme);
+          return SiteSsr.build(path, locale, theme, template, ssrEntry, injectTheme);
         },
         reply,
       });
     };
   };
 
-  return { createCachedSsrHandler, createSsrHandler };
+  return { createCachedSsrHandler };
 };
 
 export type Ssr = ReturnType<typeof Ssr>;

@@ -24,6 +24,8 @@ export * from "./MimeType";
 
 export * from "./Password";
 
+export * from "./Png";
+
 export * from "./Rgb";
 
 export * from "./Serializer";

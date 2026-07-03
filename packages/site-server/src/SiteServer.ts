@@ -1,58 +1,59 @@
+/* eslint-disable functional/immutable-data */
 // cspell:word assetlinks
-/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/no-expression-statements */
-import type { ServerModule } from "@snappy/server-module";
-import type { FastifyReply, FastifyRequest } from "fastify";
+/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
+import type { ServerModule, SiteHandlers } from "@snappy/server-module";
 
-import { Config, ConfigValues } from "@snappy/config";
-import { MimeType } from "@snappy/core";
-import { File } from "@snappy/node";
+import { ConfigValues } from "@snappy/config";
+import { Directory } from "@snappy/node";
 import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
-import { AssetLinks, Seo, Ssr } from "./core";
+import type { SsrEntry } from "./core/SiteSsr";
+
+import { Ssr } from "./core";
+import { MountAssetLinks, MountDownload, MountSeo, MountStatic } from "./mount";
 
 export const SiteServer: ServerModule = distDir => {
   const distName = `site`;
+  const siteRoot = join(distDir, distName);
+  const entryHref = pathToFileURL(join(siteRoot, `server`, `entry-server.js`)).href;
+  const loaded: { paths?: Promise<readonly string[]> } = {};
+
+  const paths = async (site: SiteHandlers | undefined) => {
+    if (site !== undefined) {
+      return site.pages.paths;
+    }
+    loaded.paths ??= (async () => ((await import(entryHref)) as SsrEntry).pages.paths)();
+
+    return loaded.paths;
+  };
 
   return {
-    mount: { prefix: `/assets/`, root: join(distDir, distName, `assets`) },
-    run: async ({ app, htmlCache, injectTheme }) => {
-      const siteRoot = join(distDir, distName);
-      const ssr = Ssr({ injectTheme });
+    mount: { prefix: `/assets/`, root: join(siteRoot, `assets`) },
+    routes: async ({ distDir: root, site }) => {
+      const list = await paths(site);
 
-      app.get(`/`, ssr.createCachedSsrHandler(siteRoot, htmlCache));
+      return {
+        files: site === undefined ? MountStatic(await Directory.async.entries(siteRoot), siteRoot) : [],
+        streams: [MountDownload(root)],
+        texts: [...MountSeo(list), ...(ConfigValues.production() ? [MountAssetLinks()] : [])],
+      };
+    },
+    run: async ({ app, htmlCache, injectTheme, site }) => {
+      const list = await paths(site);
 
-      const apkPath = join(distDir, `snappy.apk`);
-      app.get(`/download/snappy.apk`, async (_request: FastifyRequest, reply: FastifyReply) => {
-        if (!File.exists(apkPath)) {
-          reply.callNotFound();
+      if (site === undefined) {
+        const ssr = Ssr({ injectTheme });
 
-          return;
+        for (const path of list) {
+          app.get(path, ssr.createCachedSsrHandler(siteRoot, htmlCache, path));
         }
-        reply.header(`Content-Disposition`, `attachment; filename="snappy.apk"`);
-        reply.type(MimeType.apk);
-        await reply.send(File.stream(apkPath));
-      });
-
-      app.get(`/favicon.svg`, async (_request, reply) => {
-        await reply.sendFile(`favicon.svg`, siteRoot);
-      });
-
-      app.get(`/robots.txt`, async (_request, reply) => {
-        reply.type(MimeType.textPlain);
-        await reply.send(Seo.robots());
-      });
-
-      app.get(`/sitemap.xml`, async (_request, reply) => {
-        reply.type(`application/xml`);
-        await reply.send(Seo.sitemap());
-      });
-
-      if (ConfigValues.production()) {
-        app.get(`/.well-known/assetlinks.json`, async (_request, reply) => {
-          reply.type(MimeType.json);
-          await reply.send(AssetLinks.body(Config.androidCertSha256()));
-        });
+      } else if (site.route !== undefined) {
+        for (const path of list) {
+          app.get(path, site.route(path));
+        }
       }
     },
   };

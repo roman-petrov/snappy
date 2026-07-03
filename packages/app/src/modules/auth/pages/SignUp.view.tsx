@@ -4,11 +4,21 @@ import type { useSignUpState } from "./SignUp.state";
 
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
-import { AuthEmailForm } from "../components";
+import { AuthEmailForm, SignUpConsent } from "../components";
 
 export type SignUpViewProps = ReturnType<typeof useSignUpState>;
 
-export const SignUpView = ({ email, password, send, sent, setEmail, setPassword, submitDisabled }: SignUpViewProps) => (
+export const SignUpView = ({
+  consented,
+  email,
+  password,
+  send,
+  sent,
+  setConsented,
+  setEmail,
+  setPassword,
+  submitDisabled,
+}: SignUpViewProps) => (
   <AuthEmailForm
     email={email}
     emailLabel={t(`auth.signUp.email`)}
@@ -30,5 +40,6 @@ export const SignUpView = ({ email, password, send, sent, setEmail, setPassword,
       onChange={setPassword}
       value={password}
     />
+    <SignUpConsent checked={consented} disabled={send.loading} onChange={setConsented} />
   </AuthEmailForm>
 );

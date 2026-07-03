@@ -16,6 +16,8 @@ export * from "./Card";
 
 export * from "./CardButton";
 
+export * from "./Checkbox";
+
 export * from "./Chip";
 
 export * from "./context-menu";

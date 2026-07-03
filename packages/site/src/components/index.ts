@@ -18,6 +18,8 @@ export * from "./IconBadge";
 
 export * from "./Landing";
 
+export * from "./LegalPage";
+
 export * from "./Modes";
 
 export * from "./Pills";
@@ -29,6 +31,8 @@ export * from "./PromoBlock";
 export * from "./Section";
 
 export * from "./SiteHeaderMenuLink";
+
+export * from "./SitePage";
 
 export * from "./Steps";
 

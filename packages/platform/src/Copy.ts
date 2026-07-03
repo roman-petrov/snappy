@@ -15,8 +15,8 @@ const html = async (value: string) => {
 
   await navigator.clipboard.write([
     new ClipboardItem({
-      "text/html": new Blob([value], { type: MimeType.textHtml }),
-      "text/plain": new Blob([plain], { type: MimeType.textPlain }),
+      [MimeType.textHtml]: new Blob([value], { type: MimeType.textHtml }),
+      [MimeType.textPlain]: new Blob([plain], { type: MimeType.textPlain }),
     }),
   ]);
 };

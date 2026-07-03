@@ -1,5 +1,3 @@
-/* eslint-disable no-await-in-loop */
-/* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 import { AdminServer } from "@snappy/admin-server";
@@ -13,6 +11,7 @@ import { join } from "node:path";
 import { Fastify } from "./Fastify";
 import { Html } from "./Html";
 import { HtmlCache } from "./HtmlCache";
+import { Modules } from "./Modules";
 import { Spa } from "./ServeSpa";
 import { Static } from "./Static";
 import { TrustedHost } from "./TrustedHost";
@@ -36,18 +35,14 @@ export const Server = async () => {
 
   const htmlCache = HtmlCache();
   const shared = { app, distDir, htmlCache, injectTheme: Html.injectTheme, prepareIndex: Html.prepareIndex };
-  const modules = [SiteServer(distDir), AppServer(distDir), AdminServer(distDir)];
+  const modules = [SiteServer, AppServer, AdminServer];
 
   await Static.register(
     app,
-    modules.map(({ mount }) => mount),
+    modules.map(factory => factory(distDir).mount),
   );
 
-  const serveSpa = Spa(shared);
-
-  for (const { run } of modules) {
-    await run({ ...shared, serveSpa });
-  }
+  await Modules.run(modules, { ...shared, serveSpa: Spa(shared) });
 
   await app.ready();
 

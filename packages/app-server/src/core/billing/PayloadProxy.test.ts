@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { HttpStatus } from "@snappy/core";
+import { HttpStatus, MimeType } from "@snappy/core";
 import { HttpServer } from "@snappy/node";
 import fastifyFactory, { type InjectOptions } from "fastify";
 import { setImmediate } from "node:timers/promises";
@@ -14,7 +14,6 @@ import { describe, expect, it } from "vitest";
 import { PayloadProxy } from "./PayloadProxy";
 
 const proxyPath = `/proxy/resource`;
-const jsonContentType = `application/json; charset=utf-8`;
 
 type Fixture = {
   inject: (options?: InjectOptions) => ReturnType<ReturnType<typeof fastifyFactory>[`inject`]>;
@@ -110,7 +109,7 @@ describe(`PayloadProxy`, () => {
         const body = { value: `chunked` };
         const text = JSON.stringify(body);
         const mid = Math.floor(text.length / 2);
-        upstream.on(upstream.respond({ body: [text.slice(0, mid), text.slice(mid)], contentType: jsonContentType }));
+        upstream.on(upstream.respond({ body: [text.slice(0, mid), text.slice(mid)], contentType: MimeType.json }));
 
         const response = await inject({ method: `POST` });
         await waitPayloads(payloads);
@@ -123,7 +122,7 @@ describe(`PayloadProxy`, () => {
     it(`emits parsed JSON when content-type includes charset`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {
         const body = { value: `ok` };
-        upstream.on(upstream.respond({ body, contentType: jsonContentType }));
+        upstream.on(upstream.respond({ body, contentType: MimeType.json }));
 
         const response = await inject({ method: `GET` });
         await waitPayloads(payloads);
@@ -135,7 +134,7 @@ describe(`PayloadProxy`, () => {
 
     it(`returns upstreamError when body is not JSON`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {
-        upstream.on(upstream.respond({ body: `not-json`, contentType: jsonContentType }));
+        upstream.on(upstream.respond({ body: `not-json`, contentType: MimeType.json }));
 
         const response = await inject({ method: `GET` });
 
@@ -148,7 +147,7 @@ describe(`PayloadProxy`, () => {
     it(`emits parsed JSON when body is gzip-compressed`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {
         const body = { id: 43, rows: [{ blob: `x`.repeat(10_000) }] };
-        upstream.on(upstream.respond({ body, contentType: jsonContentType, encoding: `gzip` }));
+        upstream.on(upstream.respond({ body, contentType: MimeType.json, encoding: `gzip` }));
 
         const response = await inject({ method: `POST` });
         await waitPayloads(payloads);
@@ -163,7 +162,7 @@ describe(`PayloadProxy`, () => {
     it(`emits parsed JSON when body is zstd-compressed`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {
         const body = { id: 44, rows: [{ blob: `x`.repeat(10_000) }], usage: { cost_rub: 1.5 } };
-        upstream.on(upstream.respond({ body, contentType: jsonContentType, encoding: `zstd` }));
+        upstream.on(upstream.respond({ body, contentType: MimeType.json, encoding: `zstd` }));
 
         const response = await inject({ method: `POST` });
         await waitPayloads(payloads);
@@ -180,7 +179,7 @@ describe(`PayloadProxy`, () => {
         upstream.on(
           upstream.respond({
             body: Buffer.from(`corrupt`),
-            contentType: jsonContentType,
+            contentType: MimeType.json,
             headers: { "content-encoding": `gzip` },
           }),
         );
@@ -198,7 +197,7 @@ describe(`PayloadProxy`, () => {
         upstream.on(
           upstream.respond({
             body: Buffer.from([0x28, 0xb5, 0x2f, 0xfd, 0x00]),
-            contentType: jsonContentType,
+            contentType: MimeType.json,
             headers: { "content-encoding": `zstd` },
           }),
         );
@@ -213,7 +212,7 @@ describe(`PayloadProxy`, () => {
 
     it(`returns upstreamError when gzip body is not JSON`, async () => {
       await withFixture(async ({ inject, payloads, upstream }) => {
-        upstream.on(upstream.respond({ body: `not-json`, contentType: jsonContentType, encoding: `gzip` }));
+        upstream.on(upstream.respond({ body: `not-json`, contentType: MimeType.json, encoding: `gzip` }));
 
         const response = await inject({ method: `POST` });
 
@@ -307,7 +306,7 @@ describe(`PayloadProxy`, () => {
         upstream.on(
           upstream.respond({
             body: [Buffer.from(`data: ${line.slice(0, 8)}`), Buffer.from(`${line.slice(8)}\n`)],
-            contentType: `text/event-stream`,
+            contentType: MimeType.eventStream,
           }),
         );
 

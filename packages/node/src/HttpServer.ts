@@ -18,7 +18,7 @@ export type HttpServerBody = (Buffer | string)[] | Buffer | string;
 
 export type HttpServerReply = {
   body: unknown;
-  contentType?: string;
+  contentType?: MimeType;
   encoding?: `gzip` | `zstd`;
   headers?: Record<string, string>;
   status?: number;
@@ -142,7 +142,7 @@ export const HttpServer = () => {
     };
 
   const sse = (lines: string[], headers: Record<string, string> = {}) =>
-    respond({ body: lines.join(`\n`), contentType: `text/event-stream; charset=utf-8`, headers });
+    respond({ body: lines.join(`\n`), contentType: MimeType.eventStream, headers });
 
   const abort = () => (_request: IncomingMessage, response: ServerResponse) => {
     response.writeHead(HttpStatus.ok, { "content-type": MimeType.json });

@@ -1,0 +1,14 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  display: flex;
+  gap: space.lg();
+  align-items: center;
+}
+
+@include mobile {
+  .root {
+    display: none;
+  }
+}

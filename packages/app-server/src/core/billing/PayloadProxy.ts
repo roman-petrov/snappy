@@ -11,7 +11,7 @@ import type { IncomingHttpHeaders } from "node:http";
 import type { IncomingHttpHeaders as Http2IncomingHttpHeaders } from "node:http2";
 
 import httpProxy, { type FastifyHttpProxyOptions } from "@fastify/http-proxy";
-import { _, HttpStatus } from "@snappy/core";
+import { _, HttpStatus, MimeType } from "@snappy/core";
 import { type Readable, Transform } from "node:stream";
 import { gunzipSync, zstdDecompressSync } from "node:zlib";
 
@@ -72,7 +72,7 @@ export const PayloadProxy = async (
           return;
         }
 
-        if ((upstreamHeaders[`content-type`] ?? ``).includes(`text/event-stream`)) {
+        if ((upstreamHeaders[`content-type`] ?? ``).includes(MimeType.eventStream)) {
           const decoder = new TextDecoder();
           let carry = ``;
 

@@ -9,6 +9,7 @@ import { useAuthEmailSend } from "../hooks";
 export const useSignUpState = () => {
   const [email, setEmail] = useState(``);
   const [password, setPassword] = useState(``);
+  const [consented, setConsented] = useState(false);
   const [sent, setSent] = useState(false);
 
   const { send: resend, startCooldown } = useAuthEmailSend({
@@ -43,7 +44,7 @@ export const useSignUpState = () => {
   };
 
   const send = sent ? resend : { ...resend, disabled: loading || resend.disabled, error, loading, onSend: signUp };
-  const submitDisabled = send.loading || !Password.valid(password) || send.disabled;
+  const submitDisabled = send.loading || !Password.valid(password) || send.disabled || !consented;
 
-  return { email, password, send, sent, setEmail, setPassword, submitDisabled };
+  return { consented, email, password, send, sent, setConsented, setEmail, setPassword, submitDisabled };
 };

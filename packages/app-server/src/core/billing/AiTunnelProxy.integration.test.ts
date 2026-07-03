@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { Db, DbUser } from "@snappy/db";
 
-import { HttpStatus } from "@snappy/core";
+import { HttpStatus, MimeType } from "@snappy/core";
 import { HttpServer } from "@snappy/node";
 import fastifyFactory, { type InjectOptions } from "fastify";
 import { setImmediate } from "node:timers/promises";
@@ -29,7 +29,7 @@ vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-
 const chatPath = `/api/ai-tunnel/v1/chat/completions`;
 const editsPath = `/api/ai-tunnel/v1/images/edits`;
 const imagesPath = `/api/ai-tunnel/v1/images/generations`;
-const jsonContentType = `application/json; charset=utf-8`;
+const jsonContentType = MimeType.json;
 const model = `gpt-image-1-mini`;
 const tunnelKey = `test-ai-tunnel-key`;
 const upstreamError = { status: `upstreamError` };
@@ -254,7 +254,7 @@ describe(`AiTunnelProxy integration`, () => {
         const response = await inject(chatPath);
 
         expect(response.statusCode).toBe(HttpStatus.ok);
-        expect(response.headers[`content-type`]).toContain(`text/event-stream`);
+        expect(response.headers[`content-type`]).toContain(MimeType.eventStream);
         expect(response.body).toContain(`"cost_rub":0.03`);
 
         await setImmediate();

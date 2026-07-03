@@ -1,10 +1,10 @@
 import { Dom } from "@snappy/browser";
-import { useEffect, useState } from "react";
+import { type MouseEventHandler, useCallback, useEffect, useState } from "react";
 
 export const useSiteHeaderState = () => {
   const [open, setOpen] = useState(false);
   const openMenu = () => setOpen(true);
-  const close = () => setOpen(false);
+  const close = useCallback(() => setOpen(false), []);
 
   useEffect(() => {
     if (!open) {
@@ -27,30 +27,34 @@ export const useSiteHeaderState = () => {
     };
   }, [open]);
 
-  useEffect(
-    () =>
-      Dom.subscribe(document, `click`, event => {
-        if (!(event.target instanceof Element)) {
-          return;
-        }
+  const followSection: MouseEventHandler<HTMLElement> = useCallback(
+    event => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
 
-        const hash = event.target.closest(`a[href^="#"]`)?.getAttribute(`href`) ?? ``;
-        if (hash.length === 0) {
-          return;
-        }
+      const href = event.target.closest(`a[href^="#"], a[href^="/#"]`)?.getAttribute(`href`) ?? ``;
+      const hash = href.startsWith(`/#`) ? href.slice(1) : href;
+      if (hash.length === 0) {
+        return;
+      }
 
-        const section = document.querySelector(hash);
-        if (!(section instanceof Element)) {
-          return;
-        }
+      const section = document.querySelector(hash);
+      if (!(section instanceof Element)) {
+        document.body.style.overflow = ``;
+        close();
 
-        event.preventDefault();
-        section.scrollIntoView({ behavior: `smooth` });
-        window.history.replaceState(undefined, ``, hash);
-        setOpen(false);
-      }),
-    [],
+        return;
+      }
+
+      event.preventDefault();
+      document.body.style.overflow = ``;
+      close();
+      section.scrollIntoView({ behavior: `smooth` });
+      window.history.replaceState(undefined, ``, hash);
+    },
+    [close],
   );
 
-  return { close, open, openMenu };
+  return { close, followSection, open, openMenu };
 };

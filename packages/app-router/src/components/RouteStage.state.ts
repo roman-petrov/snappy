@@ -27,6 +27,7 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
   const state = useStoreValue($page);
   const contentRef = useRef<HTMLDivElement>(null);
   const preservedTab = useRef<RouterPageState | undefined>(undefined);
+  const underlayRef = useRef<RouterPageState | undefined>(undefined);
   const routePattern = pattern(path);
   const layer = layerOf?.(routePattern);
 
@@ -67,7 +68,12 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
     preserved: preservedTab.current,
     stateAt,
   });
-  preservedTab.current = stack.preserved;
+
+  if (layer === `flip`) {
+    preservedTab.current = undefined;
+  } else if (layer === undefined) {
+    preservedTab.current = stack.preserved;
+  }
 
   const { panes } = stack;
 
@@ -90,9 +96,14 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
     underlay,
   };
 
-  const slide = track !== undefined && layer !== `flip`;
+  const flipUnderlay = layer === `cover` && preservedTab.current === undefined;
+  const slide = track !== undefined && layer !== `flip` && !flipUnderlay;
   const { idle } = stack;
-  const contentPage = idle ?? state;
+  const contentPage = flipUnderlay ? (underlayRef.current ?? idle ?? state) : (idle ?? state);
+
+  if (layer !== `cover`) {
+    underlayRef.current = contentPage;
+  }
 
   return { content, contentPage, panes, slide, stage, trackItems: track };
 };

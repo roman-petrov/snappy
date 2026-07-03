@@ -7,7 +7,7 @@ import styles from "./SettingsFeedback.module.scss";
 import { SettingsRow } from "./SettingsRow";
 
 export const SettingsFeedback = () => {
-  const email = `roman.petrov@snappy-ai.ru`;
+  const email = `hello@snappy-ai.ru`;
 
   return (
     <SettingsRow icon={<FilledIcon color="accentViolet" icon={Mail} />}>

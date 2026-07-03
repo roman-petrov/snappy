@@ -14,7 +14,7 @@ export const FeatureList = ({ items }: FeatureListProps) => (
         <IconBadge color={color} icon={icon} />
         <div className={styles.body}>
           <Text as="h3" text={title} typography="h3" />
-          <Text cn={styles.desc} text={description} typography="body" />
+          <Text as="p" cn={styles.desc} text={description} typography="body" />
         </div>
       </li>
     ))}

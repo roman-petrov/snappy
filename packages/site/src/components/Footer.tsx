@@ -5,16 +5,11 @@ import styles from "./Footer.module.scss";
 
 export const Footer = () => (
   <footer className={styles.footer}>
-    <div className={styles.top}>
-      <Text cn={styles.tagline} text={t(`footer.tagline`)} typography="body" />
-      <nav className={styles.nav}>
-        {([`how`, `can`, `tasks`, `who`, `compare`] as const).map(key => (
-          <Link key={key} link={`#${key}`} muted text={t(`nav.${key}`)} />
-        ))}
-        <Link link={{ href: `/app` }} muted text={t(`footer.app`)} />
-        <Link link={{ href: `/download/snappy.apk` }} muted text={t(`footer.android`)} />
-      </nav>
-    </div>
-    <Text cn={styles.rights} text={t(`footer.rights`)} typography="caption" />
+    <Text as="p" cn={styles.tagline} text={t(`footer.tagline`)} typography="body" />
+    <Text as="p" cn={styles.rights} text={t(`footer.rights`)} typography="caption" />
+    <nav className={styles.links}>
+      <Link link={{ href: `/privacy` }} muted text={t(`footer.privacy`)} />
+      <Link link={{ href: `/terms` }} muted text={t(`footer.terms`)} />
+    </nav>
   </footer>
 );

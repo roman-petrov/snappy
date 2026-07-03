@@ -1,4 +1,5 @@
 // cspell:word AQID
+import { MimeType } from "@snappy/core";
 import { describe, expect, it, vi } from "vitest";
 
 import { ToolContext } from "./ToolContext";
@@ -8,7 +9,10 @@ const generate = (content: string) => vi.fn().mockResolvedValue({ artifactId: `a
 
 describe(`publishImage`, () => {
   it(`feeds a data url to models for relative published urls`, async () => {
-    vi.stubGlobal(`fetch`, () => new Response(new Uint8Array([1, 2, 3]), { headers: { "Content-Type": `image/png` } }));
+    vi.stubGlobal(
+      `fetch`,
+      () => new Response(new Uint8Array([1, 2, 3]), { headers: { "Content-Type": MimeType.imagePng } }),
+    );
 
     const media: Record<string, string> = {};
 

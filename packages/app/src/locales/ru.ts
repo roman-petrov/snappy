@@ -63,6 +63,12 @@ export const ru = {
       backToSignIn: `Вернуться ко входу`,
       checkEmail: `Проверьте почту`,
       checkEmailLead: `Мы отправили ссылку для подтверждения. Откройте её, чтобы завершить регистрацию.`,
+      consent: {
+        and: `и`,
+        prefix: `Я принимаю`,
+        privacy: `политику конфиденциальности`,
+        terms: `условия использования`,
+      },
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `Аккаунт с таким email уже зарегистрирован`,

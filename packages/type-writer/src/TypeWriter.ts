@@ -8,7 +8,7 @@
 
 import type { TypeWriterSpeed } from "@snappy/domain";
 
-import { _ } from "@snappy/core";
+import { _, MimeType } from "@snappy/core";
 
 import styles from "./TypeWriter.module.scss";
 
@@ -613,7 +613,7 @@ export const TypeWriter = () => {
     }
 
     lastHtml = nextHtml;
-    const newBody = new DOMParser().parseFromString(nextHtml, `text/html`).body;
+    const newBody = new DOMParser().parseFromString(nextHtml, MimeType.textHtml).body;
     const newVisible = newBody.textContent;
     carry = Math.min(prefix(previousVisible, newVisible), cumulative?.length ?? 0);
     revealedPx = Math.min(revealedPx, pxAt(carry));

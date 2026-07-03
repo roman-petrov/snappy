@@ -152,7 +152,10 @@ const transition =
       return;
     }
 
-    if ([fromLayer, toLayer].includes(`flip`)) {
+    const flipCover =
+      (fromLayer === `flip` && toLayer === `cover`) || (back && fromLayer === `cover` && toLayer === `flip`);
+
+    if ([fromLayer, toLayer].includes(`flip`) && !flipCover) {
       if (flipMotion === undefined || pageAt === undefined || setOutgoing === undefined) {
         push();
 

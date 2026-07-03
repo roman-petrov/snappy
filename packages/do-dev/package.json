@@ -9,15 +9,11 @@
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/do": "workspace:*",
-    "@snappy/intl": "workspace:*",
     "@snappy/node": "workspace:*",
     "@snappy/server": "workspace:*",
     "@snappy/site-server": "workspace:*",
     "@snappy/ui-core": "workspace:*",
-    "express": "^5.2.1",
+    "express": "^5.1.0",
     "vite": "^8.1.0"
-  },
-  "devDependencies": {
-    "@types/express": "^5.0.6"
   }
 }

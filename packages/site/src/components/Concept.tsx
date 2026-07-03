@@ -15,7 +15,7 @@ export const Concept = () => (
       <IconBadge color="accentViolet" icon={Lightbulb} />
       <div className={styles.body}>
         <Text as="h3" text={t(`concept.hintTitle`)} typography="h3" />
-        <Text text={t(`concept.hintText`)} typography="large" />
+        <Text as="p" text={t(`concept.hintText`)} typography="large" />
       </div>
     </div>
   </Section>

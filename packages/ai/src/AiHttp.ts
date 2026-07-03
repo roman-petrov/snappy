@@ -4,12 +4,12 @@ import { MimeType } from "@snappy/core";
 
 export type AiHttpConfig = { apiKey: string; baseUrl: string };
 
-const headers = (apiKey: string, contentType?: string) => ({
+const headers = (apiKey: string, contentType?: MimeType) => ({
   Authorization: `Bearer ${apiKey}`,
   ...(contentType === undefined ? {} : { "Content-Type": contentType }),
 });
 
-const post = async (config: AiHttpConfig, path: string, body: BodyInit, contentType?: string) => {
+const post = async (config: AiHttpConfig, path: string, body: BodyInit, contentType?: MimeType) => {
   const response = await fetch(`${config.baseUrl}${path}`, {
     body,
     headers: headers(config.apiKey, contentType),

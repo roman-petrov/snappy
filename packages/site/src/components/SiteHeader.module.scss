@@ -1,16 +1,7 @@
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/tokens/animation";
-@use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/layer";
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
-  display: flex;
-  gap: space.lg();
-  align-items: center;
-}
-
-.nav {
   display: flex;
   gap: space.lg();
   align-items: center;
@@ -27,91 +18,8 @@
   margin-inline-end: space.sm();
 }
 
-.burger {
-  display: none;
-  margin-inline-start: space.xs();
-}
-
-.menu {
-  @include layer.overlay;
-
-  position: fixed;
-  inset: 0;
-}
-
-.backdrop {
-  position: absolute;
-  inset: 0;
-  background-color: color.backdrop();
-  animation: backdrop-in animation.standard-md() both;
-}
-
-.panel {
-  position: absolute;
-  inset-block-start: space.md();
-  inset-inline: space.md();
-  display: flex;
-  flex-direction: column;
-  gap: space.md();
-  padding: space.lg();
-  transform-origin: top center;
-  animation: panel-in animation.settle-md() both;
-}
-
-.panel-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.panel-nav {
-  display: flex;
-  flex-direction: column;
-  gap: space.xs();
-}
-
-.panel-actions {
-  display: flex;
-  flex-direction: column;
-  gap: space.sm();
-
-  > * {
-    width: 100%;
-  }
-}
-
-@keyframes backdrop-in {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(#{r(-8)}) scale(0.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @include mobile {
-  .nav {
-    display: none;
-  }
-
   .system {
     display: none;
-  }
-
-  .burger {
-    display: inline-flex;
   }
 }

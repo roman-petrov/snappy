@@ -2,8 +2,11 @@
 /* eslint-disable functional/no-expression-statements */
 import { startSite } from "@snappy/ui";
 
-import { Landing } from "./components";
 import { SiteHeader } from "./components/SiteHeader";
+import { Pages } from "./Pages";
 import "./scss/scroll.scss";
 
-startSite({ children: <Landing />, header: <SiteHeader /> });
+const { pathname } = window.location;
+const path = Pages.paths.find(p => p === pathname) ?? `/`;
+
+startSite({ children: Pages.view(path), header: <SiteHeader />, path });

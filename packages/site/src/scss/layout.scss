@@ -21,7 +21,7 @@
   align-items: start;
 }
 
-@mixin muted($opacity: 0.7) {
+@mixin muted {
   color: color.text();
-  opacity: $opacity;
+  opacity: 0.7;
 }

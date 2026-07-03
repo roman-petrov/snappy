@@ -1,6 +1,6 @@
 /* @vitest-environment node */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { HttpStatus } from "@snappy/core";
+import { HttpStatus, MimeType } from "@snappy/core";
 import { zstdDecompressSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
@@ -8,7 +8,7 @@ import { HttpServer, type HttpServer as HttpServerType } from "./HttpServer";
 
 type ServerContext = { server: HttpServerType; url: string };
 
-const jsonContentType = `application/json; charset=utf-8`;
+const jsonContentType = MimeType.json;
 
 const withServer = async (run: (context: ServerContext) => Promise<void> | void) => {
   const server = HttpServer();
@@ -52,7 +52,7 @@ describe(`HttpServer`, () => {
       const response = await fetch(`${url}/`);
 
       expect(response.status).toBe(HttpStatus.ok);
-      expect(response.headers.get(`content-type`)).toContain(`application/json`);
+      expect(response.headers.get(`content-type`)).toContain(MimeType.json);
       await expect(response.json()).resolves.toStrictEqual(body);
     });
   });
@@ -72,12 +72,12 @@ describe(`HttpServer`, () => {
 
   it(`respond sends raw body and content type`, async () => {
     await withServer(async ({ server, url }) => {
-      server.on(server.respond({ body: `plain`, contentType: `text/plain` }));
+      server.on(server.respond({ body: `plain`, contentType: MimeType.textPlain }));
 
       const response = await fetch(`${url}/`);
 
       await expect(response.text()).resolves.toBe(`plain`);
-      expect(response.headers.get(`content-type`)).toBe(`text/plain`);
+      expect(response.headers.get(`content-type`)).toBe(MimeType.textPlain);
     });
   });
 
@@ -98,7 +98,7 @@ describe(`HttpServer`, () => {
 
       const response = await fetch(`${url}/`);
 
-      expect(response.headers.get(`content-type`)).toContain(`text/event-stream`);
+      expect(response.headers.get(`content-type`)).toContain(MimeType.eventStream);
       await expect(response.text()).resolves.toBe(`data: ${JSON.stringify(event)}`);
     });
   });

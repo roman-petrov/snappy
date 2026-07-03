@@ -18,7 +18,7 @@
 }
 
 .desc {
-  @include layout.muted(0.75);
+  @include layout.muted;
 }
 
 @include mobile {

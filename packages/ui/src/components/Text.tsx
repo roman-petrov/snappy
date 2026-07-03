@@ -16,19 +16,20 @@ export type TextProps = Omit<React.HTMLAttributes<HTMLElement>, `as` | `children
   typography?: Typography;
 };
 
-type TextTag = `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
+type TextTag = `article` | `dd` | `div` | `dt` | `h1` | `h2` | `h3` | `label` | `p` | `span`;
 
-export const Text = ({ as = `span`, cn = ``, color, html = false, text, typography = `body`, ...rest }: TextProps) => {
-  const Tag = as;
-  const className = _.cn($.typography(typography), $.color(color), cn);
-
-  if (html) {
-    return <Tag className={className} {...Html.text(text)} {...rest} />;
-  }
-
-  return (
-    <Tag className={className} {...rest}>
-      {text}
-    </Tag>
-  );
-};
+export const Text = ({
+  as: Tag = `span`,
+  cn = ``,
+  color,
+  html = false,
+  text,
+  typography = `body`,
+  ...rest
+}: TextProps) => (
+  <Tag
+    className={_.cn($.typography(typography), $.color(color), cn)}
+    {...(html ? Html.text(text) : { children: text })}
+    {...rest}
+  />
+);

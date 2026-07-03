@@ -5,7 +5,6 @@
 @use "../scss/layout";
 
 $-max-width: r(640);
-$-text-min-width: r(220);
 
 .root {
   @include layer.chrome;
@@ -21,10 +20,8 @@ $-text-min-width: r(220);
 
 .panel {
   display: flex;
-  flex-wrap: wrap;
-  gap: space.md();
+  gap: space.lg();
   align-items: center;
-  justify-content: center;
   width: 100%;
   max-width: $-max-width;
   padding: space.md() space.lg();
@@ -32,10 +29,27 @@ $-text-min-width: r(220);
   animation: banner-in animation.settle-md() both;
 }
 
+.message {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: space.xs() space.sm();
+  align-items: center;
+  min-width: 0;
+}
+
 .text {
   @include layout.muted;
 
-  flex: 1 1 $-text-min-width;
+  margin: 0;
+}
+
+.more {
+  flex-shrink: 0;
+}
+
+.accept {
+  flex-shrink: 0;
 }
 
 @keyframes banner-in {
@@ -53,12 +67,14 @@ $-text-min-width: r(220);
 @include mobile {
   .panel {
     flex-direction: column;
+    gap: space.md();
     align-items: stretch;
-    text-align: center;
   }
 
-  .text {
+  .message {
     flex: initial;
+    justify-content: center;
+    text-align: center;
   }
 
   .accept {

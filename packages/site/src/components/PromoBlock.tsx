@@ -27,9 +27,9 @@ export const PromoBlock = ({
   <section className={_.cn(styles.root, bordered && styles.bordered)}>
     <Text as={as} cn={styles.title} text={title} typography={titleTypography} />
     <PageNarrow>
-      <Text text={lead} typography="large" />
+      <Text as="p" text={lead} typography="large" />
     </PageNarrow>
     <div className={styles.actions}>{actions}</div>
-    {note === undefined ? undefined : <Text cn={styles.note} text={note} typography="caption" />}
+    {note === undefined ? undefined : <Text as="p" cn={styles.note} text={note} typography="caption" />}
   </section>
 );

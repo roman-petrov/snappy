@@ -1,5 +1,5 @@
 import { _ } from "@snappy/core";
-import { $, Button, SafeArea, Text } from "@snappy/ui";
+import { $, Button, Link, SafeArea, Text } from "@snappy/ui";
 
 import type { useCookieBannerState } from "./CookieBanner.state";
 
@@ -12,7 +12,10 @@ export const CookieBannerView = ({ accept, visible }: CookieBannerViewProps) =>
   visible ? (
     <SafeArea bottom cn={styles.root}>
       <div className={_.cn(styles.panel, $.surface(`surfaceGlass`), $.radius(`lg`))}>
-        <Text cn={styles.text} text={t(`cookieBanner.text`)} typography="caption" />
+        <div className={styles.message}>
+          <Text as="p" cn={styles.text} text={t(`cookieBanner.text`)} typography="caption" />
+          <Link cn={styles.more} link={{ href: `/privacy` }} text={t(`cookieBanner.more`)} />
+        </div>
         <Button cn={styles.accept} onClick={accept} text={t(`cookieBanner.accept`)} type="primary" />
       </div>
     </SafeArea>

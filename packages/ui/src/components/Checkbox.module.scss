@@ -1,0 +1,57 @@
+@use "pkg:@snappy/theme/material/icon-button";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/primitives";
+
+$-motion: animation.sharp-md();
+
+.root {
+  display: flex;
+  gap: space.md();
+  align-items: flex-start;
+}
+
+.control {
+  @include icon-button.touch;
+
+  flex-shrink: 0;
+}
+
+.box {
+  @include primitives.square(r(20));
+
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  background: color.surface();
+  border: 1px solid color.outline();
+  border-radius: radius.xs();
+  transition:
+    background-color $-motion,
+    border-color $-motion;
+
+  &[data-disabled] {
+    opacity: 0.5;
+  }
+
+  &.checked {
+    background: color.primary();
+    border-color: color.primary();
+  }
+
+  .icon {
+    width: space.md();
+    height: space.md();
+  }
+}
+
+.label {
+  flex: 1;
+  color: color.text();
+  text-align: start;
+  opacity: 0.7;
+}

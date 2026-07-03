@@ -9,6 +9,6 @@ export const Tile = ({ color, description, icon, title }: TileProps) => (
   <Card cn={styles.tile} elevation="e1" radius="lg">
     <IconBadge color={color} icon={icon} />
     <Text as="h3" text={title} typography="h3" />
-    <Text cn={styles.desc} text={description} typography="body" />
+    <Text as="p" cn={styles.desc} text={description} typography="body" />
   </Card>
 );

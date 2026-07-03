@@ -24,7 +24,7 @@ export type StartAppInput = {
   tabs?: TabPagerItem[];
 };
 
-export type StartSiteInput = { children: ReactNode; header?: ReactNode };
+export type StartSiteInput = { children: ReactNode; header?: ReactNode; path?: string };
 
 const container = () => {
   const element = document.querySelector(`#root`);
@@ -65,7 +65,7 @@ export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: Star
   };
 };
 
-export const startSite = ({ children, header }: StartSiteInput) => {
+export const startSite = ({ children, header, path = `/` }: StartSiteInput) => {
   Theme.init();
   Language.init();
 
@@ -76,7 +76,7 @@ export const startSite = ({ children, header }: StartSiteInput) => {
 
   hydrateRoot(
     mountContainer,
-    <AppRouter path="/" ssr>
+    <AppRouter path={path} ssr>
       <AppSite header={header}>{children}</AppSite>
     </AppRouter>,
   );

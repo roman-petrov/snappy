@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { _, Json } from "@snappy/core";
+import { _, Json, MimeType } from "@snappy/core";
 import { describe, expect, it, vi } from "vitest";
 
 import { YooKassa } from "./YooKassa";
 
 const response = (status: number, body: string) =>
-  new Response(body, { headers: { "Content-Type": `application/json` }, status });
+  new Response(body, { headers: { "Content-Type": MimeType.json }, status });
 
 describe(`yooKassa`, () => {
   const btoaMock = vi.fn((value: string) => Buffer.from(value, `utf8`).toString(`base64`));

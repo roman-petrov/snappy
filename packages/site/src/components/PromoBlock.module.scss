@@ -65,7 +65,7 @@
 }
 
 .note {
-  @include layout.muted(0.6);
+  @include layout.muted;
 }
 
 @include mobile {

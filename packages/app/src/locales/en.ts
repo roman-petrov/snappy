@@ -63,6 +63,7 @@ export const en = {
       backToSignIn: `Back to sign in`,
       checkEmail: `Check your email`,
       checkEmailLead: `We sent a verification link. Open it to finish signing up.`,
+      consent: { and: `and`, prefix: `I accept the`, privacy: `privacy policy`, terms: `terms of use` },
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `An account with this email already exists`,

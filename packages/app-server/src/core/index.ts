@@ -1,9 +1,5 @@
 export * from "./App";
 
-export * from "./AppManifest";
-
-export * from "./AppManifestHost";
-
 export * from "./AppTrpc";
 
 export * from "./Balance";

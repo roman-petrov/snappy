@@ -56,7 +56,11 @@ export const en = {
     step3: `Get a finished result you can send, publish or download right away.`,
     title: `How it works`,
   },
-  cookieBanner: { accept: `Got it`, text: `We use cookies to make the site work and remember your settings.` },
+  cookieBanner: {
+    accept: `Got it`,
+    more: `Learn more`,
+    text: `We use cookies to make the site work and remember your settings.`,
+  },
   cta: {
     button: `Get started`,
     lead: `Describe your first task — and get a finished result in a couple of minutes. Signing up takes a minute.`,
@@ -64,10 +68,10 @@ export const en = {
     title: `Try Snappy`,
   },
   footer: {
-    android: `Android`,
-    app: `Web app`,
-    rights: `© Snappy`,
+    privacy: `Privacy`,
+    rights: `© 2026 Snappy`,
     tagline: `A universal AI assistant for any task: images, text, photo and audio work, plans and ideas.`,
+    terms: `Terms`,
   },
   hero: {
     android: `Download for Android`,
