@@ -15,5 +15,8 @@
     "@snappy/ui-core": "workspace:*",
     "express": "^5.1.0",
     "vite": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6"
   }
 }
