@@ -1,6 +1,7 @@
 @use "pkg:@snappy/theme/material/icon-button";
 @use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/icon-size";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/primitives";
@@ -20,7 +21,7 @@ $-motion: animation.sharp-md();
 }
 
 .box {
-  @include primitives.square(r(20));
+  @include primitives.square(icon-size.md());
 
   position: relative;
   display: inline-flex;
@@ -41,11 +42,15 @@ $-motion: animation.sharp-md();
   &.checked {
     background: color.primary();
     border-color: color.primary();
+
+    .icon {
+      opacity: 1;
+    }
   }
 
   .icon {
-    width: space.md();
-    height: space.md();
+    opacity: 0;
+    transition: opacity $-motion;
   }
 }
 

@@ -14,7 +14,7 @@ export const CheckboxView = ({ checked, children, cn, disabled, onActivate, tapP
   <div className={_.cn(styles.root, cn)}>
     <Tap {...tapProps} cn={_.cn($.tap(`icon`), styles.control)} onClick={onActivate}>
       <span aria-hidden className={_.cn(styles.box, checked && styles.checked)} data-disabled={disabled || undefined}>
-        {checked ? <Icon cn={styles.icon} color="surface" icon={Check} size="sm" /> : undefined}
+        <Icon cn={styles.icon} color="surface" icon={Check} size="md" />
       </span>
     </Tap>
     {children === undefined ? undefined : (
