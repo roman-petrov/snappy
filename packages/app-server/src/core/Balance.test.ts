@@ -1,9 +1,10 @@
+import { Config } from "@snappy/config";
 import { describe, expect, it, vi } from "vitest";
 
 import { Balance } from "./Balance";
 import { Mock } from "./test/Mock";
 
-const { creditFromTopUp, debitForLlm, isLlmBlocked, read } = Balance;
+const { creditFromSignUp, creditFromTopUp, debitForLlm, isLlmBlocked, read } = Balance;
 
 describe(`read`, () => {
   it(`returns balance from user`, async () => {
@@ -27,6 +28,16 @@ describe(`isLlmBlocked`, () => {
     vi.mocked(user.balance.read).mockResolvedValue(balance);
 
     await expect(isLlmBlocked(user)).resolves.toBe(blocked);
+  });
+});
+
+describe(`creditFromSignUp`, () => {
+  it(`credits sign-up bonus`, async () => {
+    const user = Mock.createDbUser();
+
+    await creditFromSignUp(user);
+
+    expect(user.balance.credit).toHaveBeenCalledWith(Config.balance.signUpBonusRub, { source: `signUp` });
   });
 });
 

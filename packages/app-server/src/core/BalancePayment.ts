@@ -19,7 +19,7 @@ export const BalancePayment = ({ db, payment, paymentLog }: BalancePaymentConfig
   const description = `Snappy — пополнение баланса`;
 
   const paymentUrl = async (user: DbUser, amount: number) => {
-    if (!Number.isFinite(amount) || amount < Config.balancePaymentMinRub || amount > Config.balancePaymentMaxRub) {
+    if (!Number.isFinite(amount) || amount < Config.balance.paymentMinRub || amount > Config.balance.paymentMaxRub) {
       return { status: `invalidAmount` as const };
     }
     const rounded = _.round(amount, 2);

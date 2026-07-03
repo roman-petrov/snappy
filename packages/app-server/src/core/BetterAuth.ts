@@ -1,6 +1,6 @@
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/require-await */
-import type { DbAuth } from "@snappy/db";
+import type { Db } from "@snappy/db";
 
 import { Config } from "@snappy/config";
 import { _, Email as EmailCore } from "@snappy/core";
@@ -10,10 +10,11 @@ import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 
 import { AuthEmail } from "./AuthEmail";
+import { Balance } from "./Balance";
 
-export type BetterAuthConfig = { auth: DbAuth };
+export type BetterAuthConfig = { db: Db };
 
-export const BetterAuth = ({ auth }: BetterAuthConfig) => {
+export const BetterAuth = ({ db }: BetterAuthConfig) => {
   const resetEmail = AuthEmail();
   const verifyEmail = AuthEmail();
 
@@ -21,10 +22,11 @@ export const BetterAuth = ({ auth }: BetterAuthConfig) => {
     advanced: { cookiePrefix: `snappy` },
     basePath: `/api/auth`,
     baseURL: _.https(Config.host),
-    database: auth,
+    database: db.auth,
     databaseHooks: {
       user: {
         create: {
+          after: async user => Balance.creditFromSignUp(db.user(user.id)),
           before: async user => {
             if (EmailCore.foreignProvider(user.email)) {
               throw APIError.from(`BAD_REQUEST`, {

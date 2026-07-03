@@ -42,8 +42,7 @@ const devSsl = () => {
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
 const s3ObjectMaxAgeSec = _.day.seconds * _.daysInYear;
-const balancePaymentMinRub = 10;
-const balancePaymentMaxRub = 5000;
+const balance = { paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 };
 const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
 const smtpHost = `smtp.mail.ru`;
 const smtpPort = 465;
@@ -55,8 +54,7 @@ export const Config = {
   aiTunnelKey,
   androidCertSha256,
   authEmailCooldownSec,
-  balancePaymentMaxRub,
-  balancePaymentMinRub,
+  balance,
   betterAuthJwtSecret,
   dbHost,
   dbName,

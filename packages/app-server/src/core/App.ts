@@ -23,7 +23,7 @@ export type AppConfig = { app: FastifyInstance };
 
 export const App = async ({ app }: AppConfig) => {
   const db = Db(Config.dbUrl());
-  const betterAuth = BetterAuth({ auth: db.auth });
+  const betterAuth = BetterAuth({ db });
 
   const payment = Payment({
     credentials: { secretKey: Config.yooKassaSecretKey(), shopId: Config.yooKassaShopId() },
