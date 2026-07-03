@@ -15,6 +15,7 @@ import { Html } from "./Html";
 import { HtmlCache } from "./HtmlCache";
 import { Spa } from "./ServeSpa";
 import { Static } from "./Static";
+import { TrustedHost } from "./TrustedHost";
 
 export const Server = async () => {
   const distDir = join(process.cwd(), `dist`);
@@ -51,8 +52,11 @@ export const Server = async () => {
   await app.ready();
 
   if (handlerRef.current !== undefined) {
-    const handler = handlerRef.current;
-    https.createServer(Config.ssl(), handler).listen(portHttps, `0.0.0.0`);
+    const handler = TrustedHost.requestHandler(Config.host, handlerRef.current);
+    const ssl = Config.ssl();
+    https
+      .createServer({ ...ssl, SNICallback: TrustedHost.sni(Config.host, ssl) }, handler)
+      .listen(portHttps, `0.0.0.0`);
     http.createServer(handler).listen(portHttp, `127.0.0.1`);
   }
 };

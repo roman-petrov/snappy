@@ -9,3 +9,5 @@ export * from "./Server";
 export * from "./ServeSpa";
 
 export * from "./Static";
+
+export * from "./TrustedHost";
