@@ -23,7 +23,7 @@ Combines and goes beyond three existing ideas:
 For onboarding, product explainers, team training, workshops, and self-study when the author wants one beautiful link
 and proof that the viewer understood the material.
 
-## 🛠 What the agent uses
+### What the agent uses
 
 - **Skill workflow** — interview, outline approval, module-by-module generation, assessment design, publish.
 - **Live preview** — phone- or desktop-sized view that updates as modules and animations are added; the user flips
@@ -34,6 +34,21 @@ and proof that the viewer understood the material.
   true/false, and short answer with automatic or rubric-based scoring where feasible.
 
 The agent uses only facts and materials the user provided—no invented figures, policies, or citations.
+
+### Success criteria (product)
+
+- Author can go from brief to published link in one skill flow, with preview and iteration in Snappy.
+- Learner completes the course and assessment in the browser without installing an app.
+- Assessment questions are clearly grounded in the generated course content.
+- Visual quality and motion feel intentional (closer to **greeting page** / **presentation page** polish than a plain
+  document with a quiz pasted at the end).
+
+### Out of scope for v1
+
+- Full LMS: enrollments, deadlines, proctoring, SCORM export.
+- Long multi-hour curricula; target is a **micro-course** length (roughly 5–20 minutes).
+- Author dashboard with aggregate analytics across many learners — worth a follow-up idea if sharing links at scale
+  matters.
 
 ## 👤 How the user experiences it
 
@@ -65,18 +80,3 @@ The agent uses only facts and materials the user provided—no invented figures,
    items can offer **retry** or **review module N** links when the author enabled them.
 5. Optional: a short **completion message** or certificate-style summary screen when the learner passes—wording and
    branding come from what the user asked for, not generic stock copy.
-
-## ✅ Success criteria (product)
-
-- Author can go from brief to published link in one skill flow, with preview and iteration in Snappy.
-- Learner completes the course and assessment in the browser without installing an app.
-- Assessment questions are clearly grounded in the generated course content.
-- Visual quality and motion feel intentional (closer to **greeting page** / **presentation page** polish than a plain
-  document with a quiz pasted at the end).
-
-## 🚧 Out of scope for v1 (explicit)
-
-- Full LMS: enrollments, deadlines, proctoring, SCORM export.
-- Long multi-hour curricula; target is a **micro-course** length (roughly 5–20 minutes).
-- Author dashboard with aggregate analytics across many learners—worth a follow-up idea if sharing links at scale
-  matters.
