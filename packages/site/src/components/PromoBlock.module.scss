@@ -37,8 +37,19 @@
   pointer-events: none;
   content: "";
   background:
-    radial-gradient(50% 60% at 32% 28%, color-mix(in oklab, color.accent-violet() 28%, transparent), transparent 72%),
-    radial-gradient(52% 62% at 72% 24%, color-mix(in oklab, color.accent-indigo() 24%, transparent), transparent 72%);
+    radial-gradient(
+      50% 60% at 32% 28%,
+      color-mix(in oklab, color.accent-violet() 22%, transparent) 0%,
+      color-mix(in oklab, color.accent-violet() 8%, transparent) 45%,
+      transparent 100%
+    ),
+    radial-gradient(
+      52% 62% at 72% 24%,
+      color-mix(in oklab, color.accent-indigo() 18%, transparent) 0%,
+      color-mix(in oklab, color.accent-indigo() 6%, transparent) 45%,
+      transparent 100%
+    );
+  background-blend-mode: screen;
   filter: blur(r(28));
 }
 
