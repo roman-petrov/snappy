@@ -6,6 +6,7 @@ import type { useSiteHeaderState } from "./SiteHeader.state";
 
 import { t } from "../locales";
 import styles from "./SiteHeader.module.scss";
+import { SiteHeaderMenuLink } from "./SiteHeaderMenuLink";
 
 export type SiteHeaderViewProps = ReturnType<typeof useSiteHeaderState>;
 
@@ -37,7 +38,7 @@ export const SiteHeaderView = ({ close, open, openMenu }: SiteHeaderViewProps) =
           </div>
           <nav className={styles.panelNav}>
             {links.map(key => (
-              <Link key={key} link={`#${key}`} text={t(`nav.${key}`)} />
+              <SiteHeaderMenuLink key={key} link={`#${key}`} text={t(`nav.${key}`)} />
             ))}
           </nav>
           <div className={styles.panelActions}>

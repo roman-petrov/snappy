@@ -1,0 +1,15 @@
+@use "pkg:@snappy/theme/material/tap";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+.root {
+  @include tap.menu;
+
+  padding: space.sm() space.md();
+  border-radius: radius.md();
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    box-shadow animation.standard-md();
+}

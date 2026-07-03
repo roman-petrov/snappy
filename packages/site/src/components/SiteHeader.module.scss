@@ -1,9 +1,7 @@
 @use "pkg:@snappy/theme/core" as *;
-@use "pkg:@snappy/theme/material/tap";
 @use "pkg:@snappy/theme/tokens/animation";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/layer";
-@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 
 .root {
@@ -70,17 +68,6 @@
   display: flex;
   flex-direction: column;
   gap: space.xs();
-
-  a {
-    @include tap.menu;
-
-    padding: space.sm() space.md();
-    border-radius: radius.md();
-    transition:
-      background-color animation.standard-md(),
-      border-color animation.standard-md(),
-      box-shadow animation.standard-md();
-  }
 }
 
 .panel-actions {

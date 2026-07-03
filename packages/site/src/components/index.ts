@@ -26,6 +26,8 @@ export * from "./PromoBlock";
 
 export * from "./Section";
 
+export * from "./SiteHeaderMenuLink";
+
 export * from "./Steps";
 
 export * from "./Tile";
