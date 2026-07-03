@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { Email } from "./Email";
 
-const { foreignProvider, valid } = Email;
+const { foreignProvider, mailto, valid } = Email;
 
 describe(`valid`, () => {
   it(`returns false for empty or whitespace-only input`, () => {
@@ -22,6 +22,13 @@ describe(`valid`, () => {
     expect(valid(`user@example.com`)).toBe(true);
     expect(valid(`  user@example.com  `)).toBe(true);
     expect(valid(`user.name+tag@example.co.uk`)).toBe(true);
+  });
+});
+
+describe(`mailto`, () => {
+  it(`returns mailto href for email`, () => {
+    expect(mailto(`user@example.com`)).toBe(`mailto:user@example.com`);
+    expect(mailto(`  user@example.com  `)).toBe(`mailto:user@example.com`);
   });
 });
 

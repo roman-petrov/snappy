@@ -38,4 +38,6 @@ const foreignProvider = (email: string) => {
   return host.length > 0 && foreignDomains.has(host);
 };
 
-export const Email = { foreignProvider, valid };
+const mailto = (email: string) => `mailto:${email.trim()}`;
+
+export const Email = { foreignProvider, mailto, valid };
