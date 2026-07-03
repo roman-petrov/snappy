@@ -4,6 +4,8 @@ export * from "./Compare";
 
 export * from "./Concept";
 
+export * from "./CookieBanner";
+
 export * from "./CtaBlock";
 
 export * from "./FeatureList";

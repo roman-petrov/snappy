@@ -3,6 +3,7 @@ import { Page } from "@snappy/ui";
 import { Capabilities } from "./Capabilities";
 import { Compare } from "./Compare";
 import { Concept } from "./Concept";
+import { CookieBanner } from "./CookieBanner";
 import { CtaBlock } from "./CtaBlock";
 import { Footer } from "./Footer";
 import { Hero } from "./Hero";
@@ -25,5 +26,6 @@ export const Landing = () => (
       <CtaBlock />
     </main>
     <Footer />
+    <CookieBanner />
   </Page>
 );

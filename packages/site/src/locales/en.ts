@@ -56,6 +56,7 @@ export const en = {
     step3: `Get a finished result you can send, publish or download right away.`,
     title: `How it works`,
   },
+  cookieBanner: { accept: `Got it`, text: `We use cookies to make the site work and remember your settings.` },
   cta: {
     button: `Get started`,
     lead: `Describe your first task — and get a finished result in a couple of minutes. Signing up takes a minute.`,
