@@ -77,8 +77,8 @@ OSS). Decision deferred until upvotes/community or support volume justify it.
 
 1. The user opens feedback from Settings (or a link from the site footer).
 2. They pick a type (feature, bug, support), enter subject and body — email is taken from the account, not typed again.
-3. After submit, the request appears on the public board with status “new”; the operator receives email with Reply-To set
-   to the user.
+3. After submit, the request appears on the public board with status “new”; the operator receives email with Reply-To
+   set to the user.
 4. Anyone can browse the public list, filter by type or status, and see progress as the operator updates status (e.g.
    planned, in progress, done).
 5. To submit, the user must be signed in; viewing the board does not require login.

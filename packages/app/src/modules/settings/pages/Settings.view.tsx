@@ -5,7 +5,7 @@ import type { useSettingsState } from "./Settings.state";
 
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
-import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "../components";
+import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator, SettingsFeedback } from "../components";
 
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
@@ -29,6 +29,8 @@ export const SettingsView = ({
           link={Routes.settings.profile.root}
           text={t(`settings.profile.title`)}
         />
+        <SettingsCardSeparator />
+        <SettingsFeedback />
       </SettingsCard>
       <SettingsCard title={t(`settings.systemGroup`)}>
         <SettingsCardRow

@@ -1,9 +1,12 @@
 package com.snappy.app;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.net.Uri;
 import android.view.View;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -31,6 +34,15 @@ final class AppHost {
     void bind(String link) {
         webView.setWebViewClient(
                 new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(
+                            WebView view, WebResourceRequest request) {
+                        if (!request.isForMainFrame()) {
+                            return false;
+                        }
+                        return openExternalIfNeeded(view.getContext(), request.getUrl().toString());
+                    }
+
                     @Override
                     public void onPageFinished(WebView view, String url) {
                         if (isAppUrl(url) && !errorScreen.visible()) {
@@ -152,5 +164,24 @@ final class AppHost {
             return;
         }
         errorScreen.show(network);
+    }
+
+    private boolean openExternalIfNeeded(Context context, String url) {
+        if (url == null || isAppUrl(url)) {
+            return false;
+        }
+        Uri uri = Uri.parse(url);
+        String scheme = uri.getScheme();
+        if (scheme == null) {
+            return false;
+        }
+        if ((scheme.equals("http") || scheme.equals("https")) && AppLink.trusted(url, appUrl)) {
+            return false;
+        }
+        try {
+            context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        } catch (ActivityNotFoundException ignored) {
+        }
+        return true;
     }
 }

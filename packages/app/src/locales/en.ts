@@ -100,6 +100,7 @@ export const en = {
       mode: { direct: `Direct`, proxy: `Proxy` },
       title: `AI Tunnel`,
     },
+    feedback: { hint: `Questions and feedback` },
     language: { en: `English`, ru: `Русский`, system: `System`, title: `Language` },
     models: {
       chat: { title: `Text` },

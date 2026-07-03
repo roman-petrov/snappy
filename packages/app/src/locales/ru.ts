@@ -103,6 +103,7 @@ export const ru = {
       mode: { direct: `Прямой`, proxy: `Прокси` },
       title: `AI Tunnel`,
     },
+    feedback: { hint: `Вопросы и обратная связь` },
     language: { en: `English`, ru: `Русский`, system: `Системный`, title: `Язык` },
     models: {
       chat: { title: `Текст` },

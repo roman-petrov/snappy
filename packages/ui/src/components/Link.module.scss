@@ -2,16 +2,31 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/radius";
 
+@mixin link-underline {
+  text-decoration: underline;
+  text-underline-offset: r(2);
+}
+
+@mixin -on-interactive {
+  @include hover {
+    @include link-underline;
+  }
+
+  @include pressed {
+    @include link-underline;
+  }
+}
+
 .accent {
   @include focus($radius: radius.xs());
-
-  @include hover {
-    text-decoration: underline;
-  }
+  @include -on-interactive;
 
   color: color.primary();
 }
 
 .muted {
   @include focus($radius: radius.xs());
+  @include -on-interactive;
+
+  color: color.text();
 }
