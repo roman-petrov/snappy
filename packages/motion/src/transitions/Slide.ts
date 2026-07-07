@@ -19,7 +19,6 @@ export type SlideConfig = {
 };
 
 export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }: SlideConfig) => {
-  const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
   let touchEnabled = false;
   let dragBaseline = 0;
   let dragIndex = 0;
@@ -41,23 +40,11 @@ export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }:
       return settled;
     }
 
-    const steps = span(total);
-
-    return steps ? Math.round(_.clamp(-offset / width, 0, steps)) : 0;
+    return Math.round(_.clamp(-offset / width, 0, span(total)));
   };
 
-  const buildSnap = (release: TrackReleaseSnap) => {
+  const snapTo = (target: number) => {
     const total = count();
-
-    const delta = release.stay
-      ? 0
-      : release.gesture.type === `swipe`
-        ? release.gesture.direction === `right`
-          ? -1
-          : 1
-        : -Math.sign(dragOffset);
-
-    const target = _.clamp(dragIndex + delta, 0, total - 1);
 
     return {
       after: ({ reset, setTranslate, width }: SlideTrackControl) => {
@@ -73,7 +60,20 @@ export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }:
     };
   };
 
-  const snap = ({ release }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease);
+  const releaseTarget = (release: TrackReleaseSnap) => {
+    const delta = release.stay
+      ? 0
+      : release.gesture.type === `swipe`
+        ? release.gesture.direction === `right`
+          ? -1
+          : 1
+        : -Math.sign(dragOffset);
+
+    return _.clamp(dragIndex + delta, 0, count() - 1);
+  };
+
+  const snap = ({ release, state }: SlideTrackSnapInput) =>
+    snapTo(release === undefined ? activeIndex(state.offset, state.width) : releaseTarget(release));
 
   const motion = SlideTrack({
     anchor: width => translateForIndex(settled, width, count()),
@@ -95,6 +95,7 @@ export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }:
       dragIndex = activeIndex(offset, width);
       dragBaseline = offset - translateForIndex(dragIndex, width, count());
     },
+    stayRatio: 1 / 2,
     sync: () => settleAt(settled),
     track,
     translate: (dx, { width }) => {

@@ -1,22 +1,18 @@
-import { type Vec2, type Vec2Axis, Vector } from "./Vector";
+import { type Vec2, Vector } from "./Vector";
 
 export type Gesture = { direction: GestureDirection; type: `swipe` } | { type: `none` };
 
-export type GestureAxis = Vec2Axis;
+export type GestureDirection = `left` | `right`;
 
-export type GestureConfig = {
+export type GesturePointer = { delta: Vec2; duration: number; peak: Vec2; speed: Vec2 };
+
+type GestureConfig = {
   axisThreshold?: number;
   swipeMaxDuration?: number;
   swipeMaxRestraint?: number;
   swipeMinDistance?: number;
   swipeMinVelocity?: number;
 };
-
-export type GestureDirection = `left` | `right`;
-
-export type GesturePointer = { delta: Vec2; duration: number; peak: Vec2; speed: Vec2 };
-
-export type VelocitySample = { sample: number; time: number; value: number };
 
 const defaults: Required<GestureConfig> = {
   axisThreshold: 4,
@@ -39,14 +35,8 @@ const releaseVelocity = ({ delta, duration, speed }: GesturePointer) => {
   return speed.x === 0 ? average : Math.abs(speed.x) >= Math.abs(average) ? speed.x : average;
 };
 
-const axis = (vector: Vec2, axisThreshold = defaults.axisThreshold) => Vector.axis(vector, axisThreshold);
-
-const detect = (sample: GesturePointer, config: GestureConfig = {}): Gesture => {
-  const { axisThreshold, swipeMaxDuration, swipeMaxRestraint, swipeMinDistance, swipeMinVelocity } = {
-    ...defaults,
-    ...config,
-  };
-
+const detect = (sample: GesturePointer): Gesture => {
+  const { axisThreshold, swipeMaxDuration, swipeMaxRestraint, swipeMinDistance, swipeMinVelocity } = defaults;
   const { delta, duration, peak } = sample;
   const travel = Vector.max(Vector.abs(delta), peak);
 
@@ -73,12 +63,4 @@ const detect = (sample: GesturePointer, config: GestureConfig = {}): Gesture => 
   return sign === 0 ? { type: `none` } : { direction: sign < 0 ? `left` : `right`, type: `swipe` };
 };
 
-const velocity = (previous: VelocitySample, clientX: number, timestamp: number): VelocitySample => {
-  const dt = timestamp - previous.time;
-
-  return dt > 0
-    ? { sample: clientX, time: timestamp, value: (clientX - previous.sample) / dt }
-    : { ...previous, sample: clientX, time: timestamp };
-};
-
-export const Gesture = { axis, defaults, detect, pointer, releaseVelocity, velocity };
+export const Gesture = { detect, pointer, releaseVelocity };

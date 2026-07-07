@@ -480,7 +480,7 @@ describe(`pointer`, () => {
   });
 
   describe(`settle interrupt`, () => {
-    it(`snaps after a quick re-press during settling instead of freezing mid-track`, async () => {
+    it(`grabs the settling track on re-press and snaps to the nearest page`, async () => {
       const session = harness();
       swipe(session, 200, 120, 2);
       session.dispatch(`touchend`, { id: 1, time: 40, x: 120 });
@@ -489,10 +489,10 @@ describe(`pointer`, () => {
       expect(session.motion.busy()).toBe(true);
 
       session.dispatch(`touchstart`, { id: 1, time: 20, x: 120 });
+      session.dispatch(`touchend`, { id: 1, time: 20, x: 120 });
 
       expect(session.records.length).toBeGreaterThanOrEqual(2);
 
-      session.dispatch(`touchend`, { id: 1, time: 20, x: 120 });
       await session.settle();
 
       expectPageAnchor(session.motion.offset());
@@ -500,7 +500,7 @@ describe(`pointer`, () => {
       expect(session.motion.busy()).toBe(false);
     });
 
-    it(`re-snaps from the interrupted settle position on same-finger re-press`, async () => {
+    it(`releases the grabbed track to an anchored page`, async () => {
       const session = harness();
       session.dispatch(`touchstart`, { id: 1, time: 0, x: 200 });
       session.dispatch(`touchmove`, { id: 1, time: 100, x: 140 });
@@ -514,6 +514,7 @@ describe(`pointer`, () => {
       expect(midSettleOffset).toBeGreaterThan(-pageWidth);
 
       session.dispatch(`touchstart`, { id: 1, time: 20, x: 140 });
+      session.dispatch(`touchend`, { id: 1, time: 20, x: 140 });
       await session.settle();
 
       expectPageAnchor(session.motion.offset());
@@ -521,21 +522,20 @@ describe(`pointer`, () => {
       expect(session.motion.busy()).toBe(false);
     });
 
-    it(`ignores a second finger during settling`, async () => {
+    it(`grabs the settling track with a fresh finger and snaps to the nearest page`, async () => {
       const session = harness();
       swipe(session, 200, 120, 2);
       session.dispatch(`touchend`, { id: 1, time: 40, x: 120 });
 
       expect(session.motion.busy()).toBe(true);
 
-      const recordsBefore = session.records.length;
       session.dispatch(`touchstart`, { id: 2, x: 40 });
-
-      expect(session.records).toHaveLength(recordsBefore);
+      session.dispatch(`touchend`, { id: 2, x: 40 });
 
       await session.settle();
 
-      expect(session.motion.offset()).toBe(-pageWidth);
+      expectPageAnchor(session.motion.offset());
+
       expect(session.motion.busy()).toBe(false);
     });
   });

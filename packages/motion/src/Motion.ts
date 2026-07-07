@@ -22,15 +22,17 @@ export type MotionRunInput = {
   after?: (element: HTMLElement) => void;
   before?: (element: HTMLElement) => void;
   confirm?: boolean;
+  duration?: number;
   element: HTMLElement;
   keyframes: Keyframe[];
   tick?: (progress: number) => void;
 };
 
 export const Motion = () => {
-  const duration = 150;
-  const easing = `cubic-bezier(0.2, 0, 0, 1)`;
-  const options = { duration, easing, fill: `forwards` } as const;
+  // ? Telegram CubicBezierInterpolator.EASE_OUT_QUINT
+  const easing = `cubic-bezier(0.23, 1, 0.32, 1)`;
+  const baseDuration = 220;
+  const fill = `forwards` as const;
   let pending: (() => void) | undefined;
   let tickFrame: number | undefined;
 
@@ -63,11 +65,11 @@ export const Motion = () => {
     }
   };
 
-  const run = async ({ after, before, confirm = true, element, keyframes, tick }: MotionRunInput) => {
+  const run = async ({ after, before, confirm = true, duration, element, keyframes, tick }: MotionRunInput) => {
     cancel([element]);
     before?.(element);
 
-    const animation = element.animate(keyframes, options);
+    const animation = element.animate(keyframes, { duration: duration ?? baseDuration, easing, fill });
     element.style.transform = ``;
 
     const wait = new Promise<void>(resolve => {

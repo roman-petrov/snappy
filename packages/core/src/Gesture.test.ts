@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { Gesture, type GesturePointer } from "./Gesture";
 import { type Vec2, Vector } from "./Vector";
 
-const { axis, detect, pointer, releaseVelocity, velocity } = Gesture;
+const { detect, pointer, releaseVelocity } = Gesture;
 const { from } = Vector;
 
 type PointerInput = {
@@ -31,20 +31,6 @@ const sample = ({
 
   return pointer(duration, displacement, peaks, speeds);
 };
-
-describe(`axis`, () => {
-  it(`returns pending below threshold`, () => {
-    expect(axis(from(3, 3))).toBe(`pending`);
-  });
-
-  it(`prefers horizontal on equal axes`, () => {
-    expect(axis(from(8, 8))).toBe(`horizontal`);
-  });
-
-  it(`returns vertical when y dominates`, () => {
-    expect(axis(from(2, 10))).toBe(`vertical`);
-  });
-});
 
 describe(`detect`, () => {
   it(`detects a short quick swipe by distance`, () => {
@@ -77,11 +63,5 @@ describe(`detect`, () => {
 
   it(`detects left swipe`, () => {
     expect(detect(sample({ duration: 100, dx: -15, dy: 1 }))).toStrictEqual({ direction: `left`, type: `swipe` });
-  });
-});
-
-describe(`velocity`, () => {
-  it(`computes speed from pointer samples`, () => {
-    expect(velocity({ sample: 0, time: 0, value: 0 }, 100, 100)).toStrictEqual({ sample: 100, time: 100, value: 1 });
   });
 });

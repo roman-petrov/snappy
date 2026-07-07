@@ -27,6 +27,7 @@ export type SlideTrackConfig = {
   root: DomRef;
   snap: (input: SlideTrackSnapInput) => SlideTrackSnap;
   start?: (state: SlideTrackState) => void;
+  stayRatio?: number;
   sync?: () => void;
   track: DomRef;
   translate: (dx: number, state: SlideTrackState) => number;
@@ -56,6 +57,7 @@ export const SlideTrack = ({
   root: rootRef,
   snap,
   start,
+  stayRatio = 1 / 3,
   sync,
   track: trackRef,
   translate,
@@ -64,9 +66,25 @@ export const SlideTrack = ({
   const slop = 12;
   const crossRatio = 3;
   const snapEpsilon = 0.001;
-  const stayRatio = 1 / 3;
   const flipVelocity = 0.3;
+  const velocityHorizon = 100;
+  const minSettle = 150;
+  const maxSettle = 600;
   const motion = Motion();
+
+  const settleDuration = (remaining: number, width: number, velX: number) => {
+    if (width === 0) {
+      return minSettle;
+    }
+
+    const half = width / 2;
+    const ratio = Math.min(1, remaining / width);
+    const distance = half + half * Math.sin((ratio - 0.5) * 0.15 * Math.PI);
+    const duration = velX > 0 ? 4 * Math.round(distance / velX) : Math.round((remaining / width + 1) * 100);
+
+    return _.clamp(duration, minSettle, maxSettle);
+  };
+
   const capture = { capture: true, passive: true } as const;
   const active = { capture: true, passive: false } as const;
   let gestureNavigation = false;
@@ -75,27 +93,28 @@ export const SlideTrack = ({
   let isSettling = false;
   let animateGeneration = 0;
   let transformActive: () => boolean;
-  let commit: (snap: SlideTrackSnap) => void = () => undefined;
+  let commit: (snap: SlideTrackSnap, velX?: number) => void = () => undefined;
   let peak = Vector.from(0, 0);
   let started = 0;
   let pressOrigin = Vector.from(0, 0);
   let touchId: number | undefined;
-  let lastTouchId: number | undefined;
   let pressArmed = false;
   let skipFlick = false;
   let isDragging = false;
+  let settleArmed = false;
+  let velocityTrack: readonly { t: number; x: number }[] = [];
   let moveDetach: (() => void) | undefined;
 
   const resetPress = () => {
     pressArmed = false;
     skipFlick = false;
     isDragging = false;
+    settleArmed = false;
   };
 
   const reset = () => {
     resetPress();
     touchId = undefined;
-    lastTouchId = undefined;
   };
 
   const stopMoveListener = () => {
@@ -111,15 +130,31 @@ export const SlideTrack = ({
 
   const delta = (sample: PressSample) => Vector.delta(pressOrigin, sample.clientX, sample.clientY);
 
+  const trackSample = (x: number, t: number) => {
+    velocityTrack = [...velocityTrack.filter(item => t - item.t <= velocityHorizon), { t, x }];
+  };
+
+  // ? Telegram VelocityTracker: release speed measured over the last ~100ms window, not the whole gesture
+  const sampleVelocity = (x: number, t: number) => {
+    const first = velocityTrack.find(item => t - item.t <= velocityHorizon);
+
+    return first !== undefined && t > first.t ? (x - first.x) / (t - first.t) : 0;
+  };
+
   const release = (
     sample: PressSample,
     offset: ReturnType<typeof Vector.delta>,
     travel: ReturnType<typeof Vector.abs>,
   ) => {
     const elapsed = sample.timeStamp - started;
-    const speed = elapsed > 0 ? Vector.from(offset.x / elapsed, offset.y / elapsed) : Vector.from(0, 0);
+    const velY = elapsed > 0 ? offset.y / elapsed : 0;
 
-    return Gesture.pointer(elapsed, offset, travel, speed);
+    return Gesture.pointer(
+      elapsed,
+      offset,
+      travel,
+      Vector.from(sampleVelocity(sample.clientX, sample.timeStamp), velY),
+    );
   };
 
   const pinTranslate = (element: HTMLElement, value: number, activePin = true) => {
@@ -172,6 +207,7 @@ export const SlideTrack = ({
     const size = Vector.abs(shift);
 
     if (pressArmed) {
+      trackSample(sample.clientX, sample.timeStamp);
       peak = Vector.max(peak, size);
 
       if (!isDragging) {
@@ -211,11 +247,21 @@ export const SlideTrack = ({
         refresh();
         start?.(state());
         gestureNavigation = true;
-        commit(snap({ release: buildReleaseSnap(translateX, release(sample, shift, travel)), state: state() }));
+        const pointer = release(sample, shift, travel);
+        commit(
+          snap({ release: buildReleaseSnap(translateX, pointer), state: state() }),
+          Math.abs(Gesture.releaseVelocity(pointer)),
+        );
         resetPress();
         touchId = undefined;
 
         return;
+      }
+
+      if (settleArmed) {
+        refresh();
+        gestureNavigation = true;
+        commit(snap({ state: state() }));
       }
 
       reset();
@@ -234,19 +280,18 @@ export const SlideTrack = ({
 
     setTranslate(translate(shift.x, state()));
     gestureNavigation = true;
+    const pointer = cancel ? undefined : release(sample, shift, travel);
     commit(
       snap(
-        cancel
-          ? { state: state() }
-          : { release: buildReleaseSnap(translateX, release(sample, shift, travel)), state: state() },
+        pointer === undefined ? { state: state() } : { release: buildReleaseSnap(translateX, pointer), state: state() },
       ),
+      pointer === undefined ? 0 : Math.abs(Gesture.releaseVelocity(pointer)),
     );
     resetPress();
-    lastTouchId = touchId;
     touchId = undefined;
   };
 
-  const animate = async (targetTranslate: number) => {
+  const animate = async (targetTranslate: number, velX = 0) => {
     if (trackWidth === 0) {
       refresh();
     }
@@ -268,23 +313,22 @@ export const SlideTrack = ({
       move?.(value, trackWidth);
     };
 
-    if (startTranslate !== targetTranslate) {
-      await motion.run({
-        after: target => {
-          onFrame(targetTranslate);
-          pinTranslate(target, targetTranslate);
-        },
-        before: target => {
-          pinTranslate(target, startTranslate);
-        },
-        element,
-        keyframes: [
-          { transform: Transform.css({ translateX: startTranslate }) },
-          { transform: Transform.css({ translateX: targetTranslate }) },
-        ],
-        tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
-      });
-    }
+    await motion.run({
+      after: target => {
+        onFrame(targetTranslate);
+        pinTranslate(target, targetTranslate);
+      },
+      before: target => {
+        pinTranslate(target, startTranslate);
+      },
+      duration: settleDuration(Math.abs(targetTranslate - startTranslate), trackWidth, velX),
+      element,
+      keyframes: [
+        { transform: Transform.css({ translateX: startTranslate }) },
+        { transform: Transform.css({ translateX: targetTranslate }) },
+      ],
+      tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
+    });
 
     if (generation !== animateGeneration) {
       return false;
@@ -310,11 +354,11 @@ export const SlideTrack = ({
     refresh();
   };
 
-  commit = plan => {
+  commit = (plan, velX = 0) => {
     plan.before?.();
 
     void (async () => {
-      if (await animate(plan.target(trackWidth))) {
+      if (await animate(plan.target(trackWidth), velX)) {
         plan.after?.({ reset, setTranslate, width: width() });
       }
     })();
@@ -322,11 +366,7 @@ export const SlideTrack = ({
 
   const interruptSettle = () => {
     interrupt();
-    gestureNavigation = true;
-    commit(snap({ state: state() }));
-    stopMoveListener();
-    resetPress();
-    touchId = undefined;
+    settleArmed = true;
   };
 
   const onTouchMove = (event: TouchEvent) => {
@@ -365,10 +405,6 @@ export const SlideTrack = ({
       return;
     }
 
-    if (isSettling && touch.identifier !== lastTouchId) {
-      return;
-    }
-
     if ((isDragging || pressArmed) && touchId !== undefined && touch.identifier !== touchId) {
       return;
     }
@@ -389,6 +425,7 @@ export const SlideTrack = ({
       target.closest(`input,textarea,select,button,a,[contenteditable],[role="button"]`) !== null;
     pressOrigin = Vector.from(touch.clientX, touch.clientY);
     started = timeStamp;
+    velocityTrack = [{ t: timeStamp, x: touch.clientX }];
     touchId = touch.identifier;
 
     moveDetach = Dom.subscribe(document, `touchmove`, onTouchMove, active);
@@ -453,7 +490,6 @@ export const SlideTrack = ({
     busy,
     consumeGestureLed,
     dragging,
-    interrupt,
     layout,
     offset,
     pointer,
