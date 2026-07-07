@@ -1,56 +1,32 @@
 @use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
-@use "pkg:@snappy/theme/tokens/layer";
+@use "pkg:@snappy/theme/material/elevation";
+@use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/core" as *;
 @use "../scss/layout";
 
 .root {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: space.md();
   align-items: center;
-  padding-block: space.x3xl() space.lg();
+  padding-block: space.x2xl() space.lg();
+  padding-inline: space.lg();
   text-align: center;
+
+  &:not(.bordered) {
+    @include panel.panel-soft;
+    @include elevation.e1;
+
+    border-top: r(3) solid color.accent-indigo();
+    border-radius: radius.lg();
+  }
 
   &.bordered {
     padding: space.x2xl() space.lg() space.xl();
-    margin-block-start: space.x2xl();
     border-top: 1px solid color.outline();
   }
-}
-
-.root > * {
-  @include layer.stack-top;
-
-  position: relative;
-}
-
-.root:not(.bordered)::before {
-  @include layer.stack-base;
-
-  position: absolute;
-  inset-block-start: r(-32);
-  inset-inline: 0;
-  height: r(340);
-  margin-inline: auto;
-  pointer-events: none;
-  content: "";
-  background:
-    radial-gradient(
-      50% 60% at 32% 28%,
-      color-mix(in oklab, color.accent-violet() 22%, transparent) 0%,
-      color-mix(in oklab, color.accent-violet() 8%, transparent) 45%,
-      transparent 100%
-    ),
-    radial-gradient(
-      52% 62% at 72% 24%,
-      color-mix(in oklab, color.accent-indigo() 18%, transparent) 0%,
-      color-mix(in oklab, color.accent-indigo() 6%, transparent) 45%,
-      transparent 100%
-    );
-  background-blend-mode: screen;
-  filter: blur(r(28));
 }
 
 .title {
@@ -70,12 +46,8 @@
 
 @include mobile {
   .root {
-    padding-block: space.x2xl() space.lg();
-
-    &.bordered {
-      padding-inline: space.md();
-      margin-block-start: space.xl();
-    }
+    padding-block: space.xl() space.lg();
+    padding-inline: space.md();
   }
 
   .actions {
