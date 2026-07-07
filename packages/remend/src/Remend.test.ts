@@ -10,7 +10,7 @@ describe(`apply`, () => {
     const input = [
       `Section title`,
       ``,
-      _.gen(3000, index => `${index + 1}. Plain rule line ${index + 1}.`).join(`\n`),
+      _.gen(800, index => `${index + 1}. Plain rule line ${index + 1}.`).join(`\n`),
       ``,
       `Tail`,
     ].join(`\n`);

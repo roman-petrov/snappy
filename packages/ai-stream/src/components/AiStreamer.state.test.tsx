@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 /* eslint-disable functional/no-this-expressions */
 /* eslint-disable unicorn/no-this-outside-of-class */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
@@ -14,7 +15,14 @@ Range.prototype.getClientRects = function getClientRects(this: Range) {
   return [{ width: (this.endOffset - this.startOffset) * unitPx }] as unknown as DOMRectList;
 };
 
+const tickMs = 50;
+
 type HarnessProps = { networkDone: boolean; text: string };
+
+type Timing = {
+  advance: (ms: number) => Promise<void>;
+  until: (predicate: () => boolean, maxMs?: number) => Promise<void>;
+};
 
 const useHarness = ({ networkDone, text }: HarnessProps) => {
   const [tailBusy, setTailBusy] = useState(false);
@@ -31,58 +39,74 @@ const useHarness = ({ networkDone, text }: HarnessProps) => {
   return { ...state, streaming };
 };
 
-const settle = async (ms: number) =>
-  act(async () => {
-    await new Promise<void>(resolve => {
-      setTimeout(resolve, ms);
-    });
+const withTiming = async (run: (timing: Timing) => Promise<void> | void) => {
+  vi.useFakeTimers({
+    toFake: [`setTimeout`, `setInterval`, `requestAnimationFrame`, `cancelAnimationFrame`, `performance`],
   });
+
+  const advance = async (ms: number) => {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ms);
+    });
+  };
+
+  const until = async (predicate: () => boolean, maxMs = 5000) => {
+    let elapsed = 0;
+
+    while (!predicate() && elapsed < maxMs) {
+      await advance(tickMs);
+      elapsed += tickMs;
+    }
+  };
+
+  try {
+    await run({ advance, until });
+  } finally {
+    vi.useRealTimers();
+    document.body.replaceChildren();
+  }
+};
 
 describe(`useAiStreamerState`, () => {
   it(`keeps the stream busy until text after a code block is typed out`, async () => {
-    const markdown = `\`\`\`js\nconst a = 1;\n\`\`\`\n\nfinal words after code`;
-    const host = document.createElement(`div`);
-    document.body.append(host);
+    await withTiming(async ({ until }) => {
+      const markdown = `\`\`\`js\nconst a = 1;\n\`\`\`\n\nfinal words after code`;
+      const host = document.createElement(`div`);
+      document.body.append(host);
 
-    const { rerender, result } = renderHook(useHarness, { initialProps: { networkDone: false, text: `` } });
+      const { rerender, result } = renderHook(useHarness, { initialProps: { networkDone: false, text: `` } });
 
-    act(() => {
-      result.current.tailHost?.(host);
+      act(() => {
+        result.current.tailHost?.(host);
+      });
+
+      rerender({ networkDone: false, text: markdown });
+
+      await until(() => result.current.doc.length > 0);
+
+      rerender({ networkDone: true, text: markdown });
+
+      act(() => {
+        result.current.pushTailHtml(`<pre><code>const a = 1;</code></pre>`);
+      });
+
+      const typedAll = () => host.textContent.includes(`final words after code`);
+      let droppedEarly = false;
+
+      await until(() => {
+        if (!result.current.streaming && !typedAll()) {
+          droppedEarly = true;
+        }
+
+        return typedAll() || droppedEarly;
+      });
+
+      expect(droppedEarly).toBe(false);
+      expect(typedAll()).toBe(true);
+
+      await until(() => !result.current.streaming);
+
+      expect(result.current.streaming).toBe(false);
     });
-
-    rerender({ networkDone: false, text: markdown });
-
-    while (result.current.doc.length === 0) {
-      await settle(20);
-    }
-
-    rerender({ networkDone: true, text: markdown });
-
-    act(() => {
-      result.current.pushTailHtml(`<pre><code>const a = 1;</code></pre>`);
-    });
-
-    const start = performance.now();
-    const typedAll = () => host.textContent.includes(`final words after code`);
-    let droppedEarly = false;
-
-    while (!typedAll() && performance.now() - start < 4000) {
-      if (!result.current.streaming) {
-        droppedEarly = true;
-        break;
-      }
-      await settle(20);
-    }
-
-    expect(droppedEarly).toBe(false);
-    expect(typedAll()).toBe(true);
-
-    while (result.current.streaming && performance.now() - start < 5000) {
-      await settle(20);
-    }
-
-    expect(result.current.streaming).toBe(false);
-
-    host.remove();
   });
 });

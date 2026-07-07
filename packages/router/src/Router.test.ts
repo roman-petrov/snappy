@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 /* eslint-disable vitest/expect-expect */
 import { describe, expect, expectTypeOf, it, type MockInstance, vi } from "vitest";
 

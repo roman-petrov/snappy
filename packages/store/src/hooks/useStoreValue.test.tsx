@@ -1,4 +1,5 @@
 /* eslint-disable unicorn/filename-case */
+/* @vitest-environment jsdom */
 import { Store } from "@snappy/core";
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";

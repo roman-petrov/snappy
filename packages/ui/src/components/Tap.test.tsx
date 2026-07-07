@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 import type { ReactElement } from "react";
 
 import { _ } from "@snappy/core";

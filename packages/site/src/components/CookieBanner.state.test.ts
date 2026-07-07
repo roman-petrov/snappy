@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 /* eslint-disable unicorn/no-document-cookie */
 /* eslint-disable @typescript-eslint/require-await */
 import { act, renderHook } from "@testing-library/react";

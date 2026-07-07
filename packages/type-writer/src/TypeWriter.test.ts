@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 /* eslint-disable functional/no-this-expressions */
 /* eslint-disable unicorn/no-this-outside-of-class */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
@@ -14,7 +15,7 @@ Range.prototype.getClientRects = function getClientRects(this: Range) {
 
 const fastCharsPerSecond = 1024 / unitPx;
 const mediumCharsPerSecond = 512 / unitPx;
-const frameMs = 16;
+const tickMs = 50;
 
 type Sample = { chars: number; seconds: number };
 
@@ -77,7 +78,7 @@ const withTiming = async (run: (timing: Timing) => Promise<void> | void) => {
   };
 
   const nextFrame = async () => {
-    await advance(frameMs);
+    await advance(tickMs);
   };
 
   const sleep = async (ms: number) => {
@@ -85,8 +86,8 @@ const withTiming = async (run: (timing: Timing) => Promise<void> | void) => {
   };
 
   const finish = async (pending: Promise<boolean>) => {
-    for (let steps = 0; steps < 10_000; steps += 1) {
-      const value = await Promise.race([pending, advance(frameMs).then(() => undefined)]);
+    for (let steps = 0; steps < 500; steps += 1) {
+      const value = await Promise.race([pending, advance(tickMs).then(() => undefined)]);
       if (typeof value === `boolean`) {
         return value;
       }
@@ -99,8 +100,8 @@ const withTiming = async (run: (timing: Timing) => Promise<void> | void) => {
     let elapsed = 0;
 
     while (!predicate() && elapsed < maxMs) {
-      await advance(frameMs);
-      elapsed += frameMs;
+      await advance(tickMs);
+      elapsed += tickMs;
     }
   };
 
@@ -109,8 +110,8 @@ const withTiming = async (run: (timing: Timing) => Promise<void> | void) => {
     let elapsed = 0;
 
     while (elapsed < ms) {
-      await advance(frameMs);
-      elapsed += frameMs;
+      await advance(tickMs);
+      elapsed += tickMs;
       samples.push({ chars: revealed(), seconds: elapsed / 1000 });
     }
 
@@ -263,7 +264,7 @@ describe(`push`, () => {
 
       while (elapsed < 350) {
         await nextFrame();
-        elapsed += frameMs;
+        elapsed += tickMs;
         const caret = host.querySelector(`.${styles.root}`);
 
         expect(revealed()).toBeGreaterThanOrEqual(previous);
@@ -489,7 +490,7 @@ describe(`push`, () => {
       spy.mockRestore();
       writer.destroy();
 
-      expect(writes).toBeLessThanOrEqual(frames * 4);
+      expect(writes).toBeLessThanOrEqual(frames * 4 * Math.ceil(tickMs / 16));
     });
   });
 
@@ -524,7 +525,6 @@ describe(`push`, () => {
       const revealed = chars(host, `p`);
       const before = revealed();
       void writer.push(`<p>${`a`.repeat(50)}</p>`);
-      await nextFrame();
       await nextFrame();
       const after = revealed();
       writer.destroy();

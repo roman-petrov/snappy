@@ -1,3 +1,4 @@
+/* @vitest-environment jsdom */
 /* eslint-disable @typescript-eslint/max-params */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable vitest/prefer-spy-on */
