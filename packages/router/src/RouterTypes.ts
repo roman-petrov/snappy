@@ -1,6 +1,6 @@
 import type { ReadonlyStore } from "@snappy/core";
 
-import type { Page, RedirectTarget, RouterContextValue, RouterPageState } from "./Types";
+import type { Go, Page, RedirectTarget, RouterContextValue, RouterPageState } from "./Types";
 
 export type HrefFrom<S> = Record<FlatKey<S>, string> & { readonly [K in BranchKey<S>]: HrefTree<S[K]> } & {
   readonly [K in DynamicKey<S>]: S[K] extends string ? (p: Record<PathParameter<S[K]>, string>) => string : never;
@@ -34,6 +34,8 @@ export type RouterInit = { base?: string; path?: string; ssr?: boolean; transiti
 export type RouterRuntime = {
   current: () => RouterRuntimeCurrent;
   dispose: () => void;
+  go: Go;
+  href: (path: string) => string;
   init: (input: RouterInit) => void;
   parent: (pattern: string) => string;
   pattern: (pathname: string) => string;
@@ -63,7 +65,7 @@ export type StartConfig<R> = {
   signIn: (routes: R) => string;
 };
 
-export type TransitionCommit = (history?: `push` | `replace`) => void;
+export type TransitionCommit = (history?: `push` | `replace` | `silent`) => void;
 
 export type TransitionFn = (input: {
   back: boolean;

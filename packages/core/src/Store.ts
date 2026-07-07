@@ -20,7 +20,7 @@ export type ReadonlyStoreApi<TValue> = {
 
 export type Store<TValue> = ReadonlyStore<TValue> & StoreApi<TValue>;
 
-export type StoreApi<TValue> = ReadonlyStoreApi<TValue> & { set: (value: TValue) => TValue };
+export type StoreApi<TValue> = ReadonlyStoreApi<TValue> & { set: (value: TValue, silent?: boolean) => TValue };
 
 export type StoreListener<TValue> = (current: TValue, previous: TValue) => void;
 
@@ -72,11 +72,11 @@ export const Store = <TValue>(initialValue: TValue): Store<TValue> => {
   let current = initialValue;
   const { add, items } = _.list<StoreListener<TValue>>();
 
-  const set = (value: TValue) => {
+  const set = (value: TValue, silent = false) => {
     const previous = current;
     current = value;
 
-    if (current !== previous) {
+    if (!silent && current !== previous) {
       _.singleAction(items())(current, previous);
     }
 

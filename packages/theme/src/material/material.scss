@@ -32,11 +32,11 @@
 }
 
 @function chrome-header-surface() {
-  @return var(--chrome-header-surface, #{surface-bg()});
+  @return chrome.header-surface();
 }
 
 @function chrome-header-border() {
-  @return var(--chrome-header-border, #{chrome.header-border-surface()});
+  @return chrome.header-border();
 }
 
 @function surface-border() {

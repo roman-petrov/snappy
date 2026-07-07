@@ -1,3 +1,4 @@
+import { useChromeAccentHost } from "@snappy/app-router";
 import { useContext } from "react";
 
 import type { PageProps } from "./Page";
@@ -17,6 +18,7 @@ export const usePageState = ({
   const customHeader = header;
   const showLogo = title === undefined && !back;
   const resolvedTrailing = trailing ?? contextTrailing;
+  const headerRef = useChromeAccentHost(tab);
 
-  return { back, children, customHeader, fill, showLogo, tab, title, trailing: resolvedTrailing };
+  return { back, children, customHeader, fill, headerRef, showLogo, tab, title, trailing: resolvedTrailing };
 };

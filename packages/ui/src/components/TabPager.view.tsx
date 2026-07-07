@@ -10,12 +10,9 @@ import { Tap } from "./Tap";
 
 export type TabPagerViewProps = ReturnType<typeof useTabPagerState>;
 
-export const TabPagerView = ({ animating, items, pageIndex }: TabPagerViewProps) => (
+export const TabPagerView = ({ bar, items }: TabPagerViewProps) => (
   <PageChrome active shell>
-    <div
-      className={_.cn(styles.bar, animating && styles.barAnimating, $.elevation(`e2`))}
-      style={{ [`--tab-count` as string]: items.length, [`--tab-index` as string]: pageIndex }}
-    >
+    <div className={_.cn(styles.bar, $.elevation(`e2`))} ref={bar} style={{ [`--tab-count` as string]: items.length }}>
       <div className={styles.indicator} />
       {items.map(item => (
         <Tap cn={styles.tab} key={item.id} link={item.path}>

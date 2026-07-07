@@ -9,9 +9,19 @@ import { PageHeader } from "./PageHeader";
 
 export type PageViewProps = ReturnType<typeof usePageState>;
 
-export const PageView = ({ back, children, customHeader, fill, showLogo, tab, title, trailing }: PageViewProps) => (
+export const PageView = ({
+  back,
+  children,
+  customHeader,
+  fill,
+  headerRef,
+  showLogo,
+  tab,
+  title,
+  trailing,
+}: PageViewProps) => (
   <div className={_.cn(styles.root, fill && styles.rootFill, tab && styles.rootTab)}>
-    <header className={styles.header}>
+    <header className={styles.header} ref={headerRef}>
       <SafeArea top>
         <ContentColumn cn={styles.headerInner}>
           <div className={styles.headerSlot}>

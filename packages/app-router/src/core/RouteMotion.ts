@@ -118,18 +118,11 @@ const transition =
       const tab = slideTab(motion, from, to);
 
       if (tab !== undefined) {
-        if (tab.slide.consumeGestureLed()) {
-          flushSync(() => {
-            commit(`replace`);
-          });
-
-          return;
+        if (!tab.slide.consumeGestureLed()) {
+          await tab.slide.select(tab.toIndex);
         }
 
-        await tab.slide.select(tab.toIndex);
-        flushSync(() => {
-          commit(`replace`);
-        });
+        commit(`silent`);
 
         return;
       }

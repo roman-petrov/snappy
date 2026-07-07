@@ -62,7 +62,6 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
   coverRef.current ??= Cover({
     count: () => frameRef.current.count,
     drag: true,
-    index: () => frameRef.current.index,
     onClose: () => {
       void go(-1);
     },

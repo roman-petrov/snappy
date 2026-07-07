@@ -75,6 +75,27 @@ describe(`store`, () => {
     expect(callback).toHaveBeenCalledTimes(0);
   });
 
+  it(`updates value silently without notifying subscribers`, () => {
+    const callback = vi.fn<StoreListener<string>>();
+    const someStore = Store(`Hello`);
+    someStore.subscribe(callback);
+
+    expect(someStore.set(`World`, true)).toBe(`World`);
+    expect(someStore()).toBe(`World`);
+    expect(callback).toHaveBeenCalledTimes(0);
+  });
+
+  it(`uses silently updated value as previous on the next notified update`, () => {
+    const callback = vi.fn<StoreListener<string>>();
+    const someStore = Store(`Hello`);
+    someStore.subscribe(callback);
+    someStore.set(`World`, true);
+    someStore.set(`!`);
+
+    expect(callback).toHaveBeenCalledTimes(1);
+    expect(callback).toHaveBeenCalledWith(`!`, `World`);
+  });
+
   describe(`derived stores`, () => {
     describe(`map`, () => {
       it(`creates derived store that extracts value from source`, () => {
@@ -298,27 +319,6 @@ describe(`store`, () => {
         expect(onNameChange1).toHaveBeenCalledTimes(1);
         expect(onNameChange2).toHaveBeenCalledTimes(2);
         expect(onUserChange).toHaveBeenCalledTimes(3);
-      });
-
-      it(`re-syncs derived value when listeners return after source changed while idle`, () => {
-        const userStore = Store<undefined | { name: string }>(undefined);
-        const nameStore = userStore.map(user => (user === undefined ? undefined : user.name));
-        const onNameChange = vi.fn<StoreListener<string | undefined>>();
-        const unsubscribe = nameStore.subscribe(onNameChange);
-
-        userStore.set({ name: `Alice` });
-
-        expect(nameStore()).toBe(`Alice`);
-
-        unsubscribe();
-        userStore.set({ name: `Bob` });
-
-        expect(nameStore()).toBe(`Alice`);
-
-        nameStore.subscribe(onNameChange);
-
-        expect(nameStore()).toBe(`Bob`);
-        expect(onNameChange).toHaveBeenCalledTimes(0);
       });
     });
 

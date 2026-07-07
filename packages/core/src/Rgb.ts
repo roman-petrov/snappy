@@ -1,5 +1,9 @@
 /* eslint-disable no-bitwise */
+import { _ } from "./_";
+
 export type RgbaVec = [number, number, number, number];
+
+export type RgbVec = [number, number, number];
 
 const r = 0;
 const g = 1;
@@ -14,6 +18,20 @@ const rgba = (value: number): RgbaVec => [
   (value & mask) / mask,
 ];
 
-const vec3 = (v: RgbaVec): [number, number, number] => [v[r], v[g], v[b]];
+const vec3 = (v: RgbaVec): RgbVec => [v[r], v[g], v[b]];
 
-export const Rgb = { a, b, g, r, rgba, vec3 } as const;
+const parse = (value: string): RgbVec => {
+  const [x = 0, y = 0, z = 0] = (value.match(/[\d.]+/gu) ?? []).map(Number);
+
+  return [x, y, z];
+};
+
+const mix = (from: RgbVec, to: RgbVec, t: number): RgbVec => [
+  _.lerp(from[r], to[r], t),
+  _.lerp(from[g], to[g], t),
+  _.lerp(from[b], to[b], t),
+];
+
+const css = (v: RgbVec) => `rgb(${Math.round(v[r])} ${Math.round(v[g])} ${Math.round(v[b])})`;
+
+export const Rgb = { a, b, css, g, mix, parse, r, rgba, vec3 } as const;

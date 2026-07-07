@@ -1,10 +1,10 @@
 import { useHasTouchInput } from "@snappy/hooks";
 import { Slide, type Slide as SlideMotion } from "@snappy/motion";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 
 import type { RouteStageSlideProps } from "./RouteStageSlide";
 
-import { RouteMotion, type TrackValue } from "../core";
+import { RouteMotion, type TrackListener, type TrackLive, type TrackValue } from "../core";
 import { useRouter } from "../hooks/useRouter";
 import { useRouterGo } from "../hooks/useRouterGo";
 import { useRouterPath } from "../hooks/useRouterPath";
@@ -21,8 +21,25 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
   const laneRef = useRef<HTMLDivElement>(null);
   const motionRef = useRef<SlideMotion>(undefined);
   const lastIndexRef = useRef<number | undefined>(undefined);
-  const frameRef = useRef({ index: 0, items });
-  const [livePageIndex, setLivePageIndex] = useState<number | undefined>();
+  const itemsRef = useRef(items);
+  const liveRef = useRef<{ listeners: Set<TrackListener> }>({ listeners: new Set() });
+  const liveApi = useRef<TrackLive>(undefined);
+
+  liveApi.current ??= {
+    subscribe: listener => {
+      liveRef.current.listeners.add(listener);
+
+      return () => {
+        liveRef.current.listeners.delete(listener);
+      };
+    },
+  };
+
+  const emit = useCallback((value: number, moving: boolean) => {
+    for (const listener of liveRef.current.listeners) {
+      listener(value, moving);
+    }
+  }, []);
 
   const trackAt = useCallback(
     (routePattern: string) => {
@@ -41,19 +58,19 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
 
   const index = matched ?? lastIndexRef.current ?? trackAt(`/`) ?? 0;
 
-  frameRef.current = { index, items };
+  itemsRef.current = items;
 
   motionRef.current ??= Slide({
-    count: () => frameRef.current.items.length,
-    index: () => frameRef.current.index,
+    count: () => itemsRef.current.length,
+    index,
     onIndex: target => {
-      const targetPath = frameRef.current.items[target]?.path;
+      const targetPath = itemsRef.current[target]?.path;
 
       if (targetPath !== undefined) {
         void go(targetPath);
       }
     },
-    onPageIndex: setLivePageIndex,
+    onPageIndex: emit,
     root: contentRef,
     track: laneRef,
   });
@@ -64,13 +81,16 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
   useEffect(() => RouteMotion.bindSlide(motion, trackAt), [motion, trackAt]);
 
   useLayoutEffect(() => {
+    if (matched !== undefined) {
+      motion.sync(matched);
+    }
+
     motion.layout();
-  }, [index, items, motion, touch]);
+  }, [matched, items, motion, touch]);
 
   useTrackMotion(motion, layer === undefined);
 
-  const pageIndex = livePageIndex ?? index;
-  const track: TrackValue = { animating: livePageIndex !== undefined, index, pageIndex };
+  const track: TrackValue = { index, live: liveApi.current };
   const stage = { ...base, track };
 
   const lanes = {

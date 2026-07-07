@@ -36,7 +36,11 @@ export type StageInsetsValue = { dockPad: string; page: LaneInsets; shell: LaneI
 
 export type TrackItem = { id: string; path: string };
 
-export type TrackValue = { animating: boolean; index: number; pageIndex: number };
+export type TrackListener = (value: number, animating: boolean) => void;
+
+export type TrackLive = { subscribe: (listener: TrackListener) => Action };
+
+export type TrackValue = { index: number; live: TrackLive };
 
 type LaneInsets = { fadeMinHeight: string; scrollPad: string };
 

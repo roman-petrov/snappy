@@ -34,7 +34,6 @@
   width: calc(100% / var(--lane-count));
   min-width: 0;
   min-height: 0;
-  content-visibility: auto;
   overflow: hidden auto;
   touch-action: pan-y;
 }

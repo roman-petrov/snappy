@@ -12,7 +12,6 @@ export type Cover = ReturnType<typeof Cover>;
 export type CoverConfig = {
   count: () => number;
   drag?: boolean;
-  index: () => number;
   onClose: () => void;
   onIndex: (index: number) => void;
   onMove?: (x: number) => void;

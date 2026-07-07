@@ -268,7 +268,7 @@ const createRuntime = ({
     state = { ...state, ...update };
   };
 
-  const syncLocation = () => {
+  const syncLocation = (silent = false) => {
     if (state.$location === undefined) {
       return;
     }
@@ -286,7 +286,7 @@ const createRuntime = ({
       writeHistory(withBase(state.base, pathname), `replace`);
     }
 
-    state.$location.set(read(state.base));
+    state.$location.set(read(state.base), silent);
   };
 
   const navigate = async (
@@ -323,6 +323,16 @@ const createRuntime = ({
     const stackAfter = back && from === top?.to && to === top.from ? state.stack.slice(0, -1) : state.stack;
 
     const commit: TransitionCommit = (history = `push`) => {
+      if (history === `silent`) {
+        if (url !== undefined) {
+          writeHistory(url, `replace`);
+        }
+
+        syncLocation(true);
+
+        return;
+      }
+
       if (back) {
         if (url !== undefined) {
           writeHistory(url, `replace`);
@@ -404,9 +414,11 @@ const createRuntime = ({
     await goPath(to, options);
   };
 
+  const href = (target: string) => withBase(state.base, target);
+
   const value = (location: Location): RouterContextValue => ({
     go,
-    href: target => withBase(state.base, target),
+    href,
     path: location.pathname,
     query: new URLSearchParams(location.search),
   });
@@ -484,6 +496,8 @@ const createRuntime = ({
   return {
     current,
     dispose,
+    go,
+    href,
     init,
     parent: pattern => parents[pattern] ?? home,
     pattern: pathname => routePattern(pages, pathname),

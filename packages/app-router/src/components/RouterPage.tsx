@@ -1,16 +1,20 @@
-/* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { PageProps, RouterPageState } from "@snappy/router";
 
-import { createElement, type ReactNode } from "react";
+import { useRequiredContext } from "@snappy/hooks";
+import { createElement, type ReactNode, useMemo } from "react";
 
-import { useRouter } from "../hooks/useRouter";
+import { RouterContext } from "../core";
 
 export type RouterPageProps = RouterPageState | { path: string };
 
-export const RouterPage = (props: RouterPageProps) => {
-  const { stateAt } = useRouter();
-  const state = `path` in props ? stateAt(props.path) : props;
+const render = (state: RouterPageState | undefined) =>
+  state === undefined ? undefined : createElement(state.page as (props: PageProps) => ReactNode, state.params);
 
-  return state === undefined ? undefined : createElement(state.page as (props: PageProps) => ReactNode, state.params);
+export const RouterPage = (props: RouterPageProps) => {
+  const { runtime } = useRequiredContext(RouterContext, `RouterPage`, `RouterContext`);
+  const path = `path` in props ? props.path : undefined;
+  const lane = useMemo(() => (path === undefined ? undefined : render(runtime.stateAt(path))), [path, runtime]);
+
+  return `path` in props ? lane : render(props);
 };

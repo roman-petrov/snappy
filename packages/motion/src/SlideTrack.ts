@@ -4,7 +4,6 @@
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable @typescript-eslint/no-magic-numbers */
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 
 /**
  * ? Reference: Telegram ViewPagerFixed
@@ -132,7 +131,7 @@ export const SlideTrack = ({
     const element = trackRef.current;
 
     if (element !== null) {
-      if (isSettling || (element.getAnimations?.().length ?? 0) > 0) {
+      if (isSettling) {
         motion.cancel([element]);
       }
 
@@ -248,7 +247,10 @@ export const SlideTrack = ({
   };
 
   const animate = async (targetTranslate: number) => {
-    refresh();
+    if (trackWidth === 0) {
+      refresh();
+    }
+
     const startTranslate = translateX;
     const element = trackRef.current;
     const generation = ++animateGeneration;

@@ -11,33 +11,34 @@ export type Slide = ReturnType<typeof Slide>;
 export type SlideConfig = {
   count: () => number;
   drag?: boolean;
-  index: () => number;
+  index: number;
   onIndex: (index: number) => void;
-  onPageIndex?: (pageIndex: number | undefined) => void;
+  onPageIndex?: (pageIndex: number, animating: boolean) => void;
   root: DomRef;
   track: DomRef;
 };
 
-export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, root, track }: SlideConfig) => {
+export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }: SlideConfig) => {
   const noneRelease: TrackReleaseSnap = { gesture: { type: `none` }, stay: true };
   let touchEnabled = false;
   let dragBaseline = 0;
   let dragIndex = 0;
   let dragOffset = 0;
-  const clearPageIndex = () => onPageIndex?.(undefined);
+  let settled = index;
+  const settleAt = (value: number) => onPageIndex?.(value, false);
   const span = (total: number) => Math.max(0, total - 1);
 
-  const translateForIndex = (index: number, width: number, total: number, offset = 0) => {
+  const translateForIndex = (page: number, width: number, total: number, offset = 0) => {
     const steps = span(total);
 
-    return steps ? -index * width + offset : offset;
+    return steps ? -page * width + offset : offset;
   };
 
   const activeIndex = (offset: number, width: number) => {
     const total = count();
 
     if (!width || total <= 1) {
-      return currentIndex();
+      return settled;
     }
 
     const steps = span(total);
@@ -62,9 +63,12 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
       after: ({ reset, setTranslate, width }: SlideTrackControl) => {
         reset();
         setTranslate(translateForIndex(target, width, total));
-        clearPageIndex();
+        settleAt(target);
       },
-      before: () => onIndex(target),
+      before: () => {
+        settled = target;
+        onIndex(target);
+      },
       target: (width: number) => translateForIndex(target, width, total),
     };
   };
@@ -72,18 +76,18 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
   const snap = ({ release }: SlideTrackSnapInput) => buildSnap(release ?? noneRelease);
 
   const motion = SlideTrack({
-    anchor: width => translateForIndex(currentIndex(), width, count()),
+    anchor: width => translateForIndex(settled, width, count()),
     canDrag: (dx, { offset, width }) => {
-      const index = activeIndex(offset, width);
+      const at = activeIndex(offset, width);
       const last = count() - 1;
 
-      return !(dx > 0 && index === 0) && !(dx < 0 && index >= last);
+      return !(dx > 0 && at === 0) && !(dx < 0 && at >= last);
     },
     drag,
     move: (translate, width) => {
       const steps = span(count());
 
-      onPageIndex?.(width && steps ? -translate / width : 0);
+      onPageIndex?.(width && steps ? -translate / width : 0, true);
     },
     root,
     snap,
@@ -91,7 +95,7 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
       dragIndex = activeIndex(offset, width);
       dragBaseline = offset - translateForIndex(dragIndex, width, count());
     },
-    sync: clearPageIndex,
+    sync: () => settleAt(settled),
     track,
     translate: (dx, { width }) => {
       const total = count();
@@ -104,25 +108,30 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
   });
 
   const select = async (target: number) => {
-    if (target < 0 || motion.busy() || target === currentIndex()) {
+    if (target < 0 || motion.busy() || target === settled) {
       return;
     }
 
     motion.refresh();
-    dragIndex = currentIndex();
+    dragIndex = settled;
     dragOffset = 0;
 
     const total = count();
     const targetTranslate = translateForIndex(target, motion.width(), total);
 
+    settled = target;
     await motion.animate(targetTranslate);
     motion.reset();
     motion.setTranslate(targetTranslate);
-    clearPageIndex();
+    settleAt(target);
   };
 
   const frame = (next: boolean) => {
     touchEnabled = next;
+  };
+
+  const sync = (next: number) => {
+    settled = next;
   };
 
   const { consumeGestureLed } = motion;
@@ -130,5 +139,5 @@ export const Slide = ({ count, drag, index: currentIndex, onIndex, onPageIndex, 
   const { pointer } = motion;
   const { resize } = motion;
 
-  return { consumeGestureLed, frame, layout, pointer, resize, select };
+  return { consumeGestureLed, frame, layout, pointer, resize, select, sync };
 };

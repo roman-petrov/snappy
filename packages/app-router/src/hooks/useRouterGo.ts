@@ -1,5 +1,5 @@
 import type { Go } from "@snappy/router";
 
-import { useRouter } from "./useRouter";
+import { useRouterRuntime } from "./useRouterRuntime";
 
-export const useRouterGo = (): Go => useRouter().go;
+export const useRouterGo = (): Go => useRouterRuntime().go;

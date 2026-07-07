@@ -1,3 +1,3 @@
-import { useRouter } from "./useRouter";
+import { useRouterRuntime } from "./useRouterRuntime";
 
-export const useRouterHref = () => useRouter().href;
+export const useRouterHref = () => useRouterRuntime().href;

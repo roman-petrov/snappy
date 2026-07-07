@@ -17,10 +17,6 @@
   @return header-border(#{color.surface()});
 }
 
-@function meta-color() {
-  @return color-mix(in srgb, accent() var(--chrome-tint-ratio), color.backdrop());
-}
-
 @function panel-tint() {
   @return color-mix(in oklch, accent() var(--chrome-tint-ratio), transparent);
 }
