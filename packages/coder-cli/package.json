@@ -19,8 +19,5 @@
     "@snappy/intl": "workspace:*",
     "@snappy/node": "workspace:*",
     "globby": "^16.2.0"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.9"
   }
 }

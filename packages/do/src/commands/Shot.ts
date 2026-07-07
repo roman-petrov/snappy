@@ -1,10 +1,10 @@
 import type { Command } from "../Command";
 
-import { Run } from "../Run";
+import { Vitest } from "../Vitest";
 
 export const Shot: Command = {
   description: `Update test snapshots.`,
   label: `📸 Shot`,
   name: `shot`,
-  run: Run.tool(`vitest`, [`run`, `--update`]),
+  run: Vitest.run(true),
 };

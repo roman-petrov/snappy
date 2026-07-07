@@ -31,4 +31,8 @@ export default defineConfig([
     files: reactPackages.map(name => `**/packages/${name}/**`),
     settings: { "import/core-modules": [`react`, `react-dom`, `react-dom/client`] },
   },
+  {
+    files: [`**/*.test.ts`, `**/*.test.tsx`, `**/test/**/*.ts`],
+    settings: { "import/core-modules": [`@testing-library/react`, `vitest`] },
+  },
 ]);

@@ -10,8 +10,5 @@
   "dependencies": {
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.9"
   }
 }

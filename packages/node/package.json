@@ -10,8 +10,5 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "selfsigned": "^5.5.0"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.9"
   }
 }

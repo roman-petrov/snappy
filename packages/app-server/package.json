@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "@snappy/node": "workspace:*",
-    "@types/nodemailer": "^8.0.1",
-    "vitest": "^4.1.9"
+    "@types/nodemailer": "^8.0.1"
   }
 }

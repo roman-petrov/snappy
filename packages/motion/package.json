@@ -11,8 +11,5 @@
     "@snappy/browser": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/platform": "workspace:*"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.9"
   }
 }

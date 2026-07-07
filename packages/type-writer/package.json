@@ -10,8 +10,5 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "@snappy/domain": "workspace:*"
-  },
-  "devDependencies": {
-    "vitest": "^4.1.9"
   }
 }

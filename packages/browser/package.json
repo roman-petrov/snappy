@@ -12,7 +12,6 @@
     "isomorphic-dompurify": "^3.18.0"
   },
   "devDependencies": {
-    "@types/dom-speech-recognition": "^0.0.12",
-    "vitest": "^4.1.9"
+    "@types/dom-speech-recognition": "^0.0.12"
   }
 }

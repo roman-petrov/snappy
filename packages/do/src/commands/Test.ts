@@ -1,10 +1,5 @@
 import type { Command } from "../Command";
 
-import { Run } from "../Run";
+import { Vitest } from "../Vitest";
 
-export const Test: Command = {
-  description: `Run tests.`,
-  label: `🧪 Test`,
-  name: `test`,
-  run: Run.tool(`vitest`, [`run`]),
-};
+export const Test: Command = { description: `Run tests.`, label: `🧪 Test`, name: `test`, run: Vitest.run() };
