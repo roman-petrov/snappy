@@ -18,6 +18,6 @@
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/node": "workspace:*",
-    "globby": "^16.2.0"
+    "globby": "^16.2.1"
   }
 }
