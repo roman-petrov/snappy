@@ -299,6 +299,27 @@ describe(`store`, () => {
         expect(onNameChange2).toHaveBeenCalledTimes(2);
         expect(onUserChange).toHaveBeenCalledTimes(3);
       });
+
+      it(`re-syncs derived value when listeners return after source changed while idle`, () => {
+        const userStore = Store<undefined | { name: string }>(undefined);
+        const nameStore = userStore.map(user => (user === undefined ? undefined : user.name));
+        const onNameChange = vi.fn<StoreListener<string | undefined>>();
+        const unsubscribe = nameStore.subscribe(onNameChange);
+
+        userStore.set({ name: `Alice` });
+
+        expect(nameStore()).toBe(`Alice`);
+
+        unsubscribe();
+        userStore.set({ name: `Bob` });
+
+        expect(nameStore()).toBe(`Alice`);
+
+        nameStore.subscribe(onNameChange);
+
+        expect(nameStore()).toBe(`Bob`);
+        expect(onNameChange).toHaveBeenCalledTimes(0);
+      });
     });
 
     describe(`subscription chains`, () => {

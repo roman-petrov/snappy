@@ -22,12 +22,11 @@ export type UserSettingsPatch = {
 
 export const UserSettings = (trpc: TrpcClient) => {
   const $store = Store<undefined | UserSettings>(undefined);
-  const $aiConfig = $store.map(settings => (settings === undefined ? undefined : AgentAiFromSettings(settings)));
   const patch = async (delta: UserSettingsPatch) => $store.set(await trpc.user.settings.set.mutate(delta));
   const load = async () => $store.set(await trpc.user.settings.get.query());
   const clear = () => $store.set(undefined);
   const settings = DataHook($store, value => ({ patch, settings: value }));
-  const aiConfig = DataHook($aiConfig, value => value);
+  const aiConfig = DataHook($store, value => (value === undefined ? undefined : AgentAiFromSettings(value)));
 
   return { aiConfig, clear, load, settings };
 };

@@ -17,7 +17,11 @@ export const $data = await (async () => {
   const userSettings = UserSettings(trpc);
   const balanceModule = Balance(trpc);
   const feedModule = Feed(trpc);
-  const load = async () => Promise.all([userSettings.load(), balanceModule.load()]);
+
+  const adopt = async () => {
+    KnownUser.mark();
+    await Promise.all([userSettings.load(), balanceModule.load()]);
+  };
 
   const clear = () => {
     feedModule.clear();
@@ -31,6 +35,7 @@ export const $data = await (async () => {
       const result = await Auth.signIn(email, password);
       if (result.status === `ok`) {
         $signedIn.set(true);
+        await adopt();
       }
 
       return result;
@@ -44,31 +49,27 @@ export const $data = await (async () => {
     },
     signUp: Auth.signUp,
     sync: async () => {
-      if (await Auth.signedIn()) {
-        $signedIn.set(true);
+      if (!(await Auth.signedIn()) || $signedIn()) {
+        return;
       }
+      $signedIn.set(true);
+      await adopt();
     },
     user: Auth.user,
   });
 
   if ($signedIn()) {
-    KnownUser.mark();
-    void load();
+    void adopt();
   }
   $signedIn.subscribe(ok => {
-    if (ok) {
-      KnownUser.mark();
-      void load();
-    } else {
+    if (!ok) {
       clear();
     }
   });
 
-  return {
-    aiConfig: userSettings.aiConfig,
-    auth,
-    balance: balanceModule.balance,
-    feed: feedModule.feed,
-    settings: userSettings.settings,
-  };
+  const { aiConfig, settings } = userSettings;
+  const { balance } = balanceModule;
+  const { feed } = feedModule;
+
+  return { aiConfig, auth, balance, feed, settings };
 })();
