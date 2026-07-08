@@ -5,7 +5,7 @@ const config: KnipConfig = {
   ignoreDependencies: [`@testing-library/react`, `vitest`],
   ignoreExportsUsedInFile: true,
   ignoreIssues: { "**/*.module.scss.d.ts": [`exports`], "**/entry-server.tsx": [`exports`] },
-  vitest: { config: [`packages/do/vitest.config.ts`] },
+  vitest: { config: [`vitest.config.ts`] },
   workspaces: {
     ".": {
       entry: [`auth.ts`, `cspell.config.js`, `eslint.config.js`, `prettier.config.js`, `stylelint.config.js`],
