@@ -83,10 +83,10 @@
   // Stylelint
   "stylelint.validate": ["css", "scss"],
 
-  // TypeScript
-  "typescript.enablePromptUseWorkspaceTsdk": true,
-  "typescript.referencesCodeLens.enabled": true,
-  "typescript.tsdk": "./node_modules/typescript/lib",
+  // TypeScript / JavaScript
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.referencesCodeLens.enabled": true,
+  "js/ts.tsdk.path": "./node_modules/typescript/lib",
 
   // Npm
   "npm.autoDetect": "off",
