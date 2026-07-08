@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 
 import type { useSnappyState } from "./Snappy.state";
 
+import { AppTags } from "../../../AppTags";
 import { HeaderContent } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
@@ -27,6 +28,7 @@ export const SnappyView = ({ groups }: SnappyViewProps) => (
           cn={styles.heroAction}
           large
           link={Routes.snappy.chat}
+          tag={AppTags.snappy.chat.start}
           text={t(`snappy.quickStart.cta`)}
           type="primary"
         />
@@ -45,6 +47,7 @@ export const SnappyView = ({ groups }: SnappyViewProps) => (
                 icon={preset.emoji}
                 key={preset.id}
                 link={Routes.snappy.preset.hub({ presetId: preset.id })}
+                tag={AppTags.snappy.preset.open}
                 title={preset.title}
               />
             ))}

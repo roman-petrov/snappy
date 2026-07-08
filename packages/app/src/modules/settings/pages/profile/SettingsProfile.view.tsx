@@ -4,6 +4,7 @@ import { CreditCard, KeyRound, LogOut, Mail } from "lucide-react";
 
 import type { useSettingsProfileState } from "./SettingsProfile.state";
 
+import { AppTags } from "../../../../AppTags";
 import { t } from "../../../../core";
 import { Routes } from "../../../../Routes";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "../../components";
@@ -25,6 +26,7 @@ export const SettingsProfileView = ({ balance, email, signOut }: SettingsProfile
           bottom={balance === undefined ? undefined : i.price(balance)}
           icon={<FilledIcon color="accentOrange" icon={CreditCard} />}
           link={Routes.settings.profile.topUp}
+          tag={AppTags.settings.profile.topUp.open}
           text={t(`settings.profile.balance`)}
         />
         <SettingsCardSeparator />
@@ -38,6 +40,7 @@ export const SettingsProfileView = ({ balance, email, signOut }: SettingsProfile
         <SettingsCardRow
           icon={<FilledIcon color="accentMagenta" icon={LogOut} />}
           onClick={signOut}
+          tag={AppTags.settings.profile.signOut.click}
           text={t(`settings.profile.signOut`)}
         />
       </SettingsCard>

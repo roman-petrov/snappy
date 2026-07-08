@@ -1,5 +1,6 @@
 import { Email, Password } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
+import { CookieConsent } from "@snappy/ui-core";
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
@@ -38,6 +39,7 @@ export const useSignUpState = () => {
 
         return;
       }
+      CookieConsent.accept();
       setSent(true);
       startCooldown();
     });

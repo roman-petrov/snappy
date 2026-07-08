@@ -329,4 +329,16 @@ describe(`tap`, () => {
 
     expect(container.querySelector(`button`)?.getAttribute(`type`)).toBe(`submit`);
   });
+
+  it(`renders tag attribute when tag is set`, () => {
+    const { container } = renderTap(<Tap tag="nav.feed">Feed</Tap>);
+
+    expect(container.querySelector(`button`)?.getAttribute(`tag`)).toBe(`nav.feed`);
+  });
+
+  it(`omits tag attribute when tag is not set`, () => {
+    const { container } = renderTap(<Tap>Click</Tap>);
+
+    expect(container.querySelector(`button`)?.hasAttribute(`tag`)).toBe(false);
+  });
 });

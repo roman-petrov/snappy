@@ -1,6 +1,7 @@
 /* @vitest-environment jsdom */
 /* eslint-disable unicorn/no-document-cookie */
 /* eslint-disable @typescript-eslint/require-await */
+import { CookieConsent } from "@snappy/ui-core";
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
@@ -12,23 +13,27 @@ vi.stubGlobal(`cookieStore`, {
   },
 });
 
+const clearConsent = () => {
+  document.cookie = `cookie-consent=; max-age=0; path=/`;
+};
+
 describe(`useCookieBannerState`, () => {
   it(`shows the banner when consent was not given yet`, () => {
-    document.cookie = `cookie-consent=; max-age=0; path=/`;
+    clearConsent();
     const { result } = renderHook(useCookieBannerState);
 
     expect(result.current.visible).toBe(true);
   });
 
   it(`does not show the banner when consent was already given`, () => {
-    document.cookie = `cookie-consent=1; path=/`;
+    CookieConsent.accept();
     const { result } = renderHook(useCookieBannerState);
 
     expect(result.current.visible).toBe(false);
   });
 
   it(`hides the banner and stores consent after accept`, () => {
-    document.cookie = `cookie-consent=; max-age=0; path=/`;
+    clearConsent();
     const { result } = renderHook(useCookieBannerState);
 
     act(() => {
@@ -36,6 +41,6 @@ describe(`useCookieBannerState`, () => {
     });
 
     expect(result.current.visible).toBe(false);
-    expect(document.cookie).toContain(`cookie-consent=1`);
+    expect(CookieConsent.given()).toBe(true);
   });
 });

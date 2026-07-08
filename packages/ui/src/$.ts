@@ -1,3 +1,5 @@
+import { Dom } from "@snappy/browser";
+
 import bgStyles from "./css-modules/bg.module.scss";
 import colorStyles from "./css-modules/color.module.scss";
 import elevationStyles from "./css-modules/elevation.module.scss";
@@ -6,6 +8,7 @@ import radiusStyles from "./css-modules/radius.module.scss";
 import surfaceStyles from "./css-modules/surface.module.scss";
 import tapStyles from "./css-modules/tap.module.scss";
 import typographyStyles from "./css-modules/typography.module.scss";
+import { MetricsTracker } from "./metrics/MetricsTracker";
 
 export type Bg = WithNone<typeof bgStyles>;
 
@@ -39,4 +42,7 @@ const surface = (name: Surface) => pick(surfaceStyles, name);
 const tap = (name: TapKey) => pick(tapStyles, name);
 const typography = (name?: Typography) => (name === `body` ? `` : pick(typographyStyles, name));
 
-export const $ = { bg, color, elevation, iconSize, radius, surface, tap, typography };
+const track = (name: string, parameters?: Parameters<typeof MetricsTracker.send>[1]) =>
+  MetricsTracker.send(name, parameters);
+
+export const $ = { bg, color, elevation, iconSize, radius, surface, tag: Dom.tag, tap, track, typography };

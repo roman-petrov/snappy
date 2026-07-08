@@ -2,6 +2,7 @@ import { Button, NumberInput, Page } from "@snappy/ui";
 
 import type { useSettingsProfileTopUpState } from "./SettingsProfileTopUp.state";
 
+import { AppTags } from "../../../../AppTags";
 import { FormErrorAndActions } from "../../../../components";
 import { t } from "../../../../core";
 import { SettingsCard } from "../../components";
@@ -27,6 +28,7 @@ export const SettingsProfileTopUpView = ({
         <Button
           disabled={loading}
           onClick={submit}
+          tag={AppTags.settings.profile.topUp.submit}
           text={loading ? t(`settings.profile.topUp.submitting`) : t(`settings.profile.topUp.submit`)}
           type="primary"
         />

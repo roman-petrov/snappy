@@ -112,6 +112,7 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - [PageSpeed Insights](https://pagespeed.web.dev/)
 - [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html)
 - [Yandex Webmaster](https://webmaster.yandex.ru/)
+- [Yandex Metrica](https://metrika.yandex.ru/)
 
 ### 🎛️ AI consoles
 

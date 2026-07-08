@@ -14,6 +14,7 @@
     "@snappy/legal": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "@snappy/ui-core": "workspace:*",
     "lucide-react": "^1.23.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

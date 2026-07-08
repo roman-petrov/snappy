@@ -10,6 +10,8 @@ export * from "./DateTime";
 
 export * from "./Email";
 
+export * from "./Env";
+
 export * from "./Gesture";
 
 export * from "./HttpStatus";

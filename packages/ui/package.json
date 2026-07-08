@@ -14,6 +14,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/hooks": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/metrics": "workspace:*",
     "@snappy/platform": "workspace:*",
     "@snappy/router": "workspace:*",
     "@snappy/store": "workspace:*",

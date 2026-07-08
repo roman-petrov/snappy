@@ -20,6 +20,7 @@
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",
+    "@snappy/ui-core": "workspace:*",
     "better-auth": "^1.6.23",
     "lucide-react": "^1.23.0",
     "react": "^19.2.7",

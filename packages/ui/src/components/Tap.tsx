@@ -1,3 +1,4 @@
+import type { TagProp } from "@snappy/browser";
 import type { Vibrate } from "@snappy/platform";
 import type { ReactNode } from "react";
 
@@ -6,7 +7,7 @@ import { TapView } from "./Tap.view";
 
 export type TapLinkExternal = { href: string; rel?: string; target?: string };
 
-export type TapProps = {
+export type TapProps = TagProp & {
   children: ReactNode;
   cn?: string;
   disabled?: boolean;

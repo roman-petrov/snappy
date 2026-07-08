@@ -123,6 +123,7 @@
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui": "workspace:*",
+        "@snappy/ui-core": "workspace:*",
         "better-auth": "^1.6.23",
         "lucide-react": "^1.23.0",
         "react": "^19.2.7",
@@ -435,6 +436,15 @@
         "@types/react": "^19.2.17",
       },
     },
+    "packages/metrics": {
+      "name": "@snappy/metrics",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/browser": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "@snappy/platform": "workspace:*",
+      },
+    },
     "packages/motion": {
       "name": "@snappy/motion",
       "version": "0.0.0",
@@ -463,6 +473,7 @@
       "name": "@snappy/platform",
       "version": "0.0.0",
       "dependencies": {
+        "@snappy/browser": "workspace:*",
         "@snappy/core": "workspace:*",
       },
     },
@@ -541,6 +552,7 @@
         "@snappy/legal": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui": "workspace:*",
+        "@snappy/ui-core": "workspace:*",
         "lucide-react": "^1.23.0",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
@@ -614,6 +626,7 @@
         "@snappy/core": "workspace:*",
         "@snappy/hooks": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/metrics": "workspace:*",
         "@snappy/platform": "workspace:*",
         "@snappy/router": "workspace:*",
         "@snappy/store": "workspace:*",
@@ -1511,6 +1524,8 @@
     "@snappy/intl": ["@snappy/intl@workspace:packages/intl"],
 
     "@snappy/legal": ["@snappy/legal@workspace:packages/legal"],
+
+    "@snappy/metrics": ["@snappy/metrics@workspace:packages/metrics"],
 
     "@snappy/motion": ["@snappy/motion@workspace:packages/motion"],
 

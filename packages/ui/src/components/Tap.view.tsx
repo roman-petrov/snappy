@@ -1,3 +1,4 @@
+import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
 
 import type { useTapState } from "./Tap.state";
@@ -18,9 +19,10 @@ export const TapView = ({
   pointerDown,
   renderAsLink,
   submit,
+  tag,
   title,
 }: TapViewProps) => {
-  const common = { children, className: _.cn(styles.root, cn), onPointerDown: pointerDown, title };
+  const common = { ...Dom.tag(tag), children, className: _.cn(styles.root, cn), onPointerDown: pointerDown, title };
 
   if (renderAsLink && linkHref !== undefined) {
     return (

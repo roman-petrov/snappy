@@ -3,6 +3,7 @@ import { Page, Text } from "@snappy/ui";
 
 import type { usePresetHubState } from "./PresetHub.state";
 
+import { AppTags } from "../../../AppTags";
 import { BalanceTap } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
@@ -33,6 +34,7 @@ export const PresetHubView = ({ entry, invalid, presetId }: PresetHubViewProps) 
               emoji={icon}
               key={id}
               link={Routes.snappy.preset.flow({ flowId: id, presetId })}
+              tag={id === `snappy` ? AppTags.snappy.flow.snappy : AppTags.snappy.flow.static}
               title={title}
               tone={id === `snappy` ? `fuchsia` : `orange`}
             />

@@ -2,6 +2,7 @@ import { Button, Input, PasswordInput } from "@snappy/ui";
 
 import type { useSignInState } from "./SignIn.state";
 
+import { AppTags } from "../../../AppTags";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
 import { AuthEmailActions, authError, AuthForm, AuthSubmitActions } from "../components";
@@ -47,6 +48,7 @@ export const SignInView = ({
           loading={loading}
           submit={t(`auth.signIn.submit`)}
           submitting={t(`auth.signIn.submitting`)}
+          tag={AppTags.auth.signIn.submit}
         >
           <Button link={Routes.auth.signUp} text={t(`auth.signIn.signUpLink`)} />
           <Button link={Routes.auth.forgotPassword} text={t(`auth.signIn.forgotPassword`)} />

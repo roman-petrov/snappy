@@ -59,7 +59,7 @@ export const en = {
   cookieBanner: {
     accept: `Got it`,
     more: `Learn more`,
-    text: `We use cookies to make the site work and remember your settings.`,
+    text: `We use cookies to run the site, remember your settings, and collect anonymous usage statistics via Yandex Metrica after you accept.`,
   },
   cta: {
     button: `Get started`,

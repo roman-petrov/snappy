@@ -12,6 +12,7 @@ export const useTapState = ({
   link,
   onClick,
   submit = false,
+  tag,
   tip,
   vibrate,
 }: TapProps) => {
@@ -65,6 +66,7 @@ export const useTapState = ({
     pointerDown,
     renderAsLink,
     submit,
+    tag,
     title: tip,
   };
 };

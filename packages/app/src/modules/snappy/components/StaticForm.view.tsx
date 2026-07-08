@@ -2,6 +2,7 @@ import { AudioFile, Button, Card, ImageFile, Spoiler, Table, Text } from "@snapp
 
 import type { useStaticFormState } from "./StaticForm.state";
 
+import { AppTags } from "../../../AppTags";
 import { t } from "../../../core";
 import styles from "./StaticForm.module.scss";
 import { StaticFormField } from "./StaticFormField";
@@ -45,7 +46,12 @@ export const StaticFormView = ({ fields, rows, submit, submitted, title }: Stati
         )}
         {submitted ? undefined : (
           <div className={styles.actions}>
-            <Button onClick={submit} text={t(`snappy.form.continue`)} type="primary" />
+            <Button
+              onClick={submit}
+              tag={AppTags.snappy.form.continue}
+              text={t(`snappy.form.continue`)}
+              type="primary"
+            />
           </div>
         )}
       </div>

@@ -11,6 +11,7 @@ import { useIsMobile, useSpeechRecognition } from "../hooks";
 export const useTextInputState = ({
   afterMic,
   maxLines: maxLinesProp,
+  micTag,
   onChange,
   surface = `surface`,
   ...textAreaRest
@@ -52,6 +53,7 @@ export const useTextInputState = ({
     icon: Mic,
     keepFocus: true,
     onClick: toggleRecording,
+    tag: micTag,
   };
 
   return { afterMic, listening, micButton, speechSupported, surface, textArea };

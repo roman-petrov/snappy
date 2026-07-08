@@ -21,6 +21,7 @@ export type AuthEmailFormProps = {
   sentTitle: string;
   setEmail: (value: string) => void;
   submitDisabled?: boolean;
+  submitTag?: string;
 };
 
 export const AuthEmailForm = ({
@@ -39,6 +40,7 @@ export const AuthEmailForm = ({
   sentTitle,
   setEmail,
   submitDisabled,
+  submitTag,
 }: AuthEmailFormProps) => (
   <AuthForm lead={sent ? sentLead : formLead} submit={send.onSend} title={sent ? sentTitle : formTitle}>
     {sent ? (
@@ -56,6 +58,7 @@ export const AuthEmailForm = ({
           sendingLabel={sendingLabel}
           sendLabel={sendLabel}
           submit
+          tag={submitTag}
         >
           {footer}
         </AuthEmailActions>

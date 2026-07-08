@@ -16,6 +16,7 @@ export type AuthEmailActionsProps = {
   sendingLabel: string;
   sendLabel?: string;
   submit?: boolean;
+  tag?: string;
 };
 
 export const AuthEmailActions = ({
@@ -29,6 +30,7 @@ export const AuthEmailActions = ({
   sendingLabel,
   sendLabel,
   submit = false,
+  tag,
 }: AuthEmailActionsProps) => (
   <FormErrorAndActions error={authError(error, errorsKey, cooldownSec)}>
     <FormActions>
@@ -39,6 +41,7 @@ export const AuthEmailActions = ({
         loadingText={sendingLabel}
         onClick={submit ? undefined : onSend}
         submit={submit}
+        tag={tag}
         text={sendLabel}
         type="primary"
       />

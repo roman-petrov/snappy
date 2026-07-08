@@ -3,6 +3,7 @@ import { $, Button, Link, SafeArea, Text } from "@snappy/ui";
 
 import type { useCookieBannerState } from "./CookieBanner.state";
 
+import { AppTags } from "../AppTags";
 import { t } from "../locales";
 import styles from "./CookieBanner.module.scss";
 
@@ -16,7 +17,13 @@ export const CookieBannerView = ({ accept, visible }: CookieBannerViewProps) =>
           <Text as="p" cn={styles.text} text={t(`cookieBanner.text`)} typography="caption" />
           <Link cn={styles.more} link={{ href: `/privacy` }} text={t(`cookieBanner.more`)} />
         </div>
-        <Button cn={styles.accept} onClick={accept} text={t(`cookieBanner.accept`)} type="primary" />
+        <Button
+          cn={styles.accept}
+          onClick={accept}
+          tag={AppTags.site.cookie.accept}
+          text={t(`cookieBanner.accept`)}
+          type="primary"
+        />
       </div>
     </SafeArea>
   ) : undefined;

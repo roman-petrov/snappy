@@ -10,6 +10,8 @@ export * from "./hooks";
 
 export * from "./locales";
 
+export * from "./metrics";
+
 export * from "./SavedStore";
 
 export * from "./StartApp";

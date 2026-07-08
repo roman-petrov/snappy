@@ -48,4 +48,6 @@ const watchSize = (element: HTMLElement | null | undefined, onSize: (size: DomSi
   return _.singleAction([() => observer.disconnect(), subscribe(window.visualViewport, `resize`, sync)]);
 };
 
-export const Dom = { size, subscribe, subscribeOnce, watchSize };
+const tag = (value?: string) => (value === undefined ? {} : { tag: value });
+
+export const Dom = { size, subscribe, subscribeOnce, tag, watchSize };

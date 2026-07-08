@@ -11,6 +11,7 @@ export type AuthSubmitActionsProps = {
   loading: boolean;
   submit: string;
   submitting: string;
+  tag?: string;
 };
 
 export const AuthSubmitActions = ({
@@ -20,9 +21,10 @@ export const AuthSubmitActions = ({
   loading,
   submit,
   submitting,
+  tag,
 }: AuthSubmitActionsProps) => (
   <FormErrorAndActions error={error}>
-    <Button disabled={disabled} submit text={loading ? submitting : submit} type="primary" />
+    <Button disabled={disabled} submit tag={tag} text={loading ? submitting : submit} type="primary" />
     {children}
   </FormErrorAndActions>
 );

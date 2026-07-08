@@ -2,6 +2,7 @@ import { Button } from "@snappy/ui";
 
 import type { useAgentChatState } from "./AgentChat.state";
 
+import { AppTags } from "../../../../AppTags";
 import { t } from "../../../../core";
 import { Routes } from "../../../../Routes";
 import styles from "./AgentChat.module.scss";
@@ -13,7 +14,12 @@ export const AgentChatView = ({ balanceLow, feed, showFeed }: AgentChatViewProps
     {balanceLow ? (
       <div>
         <p>{t(`balance.common.lowLead`)}</p>
-        <Button link={Routes.settings.profile.topUp} text={t(`settings.profile.topUp.cta`)} type="primary" />
+        <Button
+          link={Routes.settings.profile.topUp}
+          tag={AppTags.settings.profile.topUp.open}
+          text={t(`settings.profile.topUp.cta`)}
+          type="primary"
+        />
       </div>
     ) : (
       showFeed && <div className={styles.main}>{feed}</div>

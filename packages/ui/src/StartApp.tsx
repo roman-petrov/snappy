@@ -3,17 +3,23 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
-import type { Action, ReadonlyStore } from "@snappy/core";
 import type { RouterBundle } from "@snappy/router";
 import type { ReactNode } from "react";
 
 import { AppRouter, type RouteLayerOf } from "@snappy/app-router";
+import { type Action, Env, type ReadonlyStore } from "@snappy/core";
+import { YandexMetrica } from "@snappy/metrics";
 import { createRoot, hydrateRoot } from "react-dom/client";
 
 import { App, AppSite, AuthLayout, TabPager, type TabPagerItem } from "./components";
 import { Language, Theme } from "./core";
+import { MetricsRoute } from "./metrics";
 // @ts-expect-error SCSS side-effect import has no TS declarations
 import "@snappy/theme/styles/index";
+
+const devCounterId = 110_522_496;
+const prodCounterId = 110_522_528;
+const metrics = [YandexMetrica(Env.dev() ? devCounterId : prodCounterId)];
 
 export type StartAppInput = {
   base: string;
@@ -48,6 +54,7 @@ export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: Star
 
   const element = (
     <AppRouter base={base} layerOf={layerOf} router={router}>
+      <MetricsRoute metrics={metrics} signedIn={signedIn} />
       <AuthLayout publicPaths={publicPaths} signedIn={signedIn} signInPath={signInPath} />
       <App disableSelection header={header} track={tabs}>
         {tabs === undefined ? undefined : <TabPager items={tabs} />}
@@ -77,6 +84,7 @@ export const startSite = ({ children, header, path = `/` }: StartSiteInput) => {
   hydrateRoot(
     mountContainer,
     <AppRouter path={path} ssr>
+      <MetricsRoute metrics={metrics} />
       <AppSite header={header}>{children}</AppSite>
     </AppRouter>,
   );

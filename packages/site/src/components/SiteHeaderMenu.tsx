@@ -4,6 +4,7 @@ import { _ } from "@snappy/core";
 import { $, Button, IconButton, SystemButtons } from "@snappy/ui";
 import { Menu, X } from "lucide-react";
 
+import { AppTags } from "../AppTags";
 import { t } from "../locales";
 import styles from "./SiteHeaderMenu.module.scss";
 import { SiteHeaderMenuLink } from "./SiteHeaderMenuLink";
@@ -35,8 +36,12 @@ export const SiteHeaderMenu = ({ close, followSection, links, open, openMenu }: 
             ))}
           </nav>
           <div className={styles.panelActions}>
-            <Button large link={{ href: `/app` }} text={t(`cta.button`)} type="primary" />
-            <Button link={{ href: `/download/snappy.apk` }} text={t(`hero.android`)} />
+            <Button large link={{ href: `/app` }} tag={AppTags.site.cta.start} text={t(`cta.button`)} type="primary" />
+            <Button
+              link={{ href: `/download/snappy.apk` }}
+              tag={AppTags.site.download.android.click}
+              text={t(`hero.android`)}
+            />
           </div>
         </div>
       </div>

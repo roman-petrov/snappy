@@ -1,10 +1,12 @@
 import { _ } from "@snappy/core";
 import { SnappyAgent } from "@snappy/snappy";
-import { Language } from "@snappy/ui";
+import { $, Language } from "@snappy/ui";
 import { useEffect, useRef, useState } from "react";
 
 import type { AgentChatProps } from "./agent-feed/AgentChat";
 import type { SnappyFlowPageProps } from "./SnappyFlowPage";
+
+import { AppTags } from "../../../AppTags";
 
 export const useSnappyFlowPageState = ({ draft, presetId }: SnappyFlowPageProps) => {
   const locale = Language.locale();
@@ -28,6 +30,7 @@ export const useSnappyFlowPageState = ({ draft, presetId }: SnappyFlowPageProps)
     if (text === ``) {
       return;
     }
+    $.track(AppTags.snappy.message.send, { presetId: presetId ?? `` });
     setSentText(text);
     setSplashDraft(``);
   };
@@ -37,6 +40,7 @@ export const useSnappyFlowPageState = ({ draft, presetId }: SnappyFlowPageProps)
     if (text === ``) {
       return;
     }
+    $.track(AppTags.snappy.message.send, { presetId: presetId ?? `` });
     agentRef.current?.appendUserText(text);
     setSessionDraft(``);
   };

@@ -2,6 +2,7 @@ import { Button, NewPasswordInput } from "@snappy/ui";
 
 import type { useSignUpState } from "./SignUp.state";
 
+import { AppTags } from "../../../AppTags";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
 import { AuthEmailForm, SignUpConsent } from "../components";
@@ -33,6 +34,7 @@ export const SignUpView = ({
     sentTitle={t(`auth.signUp.checkEmail`)}
     setEmail={setEmail}
     submitDisabled={submitDisabled}
+    submitTag={AppTags.auth.signUp.submit}
   >
     <NewPasswordInput
       disabled={send.loading}

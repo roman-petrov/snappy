@@ -1,3 +1,5 @@
+export * from "./CookieConsent";
+
 export * from "./Language";
 
 export * from "./Settings";

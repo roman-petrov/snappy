@@ -19,6 +19,7 @@ export type TextInputAfterMic = {
 export type TextInputProps = Omit<TextAreaProps, `maxLines`> & {
   afterMic?: TextInputAfterMic;
   maxLines?: number;
+  micTag?: string;
   surface?: TextInputSurface;
 };
 
