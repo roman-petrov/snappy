@@ -55,7 +55,6 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
   const ready = phase === `ready` && (!gated || aiConfig !== undefined);
   const balanceLow = gated && phase === `blocked`;
-  const boot = gated ? aiConfig : undefined;
 
   useEffect(() => {
     if (!ready) {
@@ -65,7 +64,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
     if (handle === null) {
       return _.noop;
     }
-    const resolved = gated ? boot : aiConfigLazy;
+    const resolved = gated ? aiConfigRef.current : aiConfigLazy;
     if (resolved === undefined) {
       return _.noop;
     }
@@ -76,7 +75,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
       instance.stop();
       handle.reset();
     };
-  }, [aiConfigLazy, boot, gated, phase, ready, sessionKey]);
+  }, [aiConfigLazy, gated, phase, ready, sessionKey, settings]);
 
   const feed = (gated ? ready : showFeed) ? createElement(AgentFeed, { ref: feedRef, typeWriterSpeed }) : undefined;
 
