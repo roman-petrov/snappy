@@ -1,16 +1,51 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/material";
 @use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/tokens";
+
+$-sheen: #fff;
+$-rim: 1px;
+$-rim-blur: 0.5px;
+$-lift-blur: 3px;
+$-fill: 20%;
+$-border: 60%;
+$-gloss: 45%;
+$-lift: 24%;
+
+@mixin -active {
+  background: color-mix(in srgb, color.primary() $-fill, transparent);
+  border-color: color-mix(in srgb, color.primary() $-border, transparent);
+  box-shadow:
+    inset 0 $-rim $-rim-blur color-mix(in srgb, $-sheen $-gloss, transparent),
+    0 $-rim $-lift-blur color-mix(in srgb, material.shadow() $-lift, transparent);
+}
 
 .root {
   @include primitives.inline-row-center;
   @include focus($radius: radius.lg());
 
-  gap: space.xs();
+  @include hover {
+    @include -active;
+  }
+
+  @include pressed {
+    @include -active;
+  }
+
+  gap: space.sm();
   justify-content: flex-start;
   width: 100%;
   height: tokens.field-height();
   padding: 0 space.md();
+  color: color.text();
+  border: $-rim solid transparent;
+  border-radius: radius.lg();
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    box-shadow animation.standard-md();
 }

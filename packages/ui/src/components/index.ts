@@ -28,6 +28,8 @@ export * from "./FileSelect";
 
 export * from "./FilledIcon";
 
+export * from "./Glass";
+
 export * from "./HeaderButtonGroup";
 
 export * from "./Icon";

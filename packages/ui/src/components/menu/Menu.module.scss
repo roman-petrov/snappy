@@ -1,14 +1,27 @@
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
 @use "pkg:@snappy/theme/tokens/space";
 @use "pkg:@snappy/theme/tokens/animation";
 
-.root {
+.panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: radius.lg();
+  transition: opacity animation.standard-md();
+}
+
+.glass {
+  color: color.surface();
+}
+
+.list {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: space.xs();
   align-items: stretch;
   padding: space.sm();
-  transition: opacity animation.standard-md();
 }
 
 $-action-in: animation.sharp-md();

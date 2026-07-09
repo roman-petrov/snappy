@@ -1,0 +1,54 @@
+/* stylelint-disable property-disallowed-list */
+@use "pkg:@snappy/theme/tokens/material";
+
+$-sheen: #fff;
+$-rim: 1.5px;
+$-rim-blur: 0.5px;
+$-rim-line: 0.75px;
+$-sheen-top: 85%;
+$-sheen-line: 34%;
+$-sheen-bottom: 46%;
+$-gloss: 30%;
+$-gloss-reach: 48%;
+$-pigment: 66%;
+
+.glass {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 $-rim $-rim-blur color-mix(in srgb, $-sheen $-sheen-top, transparent),
+    inset 0 0 0 $-rim-line color-mix(in srgb, $-sheen $-sheen-line, transparent),
+    inset 0 (-$-rim) $-rim color-mix(in srgb, $-sheen $-sheen-bottom, transparent);
+  backdrop-filter: blur(var(--glass-blur, 0)) saturate(material.glass-saturate()) contrast(material.glass-contrast());
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  mix-blend-mode: overlay;
+  opacity: var(--glass-grain, 0);
+}
+
+.glass::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background:
+    linear-gradient(180deg, color-mix(in srgb, $-sheen $-gloss, transparent), transparent $-gloss-reach),
+    color-mix(
+      in srgb,
+      color-mix(in srgb, currentcolor $-pigment, material.highlight()) calc(var(--glass-tint) * 100%),
+      transparent
+    );
+  border-radius: inherit;
+}
+
+.defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}

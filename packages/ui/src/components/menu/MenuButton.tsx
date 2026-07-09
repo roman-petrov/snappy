@@ -1,5 +1,3 @@
-import { _ } from "@snappy/core";
-
 import { $, type Color } from "../../$";
 import { Icon } from "../Icon";
 import { Tap, type TapProps } from "../Tap";
@@ -12,7 +10,7 @@ export type MenuButtonProps = Omit<TapProps, `children` | `cn` | `tip` | `vibrat
 };
 
 export const MenuButton = ({ color, icon, tip, ...tapProps }: MenuButtonProps) => (
-  <Tap {...tapProps} cn={_.cn($.tap(`soft`), $.radius(`lg`), styles.root)} tip={tip} vibrate="confirm">
+  <Tap {...tapProps} cn={styles.root} tip={tip} vibrate="confirm">
     <Icon color={color} icon={icon} />
     <span className={$.typography(`bodySm`)}>{tip}</span>
   </Tap>
