@@ -3,10 +3,10 @@ import { _ } from "@snappy/core";
 
 import { Dom } from "./Dom";
 
-const matches = (query: string) => (typeof window === `undefined` ? false : window.matchMedia(query).matches);
+const matches = (query: string) => (_.ssr ? false : window.matchMedia(query).matches);
 
 const subscribe = (query: string, onMatch: (matches: boolean) => void) => {
-  if (typeof window === `undefined`) {
+  if (_.ssr) {
     return _.noop;
   }
   const mq = window.matchMedia(query);

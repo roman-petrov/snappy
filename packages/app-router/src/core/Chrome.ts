@@ -27,7 +27,7 @@ const active = (accents: readonly string[], pageIndex: number) =>
   });
 
 const resolve = (css: string) => {
-  if (typeof document === `undefined`) {
+  if (_.ssr) {
     return css;
   }
 
@@ -94,7 +94,7 @@ const metaRgb = (accent: RgbVec) => {
 };
 
 const metaElement = () => {
-  if (typeof document === `undefined`) {
+  if (_.ssr) {
     return undefined;
   }
 

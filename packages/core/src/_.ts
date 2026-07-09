@@ -116,6 +116,7 @@ const kb = (kiloBytes: number) => kiloBytes * b1024;
 const mb = (megaBytes: number) => kb(kb(megaBytes));
 const gb = (gigaBytes: number) => kb(mb(gigaBytes));
 const https = (authority: string) => `https://${authority}`;
+const ssr = typeof window === `undefined`;
 
 export const _ = {
   ...DateTime,
@@ -154,6 +155,7 @@ export const _ = {
   round,
   sentenceCase,
   singleAction,
+  ssr,
   timeBuild: Time.build,
   timeGet: Time.get,
   timeMap: Time.map,

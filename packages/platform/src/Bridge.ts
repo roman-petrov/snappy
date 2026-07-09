@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 /* eslint-disable @typescript-eslint/naming-convention */
+import { _ } from "@snappy/core";
+
 import type { Vibrate } from "./Vibrate";
 
 type Haptic = Exclude<Vibrate, `none`>;
@@ -56,7 +58,7 @@ declare global {
   }
 }
 
-const native = typeof window === `undefined` ? undefined : window.Bridge;
+const native = _.ssr ? undefined : window.Bridge;
 const available = native !== undefined;
 const hapticImpact = (constant: Haptic) => native?.hapticImpact(hapticFeedbackConstants[constant]);
 const systemDark = () => native?.isSystemDark();
