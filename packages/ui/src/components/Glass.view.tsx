@@ -6,9 +6,9 @@ import styles from "./Glass.module.scss";
 
 export type GlassViewProps = ReturnType<typeof useGlassState>;
 
-export const GlassView = ({ blur, cn, grain, id, relief, tint }: GlassViewProps) => (
+export const GlassView = ({ blur, cn, flat = false, grain, id, relief, tint }: GlassViewProps) => (
   <div
-    className={_.cn(styles.glass, cn)}
+    className={_.cn(styles.glass, flat && styles.flat, cn)}
     style={{
       [`--glass-blur` as string]: _.px(blur),
       [`--glass-grain` as string]: grain,

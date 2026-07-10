@@ -11,6 +11,11 @@ $-sheen-bottom: 46%;
 $-gloss: 30%;
 $-gloss-reach: 48%;
 $-pigment: 66%;
+$-fill: color-mix(
+  in srgb,
+  color-mix(in srgb, currentcolor $-pigment, material.highlight()) calc(var(--glass-tint) * 100%),
+  transparent
+);
 
 .glass {
   position: absolute;
@@ -37,13 +42,16 @@ $-pigment: 66%;
   inset: 0;
   content: "";
   background:
-    linear-gradient(180deg, color-mix(in srgb, $-sheen $-gloss, transparent), transparent $-gloss-reach),
-    color-mix(
-      in srgb,
-      color-mix(in srgb, currentcolor $-pigment, material.highlight()) calc(var(--glass-tint) * 100%),
-      transparent
-    );
+    linear-gradient(180deg, color-mix(in srgb, $-sheen $-gloss, transparent), transparent $-gloss-reach), $-fill;
   border-radius: inherit;
+}
+
+.flat {
+  box-shadow: none;
+
+  &::after {
+    background: $-fill;
+  }
 }
 
 .defs {

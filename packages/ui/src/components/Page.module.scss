@@ -1,6 +1,5 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/chrome";
-@use "pkg:@snappy/theme/material/glass";
 @use "pkg:@snappy/theme/material/material" as material;
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/layer";
@@ -19,6 +18,10 @@
   &-tab .header::before {
     --header-surface-end: #{material.chrome-header-surface()};
     --header-border-end: #{material.chrome-header-border()};
+  }
+
+  &-tab .glass {
+    color: chrome.accent();
   }
 }
 
@@ -44,14 +47,11 @@
     animation-range: r(32) r(80);
   }
 
-  &::after {
+  .glass {
     @include layer.behind;
-    @include glass.simple;
 
-    position: absolute;
-    inset: 0;
     inset-block-end: 1px;
-    content: "";
+    color: color.surface();
     opacity: 0;
     animation: header-glass 1ms linear both;
     animation-timeline: scroll();

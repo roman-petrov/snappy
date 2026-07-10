@@ -3,6 +3,7 @@ import { _ } from "@snappy/core";
 
 import type { usePageState } from "./Page.state";
 
+import { Glass } from "./Glass";
 import { Logo } from "./Logo";
 import styles from "./Page.module.scss";
 import { PageHeader } from "./PageHeader";
@@ -22,6 +23,7 @@ export const PageView = ({
 }: PageViewProps) => (
   <div className={_.cn(styles.root, fill && styles.rootFill, tab && styles.rootTab)}>
     <header className={styles.header} ref={headerRef}>
+      <Glass blur={22} cn={styles.glass} flat roughness={0.22} tint={0.28} />
       <SafeArea top>
         <ContentColumn cn={styles.headerInner}>
           <div className={styles.headerSlot}>
