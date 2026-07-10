@@ -1,7 +1,7 @@
 import type { MouseEventHandler } from "react";
 
 import { _ } from "@snappy/core";
-import { $, Button, Glass, IconButton, SystemButtons } from "@snappy/ui";
+import { $, Button, IconButton, SystemButtons } from "@snappy/ui";
 import { Menu, X } from "lucide-react";
 
 import { AppTags } from "../AppTags";
@@ -25,8 +25,7 @@ export const SiteHeaderMenu = ({ close, followSection, links, open, openMenu }: 
     {open ? (
       <div className={styles.menu}>
         <div className={styles.backdrop} onClick={close} />
-        <div className={_.cn(styles.panel, $.elevation(`e2`), $.radius(`lg`))}>
-          <Glass cn={styles.glass} look="haze" />
+        <div className={_.cn(styles.panel, $.surface(`surface`), $.elevation(`e2`), $.radius(`lg`))}>
           <div className={styles.panelHead}>
             <SystemButtons />
             <IconButton icon={X} onClick={close} tip={t(`nav.close`)} />

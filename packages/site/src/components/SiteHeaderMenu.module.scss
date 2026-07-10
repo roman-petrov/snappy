@@ -31,35 +31,25 @@
   flex-direction: column;
   gap: space.md();
   padding: space.lg();
-  overflow: hidden;
-}
-
-.glass {
-  color: color.surface();
+  animation: panel-in animation.settle-md() both;
 }
 
 .panel-head {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  animation: panel-in animation.settle-md() both;
 }
 
 .panel-nav {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: space.xs();
-  animation: panel-in animation.settle-md() both;
 }
 
 .panel-actions {
-  position: relative;
   display: flex;
   flex-direction: column;
   gap: space.sm();
-  animation: panel-in animation.settle-md() both;
 
   > * {
     width: 100%;
