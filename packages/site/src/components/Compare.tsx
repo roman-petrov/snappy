@@ -18,7 +18,7 @@ export const Compare = () => (
         ] as const
       ).map(({ color, icon: Mark, path, win }) => (
         <div
-          className={_.cn(styles.col, win && styles.win, win && $.surface(`surfaceGlass`), win && $.radius(`lg`))}
+          className={_.cn(styles.col, win && styles.win, win && $.surface(`surface`), win && $.radius(`lg`))}
           key={path}
         >
           <Text as="h3" text={t(`compare.${path}.title`)} typography="h3" />

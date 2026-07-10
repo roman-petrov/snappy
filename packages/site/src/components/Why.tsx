@@ -9,7 +9,7 @@ import styles from "./Why.module.scss";
 
 export const Why = () => (
   <Section lead={t(`why.lead`)} title={t(`why.title`)}>
-    <div className={_.cn(styles.panel, $.surface(`surfaceGlass`), $.radius(`lg`))}>
+    <div className={_.cn(styles.panel, $.surface(`surface`), $.radius(`lg`))}>
       <FeatureList
         items={[
           { color: `accentViolet`, description: t(`why.one.desc`), icon: LayoutGrid, title: t(`why.one.title`) },
