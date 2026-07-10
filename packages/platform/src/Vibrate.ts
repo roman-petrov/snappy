@@ -32,11 +32,27 @@ const types = [
 export type Vibrate = (typeof types)[number];
 
 const trigger = (type: Vibrate) => {
-  if (type === `none` || !Bridge.available) {
+  if (type === `none`) {
     return;
   }
 
-  Bridge.hapticImpact(type);
+  if (Bridge.available) {
+    Bridge.hapticImpact(type);
+
+    return;
+  }
+
+  const web: Partial<Record<Exclude<Vibrate, `none`>, number>> = {
+    confirm: 8,
+    segmentTick: 3,
+    toggleOff: 2,
+    toggleOn: 5,
+  };
+
+  const duration = web[type];
+  if (duration !== undefined && `vibrate` in navigator) {
+    navigator.vibrate(duration);
+  }
 };
 
 export const Vibrate = { trigger };
