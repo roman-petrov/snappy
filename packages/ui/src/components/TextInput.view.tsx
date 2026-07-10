@@ -13,14 +13,16 @@ export type TextInputViewProps = ReturnType<typeof useTextInputState>;
 
 export const TextInputView = ({
   afterMic,
-  glass = false,
+  glass,
   listening,
   micButton,
   speechSupported,
   textArea,
 }: TextInputViewProps) => (
   <div className={styles.wrap}>
-    <div className={_.cn(styles.inputWrap, glass ? styles.glass : $.tap(`soft`), listening && styles.inputWrapRecording)}>
+    <div
+      className={_.cn(styles.inputWrap, glass ? styles.glass : $.tap(`soft`), listening && styles.inputWrapRecording)}
+    >
       {glass ? <Glass cn={styles.glassFill} flat look="mist" /> : undefined}
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
