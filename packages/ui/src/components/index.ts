@@ -30,6 +30,8 @@ export * from "./FilledIcon";
 
 export * from "./Glass";
 
+export * from "./GlassLook";
+
 export * from "./HeaderButtonGroup";
 
 export * from "./Icon";

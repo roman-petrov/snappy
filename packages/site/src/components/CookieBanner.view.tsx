@@ -13,7 +13,7 @@ export const CookieBannerView = ({ accept, visible }: CookieBannerViewProps) =>
   visible ? (
     <SafeArea bottom cn={styles.root}>
       <div className={_.cn(styles.panel, $.elevation(`e2`), $.radius(`lg`))}>
-        <Glass blur={1} cn={styles.glass} roughness={0.25} tint={0.44} />
+        <Glass cn={styles.glass} look="haze" />
         <div className={styles.message}>
           <Text as="p" cn={styles.text} text={t(`cookieBanner.text`)} typography="caption" />
           <Link cn={styles.more} link={{ href: `/privacy` }} text={t(`cookieBanner.more`)} />
