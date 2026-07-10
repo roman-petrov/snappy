@@ -21,7 +21,7 @@ export const TextInputView = ({
 }: TextInputViewProps) => (
   <div className={styles.wrap}>
     <div className={_.cn(styles.inputWrap, glass ? styles.glass : $.tap(`soft`), listening && styles.inputWrapRecording)}>
-      {glass ? <Glass blur={20} cn={styles.glassFill} flat roughness={0.12} tint={0.28} /> : undefined}
+      {glass ? <Glass blur={1} cn={styles.glassFill} flat roughness={0.12} tint={0.28} /> : undefined}
       <div className={styles.textAreaWrap}>
         <TextArea {...textArea} />
       </div>

@@ -26,7 +26,7 @@ export const SiteHeaderMenu = ({ close, followSection, links, open, openMenu }: 
       <div className={styles.menu}>
         <div className={styles.backdrop} onClick={close} />
         <div className={_.cn(styles.panel, $.elevation(`e2`), $.radius(`lg`))}>
-          <Glass blur={20} cn={styles.glass} roughness={0.25} tint={0.44} />
+          <Glass blur={1} cn={styles.glass} roughness={0.25} tint={0.44} />
           <div className={styles.panelHead}>
             <SystemButtons />
             <IconButton icon={X} onClick={close} tip={t(`nav.close`)} />

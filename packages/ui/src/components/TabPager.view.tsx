@@ -14,7 +14,7 @@ export type TabPagerViewProps = ReturnType<typeof useTabPagerState>;
 export const TabPagerView = ({ bar, items }: TabPagerViewProps) => (
   <PageChrome active shell>
     <div className={_.cn(styles.bar, $.elevation(`e2`))} ref={bar} style={{ [`--tab-count` as string]: items.length }}>
-      <Glass blur={10} cn={styles.glass} roughness={0.4} tint={0.2} />
+      <Glass blur={0.5} cn={styles.glass} roughness={0.4} tint={0.2} />
       <div className={styles.indicator} />
       {items.map(item => (
         <Tap cn={styles.tab} key={item.id} link={item.path} tag={item.tag}>

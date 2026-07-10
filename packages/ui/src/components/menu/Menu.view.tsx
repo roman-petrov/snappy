@@ -15,7 +15,7 @@ export type MenuViewProps = ReturnType<typeof useMenuState>;
 export const MenuView = ({ items }: MenuViewProps) =>
   items.length === 0 ? undefined : (
     <div className={_.cn(styles.panel, $.elevation(`e2`))}>
-      <Glass blur={20} cn={styles.glass} roughness={0.25} tint={0.32} />
+      <Glass blur={1} cn={styles.glass} roughness={0.25} tint={0.32} />
       <div className={styles.list}>
         {items.map(({ action, index, key, onClick, outIndex }) => (
           <div

@@ -13,6 +13,7 @@ $-gloss-reach: 48%;
 $-pigment: 66%;
 $-saturate: 1.14;
 $-contrast: 1.05;
+$-blur: 20px;
 $-fill: color-mix(
   in srgb,
   color-mix(in srgb, currentcolor $-pigment, material.highlight()) calc(var(--glass-tint) * 100%),
@@ -28,7 +29,7 @@ $-fill: color-mix(
     inset 0 $-rim $-rim-blur color-mix(in srgb, $-sheen $-sheen-top, transparent),
     inset 0 0 0 $-rim-line color-mix(in srgb, $-sheen $-sheen-line, transparent),
     inset 0 (-$-rim) $-rim color-mix(in srgb, $-sheen $-sheen-bottom, transparent);
-  backdrop-filter: blur(var(--glass-blur, 0)) saturate($-saturate) contrast($-contrast);
+  backdrop-filter: blur(calc(var(--glass-blur, 0) * $-blur)) saturate($-saturate) contrast($-contrast);
 }
 
 .grain {
