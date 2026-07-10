@@ -23,7 +23,7 @@ export const PageView = ({
 }: PageViewProps) => (
   <div className={_.cn(styles.root, fill && styles.rootFill, tab && styles.rootTab)}>
     <header className={styles.header} ref={headerRef}>
-      <Glass blur={22} cn={styles.glass} flat roughness={0.22} tint={0.28} />
+      <Glass blur={20} cn={styles.glass} flat roughness={0.2} tint={0.2} />
       <SafeArea top>
         <ContentColumn cn={styles.headerInner}>
           <div className={styles.headerSlot}>
