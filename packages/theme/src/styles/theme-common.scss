@@ -65,9 +65,6 @@ $-hue-accent-plum: 70deg;
   --material-accent-border-highlight: #{map.get($t, material-accent-border-highlight)};
   --material-tone-rim: #{map.get($t, material-tone-rim)};
   --material-tone-accent: #{map.get($t, material-tone-accent)};
-  --material-glass-blur: #{map.get($t, material-glass-blur)};
-  --material-glass-saturate: #{map.get($t, material-glass-saturate)};
-  --material-glass-contrast: #{map.get($t, material-glass-contrast)};
   --material-shadow: #{-oklch(map.get($t, shadow))};
   --material-shadow-weight: #{map.get($t, material-shadow-weight)};
 }

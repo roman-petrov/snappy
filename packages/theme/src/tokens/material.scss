@@ -30,18 +30,6 @@
   @return -material("tone-accent");
 }
 
-@function glass-blur() {
-  @return -material("glass-blur");
-}
-
-@function glass-saturate() {
-  @return -material("glass-saturate");
-}
-
-@function glass-contrast() {
-  @return -material("glass-contrast");
-}
-
 @function shadow() {
   @return -material("shadow");
 }

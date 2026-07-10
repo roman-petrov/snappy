@@ -17,10 +17,6 @@
   @return header-border(#{color.surface()});
 }
 
-@function panel-tint() {
-  @return color-mix(in oklch, accent() var(--chrome-tint-ratio), transparent);
-}
-
 @function indicator-tint() {
   @return color-mix(in oklch, accent() var(--chrome-indicator-ratio), transparent);
 }

@@ -1,11 +1,9 @@
-/* stylelint-disable property-disallowed-list */
 @use "sass:string";
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/material/chrome";
 @use "pkg:@snappy/theme/material/panel";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/material";
-@use "pkg:@snappy/theme/tokens/animation";
 
 @function primary-border() {
   @return panel.border(color.primary());
@@ -41,13 +39,4 @@
 
 @function surface-border() {
   @return 1px solid panel.border();
-}
-
-@function glass-filter() {
-  @return blur(material.glass-blur()) saturate(material.glass-saturate()) contrast(material.glass-contrast());
-}
-
-@mixin glass-simple {
-  backdrop-filter: glass-filter();
-  transition: backdrop-filter animation.standard-md();
 }
