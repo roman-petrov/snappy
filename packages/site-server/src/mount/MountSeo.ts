@@ -5,13 +5,12 @@ import { ConfigValues } from "@snappy/config";
 import { MimeType } from "@snappy/core";
 
 export const MountSeo = (paths: readonly string[]): TextRoute[] => {
-  const origin = () => ConfigValues.origin(ConfigValues.env());
-  const loc = (path: string) => (path === `/` ? `${origin()}/` : `${origin()}${path}`);
+  const loc = (path: string) => `${ConfigValues.origin(ConfigValues.env())}${path}`;
 
   return [
     {
       path: `/robots.txt`,
-      text: `User-agent: *\nAllow: /\n\nSitemap: ${loc(`/`)}sitemap.xml\n`,
+      text: `User-agent: *\nDisallow: /app\nDisallow: /admin\n\nSitemap: ${loc(`/`)}sitemap.xml\n`,
       type: MimeType.textPlain,
     },
     {

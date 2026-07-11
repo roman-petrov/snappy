@@ -16,7 +16,7 @@ describe(`MountSeo`, () => {
     expect(MountSeo(paths).filter(({ path }) => path === `/robots.txt`)).toStrictEqual([
       {
         path: `/robots.txt`,
-        text: `User-agent: *\nAllow: /\n\nSitemap: ${root}sitemap.xml\n`,
+        text: `User-agent: *\nDisallow: /app\nDisallow: /admin\n\nSitemap: ${root}sitemap.xml\n`,
         type: MimeType.textPlain,
       },
     ]);
