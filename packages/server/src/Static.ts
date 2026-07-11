@@ -10,9 +10,9 @@ const register = async (app: FastifyInstance, mounts: StaticMount[]) => {
 
   const hashedFile = (path: string) => /[-.]\w{8,}\./u.test(path.split(/[/\\]/u).at(-1) ?? ``);
 
-  const setHeaders: SetHeaders = (response, path) => {
+  const setHeaders: SetHeaders = (reply, path) => {
     if (hashedFile(path)) {
-      response.setHeader(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
+      reply.header(`Cache-Control`, `public, max-age=${_.day.seconds * _.daysInYear}, immutable`);
     }
   };
 
