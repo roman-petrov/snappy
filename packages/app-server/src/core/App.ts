@@ -6,7 +6,6 @@ import { HttpStatus } from "@snappy/core";
 import { Db } from "@snappy/db";
 import { Payment } from "@snappy/payment";
 import { Trpc } from "@snappy/server-module";
-import { fromNodeHeaders } from "better-auth/node";
 
 import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
@@ -36,13 +35,13 @@ export const App = async ({ app }: AppConfig) => {
 
   app.route({
     handler: async (request, reply) => {
-      const url = new URL(request.url, `http://${request.headers.host ?? `localhost`}`);
-      const headers = new Headers(fromNodeHeaders(request.headers));
-      headers.set(`x-forwarded-for`, request.ip);
+      const url = new URL(request.url, `http://${request.hostname}`);
+      const authHeaders = Session.headers(request.headers);
+      authHeaders.set(`x-forwarded-for`, request.ip);
 
       const authRequest = new Request(url.toString(), {
         body: request.body === undefined ? undefined : JSON.stringify(request.body),
-        headers,
+        headers: authHeaders,
         method: request.method,
       });
 
