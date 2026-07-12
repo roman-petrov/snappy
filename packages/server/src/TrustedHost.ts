@@ -1,10 +1,9 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable unicorn/no-null */
-import type { IncomingMessage, ServerResponse } from "node:http";
+import type { FastifyReply, FastifyRequest, HookHandlerDoneFunction } from "fastify";
 
 import tls, { type SecureContextOptions } from "node:tls";
 
-const hostOnly = (value: string | undefined) => value?.split(`:`)[0]?.toLowerCase() ?? ``;
 const allowedHosts = (host: string) => new Set([`www.${host.toLowerCase()}`, host.toLowerCase()]);
 
 const sni = (host: string, ssl: SecureContextOptions) => {
@@ -21,17 +20,13 @@ const sni = (host: string, ssl: SecureContextOptions) => {
   };
 };
 
-const requestHandler = (host: string, handler: (request: IncomingMessage, response: ServerResponse) => void) => {
-  const trusted = allowedHosts(host);
+const onRequest = (host: string) => (request: FastifyRequest, _reply: FastifyReply, done: HookHandlerDoneFunction) => {
+  if (!allowedHosts(host).has(request.hostname.toLowerCase())) {
+    request.socket.destroy();
 
-  return (request: IncomingMessage, response: ServerResponse) => {
-    if (!trusted.has(hostOnly(request.headers.host))) {
-      request.socket.destroy();
-
-      return;
-    }
-    handler(request, response);
-  };
+    return;
+  }
+  done();
 };
 
-export const TrustedHost = { requestHandler, sni };
+export const TrustedHost = { onRequest, sni };
