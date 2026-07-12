@@ -7,22 +7,40 @@ import { File } from "@snappy/node";
 import { join } from "node:path";
 
 // ? See https://fontsource.org/docs/getting-started/preload
-export const pluginFontPreload = (): Plugin => ({
+export const pluginHtmlHead = (): Plugin => ({
   apply: `build`,
-  name: `font-preload`,
+  name: `html-head`,
   writeBundle({ dir }, outputBundle) {
     if (dir === undefined || dir === ``) {
       return;
     }
-    const chunks = Object.values(outputBundle);
-    const placeholder = `<!-- FONT-PRELOAD-PLACEHOLDER -->`;
 
-    const preloadSubsets = [
-      `inter-latin-wght-normal`,
-      `inter-latin-ext-wght-normal`,
-      `inter-cyrillic-wght-normal`,
-      `inter-cyrillic-ext-wght-normal`,
-    ] as const;
+    const optimizeStylesheet = (source: string) => {
+      const stylesheet = /<link rel="stylesheet"[^>]*>/u.exec(source)?.[0];
+      if (stylesheet === undefined) {
+        return source;
+      }
+
+      const script = /<script type="module"[^>]*><\/script>/u.exec(source)?.[0];
+      if (script === undefined) {
+        return source;
+      }
+
+      const href = /href="(?<href>[^"]+)"/u.exec(stylesheet)?.groups?.[`href`];
+      if (href === undefined) {
+        return source;
+      }
+
+      const block = [`<link rel="preload" as="style" href="${href}" crossorigin />`, stylesheet, script].join(`\n    `);
+
+      return source
+        .replace(/<link rel="preload" as="style"[^>]*>\s*/u, ``)
+        .replace(`\n    ${script}\n    ${stylesheet}`, `\n    ${block}`);
+    };
+
+    const chunks = Object.values(outputBundle);
+    const placeholder = `<!-- HTML-HEAD-PLACEHOLDER -->`;
+    const preloadSubsets = [`inter-cyrillic-wght-normal`, `inter-latin-wght-normal`] as const;
 
     const isWoff2Asset = (chunk: { fileName?: string; type: string }, subset: string) =>
       chunk.type === `asset` &&
@@ -54,13 +72,13 @@ export const pluginFontPreload = (): Plugin => ({
     const html = File.read(htmlPath);
     const base = baseFromHtml(html);
 
-    const links = fileNames
+    const fontLinks = fileNames
       .map(
         name =>
           `<link rel="preload" as="font" type="font/woff2" href="${base === `` ? `/${name}` : `${base}/${name}`}" crossorigin="anonymous" />`,
       )
       .join(`\n    `);
 
-    File.write(htmlPath, html.replace(placeholder, links));
+    File.write(htmlPath, optimizeStylesheet(html.replace(placeholder, fontLinks)));
   },
 });

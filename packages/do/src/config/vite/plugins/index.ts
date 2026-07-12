@@ -1,3 +1,3 @@
-export * from "./FontPreload";
+export * from "./HtmlHead";
 
 export * from "./OptimizeCssModules";

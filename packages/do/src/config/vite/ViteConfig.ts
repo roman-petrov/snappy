@@ -7,7 +7,7 @@ import { type ConfigEnv, defineConfig, mergeConfig, type UserConfig } from "vite
 import { compression } from "vite-plugin-compression2";
 import pluginSassDts from "vite-plugin-sass-dts";
 
-import { pluginFontPreload, pluginOptimizeCssModules } from "./plugins";
+import { pluginHtmlHead, pluginOptimizeCssModules } from "./plugins";
 
 export type ViteConfigOptions = { analyzeFileName: string };
 
@@ -27,7 +27,7 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
         },
         plugins: [
           react(),
-          pluginFontPreload(),
+          pluginHtmlHead(),
           pluginOptimizeCssModules(),
           pluginSassDts({
             esmExport: true,
