@@ -1,1 +1,1 @@
-export { Terms as default } from "../components";
+export { Terms as default } from "../components/Terms";

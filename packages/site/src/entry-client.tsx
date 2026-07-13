@@ -8,6 +8,6 @@ import "./scss/scroll.scss";
 
 const { pathname } = window.location;
 const path = Pages.paths.find(p => p === pathname) ?? `/`;
-const View = await Pages.load(path);
+const View = Pages.at(path);
 
 startSite({ children: <SiteShell view={View} />, header: <SiteHeader />, path });

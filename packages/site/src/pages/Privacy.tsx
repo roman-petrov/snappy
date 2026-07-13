@@ -1,1 +1,1 @@
-export { Privacy as default } from "../components";
+export { Privacy as default } from "../components/Privacy";
