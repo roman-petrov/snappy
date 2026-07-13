@@ -8,6 +8,7 @@ import { _, type ReadonlyStore, Store } from "@snappy/core";
 import type {
   HrefFrom,
   IndexTarget,
+  NavigationEdge,
   PathsFrom,
   RouterBundle,
   RouterConfig,
@@ -27,8 +28,6 @@ type Compiled<I extends RoutesInput<I>> = {
   pages: Record<string, Page>;
   parents: Record<string, string>;
 };
-
-type Edge = { from: string; history: `push` | `replace`; to: string };
 
 type HrefNode = ((parameters: PageProps) => string) | string | { readonly [key: string]: HrefNode };
 
@@ -50,7 +49,7 @@ type RuntimeState = {
   lastInit?: RouterInit;
   pending?: NavJob;
   ssr: boolean;
-  stack: readonly Edge[];
+  stack: readonly NavigationEdge[];
   tail: Promise<void>;
   transition?: TransitionFn;
   unsubscribe?: () => void;
@@ -238,7 +237,12 @@ const resolvePageState = (
   return _.isFunction(matched) ? { page: matched, params } : undefined;
 };
 
-const stackOnCommit = (stackAfter: readonly Edge[], from: string, to: string, history: `push` | `replace`): Edge[] =>
+const stackOnCommit = (
+  stackAfter: readonly NavigationEdge[],
+  from: string,
+  to: string,
+  history: `push` | `replace`,
+): NavigationEdge[] =>
   history === `push`
     ? [...stackAfter, { from, history: `push`, to }]
     : stackAfter.length === 0
@@ -501,6 +505,7 @@ const createRuntime = ({
     init,
     parent: pattern => parents[pattern] ?? home,
     pattern: pathname => routePattern(pages, pathname),
+    stack: () => state.stack,
     stateAt: pathname => resolvePageState({ pathname, search: `` }, pages, index),
   };
 };

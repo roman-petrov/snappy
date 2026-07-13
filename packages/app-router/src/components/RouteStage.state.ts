@@ -22,7 +22,7 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
   const [flipAnimating, setFlipAnimating] = useState(false);
   const [shellDock, setShellDock] = useState<HTMLDivElement | undefined>();
   const [pageDock, setPageDock] = useState<HTMLDivElement | undefined>();
-  const { $page, parent, pattern, stateAt } = useRouter();
+  const { $page, parent, pattern, stack, stateAt } = useRouter();
   const path = useRouterPath();
   const state = useStoreValue($page);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -59,23 +59,25 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
     setPageDock(node ?? undefined);
   }, []);
 
-  const stack = RouteStack.stage({
+  const stageStack = RouteStack.stage({
     current: state,
     layerOf,
     parent,
     path,
     pattern: routePattern,
+    patternAt: pattern,
     preserved: preservedTab.current,
+    stack: stack(),
     stateAt,
   });
 
   if (layer === `flip`) {
     preservedTab.current = undefined;
   } else if (layer === undefined) {
-    preservedTab.current = stack.preserved;
+    preservedTab.current = stageStack.preserved;
   }
 
-  const { panes } = stack;
+  const { panes } = stageStack;
 
   const underlay = {
     contentDimmed: (layer === `cover` && !phase.entering) || phase.closing,
@@ -98,7 +100,7 @@ export const useRouteStageState = ({ content = false, track }: RouteStageProps) 
 
   const flipUnderlay = layer === `cover` && preservedTab.current === undefined;
   const slide = track !== undefined && layer !== `flip` && !flipUnderlay;
-  const { idle } = stack;
+  const { idle } = stageStack;
   const contentPage = flipUnderlay ? (underlayRef.current ?? idle ?? state) : (idle ?? state);
 
   if (layer !== `cover`) {

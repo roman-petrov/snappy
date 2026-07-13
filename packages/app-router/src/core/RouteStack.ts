@@ -1,4 +1,4 @@
-import type { RouterPageState } from "@snappy/router";
+import type { NavigationEdge, RouterPageState } from "@snappy/router";
 
 export type OverlayPane = { pattern: string; state: RouterPageState };
 
@@ -12,27 +12,83 @@ type StageInput = {
   parent: (pattern: string) => string;
   path: string;
   pattern: string;
+  patternAt: (pathname: string) => string;
   preserved?: RouterPageState;
+  stack: readonly NavigationEdge[];
   stateAt: (pathname: string) => RouterPageState | undefined;
 };
 
-const stage = ({ current, layerOf, parent, path, pattern, preserved: previous, stateAt }: StageInput) => {
-  const layer = layerOf?.(pattern);
+const edgeTo = (cursor: string, edges: readonly NavigationEdge[]) => edges.findLast(edge => edge.to === cursor);
+
+const stackAncestors = (
+  cursor: string,
+  edges: readonly NavigationEdge[],
+  include: (from: string) => boolean,
+): readonly string[] => {
+  const edge = edgeTo(cursor, edges);
+
+  return edge === undefined || !include(edge.from) ? [] : [...stackAncestors(edge.from, edges, include), edge.from];
+};
+
+const tabRoot = (
+  routePattern: string,
+  layerOf: RouteLayerOf | undefined,
+  parent: (pattern: string) => string,
+): string => {
+  if (layerOf?.(routePattern) === undefined) {
+    return routePattern;
+  }
+
+  const ancestor = parent(routePattern);
+
+  return ancestor === routePattern ? routePattern : tabRoot(ancestor, layerOf, parent);
+};
+
+const tabIndex = (
+  cursor: string,
+  edges: readonly NavigationEdge[],
+  trackAt: (pattern: string) => number | undefined,
+): number | undefined => {
+  const edge = edgeTo(cursor, edges);
+
+  if (edge === undefined) {
+    return undefined;
+  }
+
+  const slot = trackAt(edge.from);
+
+  return slot ?? tabIndex(edge.from, edges, trackAt);
+};
+
+const coverChain = (routePattern: string, edges: readonly NavigationEdge[], layerOf?: RouteLayerOf) =>
+  layerOf?.(routePattern) === `cover`
+    ? [...stackAncestors(routePattern, edges, from => layerOf(from) === `cover`), routePattern]
+    : [];
+
+const pathnameAt = (routePattern: string, path: string, patternAt: (pathname: string) => string) => {
+  if (routePattern === `/`) {
+    return `/`;
+  }
+
   const parts = path === `/` ? [] : path.replace(/^\//u, ``).split(`/`);
+  const truncated = `/${parts.slice(0, routePattern.split(`/`).length).join(`/`)}`;
 
-  const pathname = (stackPattern: string) =>
-    stackPattern === `/` ? `/` : `/${parts.slice(0, stackPattern.split(`/`).length).join(`/`)}`;
+  return patternAt(truncated) === routePattern ? truncated : `/${routePattern}`;
+};
 
-  const tabRoot = (stackPattern: string): string =>
-    layerOf?.(stackPattern) === undefined
-      ? stackPattern
-      : (() => {
-          const ancestor = parent(stackPattern);
-
-          return ancestor === stackPattern ? stackPattern : tabRoot(ancestor);
-        })();
-
-  const tabRootState = stateAt(pathname(tabRoot(pattern)));
+const stage = ({
+  current,
+  layerOf,
+  parent,
+  path,
+  pattern,
+  patternAt,
+  preserved: previous,
+  stack,
+  stateAt,
+}: StageInput) => {
+  const layer = layerOf?.(pattern);
+  const tabRootState = stateAt(pathnameAt(tabRoot(pattern, layerOf, parent), path, patternAt));
 
   const preserved =
     layer === `flip`
@@ -49,24 +105,14 @@ const stage = ({ current, layerOf, parent, path, pattern, preserved: previous, s
     return { idle, panes: [], preserved };
   }
 
-  const coverPatterns = (stack: string): string[] => {
-    if (layerOf?.(stack) !== `cover`) {
-      return [];
-    }
-
-    const ancestor = parent(stack);
-    const root = ancestor === stack || ancestor === `/` || layerOf(ancestor) !== `cover`;
-
-    return root ? [stack] : [...coverPatterns(ancestor), stack];
-  };
-
-  const items = coverPatterns(pattern).flatMap(stackPattern => {
-    const state = stackPattern === pattern && current !== undefined ? current : stateAt(pathname(stackPattern));
+  const panes = coverChain(pattern, stack, layerOf).flatMap(stackPattern => {
+    const state =
+      stackPattern === pattern && current !== undefined ? current : stateAt(pathnameAt(stackPattern, path, patternAt));
 
     return state === undefined ? [] : [{ pattern: stackPattern, state }];
   });
 
-  return { idle, panes: items, preserved };
+  return { idle, panes, preserved };
 };
 
-export const RouteStack = { stage };
+export const RouteStack = { stage, tabIndex, tabRoot };

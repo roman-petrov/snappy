@@ -7,7 +7,6 @@ import type { RouteStageCoverProps } from "./RouteStageCover";
 
 import { type OverlayPane, RouteMotion } from "../core";
 import { useRouterGo } from "../hooks/useRouterGo";
-import { useRouterPath } from "../hooks/useRouterPath";
 import { useRouteStage } from "../hooks/useRouteStage";
 import { useTrackMotion } from "../hooks/useTrackMotion";
 
@@ -25,10 +24,8 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
 
   const cornerRadius = Bridge.screenCornerRadius();
   const go = useRouterGo();
-  const path = useRouterPath();
   const overlayRef = useRef<HTMLDivElement>(null);
   const paneRef = useRef<HTMLDivElement>(null);
-  const topScrollRef = useRef<HTMLDivElement>(null);
   const frozenRef = useRef<Record<string, PaneInsets>>({});
   const paneCount = panes.length;
   const frameRef = useRef({ count: paneCount, index: Math.max(0, paneCount - 1) });
@@ -93,11 +90,6 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
 
   useTrackMotion(cover, hasPanes);
 
-  useEffect(() => {
-    topScrollRef.current?.scrollTo({ behavior: `instant`, left: 0, top: 0 });
-    document.documentElement.scrollTo({ behavior: `instant`, left: 0, top: 0 });
-  }, [path]);
-
   return {
     cornerRadius,
     items,
@@ -108,6 +100,5 @@ export const useRouteStageCoverState = ({ panes }: RouteStageCoverProps) => {
     overlayRef,
     pageDockRef,
     paneRef,
-    topScrollRef,
   };
 };

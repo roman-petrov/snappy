@@ -1,20 +1,23 @@
 import { useHasTouchInput } from "@snappy/hooks";
 import { Slide, type Slide as SlideMotion } from "@snappy/motion";
-import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useLayoutEffect, useRef } from "react";
 
 import type { RouteStageSlideProps } from "./RouteStageSlide";
 
-import { RouteMotion, type TrackListener, type TrackLive, type TrackValue } from "../core";
+import { RouteMotion, RouterContext, RouteStack, type TrackListener, type TrackLive, type TrackValue } from "../core";
 import { useRouter } from "../hooks/useRouter";
 import { useRouterGo } from "../hooks/useRouterGo";
 import { useRouterPath } from "../hooks/useRouterPath";
 import { useRouteStage } from "../hooks/useRouteStage";
 import { useTrackMotion } from "../hooks/useTrackMotion";
 
+const { tabIndex, tabRoot } = RouteStack;
+
 export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProps) => {
   const base = useRouteStage();
   const { contentRef, insets, layer, underlay } = base;
-  const { pattern } = useRouter();
+  const { layerOf } = useContext(RouterContext) ?? {};
+  const { parent, pattern, stack } = useRouter();
   const touch = useHasTouchInput();
   const go = useRouterGo();
   const path = useRouterPath();
@@ -50,13 +53,18 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
     [items, pattern],
   );
 
-  const matched = trackAt(pattern(path));
+  const routePattern = pattern(path);
+  const matched = trackAt(routePattern);
 
-  if (matched !== undefined) {
-    lastIndexRef.current = matched;
-  }
+  const index =
+    matched ??
+    tabIndex(routePattern, stack(), trackAt) ??
+    trackAt(tabRoot(routePattern, layerOf, parent)) ??
+    lastIndexRef.current ??
+    trackAt(`/`) ??
+    0;
 
-  const index = matched ?? lastIndexRef.current ?? trackAt(`/`) ?? 0;
+  lastIndexRef.current = index;
 
   itemsRef.current = items;
 
@@ -81,12 +89,9 @@ export const useRouteStageSlideState = ({ children, items }: RouteStageSlideProp
   useEffect(() => RouteMotion.bindSlide(motion, trackAt), [motion, trackAt]);
 
   useLayoutEffect(() => {
-    if (matched !== undefined) {
-      motion.sync(matched);
-    }
-
+    motion.sync(index);
     motion.layout();
-  }, [matched, items, motion, touch]);
+  }, [index, items, motion, touch]);
 
   useTrackMotion(motion, layer === undefined);
 

@@ -19,7 +19,6 @@ export const RouteStageCoverView = ({
   overlayRef,
   pageDockRef,
   paneRef,
-  topScrollRef,
 }: RouteStageCoverViewProps) => (
   <div
     className={_.cn(
@@ -41,7 +40,7 @@ export const RouteStageCoverView = ({
             : undefined
         }
       >
-        <div className={styles.paneScroll} ref={track ? topScrollRef : undefined}>
+        <div className={styles.paneScroll}>
           <div style={{ paddingBottom: scrollPad }}>
             <div className={styles.paneContent}>
               <RouterPage {...pane.state} />

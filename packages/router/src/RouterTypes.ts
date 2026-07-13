@@ -8,6 +8,8 @@ export type HrefFrom<S> = Record<FlatKey<S>, string> & { readonly [K in BranchKe
 
 export type IndexTarget = Page | RedirectTarget;
 
+export type NavigationEdge = { from: string; history: `push` | `replace`; to: string };
+
 export type PathParameters<P extends string> = Record<PathParameter<P>, string>;
 
 export type PathsFrom<I> = {
@@ -39,6 +41,7 @@ export type RouterRuntime = {
   init: (input: RouterInit) => void;
   parent: (pattern: string) => string;
   pattern: (pathname: string) => string;
+  stack: () => readonly NavigationEdge[];
   stateAt: (pathname: string) => RouterPageState | undefined;
 };
 
