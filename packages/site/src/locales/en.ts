@@ -81,9 +81,21 @@ export const en = {
     title: `Your AI assistant for any task`,
   },
   meta: {
-    description: `A universal AI assistant in Russian: create a logo and icons, a social avatar, interior design from a photo, a greeting card, text improvement, background removal and photo recognition. Describe the task — get a finished result. Web and Android.`,
-    keywords: `AI assistant, neural network online, create logo, icon generator, social avatar, interior design from photo, greeting card, improve text, remove background, recognize text from photo, photo restoration, meeting notes, AI in Russian`,
-    title: `Snappy — AI assistant: logos, icons, avatars, interior, text`,
+    index: {
+      description: `A universal AI assistant in Russian: create a logo and icons, a social avatar, interior design from a photo, a greeting card, text improvement, background removal and photo recognition. Describe the task — get a finished result. Web and Android.`,
+      keywords: `AI assistant, neural network online, create logo, icon generator, social avatar, interior design from photo, greeting card, improve text, remove background, recognize text from photo, photo restoration, meeting notes, AI in Russian`,
+      title: `Snappy — AI assistant: logos, icons, avatars, interior, text`,
+    },
+    privacy: {
+      description: `Snappy privacy policy: how we collect, use and protect your personal data when you use the service.`,
+      keywords: `privacy policy, personal data, Snappy`,
+      title: `Privacy policy — Snappy`,
+    },
+    terms: {
+      description: `Snappy terms of use: rules and conditions for using the AI assistant service.`,
+      keywords: `terms of use, service agreement, Snappy`,
+      title: `Terms of use — Snappy`,
+    },
   },
   modes: {
     chat: {

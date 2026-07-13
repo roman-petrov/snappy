@@ -1,8 +1,9 @@
-import type { LegalVariant } from "@snappy/legal";
+import { LegalArticle, type LegalArticleProps, LegalTitle, Page } from "@snappy/ui";
 
-import { useLegalPageState } from "./LegalPage.state";
-import { LegalPageView } from "./LegalPage.view";
+export type LegalPageProps = Pick<LegalArticleProps, `variant`>;
 
-export type LegalPageProps = { variant: LegalVariant };
-
-export const LegalPage = ({ variant }: LegalPageProps) => <LegalPageView {...useLegalPageState(variant)} />;
+export const LegalPage = ({ variant }: LegalPageProps) => (
+  <Page back title={<LegalTitle as="span" typography="h3" variant={variant} />}>
+    <LegalArticle variant={variant} />
+  </Page>
+);

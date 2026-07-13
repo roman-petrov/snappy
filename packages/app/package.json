@@ -13,7 +13,6 @@
     "@snappy/core": "workspace:*",
     "@snappy/domain": "workspace:*",
     "@snappy/intl": "workspace:*",
-    "@snappy/legal": "workspace:*",
     "@snappy/platform": "workspace:*",
     "@snappy/router": "workspace:*",
     "@snappy/snappy": "workspace:*",

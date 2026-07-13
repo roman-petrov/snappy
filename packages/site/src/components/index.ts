@@ -26,15 +26,21 @@ export * from "./Pills";
 
 export * from "./Presets";
 
+export * from "./Privacy";
+
 export * from "./PromoBlock";
 
 export * from "./Section";
 
+export * from "./SiteHeader";
+
 export * from "./SiteHeaderMenuLink";
 
-export * from "./SitePage";
+export * from "./SiteShell";
 
 export * from "./Steps";
+
+export * from "./Terms";
 
 export * from "./Tile";
 

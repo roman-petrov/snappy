@@ -48,6 +48,10 @@ export * from "./ImageSelect";
 
 export * from "./Input";
 
+export * from "./LegalArticle";
+
+export * from "./LegalTitle";
+
 export * from "./Link";
 
 export * from "./Logo";

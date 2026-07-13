@@ -42,6 +42,18 @@ export const ViteConfig = (override: UserConfig, options: ViteConfigOptions) =>
               ]),
         ],
         resolve: { dedupe: [`react`, `react-dom`] },
+        ...(!isSsr && {
+          build: {
+            rollupOptions: {
+              output: {
+                manualChunks: (id: string) =>
+                  /node_modules[/\\](?:react(?:[/\\]|$)|react-dom(?:[/\\]|$)|scheduler(?:[/\\]|$))/u.test(id)
+                    ? `vendor-react`
+                    : undefined,
+              },
+            },
+          },
+        }),
       },
       override,
     );

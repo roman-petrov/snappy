@@ -1,5 +1,23 @@
+@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
 .title {
+  padding-block-start: space.sm();
   margin: 0 0 space.lg();
+}
+
+@include mobile {
+  .title {
+    padding-block-start: space.xs();
+  }
+}
+
+.content {
+  padding-block-end: space.sm();
+}
+
+@include mobile {
+  .content {
+    padding-block-end: space.xs();
+  }
 }

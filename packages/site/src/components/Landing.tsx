@@ -5,12 +5,11 @@ import { CtaBlock } from "./CtaBlock";
 import { Hero } from "./Hero";
 import { Modes } from "./Modes";
 import { Presets } from "./Presets";
-import { SitePage } from "./SitePage";
 import { Who } from "./Who";
 import { Why } from "./Why";
 
 export const Landing = () => (
-  <SitePage flush>
+  <>
     <Hero />
     <Concept />
     <Capabilities />
@@ -20,5 +19,5 @@ export const Landing = () => (
     <Why />
     <Compare />
     <CtaBlock />
-  </SitePage>
+  </>
 );

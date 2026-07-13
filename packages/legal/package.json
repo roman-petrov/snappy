@@ -8,13 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@snappy/browser": "workspace:*",
-    "@snappy/core": "workspace:*",
-    "@snappy/intl": "workspace:*",
-    "@snappy/theme": "workspace:*",
-    "react": "^19.2.7"
-  },
-  "devDependencies": {
-    "@types/react": "^19.2.17"
+    "@snappy/intl": "workspace:*"
   }
 }
