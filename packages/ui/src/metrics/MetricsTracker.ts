@@ -5,14 +5,14 @@ import type { RouterRuntime } from "@snappy/router";
 
 import { Dom } from "@snappy/browser";
 import { _, type Action, type ReadonlyStore } from "@snappy/core";
-import { Metrics, type MetricsParameters, type MetricsProvider } from "@snappy/metrics";
+import { Metrics, type MetricsParameters, type MetricsProvider, YandexMetricaIntegration } from "@snappy/metrics";
 import { CookieConsent } from "@snappy/ui-core";
 
 const tagSelector = `[tag]:not([disabled]):not([data-disabled="true"])`;
 let providers: readonly MetricsProvider[] | undefined;
 let hub: Metrics | undefined;
 let signedInStore: ReadonlyStore<boolean> | undefined;
-const allowed = () => CookieConsent.given() || (signedInStore?.() ?? false);
+const allowed = () => CookieConsent.given() || (signedInStore?.() ?? false) || YandexMetricaIntegration.preview();
 
 const activeHub = (): Metrics | undefined =>
   providers === undefined || !allowed() ? undefined : (hub ??= Metrics(providers));

@@ -1,4 +1,5 @@
 import { useRouterGo, useRouterPath } from "@snappy/app-router";
+import { YandexMetricaIntegration } from "@snappy/metrics";
 import { useStoreValue } from "@snappy/store";
 import { useEffect } from "react";
 
@@ -10,6 +11,10 @@ export const useAuthLayoutState = ({ children, publicPaths, signedIn, signInPath
   const isSignedIn = useStoreValue(signedIn);
 
   useEffect(() => {
+    if (YandexMetricaIntegration.preview()) {
+      return;
+    }
+
     if (!publicPaths.includes(path) && !isSignedIn) {
       void go(signInPath, { instant: true });
     }
