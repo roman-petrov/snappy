@@ -1,16 +1,15 @@
-import { Card, type CardProps, Page, PageNarrow, Title } from "@snappy/ui";
+import { Card, Page, PageNarrow, SystemButtons, Title } from "@snappy/ui";
 
 import type { useAuthFormState } from "./AuthForm.state";
 
-import { HeaderContent } from "../../../components";
 import styles from "./AuthForm.module.scss";
 
-export type AuthFormViewProps = ReturnType<typeof useAuthFormState> & { card?: Omit<CardProps, `children` | `cn`> };
+export type AuthFormViewProps = ReturnType<typeof useAuthFormState>;
 
-export const AuthFormView = ({ card, children, lead, submit, title }: AuthFormViewProps) => (
-  <Page trailing={<HeaderContent />}>
+export const AuthFormView = ({ children, lead, submit, title }: AuthFormViewProps) => (
+  <Page trailing={<SystemButtons />}>
     <PageNarrow>
-      <Card {...card} cn={styles.panelCard}>
+      <Card cn={styles.panelCard}>
         <Title as="h1" lead={lead} level={2} title={title} />
         <form className={styles.panelForm} onSubmit={submit}>
           {children}

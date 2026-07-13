@@ -3,6 +3,7 @@ import { Eye, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, Use
 
 import type { useSettingsState } from "./Settings.state";
 
+import { TabHeaderContent } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
 import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator, SettingsFeedback } from "../components";
@@ -20,7 +21,7 @@ export const SettingsView = ({
   theme,
   typeWriterSpeed,
 }: SettingsViewProps) => (
-  <Page tab title={t(`settings.title`)}>
+  <Page tab title={t(`settings.title`)} trailing={<TabHeaderContent />}>
     <SettingsCards>
       <SettingsCard title={t(`settings.accountGroup`)}>
         <SettingsCardRow

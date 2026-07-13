@@ -1,9 +1,9 @@
-import { Button, FilledIcon, Page, Spinner, Text, Title } from "@snappy/ui";
+import { Button, FilledIcon, Page, Spinner, SystemButtons, Text, Title } from "@snappy/ui";
 import { Check } from "lucide-react";
 
 import type { useEmailVerifiedState } from "./EmailVerified.state";
 
-import { FormActions, HeaderContent } from "../../../components";
+import { FormActions } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
 import { MessageWithLink } from "../components";
@@ -12,7 +12,7 @@ import styles from "./EmailVerified.module.scss";
 export type EmailVerifiedViewProps = ReturnType<typeof useEmailVerifiedState>;
 
 export const EmailVerifiedView = ({ failedReason, home, screen }: EmailVerifiedViewProps) => (
-  <Page fill trailing={<HeaderContent />}>
+  <Page fill trailing={<SystemButtons />}>
     <div className={styles.panel}>
       {screen === `loading` ? (
         <div className={styles.status}>

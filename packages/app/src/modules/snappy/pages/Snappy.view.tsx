@@ -4,7 +4,7 @@ import { Sparkles } from "lucide-react";
 import type { useSnappyState } from "./Snappy.state";
 
 import { AppTags } from "../../../AppTags";
-import { HeaderContent } from "../../../components";
+import { TabHeaderContent } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
 import styles from "./Snappy.module.scss";
@@ -12,7 +12,7 @@ import styles from "./Snappy.module.scss";
 export type SnappyViewProps = ReturnType<typeof useSnappyState>;
 
 export const SnappyView = ({ groups }: SnappyViewProps) => (
-  <Page tab trailing={<HeaderContent />}>
+  <Page tab trailing={<TabHeaderContent />}>
     <div className={styles.root}>
       <section className={styles.hero}>
         <div className={styles.heroHead}>

@@ -8,11 +8,11 @@ export * from "./FormActions";
 
 export * from "./FormErrorAndActions";
 
-export * from "./HeaderContent";
-
 export * from "./hooks";
 
 export * from "./ImageCard";
+
+export * from "./TabHeaderContent";
 
 export * from "./TextCard";
 
