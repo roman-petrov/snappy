@@ -6,10 +6,10 @@ import { SiteServer } from "@snappy/site-server";
 import { join } from "node:path";
 
 import { Fastify } from "./Fastify";
-import { FrameAncestors } from "./FrameAncestors";
 import { Html } from "./Html";
 import { HtmlCache } from "./HtmlCache";
 import { Modules } from "./Modules";
+import { SecurityHeaders } from "./SecurityHeaders";
 import { Spa } from "./ServeSpa";
 import { Static } from "./Static";
 import { TrustedHost } from "./TrustedHost";
@@ -21,7 +21,7 @@ export const Server = async () => {
   const app = await Fastify({ https: { ...ssl, SNICallback: TrustedHost.sni(Config.host, ssl) } });
 
   app.addHook(`onRequest`, TrustedHost.onRequest(Config.host));
-  FrameAncestors.register(app);
+  SecurityHeaders.register(app);
 
   const htmlCache = HtmlCache();
   const shared = { app, distDir, htmlCache, injectTheme: Html.injectTheme, prepareIndex: Html.prepareIndex };
