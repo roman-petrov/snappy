@@ -1,27 +1,22 @@
 /* eslint-disable functional/no-expression-statements */
-/* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 import type { SecureServerOptions } from "node:http2";
 
 import fastifyCookie from "@fastify/cookie";
 import { _ } from "@snappy/core";
-import fastify, { type FastifyInstance } from "fastify";
+import fastify from "fastify";
 
 export type FastifyConfig = { https?: SecureServerOptions };
 
-export const Fastify = async ({ https: httpsOptions }: FastifyConfig = {}): Promise<FastifyInstance> => {
+export const Fastify = async ({ https: httpsOptions }: FastifyConfig = {}) => {
   const bodyLimitMegaBytes = 50;
   const bodyLimit = _.mb(bodyLimitMegaBytes);
   const shared = { bodyLimit, routerOptions: { maxParamLength: 5000 }, trustProxy: true };
 
-  if (httpsOptions === undefined) {
-    const app = fastify(shared);
-    await app.register(fastifyCookie);
-
-    return app;
-  }
-
-  const app = fastify({ ...shared, http2: true, https: httpsOptions });
+  const app = fastify({
+    ...shared,
+    ...(httpsOptions === undefined ? {} : { http2: true, https: { ...httpsOptions, allowHTTP1: true } }),
+  });
   await app.register(fastifyCookie);
 
-  return app as unknown as FastifyInstance;
+  return app;
 };
