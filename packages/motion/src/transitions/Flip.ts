@@ -2,13 +2,11 @@
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
-import type { TransformInput } from "@snappy/browser";
-
 import { _ } from "@snappy/core";
 
 import type { DomRef } from "../Types";
 
-import { Motion } from "../Motion";
+import { Motion, type MotionFrame } from "../Motion";
 
 export type Flip = ReturnType<typeof Flip>;
 
@@ -23,14 +21,12 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
   const motion = Motion();
   let active = false;
 
-  const transformFlipIn = (progress: number): TransformInput => ({
-    rotateY: _.lerp(-rotate, 0, progress),
-    scale: _.lerp(scaleFrom, 1, progress),
+  const flipIn = (progress: number): MotionFrame => ({
+    transform: { rotateY: _.lerp(-rotate, 0, progress), scale: _.lerp(scaleFrom, 1, progress) },
   });
 
-  const transformFlipOut = (rotateY: number, progress: number): TransformInput => ({
-    rotateY: _.lerp(0, rotateY, progress),
-    scale: _.lerp(1, scaleFrom, progress),
+  const flipOut = (rotateY: number, progress: number): MotionFrame => ({
+    transform: { rotateY: _.lerp(0, rotateY, progress), scale: _.lerp(1, scaleFrom, progress) },
   });
 
   const setAnimating = (value: boolean) => {
@@ -67,10 +63,10 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
         [
           {
             element: out,
-            start: { rotateY: 0, scale: 1 },
-            transformAtProgress: progress => transformFlipOut(rotate, progress),
+            frameAtProgress: progress => flipOut(rotate, progress),
+            start: { transform: { rotateY: 0, scale: 1 } },
           },
-          { element: incoming, start: { rotateY: -rotate, scale: scaleFrom }, transformAtProgress: transformFlipIn },
+          { element: incoming, frameAtProgress: flipIn, start: { transform: { rotateY: -rotate, scale: scaleFrom } } },
         ],
         { clear: true },
       );
@@ -79,15 +75,15 @@ export const Flip = ({ host, onAnimating, outgoing, root }: FlipConfig) => {
         [
           {
             element: out,
-            start: { rotateY: 0, scale: 1 },
-            transformAtProgress: progress => transformFlipOut(-rotate, progress),
+            frameAtProgress: progress => flipOut(-rotate, progress),
+            start: { transform: { rotateY: 0, scale: 1 } },
           },
         ],
         { clear: true },
       );
 
       if (incoming !== undefined) {
-        motion.pin(incoming, {});
+        motion.reset(incoming);
       }
     }
 

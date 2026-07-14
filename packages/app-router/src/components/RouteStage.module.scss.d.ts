@@ -1,5 +1,21 @@
 declare const __RouteStage: {
   readonly root: "root";
+  readonly overlay: "overlay";
+  readonly overlayOpen: "overlayOpen";
+  readonly overlayClosing: "overlayClosing";
+  readonly overlayEntering: "overlayEntering";
+  readonly overlayBackdrop: "overlayBackdrop";
+  readonly overlayBase: "overlayBase";
+  readonly overlayTop: "overlayTop";
+  readonly pageDock: "pageDock";
+  readonly paneScroll: "paneScroll";
+  readonly pageHost: "pageHost";
+  readonly pageHostDimmed: "pageHostDimmed";
+  readonly pageTrack: "pageTrack";
+  readonly pageLane: "pageLane";
   readonly shellDock: "shellDock";
+  readonly flip: "flip";
+  readonly page: "page";
+  readonly pageOut: "pageOut";
 };
 export default __RouteStage;

@@ -26,11 +26,9 @@ export type RouteStageValue = {
   registerChrome: (scope: ChromeScope, height: number) => Action;
   shellDock: HTMLDivElement | undefined;
   shellDockRef: RefCallback<HTMLDivElement>;
+  shellPassive: boolean;
   track?: TrackValue;
-  underlay: RouteUnderlay;
 };
-
-export type RouteUnderlay = { contentDimmed: boolean; shellPassive: boolean };
 
 export type StageInsetsValue = { dockPad: string; page: LaneInsets; shell: LaneInsets };
 

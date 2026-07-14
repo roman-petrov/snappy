@@ -7,6 +7,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import type { DomRef, TrackReleaseSnap } from "./Types";
 
+import { Motion } from "./Motion";
 import { SlideTrack, type SlideTrackSnapInput } from "./SlideTrack";
 
 vi.mock(import(`@snappy/platform`), () => ({ Vibrate: { trigger: vi.fn() } }));
@@ -129,6 +130,7 @@ const harness = (index = 0): Harness => {
 
       return !(dx > 0 && page === 0) && !(dx < 0 && page >= pageCount - 1);
     },
+    motion: Motion(),
     move: () => undefined,
     root: rootRef,
     snap,

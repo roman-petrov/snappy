@@ -4,6 +4,7 @@ import { _ } from "@snappy/core";
 
 import type { DomRef, TrackReleaseSnap } from "../Types";
 
+import { Motion } from "../Motion";
 import { SlideTrack, type SlideTrackControl, type SlideTrackSnapInput } from "../SlideTrack";
 
 export type Slide = ReturnType<typeof Slide>;
@@ -19,6 +20,7 @@ export type SlideConfig = {
 };
 
 export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }: SlideConfig) => {
+  const paint = Motion();
   let touchEnabled = false;
   let dragBaseline = 0;
   let dragIndex = 0;
@@ -84,6 +86,7 @@ export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }:
       return !(dx > 0 && at === 0) && !(dx < 0 && at >= last);
     },
     drag,
+    motion: paint,
     move: (translate, width) => {
       const steps = span(count());
 
@@ -135,10 +138,7 @@ export const Slide = ({ count, drag, index, onIndex, onPageIndex, root, track }:
     settled = next;
   };
 
-  const { consumeGestureLed } = motion;
-  const { layout } = motion;
-  const { pointer } = motion;
-  const { resize } = motion;
+  const { consumeGestureLed, layout, pointer, resize } = motion;
 
   return { consumeGestureLed, frame, layout, pointer, resize, select, sync };
 };

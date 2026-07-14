@@ -6,8 +6,8 @@ import type { PageChromeProps } from "./PageChrome";
 import { useRouteStage } from "../hooks";
 
 export const usePageChromeState = ({ active = false, shell = false, ...rest }: PageChromeProps) => {
-  const { insets, pageDock, registerChrome, shellDock, underlay } = useRouteStage();
-  const passive = shell && underlay.shellPassive;
+  const { insets, pageDock, registerChrome, shellDock, shellPassive } = useRouteStage();
+  const passive = shell && shellPassive;
   const target = shell ? shellDock : pageDock;
   const [element, setElement] = useState<HTMLDivElement | undefined>();
   const { height } = useMeasure(element, active);

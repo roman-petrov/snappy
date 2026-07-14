@@ -1,4 +1,8 @@
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/material" as material-border;
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/layer";
+@use "pkg:@snappy/theme/tokens/material";
 
 @mixin -column {
   display: flex;
@@ -7,11 +11,132 @@
   min-height: 0;
 }
 
-.root {
+@mixin -overlay-pane {
   @include -column;
+
+  position: absolute;
+  inset: 0;
+  touch-action: pan-y;
+  background: color.backdrop();
+}
+
+.root {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.overlay {
+  @include -column;
+
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+
+  &-open {
+    @include layer.overlay;
+
+    pointer-events: auto;
+  }
+
+  &-closing,
+  &-entering {
+    pointer-events: none;
+  }
+}
+
+.overlay-backdrop {
+  @include -overlay-pane;
+}
+
+.overlay-base,
+.overlay-top {
+  @include -overlay-pane;
+
+  overflow: hidden;
+}
+
+.overlay-base {
+  @include layer.stack-base;
+
+  transform-origin: left center;
+  will-change: opacity, transform;
+}
+
+.overlay-top {
+  @include layer.stack-top;
+
+  @include mobile {
+    border-left: 1px solid
+      color-mix(in srgb, material-border.rim-border() calc(var(--overlay-edge, 0) * 100%), transparent);
+    box-shadow: r(-4) 0 r(12) r(-8)
+      color-mix(in srgb, material.shadow() calc(28% * var(--overlay-edge, 0)), transparent);
+    transition: none;
+  }
+
+  will-change: transform;
+}
+
+.page-dock {
+  @include layer.chrome;
+
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.pane-scroll {
+  @include -column;
+  @include layer.stack-base;
 
   position: relative;
   flex: 1;
+  min-height: 0;
+  overflow: hidden auto;
+  touch-action: pan-y;
+}
+
+.page-host {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: clip;
+  transform-origin: left center;
+  will-change: opacity, transform;
+
+  &-dimmed {
+    pointer-events: none;
+  }
+}
+
+.page-track {
+  display: flex;
+  flex: 1 1 0;
+  width: calc(100% * var(--lane-count));
+  min-width: 0;
+  min-height: 0;
+  touch-action: pan-y;
+  will-change: transform;
+}
+
+.page-lane {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-self: stretch;
+  width: calc(100% / var(--lane-count));
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden auto;
+  touch-action: pan-y;
 }
 
 .shell-dock {
@@ -19,4 +144,20 @@
   right: 0;
   bottom: 0;
   left: 0;
+}
+
+.flip,
+.page {
+  @include -column;
+
+  position: relative;
+}
+
+.page {
+  background: color.backdrop();
+}
+
+.page-out {
+  position: absolute;
+  inset: 0;
 }

@@ -10,22 +10,29 @@ import { Vibrate } from "@snappy/platform";
 
 export type Motion = ReturnType<typeof Motion>;
 
+export type MotionFrame = { opacity?: number; transform?: TransformInput };
+
 export type MotionPlayOptions = { clear?: boolean };
 
 export type MotionPlayShot = {
   element: HTMLElement;
-  start: TransformInput;
-  transformAtProgress: (progress: number) => TransformInput;
+  frameAtProgress: (progress: number) => MotionFrame;
+  start: MotionFrame;
 };
 
-export type MotionRunInput = {
-  after?: (element: HTMLElement) => void;
-  before?: (element: HTMLElement) => void;
+export type MotionRun = {
   confirm?: boolean;
   duration?: number;
-  element: HTMLElement;
-  keyframes: Keyframe[];
+  targets: readonly MotionTarget[];
   tick?: (progress: number) => void;
+};
+
+export type MotionTarget = {
+  after?: (element: HTMLElement) => void;
+  before?: (element: HTMLElement) => void;
+  element: HTMLElement;
+  end: MotionFrame;
+  start: MotionFrame;
 };
 
 export const Motion = () => {
@@ -33,11 +40,27 @@ export const Motion = () => {
   const easing = `cubic-bezier(0.23, 1, 0.32, 1)`;
   const baseDuration = 220;
   const fill = `forwards` as const;
-  let pending: (() => void) | undefined;
+  let pending: PromiseWithResolvers<void> | undefined;
   let tickFrame: number | undefined;
 
-  const pin = (element: HTMLElement, input: TransformInput) => {
-    element.style.transform = Transform.css(input);
+  const frameKeyframe = ({ opacity, transform }: MotionFrame): Keyframe => ({
+    ...(opacity === undefined ? undefined : { opacity }),
+    ...(transform === undefined ? undefined : { transform: Transform.css(transform) }),
+  });
+
+  const reset = (element: HTMLElement) => {
+    element.style.transform = ``;
+    element.style.opacity = ``;
+  };
+
+  const pin = (element: HTMLElement, frame: MotionFrame = {}) => {
+    if (frame.transform !== undefined) {
+      element.style.transform = Transform.css(frame.transform);
+    }
+
+    if (frame.opacity !== undefined) {
+      element.style.opacity = `${frame.opacity}`;
+    }
   };
 
   const stopTick = () => {
@@ -48,9 +71,8 @@ export const Motion = () => {
   };
 
   const finishPending = () => {
-    const resolve = pending;
+    pending?.resolve();
     pending = undefined;
-    resolve?.();
   };
 
   const cancel = (elements: readonly HTMLElement[]) => {
@@ -65,24 +87,30 @@ export const Motion = () => {
     }
   };
 
-  const run = async ({ after, before, confirm = true, duration, element, keyframes, tick }: MotionRunInput) => {
-    cancel([element]);
-    before?.(element);
+  const run = async ({ confirm = true, duration, targets, tick }: MotionRun) => {
+    cancel(targets.map(target => target.element));
 
-    const animation = element.animate(keyframes, { duration: duration ?? baseDuration, easing, fill });
-    element.style.transform = ``;
+    for (const { before, element, start } of targets) {
+      before?.(element);
+      pin(element, start);
+    }
 
-    const wait = new Promise<void>(resolve => {
-      pending = resolve;
-    });
+    const animations = targets.map(({ element, end, start }) =>
+      element.animate([frameKeyframe(start), frameKeyframe(end)], { duration: duration ?? baseDuration, easing, fill }),
+    );
 
-    if (tick !== undefined) {
+    pending = Promise.withResolvers();
+    const [lead] = animations;
+
+    if (tick !== undefined && lead !== undefined) {
+      tick(0);
+
       const tickAnimation = () => {
-        if (animation.playState !== `running`) {
+        if (lead.playState !== `running`) {
           return;
         }
 
-        const { progress } = animation.effect?.getComputedTiming() ?? {};
+        const { progress } = lead.effect?.getComputedTiming() ?? {};
         tick(_.clamp(progress ?? 0, 0, 1));
         tickFrame = requestAnimationFrame(tickAnimation);
       };
@@ -94,8 +122,13 @@ export const Motion = () => {
       stopTick();
 
       if (success) {
-        after?.(element);
-        animation.cancel();
+        for (const { after, element } of targets) {
+          after?.(element);
+        }
+
+        for (const animation of animations) {
+          animation.cancel();
+        }
 
         if (confirm) {
           Vibrate.trigger(`confirm`);
@@ -105,12 +138,12 @@ export const Motion = () => {
       finishPending();
     };
 
-    void animation.finished.then(
+    void Promise.all(animations.map(async animation => animation.finished)).then(
       () => finish(true),
       () => finish(false),
     );
 
-    await wait;
+    await pending.promise;
   };
 
   const play = async (shots: readonly MotionPlayShot[], { clear = false }: MotionPlayOptions = {}) => {
@@ -118,26 +151,19 @@ export const Motion = () => {
       return;
     }
 
-    await Promise.all(
-      shots.map(async ({ element, start, transformAtProgress }) =>
-        run({
-          after: target => {
-            if (clear) {
-              target.style.transform = ``;
-            } else {
-              pin(target, transformAtProgress(1));
-            }
-          },
-          before: target => pin(target, start),
-          confirm: false,
-          element,
-          keyframes: [{ transform: Transform.css(start) }, { transform: Transform.css(transformAtProgress(1)) }],
-        }),
-      ),
-    );
+    await run({
+      confirm: false,
+      targets: shots.map(({ element, frameAtProgress, start }) => ({
+        after: target => (clear ? reset(target) : pin(target, frameAtProgress(1))),
+        before: target => pin(target, start),
+        element,
+        end: frameAtProgress(1),
+        start,
+      })),
+    });
 
     Vibrate.trigger(`confirm`);
   };
 
-  return { cancel, pin, play, run };
+  return { cancel, pin, play, reset, run };
 };

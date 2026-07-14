@@ -9,12 +9,11 @@
  * ? Reference: Telegram ViewPagerFixed
  * https://github.com/DrKLO/Telegram/blob/master/TMessagesProj/src/main/java/org/telegram/ui/Components/ViewPagerFixed.java
  */
-import { Dom, Transform } from "@snappy/browser";
+import { Dom } from "@snappy/browser";
 import { _, Gesture, type GesturePointer, Vector } from "@snappy/core";
 
+import type { Motion, MotionTarget } from "./Motion";
 import type { DomRef, TrackReleaseSnap } from "./Types";
-
-import { Motion } from "./Motion";
 
 export type SlideTrack = ReturnType<typeof SlideTrack>;
 
@@ -23,8 +22,11 @@ export type SlideTrackConfig = {
   blocked?: () => boolean;
   canDrag?: (dx: number, state: SlideTrackState) => boolean;
   drag?: boolean;
+  motion: Motion;
   move?: (translate: number, width: number) => void;
+  onInterrupt?: (translate: number, width: number) => void;
   root: DomRef;
+  settle?: (input: SlideTrackSettleInput) => readonly MotionTarget[];
   snap: (input: SlideTrackSnapInput) => SlideTrackSnap;
   start?: (state: SlideTrackState) => void;
   stayRatio?: number;
@@ -35,6 +37,8 @@ export type SlideTrackConfig = {
 };
 
 export type SlideTrackControl = { reset: () => void; setTranslate: (translate: number) => void; width: number };
+
+export type SlideTrackSettleInput = { end: number; start: number; width: number };
 
 export type SlideTrackSnap = {
   after?: (control: SlideTrackControl) => void;
@@ -53,8 +57,11 @@ export const SlideTrack = ({
   blocked,
   canDrag,
   drag = true,
+  motion,
   move,
+  onInterrupt,
   root: rootRef,
+  settle,
   snap,
   start,
   stayRatio = 1 / 3,
@@ -70,7 +77,6 @@ export const SlideTrack = ({
   const velocityHorizon = 100;
   const minSettle = 150;
   const maxSettle = 600;
-  const motion = Motion();
 
   const settleDuration = (remaining: number, width: number, velX: number) => {
     if (width === 0) {
@@ -104,6 +110,7 @@ export const SlideTrack = ({
   let settleArmed = false;
   let velocityTrack: readonly { t: number; x: number }[] = [];
   let moveDetach: (() => void) | undefined;
+  let settleElements: readonly HTMLElement[] = [];
 
   const resetPress = () => {
     pressArmed = false;
@@ -158,7 +165,7 @@ export const SlideTrack = ({
   };
 
   const pinTranslate = (element: HTMLElement, value: number, activePin = true) => {
-    motion.pin(element, activePin ? { translateX: value } : {});
+    motion.pin(element, activePin ? { transform: { translateX: value } } : { transform: {} });
   };
 
   const setTranslate = (value: number) => {
@@ -302,6 +309,7 @@ export const SlideTrack = ({
 
     if (trackWidth === 0 || Math.abs(targetTranslate - startTranslate) < snapEpsilon || element === null) {
       setTranslate(targetTranslate);
+      isSettling = false;
 
       return true;
     }
@@ -313,19 +321,26 @@ export const SlideTrack = ({
       move?.(value, trackWidth);
     };
 
+    const duration = settleDuration(Math.abs(targetTranslate - startTranslate), trackWidth, velX);
+    const layers = settle?.({ end: targetTranslate, start: startTranslate, width: trackWidth }) ?? [];
+    settleElements = layers.map(layer => layer.element);
+
     await motion.run({
-      after: target => {
-        onFrame(targetTranslate);
-        pinTranslate(target, targetTranslate);
-      },
-      before: target => {
-        pinTranslate(target, startTranslate);
-      },
-      duration: settleDuration(Math.abs(targetTranslate - startTranslate), trackWidth, velX),
-      element,
-      keyframes: [
-        { transform: Transform.css({ translateX: startTranslate }) },
-        { transform: Transform.css({ translateX: targetTranslate }) },
+      duration,
+      targets: [
+        {
+          after: target => {
+            onFrame(targetTranslate);
+            pinTranslate(target, targetTranslate);
+          },
+          before: target => {
+            pinTranslate(target, startTranslate);
+          },
+          element,
+          end: { transform: { translateX: targetTranslate } },
+          start: { transform: { translateX: startTranslate } },
+        },
+        ...layers,
       ],
       tick: progress => onFrame(_.lerp(startTranslate, targetTranslate, progress)),
     });
@@ -344,17 +359,19 @@ export const SlideTrack = ({
     animateGeneration += 1;
     const element = trackRef.current;
 
-    motion.cancel(element === null ? [] : [element]);
+    motion.cancel(element === null ? settleElements : [element, ...settleElements]);
 
     if (element !== null) {
       pinTranslate(element, translateX);
     }
 
+    onInterrupt?.(translateX, trackWidth);
     isSettling = false;
     refresh();
   };
 
   commit = (plan, velX = 0) => {
+    isSettling = true;
     plan.before?.();
 
     void (async () => {
@@ -396,6 +413,10 @@ export const SlideTrack = ({
 
   const onTouchStart = (event: TouchEvent) => {
     if (!inRoot(event) || event.touches.length > 1) {
+      return;
+    }
+
+    if (blocked?.() === true) {
       return;
     }
 
