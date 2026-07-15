@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";
 
-import type { SitePageMeta } from "./SitePage";
-
 import { localeData } from "./locales";
 
 type MetaKey = keyof (typeof localeData)[`en`][`meta`];
+
+type SitePageMeta = (typeof localeData)[`en`][`meta`][MetaKey];
 
 const isMetaKey = (key: string): key is MetaKey => key in localeData.en.meta;
 

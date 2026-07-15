@@ -12,67 +12,12 @@
     <meta name="yandex-verification" content="4677a3eb2abb76c9" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Snappy" />
-    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:locale" content="{{ogLocale}}" />
     <meta property="og:url" content="{{canonicalUrl}}" />
     <meta property="og:title" content="{{title}}" />
     <meta property="og:description" content="{{description}}" />
     <meta property="og:image" content="https://snappy-ai.ru/favicon.svg" />
-    <!-- cspell:disable -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "Organization",
-            "@id": "https://snappy-ai.ru/#organization",
-            "name": "Snappy",
-            "url": "https://snappy-ai.ru/",
-            "logo": "https://snappy-ai.ru/favicon.svg"
-          },
-          {
-            "@type": "WebSite",
-            "@id": "https://snappy-ai.ru/#website",
-            "name": "Snappy",
-            "url": "https://snappy-ai.ru/",
-            "inLanguage": "ru",
-            "publisher": { "@id": "https://snappy-ai.ru/#organization" }
-          },
-          {
-            "@type": "SoftwareApplication",
-            "@id": "https://snappy-ai.ru/#app",
-            "name": "Snappy",
-            "url": "https://snappy-ai.ru/",
-            "applicationCategory": "MultimediaApplication",
-            "operatingSystem": "Web, Android",
-            "inLanguage": "ru",
-            "publisher": { "@id": "https://snappy-ai.ru/#organization" },
-            "featureList": [
-              "Создать логотип",
-              "Генерация иконок",
-              "Аватар для соцсетей",
-              "Дизайн интерьера по фото",
-              "Открытка с поздравлением",
-              "Улучшение текста",
-              "Удаление фона с фото",
-              "Реставрация фото",
-              "Распознавание текста с фото",
-              "Итоги встреч из аудио"
-            ]
-          },
-          {
-            "@type": "Service",
-            "@id": "https://snappy-ai.ru/#service",
-            "name": "Snappy",
-            "serviceType": "ИИ-ассистент для генерации контента и обработки медиа",
-            "description": "Автоматизируем создание логотипов, расшифровку аудио, написание текстов и обработку фото.",
-            "provider": { "@id": "https://snappy-ai.ru/#organization" },
-            "areaServed": { "@type": "Country", "name": "Россия" },
-            "availableLanguage": "ru"
-          }
-        ]
-      }
-    </script>
-    <!-- cspell:enable -->
+    {{jsonLd}}
     <!-- HTML-HEAD-PLACEHOLDER -->
   </head>
   <body>

@@ -34,7 +34,12 @@ export const Ssr = ({ injectTheme }: SsrConfig) => {
     }
 
     return {
-      entry: { getMeta: _.isFunction(ssrModule.getMeta) ? ssrModule.getMeta : undefined, pages, render },
+      entry: {
+        getMeta: _.isFunction(ssrModule.getMeta) ? ssrModule.getMeta : undefined,
+        getSchema: _.isFunction(ssrModule.getSchema) ? ssrModule.getSchema : undefined,
+        pages,
+        render,
+      },
       template,
     };
   };

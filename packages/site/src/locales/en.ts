@@ -136,6 +136,23 @@ export const en = {
     resume: `Resume and cover letter`,
     title: `Popular tasks`,
   },
+  schema: {
+    areaServed: `Russia`,
+    features: [
+      `Create a logo`,
+      `Icon generation`,
+      `Avatar for social media`,
+      `Interior design from a photo`,
+      `Greeting card`,
+      `Text improvement`,
+      `Background removal from photos`,
+      `Photo restoration`,
+      `Text recognition from photos`,
+      `Meeting notes from audio`,
+    ],
+    serviceDescription: `We automate logo creation, audio transcription, text writing and photo editing.`,
+    serviceType: `AI assistant for content generation and media processing`,
+  },
   who: {
     business: {
       desc: `Logo, text, social visuals and plans — without contractors or extra costs.`,

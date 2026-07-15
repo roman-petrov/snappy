@@ -7,8 +7,11 @@ import { renderSite } from "@snappy/ui/StartApp.server";
 
 import { SiteHeader, SiteShell } from "./components";
 import { Pages, type SitePath } from "./Pages";
+import { SiteSchema } from "./SiteSchema";
 
 export const getMeta = (path: SitePath, locale: Locale) => ({ ...Pages.meta(path, locale), htmlLang: locale });
+
+export const getSchema = (locale: Locale, origin: string) => SiteSchema.jsonLd(locale, origin);
 
 export const render = (path: SitePath, locale: Language = `system`, theme: Theme = `system`) => {
   $locale.set(locale);

@@ -11,6 +11,7 @@ export type SiteMeta = { description: string; htmlLang: string; keywords: string
 
 export type SsrEntry = {
   getMeta: (path: string, locale: Locale) => SiteMeta;
+  getSchema: (locale: Locale, origin: string) => string;
   pages: { paths: readonly string[] };
   render: (path: string, locale: Locale, theme: ResolvedTheme | undefined) => string;
 };
@@ -24,13 +25,15 @@ const canonicalUrl = (path: string) => {
   return path === `/` ? `${origin}/` : `${origin}${path}`;
 };
 
-const injectMeta = (template: string, meta: SiteMeta, url: string) =>
+const injectHead = (template: string, meta: SiteMeta, url: string, locale: Locale, jsonLd: string) =>
   template
     .replaceAll(`{{title}}`, escapeAttribute(meta.title))
     .replaceAll(`{{description}}`, escapeAttribute(meta.description))
     .replaceAll(`{{keywords}}`, escapeAttribute(meta.keywords))
     .replaceAll(`{{htmlLang}}`, meta.htmlLang)
-    .replaceAll(`{{canonicalUrl}}`, escapeAttribute(url));
+    .replaceAll(`{{canonicalUrl}}`, escapeAttribute(url))
+    .replaceAll(`{{ogLocale}}`, locale === `ru` ? `ru_RU` : `en_US`)
+    .replaceAll(`{{jsonLd}}`, jsonLd);
 
 const build = (
   path: string,
@@ -41,8 +44,9 @@ const build = (
   injectTheme: InjectTheme,
 ) => {
   const url = canonicalUrl(path);
-  const withMeta = injectMeta(template, entry.getMeta(path, locale), url);
-  const withRoot = withMeta.replace(rootPlaceholder, `<div id="root">${entry.render(path, locale, theme)}</div>`);
+  const origin = ConfigValues.origin(ConfigValues.env());
+  const withHead = injectHead(template, entry.getMeta(path, locale), url, locale, entry.getSchema(locale, origin));
+  const withRoot = withHead.replace(rootPlaceholder, `<div id="root">${entry.render(path, locale, theme)}</div>`);
 
   return injectTheme(withRoot, theme);
 };
