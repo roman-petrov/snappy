@@ -64,8 +64,8 @@ export const RouteStageView = ({
                 : undefined
             }
           >
-            <div className={styles.paneScroll} style={{ paddingBottom: scrollPad }}>
-              {node}
+            <div className={styles.paneScroll}>
+              <div style={{ paddingBottom: scrollPad }}>{node}</div>
             </div>
             <StageFade minHeight={fadeMinHeight} />
             {track ? <div className={styles.pageDock} ref={pageDockRef} /> : undefined}

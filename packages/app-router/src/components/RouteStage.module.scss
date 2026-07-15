@@ -90,7 +90,6 @@
 }
 
 .pane-scroll {
-  @include -column;
   @include layer.stack-base;
 
   position: relative;
