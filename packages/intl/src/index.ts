@@ -36,7 +36,12 @@ const setLocale = (value: Locale) => {
 
 const getLocale = () => currentLocale ?? Locale.default;
 const resolveLocale = (locale?: Locale) => normalizeLocale(locale ?? getLocale());
-const dateFormats = { default: { dateStyle: `short` } } as const;
+
+const dateFormats = {
+  default: { dateStyle: `short` },
+  long: { day: `numeric`, month: `long`, year: `numeric` },
+} as const;
+
 const numberFormats = { default: {} } as const;
 const priceFormats = { default: { currency: `RUB`, style: `currency` } } as const;
 
