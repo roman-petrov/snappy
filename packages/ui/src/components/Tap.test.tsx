@@ -27,11 +27,13 @@ vi.mock(import(`@snappy/platform`), () => ({
     keyboardChangedEvent: `snappy:keyboard-changed` as const,
     screenCornerRadius: vi.fn(() => 0),
     setBarStyle: vi.fn(),
+    shakeEvent: `snappy:shake` as const,
     shareHtml: vi.fn(),
     shareImage: vi.fn(),
     systemDark: vi.fn(),
     systemThemeChangedEvent: `snappy:system-theme-changed` as const,
   },
+  Platform: () => (bridgeState.available ? `native` : `desktop-web`),
   Vibrate: { trigger: vibrateTrigger },
 }));
 

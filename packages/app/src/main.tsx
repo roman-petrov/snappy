@@ -4,6 +4,7 @@ import { Newspaper, Settings, Sparkles } from "lucide-react";
 
 import { AppBase } from "./AppBase";
 import { AppTags } from "./AppTags";
+import { AppShake } from "./components";
 import { t } from "./core";
 import { $data } from "./data";
 import { Routes } from "./Routes";
@@ -16,6 +17,7 @@ startApp({
       : new Set([`email-verified`, `forgot-password`, `login`, `register`, `reset-password`]).has(pattern)
         ? `flip`
         : `cover`,
+  modules: <AppShake />,
   routes: Routes,
   signedIn: $data.auth.read,
   tabs: [

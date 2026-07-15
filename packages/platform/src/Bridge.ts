@@ -33,6 +33,7 @@ type BarStyle = `dark` | `light`;
 
 const systemThemeChangedEvent = `snappy:system-theme-changed` as const;
 const keyboardChangedEvent = `snappy:keyboard-changed` as const;
+const shakeEvent = `snappy:shake` as const;
 
 type KeyboardChangedDetail = { open: boolean };
 
@@ -54,6 +55,7 @@ declare global {
 
   interface WindowEventMap {
     [keyboardChangedEvent]: CustomEvent<KeyboardChangedDetail>;
+    [shakeEvent]: Event;
     [systemThemeChangedEvent]: Event;
   }
 }
@@ -79,6 +81,7 @@ export const Bridge = {
   keyboardChangedEvent,
   screenCornerRadius,
   setBarStyle,
+  shakeEvent,
   shareHtml,
   shareImage,
   systemDark,

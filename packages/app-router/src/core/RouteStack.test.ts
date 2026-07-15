@@ -92,7 +92,12 @@ const cover = (input: CoverInput) =>
     stateAt: input.stateAt ?? stateAt,
   });
 
-const edge = (from: string, to: string): NavigationEdge => ({ from, history: `push`, to });
+const edge = (from: string, to: string, toPath?: string): NavigationEdge => ({
+  from,
+  history: `push`,
+  to,
+  ...(toPath === undefined ? {} : { toPath }),
+});
 
 describe(`stage`, () => {
   describe(`tab pages`, () => {
@@ -242,6 +247,62 @@ describe(`stage`, () => {
         { pattern: `cover/a`, state: pages[`/cover/a`] },
         { pattern: `cover/b`, state: pages[`/cover/b`] },
       ]);
+    });
+
+    it(`resolves parameterized sibling ancestor from stack paths`, () => {
+      const presetHub = state(`preset-hub`);
+      const chat = state(`chat`);
+
+      const resolve = (pathname: string) =>
+        pathname === `/snappy/preset/foo` ? presetHub : pathname === `/snappy/chat` ? chat : stateAt(pathname);
+
+      const result = cover({
+        current: chat,
+        path: `/snappy/chat`,
+        pattern: `snappy/chat`,
+        patternAt: pathname =>
+          pathname === `/snappy/preset/foo`
+            ? `snappy/preset/:presetId`
+            : pathname === `/snappy/chat`
+              ? `snappy/chat`
+              : patternAt(pathname),
+        preserved: pages[`/`],
+        stack: [
+          edge(`/`, `snappy/preset/:presetId`, `/snappy/preset/foo`),
+          edge(`snappy/preset/:presetId`, `snappy/chat`, `/snappy/chat`),
+        ],
+        stateAt: resolve,
+      });
+
+      expect(result.panes).toStrictEqual([
+        { pattern: `snappy/preset/:presetId`, state: presetHub },
+        { pattern: `snappy/chat`, state: chat },
+      ]);
+    });
+
+    it(`falls back to path truncation when stack paths are missing`, () => {
+      const presetHub = state(`preset-hub`);
+      const chat = state(`chat`);
+
+      const resolve = (pathname: string) =>
+        pathname === `/snappy/preset/foo` ? presetHub : pathname === `/snappy/chat` ? chat : stateAt(pathname);
+
+      const result = cover({
+        current: chat,
+        path: `/snappy/chat`,
+        pattern: `snappy/chat`,
+        patternAt: pathname =>
+          pathname === `/snappy/preset/foo`
+            ? `snappy/preset/:presetId`
+            : pathname === `/snappy/chat`
+              ? `snappy/chat`
+              : patternAt(pathname),
+        preserved: pages[`/`],
+        stack: [edge(`snappy/preset/:presetId`, `snappy/chat`)],
+        stateAt: resolve,
+      });
+
+      expect(result.panes).toStrictEqual([{ pattern: `snappy/chat`, state: chat }]);
     });
   });
 

@@ -1,3 +1,5 @@
+export * from "./AppShake";
+
 export * from "./BalanceTap";
 
 export * from "./FeedCard";

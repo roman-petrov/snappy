@@ -1,4 +1,4 @@
-import { Bridge } from "@snappy/platform";
+import { Platform } from "@snappy/platform";
 
 import { faviconUrl } from "../assets";
 import styles from "./Logo.module.scss";
@@ -14,7 +14,7 @@ export const Logo = ({ title }: LogoProps = {}) => {
     </>
   );
 
-  return Bridge.available ? (
+  return Platform() === `native` ? (
     <span className={styles.logo} title={title}>
       {content}
     </span>

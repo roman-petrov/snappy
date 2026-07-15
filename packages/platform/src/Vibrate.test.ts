@@ -15,6 +15,8 @@ vi.mock(`./Bridge`, () => ({
   },
 }));
 
+vi.stubGlobal(`matchMedia`, (query: string) => ({ matches: false, media: query }));
+
 import { Vibrate } from "./Vibrate";
 
 const { trigger } = Vibrate;

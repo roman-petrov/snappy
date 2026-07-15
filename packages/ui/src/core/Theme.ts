@@ -4,7 +4,7 @@ import type { ResolvedTheme as CoreResolvedTheme, Theme as CoreTheme } from "@sn
 
 import { Chrome } from "@snappy/app-router";
 import { Dom, MediaQuery } from "@snappy/browser";
-import { Bridge } from "@snappy/platform";
+import { Bridge, Platform } from "@snappy/platform";
 
 import { $theme } from "../Store";
 import { ThemeTransition } from "./ThemeTransition";
@@ -14,7 +14,10 @@ export type ResolvedTheme = CoreResolvedTheme;
 export type Theme = CoreTheme;
 
 const prefersDarkQuery = `(prefers-color-scheme: dark)` as const;
-const systemDark = () => (Bridge.available ? Bridge.systemDark() === true : MediaQuery.matches(prefersDarkQuery));
+
+const systemDark = () =>
+  Platform() === `native` ? Bridge.systemDark() === true : MediaQuery.matches(prefersDarkQuery);
+
 const effective = (value = $theme()): ResolvedTheme => (value === `system` ? (systemDark() ? `dark` : `light`) : value);
 
 const applyEffective = () => {
@@ -26,7 +29,7 @@ const applyEffective = () => {
 
 const init = () => {
   ThemeTransition.init();
-  if (Bridge.available) {
+  if (Platform() === `native`) {
     Dom.subscribe(window, Bridge.systemThemeChangedEvent, applyEffective);
   } else {
     MediaQuery.subscribe(prefersDarkQuery, applyEffective);

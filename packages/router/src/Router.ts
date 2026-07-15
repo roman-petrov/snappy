@@ -241,13 +241,17 @@ const stackOnCommit = (
   stackAfter: readonly NavigationEdge[],
   from: string,
   to: string,
+  toPath: string,
   history: `push` | `replace`,
-): NavigationEdge[] =>
-  history === `push`
-    ? [...stackAfter, { from, history: `push`, to }]
+): NavigationEdge[] => {
+  const edge: NavigationEdge = { from, history, to, toPath };
+
+  return history === `push`
+    ? [...stackAfter, edge]
     : stackAfter.length === 0
-      ? [{ from, history: `replace`, to }]
-      : [...stackAfter.slice(0, -1), { from, history: `replace`, to }];
+      ? [edge]
+      : [...stackAfter.slice(0, -1), edge];
+};
 
 const writeHistory = (url: string, mode: `push` | `replace`) => {
   if (mode === `push`) {
@@ -322,6 +326,11 @@ const createRuntime = ({
       return;
     }
 
+    const toPath =
+      url === undefined
+        ? (state.$location?.().pathname ?? home)
+        : stripBase(state.base, new URL(url, `http://local`).pathname);
+
     const top = state.stack.at(-1);
     const back = pop || syntheticBack || (from === top?.to && to === top.from);
     const stackAfter = back && from === top?.to && to === top.from ? state.stack.slice(0, -1) : state.stack;
@@ -354,7 +363,7 @@ const createRuntime = ({
       }
 
       writeHistory(url, history);
-      patch({ stack: stackOnCommit(stackAfter, from, to, history) });
+      patch({ stack: stackOnCommit(stackAfter, from, to, toPath, history) });
       syncLocation();
     };
 

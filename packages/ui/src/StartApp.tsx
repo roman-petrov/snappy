@@ -25,6 +25,7 @@ export type StartAppInput = {
   base: string;
   header?: ReactNode;
   layerOf?: RouteLayerOf;
+  modules?: ReactNode;
   routes: RouterBundle<unknown>;
   signedIn: ReadonlyStore<boolean>;
   tabs?: TabPagerItem[];
@@ -38,7 +39,7 @@ const container = () => {
   return element instanceof HTMLElement ? element : undefined;
 };
 
-export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: StartAppInput) => {
+export const startApp = ({ base, header, layerOf, modules, routes, signedIn, tabs }: StartAppInput) => {
   const { $: meta, router } = routes;
   const { publicPaths, signInPath } = meta;
   let remount: Action | undefined;
@@ -59,6 +60,7 @@ export const startApp = ({ base, header, layerOf, routes, signedIn, tabs }: Star
       <App disableSelection header={header} track={tabs}>
         {tabs === undefined ? undefined : <TabPager items={tabs} />}
       </App>
+      {modules}
     </AppRouter>
   );
 

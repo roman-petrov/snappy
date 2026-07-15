@@ -1,6 +1,6 @@
 import { Dom } from "@snappy/browser";
 import { ThemeVar, useIsMobile } from "@snappy/hooks";
-import { Bridge } from "@snappy/platform";
+import { Bridge, Platform } from "@snappy/platform";
 import { useEffect, useState } from "react";
 
 export const useStageInsets = (shellHeight?: number, pageHeight?: number) => {
@@ -10,7 +10,7 @@ export const useStageInsets = (shellHeight?: number, pageHeight?: number) => {
 
   useEffect(
     () =>
-      Bridge.available
+      Platform() === `native`
         ? Dom.subscribe(window, Bridge.keyboardChangedEvent, event => setKeyboard(event.detail.open))
         : undefined,
     [],

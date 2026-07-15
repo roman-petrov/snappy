@@ -2,12 +2,13 @@
 import { MimeType } from "@snappy/core";
 
 import { Bridge } from "./Bridge";
+import { Platform } from "./Platform";
 import { PlatformCommon } from "./PlatformCommon";
 
 const html = async (value: string) => {
   const plain = PlatformCommon.plainText(value);
 
-  if (Bridge.available) {
+  if (Platform() === `native`) {
     Bridge.copyHtml(value, plain);
 
     return;
@@ -24,7 +25,7 @@ const html = async (value: string) => {
 const image = async (src: string) => {
   const { base64, blob, extension, type } = await PlatformCommon.imageBlob(src);
 
-  if (Bridge.available) {
+  if (Platform() === `native`) {
     Bridge.copyImage(base64, `clipboard`, extension);
 
     return;

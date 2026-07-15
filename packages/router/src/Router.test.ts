@@ -417,6 +417,16 @@ describe(`router`, () => {
       });
     });
 
+    it(`records pathnames in navigation stack`, async () => {
+      await withGo(`/peer-a`, async ({ go }) => {
+        await go(`/stack/1`);
+
+        expect(nav.router.stack()).toStrictEqual([
+          { from: `peer-a`, history: `push`, to: `stack/:id`, toPath: `/stack/1` },
+        ]);
+      });
+    });
+
     it(`skips transition on explicit replace`, async () => {
       await withGo(`/peer-a`, async ({ go }) => {
         await go(`/peer-b`, { replace: true });

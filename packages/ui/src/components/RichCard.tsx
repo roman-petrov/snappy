@@ -1,20 +1,14 @@
-import { _ } from "@snappy/core";
-
 import { $ } from "../$";
 import { CardButton, type CardButtonProps } from "./CardButton";
-import { Icon } from "./Icon";
-import styles from "./RichCard.module.scss";
+import { CardRow } from "./CardRow";
 
-export type RichCardProps = Omit<CardButtonProps, `children`> & { description: string; icon: Icon; title: string };
+export type RichCardProps = Omit<CardButtonProps, `children`> & { description: string; emoji: string; title: string };
 
-export const RichCard = ({ cn, description, icon, title, ...tapProps }: RichCardProps) => (
-  <CardButton {...tapProps} cn={_.cn(styles.root, cn)}>
-    <span className={_.cn(styles.icon, $.surface(`primary`), $.elevation(`e2`), $.radius(`md`))}>
-      <Icon icon={icon} size="xl" />
-    </span>
-    <span className={styles.body}>
+export const RichCard = ({ cn, description, emoji, title, ...tapProps }: RichCardProps) => (
+  <CardButton {...tapProps} cn={cn}>
+    <CardRow emoji={emoji}>
       <span className={$.typography(`h3`)}>{title}</span>
       <span className={$.typography(`caption`)}>{description}</span>
-    </span>
+    </CardRow>
   </CardButton>
 );

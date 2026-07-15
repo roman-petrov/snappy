@@ -1,0 +1,58 @@
+/* stylelint-disable property-disallowed-list -- glass circle */
+@use "sass:list";
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/space";
+
+$-size: calc(#{icon-size.xl()} + #{space.sm()} * 2);
+$-glyph: icon-size.lg();
+$-glyph-nudge: 0.03em;
+$-sheen: color.inverse();
+$-primary: color.primary();
+$-fill: 8% 14%;
+$-rim: 20% 16%;
+$-glint: 28% 24% 42% 52%;
+$-tint: 82% 86% 10% 58%;
+$-line: 1px;
+$-blur: 8px;
+$-saturate: 1.12;
+$-lift-y: 2;
+$-inset-sheen-blur: 0.5px;
+$-inset-sheen: 24%;
+
+@function -fade($color, $weight) {
+  @return color-mix(in srgb, $color $weight, transparent);
+}
+
+@function -tint($weights) {
+  @return color-mix(in srgb, $-primary list.nth($weights, 2), -fade($-sheen, list.nth($weights, 1)));
+}
+
+@function -spot($config, $color) {
+  @return radial-gradient(
+    circle at list.nth($config, 1) list.nth($config, 2),
+    -fade($color, list.nth($config, 3)),
+    transparent list.nth($config, 4)
+  );
+}
+
+.root {
+  @include primitives.circle($-size);
+  @include primitives.grid-center;
+
+  flex-shrink: 0;
+  padding-bottom: $-glyph-nudge;
+  font-size: $-glyph;
+  line-height: 1;
+  background:
+    -spot($-glint, $-sheen),
+    -spot($-tint, $-primary),
+    -tint($-fill);
+  border: $-line solid -tint($-rim);
+  box-shadow:
+    0 r($-lift-y) r($-lift-y * 4) -fade($-primary, list.nth($-fill, 1)),
+    inset 0 $-line $-inset-sheen-blur -fade($-sheen, $-inset-sheen);
+  backdrop-filter: blur($-blur) saturate($-saturate);
+}

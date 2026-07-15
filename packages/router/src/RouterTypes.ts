@@ -8,7 +8,7 @@ export type HrefFrom<S> = Record<FlatKey<S>, string> & { readonly [K in BranchKe
 
 export type IndexTarget = Page | RedirectTarget;
 
-export type NavigationEdge = { from: string; history: `push` | `replace`; to: string };
+export type NavigationEdge = { from: string; history: `push` | `replace`; to: string; toPath?: string };
 
 export type PathParameters<P extends string> = Record<PathParameter<P>, string>;
 

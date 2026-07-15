@@ -6,6 +6,8 @@ export * from "./PresetFlowTap";
 
 export * from "./PresetMetaPageTitle";
 
+export * from "./QuickStartTap";
+
 export * from "./SnappyFlowPage";
 
 export * from "./StaticFlowPage";

@@ -166,11 +166,7 @@ export const en = {
       },
       title: `Ready-made workflows`,
     },
-    quickStart: {
-      cta: `Start from scratch`,
-      lead: `Open chat with every tool — describe any task in your own words.`,
-      title: `Quick start`,
-    },
+    quickStartTap: { lead: `Describe any task in your own words`, shake: `Shake your phone`, title: `Quick start` },
   },
   tabs: { feed: { label: `Feed` }, settings: { label: `Settings` }, snappy: { label: `Snappy` } },
 };

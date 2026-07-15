@@ -35,6 +35,7 @@ public class MainActivity extends ComponentActivity {
     private AppHost appHost;
     private PermissionRequest pendingPermissionRequest;
     private ValueCallback<Uri[]> filePathCallback;
+    private ShakeDetector shakeDetector;
 
     private final ActivityResultLauncher<Intent> fileChooserLauncher =
             registerForActivityResult(
@@ -96,6 +97,7 @@ public class MainActivity extends ComponentActivity {
         CookieManager.getInstance().setAcceptCookie(true);
         bridge = new Bridge(this, webView);
         webView.addJavascriptInterface(bridge, "Bridge");
+        shakeDetector = new ShakeDetector(this, bridge::shakeDetected);
 
         View container = findViewById(R.id.webview_container);
         ViewCompat.setOnApplyWindowInsetsListener(
@@ -166,7 +168,18 @@ public class MainActivity extends ComponentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (shakeDetector != null) {
+            shakeDetector.start();
+        }
+    }
+
+    @Override
     protected void onPause() {
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
         super.onPause();
         CookieManager.getInstance().flush();
     }

@@ -1,5 +1,4 @@
-import { Button, Icon, Page, RichCard, Text } from "@snappy/ui";
-import { Sparkles } from "lucide-react";
+import { Page, RichCard, Text } from "@snappy/ui";
 
 import type { useSnappyState } from "./Snappy.state";
 
@@ -7,6 +6,7 @@ import { AppTags } from "../../../AppTags";
 import { TabHeaderContent } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
+import { QuickStartTap } from "../components";
 import styles from "./Snappy.module.scss";
 
 export type SnappyViewProps = ReturnType<typeof useSnappyState>;
@@ -14,25 +14,7 @@ export type SnappyViewProps = ReturnType<typeof useSnappyState>;
 export const SnappyView = ({ groups }: SnappyViewProps) => (
   <Page tab trailing={<TabHeaderContent />}>
     <div className={styles.root}>
-      <section className={styles.hero}>
-        <div className={styles.heroHead}>
-          <span className={styles.heroBadge}>
-            <Icon icon={Sparkles} size="xl" />
-          </span>
-          <div className={styles.heroBody}>
-            <Text text={t(`snappy.quickStart.title`)} typography="h2" />
-            <Text text={t(`snappy.quickStart.lead`)} typography="large" />
-          </div>
-        </div>
-        <Button
-          cn={styles.heroAction}
-          large
-          link={Routes.snappy.chat}
-          tag={AppTags.snappy.chat.start}
-          text={t(`snappy.quickStart.cta`)}
-          type="primary"
-        />
-      </section>
+      <QuickStartTap />
       <section className={styles.presets}>
         <div className={styles.presetsHeader}>
           <Text text={t(`snappy.presets.title`)} typography="h2" />
@@ -44,7 +26,7 @@ export const SnappyView = ({ groups }: SnappyViewProps) => (
               <RichCard
                 cn={styles.card}
                 description={preset.description}
-                icon={preset.emoji}
+                emoji={preset.emoji}
                 key={preset.id}
                 link={Routes.snappy.preset.hub({ presetId: preset.id })}
                 tag={AppTags.snappy.preset.open}

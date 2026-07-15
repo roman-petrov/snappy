@@ -1,0 +1,54 @@
+@use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/panel";
+@use "pkg:@snappy/theme/material/tap";
+@use "pkg:@snappy/theme/primitives";
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+@mixin -filled {
+  color: color.inverse();
+  background-color: color.primary();
+
+  .shake {
+    color: color.primary();
+    background-color: color.inverse();
+  }
+}
+
+.root {
+  @include focus;
+  @include tap.elevated;
+
+  @include hover {
+    @include -filled;
+  }
+
+  @include pressed {
+    @include -filled;
+  }
+
+  color: color.primary();
+  background-color: panel.bg-glass(color.primary());
+  border: 2px solid color.primary();
+  transition:
+    background-color animation.standard-md(),
+    border-color animation.standard-md(),
+    box-shadow animation.standard-md(),
+    color animation.standard-md();
+}
+
+.shake {
+  @include primitives.inline-row-center;
+
+  gap: space.xs();
+  align-self: flex-start;
+  padding: space.xs() space.sm();
+  color: color.inverse();
+  background-color: color.primary();
+  border-radius: radius.sm();
+  transition:
+    background-color animation.standard-md(),
+    color animation.standard-md();
+}

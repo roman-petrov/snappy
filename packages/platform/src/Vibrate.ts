@@ -1,6 +1,7 @@
 /* eslint-disable unused-imports/no-unused-vars */
 /* eslint-disable functional/no-expression-statements */
 import { Bridge } from "./Bridge";
+import { Platform } from "./Platform";
 
 /**
  * @see https://developer.android.com/reference/android/view/HapticFeedbackConstants
@@ -36,7 +37,7 @@ const trigger = (type: Vibrate) => {
     return;
   }
 
-  if (Bridge.available) {
+  if (Platform() === `native`) {
     Bridge.hapticImpact(type);
 
     return;

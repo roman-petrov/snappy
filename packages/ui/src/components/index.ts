@@ -16,9 +16,13 @@ export * from "./Card";
 
 export * from "./CardButton";
 
+export * from "./CardRow";
+
 export * from "./Checkbox";
 
 export * from "./Chip";
+
+export * from "./CircleEmoji";
 
 export * from "./context-menu";
 
@@ -71,6 +75,8 @@ export * from "./PageNarrow";
 export * from "./PasswordInput";
 
 export * from "./RichCard";
+
+export * from "./ShakeHost";
 
 export * from "./Spinner";
 

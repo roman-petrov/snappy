@@ -116,12 +116,7 @@ public class Bridge {
     }
 
     public void systemThemeChanged() {
-        webView.post(
-                () ->
-                        webView.evaluateJavascript(
-                                "window.dispatchEvent(new"
-                                        + " CustomEvent('snappy:system-theme-changed'))",
-                                null));
+        WebViewEvent.dispatch(webView, "snappy:system-theme-changed", null);
     }
 
     public void keyboardChanged(boolean open) {
@@ -129,14 +124,12 @@ public class Bridge {
             return;
         }
         keyboardOpen = open;
-        webView.post(
-                () ->
-                        webView.evaluateJavascript(
-                                "window.dispatchEvent(new CustomEvent('snappy:keyboard-changed',"
-                                        + " { detail: { open: "
-                                        + open
-                                        + " } }))",
-                                null));
+        WebViewEvent.dispatch(
+                webView, "snappy:keyboard-changed", "{ detail: { open: " + open + " } }");
+    }
+
+    public void shakeDetected() {
+        WebViewEvent.dispatch(webView, "snappy:shake", null);
     }
 
     private Uri cacheUri(String base64, String name, String ext) {

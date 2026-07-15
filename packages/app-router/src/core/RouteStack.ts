@@ -76,6 +76,16 @@ const pathnameAt = (routePattern: string, path: string, patternAt: (pathname: st
   return patternAt(truncated) === routePattern ? truncated : `/${routePattern}`;
 };
 
+const pathAt = (
+  routePattern: string,
+  path: string,
+  stack: readonly NavigationEdge[],
+  patternAt: (pathname: string) => string,
+) =>
+  routePattern === `/`
+    ? `/`
+    : (stack.findLast(edge => edge.to === routePattern)?.toPath ?? pathnameAt(routePattern, path, patternAt));
+
 const stage = ({
   current,
   layerOf,
@@ -88,7 +98,7 @@ const stage = ({
   stateAt,
 }: StageInput) => {
   const layer = layerOf?.(pattern);
-  const tabRootState = stateAt(pathnameAt(tabRoot(pattern, layerOf, parent), path, patternAt));
+  const tabRootState = stateAt(pathAt(tabRoot(pattern, layerOf, parent), path, stack, patternAt));
 
   const preserved =
     layer === `flip`
@@ -107,7 +117,9 @@ const stage = ({
 
   const panes = coverChain(pattern, stack, layerOf).flatMap(stackPattern => {
     const state =
-      stackPattern === pattern && current !== undefined ? current : stateAt(pathnameAt(stackPattern, path, patternAt));
+      stackPattern === pattern && current !== undefined
+        ? current
+        : stateAt(pathAt(stackPattern, path, stack, patternAt));
 
     return state === undefined ? [] : [{ pattern: stackPattern, state }];
   });

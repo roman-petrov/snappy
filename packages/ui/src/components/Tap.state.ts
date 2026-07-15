@@ -1,6 +1,6 @@
 import { useRouterGo, useRouterHref } from "@snappy/app-router";
 import { _ } from "@snappy/core";
-import { Bridge, Vibrate } from "@snappy/platform";
+import { Platform, Vibrate } from "@snappy/platform";
 
 import type { TapProps } from "./Tap";
 
@@ -22,7 +22,7 @@ export const useTapState = ({
   const isHash = _.isString(link) && link.startsWith(`#`);
   const spaPath = _.isString(link) && !isHash ? link : undefined;
   const spaHref = href(spaPath ?? `/`);
-  const useJsNavigation = Bridge.available && spaPath !== undefined;
+  const useJsNavigation = Platform() === `native` && spaPath !== undefined;
 
   const handleLinkClick = (event: { preventDefault: () => void }) => {
     event.preventDefault();

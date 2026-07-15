@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";
-import { Bridge } from "@snappy/platform";
+import { Platform } from "@snappy/platform";
 
 import type { useRouteStageState } from "./RouteStage.state";
 
@@ -59,7 +59,7 @@ export const RouteStageView = ({
             key={pattern}
             ref={track ? paneRef : baseRef}
             style={
-              track && Bridge.available
+              track && Platform() === `native`
                 ? { borderBottomLeftRadius: keyboard ? undefined : cornerRadius, borderTopLeftRadius: cornerRadius }
                 : undefined
             }
