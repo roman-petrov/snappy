@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-loop-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/no-expression-statements */
 import { _, type Action } from "@snappy/core";
@@ -50,4 +51,10 @@ const watchSize = (element: HTMLElement | null | undefined, onSize: (size: DomSi
 
 const tag = (value?: string) => (value === undefined ? {} : { tag: value });
 
-export const Dom = { size, subscribe, subscribeOnce, tag, watchSize };
+const each = (elements: readonly HTMLElement[], apply: (element: HTMLElement) => void) => {
+  for (const element of elements) {
+    apply(element);
+  }
+};
+
+export const Dom = { each, size, subscribe, subscribeOnce, tag, watchSize };

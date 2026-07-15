@@ -64,7 +64,6 @@
   @include layer.stack-base;
 
   transform-origin: left center;
-  will-change: opacity, transform;
 }
 
 .overlay-top {
@@ -77,8 +76,6 @@
       color-mix(in srgb, material.shadow() calc(28% * var(--overlay-edge, 0)), transparent);
     transition: none;
   }
-
-  will-change: transform;
 }
 
 .page-dock {

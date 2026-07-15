@@ -165,6 +165,7 @@ export const SlideTrack = ({
   };
 
   const pinTranslate = (element: HTMLElement, value: number, activePin = true) => {
+    element.style.willChange = activePin ? `transform` : ``;
     motion.pin(element, activePin ? { transform: { translateX: value } } : { transform: {} });
   };
 

@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { Dom } from "./Dom";
 
-const { size, watchSize } = Dom;
+const { each, size, watchSize } = Dom;
 
 const resizeObserver = function resizeObserver(callback: ResizeObserverCallback) {
   resizeObserver.callback = callback;
@@ -14,6 +14,20 @@ const resizeObserver = function resizeObserver(callback: ResizeObserverCallback)
 };
 resizeObserver.callback = (() => undefined) as ResizeObserverCallback;
 resizeObserver.instance = { disconnect: vi.fn(), observe: vi.fn(), unobserve: vi.fn() };
+
+describe(`each`, () => {
+  it(`applies callback to every element`, () => {
+    const first = document.createElement(`div`);
+    const second = document.createElement(`div`);
+    const apply = vi.fn();
+
+    each([first, second], apply);
+
+    expect(apply).toHaveBeenCalledTimes(2);
+    expect(apply).toHaveBeenNthCalledWith(1, first);
+    expect(apply).toHaveBeenNthCalledWith(2, second);
+  });
+});
 
 describe(`size`, () => {
   it(`returns bounding client rect dimensions`, () => {

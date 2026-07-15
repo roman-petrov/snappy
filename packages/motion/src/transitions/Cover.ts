@@ -1,6 +1,7 @@
-/* eslint-disable functional/no-loop-statements */
+/* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-expression-statements */
+import { Dom } from "@snappy/browser";
 import { _ } from "@snappy/core";
 
 import type { DomRef, TrackReleaseSnap } from "../Types";
@@ -53,7 +54,7 @@ export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay 
     };
   };
 
-  const underlayAt = (x: number, width: number) => {
+  const underlayAt = (x: number, width: number, active = false) => {
     if (underlay === undefined || width === 0) {
       return;
     }
@@ -66,9 +67,10 @@ export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay 
 
     const frame = underlayFrame(x, width);
 
-    for (const element of underlayElements) {
+    Dom.each(underlayElements, element => {
+      element.style.willChange = active ? `opacity, transform` : ``;
       paint.pin(element, frame);
-    }
+    });
   };
 
   const clearUnderlay = () => {
@@ -78,9 +80,10 @@ export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay 
 
     paint.cancel(underlayElements);
 
-    for (const element of underlayElements) {
+    Dom.each(underlayElements, element => {
+      element.style.willChange = ``;
       paint.reset(element);
-    }
+    });
 
     underlayElements = [];
   };
@@ -137,13 +140,13 @@ export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay 
     motion: paint,
     move: (x, width) => {
       if (!motion.busy() || motion.dragging()) {
-        underlayAt(x, width);
+        underlayAt(x, width, motion.busy() || locked());
       }
 
       onMove?.(x);
     },
     onInterrupt: (x, width) => {
-      underlayAt(x, width);
+      underlayAt(x, width, true);
     },
     root,
     settle: underlaySettle,
