@@ -9,24 +9,25 @@ import { join } from "node:path";
 
 import type { CommandRun } from "./Command";
 
-const devOriginLabelWidth = 6;
-
-const devOriginLine = (emoji: string, label: string, url: string) =>
-  `${emoji} ${Terminal.yellow(`${label}:`.padStart(devOriginLabelWidth))} ${Terminal.blue(url)}`;
-
 const showDevOrigins = (name: string): boolean => name === `server:frontend:dev` || name === `server:prod:run`;
 
-const devOriginsBlock = () => {
+const devOriginsBlock = (name: string) => {
+  const labelWidth = 6;
+
+  const line = (emoji: string, label: string, url: string) =>
+    `${emoji} ${Terminal.yellow(`${label}:`.padStart(labelWidth))} ${Terminal.blue(url)}`;
+
   const origin = _.https(Config.host);
 
   return [
-    devOriginLine(`🌐`, `Site`, origin),
-    devOriginLine(`💻`, `App`, `${origin}/app`),
-    devOriginLine(`🛡️`, `Admin`, `${origin}/admin`),
+    line(`🌐`, `Site`, origin),
+    line(`💻`, `App`, `${origin}/app`),
+    line(`🛡️`, `Admin`, `${origin}/admin`),
+    ...(name === `server:frontend:dev` ? [line(`📧`, `Email`, `http://localhost:3000`)] : []),
   ].join(`\n`);
 };
 
-const logDevOrigins = () => Console.log(`\n\n${devOriginsBlock()}\n`);
+const logDevOrigins = (name: string) => Console.log(`\n\n${devOriginsBlock(name)}\n`);
 const spawnOptions = (capture: boolean) => (capture ? { capture: true as const } : {});
 const fail = (message: string, { red = true }: { red?: boolean } = {}) => ({ exitCode: 1, message, red });
 
@@ -46,6 +47,7 @@ type BackgroundConfig = {
   cwd: string;
   env?: Record<string, string>;
   shutdown?: { command: string };
+  silent?: true;
 };
 
 const background =
@@ -61,17 +63,17 @@ const background =
       detached: mcp && isBackground,
       env: config.env === undefined ? process.env : { ...process.env, ...config.env },
       shell: true,
-      stdio: mcp && isBackground ? `ignore` : `inherit`,
+      stdio: (mcp && isBackground) || config.silent === true ? `ignore` : `inherit`,
     });
 
     if (isBackground && mcp) {
       proc.unref();
-      const origins = !verbose && showDevOrigins(name) ? `${devOriginsBlock()}\n\n` : ``;
+      const origins = !verbose && showDevOrigins(name) ? `${devOriginsBlock(name)}\n\n` : ``;
 
       return { exitCode: 0, message: `${origins}Started in background.` };
     }
     if (!verbose && showDevOrigins(name)) {
-      logDevOrigins();
+      logDevOrigins(name);
     }
     if (isBackground) {
       backgroundProcesses.push(proc);

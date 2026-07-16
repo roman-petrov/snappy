@@ -40,6 +40,8 @@ export * from "./Dev";
 
 export * from "./DockerStart";
 
+export * from "./EmailPreview";
+
 export * from "./Encrypt";
 
 export * from "./EnvDev";

@@ -7,10 +7,10 @@ import { Brand, EmailLayout, PrimaryButton, Title } from "../components";
 import { Colors, Layout } from "../core";
 import { t } from "../locales";
 
-export type VerifyEmailInput = { locale: Locale; title: string; url: string };
+export type VerifyEmailInput = { locale: Locale; url: string };
 
-export const VerifyEmailEmail = ({ locale, title, url }: VerifyEmailInput) => (
-  <EmailLayout locale={locale} title={title}>
+export const VerifyEmailEmail = ({ locale, url }: VerifyEmailInput) => (
+  <EmailLayout locale={locale}>
     <Brand />
     <Title>{t(locale, `verifyEmail.title`)}</Title>
     <Text

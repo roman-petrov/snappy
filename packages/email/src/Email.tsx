@@ -12,25 +12,19 @@ export type Email = { html: string; subject: string; text: string };
 
 type EmailKey = keyof typeof en;
 
-type TemplateInput = { locale: Locale; title: string; url: string };
+type TemplateInput = { locale: Locale; url: string };
 
 const template = async (
   key: EmailKey,
   view: (input: TemplateInput) => ReactElement,
-  { locale, url }: Omit<TemplateInput, `title`>,
-): Promise<Email> => {
-  const subject = t(locale, `${key}.subject`);
+  { locale, url }: TemplateInput,
+): Promise<Email> => ({
+  html: await render(view({ locale, url })),
+  subject: t(locale, `${key}.subject`),
+  text: t(locale, `${key}.text`, { url }),
+});
 
-  return {
-    html: await render(view({ locale, title: subject, url })),
-    subject,
-    text: t(locale, `${key}.text`, { url }),
-  };
-};
-
-const forgotPassword = async (input: Omit<TemplateInput, `title`>) =>
-  template(`forgotPassword`, ForgotPasswordEmail, input);
-
-const verifyEmail = async (input: Omit<TemplateInput, `title`>) => template(`verifyEmail`, VerifyEmailEmail, input);
+const forgotPassword = async (input: TemplateInput) => template(`forgotPassword`, ForgotPasswordEmail, input);
+const verifyEmail = async (input: TemplateInput) => template(`verifyEmail`, VerifyEmailEmail, input);
 
 export const Email = { forgotPassword, verifyEmail };

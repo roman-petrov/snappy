@@ -7,10 +7,10 @@ import { Brand, EmailLayout, PrimaryButton, Title } from "../components";
 import { Colors, Layout } from "../core";
 import { t } from "../locales";
 
-export type ForgotPasswordInput = { locale: Locale; title: string; url: string };
+export type ForgotPasswordInput = { locale: Locale; url: string };
 
-export const ForgotPasswordEmail = ({ locale, title, url }: ForgotPasswordInput) => (
-  <EmailLayout locale={locale} title={title}>
+export const ForgotPasswordEmail = ({ locale, url }: ForgotPasswordInput) => (
+  <EmailLayout locale={locale}>
     <Brand />
     <Title>{t(locale, `forgotPassword.title`)}</Title>
     <Text

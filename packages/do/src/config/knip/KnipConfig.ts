@@ -42,7 +42,7 @@ const config: KnipConfig = {
       ],
     },
     "packages/do-dev": { entry: [`src/main.ts`] },
-    "packages/legal": { ignoreDependencies: [`@snappy/theme`] },
+    "packages/email": { entry: [`emails/**/*.tsx`], ignoreDependencies: [`@react-email/ui`] },
     "packages/site": { entry: [`index.html`, `src/entry-server.tsx`], ignoreDependencies: [`@snappy/theme`] },
     "packages/theme": { ignoreDependencies: [`@fontsource-variable/inter`] },
   },
