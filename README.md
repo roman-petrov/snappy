@@ -136,6 +136,7 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 ### 💳 Payments
 
 - [YooKassa](https://yookassa.ru/)
+  - [Test cards](https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing#test-bank-card-data)
 
 ## 🤖 AI (recommended)
 
