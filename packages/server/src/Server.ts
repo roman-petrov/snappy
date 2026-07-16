@@ -2,6 +2,7 @@
 import { AdminServer } from "@snappy/admin-server";
 import { AppServer } from "@snappy/app-server";
 import { Config } from "@snappy/config";
+import { HttpConstants } from "@snappy/core";
 import { SiteServer } from "@snappy/site-server";
 import { join } from "node:path";
 
@@ -16,7 +17,6 @@ import { TrustedHost } from "./TrustedHost";
 
 export const Server = async () => {
   const distDir = join(process.cwd(), `dist`);
-  const portHttps = 443;
   const ssl = Config.ssl();
   const app = await Fastify({ https: { ...ssl, SNICallback: TrustedHost.sni(Config.host, ssl) } });
 
@@ -34,5 +34,5 @@ export const Server = async () => {
 
   await Modules.run(modules, { ...shared, serveSpa: Spa(shared) });
 
-  await app.listen({ host: `0.0.0.0`, port: portHttps });
+  await app.listen({ host: `0.0.0.0`, port: HttpConstants.httpsPort });
 };

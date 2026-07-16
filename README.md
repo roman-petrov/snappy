@@ -85,6 +85,13 @@ uses the same URL.
 
 On a phone: copy `ca.pem` to the device and install it as a CA certificate (Settings → Security).
 
+### 🚇 YooKassa webhooks
+
+Configure webhook URL in shops:
+
+- Test: `https://snappy-ai.ru/api/webhooks/yookassa/test`
+- Live: `https://snappy-ai.ru/api/webhooks/yookassa`
+
 ## 🛠️ Technologies
 
 - 🟦 [TypeScript](https://www.typescriptlang.org/)

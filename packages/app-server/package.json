@@ -15,6 +15,7 @@
     "@snappy/intl": "workspace:*",
     "@snappy/payment": "workspace:*",
     "@snappy/server-module": "workspace:*",
+    "@snappy/tunnel": "workspace:*",
     "@snappy/ui-core": "workspace:*",
     "better-auth": "^1.6.23",
     "fastify": "^5.10.0",

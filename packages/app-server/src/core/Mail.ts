@@ -10,6 +10,6 @@ const transporter = nodemailer.createTransport({
   secure: true,
 });
 
-const send = async (to: string, email: Email) => transporter.sendMail({ from: Config.smtpFrom(), to, ...email });
+const send = async (to: string, email: Email) => transporter.sendMail({ from: Config.smtpUser(), to, ...email });
 
 export const Mail = { send };

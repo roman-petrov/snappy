@@ -4,7 +4,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/immutable-data */
-import { _, HttpStatus, MimeType } from "@snappy/core";
+import { _, HttpConstants, HttpStatus, MimeType } from "@snappy/core";
 import {
   createServer,
   type IncomingHttpHeaders,
@@ -29,7 +29,7 @@ export const HttpServer = () => {
 
   type RequestRecord = { headers: IncomingHttpHeaders; method: string; url: string };
 
-  const host = `http://127.0.0.1`;
+  const host = `http://${HttpConstants.loopback}`;
   const chunkSize = 16_384;
   const parts = (body: HttpServerBody): (Buffer | string)[] => (_.isArray(body) ? body : [body]);
 
@@ -85,7 +85,7 @@ export const HttpServer = () => {
       });
 
       server.once(`error`, reject);
-      server.listen(0, `127.0.0.1`, () => {
+      server.listen(0, HttpConstants.loopback, () => {
         const address = server?.address();
         if (address === null || address === undefined || _.isString(address)) {
           reject(new Error(`http server failed to bind`));

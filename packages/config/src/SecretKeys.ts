@@ -18,6 +18,7 @@ const keys = {
   smtpUser: `SMTP_USER`,
   sslCertKey: `SSL_CERT_KEY`,
   sslCertPem: `SSL_CERT_PEM`,
+  tunnelKey: `TUNNEL_KEY`,
   yookassaSecretKey: `YOOKASSA_SECRET_KEY`,
   yookassaShopId: `YOOKASSA_SHOP_ID`,
 } as const;

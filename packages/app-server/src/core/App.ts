@@ -1,11 +1,12 @@
 /* eslint-disable functional/no-expression-statements */
 import type { FastifyInstance } from "fastify";
 
-import { Config } from "@snappy/config";
+import { Config, ConfigValues } from "@snappy/config";
 import { HttpStatus } from "@snappy/core";
 import { Db } from "@snappy/db";
-import { Payment } from "@snappy/payment";
+import { Payment, YooKassaConfig } from "@snappy/payment";
 import { Trpc } from "@snappy/server-module";
+import { Tunnel } from "@snappy/tunnel";
 
 import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
@@ -66,8 +67,18 @@ export const App = async ({ app }: AppConfig) => {
 
   Images.mount({ app, betterAuth, db });
 
-  app.post(`/api/webhooks/yookassa`, async (request, reply) => {
-    await balancePayment.webhook(request.body);
-    await reply.status(HttpStatus.ok).send();
+  await Tunnel({
+    app,
+    authorize: ({ ip }) => !ConfigValues.production() || YooKassaConfig.allowsIp(ip),
+    entryPath: `/api/webhooks/yookassa/test`,
+    handle: async (request, reply) => {
+      await balancePayment.webhook(request.body);
+      await reply.status(HttpStatus.ok).send();
+    },
+    host: ConfigValues.prodHost,
+    hub: ConfigValues.production(),
+    key: Config.tunnelKey(),
+    localPath: `/api/webhooks/yookassa`,
+    wsPath: `/api/tunnel`,
   });
 };

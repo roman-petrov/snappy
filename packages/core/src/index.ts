@@ -14,6 +14,8 @@ export * from "./Env";
 
 export * from "./Gesture";
 
+export * from "./HttpConstants";
+
 export * from "./HttpStatus";
 
 export * from "./I18n";

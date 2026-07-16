@@ -7,7 +7,7 @@
 import { Admin } from "@snappy/admin-server";
 import { App, AppServer } from "@snappy/app-server";
 import { Config } from "@snappy/config";
-import { _, HttpStatus, MimeType } from "@snappy/core";
+import { _, HttpConstants, HttpStatus, MimeType } from "@snappy/core";
 import { ViteConfig } from "@snappy/do/config/vite";
 import { File } from "@snappy/node";
 import { Fastify, Html, Modules } from "@snappy/server";
@@ -26,12 +26,11 @@ export const ServerDev = async () => {
   const siteDir = packageDir(`site`);
   const distDir = join(projectRoot, `dist`);
   const faviconPath = join(packageDir(`ui`), `src`, `assets`, `favicon.svg`);
-  const portHttps = 443;
   const devInput = ([`site`, `app`, `admin`] as const).map(name => join(packageDir(name), `index.html`));
   const apiApp = await Fastify();
   await App({ app: apiApp });
   await Admin({ app: apiApp });
-  const apiPort = Number(new URL(await apiApp.listen({ host: `127.0.0.1`, port: 0 })).port);
+  const apiPort = Number(new URL(await apiApp.listen({ host: HttpConstants.loopback, port: 0 })).port);
   const app = express();
   const server = https.createServer(Config.ssl(), app);
 
@@ -53,15 +52,15 @@ export const ServerDev = async () => {
       allowedHosts: true,
       middlewareMode: true,
       origin: _.https(Config.host),
-      ws: { clientPort: portHttps, host: Config.host, protocol: `wss`, server },
+      ws: { clientPort: HttpConstants.httpsPort, host: Config.host, protocol: `wss`, server },
     },
   });
 
   app.use(`/api`, (request, response) => {
     const proxyRequest = http.request(
       {
-        headers: { ...request.headers, host: `127.0.0.1:${apiPort}` },
-        hostname: `127.0.0.1`,
+        headers: { ...request.headers, host: `${HttpConstants.loopback}:${apiPort}` },
+        hostname: HttpConstants.loopback,
         method: request.method,
         path: request.originalUrl,
         port: apiPort,
@@ -168,5 +167,5 @@ export const ServerDev = async () => {
 
   app.use(vite.middlewares);
 
-  server.listen({ host: `::`, ipv6Only: false, port: portHttps });
+  server.listen({ host: `::`, ipv6Only: false, port: HttpConstants.httpsPort });
 };

@@ -1,6 +1,7 @@
 export const HttpStatus = {
   badGateway: 502,
   badRequest: 400,
+  forbidden: 403,
   internalServerError: 500,
   notFound: 404,
   ok: 200,

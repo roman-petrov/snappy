@@ -1,0 +1,20 @@
+{
+  "name": "@snappy/tunnel",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@fastify/websocket": "^11.2.0",
+    "@snappy/core": "workspace:*",
+    "fastify": "^5.10.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@snappy/node": "workspace:*",
+    "@types/ws": "^8.18.1"
+  }
+}
