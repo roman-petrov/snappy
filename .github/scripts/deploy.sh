@@ -13,6 +13,7 @@ echo '.'
 rm -rf "${DEPLOY_PATH}"
 mkdir -p "${DEPLOY_PATH}"
 tar -xzf "${ARCHIVE}" -C "${DEPLOY_PATH}"
+rm -f "${ARCHIVE}"
 cd "${DEPLOY_PATH}"
 
 setup_node
@@ -27,6 +28,7 @@ echo '.'
 
 bun install --frozen-lockfile
 
+pm2 flush snappy 2>/dev/null || true
 pm2 delete snappy 2>/dev/null || true
 NODE_ENV=production bun do db:migrate:deploy
 NODE_ENV=production NODE_OPTIONS="--use-system-ca" pm2 start "bun do server:prod" --name snappy --update-env
