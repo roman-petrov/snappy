@@ -14,7 +14,8 @@ Count references to locals/functions in the file and project.
 
 ## 🔧 Fix
 
-Inline the single use; delete the declaration
+- Inline the single use.
+- Delete the declaration.
 
 ## 📝 Examples
 

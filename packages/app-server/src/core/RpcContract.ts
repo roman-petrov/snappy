@@ -6,22 +6,25 @@ import type { AppLog } from "./AppLog";
 import type { Balance } from "./Balance";
 import type { BalancePayment } from "./BalancePayment";
 import type { Feed } from "./Feed";
+import type { SharedConfig } from "./SharedConfig";
 import type { UserSettings } from "./UserSettings";
 
-export type RpcContext = { dbUser: DbUser | undefined; log: AppLog };
+export type RpcContext = { dbUser: DbUser; email: string; log: AppLog };
 
-export const RpcScope = Rpc.scope(({ dbUser, log }: RpcContext) =>
-  dbUser === undefined ? undefined : { dbUser, log },
-);
+export const RpcScope = Rpc.scope((context: RpcContext) => context);
 
 export type RpcScope = typeof RpcScope;
 
 export const RpcContract = Rpc.define<{
   balance: Balance;
   billing: BalancePayment;
+  config: SharedConfig;
   feed: Feed;
   settings: UserSettings;
-}>()({ path: `/api/rpc`, sync: { docs: { balance: `read`, settings: `readWrite` }, lists: { feed: 20 } } });
+}>()({
+  path: `/api/rpc`,
+  sync: { docs: { balance: `read`, config: `read`, settings: `readWrite` }, lists: { feed: 20 } },
+});
 
 export type RpcClient = Rpc.Client<typeof RpcContract>;
 

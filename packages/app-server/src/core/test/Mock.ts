@@ -26,10 +26,15 @@ const createDb = (): Db => {
     auth: {} as Db[`auth`],
     balance: withLive(balanceMethods),
     feed: withLive(feedMethods),
-    paymentLog: { create: vi.fn(), createOnce: vi.fn(), pendingAmount: vi.fn(), succeeded: vi.fn() },
+    paymentLog: {
+      create: vi.fn(),
+      createOnce: vi.fn(),
+      pendingAmount: vi.fn(),
+      succeeded: vi.fn(),
+      succeededAmount: vi.fn(),
+    },
     settings: withLive(userSettingsMethods),
     user,
-    users: { list: vi.fn(), read: vi.fn(), remove: vi.fn() },
   };
 };
 

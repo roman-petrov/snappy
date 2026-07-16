@@ -13,7 +13,7 @@ export const en = {
       loading: `Signing you in…`,
       title: `Email confirmed`,
     },
-    errors: { tooManyRequests: `Wait {{seconds}} sec. before sending again` },
+    errors: { tooManyRequests: `Wait {seconds} sec. before sending again` },
     forgotPassword: {
       backToSignIn: `Back to sign in`,
       checkEmail: `Check your email`,
@@ -81,6 +81,55 @@ export const en = {
   balance: {
     common: { lowLead: `Your balance is zero or negative. Top up to use AI features.`, tapTip: `Top up balance` },
   },
+  billing: {
+    result: {
+      canceled: { lead: `No charge was made. You can try again.`, title: `Payment canceled` },
+      copy: `Copy payment details`,
+      failed: {
+        lead: `Could not confirm the payment. If you were charged, contact support.`,
+        mail: {
+          body: `Hello!\n\nThere was a payment error. Please check the status and credit the balance if the charge went through.\n\nPayment details:\n{details}`,
+          subject: `Payment error — {paymentId}`,
+        },
+        title: `Payment error`,
+      },
+      home: `Home`,
+      loading: `Waiting for payment confirmation…`,
+      refresh: `Refresh status`,
+      retry: `Try again`,
+      succeeded: {
+        home: `Done`,
+        lead: `Your balance was topped up.`,
+        leadAmount: `Credited {amount}.`,
+        title: `Balance topped up`,
+      },
+      support: `Contact support`,
+      timeout: {
+        lead: `If you were charged, contact support and include the payment details.`,
+        mail: {
+          body: `Hello!\n\nPayment is taking too long to confirm. Please check the status and credit the balance if the charge went through.\n\nPayment details:\n{details}`,
+          subject: `Payment not confirmed — {paymentId}`,
+        },
+        title: `Payment not confirmed`,
+      },
+      title: `Payment`,
+    },
+    topUp: {
+      balance: `Current balance`,
+      cta: `Top up`,
+      errors: {
+        invalid: `Enter a valid amount`,
+        invalidAmount: `Amount is outside allowed range`,
+        payment: `Payment error`,
+      },
+      limits: `Amount from {min} to {max}`,
+      mode: { custom: `Customize`, presets: `Quick` },
+      presetsLead: `With a linked payment method the charge happens right away.`,
+      submit: `Top up`,
+      submitting: `Opening the payment page…`,
+      title: `Top up balance`,
+    },
+  },
   feed: { title: `Feed` },
   feedCard: {
     copy: `Copy`,
@@ -133,19 +182,6 @@ export const en = {
       },
       signOut: `Sign out`,
       title: `Profile`,
-      topUp: {
-        amountLabel: `Amount (RUB)`,
-        cta: `Top up`,
-        errors: {
-          invalid: `Enter a valid amount`,
-          invalidAmount: `Amount is outside allowed range`,
-          payment: `Payment error`,
-        },
-        lead: `Enter the amount in rubles. You will be redirected to the payment page.`,
-        submit: `Pay`,
-        submitting: `Redirecting…`,
-        title: `Top up balance`,
-      },
     },
     systemGroup: `System`,
     theme: { dark: `Dark`, light: `Light`, system: `System`, title: `Theme` },

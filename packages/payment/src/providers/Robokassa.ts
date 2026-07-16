@@ -99,7 +99,9 @@ export const Robokassa = ({
 
   const createRedirectPayment: PaymentProvider[`createRedirectPayment`] = async ({
     amount,
+    culture,
     description,
+    email,
     metadataKind: kind,
     options,
     userId,
@@ -128,6 +130,8 @@ export const Robokassa = ({
       SignatureValue: sign(signatureBase, shp),
       ...shp,
       ...returnUrls,
+      ...(culture === undefined ? {} : { Culture: culture }),
+      ...(email === undefined ? {} : { Email: email }),
       ...(isTest ? { IsTest: `1` } : {}),
     });
 

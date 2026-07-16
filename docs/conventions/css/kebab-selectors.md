@@ -14,7 +14,8 @@ Find camelCase/PascalCase class selectors in SCSS modules.
 
 ## 🔧 Fix
 
-Rename to kebab-case; update TSX references
+- Rename to kebab-case.
+- Update TSX references.
 
 ## 📝 Examples
 

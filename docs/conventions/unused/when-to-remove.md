@@ -6,8 +6,8 @@
 
 ## 📐 Norm
 
-During normal edits follow `agent/surgical-changes` (don't delete unrelated dead code). When the task is to audit unused
-code, actively find and plan removal using all `unused/*` atoms.
+- During normal edits follow `agent/surgical-changes` (don't delete unrelated dead code).
+- When the task is to audit unused code, actively find and plan removal using all `unused/*` atoms.
 
 ## 🔍 Detect
 

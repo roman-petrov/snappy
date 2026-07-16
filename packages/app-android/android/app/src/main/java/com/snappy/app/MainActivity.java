@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -24,9 +25,7 @@ import androidx.activity.SystemBarStyle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends ComponentActivity {
 
@@ -99,17 +98,10 @@ public class MainActivity extends ComponentActivity {
         webView.addJavascriptInterface(bridge, "Bridge");
         shakeDetector = new ShakeDetector(this, bridge::shakeDetected);
 
-        View container = findViewById(R.id.webview_container);
-        ViewCompat.setOnApplyWindowInsetsListener(
-                container,
-                (view, windowInsets) -> {
-                    Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-                    view.setPadding(0, 0, 0, ime.bottom);
-                    bridge.keyboardChanged(ime.bottom > 0);
-                    return new WindowInsetsCompat.Builder(windowInsets)
-                            .setInsets(WindowInsetsCompat.Type.ime(), Insets.NONE)
-                            .build();
-                });
+        ViewGroup container = findViewById(R.id.webview_container);
+        WebChrome webChrome = new WebChrome(this, container, bridge);
+        ViewCompat.setOnApplyWindowInsetsListener(container, webChrome::applyInsets);
+
         webView.setWebChromeClient(
                 new WebChromeClient() {
                     @Override
@@ -146,7 +138,16 @@ public class MainActivity extends ComponentActivity {
                     }
                 });
 
-        appHost = new AppHost(this, webView, splash, errorScreen, BuildConfig.APP_URL);
+        appHost =
+                new AppHost(
+                        this,
+                        container,
+                        webView,
+                        splash,
+                        errorScreen,
+                        BuildConfig.APP_URL,
+                        webChrome,
+                        bridge);
         appHost.bind(AppLink.from(getIntent()));
 
         getOnBackPressedDispatcher()
@@ -158,9 +159,7 @@ public class MainActivity extends ComponentActivity {
                                 if (appHost.errorVisible()) {
                                     return;
                                 }
-                                if (webView.canGoBack()) {
-                                    webView.goBack();
-                                } else {
+                                if (!appHost.back()) {
                                     moveTaskToBack(true);
                                 }
                             }

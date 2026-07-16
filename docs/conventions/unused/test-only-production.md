@@ -6,8 +6,15 @@
 
 ## 📐 Norm
 
-No helpers, flags, stubs, or branches in production modules that exist solely for tests (`export for tests`, `__test__`,
-`if (process.env.TEST)`). Prefer testing through the public API.
+No production code that exists solely for tests, e.g.:
+
+- helpers / stubs
+- flags / branches
+- `export for tests`
+- `__test__`
+- `if (process.env.TEST)`
+
+How tests should call the module → `unused/test-public-api`.
 
 ## 🔍 Detect
 
@@ -15,7 +22,7 @@ Search for test-only seams in non-test files.
 
 ## 🔧 Fix
 
-Delete or redesign a minimal intentional seam; fix tests to use the public API
+Delete or redesign a minimal intentional seam.
 
 ## 📝 Examples
 
@@ -25,4 +32,4 @@ Delete or redesign a minimal intentional seam; fix tests to use the public API
 
 ### ✅ Good
 
-Test only through the public API
+No test-only exports in production modules.

@@ -6,7 +6,7 @@
 
 ## 📐 Norm
 
-Don't use `null`; use `undefined` for absent values. Prefer `T | undefined` or optional fields.
+Don’t use `null` for absence — use `undefined` or an optional field (`name?: string`).
 
 ## 🔍 Detect
 
@@ -14,7 +14,7 @@ Grep for `null`.
 
 ## 🔧 Fix
 
-Replace with `undefined` / optional
+Replace with `undefined` or make the field optional.
 
 ## 📝 Examples
 

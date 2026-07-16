@@ -13,16 +13,16 @@ export const Balance = (db: Db) => {
 
   const creditFromTopUp = async (
     user: DbUser,
-    amountRub: number,
+    amount: number,
     log: { amount?: number | string; currency?: string; paymentId: string },
-  ) => user.balance.creditTopUp(amountRub, { ...log, type: `topup` });
+  ) => user.balance.creditTopUp(amount, { ...log, type: `topup` });
 
   const creditFromSignUp = async (user: DbUser) =>
-    user.balance.credit(Config.balance.signUpBonusRub, { source: `signUp` });
+    user.balance.credit(Config.balance.signUpBonus, { source: `signUp` });
 
-  const debitForLlm = async (user: DbUser, costRub: number, meta: { call: string; model: string }) => {
-    const rub = _.round(costRub * (1 + Config.balance.llmCommission), 2);
-    await user.balance.debit(rub, { ...meta, chargedRub: rub, costRub });
+  const debitForLlm = async (user: DbUser, cost: number, meta: { call: string; model: string }) => {
+    const charged = _.round(cost * (1 + Config.balance.llmCommission), 2);
+    await user.balance.debit(charged, { ...meta, charged, cost });
   };
 
   const rpc = doc(db.balance, async ({ dbUser }) => read(dbUser));

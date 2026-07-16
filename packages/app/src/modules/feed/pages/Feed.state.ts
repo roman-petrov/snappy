@@ -48,7 +48,7 @@ export const useFeedState = () => {
   const onError = useCallback(
     async (_artifactId: string, error: unknown) => {
       if (_.isObject(error) && (error as { error?: { status?: unknown } }).error?.status === `balanceBlocked`) {
-        return go(Routes.settings.profile.topUp, { replace: true });
+        return go(Routes.billing.topUp, { replace: true });
       }
 
       return undefined;

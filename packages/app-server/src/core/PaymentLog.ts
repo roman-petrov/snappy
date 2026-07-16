@@ -26,9 +26,9 @@ export const PaymentLog = (db: ReturnType<typeof Db>) => {
       userId: user?.id,
     });
 
-  const { pendingAmount, succeeded } = db.paymentLog;
+  const { pendingAmount, succeeded, succeededAmount } = db.paymentLog;
 
-  return { pendingAmount, succeeded, topUpError, topUpPending, topUpSettleError };
+  return { pendingAmount, succeeded, succeededAmount, topUpError, topUpPending, topUpSettleError };
 };
 
 export type PaymentLog = ReturnType<typeof PaymentLog>;

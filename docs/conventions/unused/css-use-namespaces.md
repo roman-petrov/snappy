@@ -6,11 +6,13 @@
 
 ## 📐 Norm
 
-`@use` namespaces never referenced as `alias.` must be removed. Ignore `as *`.
+- `@use` namespaces never referenced as `alias.` must be removed.
+- Ignore `as *`.
 
 ## 🔍 Detect
 
-List `@use` aliases; grep `alias.` within the file.
+- List `@use` aliases.
+- Grep `alias.` within the file.
 
 ## 🔧 Fix
 
@@ -20,7 +22,7 @@ Remove unused `@use` lines
 
 ### ❌ Bad
 
-`@use "theme" as t;` with no `t.` usage
+`@use "tokens" as t;` with no `t.` usage
 
 ### ✅ Good
 

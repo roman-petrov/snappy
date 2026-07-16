@@ -6,7 +6,8 @@
 
 ## 📐 Norm
 
-Destructure object parameters when reading fields: `({ a, b }: T)`. Exception: when the whole object is only forwarded.
+- Destructure object parameters when reading fields: `({ a, b }: T)`.
+- Exception: when the whole object is only forwarded.
 
 ## 🔍 Detect
 

@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Input, Page, PageNarrow, PasswordInput, Title } from "@snappy/ui";
+import { Button, Card, ErrorAlert, Input, Page, PageNarrow, PasswordInput, Title } from "@snappy/ui";
 
 import type { useSignInState } from "./SignIn.state";
 
@@ -29,7 +29,7 @@ export const SignInView = ({
             onChange={setPassword}
             value={password}
           />
-          {error === undefined ? undefined : <Alert text={t(`auth.signIn.errors.${error}`)} type="error" />}
+          {error === undefined ? undefined : <ErrorAlert text={t(`auth.signIn.errors.${error}`)} />}
           <div className={styles.actions}>
             <Button
               disabled={loading}

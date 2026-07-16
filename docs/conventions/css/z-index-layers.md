@@ -1,4 +1,4 @@
-# 🎨 No raw z-index
+# 🎨 Z-index layers
 
 - **id:** `css/z-index-layers`
 - **emoji:** 🎨
@@ -6,8 +6,12 @@
 
 ## 📐 Norm
 
-No raw `z-index` in components. Prefer DOM order, then `position: relative` on content, then `@include layer.<name>`
-from `@snappy/theme/tokens/layer`. New layers go in theme `layer.scss`.
+- No raw `z-index` in components.
+- Prefer, in order:
+  - DOM order
+  - `position: relative` on content
+  - theme layer mixins (`@include layer.<name>`)
+- New layers go in the theme module, not in components.
 
 ## 🔍 Detect
 
@@ -15,7 +19,8 @@ Grep for `z-index` in component SCSS.
 
 ## 🔧 Fix
 
-Remove or replace with layer mixins / DOM order
+- Remove raw `z-index`.
+- Or replace with a layer mixin / DOM order.
 
 ## 📝 Examples
 
@@ -25,4 +30,4 @@ Remove or replace with layer mixins / DOM order
 
 ### ✅ Good
 
-`@include layer.modal;`
+`@include layer.overlay;`

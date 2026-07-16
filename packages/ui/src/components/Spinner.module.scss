@@ -1,13 +1,30 @@
+/* stylelint-disable property-disallowed-list -- timer inside spinner */
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/animation";
-@use "pkg:@snappy/theme/tokens/icon-size";
+
+.wrap {
+  @include primitives.grid-center;
+  @include primitives.square(1em);
+
+  position: relative;
+}
 
 .root {
-  @include primitives.circle(icon-size.sm());
+  @include primitives.circle(1em);
 
+  position: absolute;
+  inset: 0;
   border: 2px solid currentcolor;
   border-top-color: transparent;
   animation: spin animation.linear-lg() infinite;
+}
+
+.time {
+  position: relative;
+  font-size: 0.22em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
 }
 
 @keyframes spin {

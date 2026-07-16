@@ -15,16 +15,20 @@ const dbUserFromId = (db: Db, id: string | undefined) => (id === undefined || id
 
 const context = async (betterAuth: BetterAuth, incoming: IncomingHttpHeaders, db: Db) => {
   const session = await betterAuth.api.getSession({ headers: headers(incoming) });
-  const dbUser = dbUserFromId(db, session?.user.id);
-  const log = AppLog({ email: session?.user.email, userId: session?.user.id });
+  if (session === null) {
+    return undefined;
+  }
+  const { email, id } = session.user;
+  const dbUser = db.user(id);
+  const log = AppLog({ email, userId: id });
 
-  return { dbUser, log };
+  return { dbUser, email, log };
 };
 
 const resolve = async (betterAuth: BetterAuth, incoming: IncomingHttpHeaders, db: Db) => {
-  const { dbUser, log } = await context(betterAuth, incoming, db);
+  const contextValue = await context(betterAuth, incoming, db);
 
-  return dbUser === undefined ? undefined : { dbUser, log };
+  return contextValue === undefined ? undefined : { dbUser: contextValue.dbUser, log: contextValue.log };
 };
 
 export const Session = { context, dbUserFromId, headers, resolve };

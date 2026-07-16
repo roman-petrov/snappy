@@ -1,42 +1,33 @@
-import { Button, FilledIcon, Page, Spinner, SystemButtons, Text, Title } from "@snappy/ui";
-import { Check } from "lucide-react";
+import { Button, FilledIcon, Spinner, StatusPage, SystemButtons } from "@snappy/ui";
+import { Check, CircleAlert } from "lucide-react";
 
 import type { useEmailVerifiedState } from "./EmailVerified.state";
 
-import { FormActions } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
-import { MessageWithLink } from "../components";
-import styles from "./EmailVerified.module.scss";
 
 export type EmailVerifiedViewProps = ReturnType<typeof useEmailVerifiedState>;
 
-export const EmailVerifiedView = ({ failedReason, home, screen }: EmailVerifiedViewProps) => (
-  <Page fill trailing={<SystemButtons />}>
-    <div className={styles.panel}>
-      {screen === `loading` ? (
-        <div className={styles.status}>
-          <Spinner />
-          <Text text={t(`auth.emailVerified.loading`)} typography="large" />
-        </div>
-      ) : undefined}
-      {screen === `done` ? (
-        <div className={styles.status}>
-          <FilledIcon color="success" icon={Check} size="md" />
-          <Title lead={t(`auth.emailVerified.lead`)} title={t(`auth.emailVerified.title`)} />
-          <FormActions>
-            <Button onClick={home} text={t(`auth.emailVerified.home`)} />
-          </FormActions>
-        </div>
-      ) : undefined}
-      {screen === `failed` ? (
-        <MessageWithLink
-          lead={t(`auth.emailVerified.failed.${failedReason}.lead`)}
-          linkText={t(`auth.signIn.title`)}
-          linkTo={Routes.auth.signIn}
-          title={t(`auth.emailVerified.failed.${failedReason}.title`)}
-        />
-      ) : undefined}
-    </div>
-  </Page>
-);
+export const EmailVerifiedView = ({ failedReason, home, screen }: EmailVerifiedViewProps) =>
+  screen === `loading` ? (
+    <StatusPage icon={<Spinner size="xxxl" />} title={t(`auth.emailVerified.loading`)} trailing={<SystemButtons />} />
+  ) : screen === `done` ? (
+    <StatusPage
+      celebrate
+      icon={<FilledIcon color="success" icon={Check} size="xxxl" />}
+      lead={t(`auth.emailVerified.lead`)}
+      title={t(`auth.emailVerified.title`)}
+      trailing={<SystemButtons />}
+    >
+      <Button onClick={home} text={t(`auth.emailVerified.home`)} type="primary" />
+    </StatusPage>
+  ) : (
+    <StatusPage
+      icon={<FilledIcon color="error" icon={CircleAlert} size="xxxl" />}
+      lead={t(`auth.emailVerified.failed.${failedReason}.lead`)}
+      title={t(`auth.emailVerified.failed.${failedReason}.title`)}
+      trailing={<SystemButtons />}
+    >
+      <Button link={Routes.auth.signIn} text={t(`auth.signIn.title`)} type="primary" />
+    </StatusPage>
+  );

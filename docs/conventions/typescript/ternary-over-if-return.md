@@ -6,16 +6,19 @@
 
 ## 📐 Norm
 
-Prefer a single return with ternary over several `if` branches that each return a value. Never introduce an IIFE to
-force a ternary. If the branch needs statements, `await`, or multiple lines — keep `if`/`return`.
+- Prefer a single return with ternary over several `if` branches that each return a value.
+- Never introduce an IIFE to force a ternary.
+- If the branch needs statements, `await`, or multiple lines — keep `if`/`return`.
 
 ## 🔍 Detect
 
-Find multiple `if … return` for the same outcome; skip cases that would need an IIFE.
+- Find multiple `if … return` for the same outcome.
+- Skip cases that would need an IIFE.
 
 ## 🔧 Fix
 
-Use ternary when branches are expressions; otherwise keep `if`/`return`
+- Use ternary when branches are expressions.
+- Otherwise keep `if`/`return`.
 
 ## 📝 Examples
 

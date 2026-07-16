@@ -10,7 +10,8 @@ Class selectors or `%placeholder` never used in TS/TSX/HTML must be removed.
 
 ## 🔍 Detect
 
-Extract class/placeholder names; grep each in the codebase.
+- Extract class/placeholder names.
+- Grep each in the codebase.
 
 ## 🔧 Fix
 

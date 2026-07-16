@@ -6,8 +6,8 @@
 
 ## 📐 Norm
 
-Parameters declared but never used in the body must be removed (update call sites) or prefixed with `_` if the API
-requires the shape.
+- Parameters declared but never used in the body must be removed (update call sites).
+- Or prefixed with `_` if the API requires the shape.
 
 ## 🔍 Detect
 
@@ -15,7 +15,8 @@ For each parameter, check body usage.
 
 ## 🔧 Fix
 
-Remove or prefix with `_`
+- Remove unused parameters.
+- Or prefix with `_`.
 
 ## 📝 Examples
 

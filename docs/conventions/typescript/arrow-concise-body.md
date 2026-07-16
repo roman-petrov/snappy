@@ -6,9 +6,11 @@
 
 ## 📐 Norm
 
-When an arrow function body is a single statement, prefer expression form without `{ }` / `return` if behavior stays the
-same. Keep a block when there are multiple statements, or when braces are required for correct meaning (e.g. a lone
-object literal needs `() => ({ … })`, not a block).
+- When an arrow function body is a single statement, prefer expression form without `{ }` / `return` if behavior stays
+  the same.
+- Keep a block when there are multiple statements.
+- Keep a block when braces are required for correct meaning (e.g. a lone object literal needs `() => ({ … })`, not a
+  block).
 
 ## 🔍 Detect
 
@@ -17,7 +19,8 @@ expression body unchanged.
 
 ## 🔧 Fix
 
-Drop the block and `return`; use `=> expr`. For object literals use `=> ({ … })`.
+- Drop the block and `return`; use `=> expr`.
+- For object literals use `=> ({ … })`.
 
 ## 📝 Examples
 

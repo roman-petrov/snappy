@@ -10,7 +10,8 @@
 
 ## 🔍 Detect
 
-Extract variables; grep usages.
+- Extract variables.
+- Grep usages.
 
 ## 🔧 Fix
 

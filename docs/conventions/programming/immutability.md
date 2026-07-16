@@ -6,15 +6,17 @@
 
 ## 📐 Norm
 
-Do not use mutation; use immutable data when possible.
+Don’t mutate shared or returned data — produce a new value (`map`, spread, new object/array).
+
+Local builder mutation inside a function is fine if the mutated value is not shared and you return a finished result.
 
 ## 🔍 Detect
 
-Look for in-place array/object mutation when a copy/new value would work.
+In-place array/object mutation on values that escape the function or are shared.
 
 ## 🔧 Fix
 
-Replace mutation with immutable updates
+Replace with an immutable update.
 
 ## 📝 Examples
 

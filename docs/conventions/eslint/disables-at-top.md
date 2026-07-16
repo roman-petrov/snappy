@@ -6,16 +6,15 @@
 
 ## 📐 Norm
 
-File-level `eslint-disable` only at the top (before imports). One rule per line. No `-- reason`. Prefer file-top disable
-over scattered `eslint-disable-next-line` for whole-file concerns.
+File-level `eslint-disable` only at the top (before imports).
 
 ## 🔍 Detect
 
-Find mid-file disables, multi-rule comments, or `-- reason`.
+Find mid-file file-level `eslint-disable` comments.
 
 ## 🔧 Fix
 
-Move to top; one rule per line; drop descriptions
+Move the disable to the top of the file, before imports.
 
 ## 📝 Examples
 
@@ -23,7 +22,7 @@ Move to top; one rule per line; drop descriptions
 
 ```ts
 import { run } from "./run";
-// eslint-disable-next-line no-console
+/* eslint-disable no-console */
 console.log(run());
 ```
 

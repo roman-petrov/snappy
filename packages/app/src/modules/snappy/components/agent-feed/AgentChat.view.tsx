@@ -15,9 +15,9 @@ export const AgentChatView = ({ balanceLow, feed, showFeed }: AgentChatViewProps
       <div>
         <p>{t(`balance.common.lowLead`)}</p>
         <Button
-          link={Routes.settings.profile.topUp}
-          tag={AppTags.settings.profile.topUp.open}
-          text={t(`settings.profile.topUp.cta`)}
+          link={Routes.billing.topUp}
+          tag={AppTags.billing.topUp.open}
+          text={t(`billing.topUp.cta`)}
           type="primary"
         />
       </div>

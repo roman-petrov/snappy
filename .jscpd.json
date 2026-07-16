@@ -26,7 +26,6 @@
     "packages/app/src/modules/auth/pages/SignIn.view.tsx",
     "packages/app/src/modules/auth/pages/SignUp.view.tsx",
     "packages/app/src/modules/settings/pages/profile/SettingsProfilePassword.view.tsx",
-    "packages/app/src/modules/settings/pages/profile/SettingsProfileTopUp.view.tsx",
     "packages/app/src/modules/settings/pages/Settings.view.tsx",
     "packages/browser/src/speech/SpeechRecognizerDesktop.ts",
     "packages/coder-store/src/core/Workspace.ts",

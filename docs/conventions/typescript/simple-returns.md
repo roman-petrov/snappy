@@ -6,17 +6,18 @@
 
 ## 📐 Norm
 
-Prefer simple returns of local names. Define handlers and derived values above; in `return { … }` only list names or
-spreads. Do not declare functions or heavy expressions inside the return. Do not rename in the return
-(`return { onSubmit: process }` — return `process` under the same name).
+- Prefer simple returns of local names.
+- Define handlers and derived values above; in `return { … }` only list names or spreads.
+- Do not declare functions or heavy expressions inside the return.
 
 ## 🔍 Detect
 
-Find `return {` with inline functions or renames.
+Find `return {` with inline functions or heavy expressions.
 
 ## 🔧 Fix
 
-Hoist to locals; return names/spreads only
+- Hoist to locals.
+- Return names/spreads only.
 
 ## 📝 Examples
 

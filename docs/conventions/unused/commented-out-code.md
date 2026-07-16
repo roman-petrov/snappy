@@ -6,7 +6,8 @@
 
 ## 📐 Norm
 
-Delete obsolete commented-out code blocks. Keep linter/cspell directives.
+- Delete obsolete commented-out code blocks.
+- Keep linter/cspell directives.
 
 ## 🔍 Detect
 

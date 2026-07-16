@@ -6,15 +6,20 @@
 
 ## 📐 Norm
 
-Hook modules must live in a directory named `hooks`. Hook file names use camelCase.
+Standalone hook files (`use*.ts`) live under a directory named `hooks/`.
+
+Does **not** apply to:
+
+- View/State files (`*.state.*`)
+- a `use*` helper in the same file as its only consumer component
 
 ## 🔍 Detect
 
-Find hook exports outside a `hooks/` path.
+`use*.ts` / `use*.tsx` files outside a `hooks/` path that are not `*.state.*`.
 
 ## 🔧 Fix
 
-Move into `hooks/`; rename if needed
+Move the file into `hooks/`.
 
 ## 📝 Examples
 

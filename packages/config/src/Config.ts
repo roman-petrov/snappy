@@ -42,7 +42,7 @@ const devSsl = () => {
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
 const s3ObjectMaxAgeSec = _.day.seconds * _.daysInYear;
-const balance = { llmCommission: 0.25, paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 };
+const balance = { llmCommission: 0.25, paymentMax: 5000, paymentMin: 50, signUpBonus: 50 };
 const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
 const smtpHost = `smtp.mail.ru`;
 const smtpPort = 465;

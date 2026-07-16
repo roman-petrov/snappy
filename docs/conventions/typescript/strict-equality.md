@@ -14,14 +14,14 @@ Grep for `==` / `!=` (excluding `===` / `!==`).
 
 ## 🔧 Fix
 
-Replace with strict operators
+Replace with strict operators.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`value == null`
+`value == 0`
 
 ### ✅ Good
 
-`value === undefined`
+`value === 0`

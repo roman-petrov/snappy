@@ -37,7 +37,7 @@ describe(`creditFromSignUp`, () => {
 
     await creditFromSignUp(user);
 
-    expect(user.balance.credit).toHaveBeenCalledWith(Config.balance.signUpBonusRub, { source: `signUp` });
+    expect(user.balance.credit).toHaveBeenCalledWith(Config.balance.signUpBonus, { source: `signUp` });
   });
 });
 
@@ -59,6 +59,6 @@ describe(`debitForLlm`, () => {
 
     await debitForLlm(user, 1.5, meta);
 
-    expect(user.balance.debit).toHaveBeenCalledWith(1.88, { ...meta, chargedRub: 1.88, costRub: 1.5 });
+    expect(user.balance.debit).toHaveBeenCalledWith(1.88, { ...meta, charged: 1.88, cost: 1.5 });
   });
 });

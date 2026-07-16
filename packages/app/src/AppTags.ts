@@ -2,9 +2,10 @@ import { Tags } from "@snappy/browser";
 
 export const AppTags = Tags({
   auth: { signIn: [`submit`], signUp: [`submit`] },
+  billing: { topUp: [`open`, `submit`] },
   feed: { copy: [`click`], share: [`click`] },
   nav: [`feed`, `settings`, `snappy`],
-  settings: { profile: { signOut: [`click`], topUp: [`open`, `submit`] } },
+  settings: { profile: { signOut: [`click`] } },
   snappy: {
     chat: [`start`],
     flow: [`snappy`, `static`],

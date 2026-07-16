@@ -14,7 +14,8 @@ Grep imports of the type name.
 
 ## 🔧 Fix
 
-Remove unused type/export
+- Remove unused type.
+- Or un-export.
 
 ## 📝 Examples
 

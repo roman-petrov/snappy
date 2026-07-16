@@ -1,13 +1,11 @@
 package com.snappy.app;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
-import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
@@ -19,16 +17,27 @@ final class AppHost {
     private final ConnectivityManager connectivity;
     private final ErrorScreen errorScreen;
     private final View splash;
+    private final WebOverlay overlay;
     private final WebView webView;
     private boolean webReady;
     private ConnectivityManager.NetworkCallback networkCallback;
 
-    AppHost(Context context, WebView webView, View splash, ErrorScreen errorScreen, String appUrl) {
+    AppHost(
+            Context context,
+            ViewGroup container,
+            WebView webView,
+            View splash,
+            ErrorScreen errorScreen,
+            String appUrl,
+            WebChrome webChrome,
+            Bridge bridge) {
         this.webView = webView;
         this.splash = splash;
         this.errorScreen = errorScreen;
         this.appUrl = appUrl;
         connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        overlay = new WebOverlay(container, appUrl, webChrome, bridge::externalReturned);
+        bridge.setExternalReady(() -> webView.postOnAnimation(overlay::close));
     }
 
     void bind(String link) {
@@ -40,12 +49,20 @@ final class AppHost {
                         if (!request.isForMainFrame()) {
                             return false;
                         }
-                        return openExternalIfNeeded(view.getContext(), request.getUrl().toString());
+                        String url = request.getUrl().toString();
+                        if (AppLink.openOutside(view.getContext(), url)) {
+                            return true;
+                        }
+                        if (AppLink.http(url) && !AppLink.inApp(url, appUrl)) {
+                            overlay.open(url);
+                            return true;
+                        }
+                        return false;
                     }
 
                     @Override
                     public void onPageFinished(WebView view, String url) {
-                        if (isAppUrl(url) && !errorScreen.visible()) {
+                        if (AppLink.inApp(url, appUrl) && !errorScreen.visible()) {
                             webReady = true;
                         }
                         if (!errorScreen.visible()) {
@@ -112,11 +129,13 @@ final class AppHost {
 
     void open(String link) {
         if (AppLink.trusted(link, appUrl)) {
+            overlay.close();
             webView.loadUrl(link);
         }
     }
 
     void destroy() {
+        overlay.close();
         if (networkCallback != null) {
             connectivity.unregisterNetworkCallback(networkCallback);
             networkCallback = null;
@@ -125,6 +144,17 @@ final class AppHost {
 
     boolean errorVisible() {
         return errorScreen.visible();
+    }
+
+    boolean back() {
+        if (overlay.isOpen()) {
+            return overlay.back();
+        }
+        if (!webView.canGoBack()) {
+            return false;
+        }
+        webView.goBack();
+        return true;
     }
 
     private void loadMain() {
@@ -136,10 +166,6 @@ final class AppHost {
         errorScreen.hide();
         splash.setVisibility(View.VISIBLE);
         webView.loadUrl(url);
-    }
-
-    private boolean isAppUrl(String url) {
-        return url != null && url.startsWith(appUrl);
     }
 
     private boolean networkAvailable() {
@@ -164,24 +190,5 @@ final class AppHost {
             return;
         }
         errorScreen.show(network);
-    }
-
-    private boolean openExternalIfNeeded(Context context, String url) {
-        if (url == null || isAppUrl(url)) {
-            return false;
-        }
-        Uri uri = Uri.parse(url);
-        String scheme = uri.getScheme();
-        if (scheme == null) {
-            return false;
-        }
-        if ((scheme.equals("http") || scheme.equals("https")) && AppLink.trusted(url, appUrl)) {
-            return false;
-        }
-        try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
-        } catch (ActivityNotFoundException ignored) {
-        }
-        return true;
     }
 }

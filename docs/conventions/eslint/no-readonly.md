@@ -6,7 +6,7 @@
 
 ## 📐 Norm
 
-Do not use the `Readonly<>` utility type (project restricts it).
+Do not use the `Readonly<>` utility type.
 
 ## 🔍 Detect
 
@@ -14,7 +14,7 @@ Grep for `Readonly<`.
 
 ## 🔧 Fix
 
-Remove `Readonly<>`; use mutable types / conventions the project allows
+Use a plain object type (rely on `readonly` fields or `as const` only when needed).
 
 ## 📝 Examples
 

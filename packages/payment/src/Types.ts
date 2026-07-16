@@ -1,6 +1,8 @@
 export type PaymentCreateRedirectPaymentInput = {
   amount: number;
+  culture?: `en` | `ru`;
   description: string;
+  email?: string;
   metadataKind: PaymentMetadataKind;
   options?: { failUrl?: string; returnUrl?: string };
   userId: string;

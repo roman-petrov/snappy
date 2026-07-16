@@ -35,9 +35,9 @@ const upstreamUrl = `https://api.aitunnel.ru`;
 
 type MockTunnel = { balance: Balance; betterAuth: BetterAuth; db: ReturnType<typeof Db>; dbUser: DbUser };
 
-const withUsage = (costRub: number, name?: string) => ({
+const withUsage = (cost: number, name?: string) => ({
   ...(name === undefined ? {} : { model: name }),
-  usage: { cost_rub: costRub },
+  usage: { cost_rub: cost },
 });
 
 const mockTunnel = (userId = `user-1`): MockTunnel => ({

@@ -12,7 +12,7 @@ convention atoms.
 ## 🔍 Look for
 
 - Unused exports/functions/vars/types/imports; unreachable branches/files
-- Test-only production seams (`unused/test-only-production`)
+- Test-only production seams (`unused/test-only-production`, `unused/test-public-api`)
 
 ## 🔎 Detect
 

@@ -6,16 +6,20 @@
 
 ## 📐 Norm
 
-Factory takes deps as an object; `export type ModuleNameConfig`. Declare each method as local `const`, then
-`return { … }`. Export `export type ModuleName = ReturnType<typeof ModuleName>`.
+- Factory takes deps as an object.
+- `export type ModuleNameConfig`.
+- Declare each method as local `const`, then `return { … }`.
+- Export `export type ModuleName = ReturnType<typeof ModuleName>`.
 
 ## 🔍 Detect
 
-Find factories with inlined return methods or missing API/config types.
+- Factories with inlined return methods.
+- Factories missing API/config types.
 
 ## 🔧 Fix
 
-Extract local consts; add Config and ReturnType exports
+- Extract local consts.
+- Add Config and ReturnType exports.
 
 ## 📝 Examples
 

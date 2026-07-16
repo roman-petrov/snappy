@@ -7,18 +7,18 @@ import { AppHeaderContext } from "./AppHeaderContext";
 
 export const usePageState = ({
   back = false,
+  center = false,
   children,
   fill = false,
-  header,
+  header: customHeader,
   tab = false,
   title,
-  trailing,
+  trailing: trailingProp,
 }: PageProps) => {
   const contextTrailing = useContext(AppHeaderContext);
-  const customHeader = header;
-  const showLogo = title === undefined && !back;
-  const resolvedTrailing = trailing ?? contextTrailing;
   const headerRef = useChromeAccentHost(tab);
+  const showLogo = title === undefined && !back;
+  const trailing = trailingProp ?? contextTrailing;
 
-  return { back, children, customHeader, fill, headerRef, showLogo, tab, title, trailing: resolvedTrailing };
+  return { back, center, children, customHeader, fill, headerRef, showLogo, tab, title, trailing };
 };

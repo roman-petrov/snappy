@@ -6,7 +6,8 @@
 
 ## 📐 Norm
 
-Don't use `let` at module level (only `const` or functions). `let` inside factory closures is allowed when needed.
+- Don’t use `let` at module scope — only `const` or functions.
+- `let` inside a factory/closure is allowed when reassignment is needed.
 
 ## 🔍 Detect
 
@@ -14,14 +15,27 @@ Grep top-level `let`.
 
 ## 🔧 Fix
 
-Use `const` or move into a function/factory
+Use `const`, or move the `let` into a function/factory.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`let count = 0;` at module scope
+```ts
+let count = 0;
+export const bump = () => {
+  count += 1;
+};
+```
 
 ### ✅ Good
 
-`let` only inside a factory/closure when needed
+```ts
+export const Counter = () => {
+  let count = 0;
+  const bump = () => {
+    count += 1;
+  };
+  return { bump };
+};
+```

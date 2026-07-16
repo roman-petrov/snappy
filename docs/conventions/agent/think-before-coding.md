@@ -6,8 +6,13 @@
 
 ## 📐 Norm
 
-Don't assume. Don't hide confusion. Surface tradeoffs. State assumptions; if uncertain, ask. If multiple interpretations
-exist, present them. If a simpler approach exists, say so. If unclear, stop and ask.
+- Don't assume.
+- Don't hide confusion.
+- Surface tradeoffs.
+- State assumptions.
+- If uncertain or unclear, stop and ask.
+- If multiple interpretations exist, present them.
+- If a simpler approach exists, say so.
 
 ## 🔍 Detect
 

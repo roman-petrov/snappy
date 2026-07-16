@@ -47,6 +47,47 @@ describe(`Robokassa`, () => {
       expect(url.searchParams.get(`Shp_type`)).toBe(`topup`);
       expect(url.searchParams.get(`Shp_userId`)).toBe(`user-1`);
       expect(url.searchParams.get(`IsTest`)).toBe(`1`);
+      expect(url.searchParams.get(`Culture`)).toBeNull();
+      expect(url.searchParams.get(`SignatureValue`)).toBe(
+        md5(`demo:10.00:${paymentId}:pass1:Shp_type=topup:Shp_userId=user-1`),
+      );
+    });
+
+    it(`adds Culture when culture is set`, async () => {
+      const { createRedirectPayment } = Robokassa({ ...credentials, isTest: true });
+
+      const result = await createRedirectPayment({
+        amount: 10,
+        culture: `en`,
+        description: `Top up`,
+        metadataKind: `topup`,
+        userId: `user-1`,
+      });
+
+      expect(result.ok).toBe(true);
+
+      const { redirectUrl } = result as PaymentCreateRedirectPaymentSuccessResult;
+
+      expect(new URL(redirectUrl).searchParams.get(`Culture`)).toBe(`en`);
+    });
+
+    it(`adds Email when email is set`, async () => {
+      const { createRedirectPayment } = Robokassa({ ...credentials, isTest: true });
+
+      const result = await createRedirectPayment({
+        amount: 10,
+        description: `Top up`,
+        email: `user@example.com`,
+        metadataKind: `topup`,
+        userId: `user-1`,
+      });
+
+      expect(result.ok).toBe(true);
+
+      const { paymentId, redirectUrl } = result as PaymentCreateRedirectPaymentSuccessResult;
+      const url = new URL(redirectUrl);
+
+      expect(url.searchParams.get(`Email`)).toBe(`user@example.com`);
       expect(url.searchParams.get(`SignatureValue`)).toBe(
         md5(`demo:10.00:${paymentId}:pass1:Shp_type=topup:Shp_userId=user-1`),
       );

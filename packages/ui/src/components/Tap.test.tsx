@@ -23,6 +23,8 @@ vi.mock(import(`@snappy/platform`), () => ({
     },
     copyHtml: vi.fn(),
     copyImage: vi.fn(),
+    externalReady: vi.fn(),
+    externalReturnEvent: `snappy:external-return` as const,
     hapticImpact: vi.fn(),
     keyboardChangedEvent: `snappy:keyboard-changed` as const,
     screenCornerRadius: vi.fn(() => 0),

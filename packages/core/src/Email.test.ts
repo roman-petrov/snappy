@@ -30,6 +30,13 @@ describe(`mailto`, () => {
     expect(mailto(`user@example.com`)).toBe(`mailto:user@example.com`);
     expect(mailto(`  user@example.com  `)).toBe(`mailto:user@example.com`);
   });
+
+  it(`appends encoded subject and body`, () => {
+    expect(mailto(`user@example.com`, { subject: `Hello` })).toBe(`mailto:user@example.com?subject=Hello`);
+    expect(mailto(`user@example.com`, { body: `Line 1\nLine 2`, subject: `Pay #1` })).toBe(
+      `mailto:user@example.com?subject=Pay%20%231&body=Line%201%0ALine%202`,
+    );
+  });
 });
 
 describe(`foreignProvider`, () => {

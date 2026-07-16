@@ -141,6 +141,22 @@ describe(`mount`, () => {
     await app.close();
   });
 
+  it(`rejects when connection context is undefined`, async () => {
+    const root = { rpc: { read: scope.query(async ({ id }) => id) } };
+    const contract = Contract.define<{ root: typeof root }>()({ path: `/rpc` });
+
+    const { app, port } = await listen(async appInstance =>
+      Rpc.mount(appInstance, contract, { context: () => undefined, modules: { root }, userId: ({ id }) => id }),
+    );
+
+    const socket = await connect(port, `/rpc`);
+
+    await expect(request(socket, { id: `1`, path: `root.read` })).rejects.toMatchObject({ code: `UNAUTHORIZED` });
+
+    socket.close();
+    await app.close();
+  });
+
   it(`pushes live mut results`, async () => {
     const root = { rpc: { bump: scope.mut(async ({ id }) => `${id}-x`) } };
     const contract = Contract.define<{ root: typeof root }>()({ path: `/rpc` });

@@ -6,8 +6,8 @@
 
 ## 📐 Norm
 
-Avoid long positional parameter lists. Practical max is 5 (project ESLint). Prefer an options object when many inputs
-are needed.
+- At most 5 positional parameters.
+- Above that, take an options object (or split the function).
 
 ## 🔍 Detect
 
@@ -15,7 +15,8 @@ Count positional params on functions.
 
 ## 🔧 Fix
 
-Collapse into an options object or split the function
+- Collapse into an options object.
+- Or split the function.
 
 ## 📝 Examples
 

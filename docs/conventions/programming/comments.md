@@ -6,17 +6,15 @@
 
 ## 📐 Norm
 
-Don't comment the obvious; only non-obvious points. Comment language is English. Remove obsolete comments and
-AI/narrative comments ("ensure that…", step-by-step essays). Keep ESLint / Stylelint / cspell directives. Keep short
-English notes for non-obvious intent or non-trivial algorithms.
+Don't comment the obvious; only non-obvious intent or non-trivial algorithms.
 
 ## 🔍 Detect
 
-Read comments; flag obvious, non-English, obsolete, or AI-narrative ones. Do not remove linter/cspell directives.
+Comments that restate the next line of code.
 
 ## 🔧 Fix
 
-Delete or rewrite; keep directives and non-obvious intent
+Delete or rewrite to capture non-obvious intent.
 
 ## 📝 Examples
 

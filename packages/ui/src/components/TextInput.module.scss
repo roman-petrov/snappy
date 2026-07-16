@@ -52,7 +52,7 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
 .glass {
   overflow: hidden;
   background-color: transparent;
-  border: 1px solid panel.border(null, true);
+  border: 1px solid panel.border-glass();
 }
 
 .glass-fill {

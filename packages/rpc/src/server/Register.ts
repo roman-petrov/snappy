@@ -23,7 +23,7 @@ export type ContextFor<T> = [ContextsOf<T>] extends [never] ? object : object & 
 
 export type RegisterConfig<TContext extends object, TModules extends object> = {
   app: FastifyInstance;
-  context: (input: { req: FastifyRequest }) => Promise<TContext> | TContext;
+  context: (input: { req: FastifyRequest }) => Promise<TContext | undefined> | TContext | undefined;
   modules: TModules;
   path: string;
   userId: (context: TContext) => string | undefined;
@@ -140,10 +140,12 @@ export const Register = async <TContext extends object, TModules extends object>
       let closed = false;
 
       const contextPromise = Promise.resolve(buildContext({ req: httpRequest })).then(context => {
-        const resolvedUserId = userId(context);
-        if (!closed && resolvedUserId !== undefined) {
-          boundUserId = resolvedUserId;
-          sharedHub.add(resolvedUserId, connection);
+        if (context !== undefined) {
+          const resolvedUserId = userId(context);
+          if (!closed && resolvedUserId !== undefined) {
+            boundUserId = resolvedUserId;
+            sharedHub.add(resolvedUserId, connection);
+          }
         }
 
         return context;
@@ -174,6 +176,11 @@ export const Register = async <TContext extends object, TModules extends object>
         void (async () => {
           const context = await contextPromise;
           if (closed) {
+            return;
+          }
+          if (context === undefined) {
+            connection.send(Protocol.stringify({ error: { code: `UNAUTHORIZED` }, id: wire.id, ok: false }));
+
             return;
           }
           const procedure = resolve(api, wire.path);

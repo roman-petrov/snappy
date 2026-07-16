@@ -69,7 +69,7 @@ export const AiTunnelProxy = async (
         return;
       }
       const { model, usage } = parsed.data;
-      const debit = { call: path, costRub: usage.cost_rub, model: model ?? `` };
+      const debit = { call: path, cost: usage.cost_rub, model: model ?? `` };
       void balance.debitForLlm(tunnel.dbUser, usage.cost_rub, { call: debit.call, model: debit.model }).then(
         () => {
           tunnel.billingDone = true;

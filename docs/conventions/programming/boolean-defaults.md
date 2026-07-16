@@ -6,15 +6,18 @@
 
 ## 📐 Norm
 
-Boolean parameters and properties are optional with default `false`. Passing `true` activates something off by default.
+- Boolean parameters and properties are optional with default `false`.
+- Passing `true` activates something off by default.
 
 ## 🔍 Detect
 
-Find required booleans or defaults of `true`.
+- Required booleans.
+- Defaults of `true`.
 
 ## 🔧 Fix
 
-Make optional with default `false`; update call sites.
+- Make optional with default `false`.
+- Update call sites.
 
 ## 📝 Examples
 

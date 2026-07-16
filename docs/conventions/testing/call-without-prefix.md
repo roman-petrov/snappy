@@ -14,17 +14,17 @@ Grep for `Module.`-style calls in test bodies after import.
 
 ## 🔧 Fix
 
-Call the destructured function
+Call the destructured function.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`expect(Math.add(1, 2)).toBe(3);`
+`expect(Calc.add(1, 2)).toBe(3);`
 
 ### ✅ Good
 
 ```ts
-const { add } = Math;
+const { add } = Calc;
 expect(add(1, 2)).toBe(3);
 ```

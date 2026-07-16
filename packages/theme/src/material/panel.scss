@@ -34,16 +34,8 @@
   @return color-mix(in srgb, color.surface() #{material.fill()}, transparent);
 }
 
-@function -fill($accent: null, $glass: false) {
-  @if $glass {
-    @return bg-glass($accent);
-  }
-
-  @return bg($accent);
-}
-
-@function border($accent: null, $glass: false) {
-  $fill: -fill($accent, $glass);
+@function border($accent: null) {
+  $fill: bg($accent);
 
   @if $accent {
     $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
@@ -58,6 +50,10 @@
   @return -rim-border(bg-soft());
 }
 
+@function border-glass($accent: null) {
+  @return -rim-border(bg-glass($accent));
+}
+
 @mixin panel-soft {
   color: color.text();
   background-color: bg-soft();
@@ -68,8 +64,8 @@
     color animation.standard-md();
 }
 
-@mixin panel($accent: null, $accent-text: true, $no-border: false, $glass: false) {
-  background-color: -fill($accent, $glass);
+@mixin panel($accent: null, $accent-text: true, $no-border: false) {
+  background-color: bg($accent);
   transition:
     background-color animation.standard-md(),
     border-color animation.standard-md(),
@@ -83,13 +79,13 @@
     }
 
     @if not $no-border {
-      border: 1px solid border($accent, $glass);
+      border: 1px solid border($accent);
     }
   } @else {
     color: color.text();
 
     @if not $no-border {
-      border: 1px solid border(null, $glass);
+      border: 1px solid border();
     }
   }
 }

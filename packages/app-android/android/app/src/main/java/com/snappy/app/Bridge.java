@@ -18,28 +18,47 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.json.JSONObject;
 
 public class Bridge {
     private final MainActivity activity;
     private final WebView webView;
     private boolean keyboardOpen;
+    private String barTheme = "light";
+    private Runnable externalReady;
 
     public Bridge(MainActivity activity, WebView webView) {
         this.activity = activity;
         this.webView = webView;
     }
 
+    void setExternalReady(Runnable externalReady) {
+        this.externalReady = externalReady;
+    }
+
     @JavascriptInterface
-    public void setBarStyle(String theme) {
+    public void externalReady() {
         onUi(
                 () -> {
-                    WindowInsetsControllerCompat controller =
-                            WindowCompat.getInsetsController(
-                                    activity.getWindow(), activity.getWindow().getDecorView());
-                    boolean lightBars = "light".equals(theme);
-                    controller.setAppearanceLightStatusBars(lightBars);
-                    controller.setAppearanceLightNavigationBars(lightBars);
+                    if (externalReady != null) {
+                        externalReady.run();
+                    }
                 });
+    }
+
+    @JavascriptInterface
+    public void setBarStyle(String theme) {
+        barTheme = theme;
+        onUi(this::applyBarStyle);
+    }
+
+    void applyBarStyle() {
+        WindowInsetsControllerCompat controller =
+                WindowCompat.getInsetsController(
+                        activity.getWindow(), activity.getWindow().getDecorView());
+        boolean lightBars = "light".equals(barTheme);
+        controller.setAppearanceLightStatusBars(lightBars);
+        controller.setAppearanceLightNavigationBars(lightBars);
     }
 
     @JavascriptInterface
@@ -130,6 +149,13 @@ public class Bridge {
 
     public void shakeDetected() {
         WebViewEvent.dispatch(webView, "snappy:shake", null);
+    }
+
+    void externalReturned(String url) {
+        WebViewEvent.dispatch(
+                webView,
+                "snappy:external-return",
+                "{ detail: { url: " + JSONObject.quote(url) + " } }");
     }
 
     private Uri cacheUri(String base64, String name, String ext) {

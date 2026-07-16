@@ -9,11 +9,22 @@ import type { PaymentLog } from "./PaymentLog";
 import { BalancePayment } from "./BalancePayment";
 import { Mock } from "./test/Mock";
 
-const production = vi.hoisted(() => vi.fn(() => false));
+const { amount, amountLong, amountRaw, email, max, min, origin, paymentId, production, userId } = vi.hoisted(() => ({
+  amount: 42,
+  amountLong: `42.000000`,
+  amountRaw: `42.00`,
+  email: `user@example.com`,
+  max: 100,
+  min: 10,
+  origin: `https://dev.example`,
+  paymentId: `pay-1`,
+  production: vi.fn(() => false),
+  userId: `user-1`,
+}));
 
 vi.mock(`@snappy/config`, () => ({
-  Config: { balance: { paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 } },
-  ConfigValues: { env: () => `dev`, origin: () => `https://dev.example`, production },
+  Config: { balance: { paymentMax: max, paymentMin: min } },
+  ConfigValues: { env: () => `dev`, origin: () => origin, production },
 }));
 
 vi.mock(`@snappy/log`, () => {
@@ -23,12 +34,10 @@ vi.mock(`@snappy/log`, () => {
   return { Log: { ...root, withFields: () => root } };
 });
 
-const paymentId = `pay-1`;
-const userId = `user-1`;
-
 const paymentLog = () => ({
-  pendingAmount: vi.fn().mockResolvedValue(100),
+  pendingAmount: vi.fn().mockResolvedValue(amount),
   succeeded: vi.fn().mockResolvedValue(false),
+  succeededAmount: vi.fn().mockResolvedValue(undefined),
   topUpError: vi.fn().mockResolvedValue(undefined),
   topUpPending: vi.fn().mockResolvedValue(undefined),
   topUpSettleError: vi.fn().mockResolvedValue(undefined),
@@ -43,7 +52,7 @@ const paymentProvider = () => ({
     .fn()
     .mockResolvedValue({
       metadataKind: `topup` as const,
-      money: { currency: `RUB`, value: `100.00` },
+      money: { currency: `RUB`, value: amountRaw },
       ok: true as const,
       paymentId,
       status: `succeeded` as const,
@@ -66,45 +75,59 @@ const setup = () => {
 
 describe(`paymentUrl`, () => {
   it.each([
-    { amount: 9.99, name: `below min` },
-    { amount: 5000.01, name: `above max` },
-    { amount: Number.NaN, name: `NaN` },
-    { amount: Number.POSITIVE_INFINITY, name: `Infinity` },
-  ])(`returns invalidAmount when $name`, async ({ amount }) => {
+    { name: `below min`, value: min - 0.01 },
+    { name: `above max`, value: max + 0.01 },
+    { name: `NaN`, value: Number.NaN },
+    { name: `Infinity`, value: Number.POSITIVE_INFINITY },
+  ])(`returns invalidAmount when $name`, async ({ value }) => {
     const { api, payment, user } = setup();
 
-    await expect(api.paymentUrl(user, amount)).resolves.toStrictEqual({ status: `invalidAmount` });
+    await expect(api.paymentUrl(user, value, `ru`)).resolves.toStrictEqual({ status: `invalidAmount` });
     expect(payment.createRedirectPayment).not.toHaveBeenCalled();
   });
 
   it(`creates pending payment and returns redirect url in Dev`, async () => {
     const { api, log, payment, user } = setup();
+    const rounded = 42.13;
 
-    await expect(api.paymentUrl(user, 100.126)).resolves.toStrictEqual({
+    await expect(api.paymentUrl(user, 42.126, `ru`, email)).resolves.toStrictEqual({
+      paymentId,
       status: `ok`,
       url: `https://pay.example/redirect`,
     });
 
     expect(payment.createRedirectPayment).toHaveBeenCalledWith({
-      amount: 100.13,
+      amount: rounded,
+      culture: `ru`,
       description: `Snappy — пополнение баланса`,
+      email,
       metadataKind: `topup`,
       options: {
-        failUrl: `https://dev.example/billing/robokassa/fail`,
-        returnUrl: `https://dev.example/billing/robokassa/success`,
+        failUrl: `${origin}/app/billing/robokassa/fail`,
+        returnUrl: `${origin}/app/billing/robokassa/success`,
       },
       userId,
     });
-    expect(log.topUpPending).toHaveBeenCalledWith(user, paymentId, 100.13);
+    expect(log.topUpPending).toHaveBeenCalledWith(user, paymentId, rounded);
   });
 
-  it(`omits return urls in production`, async () => {
+  it(`uses app-prefixed return urls in production`, async () => {
     const { api, payment, user } = setup();
     production.mockReturnValue(true);
 
-    await api.paymentUrl(user, 50);
+    await api.paymentUrl(user, amount, `en`, email);
 
-    expect(payment.createRedirectPayment).toHaveBeenCalledWith(expect.objectContaining({ options: undefined, userId }));
+    expect(payment.createRedirectPayment).toHaveBeenCalledWith(
+      expect.objectContaining({
+        culture: `en`,
+        email,
+        options: {
+          failUrl: `${origin}/app/billing/robokassa/fail`,
+          returnUrl: `${origin}/app/billing/robokassa/success`,
+        },
+        userId,
+      }),
+    );
   });
 
   it(`logs error and returns paymentError when provider fails`, async () => {
@@ -115,7 +138,7 @@ describe(`paymentUrl`, () => {
       ok: false,
     });
 
-    await expect(api.paymentUrl(user, 50)).resolves.toStrictEqual({ status: `paymentError` });
+    await expect(api.paymentUrl(user, amount, `ru`, email)).resolves.toStrictEqual({ status: `paymentError` });
     expect(log.topUpError).toHaveBeenCalledWith(user, `provider-error`, `down`);
     expect(log.topUpPending).not.toHaveBeenCalled();
   });
@@ -157,7 +180,7 @@ describe(`webhook`, () => {
     const { api, balance, log, payment, user } = setup();
     vi.mocked(payment.payment).mockResolvedValue({
       metadataKind: undefined,
-      money: { currency: `RUB`, value: `100.00` },
+      money: { currency: `RUB`, value: amountRaw },
       ok: true,
       paymentId,
       status: `succeeded`,
@@ -173,7 +196,7 @@ describe(`webhook`, () => {
     const { api, log, payment } = setup();
     vi.mocked(payment.payment).mockResolvedValue({
       metadataKind: `topup`,
-      money: { currency: `RUB`, value: `100.00` },
+      money: { currency: `RUB`, value: amountRaw },
       ok: true,
       paymentId,
       status: `succeeded`,
@@ -213,17 +236,18 @@ describe(`webhook`, () => {
 
   it(`returns OK and logs settle error when amount mismatches pending`, async () => {
     const { api, log, user } = setup();
-    vi.mocked(log.pendingAmount).mockResolvedValue(50);
+    const pending = 7;
+    vi.mocked(log.pendingAmount).mockResolvedValue(pending);
 
     await expect(api.webhook({})).resolves.toBe(`OK${paymentId}`);
-    expect(log.topUpSettleError).toHaveBeenCalledWith(user, paymentId, `amount-mismatch:50:100`);
+    expect(log.topUpSettleError).toHaveBeenCalledWith(user, paymentId, `amount-mismatch:${pending}:${amount}`);
   });
 
   it(`credits balance and returns OK on success`, async () => {
     const { api, balance, log, payment, user } = setup();
     vi.mocked(payment.payment).mockResolvedValue({
       metadataKind: `topup`,
-      money: { currency: `RUB`, value: `100.000000` },
+      money: { currency: `RUB`, value: amountLong },
       ok: true,
       paymentId,
       status: `succeeded`,
@@ -231,8 +255,8 @@ describe(`webhook`, () => {
     });
 
     await expect(api.webhook({})).resolves.toBe(`OK${paymentId}`);
-    expect(balance.creditFromTopUp).toHaveBeenCalledWith(user, 100, {
-      amount: `100.000000`,
+    expect(balance.creditFromTopUp).toHaveBeenCalledWith(user, amount, {
+      amount: amountLong,
       currency: `RUB`,
       paymentId,
     });
@@ -244,5 +268,110 @@ describe(`webhook`, () => {
     vi.mocked(balance.creditFromTopUp).mockRejectedValue(new Error(`db down`));
 
     await expect(api.webhook({})).resolves.toBeUndefined();
+  });
+});
+
+describe(`paymentStatus`, () => {
+  it(`returns pending when provider is unavailable`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({ code: `network`, ok: false });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ status: `pending` });
+  });
+
+  it(`returns error when payment belongs to another user`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({
+      metadataKind: `topup`,
+      money: { currency: `RUB`, value: amountRaw },
+      ok: true,
+      paymentId,
+      status: `succeeded`,
+      userId: `other`,
+    });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ status: `error` });
+  });
+
+  it(`returns succeeded from payment log without provider lookup`, async () => {
+    const { api, log, payment } = setup();
+    vi.mocked(log.succeededAmount).mockResolvedValue(amount);
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `succeeded` });
+    expect(payment.payment).not.toHaveBeenCalled();
+  });
+
+  it(`returns error when provider succeeded without userId snapshot`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({
+      metadataKind: `topup`,
+      money: { currency: `RUB`, value: amountRaw },
+      ok: true,
+      paymentId,
+      status: `succeeded`,
+    });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ status: `error` });
+  });
+
+  it(`returns pending when provider status is not final`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({ ok: true, paymentId, status: `pending`, userId });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount: undefined, status: `pending` });
+  });
+
+  it(`returns canceled when provider status is canceled`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({
+      money: { currency: `RUB`, value: amountRaw },
+      ok: true,
+      paymentId,
+      status: `canceled`,
+      userId,
+    });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `canceled` });
+  });
+
+  it(`returns pending when provider snapshot is incomplete`, async () => {
+    const { api, payment } = setup();
+    vi.mocked(payment.payment).mockResolvedValue({
+      metadataKind: undefined,
+      money: { currency: `RUB`, value: amountRaw },
+      ok: true,
+      paymentId,
+      status: `succeeded`,
+      userId,
+    });
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `pending` });
+  });
+
+  it(`returns error when settle permanently fails`, async () => {
+    const { api, log } = setup();
+    vi.mocked(log.pendingAmount).mockResolvedValue(undefined);
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `error` });
+  });
+
+  it(`returns pending when credit throws`, async () => {
+    const { api, balance } = setup();
+    vi.mocked(balance.creditFromTopUp).mockRejectedValue(new Error(`db down`));
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `pending` });
+  });
+
+  it(`settles and returns succeeded`, async () => {
+    const { api, balance, log, user } = setup();
+    vi.mocked(log.succeededAmount).mockResolvedValueOnce(undefined).mockResolvedValueOnce(amount);
+    vi.mocked(log.succeeded).mockResolvedValue(false);
+
+    await expect(api.paymentStatus(userId, paymentId)).resolves.toStrictEqual({ amount, status: `succeeded` });
+    expect(balance.creditFromTopUp).toHaveBeenCalledWith(user, amount, {
+      amount: amountRaw,
+      currency: `RUB`,
+      paymentId,
+    });
   });
 });

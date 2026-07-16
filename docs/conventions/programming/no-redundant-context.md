@@ -6,16 +6,17 @@
 
 ## 📐 Norm
 
-Inside a parent scope, child identifiers must not repeat words already implied by the parent (e.g. inside `sendMessage`
-use `text`, not `messageText`).
+- Inside a parent scope, child identifiers must not repeat words already implied by the parent.
+- Example: inside `sendMessage` use `text`, not `messageText`.
 
 ## 🔍 Detect
 
-Read scopes; check if child names echo parent context.
+- Read scopes.
+- Check if child names echo parent context.
 
 ## 🔧 Fix
 
-Shorten to context-free names
+Shorten to context-free names.
 
 ## 📝 Examples
 

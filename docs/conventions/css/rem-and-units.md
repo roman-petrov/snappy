@@ -1,4 +1,4 @@
-# 🎨 Units
+# 🎨 Rem and units
 
 - **id:** `css/rem-and-units`
 - **emoji:** 🎨
@@ -6,15 +6,17 @@
 
 ## 📐 Norm
 
-All sizes in `rem`. Borders may use `px` (e.g. `1px solid`).
+- Prefer `rem` for lengths (padding, gap, font-size, …).
+- `px` only for borders (e.g. `1px solid`).
+- `%`, `vh`/`vw`, `fr`, `em` are fine when the layout needs them.
 
 ## 🔍 Detect
 
-Find `px` sizes that aren't borders.
+Find `px` lengths that aren’t borders.
 
 ## 🔧 Fix
 
-Convert to rem / theme helpers
+Convert those lengths to `rem`.
 
 ## 📝 Examples
 

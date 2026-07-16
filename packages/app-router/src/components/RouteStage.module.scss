@@ -96,6 +96,12 @@
   touch-action: pan-y;
 }
 
+.pane-body {
+  @include -column;
+
+  min-height: 100%;
+}
+
 .page-host {
   position: relative;
   display: flex;

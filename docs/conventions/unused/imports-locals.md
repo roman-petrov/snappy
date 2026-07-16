@@ -6,7 +6,9 @@
 
 ## 📐 Norm
 
-Remove unused imports, variables, and similar locals.
+- Remove unused imports.
+- Remove unused variables.
+- Remove similar unused locals.
 
 ## 🔍 Detect
 

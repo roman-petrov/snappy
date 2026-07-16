@@ -6,8 +6,8 @@
 
 ## 🎯 Scope
 
-**Behavior changed vs the previous version** (diff / `git show <parent>`). Leave pure “new code is wrong by itself”
-bugs to `correctness`.
+**Behavior changed vs the previous version** (diff / `git show <parent>`). Leave pure “new code is wrong by itself” bugs
+to `correctness`.
 
 Not: style, dead code, comments, convention atoms.
 

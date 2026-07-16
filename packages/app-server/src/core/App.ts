@@ -15,6 +15,7 @@ import { Images } from "./Images";
 import { PaymentLog } from "./PaymentLog";
 import { RpcContract } from "./RpcContract";
 import { Session } from "./Session";
+import { SharedConfig } from "./SharedConfig";
 import { UserSettings } from "./UserSettings";
 
 export type AppConfig = { app: FastifyInstance };
@@ -22,6 +23,7 @@ export type AppConfig = { app: FastifyInstance };
 export const App = async ({ app }: AppConfig) => {
   const db = Db(Config.dbUrl());
   const balance = Balance(db);
+  const config = SharedConfig();
   const settings = UserSettings(db);
   const feed = Feed(db);
   const betterAuth = BetterAuth({ balance, db });
@@ -65,8 +67,8 @@ export const App = async ({ app }: AppConfig) => {
 
   await Rpc.mount(app, RpcContract, {
     context: async ({ req }) => Session.context(betterAuth, req.headers, db),
-    modules: { balance, billing, feed, settings },
-    userId: ({ dbUser }) => dbUser?.id,
+    modules: { balance, billing, config, feed, settings },
+    userId: ({ dbUser }) => dbUser.id,
   });
 
   Images.mount({ app, betterAuth, db });

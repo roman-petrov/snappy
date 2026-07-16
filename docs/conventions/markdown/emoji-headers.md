@@ -6,25 +6,23 @@
 
 ## 📐 Norm
 
-Use one relevant emoji at the start of H1–H3. Match topic; use sparingly in body text. Convention atoms: H1 uses the
-atom category emoji; structure headings always use the fixed set from `docs/conventions/README.md` (`📐 Norm`, `🔍 Detect`,
-`🔧 Fix`, `📝 Examples`, `❌ Bad`, `✅ Good`).
+Use one topic-matching emoji at the start of H1–H3.
 
 ## 🔍 Detect
 
-H1–H3 without emoji where project docs use them, multiple emojis cluttering headers, or convention atom structure
-headings that diverge from the fixed set in `docs/conventions/README.md`.
+- H1–H3 without a single leading emoji.
+- Multiple emojis cluttering a header.
 
 ## 🔧 Fix
 
-Add/adjust a single leading emoji; restore atom structure headings to the fixed set
+Add or adjust a single leading emoji that matches the topic.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`## Norm`
+`## Setup`
 
 ### ✅ Good
 
-`## 📐 Norm`
+`## ⚙️ Setup`

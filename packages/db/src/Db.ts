@@ -1,5 +1,6 @@
 import {
   DbCore,
+  DbCoreAdmin,
   type DbCoreAuth,
   type DbCoreBalance,
   type DbCoreBalanceHistoryMeta,
@@ -12,7 +13,11 @@ import {
 
 export const Db = DbCore;
 
-export type Db = DbCore;
+export type Db = ReturnType<typeof Db>;
+
+export const AdminDb = DbCoreAdmin;
+
+export type AdminDb = ReturnType<typeof AdminDb>;
 
 export type DbAuth = DbCoreAuth;
 

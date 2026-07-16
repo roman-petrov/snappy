@@ -14,8 +14,8 @@ export const BalanceTapView = ({ balance }: BalanceTapViewProps) => (
   <Chip
     cn={styles.root}
     color="soft"
-    link={Routes.settings.profile.topUp}
-    tag={AppTags.settings.profile.topUp.open}
+    link={Routes.billing.topUp}
+    tag={AppTags.billing.topUp.open}
     text={balance === undefined ? `…` : i.price(balance.balance)}
     tip={t(`balance.common.tapTip`)}
   />

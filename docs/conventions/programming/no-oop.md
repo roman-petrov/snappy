@@ -6,7 +6,8 @@
 
 ## 📐 Norm
 
-Don't use classes or object-oriented style. Prefer functions and modules.
+- Don't use classes or object-oriented style.
+- Prefer functions and modules.
 
 ## 🔍 Detect
 

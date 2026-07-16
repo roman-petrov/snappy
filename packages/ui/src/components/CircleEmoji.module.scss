@@ -3,11 +3,8 @@
 @use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/primitives";
 @use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/icon-size";
-@use "pkg:@snappy/theme/tokens/space";
 
-$-size: calc(#{icon-size.xl()} + #{space.sm()} * 2);
-$-glyph: icon-size.lg();
+$-glyph: 0.57em;
 $-glyph-nudge: 0.03em;
 $-sheen: color.inverse();
 $-primary: color.primary();
@@ -39,13 +36,10 @@ $-inset-sheen: 24%;
 }
 
 .root {
-  @include primitives.circle($-size);
+  @include primitives.circle(1em);
   @include primitives.grid-center;
 
   flex-shrink: 0;
-  padding-bottom: $-glyph-nudge;
-  font-size: $-glyph;
-  line-height: 1;
   background:
     -spot($-glint, $-sheen),
     -spot($-tint, $-primary),
@@ -55,4 +49,10 @@ $-inset-sheen: 24%;
     0 r($-lift-y) r($-lift-y * 4) -fade($-primary, list.nth($-fill, 1)),
     inset 0 $-line $-inset-sheen-blur -fade($-sheen, $-inset-sheen);
   backdrop-filter: blur($-blur) saturate($-saturate);
+}
+
+.glyph {
+  padding-bottom: $-glyph-nudge;
+  font-size: $-glyph;
+  line-height: 1;
 }

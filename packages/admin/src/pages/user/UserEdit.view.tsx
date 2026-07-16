@@ -1,4 +1,4 @@
-import { Alert, Button, IconButton, Input, NumberInput, Page } from "@snappy/ui";
+import { Button, ErrorAlert, IconButton, Input, NumberInput, Page } from "@snappy/ui";
 import { Copy } from "lucide-react";
 
 import type { useUserEditState } from "./UserEdit.state";
@@ -20,7 +20,7 @@ export const UserEditView = ({ balance, copyId, error, loading, remove, save, se
         />
         <Input disabled label={t(`users.edit.email`)} value={user.email} />
         <NumberInput disabled={loading} label={t(`users.edit.balance`)} onChange={setBalance} value={balance} />
-        {error === undefined ? undefined : <Alert text={t(error.key)} type="error" />}
+        {error === undefined ? undefined : <ErrorAlert text={t(error.key)} />}
         <div className={styles.actions}>
           <Button
             disabled={loading}

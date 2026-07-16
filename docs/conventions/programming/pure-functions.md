@@ -6,16 +6,17 @@
 
 ## 📐 Norm
 
-The main unit is the function. Prefer pure functions; extract them and cover with tests. Side effects at clear
-boundaries.
+- Keep I/O and other side effects at clear edges.
+- Core logic is pure: args in, value out — extract and test those functions.
 
 ## 🔍 Detect
 
-Look for mixed pure logic and side effects in one unit without a clear boundary.
+Pure logic mixed with side effects in one unit without a clear boundary.
 
 ## 🔧 Fix
 
-Extract pure parts; keep side effects at edges
+- Extract the pure part.
+- Keep side effects at the edge.
 
 ## 📝 Examples
 

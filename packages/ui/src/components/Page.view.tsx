@@ -12,6 +12,7 @@ export type PageViewProps = ReturnType<typeof usePageState>;
 
 export const PageView = ({
   back,
+  center,
   children,
   customHeader,
   fill,
@@ -21,7 +22,7 @@ export const PageView = ({
   title,
   trailing,
 }: PageViewProps) => (
-  <div className={_.cn(styles.root, fill && styles.rootFill, tab && styles.rootTab)}>
+  <div className={_.cn(styles.root, fill && styles.rootFill, center && styles.rootCenter, tab && styles.rootTab)}>
     <header className={styles.header} ref={headerRef}>
       <Glass cn={styles.glass} flat look="mist" />
       <SafeArea top>

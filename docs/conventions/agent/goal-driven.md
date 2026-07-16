@@ -6,8 +6,12 @@
 
 ## 📐 Norm
 
-Define success criteria and loop until verified. Prefer verifiable goals (tests for invalid inputs, reproduce-then-fix,
-tests pass before/after refactor). For multi-step work, state a brief plan with verify checks.
+- Define success criteria and loop until verified.
+- Prefer verifiable goals:
+  - tests for invalid inputs
+  - reproduce-then-fix
+  - tests pass before/after refactor
+- For multi-step work, state a brief plan with verify checks.
 
 ## 🔍 Detect
 
@@ -15,4 +19,6 @@ N/A (behavioral).
 
 ## 🔧 Fix
 
-State criteria, implement, verify.
+- State criteria.
+- Implement.
+- Verify.

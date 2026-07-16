@@ -14,7 +14,8 @@ Obvious, non-English, obsolete, AI-narrative comments. Keep linter/cspell direct
 
 ## 🔎 Detect
 
-Read `docs/conventions/README.md`; load atom `programming/comments` only; Detect on scoped comments (`applies`).
+Read `docs/conventions/README.md`; load atoms matching `programming/comments*` only; Detect on scoped comments
+(`applies`).
 
 ## 🔧 Fix
 
@@ -22,4 +23,8 @@ Per atom: remove/rewrite; keep justified intent + tool directives.
 
 ## 📐 Conventions
 
-`docs/conventions/programming/comments.md`. Atom `emoji` or 💬.
+- `docs/conventions/programming/comments.md`
+- `docs/conventions/programming/comments-english.md`
+- `docs/conventions/programming/comments-no-noise.md`
+
+Atom `emoji` or 💬.

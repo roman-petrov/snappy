@@ -8,7 +8,6 @@ import {
   SettingsModelsVision,
   SettingsProfile,
   SettingsProfilePassword,
-  SettingsProfileTopUp,
   SettingsTheme,
   SettingsTypeWriterSpeed,
 } from "./pages";
@@ -25,7 +24,6 @@ export const SettingsRoutes = {
   profile: {
     password: { page: SettingsProfilePassword, path: `settings/profile/password` },
     root: { page: SettingsProfile, path: `settings/profile` },
-    topUp: { page: SettingsProfileTopUp, path: `settings/profile/top-up` },
   },
   root: { page: Settings, path: `settings` },
   theme: { page: SettingsTheme, path: `settings/theme` },

@@ -8,3 +8,12 @@
   width: 100%;
   min-width: 0;
 }
+
+.stretch {
+  > * {
+    flex: 1 1 0;
+    align-self: stretch;
+    width: auto;
+    max-width: none;
+  }
+}

@@ -5,6 +5,8 @@ $values: (
   md: 24,
   lg: 32,
   xl: 40,
+  xxl: 64,
+  xxxl: 96,
 );
 
 @mixin root {
@@ -29,4 +31,12 @@ $values: (
 
 @function xl() {
   @return -icon-size("xl");
+}
+
+@function xxl() {
+  @return -icon-size("xxl");
+}
+
+@function xxxl() {
+  @return -icon-size("xxxl");
 }

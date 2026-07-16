@@ -32,7 +32,16 @@ export const DbCorePaymentLog = (prisma: PrismaClient) => {
   const succeeded = async (paymentId: string) =>
     (await prisma.paymentLog.findFirst({ where: { paymentId, status: `succeeded` } })) !== null;
 
-  return { create, createOnce, pendingAmount, succeeded };
+  const succeededAmount = async (paymentId: string, userId: string) => {
+    const row = await prisma.paymentLog.findFirst({
+      select: { amount: true },
+      where: { paymentId, status: `succeeded`, userId },
+    });
+
+    return row === null ? undefined : DbCoreConvert.amount(row.amount);
+  };
+
+  return { create, createOnce, pendingAmount, succeeded, succeededAmount };
 };
 
 export type DbCorePaymentLog = ReturnType<typeof DbCorePaymentLog>;

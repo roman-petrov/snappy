@@ -82,6 +82,8 @@ export * from "./Spinner";
 
 export * from "./Spoiler";
 
+export * from "./StatusPage";
+
 export * from "./Switch";
 
 export * from "./SwitchDisplay";

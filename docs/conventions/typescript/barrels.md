@@ -6,24 +6,23 @@
 
 ## 📐 Norm
 
-Use `index.ts` barrels in directories. In barrels only `export * from "./File"` / `"./folder"` — no named re-exports of
-individuals. Parent barrels re-export children. Always import from barrels (package or directory), never from concrete
-sibling files when a barrel exists.
+- Use `index.ts` barrels in directories.
+- Parent barrels re-export children.
 
 ## 🔍 Detect
 
-Check for deep sibling imports and non-`export *` barrel lines.
+Directories without an `index.ts` barrel where siblings are imported across folders.
 
 ## 🔧 Fix
 
-Add/use barrel; switch imports to barrel paths
+Add `index.ts` barrels and have parents re-export children.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`import { run } from "./Module/Run";`
+`Module/` with no `index.ts`, callers reach into nested files.
 
 ### ✅ Good
 
-`import { run } from "./Module";`
+`Module/index.ts` re-exports the folder; parents re-export `Module`.

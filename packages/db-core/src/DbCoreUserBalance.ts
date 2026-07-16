@@ -18,7 +18,7 @@ export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, us
 
   const read = async (): Promise<DbCoreBalance> => ({ balance: await amount(), id: userId });
 
-  const applyDelta = async (delta: number, kind: string, amountRubForHistory: number, meta?: Prisma.InputJsonValue) => {
+  const applyDelta = async (delta: number, kind: string, historyAmount: number, meta?: Prisma.InputJsonValue) => {
     const balance = await prisma.$transaction(async tx => {
       const row = await tx.userBalance.upsert({
         create: { amount: delta, userId },
@@ -26,7 +26,7 @@ export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, us
         where: { userId },
       });
       await tx.balanceHistory.create({
-        data: { amountRub: amountRubForHistory, balanceAfter: row.amount, kind, meta, userId },
+        data: { amountRub: historyAmount, balanceAfter: row.amount, kind, meta, userId },
       });
 
       return DbCoreConvert.amount(row.amount);
@@ -34,10 +34,9 @@ export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, us
     emit({ balance, id: userId });
   };
 
-  const credit = async (amountRub: number, meta?: Prisma.InputJsonValue) =>
-    applyDelta(amountRub, `credit`, amountRub, meta);
+  const credit = async (value: number, meta?: Prisma.InputJsonValue) => applyDelta(value, `credit`, value, meta);
 
-  const creditTopUp = async (amountRub: number, log: DbCoreTopUpLog) => {
+  const creditTopUp = async (value: number, log: DbCoreTopUpLog) => {
     const credited = await DbCorePrisma.ignoreUnique(
       async () =>
         prisma.$transaction(async tx => {
@@ -48,12 +47,18 @@ export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, us
           }
 
           const row = await tx.userBalance.upsert({
-            create: { amount: amountRub, userId },
-            update: { amount: { increment: amountRub } },
+            create: { amount: value, userId },
+            update: { amount: { increment: value } },
             where: { userId },
           });
           await tx.balanceHistory.create({
-            data: { amountRub, balanceAfter: row.amount, kind: `credit`, meta: { paymentId: log.paymentId }, userId },
+            data: {
+              amountRub: value,
+              balanceAfter: row.amount,
+              kind: `credit`,
+              meta: { paymentId: log.paymentId },
+              userId,
+            },
           });
           await tx.paymentLog.create({ data: { ...log, status: `succeeded`, userId } });
 
@@ -68,28 +73,27 @@ export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, us
     return credited !== undefined;
   };
 
-  const debit = async (amountRub: number, meta?: Prisma.InputJsonValue) =>
-    applyDelta(-amountRub, `debit`, amountRub, meta);
+  const debit = async (value: number, meta?: Prisma.InputJsonValue) => applyDelta(-value, `debit`, value, meta);
 
-  const set = async (amountRub: number) => {
+  const set = async (value: number) => {
     await prisma.$transaction(async tx => {
       const previous = await tx.userBalance.findUnique({ select: { amount: true }, where: { userId } });
       const previousAmount = DbCoreConvert.amount(previous?.amount);
 
       const row = await tx.userBalance.upsert({
-        create: { amount: amountRub, userId },
-        update: { amount: amountRub },
+        create: { amount: value, userId },
+        update: { amount: value },
         where: { userId },
       });
 
-      const delta = amountRub - previousAmount;
+      const delta = value - previousAmount;
       if (delta !== 0) {
         await tx.balanceHistory.create({
           data: { amountRub: Math.abs(delta), balanceAfter: row.amount, kind: `set`, userId },
         });
       }
     });
-    const snapshot = { balance: amountRub, id: userId };
+    const snapshot = { balance: value, id: userId };
     emit(snapshot);
 
     return snapshot;

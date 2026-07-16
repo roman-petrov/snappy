@@ -38,6 +38,17 @@ const foreignProvider = (email: string) => {
   return host.length > 0 && foreignDomains.has(host);
 };
 
-const mailto = (email: string) => `mailto:${email.trim()}`;
+export type Email = { body?: string; subject?: string };
+
+const mailto = (email: string, { body, subject }: Email = {}) => {
+  const href = `mailto:${email.trim()}`;
+
+  const parts = [
+    subject === undefined ? undefined : `subject=${encodeURIComponent(subject)}`,
+    body === undefined ? undefined : `body=${encodeURIComponent(body)}`,
+  ].filter(part => part !== undefined);
+
+  return parts.length === 0 ? href : `${href}?${parts.join(`&`)}`;
+};
 
 export const Email = { foreignProvider, mailto, valid };

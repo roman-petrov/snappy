@@ -6,15 +6,15 @@
 
 ## 📐 Norm
 
-Don't use truthiness on non-booleans casually; be explicit.
+Conditions must be booleans — don’t rely on truthiness of strings, numbers, or objects. Compare explicitly.
 
 ## 🔍 Detect
 
-Find `if (maybeString)` / similar where a boolean check is clearer.
+Find `if (value)` / `value &&` where `value` is not a `boolean`.
 
 ## 🔧 Fix
 
-Use explicit comparisons (`=== undefined`, `!== ""`, etc.)
+Use an explicit check (`!== undefined`, `!== ""`, `> 0`, …).
 
 ## 📝 Examples
 
@@ -24,4 +24,4 @@ Use explicit comparisons (`=== undefined`, `!== ""`, etc.)
 
 ### ✅ Good
 
-`if (name !== "") { … }`
+`if (name !== undefined && name !== "") { … }`

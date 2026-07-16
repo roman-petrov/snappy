@@ -43,7 +43,11 @@ const dateFormats = {
 } as const;
 
 const numberFormats = { default: {} } as const;
-const priceFormats = { default: { currency: `RUB`, style: `currency` } } as const;
+
+const priceFormats = {
+  default: { currency: `RUB`, style: `currency` },
+  whole: { currency: `RUB`, maximumFractionDigits: 0, minimumFractionDigits: 0, style: `currency` },
+} as const;
 
 const timeFormats = {
   default: { hour: `2-digit`, minute: `2-digit` },

@@ -34,12 +34,16 @@ type BarStyle = `dark` | `light`;
 const systemThemeChangedEvent = `snappy:system-theme-changed` as const;
 const keyboardChangedEvent = `snappy:keyboard-changed` as const;
 const shakeEvent = `snappy:shake` as const;
+const externalReturnEvent = `snappy:external-return` as const;
+
+type ExternalReturnDetail = { url: string };
 
 type KeyboardChangedDetail = { open: boolean };
 
 type NativeBridge = {
   copyHtml: (html: string, plain: string) => void;
   copyImage: (base64: string, name: string, extension: string) => void;
+  externalReady: () => void;
   hapticImpact: (constant: number) => void;
   isSystemDark: () => boolean;
   screenCornerRadius: () => number;
@@ -54,6 +58,7 @@ declare global {
   }
 
   interface WindowEventMap {
+    [externalReturnEvent]: CustomEvent<ExternalReturnDetail>;
     [keyboardChangedEvent]: CustomEvent<KeyboardChangedDetail>;
     [shakeEvent]: Event;
     [systemThemeChangedEvent]: Event;
@@ -73,10 +78,14 @@ const shareHtml = (html: string, plain: string, title: string) => native?.shareH
 const shareImage = (base64: string, mime: string, title: string, extension: string) =>
   native?.shareImage(base64, mime, title, extension);
 
+const externalReady = () => native?.externalReady();
+
 export const Bridge = {
   available,
   copyHtml,
   copyImage,
+  externalReady,
+  externalReturnEvent,
   hapticImpact,
   keyboardChangedEvent,
   screenCornerRadius,

@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 
 import type { AuthStatus } from "../../../data";
 
+import { AppConfig } from "../../../AppConfig";
+
 export type UseAuthEmailSendConfig = { email: string; onSent?: () => void; request: () => Promise<AuthStatus> };
 
 export const useAuthEmailSend = ({ email, onSent, request }: UseAuthEmailSendConfig) => {
@@ -17,7 +19,7 @@ export const useAuthEmailSend = ({ email, onSent, request }: UseAuthEmailSendCon
     [cooldownSec, until],
   );
 
-  const startCooldown = (seconds = _.minute.seconds) => setUntil(_.now() + seconds * _.second);
+  const startCooldown = (seconds = AppConfig.authEmailCooldownSec) => setUntil(_.now() + seconds * _.second);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
 
   const onSend = () => {

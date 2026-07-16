@@ -1,0 +1,63 @@
+@use "pkg:@snappy/theme/tokens/animation";
+@use "pkg:@snappy/theme/tokens/space";
+
+$-gap: space.md();
+$-page-gap: space.sm();
+
+.content {
+  display: grid;
+  gap: space.lg();
+}
+
+.hero {
+  display: grid;
+  gap: space.md();
+  justify-items: center;
+  padding-block: space.sm();
+  text-align: center;
+}
+
+.balance {
+  display: grid;
+  gap: space.xs();
+  justify-items: center;
+}
+
+.modes {
+  min-width: 0;
+}
+
+.viewport {
+  overflow: hidden;
+}
+
+.track {
+  display: flex;
+  gap: $-gap;
+  width: calc(200% + #{$-gap});
+  transform: translate3d(0, 0, 0);
+  transition: transform animation.settle-md();
+}
+
+.track-custom {
+  transform: translate3d(calc(-50% - #{$-gap} / 2), 0, 0);
+}
+
+.track:not(.track-custom) .page:last-child,
+.track-custom .page:first-child {
+  pointer-events: none;
+}
+
+.page {
+  display: grid;
+  flex: 0 0 calc((100% - #{$-gap}) / 2);
+  gap: $-page-gap;
+  align-content: start;
+  align-self: start;
+  min-width: 0;
+  padding-block-start: $-page-gap;
+}
+
+.page:last-child {
+  padding-block-start: space.md();
+}

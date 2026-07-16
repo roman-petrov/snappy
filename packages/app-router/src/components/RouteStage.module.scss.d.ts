@@ -9,6 +9,7 @@ declare const __RouteStage: {
   readonly overlayTop: "overlayTop";
   readonly pageDock: "pageDock";
   readonly paneScroll: "paneScroll";
+  readonly paneBody: "paneBody";
   readonly pageHost: "pageHost";
   readonly pageHostDimmed: "pageHostDimmed";
   readonly pageTrack: "pageTrack";

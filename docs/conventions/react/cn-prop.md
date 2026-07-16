@@ -6,15 +6,16 @@
 
 ## 📐 Norm
 
-For component props use `cn` (not `className`). Compose with `_.cn(...)`.
+Project components expose an optional class-name prop as `cn` (not `className`). The DOM still receives `className`
+inside the view.
 
 ## 🔍 Detect
 
-Find public `className` props on project components; find manual class string concat.
+Find public `className` props on project components.
 
 ## 🔧 Fix
 
-Rename to `cn`; use `_.cn(...)`
+Rename the prop to `cn`.
 
 ## 📝 Examples
 

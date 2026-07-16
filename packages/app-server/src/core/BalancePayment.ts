@@ -2,7 +2,7 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 import type { Db, DbUser } from "@snappy/db";
-import type { PaymentProvider } from "@snappy/payment";
+import type { PaymentProvider, PaymentSnapshotSuccess } from "@snappy/payment";
 
 import { Config, ConfigValues } from "@snappy/config";
 import { _ } from "@snappy/core";
@@ -15,17 +15,72 @@ import { AppLog } from "./AppLog";
 import { RpcScope } from "./RpcContract";
 import { Session } from "./Session";
 
-export type BalancePaymentConfig = {
-  balance: Balance;
-  db: ReturnType<typeof Db>;
-  payment: PaymentProvider;
-  paymentLog: PaymentLog;
-};
+export type BalancePaymentConfig = { balance: Balance; db: Db; payment: PaymentProvider; paymentLog: PaymentLog };
 
 export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaymentConfig) => {
-  const paymentUrl = async (user: DbUser, amount: number, log?: AppLog) => {
-    const appLog = log ?? AppLog({ userId: user.id });
-    if (!Number.isFinite(amount) || amount < Config.balance.paymentMinRub || amount > Config.balance.paymentMaxRub) {
+  const { query } = RpcScope;
+
+  const reject = async (log: AppLog, user: DbUser | undefined, paymentId: string, reason: string) => {
+    log.payment.warn(`payment.settle.rejected`, { paymentId, reason });
+    await paymentLog.topUpSettleError(user, paymentId, reason);
+  };
+
+  const settle = async ({ metadataKind, money, paymentId, userId }: PaymentSnapshotSuccess) => {
+    const log = AppLog({ userId });
+
+    if (await paymentLog.succeeded(paymentId)) {
+      log.payment.info(`payment.settle.already-succeeded`, { paymentId });
+
+      return `ok` as const;
+    }
+
+    const user = Session.dbUserFromId(db, userId);
+    if (metadataKind !== `topup`) {
+      await reject(log, user, paymentId, `invalid-metadata`);
+
+      return `rejected` as const;
+    }
+    if (user === undefined) {
+      await reject(log, user, paymentId, `missing-user`);
+
+      return `rejected` as const;
+    }
+
+    const amount = Number(money?.value);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      await reject(log, user, paymentId, `invalid-amount`);
+
+      return `rejected` as const;
+    }
+
+    const pending = await paymentLog.pendingAmount(paymentId);
+    if (pending === undefined) {
+      await reject(log, user, paymentId, `missing-pending`);
+
+      return `rejected` as const;
+    }
+    if (_.round(pending, 2) !== _.round(amount, 2)) {
+      await reject(log, user, paymentId, `amount-mismatch:${pending}:${amount}`);
+
+      return `rejected` as const;
+    }
+
+    const credit = { amount, paymentId };
+    try {
+      await balance.creditFromTopUp(user, amount, { amount: money?.value, currency: money?.currency, paymentId });
+      log.payment.info(`payment.credit.succeeded`, credit);
+    } catch {
+      log.payment.error(`payment.credit.failed`, credit);
+
+      return `retry` as const;
+    }
+
+    return `ok` as const;
+  };
+
+  const redirect = async (user: DbUser, amount: number, culture?: `en` | `ru`, email?: string, log?: AppLog) => {
+    const appLog = log ?? AppLog({ email, userId: user.id });
+    if (!Number.isFinite(amount) || amount < Config.balance.paymentMin || amount > Config.balance.paymentMax) {
       appLog.payment.warn(`payment.url.invalid-amount`, { amount });
 
       return { status: `invalidAmount` as const };
@@ -36,11 +91,14 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
 
     const result = await payment.createRedirectPayment({
       amount: rounded,
+      culture,
       description: `Snappy — пополнение баланса`,
+      email,
       metadataKind: `topup`,
-      options: ConfigValues.production()
-        ? undefined
-        : { failUrl: `${origin}/billing/robokassa/fail`, returnUrl: `${origin}/billing/robokassa/success` },
+      options: {
+        failUrl: `${origin}/app/billing/robokassa/fail`,
+        returnUrl: `${origin}/app/billing/robokassa/success`,
+      },
       userId: user.id,
     });
 
@@ -58,75 +116,47 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
     await paymentLog.topUpPending(user, result.paymentId, rounded);
     appLog.payment.info(`payment.url.created`, {
       ...fields,
+      culture,
       env: ConfigValues.env(),
       paymentId: result.paymentId,
-      returnUrlMode: ConfigValues.production() ? `cabinet` : `override`,
+      returnUrlMode: `override`,
     });
 
-    return { status: `ok` as const, url: result.redirectUrl };
+    return { paymentId: result.paymentId, status: `ok` as const, url: result.redirectUrl };
   };
 
-  const reject = async (log: AppLog, user: DbUser | undefined, paymentId: string, reason: string) => {
-    log.payment.warn(`payment.settle.rejected`, { paymentId, reason });
-    await paymentLog.topUpSettleError(user, paymentId, reason);
+  const status = async (userId: string, paymentId: string) => {
+    const logged = await paymentLog.succeededAmount(paymentId, userId);
+    if (logged !== undefined) {
+      return { amount: logged, status: `succeeded` as const };
+    }
 
-    return true;
-  };
-
-  const handlePaymentSucceeded = async (paymentId: string) => {
     const result = await payment.payment(paymentId);
-    if (!result.ok || result.status !== `succeeded`) {
-      AppLog().payment.warn(`payment.settle.provider-not-succeeded`, {
-        code: result.ok ? undefined : result.code,
-        ok: result.ok,
-        paymentId,
-        status: result.ok ? result.status : undefined,
-      });
-
-      return false;
-    }
-    const { metadataKind, money, userId } = result;
-    const profile = userId === undefined ? undefined : await db.users.read(userId);
-    const log = AppLog({ email: profile?.email, userId });
-
-    if (await paymentLog.succeeded(paymentId)) {
-      log.payment.info(`payment.settle.already-succeeded`, { paymentId });
-
-      return true;
+    if (!result.ok) {
+      return { status: `pending` as const };
     }
 
-    const user = Session.dbUserFromId(db, userId);
-    if (metadataKind !== `topup`) {
-      return reject(log, user, paymentId, `invalid-metadata`);
+    const parsed = Number(result.money?.value);
+    const amount = Number.isFinite(parsed) ? parsed : undefined;
+    if (result.userId === undefined || result.userId !== userId) {
+      return { status: `error` as const };
     }
-    if (user === undefined) {
-      return reject(log, user, paymentId, `missing-user`);
+    if (result.status === `canceled`) {
+      return { amount, status: `canceled` as const };
     }
-
-    const amountRub = Number(money?.value);
-    if (!Number.isFinite(amountRub) || amountRub <= 0) {
-      return reject(log, user, paymentId, `invalid-amount`);
+    if (result.status !== `succeeded`) {
+      return { amount: undefined, status: `pending` as const };
     }
-
-    const pending = await paymentLog.pendingAmount(paymentId);
-    if (pending === undefined) {
-      return reject(log, user, paymentId, `missing-pending`);
-    }
-    if (_.round(pending, 2) !== _.round(amountRub, 2)) {
-      return reject(log, user, paymentId, `amount-mismatch:${pending}:${amountRub}`);
+    if (result.metadataKind !== `topup`) {
+      return { amount, status: `pending` as const };
     }
 
-    const credit = { amountRub, paymentId };
-    try {
-      await balance.creditFromTopUp(user, amountRub, { amount: money?.value, currency: money?.currency, paymentId });
-      log.payment.info(`payment.credit.succeeded`, credit);
-    } catch {
-      log.payment.error(`payment.credit.failed`, credit);
-
-      return false;
+    const outcome = await settle(result);
+    if (outcome === `ok`) {
+      return { amount, status: `succeeded` as const };
     }
 
-    return true;
+    return { amount, status: outcome === `rejected` ? (`error` as const) : (`pending` as const) };
   };
 
   const webhook = async (body: unknown) => {
@@ -137,16 +167,35 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
       return undefined;
     }
 
-    return (await handlePaymentSucceeded(parsed.paymentId)) ? `OK${parsed.paymentId}` : undefined;
+    const result = await payment.payment(parsed.paymentId);
+    if (!result.ok || result.status !== `succeeded`) {
+      AppLog().payment.warn(`payment.settle.provider-not-succeeded`, {
+        code: result.ok ? undefined : result.code,
+        ok: result.ok,
+        paymentId: parsed.paymentId,
+        status: result.ok ? result.status : undefined,
+      });
+
+      return undefined;
+    }
+
+    return (await settle(result)) === `retry` ? undefined : `OK${parsed.paymentId}`;
   };
 
-  const rpc = {
-    paymentUrl: RpcScope.query(z.object({ amount: z.number().optional() }), async ({ dbUser, input, log }) =>
-      paymentUrl(dbUser, input.amount ?? 0, log),
-    ),
-  };
+  const paymentStatusQuery = query(z.object({ paymentId: z.string() }), async ({ dbUser, input }) =>
+    status(dbUser.id, input.paymentId),
+  );
 
-  return { paymentUrl, rpc, webhook };
+  const paymentUrlQuery = query(
+    z.object({ amount: z.number().optional(), culture: z.enum([`en`, `ru`]).optional() }),
+    async ({ dbUser, email, input, log }) => redirect(dbUser, input.amount ?? 0, input.culture, email, log),
+  );
+
+  const rpc = { paymentStatus: paymentStatusQuery, paymentUrl: paymentUrlQuery };
+  const paymentStatus = status;
+  const paymentUrl = redirect;
+
+  return { paymentStatus, paymentUrl, rpc, webhook };
 };
 
 export type BalancePayment = ReturnType<typeof BalancePayment>;

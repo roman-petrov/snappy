@@ -17,6 +17,12 @@ describe(`scope`, () => {
     expect(Procedure.isLive(proc)).toBe(false);
   });
 
+  it(`query accepts sync handler`, async () => {
+    const proc = rpc.query(() => 1);
+
+    await expect(proc.handle({ auth: {}, ctx: {}, input: undefined })).resolves.toBe(1);
+  });
+
   it(`mut is live`, () => {
     const proc = rpc.mut(async () => 1);
 

@@ -6,16 +6,22 @@
 
 ## 📐 Norm
 
-Prefer existing project functions over new helpers. Prefer project utilities over built-in equivalents when valid.
-Search `@snappy/core` (`_`: `cn`, `clamp`, `kebabCase`, `isString`, …; `Time`, `DateTime`, `Json`, `Translate`, …),
-`@snappy/hooks`, `@snappy/browser`, `@snappy/ui`, `@snappy/theme` (SCSS tokens/mixins), package barrels, and the current
-package before inventing helpers. Prefer existing UI primitives over one-off markup/CSS. Prefer barrel imports over deep
-paths.
+- Prefer an existing shared helper over inventing a new one.
+- Prefer existing UI primitives over one-off markup/CSS.
+- Before inventing, search in this order:
+  - shared core / utils
+  - shared hooks
+  - platform / browser helpers
+  - UI kit
+  - theme (tokens, mixins)
+  - package barrels
+  - the current package
 
 ## 🔍 Detect
 
-Before accepting a new helper, search the codebase and those packages for the same or similar API.
+N/A (policy).
 
 ## 🔧 Fix
 
-Replace reinvention with the project API; delete the duplicate.
+- Replace reinvention with the existing API.
+- Delete the duplicate.

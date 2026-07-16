@@ -6,21 +6,21 @@
 
 ## 📐 Norm
 
-Export as an object of functions: `export const ModuleName = { fn1, fn2 }`. Never export individual functions
-(exception: rare global helpers like `t`).
-
-Declare each member as a local `const`, then list only those names in the export object. Do not put calls, inline
-functions, or other expressions inside `export const ModuleName = { … }` (same shape as factory `return { … }` /
-`typescript/simple-returns`).
+- Export as one namespace object: `export const ModuleName = { fn1, fn2 }`.
+- Don’t export individual functions (exception: rare global helpers such as `t`).
+- Declare each member as a local `const`.
+- In the export object, list only those names (no calls, inline functions, or other expressions).
+- Same shape as factory `return { … }` / `typescript/simple-returns` / `typescript/no-return-rename`.
 
 ## 🔍 Detect
 
-Find individual `export function` / `export const fn` that should be namespaced. Find `export const X = {` with property
-values that are not bare local names or spreads.
+- Individual `export function` / `export const fn` that should be namespaced.
+- `export const X = {` with property values that are not bare local names or spreads.
 
 ## 🔧 Fix
 
-Hoist members to locals; group into one namespace export of names only
+- Hoist members to locals.
+- Group into one namespace export of names only.
 
 ## 📝 Examples
 
@@ -29,7 +29,7 @@ Hoist members to locals; group into one namespace export of names only
 `export const add = (a: number, b: number) => a + b;`
 
 ```ts
-export const Math = {
+export const Calc = {
   add: (a: number, b: number) => a + b,
   subtract: (a: number, b: number) => a - b,
 };
@@ -40,5 +40,5 @@ export const Math = {
 ```ts
 const add = (a: number, b: number) => a + b;
 const subtract = (a: number, b: number) => a - b;
-export const Math = { add, subtract };
+export const Calc = { add, subtract };
 ```

@@ -6,8 +6,9 @@
 
 ## 📐 Norm
 
-Don't duplicate logic — extract shared functions/constants. For data, keep one canonical place; derive the rest. Don't
-store the same fact in multiple variables/configs.
+- Don't duplicate logic — extract shared functions/constants.
+- For data, keep one canonical place; derive the rest.
+- Don't store the same fact in multiple variables/configs.
 
 ## 🔍 Detect
 
@@ -15,7 +16,8 @@ Find similar code blocks or parallel lists/values that must stay in sync.
 
 ## 🔧 Fix
 
-Extract shared logic; keep one source and derive
+- Extract shared logic.
+- Keep one source and derive.
 
 ## 📝 Examples
 

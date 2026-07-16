@@ -6,24 +6,35 @@
 
 ## 📐 Norm
 
-All tokens live in `@snappy/theme`. No hardcoded colors, font sizes, spacing, radii, shadows, or transitions in
-components. Import via `@use "pkg:@snappy/theme/<module>"`. If missing, extend the theme — don't bypass it. Read
-`packages/theme/src/` when unsure.
+- Design tokens live only in the shared theme module — not hardcoded in components.
+- No raw values in components for:
+  - colors
+  - font sizes
+  - spacing
+  - radii
+  - shadows
+  - transitions
+- Import theme helpers via the theme module’s documented `@use` paths.
+- If a token is missing, add it to the theme — don’t bypass with a local literal.
+- When unsure which helper to use, read the theme module source.
 
 ## 🔍 Detect
 
-Find raw color/size/spacing values in component SCSS.
+Find raw color/size/spacing/radius/shadow/transition literals in component SCSS.
 
 ## 🔧 Fix
 
-Replace with theme functions/mixins; add tokens if needed
+- Replace with theme functions/mixins.
+- Add tokens to the theme if needed.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`color: #333;` / `padding: 16px;` in a component
+- `color: #333;` in a component
+- `padding: 16px;` in a component
 
 ### ✅ Good
 
-Theme token / function from `@snappy/theme`
+- `color: color.primary();`
+- `padding: space.md();`

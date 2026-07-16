@@ -10,7 +10,8 @@
 
 ## 🔍 Detect
 
-Extract mixin names; grep `@include name`.
+- Extract mixin names.
+- Grep `@include name`.
 
 ## 🔧 Fix
 

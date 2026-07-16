@@ -6,22 +6,34 @@
 
 ## 📐 Norm
 
-Earlier declarations never applied due to later rules/higher specificity are dead.
+A declaration that never wins because a later rule or higher specificity always overrides it is dead.
 
 ## 🔍 Detect
 
-Trace cascade/specificity.
+Trace cascade/specificity across rules (not the same property twice in one block — that is
+`unused/css-duplicate-props`).
 
 ## 🔧 Fix
 
-Remove the never-applied declaration
+Remove the never-applied declaration.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`.item { color: red; color: blue; }`
+```scss
+.item {
+  color: red;
+}
+.item {
+  color: blue;
+}
+```
 
 ### ✅ Good
 
-`.item { color: blue; }`
+```scss
+.item {
+  color: blue;
+}
+```

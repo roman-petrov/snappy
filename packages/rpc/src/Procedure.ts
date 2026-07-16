@@ -43,11 +43,11 @@ const procedure = <TContext, TAuth, TInput, TOutput>(base: {
   sync?: true;
 }): RpcProcedure<TContext, TAuth, TInput, TOutput> => ({ ...base, [brand]: true as const });
 
-type AuthHandler<TAuth, TOutput> = (args: TAuth) => Promise<TOutput>;
+type AuthHandler<TAuth, TOutput> = (args: TAuth) => MaybePromise<TOutput>;
 
 type HandlerBuilder<TContext, TAuth> = MappedHandlerBuilder<TContext, TAuth, never, never>;
 
-type InputHandler<TAuth, TInput, TOutput> = (args: TAuth & { input: TInput }) => Promise<TOutput>;
+type InputHandler<TAuth, TInput, TOutput> = (args: TAuth & { input: TInput }) => MaybePromise<TOutput>;
 
 type LiveBaseBuilder<TContext, TAuth, TRaw, TMapped> = {
   <TOutput>(
@@ -79,6 +79,8 @@ type MappedProc<TContext, TAuth, TRaw, TMapped, TInput, TOutput> = RpcProcedure<
   WireOut<TRaw, TMapped, TOutput>
 >;
 
+type MaybePromise<T> = Promise<T> | T;
+
 type MutBuilder<TContext, TAuth> = MappedMutBuilder<TContext, TAuth, never, never>;
 
 const isLiveSource = (value: unknown): value is RpcLiveSource =>
@@ -98,19 +100,19 @@ const applyMap = (map: (data: unknown) => unknown, value: unknown) => {
 
 const handlerProcedure = <TContext, TAuth extends object, TArgs extends object>(
   authenticate: (context: TContext) => TAuth | undefined,
-  handler: (args: TArgs) => Promise<unknown>,
+  handler: (args: TArgs) => MaybePromise<unknown>,
   argsOf: (auth: TAuth, context: TContext) => TArgs,
-) => procedure({ authenticate, handle: async ({ auth, ctx }) => handler(argsOf(auth, ctx)) });
+) => procedure({ authenticate, handle: async ({ auth, ctx }) => await handler(argsOf(auth, ctx)) });
 
 const schemaProcedure = <TContext, TAuth extends object, TArgs extends object>(
   authenticate: (context: TContext) => TAuth | undefined,
   schema: z.ZodType,
-  handler: (args: TArgs & { input: unknown }) => Promise<unknown>,
+  handler: (args: TArgs & { input: unknown }) => MaybePromise<unknown>,
   argsOf: (auth: TAuth, context: TContext) => TArgs,
 ) =>
   procedure({
     authenticate,
-    handle: async ({ auth, ctx, input }) => handler({ ...argsOf(auth, ctx), input }),
+    handle: async ({ auth, ctx, input }) => await handler({ ...argsOf(auth, ctx), input }),
     input: schema,
   });
 
@@ -121,8 +123,8 @@ const handlerBuilder = <TContext, TAuth extends object>(
   ) => RpcProcedure<TContext, TAuth, TInput, TOutput>,
 ): HandlerBuilder<TContext, TAuth> =>
   ((
-    schemaOrHandler: ((args: TAuth) => Promise<unknown>) | z.ZodType,
-    maybeHandler?: (args: TAuth & { input: unknown }) => Promise<unknown>,
+    schemaOrHandler: ((args: TAuth) => MaybePromise<unknown>) | z.ZodType,
+    maybeHandler?: (args: TAuth & { input: unknown }) => MaybePromise<unknown>,
   ) =>
     wrap(
       _.isFunction(schemaOrHandler)
@@ -130,7 +132,7 @@ const handlerBuilder = <TContext, TAuth extends object>(
         : schemaProcedure(
             authenticate,
             schemaOrHandler,
-            maybeHandler as (args: TAuth & { input: unknown }) => Promise<unknown>,
+            maybeHandler as (args: TAuth & { input: unknown }) => MaybePromise<unknown>,
             auth => auth,
           ),
     )) as HandlerBuilder<TContext, TAuth>;
@@ -178,7 +180,7 @@ const markLive = <TContext, TAuth, TInput, TOutput>(
   });
 
 type OpenBuilder<TContext> = <TOutput>(
-  handler: (args: { ctx: TContext }) => Promise<TOutput>,
+  handler: (args: { ctx: TContext }) => MaybePromise<TOutput>,
 ) => RpcProcedure<TContext, object, undefined, TOutput>;
 
 type WrapProc<TContext, TAuth> = <TInput, TOutput>(
@@ -191,13 +193,13 @@ const builders = <TContext, TAuth extends object>(
 ) => {
   const query = handlerBuilder(authenticate, wrap);
 
-  const fromHandler = <TOutput>(source: RpcLiveSource, handler: (args: TAuth) => Promise<TOutput>) =>
+  const fromHandler = <TOutput>(source: RpcLiveSource, handler: AuthHandler<TAuth, TOutput>) =>
     wrap(markLive(procedure({ authenticate, handle: async ({ auth }) => handler(auth) }), source));
 
   const fromSchema = <TInput, TOutput>(
     source: RpcLiveSource,
     schema: z.ZodType<TInput>,
-    handler: (args: TAuth & { input: TInput }) => Promise<TOutput>,
+    handler: InputHandler<TAuth, TInput, TOutput>,
   ) =>
     wrap(
       markLive(
@@ -209,12 +211,8 @@ const builders = <TContext, TAuth extends object>(
   const mut = ((liveOrInput: unknown, schemaOrHandler?: unknown, handler?: unknown) =>
     isLiveSource(liveOrInput)
       ? _.isFunction(schemaOrHandler) && handler === undefined
-        ? fromHandler(liveOrInput, schemaOrHandler as (args: TAuth) => Promise<unknown>)
-        : fromSchema(
-            liveOrInput,
-            schemaOrHandler as z.ZodType,
-            handler as (args: TAuth & { input: unknown }) => Promise<unknown>,
-          )
+        ? fromHandler(liveOrInput, schemaOrHandler as AuthHandler<TAuth, unknown>)
+        : fromSchema(liveOrInput, schemaOrHandler as z.ZodType, handler as InputHandler<TAuth, unknown, unknown>)
       : handlerBuilder(authenticate, proc => wrap(markLive(proc)))(
           liveOrInput as never,
           schemaOrHandler as never,
@@ -227,26 +225,18 @@ const builders = <TContext, TAuth extends object>(
     handler?: unknown,
   ) => {
     if (_.isFunction(handlerOrSchemaOrLive) && schemaOrHandler === undefined) {
-      return fromHandler(source, handlerOrSchemaOrLive as (args: TAuth) => Promise<unknown>);
+      return fromHandler(source, handlerOrSchemaOrLive as AuthHandler<TAuth, unknown>);
     }
     if (isZod(handlerOrSchemaOrLive)) {
-      return fromSchema(
-        source,
-        handlerOrSchemaOrLive,
-        schemaOrHandler as (args: TAuth & { input: unknown }) => Promise<unknown>,
-      );
+      return fromSchema(source, handlerOrSchemaOrLive, schemaOrHandler as InputHandler<TAuth, unknown, unknown>);
     }
 
     const { room } = handlerOrSchemaOrLive as RpcDocLive;
     const roomSource: RpcLiveSource = { live: listener => source.live((_userId, data) => listener(room, data)) };
 
     return _.isFunction(schemaOrHandler)
-      ? fromHandler(roomSource, schemaOrHandler as (args: TAuth) => Promise<unknown>)
-      : fromSchema(
-          roomSource,
-          schemaOrHandler as z.ZodType,
-          handler as (args: TAuth & { input: unknown }) => Promise<unknown>,
-        );
+      ? fromHandler(roomSource, schemaOrHandler as AuthHandler<TAuth, unknown>)
+      : fromSchema(roomSource, schemaOrHandler as z.ZodType, handler as InputHandler<TAuth, unknown, unknown>);
   }) as DocBuilder<TContext, TAuth>;
 
   return { doc, mut, query };
@@ -275,7 +265,7 @@ const scope = <TContext, TAuth extends object>(
           }) as typeof proc,
       );
     },
-    open: ((handler: (args: { ctx: TContext }) => Promise<unknown>) =>
+    open: ((handler: (args: { ctx: TContext }) => MaybePromise<unknown>) =>
       handlerProcedure(
         () => ({}),
         handler,

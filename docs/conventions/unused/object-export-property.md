@@ -6,7 +6,7 @@
 
 ## 📐 Norm
 
-Exported object properties never referenced (`X.b` or bare re-export) must be removed.
+Exported object properties never referenced must be removed.
 
 ## 🔍 Detect
 
@@ -14,14 +14,14 @@ For each exported object property, grep references.
 
 ## 🔧 Fix
 
-Remove the unused property
+Remove the unused property.
 
 ## 📝 Examples
 
 ### ❌ Bad
 
-`export const Math = { add, unused };`
+`export const Calc = { add, unused };`
 
 ### ✅ Good
 
-`export const Math = { add };`
+`export const Calc = { add };`

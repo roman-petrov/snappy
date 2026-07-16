@@ -61,7 +61,7 @@ const tunnel = (userId = `user-1`): Tunnel => ({
   dbUser: Mock.createDbUser(userId),
 });
 
-const imageBody = (costRub: number) => ({ data: [{ b64_json: `aGVsbG8=` }], model, usage: { cost_rub: costRub } });
+const imageBody = (cost: number) => ({ data: [{ b64_json: `aGVsbG8=` }], model, usage: { cost_rub: cost } });
 const sseChunk = (payload: Record<string, unknown>) => `data: ${JSON.stringify(payload)}\n`;
 
 const withTunnel = async (

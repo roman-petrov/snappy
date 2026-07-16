@@ -40,7 +40,7 @@ export const BetterAuth = ({ balance, db }: BetterAuthConfig) => {
           after: async user => {
             await balance.creditFromSignUp(db.user(user.id));
             AppLog({ email: user.email, userId: user.id }).auth.info(`auth.signup.bonus`, {
-              amountRub: Config.balance.signUpBonusRub,
+              amount: Config.balance.signUpBonus,
             });
           },
           before: async user => {

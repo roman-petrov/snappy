@@ -89,8 +89,8 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 
 - Hash: `MD5`
 - ResultURL: `POST` `https://snappy-ai.ru/api/webhooks/robokassa`
-- SuccessURL: `GET` `https://snappy-ai.ru/billing/robokassa/success`
-- FailURL: `GET` `https://snappy-ai.ru/billing/robokassa/fail`
+- SuccessURL: `GET` `https://snappy-ai.ru/app/billing/robokassa/success`
+- FailURL: `GET` `https://snappy-ai.ru/app/billing/robokassa/fail`
 
 ### 📜 Logs
 

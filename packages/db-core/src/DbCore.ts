@@ -7,7 +7,6 @@ import { DbCoreClient } from "./DbCoreClient";
 import { DbCoreFeed } from "./DbCoreFeed";
 import { DbCorePaymentLog, type DbCorePaymentLogRow } from "./DbCorePaymentLog";
 import { DbCoreUserBalance } from "./DbCoreUserBalance";
-import { DbCoreUsers } from "./DbCoreUsers";
 import { DbCoreUserSettings } from "./DbCoreUserSettings";
 
 export type { DbCoreFeedArtifact, DbCoreFeedEvent, DbCoreFeedPatch } from "./DbCoreFeed";
@@ -25,7 +24,6 @@ export type DbCorePaymentLogEntry = Omit<DbCorePaymentLogRow, `userId`>;
 export const DbCore = (connectionString: string) => {
   const prisma = DbCoreClient(connectionString);
   const paymentLog = DbCorePaymentLog(prisma);
-  const users = DbCoreUsers(prisma);
   const auth = DbCoreAuthAdapter(prisma);
 
   const user = (id: string) => {
@@ -38,7 +36,7 @@ export const DbCore = (connectionString: string) => {
     return { balance, feed, id, paymentLog: log, settings };
   };
 
-  return { auth, balance: DbCoreUserBalance, feed: DbCoreFeed, paymentLog, settings: DbCoreUserSettings, user, users };
+  return { auth, balance: DbCoreUserBalance, feed: DbCoreFeed, paymentLog, settings: DbCoreUserSettings, user };
 };
 
 export type DbCore = ReturnType<typeof DbCore>;

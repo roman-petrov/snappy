@@ -22,4 +22,6 @@ export * from "./RpcContract";
 
 export * from "./Session";
 
+export * from "./SharedConfig";
+
 export * from "./UserSettings";
