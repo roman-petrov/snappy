@@ -1,10 +1,10 @@
 import { AiConstants, type AiImageQuality } from "@snappy/ai";
 
-import { $data } from "../../../../data";
+import { r } from "../../../../data";
 import { ModelNames } from "../../core";
 
 export const useSettingsModelsImageState = () => {
-  const { patch, settings } = $data.settings();
+  const [settings, patch] = r.settings();
   const names = ModelNames.forType(`image`);
   const modelOptions = names.map(modelId => ({ label: modelId, value: modelId }));
   const modelSelected = settings?.llmImageModel ?? ``;

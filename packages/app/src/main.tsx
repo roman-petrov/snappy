@@ -6,7 +6,7 @@ import { AppBase } from "./AppBase";
 import { AppTags } from "./AppTags";
 import { AppShake } from "./components";
 import { t } from "./core";
-import { $data } from "./data";
+import { r } from "./data";
 import { Routes } from "./Routes";
 
 startApp({
@@ -19,7 +19,7 @@ startApp({
         : `cover`,
   modules: <AppShake />,
   routes: Routes,
-  signedIn: $data.auth.read,
+  signedIn: r.auth,
   tabs: [
     {
       color: `accentOrange`,

@@ -4,14 +4,14 @@ import { describe, expect, it, vi } from "vitest";
 import { Balance } from "./Balance";
 import { Mock } from "./test/Mock";
 
-const { creditFromSignUp, creditFromTopUp, debitForLlm, isLlmBlocked, read } = Balance;
+const { creditFromSignUp, creditFromTopUp, debitForLlm, isLlmBlocked, read } = Balance(Mock.createDb());
 
 describe(`read`, () => {
-  it(`returns balance from user`, async () => {
+  it(`returns balance snapshot from user`, async () => {
     const user = Mock.createDbUser();
-    vi.mocked(user.balance.read).mockResolvedValue(42.5);
+    vi.mocked(user.balance.read).mockResolvedValue({ balance: 42.5, id: user.id });
 
-    await expect(read(user)).resolves.toBe(42.5);
+    await expect(read(user)).resolves.toStrictEqual({ balance: 42.5, id: user.id });
     expect(user.balance.read).toHaveBeenCalledTimes(1);
   });
 });
@@ -25,7 +25,7 @@ describe(`isLlmBlocked`, () => {
     { balance: 100, blocked: false, name: `large positive balance` },
   ])(`$name`, async ({ balance, blocked }) => {
     const user = Mock.createDbUser();
-    vi.mocked(user.balance.read).mockResolvedValue(balance);
+    vi.mocked(user.balance.read).mockResolvedValue({ balance, id: user.id });
 
     await expect(isLlmBlocked(user)).resolves.toBe(blocked);
   });

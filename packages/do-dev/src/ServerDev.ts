@@ -4,17 +4,16 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
-import { Admin } from "@snappy/admin-server";
+import { App as Admin } from "@snappy/admin-server";
 import { App, AppServer } from "@snappy/app-server";
 import { Config } from "@snappy/config";
-import { _, HttpConstants, HttpStatus, MimeType } from "@snappy/core";
+import { _, HttpConstants, MimeType } from "@snappy/core";
 import { ViteConfig } from "@snappy/do/config/vite";
-import { File } from "@snappy/node";
+import { File, HttpProxy } from "@snappy/node";
 import { Fastify, Html, Modules } from "@snappy/server";
 import { SiteServer, SiteSsr, type SsrEntry } from "@snappy/site-server";
 import { Settings } from "@snappy/ui-core";
 import express, { type Request } from "express";
-import http from "node:http";
 import https from "node:https";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -56,25 +55,9 @@ export const ServerDev = async () => {
     },
   });
 
+  const api = HttpProxy({ hostname: HttpConstants.loopback, port: apiPort, prefix: `/api`, server });
   app.use(`/api`, (request, response) => {
-    const proxyRequest = http.request(
-      {
-        headers: { ...request.headers, host: `${HttpConstants.loopback}:${apiPort}` },
-        hostname: HttpConstants.loopback,
-        method: request.method,
-        path: request.originalUrl,
-        port: apiPort,
-      },
-      proxyResponse => {
-        response.writeHead(proxyResponse.statusCode ?? HttpStatus.internalServerError, proxyResponse.headers);
-        proxyResponse.pipe(response);
-      },
-    );
-    proxyRequest.on(`error`, () => {
-      response.statusCode = HttpStatus.badGateway;
-      response.end(`API proxy error`);
-    });
-    request.pipe(proxyRequest);
+    api.forward(request, response, request.originalUrl);
   });
 
   const html = ({

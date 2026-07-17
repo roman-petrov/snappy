@@ -4,10 +4,15 @@
   "type": "module",
   "private": true,
   "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./contract": "./src/core/RpcContract.ts"
+  },
   "dependencies": {
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/db": "workspace:*",
+    "@snappy/rpc": "workspace:*",
     "@snappy/server-module": "workspace:*",
     "fastify": "^5.10.0",
     "zod": "^4.4.3"

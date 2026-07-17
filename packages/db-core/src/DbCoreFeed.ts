@@ -7,112 +7,118 @@ import { Png } from "@snappy/core";
 
 import type { FeedArtifact, PrismaClient } from "./generated/client";
 
+import { DbCoreLive } from "./DbCoreLive";
+
 export type DbCoreFeedArtifact = DbCoreFeedPatch & { generationPrompt: string; id: string };
 
 export type DbCoreFeedCreate = DbCoreFeedPatch & { generationPrompt: string };
 
+export type DbCoreFeedEvent = DbCoreFeedArtifact | { id: string };
+
 export type DbCoreFeedPatch = { src: string; type: `image` } | { text: string; type: `text` };
 
-export const DbCoreFeed = (prisma: PrismaClient, storage: S3CoreUser) => {
-  const s3Path = (file: string) => `feed/${file}`;
-  const pngFile = () => `${crypto.randomUUID()}${Png.suffix}`;
+export const DbCoreFeed = DbCoreLive<DbCoreFeedEvent>().from(
+  (_prisma: PrismaClient, storage: S3CoreUser) => storage.id,
+  (emit, prisma, storage) => {
+    const userId = storage.id;
+    const s3 = (file: string) => `feed/${file}`;
 
-  const toArtifact = ({ generationPrompt, id, src, text, type }: FeedArtifact): DbCoreFeedArtifact =>
-    type === `image` ? { generationPrompt, id, src, type: `image` } : { generationPrompt, id, text, type: `text` };
+    const fromRow = ({ generationPrompt, id, src, text, type }: FeedArtifact): DbCoreFeedArtifact =>
+      type === `image` ? { generationPrompt, id, src, type: `image` } : { generationPrompt, id, text, type: `text` };
 
-  const parseCursor = (cursor: string) => {
-    const [createdAt, id] = cursor.split(`|`);
+    const publish = (row: FeedArtifact) => {
+      const item = fromRow(row);
+      emit(item);
 
-    return { createdAt: new Date(createdAt ?? ``), id: id ?? `` };
-  };
+      return item;
+    };
 
-  const encodeCursor = ({ createdAt, id }: { createdAt: Date; id: string }) => `${createdAt.toISOString()}|${id}`;
+    const storePng = async (src: string) => {
+      const file = `${crypto.randomUUID()}${Png.suffix}`;
+      await storage.putPng(s3(file), src);
 
-  const list = async ({ cursor, limit }: { cursor?: string; limit: number }) => {
-    const parsed = cursor === undefined ? undefined : parseCursor(cursor);
+      return file;
+    };
 
-    const cursorWhere =
-      parsed === undefined
-        ? {}
-        : { OR: [{ createdAt: { lt: parsed.createdAt } }, { createdAt: parsed.createdAt, id: { lt: parsed.id } }] };
+    const list = async ({ cursor, limit }: { cursor?: string; limit: number }) => {
+      const [at, id] = cursor?.split(`|`) ?? [];
+      const createdAt = at === undefined ? undefined : new Date(at);
 
-    const rows = await prisma.feedArtifact.findMany({
-      orderBy: [{ createdAt: `desc` }, { id: `desc` }],
-      take: limit,
-      where: { userId: storage.id, ...cursorWhere },
-    });
+      const rows = await prisma.feedArtifact.findMany({
+        orderBy: [{ createdAt: `desc` }, { id: `desc` }],
+        take: limit,
+        where: {
+          userId,
+          ...(createdAt === undefined
+            ? {}
+            : { OR: [{ createdAt: { lt: createdAt } }, { createdAt, id: { lt: id ?? `` } }] }),
+        },
+      });
 
-    const last = rows.at(-1);
-    const items = rows.map(toArtifact);
-    const nextCursor = rows.length === limit && last !== undefined ? encodeCursor(last) : undefined;
+      const last = rows.at(-1);
 
-    return { items, nextCursor };
-  };
+      return {
+        items: rows.map(fromRow),
+        nextCursor:
+          rows.length === limit && last !== undefined ? `${last.createdAt.toISOString()}|${last.id}` : undefined,
+      };
+    };
 
-  const create = async (artifact: DbCoreFeedCreate) => {
-    if (artifact.type === `image`) {
-      const id = crypto.randomUUID();
-      const file = pngFile();
-      const path = s3Path(file);
-      await storage.putPng(path, artifact.src);
+    const create = async (input: DbCoreFeedCreate) => {
+      if (input.type === `image`) {
+        const id = crypto.randomUUID();
+        const file = await storePng(input.src);
 
-      const data = { ...artifact, id, src: file, userId: storage.id };
-
-      try {
-        return toArtifact(await prisma.feedArtifact.create({ data }));
-      } catch (error) {
-        await storage.remove(path);
-        throw error;
+        try {
+          return publish(await prisma.feedArtifact.create({ data: { ...input, id, src: file, userId } }));
+        } catch (error) {
+          await storage.remove(s3(file));
+          throw error;
+        }
       }
-    }
 
-    return toArtifact(await prisma.feedArtifact.create({ data: { ...artifact, userId: storage.id } }));
-  };
+      return publish(await prisma.feedArtifact.create({ data: { ...input, userId } }));
+    };
 
-  const patch = async (id: string, delta: DbCoreFeedPatch) => {
-    if (delta.type === `image`) {
-      const row = await prisma.feedArtifact.findUnique({ where: { id, userId: storage.id } });
+    const patch = async (id: string, delta: DbCoreFeedPatch) => {
+      if (delta.type === `image`) {
+        const row = await prisma.feedArtifact.findUnique({ where: { id, userId } });
+        if (row === null) {
+          throw new Error(`Feed artifact missing`);
+        }
 
+        const file = await storePng(delta.src);
+        if (row.src !== ``) {
+          await storage.remove(s3(row.src));
+        }
+
+        return publish(await prisma.feedArtifact.update({ data: { src: file }, where: { id, userId } }));
+      }
+
+      return publish(await prisma.feedArtifact.update({ data: { text: delta.text }, where: { id, userId } }));
+    };
+
+    const remove = async (id: string) => {
+      const row = await prisma.feedArtifact.findUnique({ where: { id, userId } });
       if (row === null) {
-        throw new Error(`Feed artifact missing`);
+        return;
       }
 
-      const file = pngFile();
-      const path = s3Path(file);
-      await storage.putPng(path, delta.src);
-
-      if (row.src !== ``) {
-        await storage.remove(s3Path(row.src));
+      await prisma.feedArtifact.delete({ where: { id, userId } });
+      if (row.type === `image` && row.src !== ``) {
+        await storage.remove(s3(row.src));
       }
+      emit({ id });
+    };
 
-      return toArtifact(await prisma.feedArtifact.update({ data: { src: file }, where: { id, userId: storage.id } }));
-    }
+    const image = async (file: string) => {
+      const row = await prisma.feedArtifact.findFirst({ where: { src: file, type: `image`, userId } });
 
-    return toArtifact(
-      await prisma.feedArtifact.update({ data: { text: delta.text }, where: { id, userId: storage.id } }),
-    );
-  };
+      return row === null ? undefined : storage.stream(s3(file));
+    };
 
-  const remove = async (id: string) => {
-    const row = await prisma.feedArtifact.findUnique({ where: { id, userId: storage.id } });
-    if (row === null) {
-      return;
-    }
-
-    await prisma.feedArtifact.delete({ where: { id, userId: storage.id } });
-
-    if (row.type === `image` && row.src !== ``) {
-      await storage.remove(s3Path(row.src));
-    }
-  };
-
-  const image = async (file: string) => {
-    const row = await prisma.feedArtifact.findFirst({ where: { src: file, type: `image`, userId: storage.id } });
-
-    return row === null ? undefined : storage.stream(s3Path(file));
-  };
-
-  return { create, image, list, patch, remove };
-};
+    return { create, image, list, patch, remove };
+  },
+);
 
 export type DbCoreFeed = ReturnType<typeof DbCoreFeed>;

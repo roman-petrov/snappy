@@ -23,7 +23,7 @@ export const SettingsProfileView = ({ balance, email, signOut }: SettingsProfile
         />
         <SettingsCardSeparator />
         <SettingsCardRow
-          bottom={balance === undefined ? undefined : i.price(balance)}
+          bottom={balance === undefined ? undefined : i.price(balance.balance)}
           icon={<FilledIcon color="accentOrange" icon={CreditCard} />}
           link={Routes.settings.profile.topUp}
           tag={AppTags.settings.profile.topUp.open}

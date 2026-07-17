@@ -2,7 +2,7 @@ import type { AgentAiConfig } from "@snappy/snappy";
 
 import { Ai } from "@snappy/ai";
 
-import type { UserSettings } from "../data/UserSettings";
+import type { UserSettings } from "../data";
 
 export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
   const key = settings.aiTunnelKey.trim();

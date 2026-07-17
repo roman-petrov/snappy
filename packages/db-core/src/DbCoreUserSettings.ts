@@ -1,63 +1,61 @@
 /* eslint-disable functional/no-expression-statements */
-import type { AiImageQuality } from "@snappy/ai";
-import type { TypeWriterSpeed } from "@snappy/domain";
+import { AiConstants, type AiImageQuality, AiModels } from "@snappy/ai";
+import { type TypeWriterSpeed, TypeWriterSpeeds } from "@snappy/domain";
 
-import type { PrismaClient } from "./generated/client";
+import type { UserSettings } from "./generated/client";
 
 import { DbCoreConvert } from "./DbCoreConvert";
+import { DbCoreLive } from "./DbCoreLive";
 
-export type DbCoreSettingsPatch = {
-  aiTunnelDirect?: boolean;
-  aiTunnelKey?: string;
-  llmChatModel?: string;
-  llmImageModel?: string;
-  llmImageQuality?: AiImageQuality;
-  llmSpeechRecognitionModel?: string;
-  llmVisionModel?: string;
-  typeWriterSpeed?: false | TypeWriterSpeed;
+export type DbCoreSettings = {
+  aiTunnelDirect: boolean;
+  aiTunnelKey: string;
+  llmChatModel: string;
+  llmImageModel: string;
+  llmImageQuality: AiImageQuality;
+  llmSpeechRecognitionModel: string;
+  llmVisionModel: string;
+  typeWriterSpeed?: TypeWriterSpeed;
 };
 
-export const DbCoreUserSettings = (prisma: PrismaClient, userId: string) => {
-  const find = async () => {
-    const row = await prisma.userSettings.findUnique({ where: { userId } });
-    if (row === null) {
+export const DbCoreUserSettings = DbCoreLive<DbCoreSettings>()(({ emit, prisma, userId }) => {
+  const imageQuality = (value: string | undefined) =>
+    AiConstants.imageQuality.find(quality => quality === value) ?? AiConstants.defaults.imageQuality;
+
+  const typeWriterSpeed = (value: string | undefined) => {
+    if (value === undefined || value === ``) {
       return undefined;
     }
 
-    return {
-      aiTunnelDirect: row.aiTunnelDirect,
-      aiTunnelKey: row.aiTunnelKey,
-      llmChatModel: DbCoreConvert.optional(row.llmChatModel),
-      llmImageModel: DbCoreConvert.optional(row.llmImageModel),
-      llmImageQuality: DbCoreConvert.optional(row.llmImageQuality),
-      llmSpeechRecognitionModel: DbCoreConvert.optional(row.llmSpeechRecognitionModel),
-      llmVisionModel: DbCoreConvert.optional(row.llmVisionModel),
-      typeWriterSpeed: DbCoreConvert.optional(row.typeWriterSpeed),
-    };
+    const normalized = value === `normal` ? `medium` : value;
+
+    return TypeWriterSpeeds.find(speed => speed === normalized);
   };
 
-  const update = async (patch: DbCoreSettingsPatch): Promise<void> => {
-    const fields = {
-      ...(patch.aiTunnelDirect === undefined ? {} : { aiTunnelDirect: patch.aiTunnelDirect }),
-      ...(patch.aiTunnelKey === undefined ? {} : { aiTunnelKey: patch.aiTunnelKey }),
-      ...(patch.llmChatModel === undefined ? {} : { llmChatModel: patch.llmChatModel }),
-      ...(patch.llmImageModel === undefined ? {} : { llmImageModel: patch.llmImageModel }),
-      ...(patch.llmImageQuality === undefined ? {} : { llmImageQuality: patch.llmImageQuality }),
-      ...(patch.llmVisionModel === undefined ? {} : { llmVisionModel: patch.llmVisionModel }),
-      ...(patch.llmSpeechRecognitionModel === undefined
-        ? {}
-        : { llmSpeechRecognitionModel: patch.llmSpeechRecognitionModel }),
-      ...(patch.typeWriterSpeed === undefined
-        ? {}
-        : patch.typeWriterSpeed === false
-          ? { typeWriterSpeed: `` }
-          : { typeWriterSpeed: patch.typeWriterSpeed }),
-    };
+  const or = (value: null | string | undefined, fallback: string) => DbCoreConvert.optional(value) ?? fallback;
 
+  const fromRow = (row: null | UserSettings): DbCoreSettings => ({
+    aiTunnelDirect: row?.aiTunnelDirect ?? false,
+    aiTunnelKey: row?.aiTunnelKey ?? ``,
+    llmChatModel: or(row?.llmChatModel, AiModels.fallback.chat.name),
+    llmImageModel: or(row?.llmImageModel, AiModels.fallback.image.name),
+    llmImageQuality: imageQuality(DbCoreConvert.optional(row?.llmImageQuality)),
+    llmSpeechRecognitionModel: or(row?.llmSpeechRecognitionModel, AiModels.fallback.speechRecognition.name),
+    llmVisionModel: or(row?.llmVisionModel, AiModels.fallback.vision.name),
+    typeWriterSpeed: typeWriterSpeed(DbCoreConvert.optional(row?.typeWriterSpeed)),
+  });
+
+  const read = async () => fromRow(await prisma.userSettings.findUnique({ where: { userId } }));
+
+  const update = async (snapshot: DbCoreSettings) => {
+    const fields = { ...snapshot, typeWriterSpeed: snapshot.typeWriterSpeed ?? `` };
     await prisma.userSettings.upsert({ create: { userId, ...fields }, update: fields, where: { userId } });
+    emit(snapshot);
+
+    return snapshot;
   };
 
-  return { find, update };
-};
+  return { read, update };
+});
 
 export type DbCoreUserSettings = ReturnType<typeof DbCoreUserSettings>;

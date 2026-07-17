@@ -10,9 +10,11 @@ import { DbCoreUserBalance } from "./DbCoreUserBalance";
 import { DbCoreUsers } from "./DbCoreUsers";
 import { DbCoreUserSettings } from "./DbCoreUserSettings";
 
-export type { DbCoreFeedArtifact, DbCoreFeedPatch } from "./DbCoreFeed";
+export type { DbCoreFeedArtifact, DbCoreFeedEvent, DbCoreFeedPatch } from "./DbCoreFeed";
 
-export type { DbCoreSettingsPatch } from "./DbCoreUserSettings";
+export type { DbCoreBalance } from "./DbCoreUserBalance";
+
+export type { DbCoreSettings } from "./DbCoreUserSettings";
 
 export type DbCoreAuth = ReturnType<typeof DbCoreAuthAdapter>;
 
@@ -36,7 +38,7 @@ export const DbCore = (connectionString: string) => {
     return { balance, feed, id, paymentLog: log, settings };
   };
 
-  return { auth, paymentLog, user, users };
+  return { auth, balance: DbCoreUserBalance, feed: DbCoreFeed, paymentLog, settings: DbCoreUserSettings, user, users };
 };
 
 export type DbCore = ReturnType<typeof DbCore>;

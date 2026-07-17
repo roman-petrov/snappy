@@ -3,7 +3,7 @@ import type { ServerModule } from "@snappy/server-module";
 
 import { join } from "node:path";
 
-import { Admin } from "./core";
+import { App } from "./core";
 
 export const AdminServer: ServerModule = distDir => {
   const spa = { cacheKeyPrefix: `admin:index`, distName: `admin`, prefix: `/admin` } as const;
@@ -11,7 +11,7 @@ export const AdminServer: ServerModule = distDir => {
   return {
     mount: { prefix: `${spa.prefix}/assets/`, root: join(distDir, spa.distName, `assets`) },
     run: async ({ app, serveSpa }) => {
-      await Admin({ app });
+      await App({ app });
       serveSpa(spa);
     },
   };

@@ -4,7 +4,7 @@ import type { FastifyInstance } from "fastify";
 import { Config, ConfigValues } from "@snappy/config";
 import { Db } from "@snappy/db";
 import { Payment } from "@snappy/payment";
-import { Trpc } from "@snappy/server-module";
+import { Rpc } from "@snappy/rpc/server";
 
 import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
@@ -13,15 +13,18 @@ import { AiTunnelProxy, RobokassaWebhook } from "./billing";
 import { Feed } from "./Feed";
 import { Images } from "./Images";
 import { PaymentLog } from "./PaymentLog";
+import { RpcContract } from "./RpcContract";
 import { Session } from "./Session";
-import { TrpcRouter } from "./TrpcRouter";
 import { UserSettings } from "./UserSettings";
 
 export type AppConfig = { app: FastifyInstance };
 
 export const App = async ({ app }: AppConfig) => {
   const db = Db(Config.dbUrl());
-  const betterAuth = BetterAuth({ db });
+  const balance = Balance(db);
+  const settings = UserSettings(db);
+  const feed = Feed(db);
+  const betterAuth = BetterAuth({ balance, db });
 
   const payment = Payment({
     credentials: {
@@ -34,8 +37,7 @@ export const App = async ({ app }: AppConfig) => {
   });
 
   const paymentLog = PaymentLog(db);
-  const balancePayment = BalancePayment({ db, payment, paymentLog });
-  const serverApp = { balance: Balance, balancePayment, betterAuth, feed: Feed, userSettings: UserSettings };
+  const billing = BalancePayment({ balance, db, payment, paymentLog });
 
   app.route({
     handler: async (request, reply) => {
@@ -59,16 +61,15 @@ export const App = async ({ app }: AppConfig) => {
     url: `/api/auth/*`,
   });
 
-  await AiTunnelProxy(app, { balance: Balance, betterAuth, db });
+  await AiTunnelProxy(app, { balance, betterAuth, db });
 
-  await Trpc.register({
-    app,
+  await Rpc.mount(app, RpcContract, {
     context: async ({ req }) => ({ dbUser: await Session.dbUser(betterAuth, req.headers, db) }),
-    prefix: `/api/trpc`,
-    router: TrpcRouter(serverApp),
+    modules: { balance, billing, feed, settings },
+    userId: ({ dbUser }) => dbUser?.id,
   });
 
   Images.mount({ app, betterAuth, db });
 
-  await RobokassaWebhook(app, { balancePayment, payment });
+  await RobokassaWebhook(app, { balancePayment: billing, payment });
 };

@@ -10,7 +10,7 @@ import { useCallback, useMemo, useState } from "react";
 import type { FeedArtifact } from "../Types";
 
 import { t } from "../../core";
-import { $data } from "../../data";
+import { r } from "../../data";
 
 export type FeedItemBindings = FeedItemNotify & {
   content: string;
@@ -34,7 +34,7 @@ export type UseFeedItemInput = FeedItemBase;
 type FeedItemBase = FeedItemBindings & { menu?: MenuAction[]; type: `image` | `text` };
 
 export const useFeedItem = (input: UseFeedItemInput) => {
-  const { create, patch, remove: removeFeed } = $data.feed();
+  const { create, patch, remove: removeFeed } = r.feed;
   const { content, id, menu = [], onError, onPublish, onRemove, prompt, type } = input;
   const pending = content.trim() === ``;
   const saved = id !== ``;

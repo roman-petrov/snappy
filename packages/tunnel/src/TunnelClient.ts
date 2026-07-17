@@ -6,19 +6,16 @@
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable init-declarations */
 /* eslint-disable unicorn/try-complexity */
-import { _, HttpConstants, Timer } from "@snappy/core";
+import { _, HttpConstants } from "@snappy/core";
+import { Socket } from "@snappy/rpc/socket";
 import tls from "node:tls";
-import ws from "ws";
 
 import { TunnelSocket } from "./TunnelSocket";
 
 export type TunnelClientConfig = { key: string; url: string };
 
 export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
-  const reconnectMs = 2 * _.second;
-  let stopped = false;
   let tunnel: TunnelSocket | undefined;
-  let cancelReconnect: (() => void) | undefined;
   const locals = new Map<number, tls.TLSSocket>();
   const opening = new Set<number>();
   const pending = new Map<number, Buffer[]>();
@@ -82,67 +79,65 @@ export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
     }
   };
 
-  const attach = () => {
-    const next = TunnelSocket(new ws(url), {
-      onClose: () => {
+  const session = Socket.reconnect({
+    delayMs: 2 * _.second,
+    onSocket: raw => {
+      const next = TunnelSocket(raw, {
+        onClose: () => {
+          for (const id of locals.keys()) {
+            closeLocal(id);
+          }
+          tunnel = undefined;
+        },
+        onControl: message => {
+          if (message.type === `open`) {
+            void openStream(message.id, message.port);
+
+            return;
+          }
+          if (message.type === `close`) {
+            closeLocal(message.id);
+          }
+        },
+        onData: (id, chunk) => {
+          const local = locals.get(id);
+          if (local !== undefined) {
+            local.write(chunk);
+
+            return;
+          }
+          if (opening.has(id)) {
+            const chunks = pending.get(id) ?? [];
+            chunks.push(chunk);
+            pending.set(id, chunks);
+          }
+        },
+        onError: () => raw.close(),
+        onOpen: () => {
+          next.sendControl({ key, type: `auth` });
+          next.sendControl({ port: HttpConstants.httpsPort, type: `ready` });
+        },
+      });
+      tunnel = next;
+
+      return () => {
         for (const id of locals.keys()) {
           closeLocal(id);
         }
         tunnel = undefined;
-        if (stopped) {
-          return;
-        }
-        cancelReconnect?.();
-        cancelReconnect = Timer.timeout(() => {
-          if (!stopped) {
-            attach();
-          }
-        }, reconnectMs);
-      },
-      onControl: message => {
-        if (message.type === `open`) {
-          void openStream(message.id, message.port);
-
-          return;
-        }
-        if (message.type === `close`) {
-          closeLocal(message.id);
-        }
-      },
-      onData: (id, chunk) => {
-        const local = locals.get(id);
-        if (local !== undefined) {
-          local.write(chunk);
-
-          return;
-        }
-        if (opening.has(id)) {
-          const chunks = pending.get(id) ?? [];
-          chunks.push(chunk);
-          pending.set(id, chunks);
-        }
-      },
-      onError: () => next.close(),
-      onOpen: () => {
-        next.sendControl({ key, type: `auth` });
-        next.sendControl({ port: HttpConstants.httpsPort, type: `ready` });
-      },
-    });
-    tunnel = next;
-  };
+      };
+    },
+    url,
+  });
 
   const stop = () => {
-    stopped = true;
-    cancelReconnect?.();
-    cancelReconnect = undefined;
     for (const id of locals.keys()) {
       closeLocal(id);
     }
     tunnel?.close();
     tunnel = undefined;
+    session.stop();
   };
-
-  attach();
 
   return { stop };
 };

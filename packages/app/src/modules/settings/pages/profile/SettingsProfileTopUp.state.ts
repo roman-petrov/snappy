@@ -1,10 +1,9 @@
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
-import { $data } from "../../../../data";
+import { r } from "../../../../data";
 
 export const useSettingsProfileTopUpState = () => {
-  const { paymentUrl } = $data.balance();
   const [amount, setAmount] = useState<number | undefined>(undefined);
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
@@ -15,7 +14,8 @@ export const useSettingsProfileTopUpState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await paymentUrl(amount);
+      const result = await r.billing.paymentUrl({ amount });
+
       if (result.status === `ok`) {
         window.location.assign(result.url);
 

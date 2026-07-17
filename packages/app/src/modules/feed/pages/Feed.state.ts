@@ -1,25 +1,18 @@
 import { useRouterGo } from "@snappy/app-router";
 import { _ } from "@snappy/core";
-import { Language, useAsyncEffect } from "@snappy/ui";
+import { Language } from "@snappy/ui";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 
-import { $data } from "../../../data";
+import { AgentAiFromSettings } from "../../../core";
+import { r } from "../../../data";
 import { Routes } from "../../../Routes";
 
 export const useFeedState = () => {
-  const { append, load, page } = $data.feed();
-  const items = useMemo(() => page?.items ?? [], [page]);
-  const hasMore = page?.hasMore ?? false;
-  const aiConfig = $data.aiConfig();
-  const { settings } = $data.settings();
+  const { append, hasMore, items } = r.feed();
+  const [settings] = r.settings();
+  const aiConfig = settings === undefined ? undefined : AgentAiFromSettings(settings);
   const typeWriterSpeed = settings?.typeWriterSpeed;
   const sentinelRef = useRef<HTMLDivElement>(null);
-
-  useAsyncEffect(async () => {
-    if ($data.feed.read() === undefined) {
-      await load();
-    }
-  }, [load]);
 
   useEffect(() => {
     const node = sentinelRef.current;

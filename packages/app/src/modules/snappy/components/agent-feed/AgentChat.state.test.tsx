@@ -9,11 +9,9 @@ import type { AgentFeedHandle } from "./AgentFeedHandle";
 
 import { useAgentChatState } from "./AgentChat.state";
 
-const { dataState } = vi.hoisted(() => ({
-  dataState: {
-    aiConfig: { models: {} },
-    balance: 10,
-    settings: {
+const { dataState } = vi.hoisted(
+  (): { dataState: { balance: undefined | { balance: number; id: string }; settings: undefined | UserSettings } } => {
+    const settings = {
       aiTunnelDirect: false,
       aiTunnelKey: ``,
       llmChatModel: ``,
@@ -22,9 +20,11 @@ const { dataState } = vi.hoisted(() => ({
       llmSpeechRecognitionModel: ``,
       llmVisionModel: ``,
       typeWriterSpeed: undefined,
-    } satisfies UserSettings,
+    } satisfies UserSettings;
+
+    return { dataState: { balance: { balance: 10, id: `u` }, settings } };
   },
-}));
+);
 
 vi.mock(`./AgentFeed`, () => ({
   AgentFeed: ({ ref }: { ref?: Ref<AgentFeedHandle> }) => {
@@ -33,12 +33,11 @@ vi.mock(`./AgentFeed`, () => ({
     return undefined;
   },
 }));
+
+vi.mock(`../../../../core`, () => ({ AgentAiFromSettings: () => ({ models: { chat: {} } }) }));
+
 vi.mock(`../../../../data`, () => ({
-  $data: {
-    aiConfig: () => dataState.aiConfig,
-    balance: () => ({ balance: dataState.balance }),
-    settings: () => ({ patch: vi.fn(), settings: dataState.settings }),
-  },
+  r: { balance: () => dataState.balance, settings: () => [dataState.settings, vi.fn()] as const },
 }));
 
 describe(`useAgentChatState`, () => {
@@ -58,7 +57,6 @@ describe(`useAgentChatState`, () => {
     expect(run).toHaveBeenCalledTimes(1);
 
     act(() => {
-      dataState.aiConfig = { models: { chat: {} } };
       rerender(<Host showFeed={false} />);
     });
 

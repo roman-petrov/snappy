@@ -1,3 +1,1 @@
-export { $data } from "./Data";
-
-export type { User } from "./Users";
+export { r } from "./Data";

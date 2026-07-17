@@ -6,7 +6,8 @@ import { createElement, useEffect, useRef, useState } from "react";
 import type { AgentChatProps } from "./AgentChat";
 import type { AgentFeedHandle } from "./AgentFeedHandle";
 
-import { $data } from "../../../../data";
+import { AgentAiFromSettings } from "../../../../core";
+import { r } from "../../../../data";
 import { AgentFeed } from "./AgentFeed";
 
 export const useAgentChatState = ({ runtime, session = [], showFeed = true }: AgentChatProps) => {
@@ -16,9 +17,9 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
   const aiConfigRef = useRef<AgentAiConfig | undefined>(undefined);
   const gated = useRef(!showFeed).current;
   const [phase, setPhase] = useState<`blocked` | `booting` | `ready`>(gated ? `booting` : `ready`);
-  const { balance } = $data.balance();
-  const { settings } = $data.settings();
-  const aiConfig = $data.aiConfig();
+  const balance = r.balance();
+  const [settings] = r.settings();
+  const aiConfig = settings === undefined ? undefined : AgentAiFromSettings(settings);
   const typeWriterSpeed = settings?.typeWriterSpeed;
   const sessionKey = session.map(token => token ?? ``).join(Unicode.null);
 
@@ -45,7 +46,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
 
       return;
     }
-    if (!(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``) && balance <= 0) {
+    if (!(settings.aiTunnelDirect && settings.aiTunnelKey.trim() !== ``) && balance.balance <= 0) {
       setPhase(`blocked`);
 
       return;

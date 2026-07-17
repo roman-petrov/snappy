@@ -4,7 +4,7 @@ import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
-import { $data } from "../../../data";
+import { r } from "../../../data";
 import { Routes } from "../../../Routes";
 import { useAuthEmailSend } from "../hooks";
 
@@ -23,7 +23,7 @@ export const useSignInState = () => {
   } = useAuthEmailSend({
     email,
     onSent: () => setScreen(`unverified`),
-    request: async () => $data.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
+    request: async () => r.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const submit = () => {
@@ -33,7 +33,7 @@ export const useSignInState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await $data.auth.login(email, password);
+      const result = await r.auth.signIn(email, password);
       if (result.status === `emailNotVerified`) {
         setScreen(`unverified`);
 

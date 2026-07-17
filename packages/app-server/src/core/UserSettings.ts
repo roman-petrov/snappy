@@ -1,79 +1,72 @@
-/* eslint-disable functional/no-expression-statements */
-import type { DbUser } from "@snappy/db";
+import type { Db, DbSettings, DbUser } from "@snappy/db";
 
-import { AiConstants, AiModels } from "@snappy/ai";
+import { AiConstants } from "@snappy/ai";
 import { TypeWriterSpeeds } from "@snappy/domain";
 import { z } from "zod";
 
-import { AppTrpcAuth } from "./AppTrpc";
+import { RpcScope } from "./RpcContract";
 
-const llmImageQualitySchema = z.enum(AiConstants.imageQuality);
-const typeWriterSpeedSchema = z.enum(TypeWriterSpeeds);
-const typeWriterSpeedInput = z.union([typeWriterSpeedSchema, z.literal(false)]);
+export const UserSettings = (db: Db) => {
+  const typeWriterSpeedSchema = z.enum(TypeWriterSpeeds);
 
-const load = async (user: DbUser) => {
-  const row = await user.settings.find();
-  const aiTunnelDirect = row?.aiTunnelDirect ?? false;
-  const aiTunnelKey = row?.aiTunnelKey ?? ``;
-  const llmChatModel = row?.llmChatModel ?? AiModels.fallback.chat.name;
-  const llmImageModel = row?.llmImageModel ?? AiModels.fallback.image.name;
-  const llmImageQuality = llmImageQualitySchema.catch(AiConstants.defaults.imageQuality).parse(row?.llmImageQuality);
-  const llmVisionModel = row?.llmVisionModel ?? AiModels.fallback.vision.name;
-  const llmSpeechRecognitionModel = row?.llmSpeechRecognitionModel ?? AiModels.fallback.speechRecognition.name;
-  const typeWriterSpeedStored = row?.typeWriterSpeed ?? ``;
+  const settingsSchema = z.object({
+    aiTunnelDirect: z.boolean(),
+    aiTunnelKey: z.string(),
+    llmChatModel: z.string(),
+    llmImageModel: z.string(),
+    llmImageQuality: z.enum(AiConstants.imageQuality),
+    llmSpeechRecognitionModel: z.string(),
+    llmVisionModel: z.string(),
+    typeWriterSpeed: typeWriterSpeedSchema.optional(),
+  }) satisfies z.ZodType<DbSettings>;
 
-  const typeWriterSpeed =
-    typeWriterSpeedStored === ``
-      ? undefined
-      : typeWriterSpeedSchema.parse(typeWriterSpeedStored === `normal` ? `medium` : typeWriterSpeedStored);
+  const patchSchema = settingsSchema
+    .partial()
+    .extend({ typeWriterSpeed: z.union([typeWriterSpeedSchema, z.literal(false)]).optional() });
 
-  return {
-    aiTunnelDirect,
-    aiTunnelKey,
-    llmChatModel,
-    llmImageModel,
-    llmImageQuality,
-    llmSpeechRecognitionModel,
-    llmVisionModel,
-    typeWriterSpeed,
-  };
-};
+  const { doc } = RpcScope;
+  const read = async (user: DbUser) => user.settings.read();
 
-const trpc = {
-  get: AppTrpcAuth.query(async ({ ctx }) => load(ctx.dbUser)),
-  set: AppTrpcAuth.input(
-    z.object({
-      aiTunnelDirect: z.boolean().optional(),
-      aiTunnelKey: z.string().optional(),
-      llmChatModel: z.string().optional(),
-      llmImageModel: z.string().optional(),
-      llmImageQuality: llmImageQualitySchema.optional(),
-      llmSpeechRecognitionModel: z.string().optional(),
-      llmVisionModel: z.string().optional(),
-      typeWriterSpeed: typeWriterSpeedInput.optional(),
+  const rpc = {
+    get: doc(db.settings, async ({ dbUser }) => read(dbUser)),
+    set: doc(db.settings, patchSchema, async ({ dbUser, input }) => {
+      if (
+        input.aiTunnelDirect === undefined &&
+        input.aiTunnelKey === undefined &&
+        input.llmChatModel === undefined &&
+        input.llmImageQuality === undefined &&
+        input.llmImageModel === undefined &&
+        input.llmVisionModel === undefined &&
+        input.llmSpeechRecognitionModel === undefined &&
+        input.typeWriterSpeed === undefined
+      ) {
+        return read(dbUser);
+      }
+
+      const current = await read(dbUser);
+      const aiTunnelKey = input.aiTunnelKey === undefined ? current.aiTunnelKey : input.aiTunnelKey.trim();
+
+      const typeWriterSpeed =
+        input.typeWriterSpeed === undefined
+          ? current.typeWriterSpeed
+          : input.typeWriterSpeed === false
+            ? undefined
+            : input.typeWriterSpeed;
+
+      return dbUser.settings.update({
+        aiTunnelDirect: input.aiTunnelDirect ?? current.aiTunnelDirect,
+        aiTunnelKey,
+        llmChatModel: input.llmChatModel ?? current.llmChatModel,
+        llmImageModel: input.llmImageModel ?? current.llmImageModel,
+        llmImageQuality: input.llmImageQuality ?? current.llmImageQuality,
+        llmSpeechRecognitionModel: input.llmSpeechRecognitionModel ?? current.llmSpeechRecognitionModel,
+        llmVisionModel: input.llmVisionModel ?? current.llmVisionModel,
+        ...(typeWriterSpeed === undefined ? {} : { typeWriterSpeed }),
+      });
     }),
-  ).mutation(async ({ ctx, input }) => {
-    if (
-      input.aiTunnelDirect === undefined &&
-      input.aiTunnelKey === undefined &&
-      input.llmChatModel === undefined &&
-      input.llmImageQuality === undefined &&
-      input.llmImageModel === undefined &&
-      input.llmVisionModel === undefined &&
-      input.llmSpeechRecognitionModel === undefined &&
-      input.typeWriterSpeed === undefined
-    ) {
-      return load(ctx.dbUser);
-    }
+  };
 
-    const aiTunnelKey = input.aiTunnelKey === undefined ? undefined : input.aiTunnelKey.trim();
-
-    await ctx.dbUser.settings.update({ ...input, ...(aiTunnelKey === undefined ? {} : { aiTunnelKey }) });
-
-    return load(ctx.dbUser);
-  }),
+  return { read, rpc };
 };
 
-export const UserSettings = { load, trpc };
-
-export type UserSettings = typeof UserSettings;
+export type UserSettings = ReturnType<typeof UserSettings>;

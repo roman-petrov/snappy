@@ -1,7 +1,5 @@
 export * from "./App";
 
-export * from "./AppTrpc";
-
 export * from "./Balance";
 
 export * from "./BalancePayment";
@@ -18,10 +16,8 @@ export * from "./Mail";
 
 export * from "./PaymentLog";
 
-export type * from "./ServerApp";
+export * from "./RpcContract";
 
 export * from "./Session";
-
-export * from "./TrpcRouter";
 
 export * from "./UserSettings";

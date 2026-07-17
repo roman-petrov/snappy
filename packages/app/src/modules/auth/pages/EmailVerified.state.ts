@@ -1,41 +1,41 @@
 import { useRouterGo, useRouterQuery } from "@snappy/app-router";
+import { useStoreValue } from "@snappy/store";
 import { useAsyncEffect } from "@snappy/ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { $data } from "../../../data";
+import { r } from "../../../data";
 import { Routes } from "../../../Routes";
 
 export type EmailVerifiedFailedReason = `expired` | `invalid` | `signIn`;
-
-const reason = (error: string): EmailVerifiedFailedReason => {
-  const code = error.trim().toUpperCase();
-  if (code === `TOKEN_EXPIRED`) {
-    return `expired`;
-  }
-  if (code === `INVALID_TOKEN` || code === `USER_NOT_FOUND`) {
-    return `invalid`;
-  }
-
-  return code === `` ? `signIn` : `invalid`;
-};
 
 export const useEmailVerifiedState = () => {
   const query = useRouterQuery();
   const linkError = query.get(`error`) ?? ``;
   const go = useRouterGo();
+  const signedIn = useStoreValue(r.auth);
   const [failedReason, setFailedReason] = useState<EmailVerifiedFailedReason>(`signIn`);
   const [screen, setScreen] = useState<`done` | `failed` | `loading`>(`loading`);
+  const [synced, setSynced] = useState(false);
 
   useAsyncEffect(async () => {
-    await $data.auth.sync();
-    if ($data.auth.read()) {
+    setSynced(false);
+    await r.auth.sync();
+    setSynced(true);
+  }, [linkError]);
+
+  useEffect(() => {
+    if (!synced) {
+      return;
+    }
+    if (signedIn) {
       setScreen(`done`);
 
       return;
     }
-    setFailedReason(reason(linkError));
+    const code = linkError.trim().toUpperCase();
+    setFailedReason(code === `TOKEN_EXPIRED` ? `expired` : code === `` ? `signIn` : `invalid`);
     setScreen(`failed`);
-  }, [linkError]);
+  }, [linkError, signedIn, synced]);
 
   const home = async () => go(Routes.$.home, { instant: true });
 

@@ -27,7 +27,7 @@ export const UserListView = ({ items, page, pageSize, setPage, total }: UserList
             vibrate="none"
           />
         ),
-        balance: i.price(item.balanceRub),
+        balance: i.price(item.balance),
         createdAt: i.date(item.createdAt),
         email: <Link link={Routes.user.edit({ userId: item.id })} text={item.email} />,
         emailVerified: (

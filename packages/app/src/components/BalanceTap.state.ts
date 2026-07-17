@@ -1,3 +1,3 @@
-import { $data } from "../data";
+import { r } from "../data";
 
-export const useBalanceTapState = () => ({ balance: $data.balance().balance });
+export const useBalanceTapState = () => ({ balance: r.balance() });

@@ -2,7 +2,7 @@ import { useRouterGo } from "@snappy/app-router";
 import { useAsyncSubmit } from "@snappy/ui";
 import { type SubmitEventHandler, useState } from "react";
 
-import { $data } from "../../data";
+import { r } from "../../data";
 import { Routes } from "../../Routes";
 
 export const useSignInState = () => {
@@ -14,7 +14,7 @@ export const useSignInState = () => {
   const signIn: SubmitEventHandler<HTMLFormElement> = event => {
     event.preventDefault();
     void wrapSubmit(async () => {
-      const result = await $data.auth.login(username.trim(), password);
+      const result = await r.auth.signIn(username.trim(), password);
       if (result.status !== `ok`) {
         setError(result.status);
 

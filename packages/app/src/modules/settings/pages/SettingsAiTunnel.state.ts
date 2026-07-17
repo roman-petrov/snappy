@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { $data } from "../../../data";
+import { r } from "../../../data";
 
 export const useSettingsAiTunnelState = () => {
-  const { patch, settings } = $data.settings();
+  const [settings, patch] = r.settings();
   const aiTunnelDirect = settings?.aiTunnelDirect ?? false;
   const loading = settings === undefined;
   const [tunnelKey, setTunnelKey] = useState(``);

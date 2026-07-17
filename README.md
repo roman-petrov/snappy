@@ -99,7 +99,6 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - 📦 [tsdown](https://tsdown.dev/)
 - ⚛️ [React](https://react.dev/)
 - 🔐 [Better Auth](https://www.better-auth.com/)
-- 🔗 [tRPC](https://trpc.io/)
 - 🧬 [Prisma](https://www.prisma.io/)
 - 🧪 [Vitest](https://vitest.dev/)
 - ✨ [ESLint](https://eslint.org/)

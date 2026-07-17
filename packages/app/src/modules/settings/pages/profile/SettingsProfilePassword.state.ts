@@ -3,7 +3,7 @@ import { Password } from "@snappy/core";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useState } from "react";
 
-import { $data } from "../../../../data";
+import { r } from "../../../../data";
 import { Routes } from "../../../../Routes";
 
 export const useSettingsProfilePasswordState = () => {
@@ -21,7 +21,7 @@ export const useSettingsProfilePasswordState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await $data.auth.changePassword(currentPassword, newPassword);
+      const result = await r.auth.changePassword(currentPassword, newPassword);
       if (result.status !== `ok`) {
         setError(result.status);
 

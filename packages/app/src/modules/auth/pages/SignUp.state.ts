@@ -4,7 +4,7 @@ import { CookieConsent } from "@snappy/ui-core";
 import { useState } from "react";
 
 import { AppBase } from "../../../AppBase";
-import { $data } from "../../../data";
+import { r } from "../../../data";
 import { useAuthEmailSend } from "../hooks";
 
 export const useSignUpState = () => {
@@ -15,7 +15,7 @@ export const useSignUpState = () => {
 
   const { send: resend, startCooldown } = useAuthEmailSend({
     email,
-    request: async () => $data.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
+    request: async () => r.auth.sendVerificationEmail(email, AppBase.verifyCallbackUrl),
   });
 
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit<string>();
@@ -27,7 +27,7 @@ export const useSignUpState = () => {
       return;
     }
     void wrapSubmit(async () => {
-      const result = await $data.auth.signUp(email, password, AppBase.verifyCallbackUrl);
+      const result = await r.auth.signUp(email, password, AppBase.verifyCallbackUrl);
       if (result.status === `tooManyRequests`) {
         startCooldown(result.retryAfterSec);
         setError(`tooManyRequests`);

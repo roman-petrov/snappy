@@ -1,6 +1,8 @@
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-try-statements */
 /* eslint-disable unicorn/try-complexity */
+import type { SocketRaw } from "@snappy/rpc/socket";
+
 import { _, Json } from "@snappy/core";
 
 export type AuthMessage = { key: string; type: `auth` };
@@ -13,14 +15,7 @@ export type OpenMessage = { id: number; port: number; type: `open` };
 
 export type ReadyMessage = { port: number; type: `ready` };
 
-export type TunnelRawSocket = {
-  close: () => void;
-  on: {
-    (event: `close` | `error` | `open`, listener: () => void): void;
-    (event: `message`, listener: (raw: ArrayBuffer | Buffer | Buffer[] | string, isBinary: boolean) => void): void;
-  };
-  send: (data: Buffer | string) => void;
-};
+export type TunnelRawSocket = SocketRaw;
 
 export type TunnelSocketHandlers = {
   onClose?: () => void;

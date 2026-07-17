@@ -8,12 +8,12 @@ import styles from "./UserEdit.module.scss";
 
 export type UserEditViewProps = ReturnType<typeof useUserEditState>;
 
-export const UserEditView = ({ balanceRub, error, loading, remove, save, setBalanceRub, user }: UserEditViewProps) =>
+export const UserEditView = ({ balance, error, loading, remove, save, setBalance, user }: UserEditViewProps) =>
   user === undefined ? undefined : (
     <Page back title={t(`users.edit.title`)}>
       <div className={styles.form}>
         <Input disabled label={t(`users.edit.email`)} onChange={_.noop} value={user.email} />
-        <NumberInput disabled={loading} label={t(`users.edit.balance`)} onChange={setBalanceRub} value={balanceRub} />
+        <NumberInput disabled={loading} label={t(`users.edit.balance`)} onChange={setBalance} value={balance} />
         {error === undefined ? undefined : <Alert text={t(error.key)} type="error" />}
         <div className={styles.actions}>
           <Button

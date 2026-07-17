@@ -21,8 +21,6 @@
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui-core": "workspace:*",
-    "@trpc/client": "^11.18.0",
-    "@trpc/server": "^11.18.0",
     "lucide-react": "^1.24.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

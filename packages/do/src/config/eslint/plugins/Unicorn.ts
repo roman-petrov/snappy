@@ -33,6 +33,8 @@ export default defineConfig([
             dir: true,
             Dist: true,
             dist: true,
+            Doc: true,
+            doc: true,
             Docs: true,
             docs: true,
             Env: true,

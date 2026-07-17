@@ -7,10 +7,9 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable unicorn/no-null */
 import type { FastifyInstance, FastifyReply } from "fastify";
-import type { WebSocket } from "ws";
 
-import websocket from "@fastify/websocket";
 import { HttpStatus } from "@snappy/core";
+import { Socket } from "@snappy/rpc/socket";
 import { Duplex } from "node:stream";
 
 import { type TunnelFetchInit, TunnelHttp } from "./TunnelHttp";
@@ -35,10 +34,10 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
     streams.clear();
   };
 
-  const accept = (socket: WebSocket) => {
+  const accept = (socket: Parameters<typeof Socket.node>[0]) => {
     let authenticated = false;
 
-    const tunnel = TunnelSocket(socket, {
+    const tunnel = TunnelSocket(Socket.node(socket), {
       onClose: () => dropSession(tunnel),
       onControl: message => {
         if (!authenticated) {
@@ -123,7 +122,7 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
   const online = () => session !== undefined;
 
   const register = async (app: FastifyInstance, path: string) => {
-    await app.register(websocket);
+    await Socket.fastify(app);
     await app.register(scoped => {
       scoped.get(path, { websocket: true }, accept);
     });

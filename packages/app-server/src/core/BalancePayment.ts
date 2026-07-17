@@ -8,15 +8,20 @@ import { Config, ConfigValues } from "@snappy/config";
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
+import type { Balance } from "./Balance";
 import type { PaymentLog } from "./PaymentLog";
 
-import { AppTrpcAuth } from "./AppTrpc";
-import { Balance } from "./Balance";
+import { RpcScope } from "./RpcContract";
 import { Session } from "./Session";
 
-export type BalancePaymentConfig = { db: ReturnType<typeof Db>; payment: PaymentProvider; paymentLog: PaymentLog };
+export type BalancePaymentConfig = {
+  balance: Balance;
+  db: ReturnType<typeof Db>;
+  payment: PaymentProvider;
+  paymentLog: PaymentLog;
+};
 
-export const BalancePayment = ({ db, payment, paymentLog }: BalancePaymentConfig) => {
+export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaymentConfig) => {
   const paymentUrl = async (user: DbUser, amount: number) => {
     if (!Number.isFinite(amount) || amount < Config.balance.paymentMinRub || amount > Config.balance.paymentMaxRub) {
       return { status: `invalidAmount` as const };
@@ -84,7 +89,7 @@ export const BalancePayment = ({ db, payment, paymentLog }: BalancePaymentConfig
     }
 
     try {
-      await Balance.creditFromTopUp(user, amountRub, { amount: money?.value, currency: money?.currency, paymentId });
+      await balance.creditFromTopUp(user, amountRub, { amount: money?.value, currency: money?.currency, paymentId });
     } catch {
       return false;
     }
@@ -98,13 +103,13 @@ export const BalancePayment = ({ db, payment, paymentLog }: BalancePaymentConfig
     return !parsed.ok || !(await handlePaymentSucceeded(parsed.paymentId)) ? undefined : `OK${parsed.paymentId}`;
   };
 
-  const trpc = {
-    paymentUrl: AppTrpcAuth.input(z.object({ amount: z.number().optional() })).mutation(async ({ ctx, input }) =>
-      paymentUrl(ctx.dbUser, input.amount ?? 0),
+  const rpc = {
+    paymentUrl: RpcScope.query(z.object({ amount: z.number().optional() }), async ({ dbUser, input }) =>
+      paymentUrl(dbUser, input.amount ?? 0),
     ),
   };
 
-  return { paymentUrl, trpc, webhook };
+  return { paymentUrl, rpc, webhook };
 };
 
 export type BalancePayment = ReturnType<typeof BalancePayment>;

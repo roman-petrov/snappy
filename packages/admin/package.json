@@ -10,6 +10,7 @@
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
     "@snappy/router": "workspace:*",
+    "@snappy/rpc": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui": "workspace:*",

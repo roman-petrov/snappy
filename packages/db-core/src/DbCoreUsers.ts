@@ -18,7 +18,7 @@ export const DbCoreUsers = (prisma: PrismaClient) => {
 
     const items = rows.map(({ createdAt, userBalance, ...user }) => ({
       ...user,
-      balanceRub: DbCoreConvert.amount(userBalance?.amount),
+      balance: DbCoreConvert.amount(userBalance?.amount),
       createdAt: DbCoreConvert.time(createdAt),
     }));
 
@@ -34,7 +34,7 @@ export const DbCoreUsers = (prisma: PrismaClient) => {
 
     const { userBalance, ...user } = row;
 
-    return { ...user, balanceRub: DbCoreConvert.amount(userBalance?.amount) };
+    return { ...user, balance: DbCoreConvert.amount(userBalance?.amount) };
   };
 
   const remove = async (id: string) => {

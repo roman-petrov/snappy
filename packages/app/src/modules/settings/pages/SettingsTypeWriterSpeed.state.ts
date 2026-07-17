@@ -1,9 +1,9 @@
 import type { TypeWriterSpeed } from "@snappy/domain";
 
-import { $data } from "../../../data";
+import { r } from "../../../data";
 
 export const useSettingsTypeWriterSpeedState = () => {
-  const { patch, settings } = $data.settings();
+  const [settings, patch] = r.settings();
   const value = settings?.typeWriterSpeed;
   const select = async (speed: TypeWriterSpeed | undefined) => patch({ typeWriterSpeed: speed ?? false });
 

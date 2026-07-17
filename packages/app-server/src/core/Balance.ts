@@ -1,30 +1,33 @@
 /* eslint-disable functional/no-expression-statements */
-import type { DbUser } from "@snappy/db";
+import type { Db, DbUser } from "@snappy/db";
 
 import { Config } from "@snappy/config";
 import { _ } from "@snappy/core";
 
-import { AppTrpcAuth } from "./AppTrpc";
+import { RpcScope } from "./RpcContract";
 
-const read = async (user: DbUser) => user.balance.read();
-const isLlmBlocked = async (user: DbUser) => (await read(user)) <= 0;
+export const Balance = (db: Db) => {
+  const { doc } = RpcScope;
+  const read = async (user: DbUser) => user.balance.read();
+  const isLlmBlocked = async (user: DbUser) => (await read(user)).balance <= 0;
 
-const creditFromTopUp = async (
-  user: DbUser,
-  amountRub: number,
-  log: { amount?: number | string; currency?: string; paymentId: string },
-) => user.balance.creditTopUp(amountRub, { ...log, type: `topup` });
+  const creditFromTopUp = async (
+    user: DbUser,
+    amountRub: number,
+    log: { amount?: number | string; currency?: string; paymentId: string },
+  ) => user.balance.creditTopUp(amountRub, { ...log, type: `topup` });
 
-const creditFromSignUp = async (user: DbUser) =>
-  user.balance.credit(Config.balance.signUpBonusRub, { source: `signUp` });
+  const creditFromSignUp = async (user: DbUser) =>
+    user.balance.credit(Config.balance.signUpBonusRub, { source: `signUp` });
 
-const debitForLlm = async (user: DbUser, costRub: number, meta: { call: string; model: string }) => {
-  const rub = _.round(costRub * (1 + Config.balance.llmCommission), 2);
-  await user.balance.debit(rub, { ...meta, chargedRub: rub, costRub });
+  const debitForLlm = async (user: DbUser, costRub: number, meta: { call: string; model: string }) => {
+    const rub = _.round(costRub * (1 + Config.balance.llmCommission), 2);
+    await user.balance.debit(rub, { ...meta, chargedRub: rub, costRub });
+  };
+
+  const rpc = doc(db.balance, async ({ dbUser }) => read(dbUser));
+
+  return { creditFromSignUp, creditFromTopUp, debitForLlm, isLlmBlocked, read, rpc };
 };
 
-const trpc = AppTrpcAuth.query(async ({ ctx }) => read(ctx.dbUser));
-
-export const Balance = { creditFromSignUp, creditFromTopUp, debitForLlm, isLlmBlocked, read, trpc };
-
-export type Balance = typeof Balance;
+export type Balance = ReturnType<typeof Balance>;

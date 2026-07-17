@@ -1,6 +1,6 @@
 import type { SettingsModelsBaseProps } from "./SettingsModelsBase";
 
-import { $data } from "../../../data";
+import { r } from "../../../data";
 import { ModelNames } from "../core";
 
 export const useSettingsModelsBaseState = ({
@@ -9,7 +9,7 @@ export const useSettingsModelsBaseState = ({
   settingsField,
   title,
 }: SettingsModelsBaseProps) => {
-  const { patch, settings } = $data.settings();
+  const [settings, patch] = r.settings();
   const names = ModelNames.forType(modelType, modelFilter);
   const options = names.map(modelId => ({ label: modelId, value: modelId }));
   const selected = settings?.[settingsField] ?? ``;

@@ -1,8 +1,10 @@
-import { $data } from "../data";
+import { useStoreValue } from "@snappy/store";
+
+import { r } from "../data";
 
 export const useHeaderContentState = () => {
-  const signedIn = $data.auth.use();
-  const signOut = async () => $data.auth.signOut();
+  const signedIn = useStoreValue(r.auth);
+  const signOut = async () => r.auth.signOut();
 
   return { signedIn, signOut };
 };

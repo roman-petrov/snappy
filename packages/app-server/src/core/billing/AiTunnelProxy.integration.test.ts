@@ -46,7 +46,7 @@ const tunnel = (userId = `user-1`): Tunnel => ({
     debitForLlm: vi.fn().mockResolvedValue(undefined),
     isLlmBlocked: vi.fn().mockResolvedValue(false),
     read: vi.fn(),
-    trpc: {},
+    rpc: {},
   } as unknown as Balance,
   betterAuth: {} as BetterAuth,
   db: Mock.createDb(),

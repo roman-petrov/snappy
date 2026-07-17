@@ -38,7 +38,7 @@ const mockTunnel = (userId = `user-1`): MockTunnel => ({
     debitForLlm: vi.fn().mockResolvedValue(undefined),
     isLlmBlocked: vi.fn().mockResolvedValue(false),
     read: vi.fn(),
-    trpc: {},
+    rpc: {},
   } as unknown as Balance,
   betterAuth: {} as BetterAuth,
   db: Mock.createDb(),

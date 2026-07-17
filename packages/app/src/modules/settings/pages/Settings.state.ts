@@ -2,15 +2,15 @@ import { useStoreValue } from "@snappy/store";
 import { $locale, $theme, useAsyncEffect } from "@snappy/ui";
 import { useState } from "react";
 
-import { $data } from "../../../data";
+import { r } from "../../../data";
 
 export const useSettingsState = () => {
   const [email, setEmail] = useState<string>();
-  const { settings } = $data.settings();
+  const [settings] = r.settings();
   const theme = useStoreValue($theme);
   const locale = useStoreValue($locale);
 
-  useAsyncEffect(async () => setEmail((await $data.auth.user())?.email), [locale]);
+  useAsyncEffect(async () => setEmail((await r.auth.user())?.email), [locale]);
 
   const aiTunnelDirect = settings?.aiTunnelDirect;
   const llmChatEnd = settings?.llmChatModel;

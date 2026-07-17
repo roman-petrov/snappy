@@ -1,20 +1,25 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Prisma, PrismaClient } from "./generated/client";
+import type { Prisma } from "./generated/client";
 
 import { DbCoreConvert } from "./DbCoreConvert";
+import { DbCoreLive } from "./DbCoreLive";
 import { DbCorePrisma } from "./DbCorePrisma";
+
+export type DbCoreBalance = { balance: number; id: string };
 
 export type DbCoreTopUpLog = { amount?: number | string; currency?: string; paymentId: string; type: string };
 
-export const DbCoreUserBalance = (prisma: PrismaClient, userId: string) => {
-  const read = async () => {
+export const DbCoreUserBalance = DbCoreLive<DbCoreBalance>()(({ emit, prisma, userId }) => {
+  const amount = async () => {
     const row = await prisma.userBalance.findUnique({ select: { amount: true }, where: { userId } });
 
     return DbCoreConvert.amount(row?.amount);
   };
 
-  const applyDelta = async (delta: number, kind: string, amountRubForHistory: number, meta?: Prisma.InputJsonValue) =>
-    prisma.$transaction(async tx => {
+  const read = async (): Promise<DbCoreBalance> => ({ balance: await amount(), id: userId });
+
+  const applyDelta = async (delta: number, kind: string, amountRubForHistory: number, meta?: Prisma.InputJsonValue) => {
+    const balance = await prisma.$transaction(async tx => {
       const row = await tx.userBalance.upsert({
         create: { amount: delta, userId },
         update: { amount: { increment: delta } },
@@ -23,19 +28,23 @@ export const DbCoreUserBalance = (prisma: PrismaClient, userId: string) => {
       await tx.balanceHistory.create({
         data: { amountRub: amountRubForHistory, balanceAfter: row.amount, kind, meta, userId },
       });
+
+      return DbCoreConvert.amount(row.amount);
     });
+    emit({ balance, id: userId });
+  };
 
   const credit = async (amountRub: number, meta?: Prisma.InputJsonValue) =>
     applyDelta(amountRub, `credit`, amountRub, meta);
 
-  const creditTopUp = async (amountRub: number, log: DbCoreTopUpLog) =>
-    DbCorePrisma.ignoreUnique(
+  const creditTopUp = async (amountRub: number, log: DbCoreTopUpLog) => {
+    const credited = await DbCorePrisma.ignoreUnique(
       async () =>
         prisma.$transaction(async tx => {
           const already =
             (await tx.paymentLog.findFirst({ where: { paymentId: log.paymentId, status: `succeeded` } })) !== null;
           if (already) {
-            return false;
+            return undefined;
           }
 
           const row = await tx.userBalance.upsert({
@@ -48,16 +57,22 @@ export const DbCoreUserBalance = (prisma: PrismaClient, userId: string) => {
           });
           await tx.paymentLog.create({ data: { ...log, status: `succeeded`, userId } });
 
-          return true;
+          return DbCoreConvert.amount(row.amount);
         }),
-      false,
+      undefined,
     );
+    if (credited !== undefined) {
+      emit({ balance: credited, id: userId });
+    }
+
+    return credited !== undefined;
+  };
 
   const debit = async (amountRub: number, meta?: Prisma.InputJsonValue) =>
     applyDelta(-amountRub, `debit`, amountRub, meta);
 
-  const set = async (amountRub: number) =>
-    prisma.$transaction(async tx => {
+  const set = async (amountRub: number) => {
+    await prisma.$transaction(async tx => {
       const previous = await tx.userBalance.findUnique({ select: { amount: true }, where: { userId } });
       const previousAmount = DbCoreConvert.amount(previous?.amount);
 
@@ -74,8 +89,13 @@ export const DbCoreUserBalance = (prisma: PrismaClient, userId: string) => {
         });
       }
     });
+    const snapshot = { balance: amountRub, id: userId };
+    emit(snapshot);
+
+    return snapshot;
+  };
 
   return { credit, creditTopUp, debit, read, set };
-};
+});
 
 export type DbCoreUserBalance = ReturnType<typeof DbCoreUserBalance>;

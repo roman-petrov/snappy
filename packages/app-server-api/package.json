@@ -8,8 +8,6 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "@snappy/app-server": "workspace:*",
-    "@trpc/client": "^11.18.0",
-    "@trpc/server": "^11.18.0"
+    "@snappy/app-server": "workspace:*"
   }
 }

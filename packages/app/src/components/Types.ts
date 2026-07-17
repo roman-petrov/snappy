@@ -1,3 +1,3 @@
-import type { TrpcOutputs } from "@snappy/app-server-api";
+import type { RpcOutput } from "@snappy/app-server-api";
 
-export type FeedArtifact = TrpcOutputs[`feed`][`list`][`items`][number];
+export type FeedArtifact = RpcOutput[`feed`][`list`][`items`][number];

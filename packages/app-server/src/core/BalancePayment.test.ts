@@ -3,9 +3,9 @@ import type { PaymentProvider } from "@snappy/payment";
 
 import { describe, expect, it, vi } from "vitest";
 
+import type { Balance } from "./Balance";
 import type { PaymentLog } from "./PaymentLog";
 
-import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
 import { Mock } from "./test/Mock";
 
@@ -15,8 +15,6 @@ vi.mock(`@snappy/config`, () => ({
   Config: { balance: { paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 } },
   ConfigValues: { env: () => `dev`, origin: () => `https://dev.example`, production },
 }));
-
-vi.mock(`./Balance`, () => ({ Balance: { creditFromTopUp: vi.fn().mockResolvedValue(true) } }));
 
 const paymentId = `pay-1`;
 const userId = `user-1`;
@@ -48,15 +46,15 @@ const paymentProvider = () => ({
 
 const setup = () => {
   production.mockReturnValue(false);
-  vi.mocked(Balance.creditFromTopUp).mockReset().mockResolvedValue(true);
   const db = Mock.createDb();
   const user = Mock.createDbUser(userId);
   vi.mocked(db.user).mockImplementation(((id: string) => (id === userId ? user : undefined)) as typeof db.user);
   const log = paymentLog() as unknown as PaymentLog;
   const payment = paymentProvider() as unknown as PaymentProvider;
-  const api = BalancePayment({ db, payment, paymentLog: log });
+  const balance = { creditFromTopUp: vi.fn().mockResolvedValue(true) } as unknown as Balance;
+  const api = BalancePayment({ balance, db, payment, paymentLog: log });
 
-  return { api, db, log, payment, user };
+  return { api, balance, db, log, payment, user };
 };
 
 describe(`paymentUrl`, () => {
@@ -140,16 +138,16 @@ describe(`webhook`, () => {
   });
 
   it(`returns OK when payment already succeeded`, async () => {
-    const { api, log } = setup();
+    const { api, balance, log } = setup();
     vi.mocked(log.succeeded).mockResolvedValue(true);
 
     await expect(api.webhook({})).resolves.toBe(`OK${paymentId}`);
-    expect(Balance.creditFromTopUp).not.toHaveBeenCalled();
+    expect(balance.creditFromTopUp).not.toHaveBeenCalled();
     expect(log.topUpSettleError).not.toHaveBeenCalled();
   });
 
   it(`returns OK and logs settle error for invalid metadata`, async () => {
-    const { api, log, payment, user } = setup();
+    const { api, balance, log, payment, user } = setup();
     vi.mocked(payment.payment).mockResolvedValue({
       metadataKind: undefined,
       money: { currency: `RUB`, value: `100.00` },
@@ -161,7 +159,7 @@ describe(`webhook`, () => {
 
     await expect(api.webhook({})).resolves.toBe(`OK${paymentId}`);
     expect(log.topUpSettleError).toHaveBeenCalledWith(user, paymentId, `invalid-metadata`);
-    expect(Balance.creditFromTopUp).not.toHaveBeenCalled();
+    expect(balance.creditFromTopUp).not.toHaveBeenCalled();
   });
 
   it(`returns OK and logs settle error when user is missing`, async () => {
@@ -215,7 +213,7 @@ describe(`webhook`, () => {
   });
 
   it(`credits balance and returns OK on success`, async () => {
-    const { api, log, payment, user } = setup();
+    const { api, balance, log, payment, user } = setup();
     vi.mocked(payment.payment).mockResolvedValue({
       metadataKind: `topup`,
       money: { currency: `RUB`, value: `100.000000` },
@@ -226,7 +224,7 @@ describe(`webhook`, () => {
     });
 
     await expect(api.webhook({})).resolves.toBe(`OK${paymentId}`);
-    expect(Balance.creditFromTopUp).toHaveBeenCalledWith(user, 100, {
+    expect(balance.creditFromTopUp).toHaveBeenCalledWith(user, 100, {
       amount: `100.000000`,
       currency: `RUB`,
       paymentId,
@@ -235,8 +233,8 @@ describe(`webhook`, () => {
   });
 
   it(`returns undefined when credit throws`, async () => {
-    const { api } = setup();
-    vi.mocked(Balance.creditFromTopUp).mockRejectedValue(new Error(`db down`));
+    const { api, balance } = setup();
+    vi.mocked(balance.creditFromTopUp).mockRejectedValue(new Error(`db down`));
 
     await expect(api.webhook({})).resolves.toBeUndefined();
   });

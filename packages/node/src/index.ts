@@ -8,6 +8,8 @@ export * from "./Emoji";
 
 export * from "./File";
 
+export * from "./HttpProxy";
+
 export * from "./HttpServer";
 
 export * from "./Process";

@@ -9,12 +9,13 @@ import { Settings } from "@snappy/ui-core";
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
 
+import type { Balance } from "./Balance";
+
 import { AuthEmail } from "./AuthEmail";
-import { Balance } from "./Balance";
 
-export type BetterAuthConfig = { db: Db };
+export type BetterAuthConfig = { balance: Balance; db: Db };
 
-export const BetterAuth = ({ db }: BetterAuthConfig) => {
+export const BetterAuth = ({ balance, db }: BetterAuthConfig) => {
   const resetEmail = AuthEmail();
   const verifyEmail = AuthEmail();
 
@@ -26,7 +27,7 @@ export const BetterAuth = ({ db }: BetterAuthConfig) => {
     databaseHooks: {
       user: {
         create: {
-          after: async user => Balance.creditFromSignUp(db.user(user.id)),
+          after: async user => balance.creditFromSignUp(db.user(user.id)),
           before: async user => {
             if (EmailCore.foreignProvider(user.email)) {
               throw APIError.from(`BAD_REQUEST`, {

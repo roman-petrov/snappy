@@ -1,36 +1,39 @@
 import { useRouterGo } from "@snappy/app-router";
-import { useAsyncEffect, useAsyncSubmit } from "@snappy/ui";
-import { useState } from "react";
+import { useAsyncSubmit } from "@snappy/ui";
+import { useEffect, useState } from "react";
 
 import type { UserEditProps } from "./UserEdit";
 
 import { Confirm, t } from "../../core";
-import { $data, type User } from "../../data";
+import { r } from "../../data";
 import { Routes } from "../../Routes";
 
 export const useUserEditState = ({ userId: id }: UserEditProps) => {
   const go = useRouterGo();
-  const { fetch, remove: removeUser, update } = $data.users();
-  const [user, setUser] = useState<User>();
-  const [balanceRub, setBalanceRub] = useState<number | undefined>(undefined);
+  const { item, remove: removeUser } = r.users;
+  const [user, update] = item({ id });
+  const [draft, setDraft] = useState<number>();
+  const balance = draft ?? user?.balance;
   const { error, loading, setError, wrapSubmit } = useAsyncSubmit();
 
-  useAsyncEffect(async () => {
-    const data = await fetch(id);
-    setUser(data);
-    if (data !== undefined) {
-      setBalanceRub(data.balanceRub);
+  useEffect(() => {
+    setDraft(undefined);
+  }, [id]);
+
+  const setBalance = (value: number | undefined) => {
+    if (value !== undefined) {
+      setDraft(value);
     }
-  }, [fetch, id]);
+  };
 
   const save = () => {
-    if (balanceRub === undefined || balanceRub < 0) {
+    if (balance === undefined || balance < 0) {
       setError({ key: `users.edit.errors.invalid` });
 
       return;
     }
     void wrapSubmit(async () => {
-      await update({ balanceRub, id });
+      await update({ balance });
       await go(Routes.user.list);
     });
   };
@@ -39,9 +42,9 @@ export const useUserEditState = ({ userId: id }: UserEditProps) => {
     if (!Confirm(t(`users.edit.deleteConfirm`))) {
       return;
     }
-    await removeUser(id);
+    await removeUser({ id });
     await go(Routes.user.list);
   };
 
-  return { balanceRub, error, loading, remove, save, setBalanceRub, user };
+  return { balance, error, loading, remove, save, setBalance, user };
 };
