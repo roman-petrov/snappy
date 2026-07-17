@@ -162,13 +162,12 @@ export const PaymentLogScalarFieldEnum = {
   createdAt: 'createdAt',
   type: 'type',
   userId: 'userId',
-  yooKassaPaymentId: 'yooKassaPaymentId',
+  paymentId: 'paymentId',
   amount: 'amount',
   currency: 'currency',
   status: 'status',
   idempotenceKey: 'idempotenceKey',
-  errorMessage: 'errorMessage',
-  paymentMethodId: 'paymentMethodId'
+  errorMessage: 'errorMessage'
 } as const
 
 export type PaymentLogScalarFieldEnum = (typeof PaymentLogScalarFieldEnum)[keyof typeof PaymentLogScalarFieldEnum]

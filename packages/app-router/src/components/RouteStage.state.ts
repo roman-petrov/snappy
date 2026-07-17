@@ -85,9 +85,7 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
 
     return () => {
       setChrome(previous =>
-        previous[scope] === undefined
-          ? previous
-          : _.fromEntries(Object.entries(previous).filter(([key]) => key !== scope)),
+        previous[scope] === undefined ? previous : _.filterEntries(previous, key => key !== scope),
       );
     };
   }, []);
@@ -140,7 +138,7 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
 
   const coverRef = useRef<Cover>(undefined);
   const patterns = new Set(panes.map(({ pattern: panePattern }) => panePattern));
-  frozenRef.current = _.fromEntries(_.entries(frozenRef.current).filter(([panePattern]) => patterns.has(panePattern)));
+  frozenRef.current = _.filterEntries(frozenRef.current, panePattern => patterns.has(panePattern));
 
   for (const { pattern: panePattern } of stackPanes.slice(0, -1)) {
     frozenRef.current[panePattern] ??= { fadeMinHeight: insets.page.fadeMinHeight, scrollPad: insets.page.scrollPad };

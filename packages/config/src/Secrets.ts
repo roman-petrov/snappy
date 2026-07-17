@@ -76,10 +76,9 @@ const yamlToRecord = (text: string): SecretsResult<SecretValues> => {
 
   return isPlainObject(parsed)
     ? success(
-        _.fromEntries(
-          _.entries(parsed)
-            .filter(([, value]) => value !== undefined && value !== null)
-            .map(([name, value]) => [name, String(value)]),
+        _.mapEntries(
+          _.filterEntries(parsed, (_name, value) => value !== undefined && value !== null),
+          (name, value) => [name, String(value)],
         ),
       )
     : failure(`Invalid secrets YAML.`);

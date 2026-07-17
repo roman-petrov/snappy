@@ -2,16 +2,14 @@
 import type { FastifyInstance } from "fastify";
 
 import { Config, ConfigValues } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
 import { Db } from "@snappy/db";
-import { Payment, YooKassaConfig } from "@snappy/payment";
+import { Payment } from "@snappy/payment";
 import { Trpc } from "@snappy/server-module";
-import { Tunnel } from "@snappy/tunnel";
 
 import { Balance } from "./Balance";
 import { BalancePayment } from "./BalancePayment";
 import { BetterAuth } from "./BetterAuth";
-import { AiTunnelProxy } from "./billing";
+import { AiTunnelProxy, RobokassaWebhook } from "./billing";
 import { Feed } from "./Feed";
 import { Images } from "./Images";
 import { PaymentLog } from "./PaymentLog";
@@ -26,8 +24,13 @@ export const App = async ({ app }: AppConfig) => {
   const betterAuth = BetterAuth({ db });
 
   const payment = Payment({
-    credentials: { secretKey: Config.yooKassaSecretKey(), shopId: Config.yooKassaShopId() },
-    type: `yoo-kassa`,
+    credentials: {
+      isTest: !ConfigValues.production(),
+      merchantLogin: Config.roboKassaMerchantLogin(),
+      password1: Config.roboKassaPassword1(),
+      password2: Config.roboKassaPassword2(),
+    },
+    type: `robo-kassa`,
   });
 
   const paymentLog = PaymentLog(db);
@@ -67,18 +70,5 @@ export const App = async ({ app }: AppConfig) => {
 
   Images.mount({ app, betterAuth, db });
 
-  await Tunnel({
-    app,
-    authorize: ({ ip }) => !ConfigValues.production() || YooKassaConfig.allowsIp(ip),
-    entryPath: `/api/webhooks/yookassa/test`,
-    handle: async (request, reply) => {
-      await balancePayment.webhook(request.body);
-      await reply.status(HttpStatus.ok).send();
-    },
-    host: ConfigValues.prodHost,
-    hub: ConfigValues.production(),
-    key: Config.tunnelKey(),
-    localPath: `/api/webhooks/yookassa`,
-    wsPath: `/api/tunnel`,
-  });
+  await RobokassaWebhook(app, { balancePayment, payment });
 };

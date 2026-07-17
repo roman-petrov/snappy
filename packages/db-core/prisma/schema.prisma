@@ -114,14 +114,14 @@ model PaymentLog {
   createdAt         DateTime @default(now())
   type              String
   userId            String?
-  yooKassaPaymentId String?
+  paymentId         String?
   amount            Decimal? @db.Decimal(12, 2)
   currency          String?
   status            String
   idempotenceKey    String?
   errorMessage      String?
-  paymentMethodId   String?
 
+  @@unique([paymentId, status])
   @@map("payment_logs")
 }
 

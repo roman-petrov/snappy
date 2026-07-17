@@ -1,6 +1,7 @@
 petrov
 gigachat
-yookassa
+robokassa
+robocheki
 giga
 gramio
 cascadia

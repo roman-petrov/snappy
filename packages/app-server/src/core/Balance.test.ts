@@ -42,23 +42,23 @@ describe(`creditFromSignUp`, () => {
 });
 
 describe(`creditFromTopUp`, () => {
-  it(`credits user balance`, async () => {
+  it(`credits user balance with payment log in one call`, async () => {
     const user = Mock.createDbUser();
-    const meta = { yooKassaPaymentId: `pay-1` };
+    const log = { amount: `199.00`, currency: `RUB`, paymentId: `pay-1` };
 
-    await creditFromTopUp(user, 199, meta);
+    await creditFromTopUp(user, 199, log);
 
-    expect(user.balance.credit).toHaveBeenCalledWith(199, meta);
+    expect(user.balance.creditTopUp).toHaveBeenCalledWith(199, { ...log, type: `topup` });
   });
 });
 
 describe(`debitForLlm`, () => {
-  it(`debits user balance with chargedRub in meta`, async () => {
+  it(`debits cost with llm commission`, async () => {
     const user = Mock.createDbUser();
     const meta = { call: `chat`, model: `gpt-4` };
 
     await debitForLlm(user, 1.5, meta);
 
-    expect(user.balance.debit).toHaveBeenCalledWith(1.5, { ...meta, chargedRub: 1.5 });
+    expect(user.balance.debit).toHaveBeenCalledWith(1.88, { ...meta, chargedRub: 1.88, costRub: 1.5 });
   });
 });

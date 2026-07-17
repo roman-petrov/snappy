@@ -3,7 +3,7 @@ import type { Db, DbUser } from "@snappy/db";
 
 import { vi } from "vitest";
 
-const balanceMethods = () => ({ credit: vi.fn(), debit: vi.fn(), read: vi.fn(), set: vi.fn() });
+const balanceMethods = () => ({ credit: vi.fn(), creditTopUp: vi.fn(), debit: vi.fn(), read: vi.fn(), set: vi.fn() });
 const paymentLogCreate = () => vi.fn();
 const userSettingsMethods = () => ({ find: vi.fn(), update: vi.fn() });
 
@@ -20,7 +20,7 @@ const createDb = (): ReturnType<typeof Db> => {
 
   return {
     auth: {} as ReturnType<typeof Db>[`auth`],
-    paymentLog: { create: vi.fn(), succeeded: vi.fn() },
+    paymentLog: { create: vi.fn(), createOnce: vi.fn(), pendingAmount: vi.fn(), succeeded: vi.fn() },
     user,
     users: { list: vi.fn(), read: vi.fn(), remove: vi.fn() },
   };

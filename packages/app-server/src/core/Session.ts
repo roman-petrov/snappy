@@ -7,7 +7,7 @@ import { fromNodeHeaders } from "better-auth/node";
 import type { BetterAuth } from "./BetterAuth";
 
 const headers = (incoming: IncomingHttpHeaders) =>
-  fromNodeHeaders(_.fromEntries(_.entries(incoming).filter(([key]) => !key.startsWith(`:`))));
+  fromNodeHeaders(_.filterEntries(incoming, key => !key.startsWith(`:`)));
 
 const dbUserFromId = (db: Db, id: string | undefined) => (id === undefined || id === `` ? undefined : db.user(id));
 

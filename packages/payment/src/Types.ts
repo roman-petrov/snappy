@@ -1,15 +1,14 @@
 export type PaymentCreateRedirectPaymentInput = {
   amount: number;
-  currency: string;
   description: string;
   metadataKind: PaymentMetadataKind;
-  options?: { returnUrl?: string; savePaymentMethod?: boolean };
+  options?: { failUrl?: string; returnUrl?: string };
   userId: string;
 };
 
 export type PaymentCreateRedirectPaymentResult = PaymentResult<PaymentCreateRedirectPaymentSuccess>;
 
-export type PaymentCreateRedirectPaymentSuccess = { providerPaymentId: string; redirectUrl: string };
+export type PaymentCreateRedirectPaymentSuccess = { paymentId: string; redirectUrl: string };
 
 export type PaymentCreateRedirectPaymentSuccessResult = PaymentSuccess<PaymentCreateRedirectPaymentSuccess>;
 
@@ -22,17 +21,12 @@ export type PaymentMetadataKind = `topup`;
 
 export type PaymentMoney = { currency: string; value: string };
 
-export type PaymentPaidResult = PaymentResult<PaymentPaidSuccess>;
-
-export type PaymentPaidSuccess = { paid: boolean };
-
 export type PaymentProvider = {
   createRedirectPayment: (
     input: PaymentCreateRedirectPaymentInput,
   ) => Promise<PaymentResult<PaymentCreateRedirectPaymentSuccess>>;
-  paid: (providerPaymentId: string) => Promise<PaymentResult<PaymentPaidSuccess>>;
   parseWebhook: (body: unknown) => PaymentResult<PaymentWebhookEvent>;
-  payment: (providerPaymentId: string) => Promise<PaymentResult<PaymentSnapshot>>;
+  payment: (paymentId: string) => Promise<PaymentResult<PaymentSnapshot>>;
 };
 
 export type PaymentQueryResult = PaymentResult<PaymentSnapshot>;
@@ -42,21 +36,17 @@ export type PaymentResult<T> = PaymentFailure | PaymentSuccess<T>;
 export type PaymentSnapshot = {
   metadataKind?: PaymentMetadataKind;
   money?: PaymentMoney;
-  providerCancellationCode?: string;
-  providerPaid?: boolean;
-  providerPaymentId: string;
-  savedMethodId?: string;
+  paymentId: string;
   status: PaymentStatus;
   userId?: string;
 };
 
 export type PaymentSnapshotSuccess = PaymentSuccess<PaymentSnapshot>;
 
-export type PaymentStatus =
-  `canceled` | `failed` | `pending` | `processing` | `requires-action` | `succeeded` | `unknown` | `waiting-capture`;
+export type PaymentStatus = `canceled` | `pending` | `succeeded` | `unknown`;
 
 export type PaymentSuccess<T> = T & { ok: true };
 
-export type PaymentWebhookEvent = { kind: `payment-canceled` | `payment-succeeded`; providerPaymentId: string };
+export type PaymentWebhookEvent = { paymentId: string };
 
 export type PaymentWebhookParseResult = PaymentResult<PaymentWebhookEvent>;

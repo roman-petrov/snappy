@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { ObjectValue } from "./ObjectValue";
 
-const { entries, fromEntries, groupsInOrder, keys } = ObjectValue;
+const { entries, filterEntries, fromEntries, groupsInOrder, keys, mapEntries } = ObjectValue;
 
 describe(`entries`, () => {
   it(`returns empty array for empty object`, () => {
@@ -31,6 +31,30 @@ describe(`fromEntries`, () => {
         [`c`, 1],
       ]),
     ).toStrictEqual({ a: 2, b: 42, c: 1 });
+  });
+});
+
+describe(`filterEntries`, () => {
+  it(`returns empty object for empty object`, () => {
+    expect(filterEntries({}, () => true)).toStrictEqual({});
+  });
+
+  it(`keeps entries matching predicate`, () => {
+    expect(filterEntries({ a: 2, b: 42, c: 1 }, (_key, value) => value > 1)).toStrictEqual({ a: 2, b: 42 });
+  });
+
+  it(`filters by key`, () => {
+    expect(filterEntries({ a: 2, b: 42, c: 1 }, key => key !== `b`)).toStrictEqual({ a: 2, c: 1 });
+  });
+});
+
+describe(`mapEntries`, () => {
+  it(`returns empty object for empty object`, () => {
+    expect(mapEntries({}, (key, value) => [key, value])).toStrictEqual({});
+  });
+
+  it(`maps values`, () => {
+    expect(mapEntries({ a: 2, b: 3 }, (key, value) => [key, value * 2])).toStrictEqual({ a: 4, b: 6 });
   });
 });
 

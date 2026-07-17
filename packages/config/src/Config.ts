@@ -21,8 +21,9 @@ const adminPassword = key(SecretKeys.adminPassword);
 const aiTunnelKey = key(SecretKeys.aiTunnelApiKey);
 const smtpUser = key(SecretKeys.smtpUser);
 const smtpPassword = key(SecretKeys.smtpPassword);
-const yooKassaSecretKey = key(SecretKeys.yookassaSecretKey);
-const yooKassaShopId = key(SecretKeys.yookassaShopId);
+const roboKassaMerchantLogin = key(SecretKeys.robokassaMerchantLogin);
+const roboKassaPassword1 = key(SecretKeys.robokassaPassword1);
+const roboKassaPassword2 = key(SecretKeys.robokassaPassword2);
 const tunnelKey = key(SecretKeys.tunnelKey);
 const androidCertSha256 = key(SecretKeys.androidCertSha256);
 const adminSessionSecret = () => createHmac(`sha256`, betterAuthJwtSecret()).update(`snappy-admin-v1`).digest();
@@ -41,7 +42,7 @@ const devSsl = () => {
 const ssl = () => (ConfigValues.production() ? prodSsl() : devSsl());
 const authEmailCooldownSec = _.minute.seconds;
 const s3ObjectMaxAgeSec = _.day.seconds * _.daysInYear;
-const balance = { paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 };
+const balance = { llmCommission: 0.25, paymentMaxRub: 5000, paymentMinRub: 10, signUpBonusRub: 50 };
 const host = ConfigValues.production() ? ConfigValues.prodHost : ConfigValues.devHost;
 const smtpHost = `smtp.mail.ru`;
 const smtpPort = 465;
@@ -63,6 +64,9 @@ export const Config = {
   dbUrl,
   dbUser,
   host,
+  roboKassaMerchantLogin,
+  roboKassaPassword1,
+  roboKassaPassword2,
   s3ObjectMaxAgeSec,
   smtpHost,
   smtpPassword,
@@ -70,8 +74,6 @@ export const Config = {
   smtpUser,
   ssl,
   tunnelKey,
-  yooKassaSecretKey,
-  yooKassaShopId,
 };
 
 export type Config = typeof Config;

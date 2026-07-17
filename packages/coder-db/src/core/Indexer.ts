@@ -129,7 +129,7 @@ export const Indexer =
       }
     }
 
-    manifest = _.fromEntries(_.entries(manifest).filter(([pathKey]) => pathsSet.has(pathKey)));
+    manifest = _.filterEntries(manifest, pathKey => pathsSet.has(pathKey));
     const changedJobs: IndexedJob[] = [];
     const filesTotal = paths.length;
     let filesSkippedUnchanged = 0;

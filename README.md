@@ -85,12 +85,12 @@ uses the same URL.
 
 On a phone: copy `ca.pem` to the device and install it as a CA certificate (Settings → Security).
 
-### 🚇 YooKassa webhooks
+### 🚇 Robokassa (shop technical settings)
 
-Configure webhook URL in shops:
-
-- Test: `https://snappy-ai.ru/api/webhooks/yookassa/test`
-- Live: `https://snappy-ai.ru/api/webhooks/yookassa`
+- Hash: `MD5`
+- ResultURL: `POST` `https://snappy-ai.ru/api/webhooks/robokassa`
+- SuccessURL: `GET` `https://snappy-ai.ru/billing/robokassa/success`
+- FailURL: `GET` `https://snappy-ai.ru/billing/robokassa/fail`
 
 ## 🛠️ Technologies
 
@@ -142,8 +142,7 @@ Configure webhook URL in shops:
 
 ### 💳 Payments
 
-- [YooKassa](https://yookassa.ru/)
-  - [Test cards](https://yookassa.ru/developers/payment-acceptance/testing-and-going-live/testing#test-bank-card-data)
+- [Robokassa](https://robokassa.com/)
 
 ## 🤖 AI (recommended)
 

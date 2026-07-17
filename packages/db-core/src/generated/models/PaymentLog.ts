@@ -39,13 +39,12 @@ export type PaymentLogMinAggregateOutputType = {
   createdAt: Date | null
   type: string | null
   userId: string | null
-  yooKassaPaymentId: string | null
+  paymentId: string | null
   amount: runtime.Decimal | null
   currency: string | null
   status: string | null
   idempotenceKey: string | null
   errorMessage: string | null
-  paymentMethodId: string | null
 }
 
 export type PaymentLogMaxAggregateOutputType = {
@@ -53,13 +52,12 @@ export type PaymentLogMaxAggregateOutputType = {
   createdAt: Date | null
   type: string | null
   userId: string | null
-  yooKassaPaymentId: string | null
+  paymentId: string | null
   amount: runtime.Decimal | null
   currency: string | null
   status: string | null
   idempotenceKey: string | null
   errorMessage: string | null
-  paymentMethodId: string | null
 }
 
 export type PaymentLogCountAggregateOutputType = {
@@ -67,13 +65,12 @@ export type PaymentLogCountAggregateOutputType = {
   createdAt: number
   type: number
   userId: number
-  yooKassaPaymentId: number
+  paymentId: number
   amount: number
   currency: number
   status: number
   idempotenceKey: number
   errorMessage: number
-  paymentMethodId: number
   _all: number
 }
 
@@ -91,13 +88,12 @@ export type PaymentLogMinAggregateInputType = {
   createdAt?: true
   type?: true
   userId?: true
-  yooKassaPaymentId?: true
+  paymentId?: true
   amount?: true
   currency?: true
   status?: true
   idempotenceKey?: true
   errorMessage?: true
-  paymentMethodId?: true
 }
 
 export type PaymentLogMaxAggregateInputType = {
@@ -105,13 +101,12 @@ export type PaymentLogMaxAggregateInputType = {
   createdAt?: true
   type?: true
   userId?: true
-  yooKassaPaymentId?: true
+  paymentId?: true
   amount?: true
   currency?: true
   status?: true
   idempotenceKey?: true
   errorMessage?: true
-  paymentMethodId?: true
 }
 
 export type PaymentLogCountAggregateInputType = {
@@ -119,13 +114,12 @@ export type PaymentLogCountAggregateInputType = {
   createdAt?: true
   type?: true
   userId?: true
-  yooKassaPaymentId?: true
+  paymentId?: true
   amount?: true
   currency?: true
   status?: true
   idempotenceKey?: true
   errorMessage?: true
-  paymentMethodId?: true
   _all?: true
 }
 
@@ -220,13 +214,12 @@ export type PaymentLogGroupByOutputType = {
   createdAt: Date
   type: string
   userId: string | null
-  yooKassaPaymentId: string | null
+  paymentId: string | null
   amount: runtime.Decimal | null
   currency: string | null
   status: string
   idempotenceKey: string | null
   errorMessage: string | null
-  paymentMethodId: string | null
   _count: PaymentLogCountAggregateOutputType | null
   _avg: PaymentLogAvgAggregateOutputType | null
   _sum: PaymentLogSumAggregateOutputType | null
@@ -257,13 +250,12 @@ export type PaymentLogWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"PaymentLog"> | Date | string
   type?: Prisma.StringFilter<"PaymentLog"> | string
   userId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
-  yooKassaPaymentId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
+  paymentId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   amount?: Prisma.DecimalNullableFilter<"PaymentLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   status?: Prisma.StringFilter<"PaymentLog"> | string
   idempotenceKey?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
-  paymentMethodId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
 }
 
 export type PaymentLogOrderByWithRelationInput = {
@@ -271,44 +263,42 @@ export type PaymentLogOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   type?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
-  yooKassaPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   idempotenceKey?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
-  paymentMethodId?: Prisma.SortOrderInput | Prisma.SortOrder
 }
 
 export type PaymentLogWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  paymentId_status?: Prisma.PaymentLogPaymentIdStatusCompoundUniqueInput
   AND?: Prisma.PaymentLogWhereInput | Prisma.PaymentLogWhereInput[]
   OR?: Prisma.PaymentLogWhereInput[]
   NOT?: Prisma.PaymentLogWhereInput | Prisma.PaymentLogWhereInput[]
   createdAt?: Prisma.DateTimeFilter<"PaymentLog"> | Date | string
   type?: Prisma.StringFilter<"PaymentLog"> | string
   userId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
-  yooKassaPaymentId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
+  paymentId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   amount?: Prisma.DecimalNullableFilter<"PaymentLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   status?: Prisma.StringFilter<"PaymentLog"> | string
   idempotenceKey?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
   errorMessage?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
-  paymentMethodId?: Prisma.StringNullableFilter<"PaymentLog"> | string | null
-}, "id">
+}, "id" | "paymentId_status">
 
 export type PaymentLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   type?: Prisma.SortOrder
   userId?: Prisma.SortOrderInput | Prisma.SortOrder
-  yooKassaPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentId?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrderInput | Prisma.SortOrder
   currency?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   idempotenceKey?: Prisma.SortOrderInput | Prisma.SortOrder
   errorMessage?: Prisma.SortOrderInput | Prisma.SortOrder
-  paymentMethodId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.PaymentLogCountOrderByAggregateInput
   _avg?: Prisma.PaymentLogAvgOrderByAggregateInput
   _max?: Prisma.PaymentLogMaxOrderByAggregateInput
@@ -324,13 +314,12 @@ export type PaymentLogScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"PaymentLog"> | Date | string
   type?: Prisma.StringWithAggregatesFilter<"PaymentLog"> | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
-  yooKassaPaymentId?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
+  paymentId?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
   amount?: Prisma.DecimalNullableWithAggregatesFilter<"PaymentLog"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
   status?: Prisma.StringWithAggregatesFilter<"PaymentLog"> | string
   idempotenceKey?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
   errorMessage?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
-  paymentMethodId?: Prisma.StringNullableWithAggregatesFilter<"PaymentLog"> | string | null
 }
 
 export type PaymentLogCreateInput = {
@@ -338,13 +327,12 @@ export type PaymentLogCreateInput = {
   createdAt?: Date | string
   type: string
   userId?: string | null
-  yooKassaPaymentId?: string | null
+  paymentId?: string | null
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string | null
   status: string
   idempotenceKey?: string | null
   errorMessage?: string | null
-  paymentMethodId?: string | null
 }
 
 export type PaymentLogUncheckedCreateInput = {
@@ -352,13 +340,12 @@ export type PaymentLogUncheckedCreateInput = {
   createdAt?: Date | string
   type: string
   userId?: string | null
-  yooKassaPaymentId?: string | null
+  paymentId?: string | null
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string | null
   status: string
   idempotenceKey?: string | null
   errorMessage?: string | null
-  paymentMethodId?: string | null
 }
 
 export type PaymentLogUpdateInput = {
@@ -366,13 +353,12 @@ export type PaymentLogUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yooKassaPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   idempotenceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentMethodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentLogUncheckedUpdateInput = {
@@ -380,13 +366,12 @@ export type PaymentLogUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yooKassaPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   idempotenceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentMethodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentLogCreateManyInput = {
@@ -394,13 +379,12 @@ export type PaymentLogCreateManyInput = {
   createdAt?: Date | string
   type: string
   userId?: string | null
-  yooKassaPaymentId?: string | null
+  paymentId?: string | null
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: string | null
   status: string
   idempotenceKey?: string | null
   errorMessage?: string | null
-  paymentMethodId?: string | null
 }
 
 export type PaymentLogUpdateManyMutationInput = {
@@ -408,13 +392,12 @@ export type PaymentLogUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yooKassaPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   idempotenceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentMethodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type PaymentLogUncheckedUpdateManyInput = {
@@ -422,13 +405,17 @@ export type PaymentLogUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  yooKassaPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currency?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.StringFieldUpdateOperationsInput | string
   idempotenceKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   errorMessage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentMethodId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type PaymentLogPaymentIdStatusCompoundUniqueInput = {
+  paymentId: string
+  status: string
 }
 
 export type PaymentLogCountOrderByAggregateInput = {
@@ -436,13 +423,12 @@ export type PaymentLogCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   type?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  yooKassaPaymentId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   idempotenceKey?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  paymentMethodId?: Prisma.SortOrder
 }
 
 export type PaymentLogAvgOrderByAggregateInput = {
@@ -454,13 +440,12 @@ export type PaymentLogMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   type?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  yooKassaPaymentId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   idempotenceKey?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  paymentMethodId?: Prisma.SortOrder
 }
 
 export type PaymentLogMinOrderByAggregateInput = {
@@ -468,13 +453,12 @@ export type PaymentLogMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   type?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  yooKassaPaymentId?: Prisma.SortOrder
+  paymentId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   status?: Prisma.SortOrder
   idempotenceKey?: Prisma.SortOrder
   errorMessage?: Prisma.SortOrder
-  paymentMethodId?: Prisma.SortOrder
 }
 
 export type PaymentLogSumOrderByAggregateInput = {
@@ -496,13 +480,12 @@ export type PaymentLogSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   createdAt?: boolean
   type?: boolean
   userId?: boolean
-  yooKassaPaymentId?: boolean
+  paymentId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   idempotenceKey?: boolean
   errorMessage?: boolean
-  paymentMethodId?: boolean
 }, ExtArgs["result"]["paymentLog"]>
 
 export type PaymentLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -510,13 +493,12 @@ export type PaymentLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   type?: boolean
   userId?: boolean
-  yooKassaPaymentId?: boolean
+  paymentId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   idempotenceKey?: boolean
   errorMessage?: boolean
-  paymentMethodId?: boolean
 }, ExtArgs["result"]["paymentLog"]>
 
 export type PaymentLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -524,13 +506,12 @@ export type PaymentLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   createdAt?: boolean
   type?: boolean
   userId?: boolean
-  yooKassaPaymentId?: boolean
+  paymentId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   idempotenceKey?: boolean
   errorMessage?: boolean
-  paymentMethodId?: boolean
 }, ExtArgs["result"]["paymentLog"]>
 
 export type PaymentLogSelectScalar = {
@@ -538,16 +519,15 @@ export type PaymentLogSelectScalar = {
   createdAt?: boolean
   type?: boolean
   userId?: boolean
-  yooKassaPaymentId?: boolean
+  paymentId?: boolean
   amount?: boolean
   currency?: boolean
   status?: boolean
   idempotenceKey?: boolean
   errorMessage?: boolean
-  paymentMethodId?: boolean
 }
 
-export type PaymentLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "type" | "userId" | "yooKassaPaymentId" | "amount" | "currency" | "status" | "idempotenceKey" | "errorMessage" | "paymentMethodId", ExtArgs["result"]["paymentLog"]>
+export type PaymentLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "type" | "userId" | "paymentId" | "amount" | "currency" | "status" | "idempotenceKey" | "errorMessage", ExtArgs["result"]["paymentLog"]>
 
 export type $PaymentLogPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "PaymentLog"
@@ -557,13 +537,12 @@ export type $PaymentLogPayload<ExtArgs extends runtime.Types.Extensions.Internal
     createdAt: Date
     type: string
     userId: string | null
-    yooKassaPaymentId: string | null
+    paymentId: string | null
     amount: runtime.Decimal | null
     currency: string | null
     status: string
     idempotenceKey: string | null
     errorMessage: string | null
-    paymentMethodId: string | null
   }, ExtArgs["result"]["paymentLog"]>
   composites: {}
 }
@@ -991,13 +970,12 @@ export interface PaymentLogFieldRefs {
   readonly createdAt: Prisma.FieldRef<"PaymentLog", 'DateTime'>
   readonly type: Prisma.FieldRef<"PaymentLog", 'String'>
   readonly userId: Prisma.FieldRef<"PaymentLog", 'String'>
-  readonly yooKassaPaymentId: Prisma.FieldRef<"PaymentLog", 'String'>
+  readonly paymentId: Prisma.FieldRef<"PaymentLog", 'String'>
   readonly amount: Prisma.FieldRef<"PaymentLog", 'Decimal'>
   readonly currency: Prisma.FieldRef<"PaymentLog", 'String'>
   readonly status: Prisma.FieldRef<"PaymentLog", 'String'>
   readonly idempotenceKey: Prisma.FieldRef<"PaymentLog", 'String'>
   readonly errorMessage: Prisma.FieldRef<"PaymentLog", 'String'>
-  readonly paymentMethodId: Prisma.FieldRef<"PaymentLog", 'String'>
 }
     
 

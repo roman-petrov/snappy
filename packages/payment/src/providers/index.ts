@@ -1,1 +1,1 @@
-export * from "./YooKassa";
+export * from "./Robokassa";

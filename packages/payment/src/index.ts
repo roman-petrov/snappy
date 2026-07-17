@@ -2,6 +2,6 @@ export * from "./Payment";
 
 export * from "./PaymentResponse";
 
-export type * from "./Types";
+export * from "./RobokassaConfig";
 
-export * from "./YooKassaConfig";
+export type * from "./Types";

@@ -1,10 +1,17 @@
 import { Router } from "@snappy/router";
 
 import { KnownUser } from "./core";
-import { AuthRoutes, FeedRoutes, LegalRoutes, SettingsRoutes, Snappy, SnappyRoutes } from "./modules";
+import { AuthRoutes, BillingRoutes, FeedRoutes, LegalRoutes, SettingsRoutes, Snappy, SnappyRoutes } from "./modules";
 
 export const Routes = Router({
-  routes: { auth: AuthRoutes, feed: FeedRoutes, legal: LegalRoutes, settings: SettingsRoutes, snappy: SnappyRoutes },
+  routes: {
+    auth: AuthRoutes,
+    billing: BillingRoutes,
+    feed: FeedRoutes,
+    legal: LegalRoutes,
+    settings: SettingsRoutes,
+    snappy: SnappyRoutes,
+  },
   start: {
     index: Snappy,
     public: r => [
@@ -13,6 +20,8 @@ export const Routes = Router({
       r.auth.resetPassword,
       r.auth.signIn,
       r.auth.signUp,
+      r.billing.robokassa.fail,
+      r.billing.robokassa.success,
       r.legal.privacy,
       r.legal.terms,
     ],

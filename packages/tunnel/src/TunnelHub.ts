@@ -120,16 +120,18 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
     await reply.status(response.status).send(Buffer.from(await response.arrayBuffer()));
   };
 
+  const online = () => session !== undefined;
+
   const register = async (app: FastifyInstance, path: string) => {
     await app.register(websocket);
     await app.register(scoped => {
       scoped.get(path, { websocket: true }, accept);
     });
 
-    return { proxy };
+    return { online, proxy };
   };
 
-  return { proxy, register };
+  return { online, proxy, register };
 };
 
 export type TunnelHub = ReturnType<typeof TunnelHub>;

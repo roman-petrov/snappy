@@ -11,6 +11,9 @@ const keys = {
   dbPort: `DB_PORT`,
   dbUser: `DB_USER`,
   jwtSecret: `JWT_SECRET`,
+  robokassaMerchantLogin: `ROBOKASSA_MERCHANT_LOGIN`,
+  robokassaPassword1: `ROBOKASSA_PASSWORD1`,
+  robokassaPassword2: `ROBOKASSA_PASSWORD2`,
   s3AccessKey: `S3_ACCESS_KEY`,
   s3Bucket: `S3_BUCKET`,
   s3SecretKey: `S3_SECRET_KEY`,
@@ -19,8 +22,6 @@ const keys = {
   sslCertKey: `SSL_CERT_KEY`,
   sslCertPem: `SSL_CERT_PEM`,
   tunnelKey: `TUNNEL_KEY`,
-  yookassaSecretKey: `YOOKASSA_SECRET_KEY`,
-  yookassaShopId: `YOOKASSA_SHOP_ID`,
 } as const;
 
 export type SecretKey = (typeof keys)[keyof typeof keys];

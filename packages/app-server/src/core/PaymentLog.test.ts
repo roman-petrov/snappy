@@ -5,15 +5,15 @@ import { PaymentLog } from "./PaymentLog";
 import { Mock } from "./test/Mock";
 
 describe(`paymentLog`, () => {
-  describe(`logTopUpError / logTopUpPending`, () => {
-    it(`logTopUpError calls create with error entry`, async () => {
+  describe(`topUpError / topUpPending`, () => {
+    it(`topUpError calls create with error entry`, async () => {
       const db = Mock.createDb();
       const user = Mock.createDbUser(`10`);
       vi.mocked(db.user).mockReturnValue(user);
       (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
       const paymentLog = PaymentLog(db);
 
-      await paymentLog.logTopUpError(user, `provider-error`);
+      await paymentLog.topUpError(user, `provider-error`);
 
       expect(user.paymentLog.create).toHaveBeenCalledWith({
         currency: `RUB`,
@@ -23,32 +23,32 @@ describe(`paymentLog`, () => {
       });
     });
 
-    it(`logTopUpPending calls create with pending entry`, async () => {
+    it(`topUpPending calls create with pending entry`, async () => {
       const db = Mock.createDb();
       const user = Mock.createDbUser(`5`);
       vi.mocked(db.user).mockReturnValue(user);
       (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
       const paymentLog = PaymentLog(db);
 
-      await paymentLog.logTopUpPending(user, `pay-id-1`, 199);
+      await paymentLog.topUpPending(user, `pay-id-1`, 199);
 
       expect(user.paymentLog.create).toHaveBeenCalledWith({
         amount: 199,
         currency: `RUB`,
+        paymentId: `pay-id-1`,
         status: `pending`,
         type: `topup`,
-        yooKassaPaymentId: `pay-id-1`,
       });
     });
   });
 
-  describe(`isSucceededAlready`, () => {
+  describe(`succeeded`, () => {
     it(`returns false when no succeeded row for paymentId`, async () => {
       const db = Mock.createDb();
       (db.paymentLog.succeeded as ReturnType<typeof vi.fn>).mockResolvedValue(false);
       const paymentLog = PaymentLog(db);
 
-      await expect(paymentLog.isSucceededAlready(`pay-123`)).resolves.toBe(false);
+      await expect(paymentLog.succeeded(`pay-123`)).resolves.toBe(false);
 
       expect(db.paymentLog.succeeded).toHaveBeenCalledWith(`pay-123`);
     });
@@ -58,86 +58,38 @@ describe(`paymentLog`, () => {
       (db.paymentLog.succeeded as ReturnType<typeof vi.fn>).mockResolvedValue(true);
       const paymentLog = PaymentLog(db);
 
-      await expect(paymentLog.isSucceededAlready(`pay-123`)).resolves.toBe(true);
+      await expect(paymentLog.succeeded(`pay-123`)).resolves.toBe(true);
     });
   });
 
-  describe(`logPaymentSucceeded`, () => {
-    it(`calls create with succeeded entry and type from result`, async () => {
+  describe(`pendingAmount`, () => {
+    it(`delegates to db.paymentLog.pendingAmount`, async () => {
       const db = Mock.createDb();
-      const user = Mock.createDbUser(`7`);
-      vi.mocked(db.user).mockReturnValue(user);
-      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      (db.paymentLog.pendingAmount as ReturnType<typeof vi.fn>).mockResolvedValue(199);
       const paymentLog = PaymentLog(db);
 
-      const result = {
-        metadataKind: `topup` as const,
-        money: { currency: `RUB`, value: `199.00` },
-        ok: true as const,
-        providerPaid: true,
-        providerPaymentId: `pay-1`,
-        savedMethodId: `pm-1`,
-        status: `succeeded` as const,
-        userId: `7`,
-      };
+      await expect(paymentLog.pendingAmount(`pay-1`)).resolves.toBe(199);
+      expect(db.paymentLog.pendingAmount).toHaveBeenCalledWith(`pay-1`);
+    });
+  });
 
-      await paymentLog.logPaymentSucceeded(user, result);
+  describe(`topUpSettleError`, () => {
+    it(`writes error entry via createOnce`, async () => {
+      const db = Mock.createDb();
+      const user = Mock.createDbUser(`10`);
+      (db.paymentLog.createOnce as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
+      const paymentLog = PaymentLog(db);
 
-      expect(user.paymentLog.create).toHaveBeenCalledWith({
-        amount: `199.00`,
+      await paymentLog.topUpSettleError(user, `pay-1`, `amount-mismatch`);
+
+      expect(db.paymentLog.createOnce).toHaveBeenCalledWith({
         currency: `RUB`,
-        paymentMethodId: `pm-1`,
-        status: `succeeded`,
+        errorMessage: `amount-mismatch`,
+        paymentId: `pay-1`,
+        status: `error`,
         type: `topup`,
-        yooKassaPaymentId: `pay-1`,
+        userId: `10`,
       });
-    });
-  });
-
-  describe(`logPaymentCanceled`, () => {
-    it(`calls create with canceled status when result has data`, async () => {
-      const db = Mock.createDb();
-      const user = Mock.createDbUser(`2`);
-      (user.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
-      const paymentLog = PaymentLog(db);
-
-      const result = {
-        metadataKind: undefined,
-        ok: true as const,
-        providerCancellationCode: `user_cancelled`,
-        providerPaymentId: `pay-id`,
-        savedMethodId: `pm-x`,
-        status: `canceled` as const,
-        userId: `2`,
-      };
-
-      await paymentLog.logPaymentCanceled(`pay-id`, result, user);
-
-      expect(user.paymentLog.create).toHaveBeenCalledWith({
-        errorMessage: `user_cancelled`,
-        paymentMethodId: `pm-x`,
-        status: `canceled`,
-        type: `topup`,
-        yooKassaPaymentId: `pay-id`,
-      });
-    });
-
-    it(`calls create with error status when result has error`, async () => {
-      const db = Mock.createDb();
-      (db.paymentLog.create as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
-      const paymentLog = PaymentLog(db);
-      const result = { code: `network` as const, ok: false as const };
-
-      await paymentLog.logPaymentCanceled(`pay-id`, result);
-
-      expect(db.paymentLog.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          errorMessage: `network`,
-          status: `error`,
-          type: `topup`,
-          yooKassaPaymentId: `pay-id`,
-        }),
-      );
     });
   });
 });

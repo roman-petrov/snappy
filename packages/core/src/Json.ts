@@ -8,7 +8,7 @@ const nullToUndefined = (value: unknown): unknown =>
     : _.isArray(value)
       ? value.map(nullToUndefined)
       : _.isObject(value)
-        ? _.fromEntries(Object.entries(value).map(([key, v]) => [key, nullToUndefined(v)] as const))
+        ? _.mapEntries(value, (key, v) => [key, nullToUndefined(v)])
         : value;
 
 const normalize = <T>(value: T): T => nullToUndefined(value) as T;
