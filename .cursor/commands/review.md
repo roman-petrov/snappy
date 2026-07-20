@@ -1,18 +1,19 @@
-<!-- cspell:words typecheckers oneline lockfiles IIFE -->
+<!-- cspell:words typecheckers oneline lockfiles IIFE subagents dedupe -->
 
 # 🔍 Review: Code Review (Feature Branch or Last Commit)
 
 **Mode:** Run this command in **Plan mode**. If the session is not already in Plan mode, switch to it first
-(`SwitchMode` → `plan`), then continue. Do not implement fixes in this command — the deliverable is a plan.
+(`SwitchMode` → `plan`), then continue. Do not implement fixes in this command — the deliverable is a plan via
+`CreatePlan`.
 
 **Goal:** Thoroughly review either (a) all changes on a **feature branch** vs the base branch, or (b) the **latest
-commit** when already on `main` / `master`. Produce a structured findings report and a clear **fix plan**. **Do not run
-linters, typecheckers, or tests** — analysis only (read diffs, search, reason about behavior). **Do not edit the
-codebase** as part of this command.
+commit** when already on `main` / `master`. Orchestrate **seven parallel category subagents**, merge their findings, and
+call **`CreatePlan`** with Summary + Findings + Fix plan + todos. **Do not run linters, typecheckers, or tests** —
+analysis only. **Do not edit the codebase** as part of this command.
 
-**How to run (summary):** Confirm Plan mode → resolve review scope (feature branch vs last commit on base) → load
-conventions (groups below) → collect diff → review every changed file against Blocks A–F plus loaded conventions → emit
-findings + fix plan. Stop there; leave implementation to a later Agent turn.
+**How to run (summary):** Confirm Plan mode → resolve review scope → build file list → pack shared context → launch 7
+`Task` (`explore`) subagents in parallel (one category each) → merge/dedupe → **`CreatePlan`**. Stop; leave
+implementation to a later Agent turn.
 
 ---
 
@@ -52,90 +53,106 @@ Detect current branch, then pick **one** of two scopes:
 
 ---
 
-### 2️⃣ Step 2 — Load conventions
-
-- Read `conventions/README.md` for the load protocol and applies filter.
-- Load these groups **in order** (same as `/cleanup`; skip `agent/`):
-  1. `unused`
-  2. `programming`
-  3. `typescript`
-  4. `react`
-  5. `css`
-  6. `testing`
-  7. `eslint`
-  8. `markdown`
-- Loaded atoms replace the former Block G checklist (single source of truth).
-
----
-
-### 3️⃣ Step 3 — Build review file list
+### 2️⃣ Step 2 — Build review file list
 
 - From the scoped diff, list **added / modified** source files (skip delete-only unless a delete may break callers).
 - Exclude generated noise when possible (`*.d.ts` for CSS modules, Prisma `generated/`, lockfiles) unless the change is
   hand-written.
-- Order: deterministic (e.g. alphabetical by path). Review **all** files in scope — do **not** stop on first finding
-  (unlike `cleanup`).
+- Order: deterministic (e.g. alphabetical by path).
+
+Parent does **not** load convention groups and does **not** review files itself — category subagents own that work.
 
 ---
 
-### 4️⃣ Step 4 — Review every file (Blocks A–F + conventions)
+### 3️⃣ Step 3 — Pack shared context
 
-For **each** file in the list:
+Build a **shared context pack** once (parent only). Include:
 
-1. Read the file and its hunk in the scoped diff (`git diff <base>...HEAD` or `git diff HEAD~1 HEAD`).
-2. Run checks from **Block A → Block F** (below), then every loaded convention that **applies** to the file.
-3. Collect every finding. Prefer findings that relate to **this scope’s changes**, but also flag clear new dead code or
-   convention breaks introduced or left in touched files.
+- Absolute repository root
+- Current branch name
+- Scope label: feature branch vs base **or** last commit on `main`/`master` (SHA + subject)
+- `<scope>` git range and exact commands to re-read the diff:
+  - name-status: `git diff --name-status …`
+  - full patch: `git diff …` (or `git show` for root commit)
+- `git log --oneline` for the scope
+- Ordered file list (from Step 2)
+- Optional path filter from the user
 
-**Hard constraints:**
+If the full patch is too large to embed in every subagent prompt, omit the patch body and instruct each subagent to run
+the listed git commands itself. Always include the file list and scope commands.
 
+---
+
+### 4️⃣ Step 4 — Launch seven category subagents (parallel)
+
+In **one** parent turn, launch **seven** `Task` calls with:
+
+- `subagent_type`: `"explore"`
+- `thoroughness`: `"very thorough"`
+- `description`: short label per category (`review-regressions`, `review-correctness`, …)
+- `prompt`: shared context pack + that category’s section from **Category prompts** below + **Subagent output schema**
+
+**Categories (exactly these seven):**
+
+| id                  | Block / conventions                                                |
+| ------------------- | ------------------------------------------------------------------ |
+| `regressions`       | Block A                                                            |
+| `correctness`       | Block B                                                            |
+| `dead-unused`       | Block C + load `unused/`                                           |
+| `simplify`          | Block D + listed programming atoms                                 |
+| `comments`          | Block E + `programming/comments`                                   |
+| `reuse`             | Block F + `programming/reuse-existing`                             |
+| `stack-conventions` | load `typescript`, `react`, `css`, `testing`, `eslint`, `markdown` |
+
+**Hard constraints (every subagent prompt must repeat):**
+
+- Analysis only — **do not** edit files or apply fixes.
 - **Do not** run `eslint`, `tsc`, Vitest, Knip, Stylelint, or `bun do` check workflows.
-- **Do not** start the app or hit live endpoints unless the user explicitly asks.
-- Reason about correctness from code + call sites + types you can read.
+- **Do not** start the app or hit live endpoints.
+- Review **only** this category; ignore other categories.
+- Prefer findings tied to this scope’s changes; also flag clear new dead code or convention breaks in touched files.
+- Reason from code + call sites + types you can read.
+
+Await all seven results before merging. Do **not** start implementation while waiting.
 
 ---
 
-### 5️⃣ Step 5 — Build findings + fix plan
+### 5️⃣ Step 5 — Merge, dedupe, risk
 
-Compose a **user-facing deliverable** with these sections (lists only, no tables):
+1. Collect findings from all seven subagent reports (skip `- none` lines).
+2. **Dedupe:** same `path:line` (or same symbol) + same underlying issue → keep one finding.
+   - Severity priority when merging duplicates: `regressions` > `correctness` > everything else.
+   - On equal severity, keep the more concrete fix wording.
+3. Classify each remaining finding:
+   - **must-fix** — from `regressions` / `correctness`, or clearly broken behavior
+   - **optional cleanup** — dead code, simplify, comments, reuse, stack-convention style
+4. Overall risk:
+   - 🔴 — any must-fix from regressions/correctness
+   - 🟡 — only optional cleanup
+   - 🟢 — no findings
 
-1. **Summary** — scope (feature branch + base + commit count, **or** last commit SHA/subject on `main`/`master`), files
-   touched, overall risk (🔴 / 🟡 / 🟢).
-2. **Findings** — linear list; each item: emoji + where + what + suggested fix.
-3. **Fix plan** — ordered, actionable steps to resolve the findings (see format below).
-
-Do **not** dump convention checklists into the report — only concrete findings.
-
----
-
-### 6️⃣ Step 6 — Output the plan (stop)
-
-- Emit Summary + Findings + Fix plan in chat.
-- **Do not** edit files, apply fixes, or start implementation in this turn.
-- If there are **no findings**, say so in Summary and skip an empty Fix plan (or note “nothing to fix”).
+Do **not** dump convention checklists into the plan — only concrete findings.
 
 ---
 
-## 📄 Report format (mandatory)
+### 6️⃣ Step 6 — CreatePlan (mandatory deliverable)
 
-**Findings are a single linear list. Each item MUST start with one emoji:**
+Call **`CreatePlan`** (do not substitute a long chat-only report). Brief status in chat is optional; the plan is
+required.
 
-- **Blocks A–F** (review-specific): use the Block emoji below.
-- **Loaded convention atoms**: use that atom’s `emoji` field (see `conventions/README.md`) — do not remap to another
-  symbol.
+**CreatePlan fields:**
 
-**Block A–F emojis:**
+- **name:** e.g. `Review fix plan`
+- **overview:** scope label + risk emoji + finding counts (must-fix / optional / total)
+- **plan:** markdown body with these sections (lists only, no tables):
+  1. **Summary** — scope (feature branch + base + commit count, **or** last commit SHA/subject on `main`/`master`),
+     files touched, overall risk, note any failed categories (see Edge cases)
+  2. **Findings** — single linear list; each item: emoji + `path:line` (or symbol) + short problem + short fix
+  3. **Fix plan** — ordered actionable steps (see format below)
+- **todos:** one todo per fix step (`id` + `content`); must-fix first, then optional cleanup. If there are **no
+  findings**, set plan text to note “nothing to fix” and either omit todos or use a single `no-fixes-needed` todo.
 
-- 🐛 — Block A: functional regression / likely bug / broken edge case
-- ✅ — Block B: correctness concern (logic may be wrong even if not a clear regression)
-- 🗑️ — Block C: dead / unused / test-only production code
-- ✂️ — Block D: can simplify or shorten
-- 💬 — Block E: comments to remove or fix (not ESLint/Stylelint directives)
-- 🔧 — Block F: project utility / existing API should be reused
-
-**Each finding:** emoji + `path:line` (or symbol) + short problem + short fix.
-
-### Fix plan format
+**Fix plan format (inside CreatePlan body):**
 
 - Ordered steps (1, 2, 3…), grouped by file or by dependency when order matters.
 - Each step: what to change, where, and why.
@@ -143,9 +160,43 @@ Do **not** dump convention checklists into the report — only concrete findings
 - Separate **must-fix** from **optional cleanup** when both exist.
 - Keep steps concrete enough that Agent mode can execute them without re-deriving the review.
 
+**Stop after CreatePlan:**
+
+- **Do not** edit files, apply fixes, or start implementation in this turn.
+- Remind only if the user asks to apply fixes immediately: `/review` ends at the plan; accept/build or ask to implement
+  in Agent mode as a follow-up.
+
 ---
 
-## 🐛 Block A — Functional regressions
+## 📤 Subagent output schema (mandatory)
+
+Every category subagent must return **exactly** this shape (markdown, lists only):
+
+```text
+## Category: <id>
+## Findings
+- <emoji> `path:line` — problem → fix
+## Notes
+- none
+```
+
+- If there are no findings: under `## Findings` put a single line `- none`.
+- **Emoji rules:**
+  - Blocks A–F style findings: use the Block emoji from **Category prompts** / Blocks below.
+  - Convention-atom findings: use that atom’s `emoji` field from `conventions/README.md` — do not remap.
+- **Notes:** `none`, or short caveats (e.g. uncertain call site). Do not put findings in Notes.
+
+---
+
+## 📨 Category prompts
+
+Parent embeds the matching block below into each `Task` prompt (plus shared context + output schema + hard constraints).
+Each subagent that loads conventions must itself: Read `conventions/README.md`, then Glob/Read its groups/atoms per that
+protocol, and apply the **applies filter** per file. Parent must **not** paste atom bodies into the prompt.
+
+### `regressions` — Block A
+
+Emoji: 🐛
 
 Compare **old vs new** behavior for every meaningful hunk.
 
@@ -155,10 +206,11 @@ Compare **old vs new** behavior for every meaningful hunk.
 - **How to detect:** Read diff; follow call sites of changed exports; compare with previous version via
   `git show <parent>:path` when unclear (`<base>` on a feature branch, `HEAD~1` on `main`/`master`).
 - **How to fix:** Restore intended behavior or update all call sites consistently; prefer minimal correct fix.
+- **Load conventions:** none.
 
----
+### `correctness` — Block B
 
-## ✅ Block B — Correctness (analysis only)
+Emoji: ✅
 
 - **What to look for:** Logic that cannot work as written; wrong types used at runtime; impossible states; incorrect
   derived data; handlers wired to wrong callbacks; props not forwarded; store/subscription leaks; missing exhaustiveness
@@ -167,39 +219,52 @@ Compare **old vs new** behavior for every meaningful hunk.
   returned objects match consumers.
 - **How to fix:** Correct the logic; keep the change as small as possible.
 - **Do not:** Run tests or linters to “prove” it — state the reasoning in the finding.
+- **Load conventions:** none.
 
----
+### `dead-unused` — Block C
 
-## 🗑️ Block C — Dead, unused, and test-only code
+Emoji: 🗑️ (for Block-framed findings; convention atoms use their own emoji)
 
-Apply loaded `unused/*` conventions (including `unused/test-only-production`) to touched files.
-
+- Load group `unused/` (includes `unused/test-only-production`).
 - Prefer findings introduced or left unused by the scoped changes.
 - **How to fix:** Delete dead code; if a test needs a seam, redesign the test or the minimal public surface.
 
----
+### `simplify` — Block D
 
-## ✂️ Block D — Simplify and shorten
+Emoji: ✂️ (for Block-framed findings; convention atoms use their own emoji)
 
-Apply loaded programming/typescript conventions that shorten code (one-offs, YAGNI/Occam, DRY, ternary without IIFE,
-simple returns). Review framing:
+- Load these `programming/` atoms only (not the whole programming group):
+  - `kiss-yagni-occam`
+  - `inline-one-offs`
+  - `dry-single-source`
+  - `narrowest-scope`
+  - `minimal-params`
+  - `no-redundant-context`
+- Do **not** load `programming/comments` or `programming/reuse-existing` (other categories own them).
+- Review framing: prefer shorter equivalent control flow; drop redundant wrappers, intermediate objects, unnecessary
+  generic layers; quantify roughly (“~N lines”) when helpful.
 
-- Prefer shorter equivalent control flow within the touch-set.
-- Drop redundant wrappers, intermediate objects, and unnecessary generic layers.
-- **How to fix:** Propose the shorter form; quantify roughly (“~N lines”) when helpful.
+### `comments` — Block E
 
----
+Emoji: 💬 (for Block-framed findings; atom emoji when from the atom)
 
-## 💬 Block E — Comments cleanup
+- Load atom `programming/comments` only.
+- Apply to comments added or left in the scoped diff (obvious, non-English, obsolete, AI narrative; keep linter/cspell
+  directives and non-obvious intent).
 
-Apply `programming/comments` to comments added or left in the scoped diff (obvious, non-English, obsolete, AI narrative;
-keep linter/cspell directives and non-obvious intent).
+### `reuse` — Block F
 
----
+Emoji: 🔧 (for Block-framed findings; atom emoji when from the atom)
 
-## 🔧 Block F — Project utilities and existing APIs
+- Load atom `programming/reuse-existing` only.
+- Flag new helpers in the scoped changes that should reuse an existing project utility / API.
 
-Apply `programming/reuse-existing` before accepting new helpers in the scoped changes.
+### `stack-conventions`
+
+- Load groups **in order:** `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`.
+- Enforce each atom only when its `applies` glob matches the file (or `applies` is `*`).
+- Use each atom’s `emoji` on findings.
+- Do **not** re-check unused/dead-code, comments, or reuse-existing — other categories cover those.
 
 ---
 
@@ -216,8 +281,10 @@ Apply `programming/reuse-existing` before accepting new helpers in the scoped ch
 - **Mixed feature + drive-by** — separate findings and plan steps: required correctness vs optional cleanup.
 - **Unsure base branch** (feature-branch scope) — ask the user whether base is `main` or something else before
   reviewing.
+- **Category subagent fails** — retry that category **once** with the same prompt. If it still fails, note the failed
+  category under Summary/Notes in CreatePlan and continue merging the other six. Do not abort the whole review.
 - **User asked to run tests/lint** — that is outside this command; suggest `!check.bat` / MCP workflows separately.
-- **User asks to apply fixes immediately** — remind that `/review` ends at the Fix plan; they can accept/build the plan
+- **User asks to apply fixes immediately** — remind that `/review` ends at CreatePlan; they can accept/build the plan
   (or explicitly ask to implement in Agent mode) as a follow-up.
 
 ---
@@ -225,8 +292,9 @@ Apply `programming/reuse-existing` before accepting new helpers in the scoped ch
 ## ✅ Done criteria
 
 - Session is in **Plan mode** for this command.
-- Scope resolved (feature branch vs last commit on base) and all changed files in that scope reviewed against Blocks A–F
-  and loaded conventions.
-- Deliverable includes **Summary + Findings + Fix plan** (or Summary noting no findings).
+- Scope resolved (feature branch vs last commit on base) and file list built.
+- Seven category `Task` (`explore`) subagents launched in parallel and awaited (with retry rules on failure).
+- Findings merged/deduped; risk assigned.
+- **`CreatePlan` called** with Summary + Findings + Fix plan (+ todos).
 - No linters/tests were executed as part of this command.
 - **No code edits** — only analysis and the plan.
