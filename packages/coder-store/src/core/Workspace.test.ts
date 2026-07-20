@@ -1,6 +1,6 @@
+/* cspell:word unmatch */
 /* eslint-disable unicorn/prefer-string-repeat */
 import { Directory, File } from "@snappy/node";
-import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
@@ -9,10 +9,12 @@ import { Workspace } from "./Workspace";
 const withWorkspace = async (
   {
     files,
+    git,
     listFiles,
     prepare,
   }: {
     files?: string[];
+    git?: (args: string[]) => Promise<number>;
     listFiles?: (args: { cwd: string; globs?: string[] }) => Promise<string[]>;
     prepare?: (root: string) => Promise<void>;
   },
@@ -34,12 +36,23 @@ const withWorkspace = async (
     if (prepare !== undefined) {
       await prepare(root);
     }
-    const workspace = Workspace({ ignore: { list }, projectRoot: root });
+    const workspace = Workspace({ git, ignore: { list }, projectRoot: root });
     await run({ list, root, workspace });
   }, `snappy-workspace-test-`);
 
-const runGit = ({ args, cwd }: { args: string[]; cwd: string }) =>
-  spawnSync(`git`, args, { cwd, encoding: `utf8`, windowsHide: true });
+const trackedGit = () =>
+  vi.fn(async (args: string[]) => {
+    await Promise.resolve();
+
+    return args[0] === `ls-files` || args[0] === `mv` ? 0 : 1;
+  });
+
+const untrackedGit = () =>
+  vi.fn(async () => {
+    await Promise.resolve();
+
+    return 1;
+  });
 
 describe(`listDirectory`, () => {
   it(`returns sorted files and directories`, async () => {
@@ -539,28 +552,24 @@ describe(`renameFile`, () => {
   });
 
   it(`renames tracked file via git mv`, async () => {
-    await withWorkspace(
-      {
-        prepare: async root => {
-          runGit({ args: [`init`], cwd: root });
-          await File.async.write(path.join(root, `old.txt`), `a`);
-          runGit({ args: [`add`, `old.txt`], cwd: root });
-        },
-      },
-      async ({ root, workspace }) => {
-        await expect(workspace.renameFile({ newName: `new.txt`, path: `old.txt` })).resolves.toStrictEqual({
-          error: undefined,
-        });
-        await expect(File.async.read(path.join(root, `new.txt`))).resolves.toBe(`a`);
-      },
-    );
+    const git = trackedGit();
+    await withWorkspace({ git }, async ({ workspace }) => {
+      await expect(workspace.renameFile({ newName: `new.txt`, path: `old.txt` })).resolves.toStrictEqual({
+        error: undefined,
+      });
+      expect(git.mock.calls).toStrictEqual([
+        [[`ls-files`, `--error-unmatch`, `--`, `old.txt`]],
+        [[`mv`, `-f`, `--`, `old.txt`, `new.txt`]],
+      ]);
+    });
   });
 
   it(`renames untracked file without git mv`, async () => {
+    const git = untrackedGit();
     await withWorkspace(
       {
+        git,
         prepare: async root => {
-          runGit({ args: [`init`], cwd: root });
           await File.async.write(path.join(root, `old.txt`), `a`);
         },
       },
@@ -569,6 +578,7 @@ describe(`renameFile`, () => {
           error: undefined,
         });
         await expect(File.async.read(path.join(root, `new.txt`))).resolves.toBe(`a`);
+        expect(git.mock.calls).toStrictEqual([[[`ls-files`, `--error-unmatch`, `--`, `old.txt`]]]);
       },
     );
   });
@@ -584,32 +594,29 @@ describe(`moveFile`, () => {
   });
 
   it(`moves tracked file into target directory via git mv`, async () => {
-    await withWorkspace(
-      {
-        prepare: async root => {
-          runGit({ args: [`init`], cwd: root });
-          await File.async.write(path.join(root, `a.txt`), `a`);
-          runGit({ args: [`add`, `a.txt`], cwd: root });
-        },
-      },
-      async ({ root, workspace }) => {
-        await expect(workspace.moveFile({ directoryPath: `dir`, path: `a.txt` })).resolves.toStrictEqual({});
-        await expect(File.async.read(path.join(root, `dir/a.txt`))).resolves.toBe(`a`);
-      },
-    );
+    const git = trackedGit();
+    await withWorkspace({ git }, async ({ workspace }) => {
+      await expect(workspace.moveFile({ directoryPath: `dir`, path: `a.txt` })).resolves.toStrictEqual({});
+      expect(git.mock.calls).toStrictEqual([
+        [[`ls-files`, `--error-unmatch`, `--`, `a.txt`]],
+        [[`mv`, `-f`, `--`, `a.txt`, `dir/a.txt`]],
+      ]);
+    });
   });
 
   it(`moves untracked file into target directory without git mv`, async () => {
+    const git = untrackedGit();
     await withWorkspace(
       {
+        git,
         prepare: async root => {
-          runGit({ args: [`init`], cwd: root });
           await File.async.write(path.join(root, `a.txt`), `a`);
         },
       },
       async ({ root, workspace }) => {
         await expect(workspace.moveFile({ directoryPath: `dir`, path: `a.txt` })).resolves.toStrictEqual({});
         await expect(File.async.read(path.join(root, `dir/a.txt`))).resolves.toBe(`a`);
+        expect(git.mock.calls).toStrictEqual([[[`ls-files`, `--error-unmatch`, `--`, `a.txt`]]]);
       },
     );
   });

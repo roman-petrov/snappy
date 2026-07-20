@@ -8,15 +8,18 @@
 /* eslint-disable functional/no-loop-statements */
 /* cspell:ignore unmatch */
 import { _ } from "@snappy/core";
-import { Directory, File } from "@snappy/node";
-import { spawn } from "node:child_process";
+import { Directory, File, Process } from "@snappy/node";
 import path from "node:path";
 
 import type { CoderIgnore } from "./CoderIgnore";
 
-export type WorkspaceConfig = { ignore: CoderIgnore; projectRoot: string };
+export type WorkspaceConfig = {
+  git?: (args: string[]) => Promise<number>;
+  ignore: CoderIgnore;
+  projectRoot: string;
+};
 
-export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
+export const Workspace = ({ git, ignore, projectRoot }: WorkspaceConfig) => {
   const limits = {
     defaultReadChars: 48_000,
     globPatternMaxChars: 4000,
@@ -113,22 +116,23 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
 
   const toGitPath = (absolutePath: string) => path.relative(rootResolved, absolutePath).split(path.sep).join(`/`);
 
-  const runGit = async (args: string[]): Promise<undefined | { error: `git_move_failed` }> =>
-    new Promise(resolve => {
-      const child = spawn(`git`, args, { cwd: rootResolved, windowsHide: true });
-      child.on(`error`, () => resolve({ error: `git_move_failed` } as const));
-      child.on(`close`, code => resolve(code === 0 ? undefined : ({ error: `git_move_failed` } as const)));
-    });
-
-  const runGitCode = async (args: string[]) =>
-    new Promise<number>(resolve => {
-      const child = spawn(`git`, args, { cwd: rootResolved, windowsHide: true });
-      child.on(`error`, () => resolve(1));
-      child.on(`close`, code => resolve(code ?? 1));
+  const runGit =
+    git ??
+    (async (args: string[]) => {
+      try {
+        return Process.exitCode(
+          await Process.spawn(rootResolved, [`git`, ...args], {
+            capture: true,
+            env: { GIT_TERMINAL_PROMPT: `0` },
+          }),
+        );
+      } catch {
+        return 1;
+      }
     });
 
   const isTrackedByGit = async (absolutePath: string) =>
-    (await runGitCode([`ls-files`, `--error-unmatch`, `--`, toGitPath(absolutePath)])) === 0;
+    (await runGit([`ls-files`, `--error-unmatch`, `--`, toGitPath(absolutePath)])) === 0;
 
   const movePath = async ({
     from,
@@ -140,7 +144,9 @@ export const Workspace = ({ ignore, projectRoot }: WorkspaceConfig) => {
     to: string;
   }) => {
     if (await isTrackedByGit(from)) {
-      return runGit([`mv`, `-f`, `--`, toGitPath(from), toGitPath(to)]);
+      return (await runGit([`mv`, `-f`, `--`, toGitPath(from), toGitPath(to)])) === 0
+        ? undefined
+        : ({ error: `git_move_failed` } as const);
     }
     const renameError = await File.async.rename(from, to).catch(() => onRenameError);
 
