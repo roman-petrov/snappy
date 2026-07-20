@@ -8,7 +8,7 @@ export type TextAreaProps = {
   disabled?: boolean;
   maxLines: number;
   onBlur?: () => void;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   onFocus?: () => void;
   placeholder: string;
   readOnly?: boolean;

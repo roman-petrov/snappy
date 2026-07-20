@@ -5,7 +5,7 @@ import { NumberInputView } from "./NumberInput.view";
 
 export type NumberInputProps = Omit<InputProps, `onBlur` | `onChange` | `type` | `value`> & {
   onBlur?: () => void;
-  onChange: (value: number | undefined) => void;
+  onChange?: (value: number | undefined) => void;
   value: number | undefined;
 };
 

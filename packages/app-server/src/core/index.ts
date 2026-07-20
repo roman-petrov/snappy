@@ -1,5 +1,7 @@
 export * from "./App";
 
+export * from "./AppLog";
+
 export * from "./Balance";
 
 export * from "./BalancePayment";

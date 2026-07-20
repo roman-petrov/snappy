@@ -34,4 +34,14 @@ const image = async (src: string) => {
   await navigator.clipboard.write([new ClipboardItem({ [type]: blob })]);
 };
 
-export const Copy = { html, image };
+const text = async (value: string) => {
+  if (Platform() === `native`) {
+    Bridge.copyHtml(value, value);
+
+    return;
+  }
+
+  await navigator.clipboard.writeText(value);
+};
+
+export const Copy = { html, image, text };

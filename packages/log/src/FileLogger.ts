@@ -10,7 +10,7 @@ export const FileLogger = (name: string) =>
         dateFormat: `yyyy-MM-dd`,
         file: join(ConfigValues.root, `.logs`, name),
         frequency: `daily`,
-        limit: { count: 14 },
+        limit: { count: 14, removeOtherLogFiles: true },
         mkdir: true,
         size: `20m`,
       },

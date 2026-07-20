@@ -10,19 +10,21 @@ import { describe, expect, it, vi } from "vitest";
 import type { Balance } from "../Balance";
 import type { BetterAuth } from "../BetterAuth";
 
+import { AppLog } from "../AppLog";
 import { Session } from "../Session";
 import { Mock } from "../test/Mock";
 import { AiTunnelProxy } from "./AiTunnelProxy";
 import { PayloadProxy, type PayloadProxyConfig } from "./PayloadProxy";
 
-vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
+vi.mock(`../Session`, () => ({ Session: { resolve: vi.fn() } }));
 
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
 vi.mock(`@snappy/log`, () => {
   const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+  const root = { ai: channel(), auth: channel(), payment: channel() };
 
-  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+  return { Log: { ...root, withFields: () => root } };
 });
 
 vi.mock(`./PayloadProxy`, () => ({ PayloadProxy: vi.fn() }));
@@ -56,9 +58,10 @@ const setup = async ({
   blocked = false,
 }: { authorized?: boolean; blocked?: boolean } = {}): Promise<{ api: MockTunnel; config: PayloadProxyConfig }> => {
   vi.mocked(PayloadProxy).mockClear();
-  vi.mocked(Session.dbUser).mockReset();
+  vi.mocked(Session.resolve).mockReset();
   const api = mockTunnel();
-  vi.mocked(Session.dbUser).mockResolvedValue(authorized ? api.dbUser : undefined);
+  const log = AppLog();
+  vi.mocked(Session.resolve).mockResolvedValue(authorized ? { dbUser: api.dbUser, log } : undefined);
   vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(blocked);
 
   await AiTunnelProxy({} as FastifyInstance, { balance: api.balance, betterAuth: api.betterAuth, db: api.db });
@@ -105,11 +108,10 @@ describe(`AiTunnelProxy`, () => {
 
     it(`allows request with dbUser state`, async () => {
       const { api, config } = await setup();
+      const result = await config.gate?.({});
 
-      await expect(config.gate?.({})).resolves.toStrictEqual({
-        allow: true,
-        state: { billingDone: false, dbUser: api.dbUser },
-      });
+      expect(result).toMatchObject({ allow: true, state: { billingDone: false, dbUser: api.dbUser } });
+      expect(result !== undefined && `state` in result ? result.state : undefined).toHaveProperty(`log`);
     });
   });
 
@@ -126,7 +128,7 @@ describe(`AiTunnelProxy`, () => {
   describe(`onPayload`, () => {
     it(`debits usage.cost_rub with call URL and model`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload(withUsage(12.5, `name-a`), proxyPath, state);
       await setImmediate();
@@ -139,7 +141,7 @@ describe(`AiTunnelProxy`, () => {
 
     it(`uses empty model when model is absent`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload(withUsage(3), proxyPath, state);
       await setImmediate();
@@ -149,7 +151,7 @@ describe(`AiTunnelProxy`, () => {
 
     it(`does not debit when usage.cost_rub is not a number`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload({ usage: { cost_rub: `0.43` } }, proxyPath, state);
       await setImmediate();
@@ -159,7 +161,7 @@ describe(`AiTunnelProxy`, () => {
 
     it(`does not debit on payloads without usage.cost_rub`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload({ value: `ok` }, proxyPath, state);
       await setImmediate();
@@ -169,7 +171,7 @@ describe(`AiTunnelProxy`, () => {
 
     it(`debits only once after billing flag is set`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload(withUsage(1), proxyPath, state);
       await setImmediate();
@@ -181,7 +183,7 @@ describe(`AiTunnelProxy`, () => {
 
     it(`debits on every billable payload that starts before billing flag is set`, async () => {
       const { api, config } = await setup();
-      const state = { billingDone: false, dbUser: api.dbUser };
+      const state = { billingDone: false, dbUser: api.dbUser, log: AppLog() };
 
       config.onPayload(withUsage(1), proxyPath, state);
       config.onPayload(withUsage(9), proxyPath, state);

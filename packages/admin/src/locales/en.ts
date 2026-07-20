@@ -15,10 +15,12 @@ export const en = {
   users: {
     edit: {
       balance: `Balance`,
+      copyId: `Copy ID`,
       delete: `Delete user`,
       deleteConfirm: `Delete this user?`,
       email: `Email`,
       errors: { invalid: `Enter a valid balance` },
+      id: `ID`,
       submit: `Save`,
       submitting: `Saving…`,
       title: `Edit user`,

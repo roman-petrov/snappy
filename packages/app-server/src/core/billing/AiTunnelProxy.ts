@@ -8,9 +8,9 @@ import type { FastifyInstance } from "fastify";
 
 import { Config } from "@snappy/config";
 import { _, HttpStatus } from "@snappy/core";
-import { Log } from "@snappy/log";
 import { z } from "zod";
 
+import type { AppLog } from "../AppLog";
 import type { Balance } from "../Balance";
 import type { BetterAuth } from "../BetterAuth";
 
@@ -28,23 +28,24 @@ export const AiTunnelProxy = async (
   app: FastifyInstance,
   { balance, betterAuth, db, upstream }: AiTunnelProxyConfig,
 ) => {
-  type State = { billingDone?: boolean; dbUser: DbUser };
+  type State = { billingDone?: boolean; dbUser: DbUser; log: AppLog };
 
   const upstreamHost = `api.aitunnel.ru`;
 
   await PayloadProxy(app, {
     gate: async headers => {
-      const dbUser = await Session.dbUser(betterAuth, headers, db);
-      if (dbUser === undefined) {
+      const resolved = await Session.resolve(betterAuth, headers, db);
+      if (resolved === undefined) {
         return { allow: false, body: { status: `unauthorized` }, status: HttpStatus.unauthorized };
       }
+      const { dbUser, log } = resolved;
       if (await balance.isLlmBlocked(dbUser)) {
-        Log.ai.warn(`ai.gate.blocked`, { userId: dbUser.id });
+        log.ai.warn(`ai.gate.blocked`);
 
         return { allow: false, body: { status: `balanceBlocked` }, status: HttpStatus.ok };
       }
 
-      return { allow: true, state: { billingDone: false, dbUser } satisfies State };
+      return { allow: true, state: { billingDone: false, dbUser, log } satisfies State };
     },
     headers: outgoing => {
       const { cookie, host, ...rest } = outgoing;
@@ -68,13 +69,13 @@ export const AiTunnelProxy = async (
         return;
       }
       const { model, usage } = parsed.data;
-      const debit = { call: path, costRub: usage.cost_rub, model: model ?? ``, userId: tunnel.dbUser.id };
+      const debit = { call: path, costRub: usage.cost_rub, model: model ?? `` };
       void balance.debitForLlm(tunnel.dbUser, usage.cost_rub, { call: debit.call, model: debit.model }).then(
         () => {
           tunnel.billingDone = true;
-          Log.ai.info(`ai.debit.ok`, debit);
+          tunnel.log.ai.info(`ai.debit.ok`, debit);
         },
-        () => Log.ai.error(`ai.debit.failed`, debit),
+        () => tunnel.log.ai.error(`ai.debit.failed`, debit),
       );
     },
     prefix: `/api/ai-tunnel`,

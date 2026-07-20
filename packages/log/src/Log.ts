@@ -1,24 +1,42 @@
 import type { Logger } from "pino";
 
+import { _ } from "@snappy/core";
+
 import { FileLogger } from "./FileLogger";
 
-type LogFields = Record<string, unknown>;
+export type LogFields = Record<string, unknown>;
 
-const channel = (logger: Logger) => {
-  const write =
-    (method: `error` | `info` | `warn`) =>
-    (event: string, fields: LogFields = {}) =>
-      logger[method](fields, event);
+const domains = [`ai`, `auth`, `payment`] as const;
+const methods = [`error`, `info`, `warn`] as const;
 
-  const error = write(`error`);
-  const info = write(`info`);
-  const warn = write(`warn`);
+export type Log = Record<Domain, LogChannel>;
 
-  return { error, info, warn };
-};
+type Domain = (typeof domains)[number];
 
-const ai = channel(FileLogger(`ai`));
-const auth = channel(FileLogger(`auth`));
-const payment = channel(FileLogger(`payment`));
+type LogChannel = Record<Method, (event: string, fields?: LogFields) => void>;
 
-export const Log = { ai, auth, payment };
+type Method = (typeof methods)[number];
+
+const channel = (write: (method: Method) => (event: string, fields?: LogFields) => void) =>
+  _.fromEntries(methods.map(method => [method, write(method)])) as LogChannel;
+
+const fromLogger = (logger: Logger) =>
+  channel(
+    method =>
+      (event, fields = {}) =>
+        logger[method](fields, event),
+  );
+
+const bind = (base: LogChannel, baseFields: LogFields) =>
+  channel(
+    method =>
+      (event, fields = {}) =>
+        base[method](event, { ...baseFields, ...fields }),
+  );
+
+const root = _.fromEntries(domains.map(name => [name, fromLogger(FileLogger(name))]));
+
+const withFields = (baseFields: LogFields = {}): Log =>
+  _.keys(baseFields).length === 0 ? root : _.mapEntries(root, (name, base) => [name, bind(base, baseFields)]);
+
+export const Log = { ...root, withFields };

@@ -1,4 +1,5 @@
 import { useRouterGo } from "@snappy/app-router";
+import { Copy } from "@snappy/platform";
 import { useAsyncSubmit } from "@snappy/ui";
 import { useEffect, useState } from "react";
 
@@ -46,5 +47,7 @@ export const useUserEditState = ({ userId: id }: UserEditProps) => {
     await go(Routes.user.list);
   };
 
-  return { balance, error, loading, remove, save, setBalance, user };
+  const copyId = async () => Copy.text(id);
+
+  return { balance, copyId, error, loading, remove, save, setBalance, user };
 };

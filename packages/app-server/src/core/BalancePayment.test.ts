@@ -18,8 +18,9 @@ vi.mock(`@snappy/config`, () => ({
 
 vi.mock(`@snappy/log`, () => {
   const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+  const root = { ai: channel(), auth: channel(), payment: channel() };
 
-  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+  return { Log: { ...root, withFields: () => root } };
 });
 
 const paymentId = `pay-1`;

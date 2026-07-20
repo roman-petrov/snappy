@@ -13,7 +13,7 @@ export const useNewPasswordInputState = ({
   const [visible, toggleVisible] = useToggle(false);
   const strength = Password.strength(value);
   const strengthBarWidth = strength === `weak` ? `33%` : strength === `medium` ? `66%` : `100%`;
-  const generatePassword = () => onChange(Password.generate());
+  const generatePassword = () => onChange?.(Password.generate());
 
   return {
     ...rest,

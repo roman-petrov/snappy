@@ -18,18 +18,20 @@ import { describe, expect, it, vi } from "vitest";
 import type { Balance } from "../Balance";
 import type { BetterAuth } from "../BetterAuth";
 
+import { AppLog } from "../AppLog";
 import { Session } from "../Session";
 import { Mock } from "../test/Mock";
 import { AiTunnelProxy } from "./AiTunnelProxy";
 
-vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
+vi.mock(`../Session`, () => ({ Session: { resolve: vi.fn() } }));
 
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
 vi.mock(`@snappy/log`, () => {
   const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+  const root = { ai: channel(), auth: channel(), payment: channel() };
 
-  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+  return { Log: { ...root, withFields: () => root } };
 });
 
 const chatPath = `/api/ai-tunnel/v1/chat/completions`;
@@ -69,7 +71,7 @@ const withTunnel = async (
   const upstream = HttpServer();
   const { url } = await upstream.start();
   const api = tunnel();
-  vi.mocked(Session.dbUser).mockResolvedValue(authorized ? api.dbUser : undefined);
+  vi.mocked(Session.resolve).mockResolvedValue(authorized ? { dbUser: api.dbUser, log: AppLog() } : undefined);
   vi.mocked(api.balance.isLlmBlocked).mockResolvedValue(blocked);
 
   const app = fastifyFactory();

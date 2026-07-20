@@ -28,7 +28,7 @@ export const InputView = ({
       disabled={disabled}
       id={id}
       onBlur={onBlur}
-      onChange={event => onChange(event.target.value)}
+      onChange={event => onChange?.(event.target.value)}
       type={type}
       value={value}
     />

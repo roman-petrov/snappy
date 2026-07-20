@@ -2,14 +2,17 @@ import type { DbUser } from "@snappy/db";
 
 import { Rpc } from "@snappy/rpc/contract";
 
+import type { AppLog } from "./AppLog";
 import type { Balance } from "./Balance";
 import type { BalancePayment } from "./BalancePayment";
 import type { Feed } from "./Feed";
 import type { UserSettings } from "./UserSettings";
 
-export type RpcContext = { dbUser: DbUser | undefined };
+export type RpcContext = { dbUser: DbUser | undefined; log: AppLog };
 
-export const RpcScope = Rpc.scope(({ dbUser }: RpcContext) => (dbUser === undefined ? undefined : { dbUser }));
+export const RpcScope = Rpc.scope(({ dbUser, log }: RpcContext) =>
+  dbUser === undefined ? undefined : { dbUser, log },
+);
 
 export type RpcScope = typeof RpcScope;
 

@@ -27,6 +27,7 @@
         "@snappy/app-router": "workspace:*",
         "@snappy/core": "workspace:*",
         "@snappy/intl": "workspace:*",
+        "@snappy/platform": "workspace:*",
         "@snappy/router": "workspace:*",
         "@snappy/rpc": "workspace:*",
         "@snappy/store": "workspace:*",
@@ -436,6 +437,7 @@
       "version": "0.0.0",
       "dependencies": {
         "@snappy/config": "workspace:*",
+        "@snappy/core": "workspace:*",
         "fastify": "^5.10.0",
         "pino": "^10.1.0",
         "pino-roll": "^4.0.0",

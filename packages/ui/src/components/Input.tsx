@@ -8,7 +8,7 @@ export type InputProps = {
   disabled?: boolean;
   label: string;
   onBlur?: () => void;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   overlay?: ReactNode;
   suffix?: ReactNode;
   type?: `password` | `text`;

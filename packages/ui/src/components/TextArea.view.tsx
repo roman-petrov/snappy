@@ -18,7 +18,7 @@ export const TextAreaView = ({
     className={styles.root}
     disabled={disabled}
     onBlur={blur}
-    onChange={event => onChange(event.currentTarget.value)}
+    onChange={event => onChange?.(event.currentTarget.value)}
     onFocus={focus}
     placeholder={placeholder}
     readOnly={readOnly}

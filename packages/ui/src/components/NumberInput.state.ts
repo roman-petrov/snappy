@@ -34,7 +34,7 @@ export const useNumberInputState = ({ onBlur, onChange, value, ...rest }: Number
     onChange: raw => {
       editing.current = true;
       setText(raw);
-      onChange(fromText(raw));
+      onChange?.(fromText(raw));
     },
     type: `text`,
     value: text,

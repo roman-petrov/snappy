@@ -29,7 +29,9 @@ export const useTextInputState = ({
       return;
     }
 
-    start({ lang: Language.locale(), onText: onChange });
+    if (onChange !== undefined) {
+      start({ lang: Language.locale(), onText: onChange });
+    }
   };
 
   const setInputBlurred = () => setFocused(false);

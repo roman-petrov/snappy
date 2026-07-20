@@ -16,10 +16,12 @@ export const ru = {
   users: {
     edit: {
       balance: `Баланс`,
+      copyId: `Копировать ID`,
       delete: `Удалить`,
       deleteConfirm: `Удалить пользователя?`,
       email: `Email`,
       errors: { invalid: `Введите корректный баланс` },
+      id: `ID`,
       submit: `Сохранить`,
       submitting: `Сохранение…`,
       title: `Редактирование пользователя`,

@@ -64,7 +64,7 @@ export const App = async ({ app }: AppConfig) => {
   await AiTunnelProxy(app, { balance, betterAuth, db });
 
   await Rpc.mount(app, RpcContract, {
-    context: async ({ req }) => ({ dbUser: await Session.dbUser(betterAuth, req.headers, db) }),
+    context: async ({ req }) => Session.context(betterAuth, req.headers, db),
     modules: { balance, billing, feed, settings },
     userId: ({ dbUser }) => dbUser?.id,
   });
