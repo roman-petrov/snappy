@@ -1,33 +1,9 @@
 ---
-description: Use for React components and hooks.
+description: Use for React components, hooks, and View/State pattern.
 alwaysApply: false
 ---
 
 # ⚛️ React
 
-Follow the **programming** and **typescript** rules. This rule adds React-specific conventions only.
-
----
-
-## 📋 General principles
-
-- **One component per file** — each component lives in its own file; do not put multiple component definitions in one
-  file.
-- **Always export the props type** — the type of a component's props must be exported so it can be reused (e.g. by state
-  hooks or parents).
-- **Props type naming** — always name the component's props type `<ComponentName>Props` (e.g. `ButtonProps` for
-  `Button`, `InputViewProps` for `InputView`).
-- **Wrappers: inherit the child’s props, don’t copy them by hand** — when your component mostly passes props through to
-  another component (same DOM or child UI):
-  - **Do:** build your props type from the child’s exported props (`InnerProps`), drop only what you replace yourself
-    (often `children`, layout/class names), add your own fields, then pass the rest to the child:
-    `type WrapperProps = Omit<InnerProps, 'children' | 'className'> & { label: string }` and
-    `<Child {...innerProps} />`.
-  - **Don’t:** list the same props again (`disabled`, `onClick`, …) on the wrapper — they drift from the child and every
-    new child prop needs manual updates everywhere.
-  - **Why:** the child API grows (new optional props) and wrappers keep working without edits.
-- **Hooks in `hooks` directory** — all hook modules (files that export React hooks) must live in a directory named
-  `hooks` (e.g. `hooks/useFormState.ts`, `app/core/hooks/useFormState.ts`). Hook file names use camelCase (see
-  TypeScript rule).
-- **`cn` instead of `className` in props** — for component props use the name `cn` (not `className`), and compose class
-  names via `_.cn(...)` instead of template strings or manual concatenation.
+Read `.cursor/conventions/README.md`, then load group `react/` per that README (includes View/State).
+Those files are the single source of truth.

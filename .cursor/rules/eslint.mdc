@@ -1,24 +1,9 @@
 ---
-description: Use when working with ESLint issues.
+description: Use when working with ESLint issues or disables.
 alwaysApply: false
 ---
 
 # 📘 ESLint
 
----
-
-## 📋 Exceptions at the top of the file
-
-When you need to disable ESLint rules for a file, **always place exceptions at the beginning of the file**:
-
-- Put each rule on its own line: **one `/* eslint-disable rule-name */` per line**. Do not list multiple rules in one
-  comment.
-- Do not add descriptions to disable comments (no `-- reason` or inline explanation).
-- Do not scatter disables throughout the code; do not use `eslint-disable-next-line` for whole blocks — move the rule to
-  the top of the file.
-
-**Example (at the top of the file, before imports):**
-
-```ts
-/* eslint-disable no-console */
-```
+Read `.cursor/conventions/README.md`, then load group `eslint/` per that README.
+Those files are the single source of truth.

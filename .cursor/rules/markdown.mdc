@@ -1,28 +1,9 @@
 ---
-globs: **/*.md
+globs: **/*.md,**/*.mdc
 alwaysApply: false
 ---
 
 # 📝 Markdown
 
----
-
-## 🌐 Language
-
-- **Always write in English** — body, headings, lists. Do _not_ switch unless the user asks.
-
----
-
-## ✍️ Emphasis
-
-- **Bold** — key terms, actions, important notes.
-- _Italic_ — nuance, _optional_ items.
-- `Code` — file names, commands, keys, technical identifiers (e.g. `README.md`, `H1`).
-- ~~Strikethrough~~ — deprecated.
-
----
-
-## 😀 Emoji in Headers
-
-- Use **one** relevant emoji at the start of **H1–H3** (e.g. 📋 checklist, ⚙️ config, 🚀 getting started).
-- Match emoji to the section topic; use _sparingly_ in body text.
+Read `.cursor/conventions/README.md`, then load group `markdown/` per that README.
+Those files are the single source of truth.
