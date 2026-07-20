@@ -5,5 +5,5 @@ alwaysApply: false
 
 # 🎨 CSS
 
-Read `.cursor/conventions/README.md`, then load group `css/` per that README.
+Read `conventions/README.md`, then load group `css/` per that README.
 Those files are the single source of truth.

@@ -5,5 +5,5 @@ alwaysApply: true
 
 # 📘 Programming
 
-**Must** Read `.cursor/conventions/README.md`, then load group `programming/` per that README.
+**Must** Read `conventions/README.md`, then load group `programming/` per that README.
 Do not skip the Read/Glob steps. Those files are the single source of truth.

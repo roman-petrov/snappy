@@ -5,5 +5,5 @@ alwaysApply: false
 
 # 🧪 Testing
 
-Read `.cursor/conventions/README.md`, then load group `testing/` per that README.
+Read `conventions/README.md`, then load group `testing/` per that README.
 Those files are the single source of truth.

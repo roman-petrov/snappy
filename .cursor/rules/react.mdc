@@ -5,5 +5,5 @@ alwaysApply: false
 
 # ⚛️ React
 
-Read `.cursor/conventions/README.md`, then load group `react/` per that README (includes View/State).
+Read `conventions/README.md`, then load group `react/` per that README (includes View/State).
 Those files are the single source of truth.

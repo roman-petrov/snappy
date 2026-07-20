@@ -61,7 +61,7 @@ What to change.
 
 When told to load a **group**:
 
-1. **Glob** `.cursor/conventions/<group>/**/*.md`
+1. **Glob** `conventions/<group>/**/*.md`
 2. Sort paths **lexicographically**
 3. **Read** every file in full — do not skip
 4. Treat file text as the single source of truth — do not invent parallel rules from memory

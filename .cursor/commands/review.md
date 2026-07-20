@@ -54,7 +54,7 @@ Detect current branch, then pick **one** of two scopes:
 
 ### 2️⃣ Step 2 — Load conventions
 
-- Read `.cursor/conventions/README.md` for the load protocol and applies filter.
+- Read `conventions/README.md` for the load protocol and applies filter.
 - Load these groups **in order** (same as `/cleanup`; skip `agent/`):
   1. `unused`
   2. `programming`
@@ -121,7 +121,7 @@ Do **not** dump convention checklists into the report — only concrete findings
 **Findings are a single linear list. Each item MUST start with one emoji:**
 
 - **Blocks A–F** (review-specific): use the Block emoji below.
-- **Loaded convention atoms**: use that atom’s `emoji` field (see `.cursor/conventions/README.md`) — do not remap to
+- **Loaded convention atoms**: use that atom’s `emoji` field (see `conventions/README.md`) — do not remap to
   another symbol.
 
 **Block A–F emojis:**

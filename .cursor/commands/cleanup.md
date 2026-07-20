@@ -15,7 +15,7 @@ confirms.**
 
 ### 1️⃣ Step 1 — Load conventions
 
-- Read `.cursor/conventions/README.md` for the load protocol and applies filter.
+- Read `conventions/README.md` for the load protocol and applies filter.
 - Load these groups **in order** (skip `agent/` — not an audit checklist):
   1. `unused`
   2. `programming`
@@ -71,7 +71,7 @@ complete the full list of its violations. Do not skip a check because the file "
 - Compose a **user-facing report** as a single linear list of violations. Do **not** list or enumerate convention ids in
   the report.
 - For **each** violation include:
-  - **Emoji** — the atom’s `emoji` field (see `.cursor/conventions/README.md`).
+  - **Emoji** — the atom’s `emoji` field (see `conventions/README.md`).
   - **Where** — file path and location (e.g. line, symbol name).
   - **What is violated** — short description of the problem (no convention id).
   - **What will be fixed** — short, actionable fix (what will be done).

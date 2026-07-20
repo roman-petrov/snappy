@@ -5,5 +5,5 @@ alwaysApply: false
 
 # 📘 ESLint
 
-Read `.cursor/conventions/README.md`, then load group `eslint/` per that README.
+Read `conventions/README.md`, then load group `eslint/` per that README.
 Those files are the single source of truth.
