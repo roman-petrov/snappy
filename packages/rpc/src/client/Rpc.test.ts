@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { describe, expect, expectTypeOf, it, vi } from "vitest";
 
+import type { RpcProcedure } from "../Procedure";
+
 import { Rpc as Contract } from "../contract/Rpc";
 
 const state = vi.hoisted(() => {
@@ -135,7 +137,10 @@ describe(`Rpc`, () => {
   describe(`signedIn`, () => {
     it(`receives RPC auth so session can be read`, async () => {
       state.clients.length = 0;
-      const contract = Contract.define<{ auth: { session: object } }>()({ path: `/rpc` });
+
+      type AuthModules = { auth: { rpc: { session: RpcProcedure<object, object, undefined, unknown> } } };
+
+      const contract = Contract.define<AuthModules>()({ path: `/rpc` });
 
       const api = await connect(contract, {
         auth: {
