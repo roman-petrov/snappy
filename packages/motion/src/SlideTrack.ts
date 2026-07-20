@@ -421,6 +421,23 @@ export const SlideTrack = ({
       return;
     }
 
+    const root = rootRef.current;
+
+    if (
+      root !== null &&
+      event.composedPath().some(node => {
+        if (!(node instanceof Element) || !root.contains(node)) {
+          return false;
+        }
+
+        const { overflowX } = getComputedStyle(node);
+
+        return (overflowX === `auto` || overflowX === `scroll`) && node.scrollWidth > node.clientWidth;
+      })
+    ) {
+      return;
+    }
+
     const [touch] = event.changedTouches;
 
     if (touch === undefined) {

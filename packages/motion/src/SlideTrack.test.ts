@@ -18,6 +18,7 @@ type Harness = {
   motion: ReturnType<typeof SlideTrack>;
   records: SnapRecord[];
   root: HTMLDivElement;
+  scroll: HTMLDivElement;
   settle: () => Promise<void>;
 };
 
@@ -25,7 +26,7 @@ type SnapRecord = { release?: TrackReleaseSnap; state: { busy: boolean; offset: 
 
 type TouchInput = {
   id?: number;
-  on?: `field` | `root`;
+  on?: `field` | `root` | `scroll`;
   pointerType?: `mouse` | `touch`;
   time?: number;
   x: number;
@@ -71,10 +72,14 @@ const harness = (index = 0): Harness => {
   const root = document.createElement(`div`);
   const track = document.createElement(`div`);
   const field = document.createElement(`input`);
+  const scroll = document.createElement(`div`);
 
   document.body.append(root);
   root.append(track);
-  track.append(field);
+  track.append(field, scroll);
+  scroll.style.overflowX = `auto`;
+  Object.defineProperty(scroll, `clientWidth`, { configurable: true, value: 100 });
+  Object.defineProperty(scroll, `scrollWidth`, { configurable: true, value: 100 });
 
   Object.defineProperty(root, `clientWidth`, { configurable: true, value: pageWidth });
   root.setPointerCapture = vi.fn();
@@ -207,7 +212,7 @@ const harness = (index = 0): Harness => {
       return;
     }
 
-    const target = on === `field` ? field : type === `touchstart` ? root : document;
+    const target = on === `field` ? field : on === `scroll` ? scroll : type === `touchstart` ? root : document;
     const point = touches.get(id);
     const source = point?.target ?? target;
 
@@ -244,7 +249,7 @@ const harness = (index = 0): Harness => {
     await flushMicrotasks();
   };
 
-  return { dispatch, field, motion, records, root, settle };
+  return { dispatch, field, motion, records, root, scroll, settle };
 };
 
 const swipe = (session: Harness, from: number, to: number, steps = 1, id = 1, on: TouchInput[`on`] = `root`) => {
@@ -470,6 +475,31 @@ describe(`pointer`, () => {
     it(`advances when horizontal drag starts on an input field`, async () => {
       const session = harness();
       swipe(session, 200, 80, 4, 1, `field`);
+      session.dispatch(`touchend`, { id: 1, time: 40, x: 60 });
+
+      await session.settle();
+
+      expect(session.motion.offset()).toBe(-pageWidth);
+      expect(session.motion.busy()).toBe(false);
+      expect(session.records).toHaveLength(1);
+
+      expectGesture(session.records[0], { direction: `left`, type: `swipe` });
+    });
+
+    it(`ignores horizontal drag over an overflowing scroll container`, () => {
+      const session = harness();
+      Object.defineProperty(session.scroll, `scrollWidth`, { configurable: true, value: 240 });
+      swipe(session, 200, 80, 4, 1, `scroll`);
+      session.dispatch(`touchend`, { id: 1, time: 40, x: 60 });
+
+      expect(session.motion.offset()).toBe(0);
+      expect(session.motion.dragging()).toBe(false);
+      expect(session.records).toHaveLength(0);
+    });
+
+    it(`advances when horizontal drag starts on a non-overflowing scroll container`, async () => {
+      const session = harness();
+      swipe(session, 200, 80, 4, 1, `scroll`);
       session.dispatch(`touchend`, { id: 1, time: 40, x: 60 });
 
       await session.settle();
