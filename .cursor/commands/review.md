@@ -9,8 +9,9 @@
 **Goal:** Thoroughly review either (a) all changes on a **feature branch** vs the base branch, or (b) the **latest
 commit** when already on `main` / `master`. Orchestrate **seven parallel category subagents**, merge their findings,
 load **all** convention groups, then call **`CreatePlan`** with a detailed Russian-language plan: **Краткое резюме** +
-**Находки** + **План исправлений** + **Чеклист завершения** + todos. **Do not run linters, typecheckers, or tests** —
-analysis only. **Do not edit the codebase** as part of this command.
+**Находки** + **План исправлений** + **Чеклист завершения** + todos. The plan must favor **simplification**, project
+conventions, and fixes for **real problems** — never unnecessary code growth. **Do not run linters, typecheckers, or
+tests** — analysis only. **Do not edit the codebase** as part of this command.
 
 **How to run (summary):** Confirm Plan mode → resolve review scope → build file list → pack shared context → launch 7
 `Task` (`explore`) subagents in parallel (one category each) → merge/dedupe → load conventions → **`CreatePlan`**
@@ -162,6 +163,8 @@ Before calling `CreatePlan`, the parent **must** load conventions (do not skip; 
    9. `markdown`
 3. Use the loaded norms to:
    - Write **План исправлений** steps that do not prescribe convention-violating changes.
+   - Prefer simpler / smaller fixes over new abstractions (align with `agent/simplicity-first`,
+     `programming/kiss-yagni-occam`, `programming/inline-one-offs`, `programming/reuse-existing`).
    - Fill **Чеклист завершения** so the later implementer verifies applicable atoms (`applies`) for every file the
      planned fixes touch.
    - Keep planned scope surgical (`agent/surgical-changes`, `agent/simplicity-first`, `agent/goal-driven`).
@@ -185,6 +188,16 @@ be English; parent rephrases into Russian in CreatePlan. This command file stays
   rules).
 - One concern per step; no drive-by refactors.
 - Agent mode must be able to execute the plan without re-deriving the review.
+
+**Simplification bias (mandatory):**
+
+- The whole plan must aim to **simplify** code, apply project conventions, and fix **real** regressions/correctness
+  problems — not to grow the codebase.
+- Prefer: delete dead code, inline one-offs, reuse existing APIs, narrower scope, smaller diffs.
+- Forbid plan steps whose main effect is adding helpers, wrappers, indirection, “future-proof” layers, or extra files
+  without fixing a concrete finding.
+- If a correct fix and a larger/more abstract fix both work, keep only the smaller correct fix in the plan.
+- Drop optional-cleanup findings that only rearrange code without net simplification or a convention fix.
 
 **CreatePlan fields:**
 
@@ -211,14 +224,16 @@ be English; parent rephrases into Russian in CreatePlan. This command file stays
 
 **Чеклист завершения (mandatory; fixed items; Russian checkboxes):**
 
-This section is for the agent that **implements** the plan later — not for the `/review` turn. Copy the seven items
+This section is for the agent that **implements** the plan later — not for the `/review` turn. Copy the eight items
 below **verbatim** into CreatePlan. Do not drop, reorder, or rewrite them. Parenthetical `N/A` clauses are the only
 allowed skip conditions when implementing.
 
 - [ ] Все шаги **Обязательные (must-fix)** выполнены (N/A — таких шагов не было)
 - [ ] Все шаги **Опциональная зачистка** выполнены (N/A — таких шагов не было; либо пользователь в этом чате явно
-      отказался от optional cleanup)
+      отказался от опциональной зачистки)
 - [ ] Diff содержит только изменения из шагов плана — без посторонних правок
+- [ ] Правки упрощают код или устраняют реальную проблему / нарушение conventions; нет лишних абстракций, обёрток и
+      файлов «на вырост»
 - [ ] Для каждого файла, изменённого при выполнении плана, прогнаны Detect-проверки всех применимых atoms из групп
       `unused`, `programming`, `typescript`, `react`, `css`, `testing`, `eslint`, `markdown` (фильтр `applies`)
 - [ ] Scope правок соответствует `agent/surgical-changes`, `agent/simplicity-first`, `agent/goal-driven`
@@ -369,5 +384,6 @@ Emoji: 🔧 (for Block-framed findings; atom emoji when from the atom)
 - **`CreatePlan` called** with Russian Overview + **Краткое резюме** + **Находки** + **План исправлений** + **Чеклист
   завершения** (+ todos).
 - Plan steps are concrete and unambiguous; completion checklist is present and strict.
+- Plan favors simplification / conventions / real fixes — no unnecessary code growth.
 - No linters/tests were executed as part of this command.
 - **No code edits** — only analysis and the plan.
