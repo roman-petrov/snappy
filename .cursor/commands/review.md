@@ -2,12 +2,16 @@
 
 # 🔍 Review: Feature Branch Code Review
 
-**Goal:** On a **feature branch**, thoroughly review all changes vs the base branch. Produce a structured report and
-propose fixes. **Do not run linters, typecheckers, or tests** — analysis only (read diffs, search, reason about
-behavior).
+**Mode:** Run this command in **Plan mode**. If the session is not already in Plan mode, switch to it first
+(`SwitchMode` → `plan`), then continue. Do not implement fixes in this command — the deliverable is a plan.
 
-**How to run (summary):** Confirm feature branch → load rules → collect branch diff → review every changed file against
-Blocks A–G → emit full report → ask before applying fixes.
+**Goal:** On a **feature branch**, thoroughly review all changes vs the base branch. Produce a structured findings report
+and a clear **fix plan**. **Do not run linters, typecheckers, or tests** — analysis only (read diffs, search, reason
+about behavior). **Do not edit the codebase** as part of this command.
+
+**How to run (summary):** Confirm Plan mode → confirm feature branch → load rules → collect branch diff → review every
+changed file against Blocks A–G → emit findings + fix plan. Stop there; leave implementation to a later Agent turn (e.g.
+after the user accepts / builds the plan).
 
 ---
 
@@ -63,24 +67,25 @@ For **each** file in the list:
 
 ---
 
-### 5️⃣ Step 5 — Build report
+### 5️⃣ Step 5 — Build findings + fix plan
 
-Compose a **user-facing report** with these sections (lists only, no tables):
+Compose a **user-facing deliverable** with these sections (lists only, no tables):
 
 1. **Summary** — branch name, base, commit count, files touched, overall risk (🔴 / 🟡 / 🟢).
 2. **Findings** — linear list; each item: emoji + where + what + suggested fix.
-3. **Ask** — whether to apply the proposed fixes.
+3. **Fix plan** — ordered, actionable steps to resolve the findings (see format below). This is the primary outcome of
+   the command.
 
 Do **not** dump the entire Block G checklist into the report — only concrete findings.
 
 ---
 
-### 6️⃣ Step 6 — Output and ask
+### 6️⃣ Step 6 — Output the plan (stop)
 
-- Emit the full report in chat.
-- Ask: _"Apply these fixes?"_ (or apply a subset if the user specifies).
-- **Do not** change the codebase until the user confirms.
-- After confirmation: apply only named fixes; keep changes surgical; re-read touched files for consistency.
+- Emit Summary + Findings + Fix plan in chat.
+- **Do not** edit files, apply fixes, or start implementation in this turn.
+- The Fix plan should be ready for the user to accept and hand off to Agent mode (e.g. Build) when they choose.
+- If there are **no findings**, say so in Summary and skip an empty Fix plan (or note “nothing to fix”).
 
 ---
 
@@ -104,6 +109,16 @@ Do **not** dump the entire Block G checklist into the report — only concrete f
 
 **Example:**  
 `✂️`**`packages/app/src/Foo.ts:42`** — One-off `const label = …` used once. → Inline into the return.
+
+### Fix plan format
+
+After Findings, add a **Fix plan** section:
+
+- Ordered steps (1, 2, 3…), grouped by file or by dependency when order matters.
+- Each step: what to change, where, and why (tie back to a finding when useful).
+- Prefer **surgical** steps — one concern per step; no drive-by refactors.
+- Separate **must-fix** (bugs / correctness / broken conventions) from **optional cleanup** when both exist.
+- Keep steps concrete enough that Agent mode can execute them without re-deriving the review.
 
 ---
 
@@ -332,29 +347,34 @@ Use this list when reviewing. Report only violations found. Sources: `.cursor/ru
 
 ### General quality bar
 
-1. Every changed line should serve the feature; no drive-by refactors in the proposal unless they fix a finding.
+1. Every planned change should serve a finding; no drive-by refactors unless they fix a finding.
 2. Prefer existing patterns in neighboring files of the same package.
 3. Prefer deleting code over adding configuration knobs.
 4. Error handling only for realistic failures — no defensive noise for impossible states.
 5. Keep public APIs minimal; don’t export “just in case”.
-6. After proposed fixes, touched code should still read as one consistent style with the package.
+6. Planned fixes should leave touched code consistent with the package style.
 
 ---
 
 ## ⚠️ Edge cases
 
+- **Not in Plan mode** — switch to Plan mode before reviewing; do not review-and-implement in Agent mode under this
+  command.
 - **Merge commits / messy history** — still review the aggregate `<base>...HEAD` diff, not commit-by-commit unless a
   regression is unclear.
 - **Generated files** — skip noise; if the branch only updates generated output, say so in Summary and focus on sources.
-- **Mixed feature + drive-by** — separate findings: required correctness vs optional cleanup.
+- **Mixed feature + drive-by** — separate findings and plan steps: required correctness vs optional cleanup.
 - **Unsure base branch** — ask the user whether base is `main` or something else before reviewing.
 - **User asked to run tests/lint** — that is outside this command; suggest `!check.bat` / MCP workflows separately.
+- **User asks to apply fixes immediately** — remind that `/review` ends at the Fix plan; they can accept/build the plan
+  (or explicitly ask to implement in Agent mode) as a follow-up.
 
 ---
 
 ## ✅ Done criteria
 
+- Session is in **Plan mode** for this command.
 - All changed files in scope reviewed against Blocks A–G.
-- Report includes Summary + Findings + Ask.
+- Deliverable includes **Summary + Findings + Fix plan** (or Summary noting no findings).
 - No linters/tests were executed as part of this command.
-- No code edits until the user confirms.
+- **No code edits** — only analysis and the plan.
