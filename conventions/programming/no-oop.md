@@ -10,7 +10,7 @@ Don't use classes or object-oriented style. Prefer functions and modules.
 
 ## 🔍 Detect
 
-Grep for `class ` in source (exclude generated).
+Grep for `class` + space in source (exclude generated).
 
 ## 🔧 Fix
 

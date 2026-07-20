@@ -10,7 +10,7 @@ Use arrow functions everywhere, not `function` declarations.
 
 ## 🔍 Detect
 
-Grep for `function `.
+Grep for `function` + space.
 
 ## 🔧 Fix
 

@@ -10,7 +10,7 @@ Use only `type`, never `interface`.
 
 ## 🔍 Detect
 
-Grep for `interface `.
+Grep for `interface` + space.
 
 ## 🔧 Fix
 
