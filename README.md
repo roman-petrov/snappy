@@ -92,6 +92,18 @@ On a phone: copy `ca.pem` to the device and install it as a CA certificate (Sett
 - SuccessURL: `GET` `https://snappy-ai.ru/billing/robokassa/success`
 - FailURL: `GET` `https://snappy-ai.ru/billing/robokassa/fail`
 
+### 📜 Logs
+
+Server logs go to **`.logs/`** in the repo root (created automatically; gitignored):
+
+- `http` — Fastify request/access logs (`HttpLog`)
+- `payment` — top-up, settle, credit, Robokassa webhook / tunnel (`Log.payment`)
+- `auth` — signup reject / bonus, email send failures (`Log.auth`)
+- `ai` — LLM proxy gate / debit (`Log.ai`)
+
+Rotation: daily and at ~20 MB, keep 14 files. For top-up / tunnel issues inspect `.logs/payment*.log` on the server and
+locally.
+
 ## 🛠️ Technologies
 
 - 🟦 [TypeScript](https://www.typescriptlang.org/)

@@ -2,7 +2,8 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 
 import { Config, ConfigValues } from "@snappy/config";
-import { HttpStatus } from "@snappy/core";
+import { _, HttpStatus } from "@snappy/core";
+import { Log } from "@snappy/log";
 import { type PaymentProvider, RobokassaConfig } from "@snappy/payment";
 import { TunnelClient, TunnelHub } from "@snappy/tunnel";
 
@@ -15,40 +16,71 @@ export const RobokassaWebhook = async (app: FastifyInstance, { balancePayment, p
   const wsPath = `/api/tunnel`;
   const key = Config.tunnelKey();
 
-  const handle = async (request: FastifyRequest, reply: FastifyReply) => {
-    const body = await balancePayment.webhook(request.body);
-    if (body === undefined) {
+  const hint = (body: unknown) =>
+    !(body instanceof Object) || _.isArray(body)
+      ? {}
+      : { invId: `InvId` in body ? body.InvId : undefined, outSum: `OutSum` in body ? body.OutSum : undefined };
+
+  const handle = async ({ body }: FastifyRequest, reply: FastifyReply) => {
+    const ack = await balancePayment.webhook(body);
+    const ok = ack?.startsWith(`OK`) === true;
+    Log.payment.info(`robokassa.webhook.ack`, { ok, paymentId: ok ? ack.slice(2) : undefined });
+    if (ack === undefined) {
       await reply.status(HttpStatus.ok).send();
 
       return;
     }
-    await reply.status(HttpStatus.ok).type(`text/plain`).send(body);
+    await reply.status(HttpStatus.ok).type(`text/plain`).send(ack);
   };
 
   if (!ConfigValues.production()) {
-    app.post(path, handle);
+    const url = `wss://${ConfigValues.prodHost}${wsPath}`;
+    const fields = { url };
+    app.post(path, async (request, reply) => {
+      Log.payment.info(`robokassa.webhook.dev-handle`, { ip: request.ip, ...hint(request.body) });
+      await handle(request, reply);
+    });
 
-    return TunnelClient({ key, url: `wss://${ConfigValues.prodHost}${wsPath}` });
+    return TunnelClient({
+      key,
+      onClose: () => Log.payment.warn(`tunnel.client.close`, fields),
+      onDialError: ({ port, streamId }) => Log.payment.error(`tunnel.client.dial-error`, { ...fields, port, streamId }),
+      onOpen: () => Log.payment.info(`tunnel.client.open`, fields),
+      url,
+    });
   }
 
-  const { online, proxy } = await TunnelHub({ key }).register(app, wsPath);
+  const { online, proxy } = await TunnelHub({
+    key,
+    onAuthFailed: () => Log.payment.warn(`tunnel.hub.auth-failed`),
+    onOffline: () => Log.payment.warn(`tunnel.hub.offline`),
+    onReady: ({ port, replaced }) => Log.payment.info(replaced ? `tunnel.hub.replaced` : `tunnel.hub.ready`, { port }),
+  }).register(app, wsPath);
 
   app.post(path, async (request, reply) => {
-    if (!RobokassaConfig.allowsIp(request.ip)) {
+    const { body, ip } = request;
+    if (!RobokassaConfig.allowsIp(ip)) {
+      Log.payment.warn(`robokassa.webhook.ip-forbidden`, { ip });
       await reply.status(HttpStatus.forbidden).send();
 
       return;
     }
-    if (payment.parseWebhook(request.body).ok) {
+    const fields = { ip, path, ...hint(body) };
+    if (payment.parseWebhook(body).ok) {
+      Log.payment.info(`robokassa.webhook.local`, fields);
       await handle(request, reply);
 
       return;
     }
     if (online()) {
-      await proxy(reply, path, { json: request.body });
+      Log.payment.info(`robokassa.webhook.proxy`, fields);
+      if (!(await proxy(reply, path, { json: body }))) {
+        Log.payment.error(`robokassa.webhook.proxy-failed`, fields);
+      }
 
       return;
     }
+    Log.payment.warn(`robokassa.webhook.offline-ack`, fields);
     await reply.status(HttpStatus.ok).send();
   });
 

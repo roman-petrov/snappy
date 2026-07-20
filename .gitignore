@@ -1,6 +1,7 @@
 # Dot files/folders
 .analyze
 .jscpd
+.logs
 .snappy
 secrets.dev.yaml
 secrets.prod.yaml

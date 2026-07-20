@@ -1,0 +1,16 @@
+{
+  "name": "@snappy/log",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@snappy/config": "workspace:*",
+    "fastify": "^5.10.0",
+    "pino": "^10.1.0",
+    "pino-roll": "^4.0.0"
+  }
+}

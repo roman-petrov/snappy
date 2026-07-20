@@ -12,9 +12,15 @@ import tls from "node:tls";
 
 import { TunnelSocket } from "./TunnelSocket";
 
-export type TunnelClientConfig = { key: string; url: string };
+export type TunnelClientConfig = {
+  key: string;
+  onClose?: () => void;
+  onDialError?: (info: { port: number; streamId: number }) => void;
+  onOpen?: () => void;
+  url: string;
+};
 
-export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
+export const TunnelClient = ({ key, onClose, onDialError, onOpen, url }: TunnelClientConfig) => {
   let tunnel: TunnelSocket | undefined;
   const locals = new Map<number, tls.TLSSocket>();
   const opening = new Set<number>();
@@ -75,6 +81,7 @@ export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
     } catch {
       opening.delete(id);
       pending.delete(id);
+      onDialError?.({ port, streamId: id });
       tunnel?.sendControl({ id, type: `close` });
     }
   };
@@ -88,6 +95,7 @@ export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
             closeLocal(id);
           }
           tunnel = undefined;
+          onClose?.();
         },
         onControl: message => {
           if (message.type === `open`) {
@@ -114,6 +122,7 @@ export const TunnelClient = ({ key, url }: TunnelClientConfig) => {
         },
         onError: () => raw.close(),
         onOpen: () => {
+          onOpen?.();
           next.sendControl({ key, type: `auth` });
           next.sendControl({ port: HttpConstants.httpsPort, type: `ready` });
         },

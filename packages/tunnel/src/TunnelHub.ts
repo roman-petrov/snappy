@@ -15,23 +15,30 @@ import { Duplex } from "node:stream";
 import { type TunnelFetchInit, TunnelHttp } from "./TunnelHttp";
 import { TunnelSocket } from "./TunnelSocket";
 
-export type TunnelHubConfig = { key: string };
+export type TunnelHubConfig = {
+  key: string;
+  onAuthFailed?: () => void;
+  onOffline?: () => void;
+  onReady?: (info: { port: number; replaced: boolean }) => void;
+};
 
 type Session = { defaultPort: number; tunnel: TunnelSocket };
 
-export const TunnelHub = ({ key }: TunnelHubConfig) => {
+export const TunnelHub = ({ key, onAuthFailed, onOffline, onReady }: TunnelHubConfig) => {
   let session: Session | undefined;
   let nextId = 1;
   const streams = new Map<number, Duplex>();
 
   const dropSession = (tunnel: TunnelSocket) => {
-    if (session?.tunnel === tunnel) {
-      session = undefined;
+    if (session?.tunnel !== tunnel) {
+      return;
     }
+    session = undefined;
     for (const [, stream] of streams) {
       stream.destroy();
     }
     streams.clear();
+    onOffline?.();
   };
 
   const accept = (socket: Parameters<typeof Socket.node>[0]) => {
@@ -42,6 +49,7 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
       onControl: message => {
         if (!authenticated) {
           if (message.type !== `auth` || message.key !== key) {
+            onAuthFailed?.();
             tunnel.close();
 
             return;
@@ -62,10 +70,17 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
           return;
         }
         if (message.type === `ready`) {
-          if (session !== undefined && session.tunnel !== tunnel) {
-            session.tunnel.close();
-          }
+          const previous = session;
+          const replaced = previous !== undefined && previous.tunnel !== tunnel;
           session = { defaultPort: message.port, tunnel };
+          if (replaced) {
+            for (const [, stream] of streams) {
+              stream.destroy();
+            }
+            streams.clear();
+            previous.tunnel.close();
+          }
+          onReady?.({ port: message.port, replaced });
         }
       },
       onData: (id, chunk) => streams.get(id)?.push(chunk),
@@ -114,9 +129,11 @@ export const TunnelHub = ({ key }: TunnelHubConfig) => {
     if (response === undefined) {
       await reply.status(HttpStatus.badGateway).send();
 
-      return;
+      return false;
     }
     await reply.status(response.status).send(Buffer.from(await response.arrayBuffer()));
+
+    return true;
   };
 
   const online = () => session !== undefined;

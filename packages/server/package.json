@@ -12,6 +12,7 @@
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/log": "workspace:*",
     "@snappy/metrics": "workspace:*",
     "@snappy/node": "workspace:*",
     "@snappy/server-module": "workspace:*",

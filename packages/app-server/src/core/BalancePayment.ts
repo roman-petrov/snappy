@@ -6,6 +6,7 @@ import type { PaymentProvider } from "@snappy/payment";
 
 import { Config, ConfigValues } from "@snappy/config";
 import { _ } from "@snappy/core";
+import { Log } from "@snappy/log";
 import { z } from "zod";
 
 import type { Balance } from "./Balance";
@@ -24,10 +25,13 @@ export type BalancePaymentConfig = {
 export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaymentConfig) => {
   const paymentUrl = async (user: DbUser, amount: number) => {
     if (!Number.isFinite(amount) || amount < Config.balance.paymentMinRub || amount > Config.balance.paymentMaxRub) {
+      Log.payment.warn(`payment.url.invalid-amount`, { amount, userId: user.id });
+
       return { status: `invalidAmount` as const };
     }
     const rounded = _.round(amount, 2);
     const origin = ConfigValues.origin(ConfigValues.env());
+    const fields = { amount: rounded, userId: user.id };
 
     const result = await payment.createRedirectPayment({
       amount: rounded,
@@ -40,17 +44,29 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
     });
 
     if (!result.ok) {
+      Log.payment.error(`payment.url.provider-error`, {
+        ...fields,
+        code: result.code,
+        externalMessage: result.externalMessage,
+      });
       await paymentLog.topUpError(user, result.code, result.externalMessage);
 
       return { status: `paymentError` as const };
     }
 
     await paymentLog.topUpPending(user, result.paymentId, rounded);
+    Log.payment.info(`payment.url.created`, {
+      ...fields,
+      env: ConfigValues.env(),
+      paymentId: result.paymentId,
+      returnUrlMode: ConfigValues.production() ? `cabinet` : `override`,
+    });
 
     return { status: `ok` as const, url: result.redirectUrl };
   };
 
   const reject = async (user: DbUser | undefined, paymentId: string, reason: string) => {
+    Log.payment.warn(`payment.settle.rejected`, { paymentId, reason, userId: user?.id });
     await paymentLog.topUpSettleError(user, paymentId, reason);
 
     return true;
@@ -59,11 +75,20 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
   const handlePaymentSucceeded = async (paymentId: string) => {
     const result = await payment.payment(paymentId);
     if (!result.ok || result.status !== `succeeded`) {
+      Log.payment.warn(`payment.settle.provider-not-succeeded`, {
+        code: result.ok ? undefined : result.code,
+        ok: result.ok,
+        paymentId,
+        status: result.ok ? result.status : undefined,
+      });
+
       return false;
     }
     const { metadataKind, money, userId } = result;
 
     if (await paymentLog.succeeded(paymentId)) {
+      Log.payment.info(`payment.settle.already-succeeded`, { paymentId });
+
       return true;
     }
 
@@ -88,9 +113,13 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
       return reject(user, paymentId, `amount-mismatch:${pending}:${amountRub}`);
     }
 
+    const credit = { amountRub, paymentId, userId: user.id };
     try {
       await balance.creditFromTopUp(user, amountRub, { amount: money?.value, currency: money?.currency, paymentId });
+      Log.payment.info(`payment.credit.succeeded`, credit);
     } catch {
+      Log.payment.error(`payment.credit.failed`, credit);
+
       return false;
     }
 
@@ -99,8 +128,13 @@ export const BalancePayment = ({ balance, db, payment, paymentLog }: BalancePaym
 
   const webhook = async (body: unknown) => {
     const parsed = payment.parseWebhook(body);
+    if (!parsed.ok) {
+      Log.payment.warn(`robokassa.webhook.parse-failed`, { code: parsed.code });
 
-    return !parsed.ok || !(await handlePaymentSucceeded(parsed.paymentId)) ? undefined : `OK${parsed.paymentId}`;
+      return undefined;
+    }
+
+    return (await handlePaymentSucceeded(parsed.paymentId)) ? `OK${parsed.paymentId}` : undefined;
   };
 
   const rpc = {

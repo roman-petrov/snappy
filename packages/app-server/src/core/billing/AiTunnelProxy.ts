@@ -8,6 +8,7 @@ import type { FastifyInstance } from "fastify";
 
 import { Config } from "@snappy/config";
 import { _, HttpStatus } from "@snappy/core";
+import { Log } from "@snappy/log";
 import { z } from "zod";
 
 import type { Balance } from "../Balance";
@@ -34,12 +35,16 @@ export const AiTunnelProxy = async (
   await PayloadProxy(app, {
     gate: async headers => {
       const dbUser = await Session.dbUser(betterAuth, headers, db);
+      if (dbUser === undefined) {
+        return { allow: false, body: { status: `unauthorized` }, status: HttpStatus.unauthorized };
+      }
+      if (await balance.isLlmBlocked(dbUser)) {
+        Log.ai.warn(`ai.gate.blocked`, { userId: dbUser.id });
 
-      return dbUser === undefined
-        ? { allow: false, body: { status: `unauthorized` }, status: HttpStatus.unauthorized }
-        : (await balance.isLlmBlocked(dbUser))
-          ? { allow: false, body: { status: `balanceBlocked` }, status: HttpStatus.ok }
-          : { allow: true, state: { billingDone: false, dbUser } satisfies State };
+        return { allow: false, body: { status: `balanceBlocked` }, status: HttpStatus.ok };
+      }
+
+      return { allow: true, state: { billingDone: false, dbUser } satisfies State };
     },
     headers: outgoing => {
       const { cookie, host, ...rest } = outgoing;
@@ -63,9 +68,14 @@ export const AiTunnelProxy = async (
         return;
       }
       const { model, usage } = parsed.data;
-      void balance.debitForLlm(tunnel.dbUser, usage.cost_rub, { call: path, model: model ?? `` }).then(() => {
-        tunnel.billingDone = true;
-      });
+      const debit = { call: path, costRub: usage.cost_rub, model: model ?? ``, userId: tunnel.dbUser.id };
+      void balance.debitForLlm(tunnel.dbUser, usage.cost_rub, { call: debit.call, model: debit.model }).then(
+        () => {
+          tunnel.billingDone = true;
+          Log.ai.info(`ai.debit.ok`, debit);
+        },
+        () => Log.ai.error(`ai.debit.failed`, debit),
+      );
     },
     prefix: `/api/ai-tunnel`,
     upstream: upstream ?? _.https(upstreamHost),

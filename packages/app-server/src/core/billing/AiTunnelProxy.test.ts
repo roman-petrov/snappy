@@ -19,6 +19,12 @@ vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
 
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
+vi.mock(`@snappy/log`, () => {
+  const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+
+  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+});
+
 vi.mock(`./PayloadProxy`, () => ({ PayloadProxy: vi.fn() }));
 
 const proxyPath = `/api/ai-tunnel/resource`;

@@ -26,6 +26,12 @@ vi.mock(`../Session`, () => ({ Session: { dbUser: vi.fn() } }));
 
 vi.mock(`@snappy/config`, () => ({ Config: { aiTunnelKey: () => `test-ai-tunnel-key` } }));
 
+vi.mock(`@snappy/log`, () => {
+  const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+
+  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+});
+
 const chatPath = `/api/ai-tunnel/v1/chat/completions`;
 const editsPath = `/api/ai-tunnel/v1/images/edits`;
 const imagesPath = `/api/ai-tunnel/v1/images/generations`;
@@ -88,7 +94,7 @@ const noDebit = async (api: Tunnel) => {
   expect(api.balance.debitForLlm).not.toHaveBeenCalled();
 };
 
-describe(`AiTunnelProxy integration`, () => {
+describe(`AiTunnelProxy`, () => {
   describe(`gate`, () => {
     it(`returns unauthorized without calling upstream`, async () => {
       await withTunnel({ authorized: false }, async ({ api, inject, upstream }) => {

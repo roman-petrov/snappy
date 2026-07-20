@@ -1,3 +1,4 @@
+/* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-promise-reject */
 /* eslint-disable @typescript-eslint/require-await */
 import type { Db } from "@snappy/db";
@@ -5,6 +6,7 @@ import type { Db } from "@snappy/db";
 import { Config } from "@snappy/config";
 import { _, Email as EmailCore } from "@snappy/core";
 import { Email } from "@snappy/email";
+import { Log } from "@snappy/log";
 import { Settings } from "@snappy/ui-core";
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth/api";
@@ -19,6 +21,14 @@ export const BetterAuth = ({ balance, db }: BetterAuthConfig) => {
   const resetEmail = AuthEmail();
   const verifyEmail = AuthEmail();
 
+  const sendAuthEmail = async (kind: `reset` | `verify`, send: () => Promise<void>) =>
+    send().catch((error: unknown) => {
+      if (!(error instanceof APIError)) {
+        Log.auth.error(`auth.email.failed`, { kind });
+      }
+      throw error;
+    });
+
   return betterAuth({
     advanced: { cookiePrefix: `snappy` },
     basePath: `/api/auth`,
@@ -27,9 +37,13 @@ export const BetterAuth = ({ balance, db }: BetterAuthConfig) => {
     databaseHooks: {
       user: {
         create: {
-          after: async user => balance.creditFromSignUp(db.user(user.id)),
+          after: async user => {
+            await balance.creditFromSignUp(db.user(user.id));
+            Log.auth.info(`auth.signup.bonus`, { amountRub: Config.balance.signUpBonusRub, userId: user.id });
+          },
           before: async user => {
             if (EmailCore.foreignProvider(user.email)) {
+              Log.auth.warn(`auth.signup.rejected`, { reason: `FOREIGN_EMAIL` });
               throw APIError.from(`BAD_REQUEST`, {
                 code: `FOREIGN_EMAIL`,
                 message: `Foreign email provider is not allowed for registration`,
@@ -46,13 +60,17 @@ export const BetterAuth = ({ balance, db }: BetterAuthConfig) => {
       enabled: true,
       requireEmailVerification: true,
       sendResetPassword: async ({ url, user }, request) =>
-        resetEmail.send(user.email, Email.forgotPassword({ locale: Settings(request).locale, url })),
+        sendAuthEmail(`reset`, async () =>
+          resetEmail.send(user.email, Email.forgotPassword({ locale: Settings(request).locale, url })),
+        ),
     },
     emailVerification: {
       autoSignInAfterVerification: true,
       sendOnSignIn: true,
       sendVerificationEmail: async ({ url, user }, request) =>
-        verifyEmail.send(user.email, Email.verifyEmail({ locale: Settings(request).locale, url })),
+        sendAuthEmail(`verify`, async () =>
+          verifyEmail.send(user.email, Email.verifyEmail({ locale: Settings(request).locale, url })),
+        ),
     },
     rateLimit: { enabled: true, max: 100, window: Config.authEmailCooldownSec },
     secret: Config.betterAuthJwtSecret(),

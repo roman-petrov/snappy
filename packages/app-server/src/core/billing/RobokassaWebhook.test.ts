@@ -17,6 +17,12 @@ vi.mock(`@snappy/config`, () => ({
   ConfigValues: { prodHost: `prod.example`, production },
 }));
 
+vi.mock(`@snappy/log`, () => {
+  const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+
+  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+});
+
 vi.mock(`@snappy/payment`, () => ({ RobokassaConfig: { allowsIp } }));
 
 const payment = (ok: boolean): PaymentProvider =>

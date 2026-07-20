@@ -17,6 +17,7 @@
     "@snappy/domain": "workspace:*",
     "@snappy/email": "workspace:*",
     "@snappy/intl": "workspace:*",
+    "@snappy/log": "workspace:*",
     "@snappy/payment": "workspace:*",
     "@snappy/rpc": "workspace:*",
     "@snappy/server-module": "workspace:*",

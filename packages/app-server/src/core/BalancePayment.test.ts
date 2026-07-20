@@ -16,6 +16,12 @@ vi.mock(`@snappy/config`, () => ({
   ConfigValues: { env: () => `dev`, origin: () => `https://dev.example`, production },
 }));
 
+vi.mock(`@snappy/log`, () => {
+  const channel = () => ({ error: vi.fn(), info: vi.fn(), warn: vi.fn() });
+
+  return { Log: { ai: channel(), auth: channel(), payment: channel() } };
+});
+
 const paymentId = `pay-1`;
 const userId = `user-1`;
 
