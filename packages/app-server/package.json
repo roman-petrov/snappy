@@ -9,7 +9,7 @@
     "./contract": "./src/core/RpcContract.ts"
   },
   "dependencies": {
-    "@fastify/http-proxy": "^11.5.0",
+    "@fastify/http-proxy": "^11.6.0",
     "@snappy/ai": "workspace:*",
     "@snappy/config": "workspace:*",
     "@snappy/core": "workspace:*",
