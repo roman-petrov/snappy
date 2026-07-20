@@ -11,13 +11,13 @@ import { Client } from "../Client";
 import { type DocsFromSync, type ListsFromSync, SyncManifest } from "../SyncManifest";
 import { Sync, type SyncResourcesOf } from "./Sync";
 
-type AuthBag<TApi = unknown> = {
+type AuthCfg<TApi = unknown> = {
   signedIn: (api: TApi) => boolean | Promise<boolean>;
   signIn: (...args: never[]) => Promise<{ status: string }>;
   signOut: () => unknown;
 };
 
-type AuthMethods<TAuth extends AuthBag<never>> = Omit<TAuth, `signedIn` | `signIn` | `signOut`> & {
+type AuthMethods<TAuth extends AuthCfg<never>> = Omit<TAuth, `signedIn` | `signIn` | `signOut`> & {
   signIn: TAuth[`signIn`];
   signOut: () => Promise<void>;
   sync: () => Promise<void>;
@@ -30,7 +30,7 @@ type ConnectSync<TApi extends RpcApiTree, TOwn extends object = object, TAuth ex
   TOwn & { auth: AuthStore<TAuth> }
 >;
 
-type RpcConfig<TAuth extends AuthBag<never>> = { auth: TAuth; onOpen?: () => void };
+type RpcConfig<TAuth extends AuthCfg<never>> = { auth: TAuth; onOpen?: () => void };
 
 type Wired<TApi extends RpcApiTree, TOwn extends object = object> = Omit<RpcClient<TApi>, keyof TOwn> & TOwn;
 
@@ -42,7 +42,7 @@ type WiredOf<TApi extends RpcApiTree, TSync extends SyncManifest> = SyncResource
 export const Rpc = async <
   TApi extends RpcApiTree,
   const TSync extends SyncManifest,
-  const TAuth extends AuthBag<Wired<TApi, WiredOf<TApi, TSync>>>,
+  const TAuth extends AuthCfg<RpcClient<TApi>>,
 >(
   contract: Endpoint<TApi, TSync>,
   config: RpcConfig<TAuth>,
@@ -70,7 +70,7 @@ export const Rpc = async <
   }) as unknown as Api;
 
   const { signedIn: readSession, signIn: authSignIn, signOut: authSignOut, ...authExtra } = config.auth;
-  const signedIn = Store(await readSession(api));
+  const signedIn = Store(await readSession(client));
   const adopt = scope.bind({ onOpen: config.onOpen, session: signedIn });
   if (signedIn()) {
     await adopt();
@@ -97,7 +97,7 @@ export const Rpc = async <
   };
 
   const sync = async () => {
-    if (signedIn() || !(await readSession(api))) {
+    if (signedIn() || !(await readSession(client))) {
       return;
     }
     resetSocket();

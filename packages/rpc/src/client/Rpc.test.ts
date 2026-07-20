@@ -132,6 +132,27 @@ describe(`Rpc`, () => {
     expect(api.auth()).toBe(false);
   });
 
+  describe(`signedIn`, () => {
+    it(`receives RPC auth so session can be read`, async () => {
+      state.clients.length = 0;
+      const contract = Contract.define<{ auth: { session: object } }>()({ path: `/rpc` });
+
+      const api = await connect(contract, {
+        auth: {
+          signedIn: async client =>
+            client.auth
+              .session()
+              .then(() => true)
+              .catch(() => false),
+          signIn: async () => ({ status: `ok` }),
+          signOut: async () => undefined,
+        },
+      });
+
+      expect(api.auth()).toBe(true);
+    });
+  });
+
   describe(`signIn`, () => {
     it(`adopts without a second session read`, async () => {
       state.clients.length = 0;
