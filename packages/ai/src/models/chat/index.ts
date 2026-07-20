@@ -45,9 +45,9 @@ export * from "./AiModelGrok45";
 
 export * from "./AiModelGrok420";
 
-export * from "./AiModelKimiK27Code";
-
 export * from "./AiModelKimiK3";
+
+export * from "./AiModelKimiK27Code";
 
 export * from "./AiModelQwen36Flash";
 
