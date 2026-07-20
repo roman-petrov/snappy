@@ -121,8 +121,8 @@ Do **not** dump convention checklists into the report — only concrete findings
 **Findings are a single linear list. Each item MUST start with one emoji:**
 
 - **Blocks A–F** (review-specific): use the Block emoji below.
-- **Loaded convention atoms**: use that atom’s `emoji` field (see `conventions/README.md`) — do not remap to
-  another symbol.
+- **Loaded convention atoms**: use that atom’s `emoji` field (see `conventions/README.md`) — do not remap to another
+  symbol.
 
 **Block A–F emojis:**
 

@@ -13,11 +13,7 @@ import path from "node:path";
 
 import type { CoderIgnore } from "./CoderIgnore";
 
-export type WorkspaceConfig = {
-  git?: (args: string[]) => Promise<number>;
-  ignore: CoderIgnore;
-  projectRoot: string;
-};
+export type WorkspaceConfig = { git?: (args: string[]) => Promise<number>; ignore: CoderIgnore; projectRoot: string };
 
 export const Workspace = ({ git, ignore, projectRoot }: WorkspaceConfig) => {
   const limits = {
@@ -121,10 +117,7 @@ export const Workspace = ({ git, ignore, projectRoot }: WorkspaceConfig) => {
     (async (args: string[]) => {
       try {
         return Process.exitCode(
-          await Process.spawn(rootResolved, [`git`, ...args], {
-            capture: true,
-            env: { GIT_TERMINAL_PROMPT: `0` },
-          }),
+          await Process.spawn(rootResolved, [`git`, ...args], { capture: true, env: { GIT_TERMINAL_PROMPT: `0` } }),
         );
       } catch {
         return 1;

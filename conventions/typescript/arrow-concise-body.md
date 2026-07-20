@@ -17,7 +17,7 @@ expression body unchanged.
 
 ## 🔧 Fix
 
-Drop the block and `return`; use `=> expr`. For object literals use `=> ({ … })`. 
+Drop the block and `return`; use `=> expr`. For object literals use `=> ({ … })`.
 
 ## 📝 Examples
 

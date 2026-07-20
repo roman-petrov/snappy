@@ -7,8 +7,8 @@
 ## 📐 Norm
 
 Use one relevant emoji at the start of H1–H3. Match topic; use sparingly in body text. Convention atoms: H1 uses the
-atom category emoji; structure headings always use the fixed set from `conventions/README.md` (`📐 Norm`,
-`🔍 Detect`, `🔧 Fix`, `📝 Examples`, `❌ Bad`, `✅ Good`).
+atom category emoji; structure headings always use the fixed set from `conventions/README.md` (`📐 Norm`, `🔍 Detect`,
+`🔧 Fix`, `📝 Examples`, `❌ Bad`, `✅ Good`).
 
 ## 🔍 Detect
 
