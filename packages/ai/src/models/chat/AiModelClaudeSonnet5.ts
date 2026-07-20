@@ -1,7 +1,7 @@
 // cspell:disable
 import { ModelChat } from "../../core-model";
 
-export const AiModelGpt55Pro = ModelChat({
+export const AiModelClaudeSonnet5 = ModelChat({
   capabilities: { input: [`text`, `image`], output: [`text`] },
-  name: `gpt-5.5-pro`,
+  name: `claude-sonnet-5`,
 });

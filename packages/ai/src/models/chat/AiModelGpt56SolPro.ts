@@ -1,7 +1,7 @@
 // cspell:disable
 import { ModelChat } from "../../core-model";
 
-export const AiModelQwen35Plus20260420 = ModelChat({
+export const AiModelGpt56SolPro = ModelChat({
   capabilities: { input: [`text`, `image`], output: [`text`] },
-  name: `qwen3.5-plus-20260420`,
+  name: `gpt-5.6-sol-pro`,
 });

@@ -24,6 +24,7 @@ export const AiConstants = {
   imageConfigPreset: {
     gemini: { aspectRatios: imageAspectRatio, resolutions: [`1K`, `2K`, `4K`] as const },
     geminiFlash: { aspectRatios: [...imageAspectRatio, ...imageAspectRatioExtended], resolutions: imageResolution },
+    geminiPro: { aspectRatios: imageAspectRatio, resolutions: [`1K`, `2K`] as const },
   },
   imageQuality: [`auto`, `hd`, `high`, `low`, `medium`, `standard`] as const,
   imageResolution,

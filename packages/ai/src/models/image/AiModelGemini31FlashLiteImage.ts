@@ -2,11 +2,11 @@
 import { AiConstants } from "../../AiConstants";
 import { ModelImage } from "../../core-model";
 
-export const AiModelGemini3ProImagePreview = ModelImage({
+export const AiModelGemini31FlashLiteImage = ModelImage({
   capabilities: { input: [`text`, `image`], output: [`text`, `image`] },
-  imageAspectRatios: AiConstants.imageConfigPreset.gemini.aspectRatios,
+  imageAspectRatios: AiConstants.imageConfigPreset.geminiFlash.aspectRatios,
   imageConfigKind: `gemini`,
-  imageResolutions: AiConstants.imageConfigPreset.gemini.resolutions,
+  imageResolutions: [`1K`],
   imageSizes: AiConstants.imageSizePreset.gemini,
-  name: `gemini-3-pro-image-preview`,
+  name: `gemini-3.1-flash-lite-image`,
 });

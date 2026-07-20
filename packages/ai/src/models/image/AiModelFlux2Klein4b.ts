@@ -2,8 +2,9 @@
 import { AiConstants } from "../../AiConstants";
 import { ModelImage } from "../../core-model";
 
-export const AiModelQwenImageEdit = ModelImage({
+export const AiModelFlux2Klein4b = ModelImage({
   capabilities: { input: [`text`, `image`], output: [`image`] },
-  imageSizes: AiConstants.imageSizePreset.gptImage,
-  name: `qwen-image-edit`,
+  imageConfigKind: `flux`,
+  imageSizes: AiConstants.imageSizePreset.gemini,
+  name: `flux.2-klein-4b`,
 });
