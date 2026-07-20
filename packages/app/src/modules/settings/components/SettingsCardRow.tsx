@@ -10,11 +10,12 @@ export type SettingsCardRowProps = Omit<TapProps, `children` | `cn`> & {
   bottom?: string;
   icon?: ReactNode;
   right?: ReactNode;
+  selected?: boolean;
   text: string;
 };
 
-export const SettingsCardRow = ({ bottom, icon, right, text, ...tapProps }: SettingsCardRowProps) => (
-  <Tap {...tapProps} cn={_.cn($.tap(`menu`), styles.focus)}>
+export const SettingsCardRow = ({ bottom, icon, right, selected = false, text, ...tapProps }: SettingsCardRowProps) => (
+  <Tap {...tapProps} cn={_.cn($.tap(`menu`), styles.focus, selected && styles.selected)}>
     <SettingsRow icon={icon} right={right}>
       <span className={styles.text}>
         <Text color="primary" text={text} />

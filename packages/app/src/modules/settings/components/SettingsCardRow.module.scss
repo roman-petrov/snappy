@@ -1,7 +1,12 @@
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/surface";
 
 .focus {
   @include focus;
+}
+
+.selected {
+  @include surface.primary-hover($no-border: true);
 }
 
 .text {

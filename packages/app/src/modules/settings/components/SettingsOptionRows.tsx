@@ -25,6 +25,7 @@ export const SettingsOptionRows = <T extends string | undefined>({
         icon={opt.icon}
         onClick={() => select(opt.value)}
         right={value === opt.value ? <Icon color="primary" icon={Check} /> : undefined}
+        selected={value === opt.value}
         text={opt.label}
       />
     </Fragment>
