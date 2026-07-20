@@ -8,6 +8,7 @@ import type {
   AiImageResolution,
   AiImageSize,
   AiModelCapabilities,
+  AiModelCost,
 } from "../Types";
 import type { AiModelEntry } from "./Entry";
 
@@ -31,6 +32,7 @@ export type CatalogImage = AiModelEntry & {
 
 export const ModelImage = (props: {
   capabilities: AiModelCapabilities;
+  cost: AiModelCost;
   imageAspectRatios?: readonly AiImageAspectRatio[];
   imageConfigKind?: AiImageConfigKind;
   imageResolutions?: readonly AiImageResolution[];

@@ -6,7 +6,6 @@ import { ModelNames } from "../../core";
 export const useSettingsModelsImageState = () => {
   const [settings, patch] = r.settings();
   const names = ModelNames.forType(`image`);
-  const modelOptions = names.map(modelId => ({ label: modelId, value: modelId }));
   const modelSelected = settings?.llmImageModel ?? ``;
   const modelValue = names.includes(modelSelected) ? modelSelected : (names[0] ?? ``);
   const qualityValue = settings?.llmImageQuality ?? AiConstants.imageQuality[0];
@@ -14,5 +13,5 @@ export const useSettingsModelsImageState = () => {
   const selectModel = async (modelId: string) => patch({ llmImageModel: modelId });
   const selectQuality = async (quality: AiImageQuality) => patch({ llmImageQuality: quality });
 
-  return { modelOptions, modelValue, qualityOptions, qualityValue, selectModel, selectQuality };
+  return { modelValue, qualityOptions, qualityValue, selectModel, selectQuality };
 };

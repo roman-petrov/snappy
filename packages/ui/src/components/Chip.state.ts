@@ -9,6 +9,7 @@ export const useChipState = ({
   cn = ``,
   color,
   disabled,
+  flat = false,
   keepFocus,
   left,
   link,
@@ -25,7 +26,7 @@ export const useChipState = ({
     ? color === `accent`
       ? `accent`
       : `soft`
-    : [`error`, `primary`, `success`].includes(color)
+    : [`error`, `primary`, `success`, `warning`].includes(color)
       ? color
       : `soft`;
 
@@ -38,7 +39,12 @@ export const useChipState = ({
 
   const rootCn = _.cn(
     styles.root,
-    interactive ? (resolvedColor === `accent` ? _.cn(surfaceCn, styles.interactive) : $.tap(`soft`)) : surfaceCn,
+    interactive
+      ? resolvedColor === `accent`
+        ? _.cn(surfaceCn, !flat && styles.interactive)
+        : $.tap(`soft`)
+      : surfaceCn,
+    flat && styles.flat,
     tile && styles.tile,
     cn,
   );

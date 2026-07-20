@@ -29,6 +29,10 @@ $-half-height: calc(#{$-height} / 2);
   white-space: normal;
   border-radius: $-half-height;
 
+  &.flat {
+    box-shadow: none;
+  }
+
   &.tile {
     @include focus($radius: radius.sm());
 

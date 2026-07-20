@@ -75,7 +75,15 @@ export type AiModality = `audio` | `embeddings` | `image` | `text`;
 
 export type AiModelCapabilities = { input: readonly AiModality[]; output: readonly AiModality[] };
 
-export type AiModelItem = { capabilities: AiModelCapabilities; name: string; source: `ai-tunnel`; type: AiModelType };
+export type AiModelCost = `high` | `low` | `medium`;
+
+export type AiModelItem = {
+  capabilities: AiModelCapabilities;
+  cost?: AiModelCost;
+  name: string;
+  source: `ai-tunnel`;
+  type: AiModelType;
+};
 
 export type AiModelType = `chat` | `embedder` | `image` | `speech-recognition`;
 

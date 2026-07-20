@@ -4,6 +4,7 @@ import { ModelImage } from "../../core-model";
 
 export const AiModelSeedream45 = ModelImage({
   capabilities: { input: [`text`, `image`], output: [`image`] },
+  cost: `medium`,
   imageAspectRatios: AiConstants.imageConfigPreset.gemini.aspectRatios,
   imageConfigKind: `gemini`,
   imageResolutions: AiConstants.imageConfigPreset.gemini.resolutions,

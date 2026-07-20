@@ -11,7 +11,7 @@ import {
 } from "./models";
 
 const items = [...AiModelChatCatalog, ...AiModelEmbedderCatalog, ...AiModelImageCatalog, ...AiModelSpeechCatalog].map(
-  ({ capabilities, name, source, type }) => ({ capabilities, name, source, type }),
+  ({ capabilities, cost, name, source, type }) => ({ capabilities, cost, name, source, type }),
 );
 
 const fallback = {

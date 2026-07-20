@@ -11,10 +11,16 @@ export const useSettingsModelsBaseState = ({
 }: SettingsModelsBaseProps) => {
   const [settings, patch] = r.settings();
   const names = ModelNames.forType(modelType, modelFilter);
-  const options = names.map(modelId => ({ label: modelId, value: modelId }));
   const selected = settings?.[settingsField] ?? ``;
   const value = names.includes(selected) ? selected : (names[0] ?? ``);
   const select = async (modelId: string) => patch({ [settingsField]: modelId });
+  const grouped = modelType !== `speech-recognition`;
 
-  return { options, select, title, value };
+  if (grouped) {
+    return { grouped: true as const, modelFilter, modelType, select, title, value };
+  }
+
+  const options = names.map(modelId => ({ label: modelId, value: modelId }));
+
+  return { grouped: false as const, options, select, title, value };
 };

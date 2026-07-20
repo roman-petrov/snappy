@@ -10,6 +10,8 @@ export * from "./SettingsFeedback";
 
 export * from "./SettingsModelsBase";
 
+export * from "./SettingsModelsList";
+
 export * from "./SettingsOptionList";
 
 export * from "./SettingsOptionRows";

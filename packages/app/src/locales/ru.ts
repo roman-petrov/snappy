@@ -113,6 +113,7 @@ export const ru = {
     language: { en: `English`, ru: `Русский`, system: `Системный`, title: `Язык` },
     models: {
       chat: { title: `Текст` },
+      cost: { high: `Высокая стоимость`, low: `Низкая стоимость`, medium: `Средняя стоимость` },
       image: {
         quality: `Качество изображения`,
         qualityValue: {

@@ -105,6 +105,7 @@ export const en = {
     language: { en: `English`, ru: `Русский`, system: `System`, title: `Language` },
     models: {
       chat: { title: `Text` },
+      cost: { high: `High cost`, low: `Low cost`, medium: `Medium cost` },
       image: {
         quality: `Image quality`,
         qualityValue: { auto: `Auto`, hd: `HD`, high: `High`, low: `Low`, medium: `Medium`, standard: `Standard` },

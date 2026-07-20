@@ -4,6 +4,7 @@ import { ModelImage } from "../../core-model";
 
 export const AiModelGemini31FlashLiteImage = ModelImage({
   capabilities: { input: [`text`, `image`], output: [`text`, `image`] },
+  cost: `low`,
   imageAspectRatios: AiConstants.imageConfigPreset.geminiFlash.aspectRatios,
   imageConfigKind: `gemini`,
   imageResolutions: [`1K`],

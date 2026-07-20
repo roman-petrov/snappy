@@ -1,5 +1,5 @@
 import type { AiHttpConfig } from "../AiHttp";
-import type { AiChatCompletionSession, AiChatCompletionsInput, AiModelCapabilities } from "../Types";
+import type { AiChatCompletionSession, AiChatCompletionsInput, AiModelCapabilities, AiModelCost } from "../Types";
 import type { AiModelBehavior, AiModelEntry } from "./Entry";
 
 import { AiChat } from "../AiChat";
@@ -12,13 +12,15 @@ export type CatalogChat = AiModelEntry & { type: `chat` };
 export const ModelChat = ({
   behavior,
   capabilities,
+  cost,
   name,
 }: {
   behavior?: Partial<AiModelBehavior>;
   capabilities: AiModelCapabilities;
+  cost: AiModelCost;
   name: string;
 }): CatalogChat & { of: (http: AiHttpConfig) => AiChatModel } =>
-  ModelEntry.bind(`chat`, { behavior, capabilities, name }, (http, catalog) => ({
+  ModelEntry.bind(`chat`, { behavior, capabilities, cost, name }, (http, catalog) => ({
     ...catalog,
     completions: input => AiChat.completion(http, catalog, input),
   }));
