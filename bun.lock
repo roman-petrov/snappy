@@ -15,7 +15,7 @@
       "devDependencies": {
         "@knip/mcp": "^0.0.32",
         "actions-up": "^1.15.0",
-        "agent-browser": "^0.32.0",
+        "agent-browser": "^0.32.3",
         "jsdom": "^29.0.2",
       },
     },
@@ -1849,7 +1849,7 @@
 
     "actions-up": ["actions-up@1.16.0", "", { "dependencies": { "enquirer": "^2.4.1", "nanospinner": "^1.2.2", "picocolors": "^1.1.1", "semver": "^7.8.5", "yaml": "^2.9.0" }, "bin": { "actions-up": "bin/actions-up.js" } }, "sha512-i/2cDk8Z5YUatx1atmxmZx5jCe0z6nwpDvBiqf4FB7cTuKXnEvpwLbwDGlvKkwA7n+SOHxlosGgOhBJXtHW3IA=="],
 
-    "agent-browser": ["agent-browser@0.32.0", "", { "bin": { "agent-browser": "./bin/agent-browser.js" } }, "sha512-tEcrUF4jHS3DxHE2oRzqRs9oIvO/y301sWUUrNnYy3Xo/oGNKMP+HKKoMcFb8nAD3VDkMXem9yLIHB0Axr2g3g=="],
+    "agent-browser": ["agent-browser@0.32.3", "", { "bin": { "agent-browser": "./bin/agent-browser.js" } }, "sha512-jwmqex/vEFNWx7X/W3JnZSWm5C+46SFKWDXYD7timGPCcvqHZtdVIBnKGUz7iCJYflQg4DrtxWUWzuin9+zoyA=="],
 
     "agentkeepalive": ["agentkeepalive@4.6.0", "", { "dependencies": { "humanize-ms": "^1.2.1" } }, "sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ=="],
 
