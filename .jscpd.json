@@ -20,6 +20,7 @@
 
     "*********** FILES ***********",
 
+    "conventions/**",
     "packages/ai-stream/src/themes/chat/Theme.ts",
     "packages/ai-stream/src/themes/reasoning/Theme.ts",
     "packages/app/src/modules/auth/pages/SignIn.view.tsx",
