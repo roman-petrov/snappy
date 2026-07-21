@@ -4,17 +4,7 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig({
   banner: { js: `import { createRequire } from "node:module";const require=createRequire(import.meta.url);` },
-  deps: {
-    alwaysBundle: [/^@snappy\//u],
-    neverBundle: id =>
-      !(
-        id.startsWith(`@snappy/`) ||
-        id.startsWith(`.`) ||
-        id.startsWith(`/`) ||
-        id.startsWith(`node:`) ||
-        /^[a-z]:[/\\]/iu.test(id)
-      ),
-  },
+  deps: { alwaysBundle: [/^@snappy\//u], neverBundle: true },
   // eslint-disable-next-line @stylistic/quotes --- IMPORTANT: Knip will not work with backticks!
   entry: { main: "./src/main.ts" },
   format: `esm`,
