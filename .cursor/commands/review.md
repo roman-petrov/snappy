@@ -98,15 +98,15 @@ In **one** parent turn, launch **seven** `Task` calls with:
 
 **Categories (exactly these seven):**
 
-| id                  | Block / conventions                                                       |
-| ------------------- | ------------------------------------------------------------------------- |
-| `regressions`       | Block A                                                                   |
-| `correctness`       | Block B                                                                   |
-| `dead-unused`       | Block C + load `unused/`                                                  |
-| `simplify`          | Block D + all `programming/` atoms except `comments` and `reuse-existing` |
-| `comments`          | Block E + `programming/comments`                                          |
-| `reuse`             | Block F + `programming/reuse-existing`                                    |
-| `stack-conventions` | load `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`        |
+| id                  | Block / conventions                                                                                |
+| ------------------- | -------------------------------------------------------------------------------------------------- |
+| `regressions`       | Block A                                                                                            |
+| `correctness`       | Block B                                                                                            |
+| `dead-unused`       | Block C + load `unused/`                                                                           |
+| `simplify`          | Block D + `programming/` (except `comments`, `reuse-existing`); stack groups as conflict gate only |
+| `comments`          | Block E + `programming/comments`                                                                   |
+| `reuse`             | Block F + `programming/reuse-existing`                                                             |
+| `stack-conventions` | load `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`                                 |
 
 **Hard constraints (every subagent prompt must repeat):**
 
@@ -165,6 +165,8 @@ Before calling `CreatePlan`, the parent **must** load conventions (do not skip; 
    - Write **План исправлений** steps that do not prescribe convention-violating changes.
    - Prefer simpler / smaller fixes over new abstractions (align with `agent/simplicity-first`,
      `programming/kiss-yagni-occam`, `programming/inline-one-offs`, `programming/reuse-existing`).
+   - **Conventions over simplification:** drop any `simplify`-sourced finding whose proposed fix would violate an
+     applicable loaded atom (`applies` filter). Do not put those items in **Находки** or **План исправлений**.
    - Fill **Чеклист завершения** so the later implementer verifies applicable atoms (`applies`) for every file the
      planned fixes touch.
    - Keep planned scope surgical (`agent/surgical-changes`, `agent/simplicity-first`, `agent/goal-driven`).
@@ -198,6 +200,8 @@ be English; parent rephrases into Russian in CreatePlan. This command file stays
   without fixing a concrete finding.
 - If a correct fix and a larger/more abstract fix both work, keep only the smaller correct fix in the plan.
 - Drop optional-cleanup findings that only rearrange code without net simplification or a convention fix.
+- **Conventions outrank simplification:** never plan a `simplify` step whose fix would violate an applicable convention
+  atom. If shorter code and a convention conflict, keep the convention-compliant shape.
 
 **CreatePlan fields:**
 
@@ -324,6 +328,14 @@ Emoji: ✂️ (for Block-framed findings; convention atoms use their own emoji)
 - Enforce every other atom in `programming/` (including atoms added to the group later).
 - Flag: redundant control flow, wrappers, intermediate objects, unnecessary generic layers. When removing code, state
   approximate lines removed (e.g. `~12 lines`).
+- **Conventions over simplification (mandatory):** Project conventions outrank making code shorter. Before reporting a
+  finding, verify the **proposed fix** would not violate any applicable atom for that file:
+  1. Atoms already loaded in this category (`programming/` minus the two skips above).
+  2. Stack groups loaded **only as a conflict gate** (do **not** report stack violations here — that is
+     `stack-conventions`): `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`. Read `conventions/README.md`,
+     Glob/Read each group in full, apply the `applies` filter per file. If a candidate conflicts with any such atom,
+     **drop it** — omit from Findings. Optionally under Notes: `dropped: convention conflict` + path/symbol. Never
+     promote a convention-conflicting simplification to Findings.
 
 ### `comments` — Block E
 
@@ -384,6 +396,7 @@ Emoji: 🔧 (for Block-framed findings; atom emoji when from the atom)
 - **`CreatePlan` called** with Russian Overview + **Краткое резюме** + **Находки** + **План исправлений** + **Чеклист
   завершения** (+ todos).
 - Plan steps are concrete and unambiguous; completion checklist is present and strict.
-- Plan favors simplification / conventions / real fixes — no unnecessary code growth.
+- Plan favors simplification / conventions / real fixes — no unnecessary code growth; conventions outrank simplification
+  (no plan steps that violate applicable atoms).
 - No linters/tests were executed as part of this command.
 - **No code edits** — only analysis and the plan.
