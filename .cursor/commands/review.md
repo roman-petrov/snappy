@@ -80,17 +80,22 @@ One parallel `Task` (`explore`, very thorough) per selected doc. Prompt = contex
 **Constraints:** no edits; no eslint/tsc/Vitest/Knip/Stylelint/`bun do`; no live app; only this mechanic; only scoped
 changes; reason from code/call sites/types.
 
-**Output schema:**
+**Output schema** (each finding its own list line — never one paragraph):
 
-```text
+```markdown
 ## Category: <id>
+
 ## Findings
+
 - <emoji> `path:line` — problem → fix
+- <emoji> `path:line` — problem → fix
+
 ## Notes
+
 - none
 ```
 
-No findings → `- none`. Uncertain → Notes only (not Findings).
+No findings → single `- none` under Findings. Uncertain → Notes only (not Findings).
 
 ### 6 — Merge / risk
 
@@ -100,17 +105,37 @@ optional, 🟢 none. Unconfirmed Notes: drop, or list under резюме as не
 
 ### 7 — Report (stop)
 
-Russian chat report (not CreatePlan):
+Russian chat report (not CreatePlan). Emit **real Markdown** — each finding on its **own line**. Never pack `N.1`,
+`N.2`, … into one paragraph.
 
-1. **Краткое резюме** — scope, files, risk, failed agents
-2. Per selected doc (menu `N`):
+**Required shape (blank line between blocks):**
 
-```text
-N. <H1>
-  N.1 <emoji> `path:line` — problem → fix
+```markdown
+## Краткое резюме
+
+- Scope: …
+- Files: …
+- Agents: …
+- Risk: …
+
+### Неподтверждённые (only if any)
+
+- …
+
+## Находки
+
+### N. <H1>
+
+- **N.1** <emoji> `path:line` — problem → fix
+- **N.2** <emoji> `path:line` — problem → fix
 ```
 
-Empty agent → `нет`. Ask what to include in the plan (free-form: `N.M`, ranges, «все», «только must-fix», …). **Stop.**
+Rules:
+
+- One `### N. <H1>` per **selected** agent (menu `N`, gaps ok).
+- Each finding = one list item starting with `- **N.M**`. Empty agent → single item `- нет`.
+- No tables. No inline chaining of several `N.M` on one line.
+- End with: `Что включить в план? (N.M, диапазоны, «все», «только must-fix», …)` then **Stop.**
 
 ### 8 — CreatePlan (after user choice)
 
@@ -125,8 +150,8 @@ Call `CreatePlan`:
 
 - **name:** `План исправлений по review`
 - **overview / plan / todos:** Russian
-- **plan** (lists only): **Краткое резюме** → **Находки** (`N`/`N.M`, or `- нет`) → **План исправлений** → **Чеклист
-  завершения**
+- **plan** sections (same Markdown structure as the chat report for резюме + находки): **Краткое резюме** → **Находки**
+  (`### N` + `- **N.M**` list items, or `- нет`) → **План исправлений** → **Чеклист завершения**
 - Steps: file + place + exact change + why; must-fix first then optional; one concern; no soft hedges. Subsections
   **Обязательные (must-fix)** / **Опциональная зачистка** when both exist; else one list from `1`. None →
   `Исправления не требуются.`
