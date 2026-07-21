@@ -150,7 +150,7 @@ Findings in the plan must stay **concrete** (path, problem, fix). Do **not** pas
 
 Before calling `CreatePlan`, the parent **must** load conventions (do not skip; do not rely on memory):
 
-1. Read `conventions/README.md` for the load protocol and applies filter.
+1. Read `docs/conventions/README.md` for the load protocol and applies filter.
 2. Load these groups **in order** via Glob + Read every atom file in full:
    1. `agent`
    2. `unused`
@@ -268,7 +268,7 @@ Every category subagent must return **exactly** this shape (markdown, lists only
 - If there are no findings: under `## Findings` put a single line `- none`.
 - **Emoji rules:**
   - Blocks A–F style findings: use the Block emoji from **Category prompts** / Blocks below.
-  - Convention-atom findings: use that atom’s `emoji` field from `conventions/README.md` — do not remap.
+  - Convention-atom findings: use that atom’s `emoji` field from `docs/conventions/README.md` — do not remap.
 - **Notes:** `none`, or a short caveat. Put uncertain items only in Notes (not under Findings). Parent applies Step 5
   rules for unconfirmed Notes.
 - Subagent text may be English; the parent rephrases into Russian in CreatePlan.
@@ -278,7 +278,7 @@ Every category subagent must return **exactly** this shape (markdown, lists only
 ## 📨 Category prompts
 
 Parent embeds the matching block below into each `Task` prompt (plus shared context + output schema + hard constraints).
-Each subagent that loads conventions must itself: Read `conventions/README.md`, then Glob/Read its groups/atoms per that
+Each subagent that loads conventions must itself: Read `docs/conventions/README.md`, then Glob/Read its groups/atoms per that
 protocol, and apply the **applies filter** per file. Parent must **not** paste atom bodies into the prompt.
 
 ### `regressions` — Block A
@@ -322,7 +322,7 @@ Emoji: 🗑️ (for Block-framed findings; convention atoms use their own emoji)
 
 Emoji: ✂️ (for Block-framed findings; convention atoms use their own emoji)
 
-- Load the **entire** `programming/` group per `conventions/README.md`, then **skip** only:
+- Load the **entire** `programming/` group per `docs/conventions/README.md`, then **skip** only:
   - `programming/comments`
   - `programming/reuse-existing`
 - Enforce every other atom in `programming/` (including atoms added to the group later).
@@ -332,7 +332,7 @@ Emoji: ✂️ (for Block-framed findings; convention atoms use their own emoji)
   finding, verify the **proposed fix** would not violate any applicable atom for that file:
   1. Atoms already loaded in this category (`programming/` minus the two skips above).
   2. Stack groups loaded **only as a conflict gate** (do **not** report stack violations here — that is
-     `stack-conventions`): `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`. Read `conventions/README.md`,
+     `stack-conventions`): `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`. Read `docs/conventions/README.md`,
      Glob/Read each group in full, apply the `applies` filter per file. If a candidate conflicts with any such atom,
      **drop it** — omit from Findings. Optionally under Notes: `dropped: convention conflict` + path/symbol. Never
      promote a convention-conflicting simplification to Findings.
@@ -392,7 +392,7 @@ Emoji: 🔧 (for Block-framed findings; atom emoji when from the atom)
 - Seven category `Task` (`explore`) subagents launched in parallel and awaited (with retry rules on failure).
 - Findings merged/deduped; risk assigned.
 - Parent loaded all convention groups (`agent`, `unused`, `programming`, `typescript`, `react`, `css`, `testing`,
-  `eslint`, `markdown`) per `conventions/README.md` before CreatePlan.
+  `eslint`, `markdown`) per `docs/conventions/README.md` before CreatePlan.
 - **`CreatePlan` called** with Russian Overview + **Краткое резюме** + **Находки** + **План исправлений** + **Чеклист
   завершения** (+ todos).
 - Plan steps are concrete and unambiguous; completion checklist is present and strict.

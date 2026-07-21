@@ -5,5 +5,5 @@ alwaysApply: false
 
 # 📝 Markdown
 
-Read `conventions/README.md`, then load group `markdown/` per that README.
+Read `docs/conventions/README.md`, then load group `markdown/` per that README.
 Those files are the single source of truth.

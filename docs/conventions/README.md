@@ -7,8 +7,8 @@ this protocol.
 
 ## 📁 Layout
 
-- The root of `conventions/` contains **only** this `README.md`.
-- Every atom lives in a group subdirectory: `conventions/<group>/<kebab-name>.md`.
+- The root of `docs/conventions/` contains **only** this `README.md`.
+- Every atom lives in a group subdirectory: `docs/conventions/<group>/<kebab-name>.md`.
 - Do not put atoms, `_meta/`, or `bundles/` next to this README.
 
 Groups: `agent`, `programming`, `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`, `unused`.
@@ -61,7 +61,7 @@ What to change.
 
 When told to load a **group**:
 
-1. **Glob** `conventions/<group>/**/*.md`
+1. **Glob** `docs/conventions/<group>/**/*.md`
 2. Sort paths **lexicographically**
 3. **Read** every file in full — do not skip
 4. Treat file text as the single source of truth — do not invent parallel rules from memory
@@ -80,7 +80,7 @@ Skip atoms that do not match (e.g. do not apply TypeScript norms to `.scss`).
 
 ## ➕ Adding a convention
 
-1. Add `conventions/<existing-group>/<kebab-name>.md` in the atom format.
+1. Add `docs/conventions/<existing-group>/<kebab-name>.md` in the atom format.
 2. Existing group — no other edits in this directory.
 
 New **group**: add a subdirectory and list it under Layout above.
