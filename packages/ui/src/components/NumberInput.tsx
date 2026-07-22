@@ -3,7 +3,8 @@ import type { InputProps } from "./Input";
 import { useNumberInputState } from "./NumberInput.state";
 import { NumberInputView } from "./NumberInput.view";
 
-export type NumberInputProps = Omit<InputProps, `onBlur` | `onChange` | `type` | `value`> & {
+export type NumberInputProps = Omit<InputProps, `inputMode` | `onBlur` | `onChange` | `type` | `value`> & {
+  integer?: boolean;
   onBlur?: () => void;
   onChange?: (value: number | undefined) => void;
   value: number | undefined;

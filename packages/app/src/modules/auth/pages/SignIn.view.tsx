@@ -1,4 +1,4 @@
-import { Button, Input, PasswordInput } from "@snappy/ui";
+import { Button, EmailInput, PasswordInput } from "@snappy/ui";
 
 import type { useSignInState } from "./SignIn.state";
 
@@ -34,7 +34,7 @@ export const SignInView = ({
       </AuthEmailActions>
     ) : (
       <>
-        <Input autoComplete="email" label={t(`auth.signIn.email`)} onChange={setEmail} value={email} />
+        <EmailInput label={t(`auth.signIn.email`)} onChange={setEmail} value={email} />
         <PasswordInput
           autoComplete="current-password"
           disabled={loading}

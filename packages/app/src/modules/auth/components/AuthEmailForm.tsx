@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Input } from "@snappy/ui";
+import { EmailInput } from "@snappy/ui";
 
 import { AuthEmailActions, type AuthEmailActionsProps } from "./AuthEmailActions";
 import { AuthForm } from "./AuthForm";
@@ -49,7 +49,7 @@ export const AuthEmailForm = ({
       </AuthEmailActions>
     ) : (
       <>
-        <Input autoComplete="email" label={emailLabel} onChange={setEmail} value={email} />
+        <EmailInput label={emailLabel} onChange={setEmail} value={email} />
         {children}
         <AuthEmailActions
           errorsKey={errorsKey}

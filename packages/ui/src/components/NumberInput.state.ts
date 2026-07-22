@@ -3,18 +3,22 @@ import { useEffect, useRef, useState } from "react";
 import type { InputProps } from "./Input";
 import type { NumberInputProps } from "./NumberInput";
 
-const fromText = (text: string): number | undefined => {
+const fromText = (text: string, integer: boolean): number | undefined => {
   if (text.trim() === ``) {
     return undefined;
   }
-  const parsed = Number(text.replace(`,`, `.`));
+  const parsed = Number(integer ? text : text.replace(`,`, `.`));
 
-  return Number.isFinite(parsed) ? parsed : undefined;
+  if (!Number.isFinite(parsed)) {
+    return undefined;
+  }
+
+  return integer && !Number.isInteger(parsed) ? undefined : parsed;
 };
 
 const toText = (value: number | undefined) => (value === undefined ? `` : String(value));
 
-export const useNumberInputState = ({ onBlur, onChange, value, ...rest }: NumberInputProps) => {
+export const useNumberInputState = ({ integer = false, onBlur, onChange, value, ...rest }: NumberInputProps) => {
   const editing = useRef(false);
   const [text, setText] = useState(() => toText(value));
 
@@ -26,6 +30,7 @@ export const useNumberInputState = ({ onBlur, onChange, value, ...rest }: Number
 
   const input: InputProps = {
     ...rest,
+    inputMode: integer ? `numeric` : `decimal`,
     onBlur: () => {
       editing.current = false;
       setText(toText(value));
@@ -34,7 +39,7 @@ export const useNumberInputState = ({ onBlur, onChange, value, ...rest }: Number
     onChange: raw => {
       editing.current = true;
       setText(raw);
-      onChange?.(fromText(raw));
+      onChange?.(fromText(raw, integer));
     },
     type: `text`,
     value: text,

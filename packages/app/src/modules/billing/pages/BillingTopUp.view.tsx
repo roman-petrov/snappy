@@ -94,6 +94,7 @@ export const BillingTopUpView = ({
                 <div className={styles.page}>
                   <NumberInput
                     disabled={loading}
+                    integer
                     label={t(`billing.topUp.limits`, {
                       max: max === undefined ? `…` : i.price(max, `whole`),
                       min: min === undefined ? `…` : i.price(min, `whole`),

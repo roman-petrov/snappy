@@ -1,4 +1,4 @@
-import type { HTMLInputAutoCompleteAttribute, ReactNode } from "react";
+import type { ComponentProps, HTMLInputAutoCompleteAttribute, ReactNode } from "react";
 
 import { useInputState } from "./Input.state";
 import { InputView } from "./Input.view";
@@ -6,12 +6,13 @@ import { InputView } from "./Input.view";
 export type InputProps = {
   autoComplete?: HTMLInputAutoCompleteAttribute;
   disabled?: boolean;
+  inputMode?: ComponentProps<`input`>[`inputMode`];
   label: string;
   onBlur?: () => void;
   onChange?: (value: string) => void;
   overlay?: ReactNode;
   suffix?: ReactNode;
-  type?: `password` | `text`;
+  type?: `email` | `password` | `text`;
   value: string;
 };
 

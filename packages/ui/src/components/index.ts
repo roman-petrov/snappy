@@ -28,6 +28,8 @@ export * from "./context-menu";
 
 export * from "./CooldownButton";
 
+export * from "./EmailInput";
+
 export * from "./FileSelect";
 
 export * from "./FilledIcon";

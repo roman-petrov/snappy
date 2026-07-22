@@ -11,6 +11,7 @@ export const InputView = ({
   autoComplete,
   disabled = false,
   id,
+  inputMode,
   label,
   onBlur,
   onChange,
@@ -27,6 +28,7 @@ export const InputView = ({
       className={styles.control}
       disabled={disabled}
       id={id}
+      inputMode={inputMode}
       onBlur={onBlur}
       onChange={event => onChange?.(event.target.value)}
       type={type}
