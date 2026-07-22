@@ -31,7 +31,6 @@ export type CoverUnderlay = { fade?: () => boolean; targets: () => readonly HTML
 export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay }: CoverConfig) => {
   const underlayShift = 0.12;
   const underlayScale = 0.08;
-  const underlayFade = 0.5;
   const paint = Motion();
   let isClosing = false;
   let isEntering = false;
@@ -49,7 +48,7 @@ export const Cover = ({ drag, onDismiss, onMove, onPhase, root, track, underlay 
     const faded = underlay?.fade?.() === true;
 
     return {
-      ...(faded ? { opacity: 1 - reveal * underlayFade } : {}),
+      ...(faded ? { opacity: 1 - reveal } : {}),
       transform: { scale: 1 - reveal * underlayScale, translateX: -width * reveal * underlayShift },
     };
   };

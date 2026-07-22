@@ -23,7 +23,6 @@ import org.json.JSONObject;
 public class Bridge {
     private final MainActivity activity;
     private final WebView webView;
-    private boolean keyboardOpen;
     private String barTheme = "light";
     private Runnable externalReady;
 
@@ -136,15 +135,6 @@ public class Bridge {
 
     public void systemThemeChanged() {
         WebViewEvent.dispatch(webView, "snappy:system-theme-changed", null);
-    }
-
-    public void keyboardChanged(boolean open) {
-        if (keyboardOpen == open) {
-            return;
-        }
-        keyboardOpen = open;
-        WebViewEvent.dispatch(
-                webView, "snappy:keyboard-changed", "{ detail: { open: " + open + " } }");
     }
 
     public void shakeDetected() {

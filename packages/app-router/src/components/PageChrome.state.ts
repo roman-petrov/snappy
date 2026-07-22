@@ -10,7 +10,8 @@ export const usePageChromeState = ({ active = false, shell = false, ...rest }: P
   const passive = shell && shellPassive;
   const target = shell ? shellDock : pageDock;
   const [element, setElement] = useState<HTMLDivElement | undefined>();
-  const { height } = useMeasure(element, active);
+  const measuring = active && !passive;
+  const { height } = useMeasure(element, measuring);
 
   const ref = useCallback((node: HTMLDivElement | null) => {
     setElement(node ?? undefined);
@@ -18,7 +19,10 @@ export const usePageChromeState = ({ active = false, shell = false, ...rest }: P
 
   const scope = shell ? `shell` : `page`;
 
-  useLayoutEffect(() => (active ? registerChrome(scope, height) : undefined), [active, height, registerChrome, scope]);
+  useLayoutEffect(
+    () => (measuring ? registerChrome(scope, height) : undefined),
+    [height, measuring, registerChrome, scope],
+  );
 
   return { ...rest, active, dockPad: insets.dockPad, hidden: target === undefined, passive, ref, target };
 };

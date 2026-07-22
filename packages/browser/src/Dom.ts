@@ -46,7 +46,9 @@ const watchSize = (element: HTMLElement | null | undefined, onSize: (size: DomSi
   const observer = new ResizeObserver(sync);
   observer.observe(element);
 
-  return _.singleAction([() => observer.disconnect(), subscribe(window.visualViewport, `resize`, sync)]);
+  return () => {
+    observer.disconnect();
+  };
 };
 
 const tag = (value?: string) => (value === undefined ? {} : { tag: value });

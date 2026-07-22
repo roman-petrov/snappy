@@ -25,7 +25,6 @@ import androidx.activity.SystemBarStyle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 
 public class MainActivity extends ComponentActivity {
 
@@ -89,7 +88,6 @@ public class MainActivity extends ComponentActivity {
         View splash = findViewById(R.id.splash);
         ErrorScreen errorScreen = new ErrorScreen(findViewById(R.id.error), splash);
         webView = findViewById(R.id.webview);
-        webView.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -100,7 +98,6 @@ public class MainActivity extends ComponentActivity {
 
         ViewGroup container = findViewById(R.id.webview_container);
         WebChrome webChrome = new WebChrome(this, container, bridge);
-        ViewCompat.setOnApplyWindowInsetsListener(container, webChrome::applyInsets);
 
         webView.setWebChromeClient(
                 new WebChromeClient() {

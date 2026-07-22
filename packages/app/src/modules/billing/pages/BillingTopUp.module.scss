@@ -45,6 +45,9 @@ $-page-gap: space.sm();
 
 .track:not(.track-custom) .page:last-child,
 .track-custom .page:first-child {
+  height: 0;
+  padding-block: 0;
+  overflow: hidden;
   pointer-events: none;
 }
 

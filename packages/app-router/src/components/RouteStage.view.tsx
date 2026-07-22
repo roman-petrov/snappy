@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { Keyboard } from "@snappy/browser";
 import { _ } from "@snappy/core";
 import { Platform } from "@snappy/platform";
 
@@ -20,7 +21,6 @@ export const RouteStageView = ({
   coverItems,
   hostRef,
   inRef,
-  keyboard,
   laneCount,
   laneRef,
   lanes,
@@ -60,7 +60,10 @@ export const RouteStageView = ({
             ref={track ? paneRef : baseRef}
             style={
               track && Platform() === `native`
-                ? { borderBottomLeftRadius: keyboard ? undefined : cornerRadius, borderTopLeftRadius: cornerRadius }
+                ? {
+                    borderBottomLeftRadius: Keyboard.coverBottomLeftRadius(_.px(cornerRadius)),
+                    borderTopLeftRadius: cornerRadius,
+                  }
                 : undefined
             }
           >

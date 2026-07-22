@@ -6,9 +6,7 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.SystemBarStyle;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 final class WebChrome {
     private final ComponentActivity activity;
@@ -34,15 +32,6 @@ final class WebChrome {
             bridge.applyBarStyle();
         }
         ViewCompat.requestApplyInsets(container);
-    }
-
-    WindowInsetsCompat applyInsets(View view, WindowInsetsCompat windowInsets) {
-        Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-        view.setPadding(0, 0, 0, ime.bottom);
-        bridge.keyboardChanged(ime.bottom > 0);
-        return new WindowInsetsCompat.Builder(windowInsets)
-                .setInsets(WindowInsetsCompat.Type.ime(), Insets.NONE)
-                .build();
     }
 
     private void applyApp() {

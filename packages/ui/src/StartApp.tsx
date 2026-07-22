@@ -7,6 +7,7 @@ import type { RouterBundle } from "@snappy/router";
 import type { ReactNode } from "react";
 
 import { AppRouter, type RouteLayerOf } from "@snappy/app-router";
+import { Keyboard } from "@snappy/browser";
 import { type Action, Env, type ReadonlyStore } from "@snappy/core";
 import { YandexMetrica } from "@snappy/metrics";
 import { createRoot, hydrateRoot } from "react-dom/client";
@@ -44,6 +45,7 @@ export const startApp = ({ base, header, layerOf, modules, routes, signedIn, tab
   const { publicPaths, signInPath } = meta;
   let remount: Action | undefined;
 
+  Keyboard.init();
   Theme.init();
   Language.init({ onRemount: () => remount?.() });
 

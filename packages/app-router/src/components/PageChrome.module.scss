@@ -1,3 +1,4 @@
+@use "pkg:@snappy/theme/tokens/keyboard";
 @use "pkg:@snappy/theme/tokens/layer";
 
 .dock {
@@ -5,7 +6,7 @@
 
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: keyboard.inset();
   left: 0;
 
   &-passive {

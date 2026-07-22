@@ -26,7 +26,6 @@ vi.mock(import(`@snappy/platform`), () => ({
     externalReady: vi.fn(),
     externalReturnEvent: `snappy:external-return` as const,
     hapticImpact: vi.fn(),
-    keyboardChangedEvent: `snappy:keyboard-changed` as const,
     screenCornerRadius: vi.fn(() => 0),
     setBarStyle: vi.fn(),
     shakeEvent: `snappy:shake` as const,

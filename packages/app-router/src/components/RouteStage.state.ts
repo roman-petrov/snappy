@@ -78,7 +78,7 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
     );
   }, [layer, phase, track]);
 
-  const { insets, keyboard } = useStageInsets(chrome.shell, chrome.page);
+  const { insets } = useStageInsets(chrome.shell, chrome.page);
 
   const registerChrome = useCallback((scope: ChromeScope, height: number) => {
     setChrome(previous => (previous[scope] === height ? previous : { ...previous, [scope]: height }));
@@ -320,7 +320,6 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
   const stage: RouteStageValue = {
     contentRef,
     insets,
-    keyboard,
     layer,
     motion: { flipAnimating, phase, setFlipAnimating, setPhase },
     pageDock,
@@ -339,8 +338,9 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
   const laneCount = slide ? trackItems.length : 1;
   const lanes = slide ? trackItems.map(item => ({ node: render(stateAt(item.path)), path: item.path })) : undefined;
   const pageHostDimmed = shallow;
-  const scrollPaddingBottom = shellInsets.scrollPad;
-  const shellFadeMinHeight = shellInsets.fadeMinHeight;
+  const laneInsets = layer === `flip` ? pageInsets : shellInsets;
+  const scrollPaddingBottom = laneInsets.scrollPad;
+  const shellFadeMinHeight = laneInsets.fadeMinHeight;
 
   return {
     baseRef,
@@ -350,7 +350,6 @@ export const useRouteStageState = ({ content = false, track: trackItems = [] }: 
     coverItems,
     hostRef,
     inRef,
-    keyboard,
     laneCount,
     laneRef,
     lanes,

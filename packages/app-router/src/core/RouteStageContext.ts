@@ -18,7 +18,6 @@ export type RouteStageMotionValue = {
 export type RouteStageValue = {
   contentRef: RefObject<HTMLDivElement | null>;
   insets: StageInsetsValue;
-  keyboard: boolean;
   layer: RouteLayer | undefined;
   motion: RouteStageMotionValue;
   pageDock: HTMLDivElement | undefined;

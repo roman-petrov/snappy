@@ -1,31 +1,24 @@
-import { Dom } from "@snappy/browser";
+import { Keyboard } from "@snappy/browser";
 import { ThemeVar, useIsMobile } from "@snappy/hooks";
-import { Bridge, Platform } from "@snappy/platform";
-import { useEffect, useState } from "react";
 
 export const useStageInsets = (shellHeight?: number, pageHeight?: number) => {
   const mobile = useIsMobile();
   const edge = ThemeVar.ref(mobile ? `space-sm` : `space-md`);
-  const [keyboard, setKeyboard] = useState(false);
+  const pageSafe = Keyboard.safe;
+  const shellSafe = `env(safe-area-inset-bottom, 0px)`;
+  const ime = Keyboard.height;
+  const sum = (head: string, ...rest: string[]) => (rest.length === 0 ? head : `calc(${[head, ...rest].join(` + `)})`);
 
-  useEffect(
-    () =>
-      Platform() === `native`
-        ? Dom.subscribe(window, Bridge.keyboardChangedEvent, event => setKeyboard(event.detail.open))
-        : undefined,
-    [],
-  );
-  const safe = keyboard ? `0px` : `env(safe-area-inset-bottom, 0px)`;
-  const dockPad = `calc(${edge} + ${safe})`;
-
-  const lane = (height?: number) => ({
-    fadeMinHeight: height === undefined ? safe : dockPad,
-    scrollPad: height === undefined ? `calc(${safe} + ${edge})` : `calc(${safe} + ${edge} + ${height}px + ${edge})`,
+  const zone = (safe: string, height?: number, ...extra: string[]) => ({
+    fadeMinHeight: height === undefined ? sum(safe, ...extra) : sum(edge, safe, ...extra),
+    scrollPad: height === undefined ? sum(safe, edge, ...extra) : sum(safe, edge, `${height}px`, edge, ...extra),
   });
 
-  const page = lane(pageHeight);
-  const shell = lane(shellHeight);
-  const insets = { dockPad, page, shell };
+  const insets = {
+    dockPad: sum(edge, pageSafe),
+    page: zone(pageSafe, pageHeight, ime),
+    shell: zone(shellSafe, shellHeight),
+  };
 
-  return { insets, keyboard };
+  return { insets };
 };

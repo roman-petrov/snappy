@@ -1,96 +1,109 @@
 /* @vitest-environment jsdom */
-import { act, renderHook } from "@testing-library/react";
+import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { useStageInsets } from "./useStageInsets";
 
-const safe = `env(safe-area-inset-bottom, 0px)`;
-const edgeSm = `var(--space-sm)`;
-const edgeMd = `var(--space-md)`;
-const { bridgeState, mobile } = vi.hoisted(() => ({ bridgeState: { available: false }, mobile: { value: true } }));
+const shellSafe = `env(safe-area-inset-bottom, 0px)`;
+const edgeSm = `token(space-sm)`;
+const edgeMd = `token(space-md)`;
+
+const { ime, mobile, pageSafe } = vi.hoisted(() => ({
+  ime: `ime-fixture`,
+  mobile: { value: true },
+  pageSafe: `page-safe-fixture`,
+}));
+
+vi.mock(`@snappy/browser`, () => ({ Keyboard: { height: ime, safe: pageSafe } }));
 
 vi.mock(`@snappy/hooks`, () => ({
-  ThemeVar: { ref: (name: string) => `var(--${name})` },
+  ThemeVar: { ref: (name: string) => `token(${name})` },
   useIsMobile: () => mobile.value,
 }));
 
-vi.mock(import(`@snappy/platform`), () => ({
-  Bridge: {
-    get available() {
-      return bridgeState.available;
-    },
-    copyHtml: vi.fn(),
-    copyImage: vi.fn(),
-    externalReady: vi.fn(),
-    externalReturnEvent: `snappy:external-return` as const,
-    hapticImpact: vi.fn(),
-    keyboardChangedEvent: `snappy:keyboard-changed` as const,
-    screenCornerRadius: vi.fn(() => 0),
-    setBarStyle: vi.fn(),
-    shakeEvent: `snappy:shake` as const,
-    shareHtml: vi.fn(),
-    shareImage: vi.fn(),
-    systemDark: vi.fn(),
-    systemThemeChangedEvent: `snappy:system-theme-changed` as const,
-  },
-  Platform: () => (bridgeState.available ? `native` : `desktop-web`),
-  Vibrate: { trigger: vi.fn() },
-}));
-
 describe(`useStageInsets`, () => {
-  it(`uses mobile edge`, () => {
-    bridgeState.available = false;
+  it(`dockPad is edge plus page safe`, () => {
     mobile.value = true;
 
     const { result } = renderHook(() => useStageInsets());
 
-    expect(result.current.insets.shell.scrollPad).toBe(`calc(${safe} + ${edgeSm})`);
+    expect(result.current.insets.dockPad).toBe(`calc(${edgeSm} + ${pageSafe})`);
   });
 
   it(`uses desktop edge`, () => {
-    bridgeState.available = false;
     mobile.value = false;
 
     const { result } = renderHook(() => useStageInsets());
 
-    expect(result.current.insets.shell.scrollPad).toBe(`calc(${safe} + ${edgeMd})`);
+    expect(result.current.insets.dockPad).toBe(`calc(${edgeMd} + ${pageSafe})`);
+    expect(result.current.insets.shell.scrollPad).toBe(`calc(${shellSafe} + ${edgeMd})`);
   });
 
-  it(`shell fade with chrome equals dockPad`, () => {
-    bridgeState.available = false;
-    mobile.value = true;
+  describe(`page`, () => {
+    it(`fade without chrome is safe plus ime`, () => {
+      mobile.value = true;
 
-    const { result } = renderHook(() => useStageInsets(48));
+      const { result } = renderHook(() => useStageInsets());
 
-    expect(result.current.insets.shell.fadeMinHeight).toBe(`calc(${edgeSm} + ${safe})`);
-  });
-
-  it(`shell fade without chrome equals safe`, () => {
-    bridgeState.available = false;
-    const { result } = renderHook(() => useStageInsets());
-
-    expect(result.current.insets.shell.fadeMinHeight).toBe(safe);
-  });
-
-  it(`page fade with keyboard uses edge only`, () => {
-    bridgeState.available = true;
-    mobile.value = true;
-
-    const { result } = renderHook(() => useStageInsets(undefined, 48));
-
-    act(() => {
-      window.dispatchEvent(new CustomEvent(`snappy:keyboard-changed`, { detail: { open: true } }));
+      expect(result.current.insets.page.fadeMinHeight).toBe(`calc(${pageSafe} + ${ime})`);
     });
 
-    expect(result.current.insets.page.fadeMinHeight).toBe(`calc(${edgeSm} + 0px)`);
+    it(`fade with chrome adds edge`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets(undefined, 42));
+
+      expect(result.current.insets.page.fadeMinHeight).toBe(`calc(${edgeSm} + ${pageSafe} + ${ime})`);
+    });
+
+    it(`scrollPad without chrome includes ime`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets());
+
+      expect(result.current.insets.page.scrollPad).toBe(`calc(${pageSafe} + ${edgeSm} + ${ime})`);
+    });
+
+    it(`scrollPad with chrome stacks height between edges`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets(undefined, 42));
+
+      expect(result.current.insets.page.scrollPad).toBe(`calc(${pageSafe} + ${edgeSm} + 42px + ${edgeSm} + ${ime})`);
+    });
   });
 
-  it(`page scrollPad with chrome height`, () => {
-    bridgeState.available = false;
-    mobile.value = true;
+  describe(`shell`, () => {
+    it(`fade without chrome is bare safe`, () => {
+      mobile.value = true;
 
-    const { result } = renderHook(() => useStageInsets(undefined, 48));
+      const { result } = renderHook(() => useStageInsets());
 
-    expect(result.current.insets.page.scrollPad).toBe(`calc(${safe} + ${edgeSm} + 48px + ${edgeSm})`);
+      expect(result.current.insets.shell.fadeMinHeight).toBe(shellSafe);
+    });
+
+    it(`fade with chrome adds edge and ignores ime`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets(42));
+
+      expect(result.current.insets.shell.fadeMinHeight).toBe(`calc(${edgeSm} + ${shellSafe})`);
+    });
+
+    it(`scrollPad without chrome ignores ime`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets());
+
+      expect(result.current.insets.shell.scrollPad).toBe(`calc(${shellSafe} + ${edgeSm})`);
+    });
+
+    it(`scrollPad with chrome stacks height between edges`, () => {
+      mobile.value = true;
+
+      const { result } = renderHook(() => useStageInsets(42));
+
+      expect(result.current.insets.shell.scrollPad).toBe(`calc(${shellSafe} + ${edgeSm} + 42px + ${edgeSm})`);
+    });
   });
 });

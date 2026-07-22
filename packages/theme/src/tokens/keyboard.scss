@@ -1,0 +1,21 @@
+$-height: ime-height;
+$-inset: ime-inset;
+$-safe: stage-safe-bottom;
+
+@mixin root {
+  --#{$-height}: 0px;
+  --#{$-inset}: 0px;
+  --#{$-safe}: env(safe-area-inset-bottom, 0px);
+}
+
+@function height() {
+  @return var(--#{$-height});
+}
+
+@function inset() {
+  @return var(--#{$-inset});
+}
+
+@function safe() {
+  @return var(--#{$-safe});
+}

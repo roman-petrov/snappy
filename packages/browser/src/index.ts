@@ -6,6 +6,8 @@ export * from "./FilePicker";
 
 export * from "./Html";
 
+export * from "./Keyboard";
+
 export * from "./MediaQuery";
 
 export * from "./speech";
