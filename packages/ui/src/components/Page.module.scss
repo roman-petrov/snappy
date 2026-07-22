@@ -6,6 +6,7 @@
 @use "pkg:@snappy/theme/tokens/space";
 
 $-header-height: r(56);
+$-fade: space.sm();
 
 .root {
   position: relative;
@@ -35,7 +36,6 @@ $-header-height: r(56);
 
   &-tab .header::before {
     --header-surface-end: #{material.chrome-header-surface()};
-    --header-border-end: #{material.chrome-header-border()};
   }
 
   &-tab .glass {
@@ -49,17 +49,21 @@ $-header-height: r(56);
   position: sticky;
   inset-block-start: 0;
 
+  &::before,
+  .glass {
+    mask-image: linear-gradient(#000 calc(100% - #{$-fade}), transparent);
+  }
+
   &::before {
     @include layer.behind;
 
     --header-surface-end: #{material.surface-bg()};
-    --header-border-end: #{chrome.header-border-surface()};
 
     position: absolute;
     inset: 0;
+    inset-block-end: calc(-1 * #{$-fade});
     content: "";
     background-color: color.backdrop();
-    border-bottom: 1px solid transparent;
     animation: header-surface 1ms linear both;
     animation-timeline: scroll();
     animation-range: r(32) r(80);
@@ -68,7 +72,7 @@ $-header-height: r(56);
   .glass {
     @include layer.behind;
 
-    inset-block-end: 1px;
+    inset-block-end: calc(-1 * #{$-fade});
     color: color.surface();
     opacity: 0;
     animation: header-glass 1ms linear both;
@@ -94,12 +98,10 @@ $-header-height: r(56);
 @keyframes header-surface {
   from {
     background-color: color.backdrop();
-    border-bottom-color: transparent;
   }
 
   to {
     background-color: var(--header-surface-end);
-    border-bottom-color: var(--header-border-end);
   }
 }
 

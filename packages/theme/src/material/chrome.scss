@@ -6,15 +6,7 @@
 }
 
 @function header-surface() {
-  @return panel.bg-glass(accent());
-}
-
-@function header-border($accent: accent()) {
-  @return panel.border($accent);
-}
-
-@function header-border-surface() {
-  @return header-border(#{color.surface()});
+  @return color-mix(in srgb, panel.bg-glass(accent()) 35%, transparent);
 }
 
 @function indicator-tint() {

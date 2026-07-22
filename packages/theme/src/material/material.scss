@@ -33,10 +33,6 @@
   @return chrome.header-surface();
 }
 
-@function chrome-header-border() {
-  @return chrome.header-border();
-}
-
 @function surface-border() {
   @return 1px solid panel.border();
 }
