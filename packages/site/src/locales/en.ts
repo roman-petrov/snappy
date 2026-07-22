@@ -68,6 +68,7 @@ export const en = {
     title: `Try Snappy`,
   },
   footer: {
+    email: `hello@snappy-ai.ru`,
     privacy: `Privacy`,
     rights: `© 2026 Snappy`,
     tagline: `A universal AI assistant for any task: images, text, photo and audio work, plans and ideas.`,
@@ -116,6 +117,7 @@ export const en = {
     cta: `Sign in`,
     how: `How it works`,
     menu: `Menu`,
+    pricing: `Pricing`,
     tasks: `Tasks`,
     who: `For whom`,
   },
@@ -135,6 +137,17 @@ export const en = {
     restore: `Restore old photos`,
     resume: `Resume and cover letter`,
     title: `Popular tasks`,
+  },
+  pricing: {
+    aitunnel: `Model prices on AiTunnel`,
+    hintText: `You’ll see what each model costs there. Snappy adds 25% on top — and charges it from your balance.`,
+    hintTitle: `Want a rough estimate?`,
+    lead: `You only pay for what you actually use: top up your balance, then each AI request is charged as you go.`,
+    step1: `Add from 50 ₽ to your balance whenever you want.`,
+    step2: `Each AI request charges the model cost plus 25%.`,
+    step3: `The result shows up in chat right away — nothing to wait for.`,
+    terms: `Payment terms`,
+    title: `Pricing`,
   },
   schema: {
     areaServed: `Russia`,

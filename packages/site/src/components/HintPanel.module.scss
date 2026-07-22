@@ -1,4 +1,3 @@
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/space";
 
 .hint {
@@ -12,4 +11,11 @@
   display: flex;
   flex-direction: column;
   gap: space.xs();
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.sm() space.md();
+  margin-top: space.xs();
 }

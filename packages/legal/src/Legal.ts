@@ -8,7 +8,7 @@ import termsRu from "../content/terms.ru.html?raw";
 export type LegalVariant = `privacy` | `terms`;
 
 const content = { privacy: { en: privacyEn, ru: privacyRu }, terms: { en: termsEn, ru: termsRu } } as const;
-const updated = { privacy: `2026-07-03`, terms: `2026-07-17` } as const;
+const updated = { privacy: `2026-07-03`, terms: `2026-07-22` } as const;
 
 const updatedAt = (variant: LegalVariant, locale: Locale) => {
   const iso = updated[variant];

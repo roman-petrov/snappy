@@ -17,6 +17,20 @@
   text-align: center;
 }
 
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: space.sm();
+  align-items: center;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: space.xs();
+  align-items: center;
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;

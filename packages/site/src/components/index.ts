@@ -14,6 +14,8 @@ export * from "./Footer";
 
 export * from "./Hero";
 
+export * from "./HintPanel";
+
 export * from "./IconBadge";
 
 export * from "./Landing";
@@ -25,6 +27,8 @@ export * from "./Modes";
 export * from "./Pills";
 
 export * from "./Presets";
+
+export * from "./Pricing";
 
 export * from "./Privacy";
 

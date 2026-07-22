@@ -5,6 +5,7 @@ import { CtaBlock } from "./CtaBlock";
 import { Hero } from "./Hero";
 import { Modes } from "./Modes";
 import { Presets } from "./Presets";
+import { Pricing } from "./Pricing";
 import { Who } from "./Who";
 import { Why } from "./Why";
 
@@ -18,6 +19,7 @@ export const Landing = () => (
     <Who />
     <Why />
     <Compare />
+    <Pricing />
     <CtaBlock />
   </>
 );

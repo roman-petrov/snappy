@@ -11,7 +11,7 @@ import { SiteHeaderNav } from "./SiteHeaderNav";
 export type SiteHeaderViewProps = ReturnType<typeof useSiteHeaderState>;
 
 export const SiteHeaderView = ({ close, followSection, open, openMenu }: SiteHeaderViewProps) => {
-  const links = [`how`, `can`, `tasks`, `who`, `compare`] as const;
+  const links = [`how`, `can`, `tasks`, `who`, `compare`, `pricing`] as const;
 
   return (
     <header className={styles.root}>
