@@ -1,0 +1,41 @@
+@use "pkg:@snappy/theme/tokens/space";
+@use "pkg:@snappy/theme/tokens/typography";
+
+.root {
+  display: grid;
+  gap: space.lg();
+  padding-block: space.md();
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: space.sm();
+  align-items: center;
+}
+
+.stream {
+  padding: space.md();
+  overflow: auto;
+}
+
+.report {
+  display: grid;
+  gap: space.sm();
+  padding: space.md();
+  overflow: auto;
+}
+
+.report-header {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.report-json {
+  @include typography.caption-sm;
+
+  margin: 0;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}

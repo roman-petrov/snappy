@@ -96,23 +96,23 @@ describe(`apply`, () => {
       expect(apply(`- [ ] **ta`)).toMatchInlineSnapshot(`"- [ ] **ta**"`);
     });
 
-    it(`does not close partial bold-italic on parent line before nested item`, () => {
+    it(`closes partial bold-italic on parent line before nested item`, () => {
       expect(apply(`- A ***bo\n  - B`)).toMatchInlineSnapshot(`
-        "- A ***bo
+        "- A ***bo***
           - B"
       `);
     });
 
     it(`closes partial bold in each nested list item on its line`, () => {
       expect(apply(`- **ou\n  - **in`)).toMatchInlineSnapshot(`
-        "- **ou
+        "- **ou**
           - **in**"
       `);
     });
 
-    it(`does not close outer list item bold when nested item has balanced bold`, () => {
+    it(`closes outer list item bold when nested item has balanced bold`, () => {
       expect(apply(`- **outer\n  - **inner**`)).toMatchInlineSnapshot(`
-        "- **outer
+        "- **outer**
           - **inner**"
       `);
     });

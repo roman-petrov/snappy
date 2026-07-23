@@ -8,12 +8,17 @@ import {
   type StaticFormFieldByKind,
   type StaticFormPlan,
 } from "@snappy/snappy";
-import { AudioSelect, ImageSelect, Switch, Tabs, TextInput } from "@snappy/ui";
 import { type ElementType, useRef, useState } from "react";
 
 import type { StaticFormProps } from "./StaticForm";
 
-import { StaticFormValues } from "../core/StaticFormValues";
+import { t } from "../locales";
+import { AudioSelect } from "./AudioSelect";
+import { ImageSelect } from "./ImageSelect";
+import { StaticFormValues } from "./StaticFormValues";
+import { Switch } from "./Switch";
+import { Tabs } from "./Tabs";
+import { TextInput } from "./TextInput";
 
 const display = {
   audio: (file: File) => ({ file, type: `audio` }) as const,
@@ -144,10 +149,10 @@ const fieldByKind: { [TKind in FieldKind]: KindConfig<TKind> } = {
 
 const isSubmitted = <TPlan extends StaticFormPlan>(
   props: StaticFormProps<TPlan>,
-): props is { answers: StaticFormAnswers; plan: TPlan } => `answers` in props;
+): props is { answers: StaticFormAnswers; plan: TPlan; submitTag?: string; submitText?: string } => `answers` in props;
 
 export const useStaticFormState = <TPlan extends StaticFormPlan>(props: StaticFormProps<TPlan>) => {
-  const { plan } = props;
+  const { plan, submitTag, submitText = t(`form.continue`) } = props;
   const submitted = isSubmitted(props);
 
   const [answers, setAnswers] = useState<StaticFormAnswers>(() => {
@@ -205,5 +210,13 @@ export const useStaticFormState = <TPlan extends StaticFormPlan>(props: StaticFo
       }))
     : [];
 
-  return { fields: submitted ? [] : plan.fields.map(fieldView), rows, submit, submitted, title: plan.title };
+  return {
+    fields: submitted ? [] : plan.fields.map(fieldView),
+    rows,
+    submit,
+    submitTag,
+    submitted,
+    submitText,
+    title: plan.title,
+  };
 };

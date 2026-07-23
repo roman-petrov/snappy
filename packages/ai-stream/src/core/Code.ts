@@ -6,6 +6,7 @@
 import { ShikiStreamTokenizer } from "@shikijs/stream";
 import {
   type BundledLanguage,
+  bundledLanguages,
   createHighlighter,
   createJavaScriptRegexEngine,
   getTokenStyleObject,
@@ -33,11 +34,20 @@ export const Code = () => {
   const inflight = new Map<string, Promise<string>>();
   let active: Active | undefined;
 
-  const langReady = async (lang: string) => {
+  const resolveLang = async (lang: string) => {
     const highlighter = await highlighterPromise;
-    if (!highlighter.getLoadedLanguages().includes(lang)) {
-      await highlighter.loadLanguage(lang as BundledLanguage);
+
+    if (highlighter.getLoadedLanguages().includes(lang)) {
+      return lang;
     }
+
+    if (!(lang in bundledLanguages)) {
+      return `text`;
+    }
+
+    await highlighter.loadLanguage(lang as BundledLanguage);
+
+    return lang;
   };
 
   const span = (token: ThemedToken) => {
@@ -57,12 +67,12 @@ export const Code = () => {
   };
 
   const highlight = async ({ closed = false, lang = `text`, source, theme }: CodeInput) => {
-    await langReady(lang);
+    const resolvedLang = await resolveLang(lang);
     const highlighter = await highlighterPromise;
-    const key = CodeStream.sessionKey(lang, theme);
+    const key = CodeStream.sessionKey(resolvedLang, theme);
     const { fg, rootStyle } = themeRoot(highlighter, theme);
 
-    if (active !== undefined && CodeStream.sessionReset(active, lang, theme, source)) {
+    if (active !== undefined && CodeStream.sessionReset(active, resolvedLang, theme, source)) {
       active.tokenizer.clear();
       dropActive();
     }
@@ -87,7 +97,7 @@ export const Code = () => {
         return CodeStream.preWrap(theme, rootStyle, body);
       }
 
-      const tokenizer = new ShikiStreamTokenizer({ highlighter, lang, theme });
+      const tokenizer = new ShikiStreamTokenizer({ highlighter, lang: resolvedLang, theme });
       await tokenizer.enqueue(source);
       const { stable: closeStable } = tokenizer.close();
       const body = CodeStream.finalizeBody(tokenizer.tokensStable, closeStable, tokenizer.tokensUnstable, span);
@@ -96,7 +106,12 @@ export const Code = () => {
     }
 
     if (active === undefined || CodeStream.sessionKey(active.lang, active.theme) !== key) {
-      active = { lang, lastSource: ``, theme, tokenizer: new ShikiStreamTokenizer({ highlighter, lang, theme }) };
+      active = {
+        lang: resolvedLang,
+        lastSource: ``,
+        theme,
+        tokenizer: new ShikiStreamTokenizer({ highlighter, lang: resolvedLang, theme }),
+      };
     }
 
     const session = active;

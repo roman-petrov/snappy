@@ -82,6 +82,24 @@ const blockStart = (lines: readonly string[], end: number): number => {
 const readyBlock = (block: readonly string[]): readonly string[] =>
   block.length > 1 && !rowReady(block.at(-1) ?? ``) ? readyBlock(block.slice(0, -1)) : block;
 
+const repairBlock = (block: readonly string[]) => {
+  const header = block[0] ?? ``;
+
+  if (!rowHasCellContent(header)) {
+    return undefined;
+  }
+
+  const columns = columnCount(header);
+  const separatorIndex = block.findIndex(tableSeparator);
+  const hasSeparator = separatorIndex !== -1;
+
+  return hasSeparator
+    ? block.map((row, index) =>
+        index === separatorIndex && columnCount(row) < columns ? separatorRow(columns) : completeTableRow(row),
+      )
+    : [header, separatorRow(columns), ...block.slice(1)];
+};
+
 const repair = (text: string) => {
   const lines = text.split(`\n`);
   const end = trailingEnd(lines);
@@ -91,24 +109,13 @@ const repair = (text: string) => {
     return text;
   }
 
-  const block = readyBlock(lines.slice(start, end).map(completeTableRow));
-  const header = block[0] ?? ``;
+  const raw = lines.slice(start, end);
+  const block = readyBlock(raw.map(completeTableRow));
+  const repairedBlock = repairBlock(block);
 
-  if (!rowHasCellContent(header)) {
-    return withoutLines(text, lines, start, end);
-  }
-
-  const columns = columnCount(header);
-  const separatorIndex = block.findIndex(tableSeparator);
-  const hasSeparator = separatorIndex !== -1;
-
-  const repairedBlock = hasSeparator
-    ? block.map((row, index) =>
-        index === separatorIndex && columnCount(row) < columns ? separatorRow(columns) : completeTableRow(row),
-      )
-    : [header, separatorRow(columns), ...block.slice(1)];
-
-  return [...lines.slice(0, start), ...repairedBlock, ...lines.slice(end)].join(`\n`);
+  return repairedBlock === undefined
+    ? withoutLines(text, lines, start, end)
+    : [...lines.slice(0, start), ...repairedBlock, ...lines.slice(end)].join(`\n`);
 };
 
 export const RemendTable = { repair };

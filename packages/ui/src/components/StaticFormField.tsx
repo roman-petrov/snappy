@@ -2,8 +2,8 @@ import type { StaticFormLabel } from "@snappy/snappy";
 import type { ReactNode } from "react";
 
 import { _ } from "@snappy/core";
-import { $ } from "@snappy/ui";
 
+import { $ } from "../$";
 import styles from "./StaticFormField.module.scss";
 
 export type StaticFormFieldProps = { children: ReactNode; cn?: string; label: StaticFormLabel };

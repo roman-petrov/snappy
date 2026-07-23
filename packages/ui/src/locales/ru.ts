@@ -2,6 +2,7 @@
 export const ru = {
   audio: { play: `Воспроизвести`, stop: `Остановить` },
   cooldownButton: { resend: `Отправить снова`, resendIn: `Снова через {seconds} сек.` },
+  form: { continue: `Продолжить`, label: `Поле`, no: `Нет`, summary: `Ваши ответы`, value: `Ответ`, yes: `Да` },
   legal: { privacy: { title: `Политика конфиденциальности` }, terms: { title: `Условия использования` } },
   localeSwitcher: `Переключить на английский`,
   newPasswordInput: { generatePassword: `Сгенерировать пароль` },

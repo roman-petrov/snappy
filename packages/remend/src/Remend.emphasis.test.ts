@@ -142,6 +142,10 @@ describe(`apply`, () => {
       expect(apply(`word ${marker}`)).toBe(`word ${marker}${zwsp}${marker}`);
     });
 
+    it(`closes empty nested italic inside open bold with zero-width space`, () => {
+      expect(apply(`prefix **suffix and also _`)).toBe(`prefix **suffix and also _${zwsp}_**`);
+    });
+
     it.each(kinds)(`leaves mid-word $marker unchanged`, ({ mid }) => {
       expect(apply(mid)).toBe(mid);
     });
@@ -159,12 +163,18 @@ describe(`apply`, () => {
       expect(apply(`Hello ${partial(kind, kind.streamLetter)} `)).toBe(`Hello ${closed(kind, kind.streamLetter)} `);
     });
 
-    it.each(kinds)(`does not close partial $marker on non-last line`, kind => {
-      expect(apply(`line ${partial(kind)}\nnext`)).toBe(`line ${partial(kind)}\nnext`);
+    it.each(kinds)(`closes partial $marker when a later line arrives`, kind => {
+      expect(apply(`line ${partial(kind)}\nnext`)).toBe(`line ${closed(kind)}\nnext`);
     });
 
-    it.each(kinds)(`does not close prose $marker before table on prior line`, kind => {
-      expect(apply(`Intro ${partial(kind)}\n| C |`)).toBe(`Intro ${partial(kind)}\n| C |\n| --- |`);
+    it.each(kinds)(`closes prose $marker before table on prior line`, kind => {
+      expect(apply(`Intro ${partial(kind)}\n| C |`)).toBe(`Intro ${closed(kind)}\n| C |\n| --- |`);
+    });
+
+    it(`closes unfinished emphasis before the next section heading`, () => {
+      expect(apply(`prefix **suffix and also _tail and wrap.\n\n## Nested`)).toBe(
+        `prefix **suffix and also _tail and wrap._**\n\n## Nested`,
+      );
     });
 
     it.each(kinds)(`abandons $marker when only whitespace follows open marker`, kind => {
@@ -208,8 +218,8 @@ describe(`apply`, () => {
       expect(apply(kind.incompleteEnd.in)).toBe(kind.incompleteEnd.out);
     });
 
-    it(`closes partial emphasis on last line only in multi-line buffer`, () => {
-      expect(apply(`line **bo\nnext **x`)).toBe(`line **bo\nnext **x**`);
+    it(`closes partial emphasis on each line in a multi-line buffer`, () => {
+      expect(apply(`line **bo\nnext **x`)).toBe(`line **bo**\nnext **x**`);
     });
 
     it.each(kinds)(`streams partial $marker without rolling back prefix`, kind => {

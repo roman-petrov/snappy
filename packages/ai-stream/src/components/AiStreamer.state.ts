@@ -1,15 +1,11 @@
 import { Html } from "@snappy/browser";
-import { _ } from "@snappy/core";
 import { TypeWriter } from "@snappy/type-writer";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { AiStreamerProps } from "./AiStreamer";
 
-import { Markdown, Stream } from "../core";
+import { type AnnotatedDocument, Markdown, Stream } from "../core";
 import { AiStreamTheme } from "../themes";
-
-const typeWriterFps = 15;
-const streamFps = 60;
 
 export const useAiStreamerState = ({
   onTailBusyChange,
@@ -19,72 +15,73 @@ export const useAiStreamerState = ({
   typeWriterSpeed,
 }: AiStreamerProps) => {
   const theme = AiStreamTheme[themeKey];
-  const typeWriter = typeWriterSpeed !== undefined;
-  const frameMs = _.second / (typeWriter ? typeWriterFps : streamFps);
-  const [renderText, setRenderText] = useState(text);
+  const animated = typeWriterSpeed !== undefined;
   const [playStep, setPlayStep] = useState(0);
   const [codeHtml, setCodeHtml] = useState(``);
   const [pushing, setPushing] = useState(false);
   const [playedHtml, setPlayedHtml] = useState(``);
-  const latestRef = useRef(text);
-  const paintRef = useRef(0);
-  const paintAtRef = useRef(0);
+  const [sealedDoc, setSealedDoc] = useState<AnnotatedDocument>([]);
+  const previousTextRef = useRef(text);
   const twRef = useRef<TypeWriter | undefined>(undefined);
+  const resetPlayback = streaming && !text.startsWith(previousTextRef.current);
 
-  latestRef.current = text;
-
-  useEffect(() => {
-    if (!streaming) {
-      cancelAnimationFrame(paintRef.current);
-      paintRef.current = 0;
-      paintAtRef.current = 0;
-      setRenderText(text);
-
-      return undefined;
+  useLayoutEffect(() => {
+    if (!resetPlayback) {
+      return;
     }
 
-    const paint = (now: number) => {
-      paintRef.current = 0;
-      const gap = paintAtRef.current === 0 ? frameMs : now - paintAtRef.current;
-      if (gap < frameMs) {
-        paintRef.current = requestAnimationFrame(paint);
+    setSealedDoc([]);
+    setPlayStep(0);
+    setPlayedHtml(``);
+  }, [resetPlayback]);
 
-        return;
-      }
-      paintAtRef.current = now;
-      setRenderText(value => (value === latestRef.current ? value : latestRef.current));
-    };
-
-    paintRef.current = requestAnimationFrame(paint);
-
-    return () => {
-      cancelAnimationFrame(paintRef.current);
-      paintRef.current = 0;
-    };
-  }, [frameMs, streaming, text]);
+  useEffect(() => {
+    previousTextRef.current = text;
+  }, [text]);
 
   const pieces = useMemo(() => {
-    const parsed = Markdown.pieces(renderText);
+    const parsed = Markdown.pieces(text);
 
-    return streaming ? Stream.apply(parsed, Stream.fenceOpen(renderText)) : parsed;
-  }, [streaming, renderText]);
+    return streaming ? Stream.apply(parsed, Stream.fenceOpen(text)) : parsed;
+  }, [streaming, text]);
 
   const { doc, segments } = useMemo(() => Stream.annotate(pieces), [pieces]);
   const end = Math.max(0, segments.length - 1);
-  const playIndex = typeWriter ? Math.min(playStep, end) : end;
-  const waitingHost = streaming && typeWriter && segments.length === 0;
+  const playHead = resetPlayback ? 0 : playStep;
+  const playIndex = animated ? Math.min(playHead, end) : end;
+  const waitingHost = streaming && segments.length === 0;
   const tail = segments[playIndex];
+  const sealAt = streaming ? Stream.sealCount(doc, playIndex) : doc.length;
+  const effectiveSealed = resetPlayback ? [] : sealedDoc;
+  const liveDoc = useMemo(() => doc.slice(effectiveSealed.length), [doc, effectiveSealed.length]);
+
+  useEffect(() => {
+    if (resetPlayback) {
+      return;
+    }
+
+    setSealedDoc(previous => {
+      if (previous.length === sealAt) {
+        return previous;
+      }
+      if (previous.length > sealAt) {
+        return previous.slice(0, sealAt);
+      }
+
+      return [...previous, ...doc.slice(previous.length, sealAt)];
+    });
+  }, [doc, resetPlayback, sealAt]);
 
   const tailHtml = useMemo(() => {
-    const html = tail?.kind === `code` && codeHtml === `` ? `` : Stream.tailHtml(tail, codeHtml);
+    const html = Stream.tailHtml(tail, codeHtml);
 
     return html === `` ? `` : Html.sanitize(html);
   }, [codeHtml, tail]);
 
   const tailPending = tail !== undefined && (tailHtml === `` || tailHtml !== playedHtml);
-  const tailPlaying = streaming && typeWriter && (pushing || playStep < end || tailPending);
+  const tailPlaying = streaming && (tailPending || (animated && (pushing || playStep < end)));
 
-  if (streaming && typeWriter && twRef.current === undefined) {
+  if (streaming && twRef.current === undefined) {
     twRef.current = TypeWriter();
   }
 
@@ -93,23 +90,15 @@ export const useAiStreamerState = ({
   }, [onTailBusyChange, tailPlaying]);
 
   useEffect(() => {
-    twRef.current?.setWaiting(streaming && typeWriter);
-  }, [streaming, typeWriter]);
-
-  useEffect(() => {
-    if (streaming && text === ``) {
-      setPlayStep(0);
-      setPlayedHtml(``);
-    }
-  }, [streaming, text]);
+    twRef.current?.setWaiting(streaming);
+  }, [streaming]);
 
   useEffect(() => {
     const tw = twRef.current;
-    const speed = typeWriterSpeed;
-    if (!streaming || speed === undefined || tw === undefined) {
+    if (!streaming || tw === undefined) {
       return undefined;
     }
-    tw.setSpeed(speed);
+    tw.setSpeed(typeWriterSpeed ?? `instant`);
 
     return undefined;
   }, [streaming, typeWriterSpeed]);
@@ -127,7 +116,7 @@ export const useAiStreamerState = ({
   }, [playIndex]);
 
   useEffect(() => {
-    if (!streaming || !typeWriter) {
+    if (!streaming) {
       return undefined;
     }
 
@@ -137,14 +126,19 @@ export const useAiStreamerState = ({
     }
 
     let dead = false;
-    setPushing(true);
+
+    if (animated) {
+      setPushing(true);
+    }
 
     void tw.push(tailHtml).then(finished => {
       if (dead) {
         return finished;
       }
 
-      setPushing(false);
+      if (animated) {
+        setPushing(false);
+      }
 
       if (!finished) {
         return finished;
@@ -152,7 +146,7 @@ export const useAiStreamerState = ({
 
       setPlayedHtml(tailHtml);
 
-      if (playStep < end && !(segments[playStep]?.kind === `code` && codeHtml === ``)) {
+      if (animated && playStep < end) {
         setPlayStep(step => step + 1);
       }
 
@@ -161,9 +155,12 @@ export const useAiStreamerState = ({
 
     return () => {
       dead = true;
-      setPushing(false);
+
+      if (animated) {
+        setPushing(false);
+      }
     };
-  }, [codeHtml, doc, end, playStep, segments, streaming, tailHtml, typeWriter]);
+  }, [animated, codeHtml, end, playStep, segments, streaming, tailHtml]);
 
   const pushTailHtml = useCallback((html: string) => {
     setCodeHtml(html);
@@ -175,7 +172,17 @@ export const useAiStreamerState = ({
     }
   }, []);
 
-  const tailHost = streaming && typeWriter ? attach : undefined;
+  const tailHost = streaming ? attach : undefined;
 
-  return { doc, playIndex, pushTailHtml, streaming, tailHost, theme, typeWriterSpeed, waitingHost };
+  return {
+    liveDoc,
+    playIndex,
+    pushTailHtml,
+    sealedDoc: effectiveSealed,
+    streaming,
+    tailHost,
+    theme,
+    typeWriterSpeed,
+    waitingHost,
+  };
 };

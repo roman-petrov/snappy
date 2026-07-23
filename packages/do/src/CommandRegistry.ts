@@ -1,4 +1,5 @@
 import {
+  AiStreamLab,
   AndroidClean,
   AndroidKeysDev,
   AndroidKeysProd,
@@ -47,6 +48,7 @@ import {
 } from "./commands";
 
 export const CommandRegistry = [
+  AiStreamLab,
   AndroidClean,
   AndroidKeysDev,
   AndroidKeysProd,

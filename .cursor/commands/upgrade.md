@@ -126,7 +126,7 @@ If declined — Step 4 upgrade remains.
 
 - **Patched** — `<package>` in `patchedDependencies`; confirm before Step 4; patch may need refresh
 - **Version drift** — unify all workspaces to `target`
-- **Root-only package** — e.g. `agent-browser` in root `devDependencies`; edit root manifest from Step 3
+- **Root-only package** — e.g. `actions-up` in root `devDependencies`; edit root manifest from Step 3
 - **@types-only upgrade** — bump `@types` only; no automatic main-package bump
 - **No changelog** — infer from types, failures, release tags
 - **Transitive only** — add to the workspace manifest that needs it

@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable init-declarations */
-/* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 /* eslint-disable no-continue */
+/* eslint-disable no-use-before-define */
+/* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 
 import type { TypeWriterSpeed } from "@snappy/domain";
 
@@ -18,6 +20,8 @@ type BodyShell =
   | { kind: `void`; outer: HtmlAttributes; tag: string };
 
 type HtmlAttributes = { className?: string; style?: string };
+
+type Pace = `instant` | TypeWriterSpeed;
 
 type RevealSlice = { full: number; partial: number };
 
@@ -37,9 +41,10 @@ export const TypeWriter = () => {
   let lastHtml = ``;
   let revealedPx = 0;
   let totalPx = 0;
-  let speed: TypeWriterSpeed = `medium`;
+  let speed: Pace = `medium`;
   let animating = false;
   let waiting = false;
+  let alive = true;
   let pendingId = 0;
   let pendingResolve: ((finished: boolean) => void) | undefined;
   let frame = 0;
@@ -482,6 +487,28 @@ export const TypeWriter = () => {
     applyReveal();
   };
 
+  const syncShellAttributes = (shell: BodyShell | undefined) => {
+    if (host === undefined || shell === undefined || (shell.kind !== `pre` && shell.kind !== `prePlain`)) {
+      return;
+    }
+
+    const pre = host.querySelector(`:scope > pre`);
+
+    if (!(pre instanceof HTMLElement)) {
+      return;
+    }
+
+    applyAttributes(pre, shell.pre);
+
+    if (shell.kind === `pre`) {
+      const code = pre.querySelector(`:scope > code`);
+
+      if (code instanceof HTMLElement) {
+        applyAttributes(code, shell.code);
+      }
+    }
+  };
+
   const paint = (): boolean => {
     if (host === undefined || body === undefined) {
       return false;
@@ -495,6 +522,8 @@ export const TypeWriter = () => {
       mountedSignature = nextSignature;
       textSlots = undefined;
       placeCaret();
+    } else {
+      syncShellAttributes(shell);
     }
 
     if (contentMount === undefined) {
@@ -528,9 +557,34 @@ export const TypeWriter = () => {
     settlePending(true);
   };
 
+  const finishInstant = () => {
+    stopLoop();
+    revealedPx = totalPx;
+    applyReveal();
+    finishPush();
+  };
+
+  const completeOrAnimate = () => {
+    if (speed === `instant`) {
+      finishInstant();
+
+      return;
+    }
+    if (caughtUp()) {
+      finishPush();
+
+      return;
+    }
+    setAnimating(true);
+    startLoop();
+  };
+
   const tick = (now: number) => {
-    if (host === undefined || body === undefined || cumulative === undefined) {
+    if (host === undefined || body === undefined || cumulative === undefined || speed === `instant`) {
       stopLoop();
+      if (speed === `instant`) {
+        finishInstant();
+      }
 
       return;
     }
@@ -556,7 +610,7 @@ export const TypeWriter = () => {
   };
 
   const startLoop = () => {
-    if (host === undefined || frame !== 0 || caughtUp()) {
+    if (host === undefined || frame !== 0 || caughtUp() || speed === `instant`) {
       return;
     }
     clockLast = performance.now();
@@ -581,17 +635,15 @@ export const TypeWriter = () => {
       paintWaiting();
     } else {
       paint();
-      if (caughtUp()) {
-        finishPush();
-      } else {
-        setAnimating(true);
-        startLoop();
-      }
+      completeOrAnimate();
     }
     updateCaret();
   };
 
   const push = async (nextHtml: string): Promise<boolean> => {
+    if (!alive) {
+      return false;
+    }
     settlePending(false);
     const id = ++pendingId;
     const { promise, resolve } = Promise.withResolvers<boolean>();
@@ -602,12 +654,7 @@ export const TypeWriter = () => {
     };
 
     if (nextHtml === lastHtml && contentMount !== undefined && textSlots !== undefined) {
-      if (caughtUp()) {
-        finishPush();
-      } else {
-        setAnimating(true);
-        startLoop();
-      }
+      completeOrAnimate();
 
       return promise;
     }
@@ -632,11 +679,10 @@ export const TypeWriter = () => {
       }
     } else {
       const ready = paint();
-      if (!ready || caughtUp()) {
-        finishPush();
+      if (ready) {
+        completeOrAnimate();
       } else {
-        setAnimating(true);
-        startLoop();
+        finishPush();
       }
     }
 
@@ -644,6 +690,7 @@ export const TypeWriter = () => {
   };
 
   const destroy = () => {
+    alive = false;
     stopLoop();
     settlePending(false);
     if (host !== undefined) {
@@ -662,12 +709,19 @@ export const TypeWriter = () => {
     waiting = false;
   };
 
-  const setSpeed = (value: TypeWriterSpeed) => {
+  const setSpeed = (value: Pace) => {
     if (value === speed) {
       return;
     }
     speed = value;
     updateCaret();
+    if (value === `instant`) {
+      if (host !== undefined && body !== undefined && cumulative !== undefined) {
+        finishInstant();
+      }
+
+      return;
+    }
     if (animating && host !== undefined) {
       startLoop();
     }

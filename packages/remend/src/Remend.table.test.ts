@@ -14,7 +14,7 @@ describe(`apply`, () => {
       expect(apply(`## Metrics\n\n|`)).toBe(`## Metrics\n\n`);
     });
 
-    it(`adds separator only after header row has cell content`, () => {
+    it(`adds separator once header row has cell content`, () => {
       expect(apply(`| N`)).toMatchInlineSnapshot(`
         "| N |
         | --- |"
@@ -57,7 +57,7 @@ describe(`apply`, () => {
       `);
     });
 
-    it(`completes header row missing trailing pipe`, () => {
+    it(`closes header row missing trailing pipe so GFM parses a table`, () => {
       expect(apply(`| Name | Value`)).toMatchInlineSnapshot(`
         "| Name | Value |
         | --- | --- |"
@@ -214,6 +214,25 @@ describe(`apply`, () => {
       expect(apply(`| _i_ |`)).toMatchInlineSnapshot(`
         "| _i_ |
         | --- |"
+      `);
+    });
+
+    it(`grows open header cells inside a closed GFM table shape`, () => {
+      const mid = apply(`| Approach | Lat`);
+      const next = apply(`| Approach | Laten`);
+      const closed = apply(`| Approach | Latency |`);
+
+      expect(mid).toMatchInlineSnapshot(`
+        "| Approach | Lat |
+        | --- | --- |"
+      `);
+      expect(next).toMatchInlineSnapshot(`
+        "| Approach | Laten |
+        | --- | --- |"
+      `);
+      expect(closed).toMatchInlineSnapshot(`
+        "| Approach | Latency |
+        | --- | --- |"
       `);
     });
   });

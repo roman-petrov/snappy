@@ -1,7 +1,7 @@
 import pluginImport from "eslint-plugin-import";
 import { defineConfig } from "eslint/config";
 
-const reactPackages = [`ai-stream`, `app`, `site`, `ui`];
+const reactPackages = [`ai-stream`, `ai-stream-lab`, `app`, `site`, `ui`];
 
 export default defineConfig([
   {

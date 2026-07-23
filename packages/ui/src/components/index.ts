@@ -84,6 +84,12 @@ export * from "./Spinner";
 
 export * from "./Spoiler";
 
+export * from "./StaticForm";
+
+export * from "./StaticFormField";
+
+export * from "./StaticFormValues";
+
 export * from "./StatusPage";
 
 export * from "./Switch";

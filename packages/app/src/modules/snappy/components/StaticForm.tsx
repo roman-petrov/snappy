@@ -1,12 +1,11 @@
-import type { StaticFormAnswers, StaticFormAnswersOf, StaticFormPlan } from "@snappy/snappy";
+import type { StaticFormPlan } from "@snappy/snappy";
 
-import { useStaticFormState } from "./StaticForm.state";
-import { StaticFormView } from "./StaticForm.view";
+import { StaticForm as Form, type StaticFormProps } from "@snappy/ui";
 
-export type StaticFormProps<TPlan extends StaticFormPlan = StaticFormPlan> =
-  | { answers: StaticFormAnswers; plan: TPlan }
-  | { answers?: never; onSubmit: (value: StaticFormAnswersOf<TPlan>) => void; plan: TPlan };
+import { AppTags } from "../../../AppTags";
 
-export const StaticForm = <TPlan extends StaticFormPlan>(props: StaticFormProps<TPlan>) => (
-  <StaticFormView {...useStaticFormState(props)} />
+export type { StaticFormProps } from "@snappy/ui";
+
+export const StaticForm = <TPlan extends StaticFormPlan>({ submitTag, ...props }: StaticFormProps<TPlan>) => (
+  <Form {...props} submitTag={submitTag ?? AppTags.snappy.form.continue} />
 );

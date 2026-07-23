@@ -2,6 +2,7 @@
 export const en = {
   audio: { play: `Play`, stop: `Stop` },
   cooldownButton: { resend: `Send again`, resendIn: `Again in {seconds}s` },
+  form: { continue: `Continue`, label: `Field`, no: `No`, summary: `Your answers`, value: `Answer`, yes: `Yes` },
   legal: { privacy: { title: `Privacy policy` }, terms: { title: `Terms of use` } },
   localeSwitcher: `Switch to Russian`,
   newPasswordInput: { generatePassword: `Generate password` },

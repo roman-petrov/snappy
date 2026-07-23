@@ -5,7 +5,7 @@ import type { Piece } from "./Types";
 
 import { type AnnotatedList, type AnnotatedTable, Stream } from "./Stream";
 
-const { annotate, apply, fenceOpen, segments, tailHtml } = Stream;
+const { annotate, apply, fenceOpen, sealCount, segmentMode, segments, showNode, tailHtml, topFirstIndex } = Stream;
 
 describe(`apply`, () => {
   it(`returns empty array unchanged`, () => {
@@ -122,6 +122,15 @@ describe(`fenceOpen`, () => {
   it(`detects unclosed fence`, () => {
     expect(fenceOpen(`\`\`\`js\nx`)).toBe(true);
     expect(fenceOpen(`\`\`\`js\nx\n\`\`\``)).toBe(false);
+  });
+
+  it(`ignores inline triple backticks inside a closed fence`, () => {
+    expect(fenceOpen(`\`\`\`js\ncode with \`\`\` inside\n\`\`\``)).toBe(false);
+  });
+
+  it(`treats matching tilde fences like backtick fences`, () => {
+    expect(fenceOpen(`~~~\nbody`)).toBe(true);
+    expect(fenceOpen(`~~~\nbody\n~~~`)).toBe(false);
   });
 });
 
@@ -346,5 +355,80 @@ describe(`tailHtml`, () => {
     const list = segments(pieces);
 
     expect(tailHtml(list.at(-1), ``)).toBe(`<p>streaming</p>`);
+  });
+});
+
+describe(`sealCount`, () => {
+  it(`keeps the active top piece live`, () => {
+    const { doc } = annotate([
+      { html: `<p>one</p>`, type: `html` },
+      { html: `<p>two</p>`, type: `html` },
+    ]);
+
+    expect(sealCount(doc, 0)).toBe(0);
+    expect(sealCount(doc, 1)).toBe(1);
+  });
+
+  it(`does not seal a multi-segment top piece until fully behind playIndex`, () => {
+    const { doc } = annotate([
+      {
+        html: `<ul></ul>`,
+        items: [{ body: [{ html: `a`, type: `html` }] }, { body: [{ html: `b`, type: `html` }] }],
+        kind: `unordered`,
+        type: `list`,
+      },
+      { html: `<p>tail</p>`, type: `html` },
+    ]);
+
+    expect(sealCount(doc, 1)).toBe(0);
+    expect(sealCount(doc, 2)).toBe(1);
+  });
+});
+
+describe(`segmentMode`, () => {
+  it(`marks done, tail, and pending while streaming`, () => {
+    expect(segmentMode(0, 1, true)).toBe(`done`);
+    expect(segmentMode(1, 1, true)).toBe(`tail`);
+    expect(segmentMode(2, 1, true)).toBe(`pending`);
+  });
+
+  it(`marks every index done when not streaming`, () => {
+    expect(segmentMode(0, 0, false)).toBe(`done`);
+    expect(segmentMode(42, 0, false)).toBe(`done`);
+  });
+});
+
+describe(`showNode`, () => {
+  it(`hides nodes ahead of playIndex while streaming`, () => {
+    expect(showNode(0, 1, true)).toBe(true);
+    expect(showNode(1, 1, true)).toBe(true);
+    expect(showNode(2, 1, true)).toBe(false);
+  });
+
+  it(`shows every node when not streaming`, () => {
+    expect(showNode(42, 0, false)).toBe(true);
+  });
+});
+
+describe(`topFirstIndex`, () => {
+  it(`reads index from html, list, and table tops`, () => {
+    const { doc } = annotate([
+      { html: `<p>one</p>`, type: `html` },
+      { html: `<ul></ul>`, items: [{ body: [{ html: `a`, type: `html` }] }], kind: `unordered`, type: `list` },
+      {
+        html: `<table></table>`,
+        rows: [[[{ html: `c`, type: `html` }], [{ html: `d`, type: `html` }]]],
+        type: `table`,
+      },
+    ]);
+
+    const [htmlTop, listTop, tableTop] = doc;
+
+    expect(htmlTop).toBeDefined();
+    expect(listTop).toBeDefined();
+    expect(tableTop).toBeDefined();
+    expect(htmlTop === undefined ? -1 : topFirstIndex(htmlTop)).toBe(0);
+    expect(listTop === undefined ? -1 : topFirstIndex(listTop)).toBe(1);
+    expect(tableTop === undefined ? -1 : topFirstIndex(tableTop)).toBe(2);
   });
 });
