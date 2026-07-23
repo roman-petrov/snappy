@@ -40,6 +40,8 @@ const preStyle = (_bg: unknown, fg: unknown) => (_.isString(fg) ? `color:${fg}` 
 const preWrap = (themeName: string, rootStyle: string, body: string) =>
   `<pre class="shiki ${themeName}" style="${rootStyle}" tabindex="0"><code>${body}</code></pre>`;
 
+const isShikiHtml = (value: string) => value.includes(`class="shiki`);
+
 const streamBody = <T extends TokenChunk>(
   stable: readonly T[],
   span: (token: T) => string,
@@ -75,6 +77,7 @@ const sessionReset = (session: Session, lang: string, theme: string, source: str
 
 export const CodeStream = {
   finalizeBody,
+  isShikiHtml,
   preStyle,
   preWrap,
   requestKey,

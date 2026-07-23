@@ -148,7 +148,7 @@ const scan = (text: string) => {
     if (text[at] === `\n`) {
       const nextAt = at + 1;
 
-      return { ...emit(flush(state, at, false), nextAt), at: nextAt };
+      return { ...emit(flush(state, at, true), nextAt), at: nextAt };
     }
 
     if (text.startsWith(fenceTicksText(fenceTicks), at)) {

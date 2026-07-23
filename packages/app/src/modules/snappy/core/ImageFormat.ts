@@ -9,10 +9,9 @@ import {
   type ImageToolFields,
 } from "@snappy/ai";
 import { Bilingual, type Locale } from "@snappy/intl";
+import { StaticFormValues } from "@snappy/ui";
 
 import type { StaticImageFormat, StaticImageFormatOptions } from "./Types";
-
-import { StaticFormValues } from "./StaticFormValues";
 
 const orientationId = `orientation`;
 const resolutionId = `resolution`;

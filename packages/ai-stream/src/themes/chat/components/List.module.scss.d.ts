@@ -1,4 +1,4 @@
 declare const __List: {
-  readonly inner: "inner";
+  readonly root: "root";
 };
 export default __List;

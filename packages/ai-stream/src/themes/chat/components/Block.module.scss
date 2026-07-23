@@ -1,6 +1,6 @@
-@use "pkg:@snappy/theme/tokens/space";
+@use "../../typography" as typography;
 
 .root {
-  margin-block: space.sm();
+  margin-block: typography.body-em(16);
   overflow: hidden;
 }

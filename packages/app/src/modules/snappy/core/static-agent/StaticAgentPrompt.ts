@@ -8,8 +8,7 @@ import type {
 
 import { _ } from "@snappy/core";
 import { Bilingual, type Locale } from "@snappy/intl";
-
-import { StaticFormValues } from "../StaticFormValues";
+import { StaticFormValues } from "@snappy/ui";
 
 type NonTextFieldKind = Exclude<StaticFormFieldKind, `audio_input` | `image_input` | `text_input`>;
 

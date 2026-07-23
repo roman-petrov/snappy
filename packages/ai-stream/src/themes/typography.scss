@@ -1,11 +1,350 @@
 /* stylelint-disable property-disallowed-list */
 @use "sass:list";
+@use "sass:map";
+@use "sass:math";
 @use "pkg:@snappy/theme/core" as *;
+@use "pkg:@snappy/theme/material/panel";
+@use "pkg:@snappy/theme/material/surface";
+@use "pkg:@snappy/theme/tokens/color";
+@use "pkg:@snappy/theme/tokens/radius";
+@use "pkg:@snappy/theme/tokens/space";
+
+$-body-base: 15;
+$-body-line: 1.65;
+$-body-weight: 400;
+$-mute: 70%;
+$-mute-dim: 55%;
+$-accent-wash: 32%;
+$-border: 1px;
+$-border-strong: 2px;
+$-border-accent: 3px;
+$-semibold: 600;
+$-bold: 700;
+$-link-underline-offset: 2;
+$-pre-size: 13.5;
+$-code-size: 0.88em;
+$-code-pad-y: 1.5;
+$-code-pad-x: 5;
+$-list-indent: 1.4em;
+$-checkbox-size: 14;
+$-checkbox-mark-size: 0.75em;
+$-table-pad-y: 11;
+$-table-pad-x: 14;
+$-table-head-size: 12.5;
+$-table-head-tracking: 0.02em;
+$-headings: (
+  h1: (
+    weight: 800,
+    size: 32,
+    line: 1.12,
+    tracking: -0.03em,
+    before: "2xl",
+    after: md,
+  ),
+  h2: (
+    weight: 700,
+    size: 26,
+    line: 1.18,
+    tracking: -0.02em,
+    before: xl,
+    after: sm,
+  ),
+  h3: (
+    weight: 700,
+    size: 21,
+    line: 1.25,
+    tracking: -0.01em,
+    before: lg,
+    after: sm,
+  ),
+  h4: (
+    weight: 650,
+    size: 18,
+    line: 1.3,
+    before: md,
+    after: xs,
+  ),
+  h5: (
+    weight: 650,
+    size: 16,
+    line: 1.35,
+    before: md,
+    after: xs,
+  ),
+  h6: (
+    weight: 650,
+    size: 15,
+    line: 1.4,
+    before: sm,
+    after: xs,
+  ),
+);
+
+@function body-em($px) {
+  @return math.div($px, $-body-base) * 1em;
+}
+
+@function -mute($amount: $-mute) {
+  @return color-mix(in oklch, color.text() $amount, color.outline());
+}
+
+@function -wash($amount: $-accent-wash) {
+  @return color-mix(in oklch, color.primary() $amount, color.surface());
+}
+
+@function -gap($name, $scale) {
+  @return r(map.get(space.$values, $name) * $scale);
+}
+
+@mixin stream-table {
+  background-color: color.surface();
+  border-color: panel.border();
+}
 
 @mixin font($weight, $size, $line, $tracking: null) {
   font: $weight #{list.slash(r($size), $line)} var(--font-sans);
 
   @if $tracking {
     letter-spacing: $tracking;
+  }
+}
+
+@mixin -underline {
+  text-decoration: underline;
+  text-underline-offset: r($-link-underline-offset);
+}
+
+@mixin link {
+  @include focus($radius: radius.xs());
+
+  @include hover {
+    @include -underline;
+  }
+
+  @include pressed {
+    @include -underline;
+  }
+
+  font-weight: $-semibold;
+  color: color.primary();
+}
+
+@mixin stream-doc($body) {
+  $-scale: math.div($body, $-body-base);
+  $-xs: -gap(xs, $-scale);
+  $-sm: -gap(sm, $-scale);
+  $-md: -gap(md, $-scale);
+  $-lg: -gap(lg, $-scale);
+  $-xl: -gap(xl, $-scale);
+  $-gaps: (
+    xs: $-xs,
+    sm: $-sm,
+    md: $-md,
+    lg: $-lg,
+    xl: $-xl,
+    "2xl": -gap("2xl", $-scale),
+  );
+
+  @include font($-body-weight, $body, $-body-line);
+
+  color: color.text();
+
+  pre {
+    font-size: r($-pre-size * $-scale);
+  }
+
+  :not(pre) > code {
+    padding: r($-code-pad-y * $-scale) r($-code-pad-x * $-scale);
+    font-family: ui-monospace, monospace;
+    font-size: $-code-size;
+    color: color.text();
+    background-color: panel.bg-soft();
+    border: $-border solid panel.border-soft();
+    border-radius: radius.xs();
+  }
+
+  strong {
+    font-weight: $-bold;
+  }
+
+  em {
+    font-style: italic;
+  }
+
+  del {
+    color: -mute($-mute-dim);
+    text-decoration: line-through;
+  }
+
+  a {
+    @include link;
+  }
+
+  :is(h1, h2, h3, h4, h5, h6) {
+    color: color.text();
+  }
+
+  @each $tag, $heading in $-headings {
+    #{$tag} {
+      @include font(
+        map.get($heading, weight),
+        map.get($heading, size) * $-scale,
+        map.get($heading, line),
+        map.get($heading, tracking)
+      );
+
+      margin: map.get($-gaps, map.get($heading, before)) 0 map.get($-gaps, map.get($heading, after));
+    }
+  }
+
+  h1:first-of-type {
+    margin-top: $-sm;
+  }
+
+  :is(h1, h2, h3, h4, h5) + :is(h2, h3, h4, h5, h6) {
+    margin-top: $-md;
+  }
+
+  blockquote {
+    padding: $-xs 0 $-xs $-md;
+    margin: $-md 0;
+    color: -mute();
+    border-inline-start: $-border-accent solid color.primary();
+  }
+
+  blockquote blockquote {
+    margin-top: $-sm;
+    color: -mute($-mute-dim);
+    border-inline-start-color: panel.border(color.primary());
+  }
+
+  blockquote > :first-child {
+    margin-block-start: 0;
+  }
+
+  blockquote > :last-child {
+    margin-block-end: 0;
+  }
+
+  hr {
+    height: 0;
+    margin: $-lg 0;
+    border: 0;
+    border-top: $-border-strong solid color.primary();
+  }
+
+  ul,
+  ol {
+    padding-inline-start: $-list-indent;
+  }
+
+  :is(ul, ol) ::marker {
+    font-weight: $-semibold;
+    color: color.primary();
+  }
+
+  li + li {
+    margin-block-start: $-xs;
+  }
+
+  ul ul,
+  ul ol,
+  ol ul,
+  ol ol {
+    padding-inline-start: $-md;
+    margin-block-start: $-sm;
+  }
+
+  ul ul {
+    list-style-type: circle;
+  }
+
+  ul ul ul {
+    list-style-type: square;
+  }
+
+  ol ol {
+    list-style-type: lower-alpha;
+  }
+
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
+
+  li:has(input[type="checkbox"]) {
+    list-style: none;
+  }
+
+  li:has(input[type="checkbox"]) > span > * {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: $-sm;
+    align-items: center;
+  }
+
+  li:has(input[type="checkbox"]:checked) {
+    color: -mute($-mute-dim);
+  }
+
+  input[type="checkbox"] {
+    display: inline-grid;
+    flex: none;
+    place-content: center;
+    width: r($-checkbox-size * $-scale);
+    height: r($-checkbox-size * $-scale);
+    margin: 0;
+    appearance: none;
+    background-color: color.surface();
+    border: $-border solid panel.border(color.primary());
+    border-radius: radius.xs();
+  }
+
+  input[type="checkbox"]::before {
+    font-size: $-checkbox-mark-size;
+    font-weight: $-bold;
+    line-height: 1;
+    color: color.inverse();
+    content: "✓";
+    transform: scale(0);
+  }
+
+  input[type="checkbox"]:checked {
+    background-color: color.success();
+    border-color: color.success();
+  }
+
+  input[type="checkbox"]:checked::before {
+    transform: scale(1);
+  }
+
+  table {
+    border: 0;
+  }
+
+  table :is(th, td) {
+    padding: r($-table-pad-y * $-scale) r($-table-pad-x * $-scale);
+    border-color: panel.border-soft();
+  }
+
+  table th {
+    font-size: r($-table-head-size * $-scale);
+    font-weight: $-bold;
+    color: color.text();
+    letter-spacing: $-table-head-tracking;
+    background-color: -wash();
+    border-bottom: 0;
+    box-shadow: inset 0 (-$-border-strong) 0 color.primary();
+  }
+
+  table td {
+    background-color: color.surface();
+  }
+
+  table tbody tr:nth-child(even) td {
+    background-color: color.backdrop();
+  }
+
+  table tbody tr:hover td {
+    @include surface.primary-hover($no-border: true);
   }
 }

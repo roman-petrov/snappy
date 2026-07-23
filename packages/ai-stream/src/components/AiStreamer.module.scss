@@ -5,6 +5,7 @@
   flex: 1;
   min-width: 0;
   max-width: 100%;
+  overflow-x: clip;
   word-break: normal;
   overflow-wrap: normal;
   white-space: normal;
@@ -29,8 +30,6 @@
 
   hr {
     display: block;
-    width: 100%;
-    border: 0;
   }
 
   ul,
@@ -50,4 +49,5 @@
 
 .chunk {
   display: block;
+  overflow-x: clip;
 }

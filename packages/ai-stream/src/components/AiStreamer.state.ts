@@ -1,15 +1,13 @@
 import { Html } from "@snappy/browser";
-import { _ } from "@snappy/core";
 import { TypeWriter } from "@snappy/type-writer";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import type { AiStreamerProps } from "./AiStreamer";
 
-import { Markdown, Stream } from "../core";
+import { type AnnotatedDocument, Markdown, Stream } from "../core";
 import { AiStreamTheme } from "../themes";
 
-const typeWriterFps = 15;
-const streamFps = 60;
+const emptyCodeHtml = new Map<number, string>();
 
 export const useAiStreamerState = ({
   onTailBusyChange,
@@ -19,72 +17,73 @@ export const useAiStreamerState = ({
   typeWriterSpeed,
 }: AiStreamerProps) => {
   const theme = AiStreamTheme[themeKey];
-  const typeWriter = typeWriterSpeed !== undefined;
-  const frameMs = _.second / (typeWriter ? typeWriterFps : streamFps);
-  const [renderText, setRenderText] = useState(text);
+  const animated = typeWriterSpeed !== undefined;
   const [playStep, setPlayStep] = useState(0);
   const [codeHtml, setCodeHtml] = useState(``);
-  const [pushing, setPushing] = useState(false);
   const [playedHtml, setPlayedHtml] = useState(``);
-  const latestRef = useRef(text);
-  const paintRef = useRef(0);
-  const paintAtRef = useRef(0);
+  const [sealedDoc, setSealedDoc] = useState<AnnotatedDocument>([]);
+  const [codeHtmlByIndex, setCodeHtmlByIndex] = useState(emptyCodeHtml);
+  const previousTextRef = useRef(text);
   const twRef = useRef<TypeWriter | undefined>(undefined);
+  const playIndexRef = useRef(0);
+  const segmentsRef = useRef<ReturnType<typeof Stream.annotate>[`segments`]>([]);
+  const resetPlayback = streaming && !text.startsWith(previousTextRef.current);
 
-  latestRef.current = text;
-
-  useEffect(() => {
-    if (!streaming) {
-      cancelAnimationFrame(paintRef.current);
-      paintRef.current = 0;
-      paintAtRef.current = 0;
-      setRenderText(text);
-
-      return undefined;
+  useLayoutEffect(() => {
+    if (resetPlayback) {
+      setSealedDoc([]);
+      setPlayStep(0);
+      setPlayedHtml(``);
+      setCodeHtml(``);
+      setCodeHtmlByIndex(emptyCodeHtml);
     }
 
-    const paint = (now: number) => {
-      paintRef.current = 0;
-      const gap = paintAtRef.current === 0 ? frameMs : now - paintAtRef.current;
-      if (gap < frameMs) {
-        paintRef.current = requestAnimationFrame(paint);
-
-        return;
-      }
-      paintAtRef.current = now;
-      setRenderText(value => (value === latestRef.current ? value : latestRef.current));
-    };
-
-    paintRef.current = requestAnimationFrame(paint);
-
-    return () => {
-      cancelAnimationFrame(paintRef.current);
-      paintRef.current = 0;
-    };
-  }, [frameMs, streaming, text]);
+    previousTextRef.current = text;
+  }, [resetPlayback, text]);
 
   const pieces = useMemo(() => {
-    const parsed = Markdown.pieces(renderText);
+    const parsed = Markdown.pieces(text);
 
-    return streaming ? Stream.apply(parsed, Stream.fenceOpen(renderText)) : parsed;
-  }, [streaming, renderText]);
+    return streaming ? Stream.apply(parsed, Stream.fenceOpen(text)) : parsed;
+  }, [streaming, text]);
 
-  const { doc, segments } = useMemo(() => Stream.annotate(pieces), [pieces]);
+  const { doc: annotated, segments } = useMemo(() => Stream.annotate(pieces), [pieces]);
   const end = Math.max(0, segments.length - 1);
-  const playIndex = typeWriter ? Math.min(playStep, end) : end;
-  const waitingHost = streaming && typeWriter && segments.length === 0;
+  const playIndex = animated ? Math.min(resetPlayback ? 0 : playStep, end) : end;
+  const waitingHost = streaming && segments.length === 0;
   const tail = segments[playIndex];
+  const sealAt = streaming ? Stream.sealCount(annotated, playIndex) : annotated.length;
+  const sealed = resetPlayback ? [] : sealedDoc;
+  playIndexRef.current = playIndex;
+  segmentsRef.current = segments;
+
+  useEffect(() => {
+    if (resetPlayback) {
+      return;
+    }
+
+    setSealedDoc(previous => {
+      const at = Math.max(previous.length, sealAt);
+      const next = annotated.slice(0, at);
+
+      return previous.length === next.length && previous.every((piece, index) => piece === next[index])
+        ? previous
+        : next;
+    });
+  }, [annotated, resetPlayback, sealAt]);
+
+  const doc = [...sealed, ...annotated.slice(sealed.length)];
 
   const tailHtml = useMemo(() => {
-    const html = tail?.kind === `code` && codeHtml === `` ? `` : Stream.tailHtml(tail, codeHtml);
+    const html = Stream.tailHtml(tail, codeHtml);
 
     return html === `` ? `` : Html.sanitize(html);
   }, [codeHtml, tail]);
 
   const tailPending = tail !== undefined && (tailHtml === `` || tailHtml !== playedHtml);
-  const tailPlaying = streaming && typeWriter && (pushing || playStep < end || tailPending);
+  const tailPlaying = streaming && (tailPending || (animated && playStep < end));
 
-  if (streaming && typeWriter && twRef.current === undefined) {
+  if (streaming && twRef.current === undefined) {
     twRef.current = TypeWriter();
   }
 
@@ -93,23 +92,15 @@ export const useAiStreamerState = ({
   }, [onTailBusyChange, tailPlaying]);
 
   useEffect(() => {
-    twRef.current?.setWaiting(streaming && typeWriter);
-  }, [streaming, typeWriter]);
-
-  useEffect(() => {
-    if (streaming && text === ``) {
-      setPlayStep(0);
-      setPlayedHtml(``);
-    }
-  }, [streaming, text]);
+    twRef.current?.setWaiting(streaming);
+  }, [streaming]);
 
   useEffect(() => {
     const tw = twRef.current;
-    const speed = typeWriterSpeed;
-    if (!streaming || speed === undefined || tw === undefined) {
+    if (!streaming || tw === undefined) {
       return undefined;
     }
-    tw.setSpeed(speed);
+    tw.setSpeed(typeWriterSpeed ?? `instant`);
 
     return undefined;
   }, [streaming, typeWriterSpeed]);
@@ -123,11 +114,17 @@ export const useAiStreamerState = ({
   );
 
   useEffect(() => {
+    if (tail?.kind === `code`) {
+      setCodeHtml(codeHtmlByIndex.get(playIndex) ?? ``);
+
+      return;
+    }
+
     setCodeHtml(``);
-  }, [playIndex]);
+  }, [codeHtmlByIndex, playIndex, tail?.kind]);
 
   useEffect(() => {
-    if (!streaming || !typeWriter) {
+    if (!streaming) {
       return undefined;
     }
 
@@ -137,22 +134,15 @@ export const useAiStreamerState = ({
     }
 
     let dead = false;
-    setPushing(true);
 
     void tw.push(tailHtml).then(finished => {
-      if (dead) {
-        return finished;
-      }
-
-      setPushing(false);
-
-      if (!finished) {
+      if (dead || !finished) {
         return finished;
       }
 
       setPlayedHtml(tailHtml);
 
-      if (playStep < end && !(segments[playStep]?.kind === `code` && codeHtml === ``)) {
+      if (animated && playStep < end) {
         setPlayStep(step => step + 1);
       }
 
@@ -161,11 +151,24 @@ export const useAiStreamerState = ({
 
     return () => {
       dead = true;
-      setPushing(false);
     };
-  }, [codeHtml, doc, end, playStep, segments, streaming, tailHtml, typeWriter]);
+  }, [animated, codeHtml, end, playStep, segments, streaming, tailHtml]);
 
   const pushTailHtml = useCallback((html: string) => {
+    const index = playIndexRef.current;
+    if (segmentsRef.current[index]?.kind === `code` && html !== ``) {
+      setCodeHtmlByIndex(previous => {
+        if (previous.get(index) === html) {
+          return previous;
+        }
+
+        const next = new Map(previous);
+        next.set(index, html);
+
+        return next;
+      });
+    }
+
     setCodeHtml(html);
   }, []);
 
@@ -175,7 +178,7 @@ export const useAiStreamerState = ({
     }
   }, []);
 
-  const tailHost = streaming && typeWriter ? attach : undefined;
+  const tailHost = streaming ? attach : undefined;
 
-  return { doc, playIndex, pushTailHtml, streaming, tailHost, theme, typeWriterSpeed, waitingHost };
+  return { codeHtmlByIndex, doc, playIndex, pushTailHtml, streaming, tailHost, theme, waitingHost };
 };

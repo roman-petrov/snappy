@@ -50,6 +50,11 @@ const x = 1;
       expect(apply(`\`code`)).toMatchInlineSnapshot(`"\`code\`"`);
     });
 
+    it(`closes empty inline code inside strike with zero-width space instead of a literal tick`, () => {
+      expect(apply(`~~gone \``)).toBe(`~~gone \`\u200B\`~~`);
+      expect(apply(`~~gone\``)).toBe(`~~gone\`\u200B\`~~`);
+    });
+
     it(`closes partial inline backtick in open fence`, () => {
       expect(apply(`\`\`\`ts\nconst x = \`y`)).toMatchInlineSnapshot(`
         "\`\`\`ts

@@ -15,7 +15,6 @@
       "devDependencies": {
         "@knip/mcp": "^0.0.32",
         "actions-up": "^1.15.0",
-        "agent-browser": "^0.32.4",
         "jsdom": "^29.0.2",
       },
     },
@@ -103,6 +102,28 @@
       },
       "devDependencies": {
         "@types/react": "^19.2.17",
+      },
+    },
+    "packages/ai-stream-lab": {
+      "name": "@snappy/ai-stream-lab",
+      "version": "0.0.0",
+      "dependencies": {
+        "@snappy/ai-stream": "workspace:*",
+        "@snappy/core": "workspace:*",
+        "@snappy/domain": "workspace:*",
+        "@snappy/platform": "workspace:*",
+        "@snappy/router": "workspace:*",
+        "@snappy/snappy": "workspace:*",
+        "@snappy/theme": "workspace:*",
+        "@snappy/ui": "workspace:*",
+        "lucide-react": "^1.26.0",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+      },
+      "devDependencies": {
+        "@snappy/do": "workspace:*",
+        "@types/react": "^19.2.17",
+        "@types/react-dom": "^19.2.3",
       },
     },
     "packages/app": {
@@ -667,6 +688,7 @@
         "@snappy/metrics": "workspace:*",
         "@snappy/platform": "workspace:*",
         "@snappy/router": "workspace:*",
+        "@snappy/snappy": "workspace:*",
         "@snappy/store": "workspace:*",
         "@snappy/theme": "workspace:*",
         "@snappy/ui-core": "workspace:*",
@@ -1549,6 +1571,8 @@
 
     "@snappy/ai-stream": ["@snappy/ai-stream@workspace:packages/ai-stream"],
 
+    "@snappy/ai-stream-lab": ["@snappy/ai-stream-lab@workspace:packages/ai-stream-lab"],
+
     "@snappy/app": ["@snappy/app@workspace:packages/app"],
 
     "@snappy/app-android": ["@snappy/app-android@workspace:packages/app-android"],
@@ -1906,8 +1930,6 @@
     "acorn-jsx": ["acorn-jsx@5.3.2", "", { "peerDependencies": { "acorn": "^6.0.0 || ^7.0.0 || ^8.0.0" } }, "sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ=="],
 
     "actions-up": ["actions-up@1.16.0", "", { "dependencies": { "enquirer": "^2.4.1", "nanospinner": "^1.2.2", "picocolors": "^1.1.1", "semver": "^7.8.5", "yaml": "^2.9.0" }, "bin": { "actions-up": "bin/actions-up.js" } }, "sha512-i/2cDk8Z5YUatx1atmxmZx5jCe0z6nwpDvBiqf4FB7cTuKXnEvpwLbwDGlvKkwA7n+SOHxlosGgOhBJXtHW3IA=="],
-
-    "agent-browser": ["agent-browser@0.32.4", "", { "bin": { "agent-browser": "./bin/agent-browser.js" } }, "sha512-RaOWqNkYbnMCjsCSMY57bD0gsc5JGuJ+hjzDv73US9+uNVARdjhmJMpit35IGsdlpWGePN3WOSuqiStJnI2QJg=="],
 
     "agentkeepalive": ["agentkeepalive@4.6.0", "", { "dependencies": { "humanize-ms": "^1.2.1" } }, "sha512-kja8j7PjmncONqaTsB8fQ+wE2mSU2DJ9D4XKoJ5PFWIdRMa6SLSN1ff4mOr4jCbfRSsxR4keIiySJU0N9T5hIQ=="],
 

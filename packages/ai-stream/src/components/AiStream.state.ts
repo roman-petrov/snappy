@@ -23,6 +23,7 @@ export const useAiStreamState = ({
   const pumpRef = useRef<Pump | undefined>(undefined);
   const mountedRef = useRef(false);
   const doneRef = useRef(false);
+  const flushRafRef = useRef(0);
   const generating = active && chatModel !== undefined && chatMessages !== undefined && chatMessages.length > 0;
 
   if (generating && (sessionRef.current === undefined || generationRef.current !== generationKey)) {
@@ -52,13 +53,42 @@ export const useAiStreamState = ({
     setTailBusy(next);
   }, []);
 
+  const cancelFlush = useCallback(() => {
+    if (flushRafRef.current !== 0) {
+      cancelAnimationFrame(flushRafRef.current);
+      flushRafRef.current = 0;
+    }
+  }, []);
+
+  const flushBuffer = useCallback(() => {
+    cancelFlush();
+    const next = pumpRef.current?.buffer;
+    if (next !== undefined && mountedRef.current) {
+      setBuffer(next);
+    }
+  }, [cancelFlush]);
+
+  const scheduleFlush = useCallback(() => {
+    if (flushRafRef.current !== 0 || !mountedRef.current) {
+      return;
+    }
+    flushRafRef.current = requestAnimationFrame(() => {
+      flushRafRef.current = 0;
+      const next = pumpRef.current?.buffer;
+      if (next !== undefined && mountedRef.current) {
+        setBuffer(value => (value === next ? value : next));
+      }
+    });
+  }, []);
+
   useEffect(() => {
     mountedRef.current = true;
 
     return () => {
       mountedRef.current = false;
+      cancelFlush();
     };
-  }, []);
+  }, [cancelFlush]);
 
   useEffect(() => {
     doneRef.current = false;
@@ -68,9 +98,10 @@ export const useAiStreamState = ({
     if (!generating) {
       return;
     }
+    cancelFlush();
     setBuffer(``);
     setNetworkDone(false);
-  }, [generationKey, generating]);
+  }, [cancelFlush, generationKey, generating]);
 
   useEffect(() => {
     if (stream === undefined) {
@@ -83,9 +114,7 @@ export const useAiStreamState = ({
     }
 
     setNetworkDone(activePump.networkDone);
-    if (activePump.buffer !== ``) {
-      setBuffer(activePump.buffer);
-    }
+    setBuffer(activePump.buffer);
 
     if (activePump.started) {
       return;
@@ -100,18 +129,17 @@ export const useAiStreamState = ({
             continue;
           }
           activePump.buffer += chunk;
-          if (mountedRef.current) {
-            setBuffer(activePump.buffer);
-          }
+          scheduleFlush();
         }
       } finally {
         activePump.networkDone = true;
+        flushBuffer();
         if (mountedRef.current) {
           setNetworkDone(true);
         }
       }
     })();
-  }, [stream]);
+  }, [flushBuffer, scheduleFlush, stream]);
 
   useEffect(() => {
     if (!networkDone || doneRef.current || onComplete === undefined) {

@@ -18,6 +18,7 @@
     "@snappy/metrics": "workspace:*",
     "@snappy/platform": "workspace:*",
     "@snappy/router": "workspace:*",
+    "@snappy/snappy": "workspace:*",
     "@snappy/store": "workspace:*",
     "@snappy/theme": "workspace:*",
     "@snappy/ui-core": "workspace:*",

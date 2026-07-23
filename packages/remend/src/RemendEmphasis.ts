@@ -76,16 +76,17 @@ const closePrefixSkip = (source: string, position: number, kind: Kind) => {
 const trailingCodeTicks = (source: string, position: number, stack: readonly Frame[]) => {
   const top = stack.at(-1);
 
-  const firstNonTick =
-    top?.kind !== `code` || position !== source.length
-      ? undefined
-      : _.gen(position, index => position - 1 - index).find(index => source[index] !== fenceTick);
+  if (top?.kind !== `code` || position !== source.length) {
+    return 0;
+  }
 
-  return top?.kind !== `code` || position !== source.length
-    ? 0
-    : firstNonTick === undefined
-      ? position
-      : position - 1 - firstNonTick;
+  const from = top.openAt;
+
+  const firstNonTick = _.gen(position - from, index => position - 1 - index).find(
+    index => index >= from && source[index] !== fenceTick,
+  );
+
+  return firstNonTick === undefined ? position - from : position - 1 - firstNonTick;
 };
 
 const incompleteClosePrefixLength = (source: string, position: number, stack: readonly Frame[]) => {
@@ -136,6 +137,13 @@ const markerOnly = (line: string) => {
 };
 
 const tryAt = (text: string, position: number, line: string, offset: number, stack: readonly Frame[]) => {
+  const slashCountBefore = (source: string, index: number): number =>
+    index > 0 && source[index - 1] === `\\` ? 1 + slashCountBefore(source, index - 1) : 0;
+
+  if (slashCountBefore(text, position) % 2 === 1) {
+    return undefined;
+  }
+
   const top = stack.at(-1);
 
   if (top !== undefined) {
@@ -251,11 +259,19 @@ const flush = ({
     }
   }
 
+  const topOpenAt = stack.at(-1)?.openAt ?? flushAt;
+  const emptyTop = text.slice(topOpenAt, flushAt).trim() === ``;
   const tail = flushAt < position ? text.slice(flushAt, position) : ``;
 
   return {
     cursor: position,
-    parts: [...parts, text.slice(cursor, flushAt), closeStack(stack), ...(tail === `` ? [] : [tail])],
+    parts: [
+      ...parts,
+      text.slice(cursor, flushAt),
+      ...(emptyTop ? [Unicode.zeroWidthSpace] : []),
+      closeStack(stack),
+      ...(tail === `` ? [] : [tail]),
+    ],
     stack: [] as readonly Frame[],
   };
 };

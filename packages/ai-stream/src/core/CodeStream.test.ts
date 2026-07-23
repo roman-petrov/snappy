@@ -2,8 +2,18 @@ import { describe, expect, it } from "vitest";
 
 import { CodeStream } from "./CodeStream";
 
-const { finalizeBody, preStyle, preWrap, requestKey, sessionKey, sessionReset, sourceDelta, streamBody, tokenSpan } =
-  CodeStream;
+const {
+  finalizeBody,
+  isShikiHtml,
+  preStyle,
+  preWrap,
+  requestKey,
+  sessionKey,
+  sessionReset,
+  sourceDelta,
+  streamBody,
+  tokenSpan,
+} = CodeStream;
 
 const span = (token: { content: string }) => tokenSpan(token.content, ``);
 
@@ -56,6 +66,16 @@ describe(`preWrap`, () => {
     expect(preWrap(`dark-plus`, `color:#1`, `<span class="line">x</span>`)).toBe(
       `<pre class="shiki dark-plus" style="color:#1" tabindex="0"><code><span class="line">x</span></code></pre>`,
     );
+  });
+});
+
+describe(`isShikiHtml`, () => {
+  it(`detects shiki pre from preWrap`, () => {
+    expect(isShikiHtml(preWrap(`dark-plus`, ``, `x`))).toBe(true);
+  });
+
+  it(`rejects plain marked code html`, () => {
+    expect(isShikiHtml(`<pre><code class="language-ts">const x = 1;</code></pre>`)).toBe(false);
   });
 });
 

@@ -1,7 +1,7 @@
 @use "sass:list";
 
 $-colors: #38bdf8, #22c55e, #eab308, #f97316, #ef4444, #c026d3;
-$-shadow: #0f172a;
+$-spectrum: linear-gradient(to top right, list.append($-colors, list.nth($-colors, 1)));
 
 @keyframes shift {
   0% {
@@ -13,21 +13,41 @@ $-shadow: #0f172a;
   }
 }
 
+@mixin spectrum {
+  background-image: $-spectrum;
+  background-position: 100% 0%;
+  background-size: 600% 600%;
+  animation: shift 0.75s linear infinite;
+}
+
 .root {
+  @include spectrum;
+
+  position: relative;
   display: inline-block;
   flex-shrink: 0;
   width: 0.58em;
   height: 1.05em;
   margin-left: 0.2em;
   vertical-align: text-bottom;
-  background-image: linear-gradient(to top right, list.append($-colors, list.nth($-colors, 1)));
-  background-position: 100% 0%;
-  background-size: 600% 600%;
-  box-shadow:
-    0 0 2px 0.5px color-mix(in srgb, $-shadow 58%, transparent),
-    0 0 5px 1.5px color-mix(in srgb, $-shadow 40%, transparent);
-  animation: shift 0.75s linear infinite;
-  will-change: background-position;
+}
+
+.trail {
+  margin-left: 1px;
+
+  &::before {
+    @include spectrum;
+
+    position: absolute;
+    top: 0;
+    right: calc(100% + 1px);
+    width: 6.5em;
+    height: 100%;
+    pointer-events: none;
+    content: "";
+    border-radius: 0 0.45em 0.45em 0;
+    mask-image: linear-gradient(to right, transparent 0%, rgb(0 0 0 / 55%) 45%, black 100%);
+  }
 }
 
 .hidden {

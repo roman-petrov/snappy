@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
 /* eslint-disable init-declarations */
-/* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 /* eslint-disable no-continue */
+/* eslint-disable no-use-before-define */
+/* eslint-disable unicorn/prefer-includes-over-repeated-comparisons */
 
 import type { TypeWriterSpeed } from "@snappy/domain";
 
@@ -19,6 +21,8 @@ type BodyShell =
 
 type HtmlAttributes = { className?: string; style?: string };
 
+type Pace = `instant` | TypeWriterSpeed;
+
 type RevealSlice = { full: number; partial: number };
 
 type Slot = { end: number; graphemes: readonly string[]; node: Text; start: number; text: string };
@@ -26,6 +30,7 @@ type Slot = { end: number; graphemes: readonly string[]; node: Text; start: numb
 export const TypeWriter = () => {
   const segmenter = new Intl.Segmenter();
   const partialSpans = new Map<Text, HTMLSpanElement>();
+  const hiddenAfterCaret = new Set<HTMLElement>();
   const voidTags = new Set([`br`, `hr`, `img`]);
   const pixelsPerSecond = { fast: 0x4_00, medium: 0x2_00, slow: 0x1_00 } as const;
   const caretPeriodMs = 750;
@@ -36,10 +41,12 @@ export const TypeWriter = () => {
   let previousVisible = ``;
   let lastHtml = ``;
   let revealedPx = 0;
+  let revealedFull = 0;
   let totalPx = 0;
-  let speed: TypeWriterSpeed = `medium`;
+  let speed: Pace = `medium`;
   let animating = false;
   let waiting = false;
+  let alive = true;
   let pendingId = 0;
   let pendingResolve: ((finished: boolean) => void) | undefined;
   let frame = 0;
@@ -372,25 +379,41 @@ export const TypeWriter = () => {
       }
     };
 
-    let passedCaret = false;
+    const nextHidden = new Set<HTMLElement>();
+    let node: Node | null = caretElement;
+    while (node !== null && node !== contentMount) {
+      let sibling = node.nextSibling;
+      while (sibling !== null) {
+        if (sibling instanceof HTMLElement) {
+          nextHidden.add(sibling);
+        }
+        sibling = sibling.nextSibling;
+      }
+      node = node.parentNode;
+    }
+
+    for (const element of hiddenAfterCaret) {
+      if (!nextHidden.has(element)) {
+        write(element, `display`, ``);
+        hiddenAfterCaret.delete(element);
+      }
+    }
+    for (const element of nextHidden) {
+      write(element, `display`, `none`);
+      hiddenAfterCaret.add(element);
+    }
+
     let lastVisible: HTMLElement | undefined;
     let hiddenAfter = false;
-
     for (const child of contentMount.children) {
-      if (child === caretElement) {
-        passedCaret = true;
+      if (!(child instanceof HTMLElement) || child === caretElement) {
         continue;
       }
-      if (!(child instanceof HTMLElement)) {
-        continue;
-      }
-      write(child, `display`, passedCaret ? `none` : ``);
       write(child, `marginBlockEnd`, ``);
-      if (passedCaret) {
+      if (nextHidden.has(child)) {
         hiddenAfter = true;
       } else {
         lastVisible = child;
-        passedCaret = child.contains(caretElement);
       }
     }
 
@@ -400,9 +423,12 @@ export const TypeWriter = () => {
   };
 
   const updateCaret = () => {
-    if (caretElement !== undefined) {
-      caretElement.classList.toggle(styles.hidden, !(animating || waiting));
+    if (caretElement === undefined) {
+      return;
     }
+    const typing = animating && speed !== `instant`;
+    caretElement.classList.toggle(styles.hidden, !(animating || waiting));
+    caretElement.classList.toggle(styles.trail, typing);
   };
 
   const setAnimating = (next: boolean) => {
@@ -438,6 +464,7 @@ export const TypeWriter = () => {
     carry = 0;
     partialSpans.clear();
     partialCaretAnchor = undefined;
+    hiddenAfterCaret.clear();
   };
 
   const revealSlice = () =>
@@ -451,6 +478,7 @@ export const TypeWriter = () => {
     applyRevealToSlots(textSlots, slice, lastPaintedFull);
     lastPaintedFull = slice.full;
     lastPaintedPartial = slice.partial;
+    revealedFull = Math.max(revealedFull, slice.full);
     placeCaret();
     updateCaret();
     hideUnrevealed();
@@ -463,6 +491,7 @@ export const TypeWriter = () => {
 
     partialSpans.clear();
     partialCaretAnchor = undefined;
+    hiddenAfterCaret.clear();
     lastPaintedFull = -1;
     lastPaintedPartial = -1;
     contentMount.innerHTML = shell?.kind === `pre` || shell?.kind === `prePlain` ? shell.inner : body.innerHTML;
@@ -478,8 +507,31 @@ export const TypeWriter = () => {
     }
     measureFrom(keep);
     totalPx = cumulative[totalGraphemes - 1] ?? 0;
-    revealedPx = Math.min(revealedPx, totalPx);
+    const floor = Math.min(revealedFull, totalGraphemes);
+    revealedPx = Math.max(pxAt(floor), Math.min(revealedPx, totalPx));
     applyReveal();
+  };
+
+  const syncShellAttributes = (shell: BodyShell | undefined) => {
+    if (host === undefined || shell === undefined || (shell.kind !== `pre` && shell.kind !== `prePlain`)) {
+      return;
+    }
+
+    const pre = host.querySelector(`:scope > pre`);
+
+    if (!(pre instanceof HTMLElement)) {
+      return;
+    }
+
+    applyAttributes(pre, shell.pre);
+
+    if (shell.kind === `pre`) {
+      const code = pre.querySelector(`:scope > code`);
+
+      if (code instanceof HTMLElement) {
+        applyAttributes(code, shell.code);
+      }
+    }
   };
 
   const paint = (): boolean => {
@@ -495,6 +547,8 @@ export const TypeWriter = () => {
       mountedSignature = nextSignature;
       textSlots = undefined;
       placeCaret();
+    } else {
+      syncShellAttributes(shell);
     }
 
     if (contentMount === undefined) {
@@ -528,8 +582,30 @@ export const TypeWriter = () => {
     settlePending(true);
   };
 
+  const finishInstant = () => {
+    stopLoop();
+    revealedPx = totalPx;
+    applyReveal();
+    finishPush();
+  };
+
+  const completeOrAnimate = () => {
+    if (speed === `instant`) {
+      finishInstant();
+
+      return;
+    }
+    if (caughtUp()) {
+      finishPush();
+
+      return;
+    }
+    setAnimating(true);
+    startLoop();
+  };
+
   const tick = (now: number) => {
-    if (host === undefined || body === undefined || cumulative === undefined) {
+    if (host === undefined || body === undefined || cumulative === undefined || speed === `instant`) {
       stopLoop();
 
       return;
@@ -575,23 +651,22 @@ export const TypeWriter = () => {
       previousVisible = ``;
       lastHtml = ``;
       revealedPx = 0;
+      revealedFull = 0;
     }
 
     if (body === undefined) {
       paintWaiting();
     } else {
       paint();
-      if (caughtUp()) {
-        finishPush();
-      } else {
-        setAnimating(true);
-        startLoop();
-      }
+      completeOrAnimate();
     }
     updateCaret();
   };
 
   const push = async (nextHtml: string): Promise<boolean> => {
+    if (!alive) {
+      return false;
+    }
     settlePending(false);
     const id = ++pendingId;
     const { promise, resolve } = Promise.withResolvers<boolean>();
@@ -602,12 +677,7 @@ export const TypeWriter = () => {
     };
 
     if (nextHtml === lastHtml && contentMount !== undefined && textSlots !== undefined) {
-      if (caughtUp()) {
-        finishPush();
-      } else {
-        setAnimating(true);
-        startLoop();
-      }
+      completeOrAnimate();
 
       return promise;
     }
@@ -616,7 +686,6 @@ export const TypeWriter = () => {
     const newBody = new DOMParser().parseFromString(nextHtml, MimeType.textHtml).body;
     const newVisible = newBody.textContent;
     carry = Math.min(prefix(previousVisible, newVisible), cumulative?.length ?? 0);
-    revealedPx = Math.min(revealedPx, pxAt(carry));
 
     body = newBody;
     previousVisible = newVisible;
@@ -632,11 +701,10 @@ export const TypeWriter = () => {
       }
     } else {
       const ready = paint();
-      if (!ready || caughtUp()) {
-        finishPush();
+      if (ready) {
+        completeOrAnimate();
       } else {
-        setAnimating(true);
-        startLoop();
+        finishPush();
       }
     }
 
@@ -644,6 +712,7 @@ export const TypeWriter = () => {
   };
 
   const destroy = () => {
+    alive = false;
     stopLoop();
     settlePending(false);
     if (host !== undefined) {
@@ -656,18 +725,26 @@ export const TypeWriter = () => {
     previousVisible = ``;
     lastHtml = ``;
     revealedPx = 0;
+    revealedFull = 0;
     lastPaintedFull = -1;
     lastPaintedPartial = -1;
     animating = false;
     waiting = false;
   };
 
-  const setSpeed = (value: TypeWriterSpeed) => {
+  const setSpeed = (value: Pace) => {
     if (value === speed) {
       return;
     }
     speed = value;
     updateCaret();
+    if (value === `instant`) {
+      if (host !== undefined && body !== undefined && cumulative !== undefined) {
+        finishInstant();
+      }
+
+      return;
+    }
     if (animating && host !== undefined) {
       startLoop();
     }

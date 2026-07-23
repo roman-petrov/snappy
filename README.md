@@ -120,13 +120,13 @@ locally.
 - 📦 [Zod](https://zod.dev/)
 - ✉️ [Nodemailer](https://nodemailer.com/)
 - 📧 [React Email](https://react.email/)
-- 🌐 [agent-browser](https://agent-browser.dev/)
 
 ## 📎 Service links
 
 ### 📊 Repository & monitoring
 
 - [GitHub](https://github.com/roman-petrov/snappy/)
+- [Product Radar](https://productradar.ru/)
 - [PageSpeed Insights](https://pagespeed.web.dev/)
 - [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html)
 - [Yandex Webmaster](https://webmaster.yandex.ru/)
@@ -191,6 +191,7 @@ locally.
 - [SWE-bench](https://www.swebench.com/) — real-world GitHub-style coding and patching (software engineering).
 - [LiveBench](https://livebench.ai/) — frequently updated benchmarks focused on contamination resistance.
 
-## 🔗 Links
+## 🔗 Technologies to study
 
-- [assistant-ui](https://www.assistant-ui.com/) — open-source React toolkit for production AI chat experiences.
+- [assistant-ui](https://www.assistant-ui.com/)
+- [agent-browser](https://agent-browser.dev/)

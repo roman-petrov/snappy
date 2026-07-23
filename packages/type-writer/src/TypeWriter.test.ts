@@ -185,6 +185,24 @@ describe(`push`, () => {
     });
   });
 
+  it(`reveals instantly and keeps the caret while waiting`, async () => {
+    await withTiming(async () => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+      writer.setWaiting(true);
+
+      await expect(writer.push(`<p>hello stream</p>`)).resolves.toBe(true);
+      expect(host.textContent).toContain(`hello stream`);
+
+      const caret = host.querySelector(`.${styles.root}`);
+
+      expect(caret?.classList.contains(styles.hidden)).toBe(false);
+      expect(caret?.classList.contains(styles.trail)).toBe(false);
+    });
+  });
+
   it(`resolves repeated identical html`, async () => {
     await withTiming(async ({ finish }) => {
       const host = hostElement();
@@ -207,6 +225,21 @@ describe(`push`, () => {
 
       expect(first?.style.display).toBe(``);
       expect(second?.style.display).toBe(`none`);
+    });
+  });
+
+  it(`hides unrevealed inline code after the caret`, async () => {
+    await withTiming(async ({ until }) => {
+      const host = hostElement();
+      const writer = fastWriter(host);
+      void writer.push(`<p>prefix <code>token</code> end</p>`);
+      const revealed = chars(host, `p`);
+
+      await until(() => revealed() >= 3 && revealed() < 8);
+
+      expect(host.querySelector(`code`)?.style.display).toBe(`none`);
+
+      writer.destroy();
     });
   });
 
@@ -253,7 +286,7 @@ describe(`push`, () => {
     });
   });
 
-  it(`reveals buffered content at linear speed, keeping the caret visible`, async () => {
+  it(`reveals buffered content at linear speed with a visible caret trail`, async () => {
     await withTiming(async ({ nextFrame }) => {
       const host = hostElement();
       const writer = fastWriter(host);
@@ -271,6 +304,7 @@ describe(`push`, () => {
         expect(revealed()).toBeLessThanOrEqual((elapsed / 1000) * fastCharsPerSecond + 3);
         expect(caret).not.toBeNull();
         expect(caret?.classList.contains(styles.hidden)).toBe(false);
+        expect(caret?.classList.contains(styles.trail)).toBe(true);
 
         previous = revealed();
       }
@@ -376,6 +410,26 @@ describe(`push`, () => {
       expect(samples.at(-1)?.chars ?? 0).toBeGreaterThanOrEqual(before);
 
       expectSmooth(samples, fastCharsPerSecond, { chars: before, seconds: 0 });
+    });
+  });
+
+  it(`does not rewind when remend-like markup breaks the visible text prefix`, async () => {
+    await withTiming(async ({ nextFrame, until }) => {
+      const host = hostElement();
+      const writer = fastWriter(host);
+      void writer.push(`<p>alpha beta gamma delta</p>`);
+      const revealed = chars(host, `p`);
+
+      await until(() => revealed() >= 12);
+
+      const before = revealed();
+      void writer.push(`<p>alpha <strong>zeta</strong> gamma delta epsilon</p>`);
+      await nextFrame();
+      await nextFrame();
+
+      expect(revealed()).toBeGreaterThanOrEqual(before);
+
+      writer.destroy();
     });
   });
 
@@ -534,6 +588,98 @@ describe(`push`, () => {
       expect(after - before).toBeLessThanOrEqual(8);
     });
   });
+
+  it(`catches up instantly when speed switches to instant mid-reveal`, async () => {
+    await withTiming(async ({ until }) => {
+      const host = hostElement();
+      const writer = fastWriter(host);
+      const full = `word `.repeat(40).trim();
+      void writer.push(`<p>${full}</p>`);
+      const revealed = chars(host, `p`);
+
+      await until(() => revealed() >= 5 && revealed() < full.length);
+
+      writer.setSpeed(`instant`);
+
+      expect(revealed()).toBe(full.length);
+      expect(host.querySelector(`.${styles.root}`)?.classList.contains(styles.hidden)).toBe(false);
+
+      writer.destroy();
+    });
+  });
+
+  it(`resolves growing instant pushes without animation and measures each grapheme once`, async () => {
+    await withTiming(async () => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+      writer.setWaiting(true);
+      const full = `alpha bravo charlie delta echo foxtrot`;
+      const spy = vi.spyOn(Range.prototype, `getClientRects`);
+
+      for (let sent = 6; sent < full.length + 6; sent += 6) {
+        await expect(writer.push(`<p>${full.slice(0, sent)}</p>`)).resolves.toBe(true);
+        expect(host.querySelector(`p`)?.textContent).toBe(full.slice(0, Math.min(sent, full.length)));
+      }
+
+      const calls = spy.mock.calls.length;
+      spy.mockRestore();
+      writer.destroy();
+
+      expect(calls).toBe(full.length);
+    });
+  });
+
+  it(`remounts when the body shell changes from content to pre`, async () => {
+    await withTiming(async ({ finish }) => {
+      const host = hostElement();
+      const writer = fastWriter(host);
+
+      await expect(finish(writer.push(`<p>plain</p>`))).resolves.toBe(true);
+      expect(host.querySelector(`p`)).not.toBeNull();
+
+      await expect(finish(writer.push(`<pre><code>const x = 42;</code></pre>`))).resolves.toBe(true);
+      expect(host.querySelector(`pre code`)?.textContent).toBe(`const x = 42;`);
+      expect(host.querySelector(`p`)).toBeNull();
+
+      writer.destroy();
+    });
+  });
+
+  it(`reveals an emoji grapheme as one unit`, async () => {
+    await withTiming(async ({ finish }) => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+      writer.setWaiting(true);
+
+      await expect(finish(writer.push(`<p>hi 😀</p>`))).resolves.toBe(true);
+      expect(host.querySelector(`p`)?.textContent).toBe(`hi 😀`);
+
+      writer.destroy();
+    });
+  });
+
+  it(`updates pre style attributes when shell signature stays pre:code`, async () => {
+    await withTiming(async ({ finish }) => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+
+      await expect(finish(writer.push(`<pre class="shiki"><code>a</code></pre>`))).resolves.toBe(true);
+      await expect(finish(writer.push(`<pre class="shiki" style="color:#fff"><code>ab</code></pre>`))).resolves.toBe(
+        true,
+      );
+
+      expect(host.querySelector(`pre`)?.style.color).toBe(`rgb(255, 255, 255)`);
+      expect(host.textContent).toContain(`ab`);
+
+      writer.destroy();
+    });
+  });
 });
 
 describe(`setWaiting`, () => {
@@ -547,6 +693,25 @@ describe(`setWaiting`, () => {
 
       expect(caret).not.toBeNull();
       expect(caret?.classList.contains(styles.hidden)).toBe(false);
+      expect(caret?.classList.contains(styles.trail)).toBe(false);
+
+      writer.destroy();
+    });
+  });
+
+  it(`hides the caret after content when waiting turns off`, async () => {
+    await withTiming(async ({ finish }) => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+      writer.setWaiting(true);
+
+      await expect(finish(writer.push(`<p>done</p>`))).resolves.toBe(true);
+
+      writer.setWaiting(false);
+
+      expect(host.querySelector(`.${styles.root}`)?.classList.contains(styles.hidden)).toBe(true);
 
       writer.destroy();
     });
@@ -567,6 +732,27 @@ describe(`attach`, () => {
       expect(second.querySelector(`.${styles.root}`)).not.toBeNull();
     });
   });
+
+  it(`keeps pending push on a new host without stale content`, async () => {
+    await withTiming(async ({ finish }) => {
+      const first = hostElement();
+      const writer = TypeWriter();
+      writer.attach(first);
+      writer.setSpeed(`fast`);
+      writer.setWaiting(true);
+      const pending = writer.push(`<p>${`a`.repeat(80)}</p>`);
+      const second = hostElement();
+      writer.attach(second);
+
+      expect(second.textContent === `` || second.textContent.includes(`a`)).toBe(true);
+      expect(first.textContent).not.toContain(`a`);
+
+      await expect(finish(pending)).resolves.toBe(true);
+      expect(second.textContent).toContain(`a`);
+
+      writer.destroy();
+    });
+  });
 });
 
 describe(`destroy`, () => {
@@ -577,6 +763,37 @@ describe(`destroy`, () => {
       writer.destroy();
 
       await expect(pending).resolves.toBe(false);
+    });
+  });
+
+  it(`rejects push after destroy with false`, async () => {
+    await withTiming(async () => {
+      const host = hostElement();
+      const writer = fastWriter(host);
+      writer.destroy();
+
+      await expect(writer.push(`<p>after</p>`)).resolves.toBe(false);
+      expect(host.textContent).toBe(``);
+    });
+  });
+});
+
+describe(`setSpeed`, () => {
+  it(`is a no-op when the same speed is set again`, async () => {
+    await withTiming(async ({ finish }) => {
+      const host = hostElement();
+      const writer = TypeWriter();
+      writer.attach(host);
+      writer.setSpeed(`instant`);
+      writer.setWaiting(true);
+
+      await expect(finish(writer.push(`<p>same</p>`))).resolves.toBe(true);
+
+      writer.setSpeed(`instant`);
+
+      expect(host.textContent).toContain(`same`);
+
+      writer.destroy();
     });
   });
 });

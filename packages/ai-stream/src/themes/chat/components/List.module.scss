@@ -1,7 +1,15 @@
-@use "pkg:@snappy/theme/tokens/space";
+@use "../../typography" as typography;
 
-.inner {
+.root {
   min-width: 0;
-  padding: space.md();
+  margin-block: typography.body-em(16);
   overflow-x: auto;
+}
+
+.root:last-child {
+  margin-block-end: 0;
+}
+
+.root + .root {
+  margin-block-start: typography.body-em(28);
 }

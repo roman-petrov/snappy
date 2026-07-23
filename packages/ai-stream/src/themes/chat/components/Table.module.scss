@@ -1,0 +1,5 @@
+@use "../../typography" as typography;
+
+.card {
+  @include typography.stream-table;
+}

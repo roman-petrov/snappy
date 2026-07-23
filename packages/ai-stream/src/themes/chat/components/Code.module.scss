@@ -1,7 +1,7 @@
 /* stylelint-disable property-disallowed-list */
-@use "pkg:@snappy/theme/core" as *;
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/space";
+@use "../../typography" as typography;
 /* stylelint-disable import-notation */
 @import url("@fontsource/google-sans-code/latin-400.css");
 /* stylelint-enable import-notation */
@@ -9,21 +9,20 @@
 .root {
   position: relative;
   min-width: 0;
+  background-color: color.backdrop();
 }
 
 .scroll {
+  padding: typography.body-em(16);
+  padding-inline-end: calc(#{typography.body-em(16)} + 2.5rem);
   overflow-x: auto;
 
   pre {
     width: max-content;
     min-width: 100%;
-    padding: space.md();
-    padding-inline-end: calc(space.md() + 2.5rem);
     font-family: "Google Sans Code", ui-monospace, monospace;
-    font-size: r(14);
     line-height: 1.65;
     tab-size: 2;
-    background-color: color.backdrop();
   }
 
   code {

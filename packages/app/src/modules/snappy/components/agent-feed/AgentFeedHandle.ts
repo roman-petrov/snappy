@@ -170,6 +170,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
           key,
           onComplete: () => entry.done.resolve(),
           stream: entry.stream,
+          typeWriterSpeed,
         });
       }
       case `status`: {

@@ -91,7 +91,8 @@ const repair = (text: string) => {
     return text;
   }
 
-  const block = readyBlock(lines.slice(start, end).map(completeTableRow));
+  const raw = lines.slice(start, end);
+  const block = readyBlock(raw.map(completeTableRow));
   const header = block[0] ?? ``;
 
   if (!rowHasCellContent(header)) {

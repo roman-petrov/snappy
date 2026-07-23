@@ -1,0 +1,25 @@
+{
+  "name": "@snappy/ai-stream-lab",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "main": "./src/main.tsx",
+  "dependencies": {
+    "@snappy/ai-stream": "workspace:*",
+    "@snappy/core": "workspace:*",
+    "@snappy/domain": "workspace:*",
+    "@snappy/platform": "workspace:*",
+    "@snappy/router": "workspace:*",
+    "@snappy/snappy": "workspace:*",
+    "@snappy/theme": "workspace:*",
+    "@snappy/ui": "workspace:*",
+    "lucide-react": "^1.26.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@snappy/do": "workspace:*",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3"
+  }
+}
