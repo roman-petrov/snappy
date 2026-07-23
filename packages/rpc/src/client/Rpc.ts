@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
+/* eslint-disable functional/no-let */
 import { _, Store, type Store as StoreType } from "@snappy/core";
 
 import type { Endpoint } from "../Endpoint";
@@ -72,37 +74,70 @@ export const Rpc = async <
   const { signedIn: readSession, signIn: authSignIn, signOut: authSignOut, ...authExtra } = config.auth;
   const signedIn = Store(await readSession(client));
   const adopt = scope.bind({ onOpen: config.onOpen, session: signedIn });
+  const auth = { epoch: 0 };
   if (signedIn()) {
-    await adopt();
-  }
-
-  const resetSocket = () => {
+    await adopt().then(undefined, () => {
+      client.close();
+      signedIn.set(false);
+    });
+  } else {
     client.close();
-  };
+  }
 
   const signIn = (async (...args: never[]) => {
     const result = await authSignIn(...args);
     if (result.status === `ok`) {
-      resetSocket();
+      if (signedIn()) {
+        return result;
+      }
+      const started = auth.epoch;
       signedIn.set(true);
-      await adopt();
+      const done = adopt();
+      await done.then(undefined, () => {
+        signedIn.set(false);
+        client.close();
+
+        return false;
+      });
+      await done;
+      if (!signedIn() || started !== auth.epoch) {
+        signedIn.set(false);
+        client.close();
+
+        return result;
+      }
     }
 
     return result;
   }) as TAuth[`signIn`];
 
   const signOut = async () => {
+    auth.epoch += 1;
     signedIn.set(false);
     await authSignOut();
   };
 
   const sync = async () => {
-    if (signedIn() || !(await readSession(client))) {
+    if (signedIn()) {
       return;
     }
-    resetSocket();
+    const started = auth.epoch;
+    client.open();
+    const active = await Promise.resolve(readSession(client)).catch(() => false);
+    if (!active || started !== auth.epoch) {
+      client.close();
+
+      return;
+    }
     signedIn.set(true);
-    await adopt();
+    let adopted = true;
+    await adopt().then(undefined, () => {
+      adopted = false;
+    });
+    if (!adopted || !signedIn() || started !== auth.epoch) {
+      signedIn.set(false);
+      client.close();
+    }
   };
 
   session.auth = Object.assign(signedIn, { ...authExtra, signIn, signOut, sync });

@@ -16,10 +16,11 @@ import { Browser } from "./socket/Browser";
 
 export type ClientConfig = { path: string };
 
-type Pending = { reject: (error: Error) => void; resolve: (data: unknown) => void };
+type Pending = { message: string; reject: (error: Error) => void; resolve: (data: unknown) => void };
 
 export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClientType<TApi> => {
   const pending = new Map<string, Pending>();
+  const inflight = new Map<string, Promise<unknown>>();
   const listeners = new Map<string, Set<(data: unknown) => void>>();
   const sequences = new Map<string, number>();
   const reconnectListeners = new Set<() => void>();
@@ -30,26 +31,15 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
   let stopped = false;
   let everConnected = false;
   let cancelReconnect: (() => void) | undefined;
-  const queue: string[] = [];
   const url = () => `${globalThis.location.protocol === `https:` ? `wss:` : `ws:`}//${globalThis.location.host}${path}`;
 
   const flush = () => {
     if (!ready || socket === undefined) {
       return;
     }
-    for (const message of queue) {
-      socket.send(message);
+    for (const request of pending.values()) {
+      socket.send(request.message);
     }
-    queue.length = 0;
-  };
-
-  const send = (message: string) => {
-    if (ready && socket !== undefined) {
-      socket.send(message);
-
-      return;
-    }
-    queue.push(message);
   };
 
   const connect = () => {
@@ -61,6 +51,9 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
     ready = false;
 
     connection.on(`open`, () => {
+      if (socket !== connection) {
+        return;
+      }
       ready = true;
       flush();
       if (everConnected) {
@@ -73,7 +66,7 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
     });
 
     connection.on(`message`, (message, isBinary) => {
-      if (isBinary || !_.isString(message)) {
+      if (socket !== connection || isBinary || !_.isString(message)) {
         return;
       }
       const wire = Protocol.parse(message);
@@ -107,18 +100,20 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
     });
 
     connection.on(`close`, () => {
+      if (socket !== connection) {
+        return;
+      }
       socket = undefined;
       ready = false;
-      queue.length = 0;
+      inflight.clear();
       if (!opened) {
+        for (const [, request] of pending) {
+          request.reject(new Error(`disconnected`));
+        }
         pending.clear();
 
         return;
       }
-      for (const [, request] of pending) {
-        request.reject(new Error(`disconnected`));
-      }
-      pending.clear();
       cancelReconnect?.();
       cancelReconnect = Timer.timeout(() => {
         if (opened) {
@@ -127,7 +122,11 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
       }, 2 * _.second);
     });
 
-    connection.on(`error`, () => connection.close());
+    connection.on(`error`, () => {
+      if (socket === connection) {
+        connection.close();
+      }
+    });
   };
 
   const open = () => {
@@ -142,8 +141,11 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
     everConnected = false;
     cancelReconnect?.();
     cancelReconnect = undefined;
+    for (const [, request] of pending) {
+      request.reject(new Error(`disconnected`));
+    }
     pending.clear();
-    queue.length = 0;
+    inflight.clear();
     const current = socket;
     socket = undefined;
     ready = false;
@@ -169,13 +171,29 @@ export const Client = <TApi extends RpcApiTree>({ path }: ClientConfig): RpcClie
       open();
     }
     connect();
+    const key = `${route}\0${JSON.stringify(input) ?? ``}`;
+    const existing = inflight.get(key);
+    if (existing !== undefined) {
+      return existing;
+    }
     nextId += 1;
     const requestId = String(nextId);
+    const { promise, reject, resolve } = Promise.withResolvers<unknown>();
 
-    return new Promise<unknown>((resolve, reject) => {
-      pending.set(requestId, { reject, resolve });
-      send(Protocol.stringify({ id: requestId, input, path: route }));
+    const tracked = promise.finally(() => {
+      if (inflight.get(key) === tracked) {
+        inflight.delete(key);
+      }
     });
+    inflight.set(key, tracked);
+    const message = Protocol.stringify({ id: requestId, input, path: route });
+    pending.set(requestId, { message, reject, resolve });
+
+    if (ready && socket !== undefined) {
+      socket.send(message);
+    }
+
+    return tracked;
   };
 
   const on = (route: string, listener: (data: unknown) => void) => {

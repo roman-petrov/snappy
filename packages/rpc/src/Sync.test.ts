@@ -91,6 +91,167 @@ describe(`track`, () => {
   });
 });
 
+describe(`open`, () => {
+  it(`reseeds on every call`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    let value = 1;
+    const read = voidLeaf(async () => value);
+    const amount = sync.mirror(read);
+
+    await sync.open();
+
+    expect(amount()).toBe(1);
+
+    expect(api.open).toHaveBeenCalledTimes(1);
+    expect(api.close).not.toHaveBeenCalled();
+
+    value = 2;
+    await sync.open();
+
+    expect(amount()).toBe(2);
+
+    expect(api.open).toHaveBeenCalledTimes(2);
+    expect(api.close).toHaveBeenCalledTimes(1);
+  });
+
+  it(`does not close the transport on the first open`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const read = voidLeaf(async () => 1);
+    sync.mirror(read);
+
+    await sync.open();
+
+    expect(api.open).toHaveBeenCalledTimes(1);
+    expect(api.close).not.toHaveBeenCalled();
+  });
+
+  it(`does not apply a late load after close`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const { promise, resolve } = Promise.withResolvers<number>();
+    const read = voidLeaf(async () => promise);
+    const amount = sync.mirror(read);
+
+    await sync.open();
+    const loading = amount.load();
+    sync.close();
+    resolve(9);
+    await loading;
+
+    expect(amount()).toBeUndefined();
+  });
+
+  it(`does not reopen after close while open is queued`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const read = voidLeaf(async () => 1);
+    sync.mirror(read);
+
+    const opening = sync.open();
+    sync.close();
+    await opening;
+
+    expect(api.open).not.toHaveBeenCalled();
+    expect(api.close).toHaveBeenCalledTimes(1);
+  });
+
+  it(`resolves before a slow seed finishes`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const blockers: (() => void)[] = [];
+
+    const read = voidLeaf(async () => {
+      await new Promise<void>(resolve => {
+        blockers.push(resolve);
+      });
+
+      return 7;
+    });
+
+    const amount = sync.mirror(read);
+    await sync.open();
+
+    expect(amount()).toBeUndefined();
+    expect(blockers).toHaveLength(1);
+
+    blockers[0]?.();
+
+    await vi.waitFor(() => {
+      expect(amount()).toBe(7);
+    });
+  });
+
+  it(`keeps the session open when seed fails`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const errors: unknown[] = [];
+
+    const onUnhandled = (reason: unknown) => {
+      errors.push(reason);
+    };
+
+    process.on(`unhandledRejection`, onUnhandled);
+
+    const read = voidLeaf(async () => {
+      throw new Error(`disconnected`);
+    });
+
+    const amount = sync.mirror(read);
+
+    await sync.open();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    process.off(`unhandledRejection`, onUnhandled);
+
+    expect(amount()).toBeUndefined();
+    expect(errors).toHaveLength(0);
+    expect(api.open).toHaveBeenCalledTimes(1);
+  });
+
+  it(`serializes concurrent opens so a later open still seeds`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    let seed = 0;
+    const blockers: (() => void)[] = [];
+
+    const read = voidLeaf(async () => {
+      seed += 1;
+      const n = seed;
+      if (n === 1) {
+        await new Promise<void>(resolve => {
+          blockers.push(resolve);
+        });
+        throw new Error(`disconnected`);
+      }
+
+      return n;
+    });
+
+    const amount = sync.mirror(read);
+    const first = sync.open();
+
+    await vi.waitFor(() => {
+      expect(blockers).toHaveLength(1);
+    });
+
+    await first;
+    const second = sync.open();
+
+    await vi.waitFor(() => {
+      expect(amount()).toBe(2);
+    });
+
+    await second;
+    blockers[0]?.();
+    await Promise.resolve();
+
+    expect(amount()).toBe(2);
+  });
+});
+
 describe(`mirror`, () => {
   it(`replaces store from load, write, and events`, async () => {
     const api = { close: vi.fn(), open: vi.fn() };
@@ -150,6 +311,26 @@ describe(`bind`, () => {
 
     expect(api.close).toHaveBeenCalledTimes(1);
     expect(amount()).toBeUndefined();
+  });
+
+  it(`reseeds on every adopt`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const session = Store(true);
+    let value = 1;
+    const read = voidLeaf(async () => value);
+    const amount = sync.mirror(read);
+    const adopt = sync.bind({ session });
+
+    await adopt();
+
+    expect(amount()).toBe(1);
+
+    value = 2;
+    await adopt();
+
+    expect(amount()).toBe(2);
+    expect(api.open).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -225,18 +406,85 @@ describe(`lists`, () => {
     expect(rows()?.items.map(item => item.id)).toStrictEqual([`9`, `1`, `3`]);
   });
 
-  it(`seeds list on open`, async () => {
+  it(`does not seed list until the first load`, async () => {
     const api = { close: vi.fn(), open: vi.fn() };
     const sync = scope({ api });
-    const listProc = leaf(async () => ({ items: [{ id: `1` }] }));
+    const calls: unknown[] = [];
+
+    const listProc = leaf(async (input?: { page?: number }) => {
+      calls.push(input);
+
+      return { items: [{ id: `1` }] };
+    });
+
     const { rows } = sync.lists({ rows: { list: listProc } });
 
     await sync.open();
 
+    expect(rows()).toBeUndefined();
+    expect(calls).toHaveLength(0);
+
+    await rows.load({ page: 2 });
+
     expect(rows()?.items.map(item => item.id)).toStrictEqual([`1`]);
+    expect(calls).toStrictEqual([{ page: 2 }]);
   });
 
-  it(`reseeds on reconnect`, async () => {
+  it(`ignores a late list load for a superseded input`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const blockers: (() => void)[] = [];
+
+    const listProc = leaf(async (input?: { page?: number }) => {
+      const page = input?.page ?? 1;
+      if (page === 1) {
+        await new Promise<void>(resolve => {
+          blockers.push(resolve);
+        });
+      }
+
+      return { items: [{ id: String(page) }], page };
+    });
+
+    const { rows } = sync.lists({ rows: { list: listProc } });
+    await sync.open();
+    const first = rows.load({ page: 1 });
+    await vi.waitFor(() => {
+      expect(blockers).toHaveLength(1);
+    });
+    await rows.load({ page: 2 });
+
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+
+    blockers[0]?.();
+    await first;
+
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+  });
+
+  it(`reseeds the last list input after close and reopen`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const calls: unknown[] = [];
+
+    const listProc = leaf(async (input?: { page?: number }) => {
+      calls.push(input);
+
+      return { items: [{ id: `1` }], page: input?.page };
+    });
+
+    const { rows } = sync.lists({ rows: { list: listProc } });
+
+    await sync.open();
+    await rows.load({ page: 2 });
+    sync.close();
+    await sync.open();
+
+    expect(calls).toStrictEqual([{ page: 2 }, { page: 2 }]);
+    expect(rows()?.page).toBe(2);
+  });
+
+  it(`ignores a late list response flushed from before reconnect`, async () => {
     const listeners = new Set<() => void>();
 
     const api = {
@@ -252,15 +500,153 @@ describe(`lists`, () => {
     };
 
     const sync = scope({ api });
-    const listProc = leaf(async () => ({ items: [{ id: `1` }] }));
+    const blockers: (() => void)[] = [];
+    let calls = 0;
+
+    const listProc = leaf(async () => {
+      calls += 1;
+      const n = calls;
+      if (n === 1) {
+        await new Promise<void>(resolve => {
+          blockers.push(resolve);
+        });
+      }
+
+      return { items: [{ id: String(n) }] };
+    });
+
+    const { rows } = sync.lists({ rows: { list: listProc } });
+    await sync.open();
+    const first = rows.load();
+    await vi.waitFor(() => {
+      expect(blockers).toHaveLength(1);
+    });
+    await Promise.all([...listeners].map(async listener => listener()));
+    await vi.waitFor(() => {
+      expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+    });
+    blockers[0]?.();
+    await first;
+
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+  });
+
+  it(`applies only the latest concurrent list load`, async () => {
+    const api = { close: vi.fn(), open: vi.fn() };
+    const sync = scope({ api });
+    const blockers: (() => void)[] = [];
+    let calls = 0;
+
+    const listProc = leaf(async () => {
+      calls += 1;
+      const n = calls;
+      await new Promise<void>(resolve => {
+        blockers.push(resolve);
+      });
+
+      return { items: [{ id: String(n) }] };
+    });
+
+    const { rows } = sync.lists({ rows: { list: listProc } });
+    await sync.open();
+    const first = rows.load();
+    const second = rows.load();
+    await vi.waitFor(() => {
+      expect(blockers).toHaveLength(2);
+    });
+    blockers[0]?.();
+    await first;
+
+    expect(rows()?.items.map(item => item.id)).toBeUndefined();
+
+    blockers[1]?.();
+    await second;
+
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+  });
+
+  it(`reseeds on reconnect with the last list input`, async () => {
+    const listeners = new Set<() => void>();
+
+    const api = {
+      close: vi.fn(),
+      onReconnect: (listener: () => void) => {
+        listeners.add(listener);
+
+        return () => {
+          listeners.delete(listener);
+        };
+      },
+      open: vi.fn(),
+    };
+
+    const sync = scope({ api });
+    const calls: unknown[] = [];
+
+    const listProc = leaf(async (input?: { page?: number }) => {
+      calls.push(input);
+      const page = input?.page ?? 1;
+
+      return { items: [{ id: String(page) }], page };
+    });
+
     const { rows } = sync.lists({ rows: { list: listProc } });
 
     await sync.open();
-    listProc.emit({ items: [{ id: `2` }] });
+    await rows.load({ page: 2 });
+
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+    expect(calls).toStrictEqual([{ page: 2 }]);
 
     await Promise.all([...listeners].map(async listener => listener()));
 
-    expect(rows()?.items.map(item => item.id)).toStrictEqual([`1`]);
+    expect(calls).toStrictEqual([{ page: 2 }, { page: 2 }]);
+    expect(rows()?.items.map(item => item.id)).toStrictEqual([`2`]);
+  });
+
+  it(`swallows reseed failures on reconnect`, async () => {
+    const listeners = new Set<() => void>();
+
+    const api = {
+      close: vi.fn(),
+      onReconnect: (listener: () => void) => {
+        listeners.add(listener);
+
+        return () => {
+          listeners.delete(listener);
+        };
+      },
+      open: vi.fn(),
+    };
+
+    const sync = scope({ api });
+    let fail = false;
+
+    const read = voidLeaf(async () => {
+      if (fail) {
+        throw new Error(`disconnected`);
+      }
+
+      return 1;
+    });
+
+    const amount = sync.mirror(read);
+    const errors: unknown[] = [];
+
+    const onUnhandled = (reason: unknown) => {
+      errors.push(reason);
+    };
+
+    process.on(`unhandledRejection`, onUnhandled);
+    await sync.open();
+    fail = true;
+
+    await Promise.all([...listeners].map(async listener => listener()));
+    await Promise.resolve();
+    process.off(`unhandledRejection`, onUnhandled);
+
+    expect(errors).toHaveLength(0);
+    expect(amount()).toBe(1);
   });
 
   it(`patches and reads into item store`, async () => {
@@ -320,6 +706,10 @@ describe(`resources`, () => {
     await sync.open();
 
     expect(amount()).toBe(2);
+    expect(rows()).toBeUndefined();
+
+    await rows.load();
+
     expect(rows()?.items).toStrictEqual([{ id: `1` }]);
   });
 });

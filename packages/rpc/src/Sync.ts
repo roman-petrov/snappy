@@ -1,8 +1,11 @@
+/* eslint-disable unicorn/try-complexity */
+/* eslint-disable @typescript-eslint/no-invalid-void-type */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
+/* eslint-disable functional/no-try-statements */
 /* eslint-disable init-declarations */
 import { _, Store, type Store as StoreType } from "@snappy/core";
 
@@ -73,7 +76,7 @@ type ListLoadInput<TList> = AsyncArgs<TList> extends [infer Input, ...unknown[]]
 
 type ListMethodsOf<T extends ListEntry> = {
   append: () => Promise<void>;
-  load: (input?: ListLoadInput<T[`list`]>) => Promise<void>;
+  load: (input?: ListLoadInput<T[`list`]>) => Promise<boolean>;
 } & (T extends { create: infer Create }
   ? { create: (...args: AsyncArgs<Create>) => Promise<ListItemOf<T[`list`]>> }
   : object) &
@@ -111,6 +114,8 @@ const asPage = <TItem extends IdItem>(page: SyncListPage<TItem>): SyncListPage<T
 
 const scope = ({ api }: SyncScopeConfig) => {
   let opened = false;
+  let generation = 0;
+  const $revision = Store(0);
   const lives: { attach: () => () => void }[] = [];
   const seeds: (() => Promise<unknown>)[] = [];
   const clears: (() => void)[] = [];
@@ -123,7 +128,9 @@ const scope = ({ api }: SyncScopeConfig) => {
     const live = {
       attach: () =>
         proc.on(data => {
-          apply(data);
+          if (opened) {
+            apply(data);
+          }
         }),
     };
     lives.push(live);
@@ -132,8 +139,11 @@ const scope = ({ api }: SyncScopeConfig) => {
     }
 
     return async (...args: TArgs) => {
+      const gen = generation;
       const result = await proc(...args);
-      apply(result);
+      if (opened && gen === generation) {
+        apply(result);
+      }
 
       return result;
     };
@@ -244,13 +254,35 @@ const scope = ({ api }: SyncScopeConfig) => {
     };
 
     const callList = entry.list as unknown as (input?: unknown) => Promise<SyncListPage<TItem>>;
+    const unset = Symbol(`unset`);
+    let lastInput: unknown = unset;
+    let loadSeq = 0;
+    let readSeq = 0;
 
     const load = async (input?: unknown) => {
+      lastInput = input;
+      if (!opened) {
+        return false;
+      }
+      const gen = generation;
+      loadSeq += 1;
+      const seq = loadSeq;
+      const requested = input;
       const args = entry.limit === undefined ? input : { ...(input as object | undefined), limit: entry.limit };
-      $page.set(asPage(await callList(args)));
+      const page = asPage(await callList(args));
+      if (gen === generation && lastInput === requested && seq === loadSeq) {
+        $page.set(page);
+
+        return true;
+      }
+
+      return false;
     };
 
     const append = async () => {
+      if (!opened) {
+        return;
+      }
       const page = $page();
       if (page === undefined || entry.limit === undefined) {
         return;
@@ -261,11 +293,28 @@ const scope = ({ api }: SyncScopeConfig) => {
         return;
       }
 
+      const gen = generation;
       const next = asPage(await callList({ cursor, limit: entry.limit }));
-      $page.set(asPage({ ...next, items: [...page.items, ...next.items] }));
+      if (gen !== generation) {
+        return;
+      }
+      const current = $page();
+      if (current === undefined) {
+        return;
+      }
+      const currentCursor = current.nextCursor ?? current.cursor;
+      if (currentCursor !== cursor) {
+        return;
+      }
+      $page.set(asPage({ ...next, items: [...current.items, ...next.items] }));
     };
 
-    seeds.push(async () => load());
+    seeds.push(async () => {
+      if (lastInput === unset) {
+        return;
+      }
+      await load(lastInput);
+    });
 
     const methods: SyncListMut & { append: typeof append; load: typeof load } = { append, load };
     const upsertOrDrop = (data: IdItem) => (_.keys(data).length === 1 ? drop(data) : upsert(data as TItem));
@@ -285,8 +334,16 @@ const scope = ({ api }: SyncScopeConfig) => {
     if (entry.read !== undefined) {
       const raw = entry.read as SyncLeaf<[unknown], TItem | undefined>;
       methods.read = async (input: unknown) => {
+        if (!opened) {
+          return undefined;
+        }
+        const gen = generation;
+        readSeq += 1;
+        const seq = readSeq;
         const result = await raw(input);
-        $item.set(result);
+        if (gen === generation && seq === readSeq) {
+          $item.set(result);
+        }
 
         return result;
       };
@@ -318,26 +375,18 @@ const scope = ({ api }: SyncScopeConfig) => {
     }) as DocsOf<TDocs> & ListsOf<TLists>;
 
   let unsubscribeReconnect: (() => void) | undefined;
+  let gate: Promise<void> = Promise.resolve();
+  let openEpoch = 0;
 
   const reseed = async () => {
     if (!opened) {
       return;
     }
-    await Promise.all(seeds.map(async seed => seed()));
+    await Promise.allSettled(seeds.map(async seed => seed()));
   };
 
-  const open = async () => {
-    if (opened) {
-      return;
-    }
-    api.open();
-    opened = true;
-    unsubscribes = lives.map(live => live.attach());
-    unsubscribeReconnect = api.onReconnect?.(reseed);
-    await Promise.all(seeds.map(async seed => seed()));
-  };
-
-  const close = () => {
+  const reset = () => {
+    generation += 1;
     opened = false;
     unsubscribeReconnect?.();
     unsubscribeReconnect = undefined;
@@ -348,7 +397,44 @@ const scope = ({ api }: SyncScopeConfig) => {
     for (const clear of clears) {
       clear();
     }
+  };
+
+  const close = () => {
+    openEpoch += 1;
+    reset();
     api.close();
+  };
+
+  const runOpen = () => {
+    if (opened) {
+      close();
+    } else {
+      reset();
+    }
+    api.open();
+    opened = true;
+    unsubscribes = lives.map(live => live.attach());
+    unsubscribeReconnect = api.onReconnect?.(() => {
+      generation += 1;
+      void reseed();
+    });
+    $revision.set($revision() + 1);
+    void reseed();
+  };
+
+  const open = async () => {
+    const previous = gate;
+    const { promise, resolve } = Promise.withResolvers<void>();
+    gate = promise;
+    const epoch = openEpoch;
+    await previous;
+    try {
+      if (epoch === openEpoch) {
+        runOpen();
+      }
+    } finally {
+      resolve();
+    }
   };
 
   const bind = ({ onOpen, session }: { onOpen?: () => void; session: StoreType<boolean> }) => {
@@ -366,7 +452,7 @@ const scope = ({ api }: SyncScopeConfig) => {
     return adopt;
   };
 
-  return { bind, close, docs, list, lists, mirror, open, resources, track };
+  return { $revision, bind, close, docs, list, lists, mirror, open, resources, track };
 };
 
 export type AsDocs<T extends Record<string, unknown>> = { [K in keyof T]: AsDoc<T[K]> };

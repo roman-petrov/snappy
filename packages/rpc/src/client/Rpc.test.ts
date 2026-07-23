@@ -64,6 +64,21 @@ describe(`Rpc`, () => {
     expect(state.clients[0]?.open).not.toHaveBeenCalled();
   });
 
+  it(`stays signed out and closes when initial adopt fails`, async () => {
+    state.clients.length = 0;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+    const api = await connect(contract, {
+      auth: { signedIn: async () => true, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+      onOpen: () => {
+        throw new Error(`onOpen failed`);
+      },
+    });
+
+    expect(api.auth()).toBe(false);
+    expect(state.clients[0]?.close).toHaveBeenCalledWith();
+  });
+
   it(`adopts when signed in and on successful signIn`, async () => {
     state.clients.length = 0;
     const onOpen = vi.fn();
@@ -86,8 +101,21 @@ describe(`Rpc`, () => {
     await api.auth.signIn();
 
     expect(api.auth()).toBe(true);
-    expect(state.clients[0]?.close).toHaveBeenCalledTimes(2);
+    expect(state.clients[0]?.close).toHaveBeenCalledTimes(1);
+    expect(state.clients[0]?.open).toHaveBeenCalledTimes(2);
     expect(onOpen).toHaveBeenCalledTimes(2);
+  });
+
+  it(`closes the probe socket when the session is signed out`, async () => {
+    state.clients.length = 0;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+    await connect(contract, {
+      auth: { signedIn: async () => false, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+    });
+
+    expect(state.clients[0]?.open).not.toHaveBeenCalled();
+    expect(state.clients[0]?.close).toHaveBeenCalledTimes(1);
   });
 
   it(`sync adopts when session becomes true`, async () => {
@@ -105,7 +133,105 @@ describe(`Rpc`, () => {
     await api.auth.sync();
 
     expect(api.auth()).toBe(true);
-    expect(state.clients[0]?.open).toHaveBeenCalledTimes(1);
+    expect(state.clients[0]?.open).toHaveBeenCalledTimes(2);
+  });
+
+  it(`keeps signed out when signOut wins over in-flight sync probe`, async () => {
+    state.clients.length = 0;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+    const gate = Promise.withResolvers<boolean>();
+    const probe = { n: 0 };
+
+    const api = await connect(contract, {
+      auth: {
+        signedIn: async () => {
+          probe.n += 1;
+          if (probe.n === 1) {
+            return false;
+          }
+
+          return gate.promise;
+        },
+        signIn: async () => ({ status: `fail` }),
+        signOut: async () => undefined,
+      },
+    });
+
+    const syncing = api.auth.sync();
+    await api.auth.signOut();
+    gate.resolve(true);
+    await syncing;
+
+    expect(api.auth()).toBe(false);
+    expect(state.clients[0]?.close).toHaveBeenCalledWith();
+  });
+
+  it(`closes the probe socket when sync session read fails`, async () => {
+    state.clients.length = 0;
+    let session = false;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+    const api = await connect(contract, {
+      auth: {
+        signedIn: async () => {
+          if (!session) {
+            return false;
+          }
+          throw new Error(`probe failed`);
+        },
+        signIn: async () => ({ status: `fail` }),
+        signOut: async () => undefined,
+      },
+    });
+
+    const [client] = state.clients;
+    client?.close.mockClear();
+    session = true;
+
+    await api.auth.sync();
+
+    expect(api.auth()).toBe(false);
+    expect(client?.close).toHaveBeenCalledWith();
+  });
+
+  it(`closes the probe socket when sync adopt fails`, async () => {
+    state.clients.length = 0;
+    let session = false;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+    const api = await connect(contract, {
+      auth: { signedIn: async () => session, signIn: async () => ({ status: `fail` }), signOut: async () => undefined },
+      onOpen: () => {
+        throw new Error(`onOpen failed`);
+      },
+    });
+
+    const [client] = state.clients;
+    client?.close.mockClear();
+    session = true;
+
+    await api.auth.sync();
+
+    expect(api.auth()).toBe(false);
+    expect(client?.close).toHaveBeenCalledWith();
+  });
+
+  it(`keeps signed out when signOut wins over in-flight signIn adopt`, async () => {
+    state.clients.length = 0;
+    const contract = Contract.define<Modules>()({ path: `/rpc` });
+    const box: { api?: Awaited<ReturnType<typeof connect>> } = {};
+
+    box.api = await connect(contract, {
+      auth: { signedIn: async () => false, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+      onOpen: () => {
+        void box.api?.auth.signOut();
+      },
+    });
+
+    await box.api.auth.signIn();
+
+    expect(box.api.auth()).toBe(false);
+    expect(state.clients[0]?.close).toHaveBeenCalledWith();
   });
 
   it(`closes the socket before HTTP sign-out`, async () => {
@@ -159,6 +285,25 @@ describe(`Rpc`, () => {
   });
 
   describe(`signIn`, () => {
+    it(`does not reopen when already signed in`, async () => {
+      state.clients.length = 0;
+      const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+      const api = await connect(contract, {
+        auth: { signedIn: async () => true, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+      });
+
+      const [client] = state.clients;
+      client?.open.mockClear();
+      client?.close.mockClear();
+
+      await expect(api.auth.signIn()).resolves.toStrictEqual({ status: `ok` });
+
+      expect(api.auth()).toBe(true);
+      expect(client?.open).not.toHaveBeenCalled();
+      expect(client?.close).not.toHaveBeenCalled();
+    });
+
     it(`adopts without a second session read`, async () => {
       state.clients.length = 0;
       const readSession = vi.fn(async () => false);
@@ -175,6 +320,46 @@ describe(`Rpc`, () => {
       expect(readSession).not.toHaveBeenCalled();
       expect(api.auth()).toBe(true);
       expect(state.clients[0]?.open).toHaveBeenCalledTimes(1);
+    });
+
+    it(`keeps signed out when adopt fails`, async () => {
+      state.clients.length = 0;
+      const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+      const api = await connect(contract, {
+        auth: { signedIn: async () => false, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+      });
+
+      const [client] = state.clients;
+      client?.close.mockClear();
+      client?.open.mockImplementationOnce(() => {
+        throw new Error(`disconnected`);
+      });
+
+      await expect(api.auth.signIn()).rejects.toThrow(`disconnected`);
+
+      expect(api.auth()).toBe(false);
+      expect(client?.close).toHaveBeenCalledWith();
+    });
+
+    it(`adopts again after a failed signIn`, async () => {
+      state.clients.length = 0;
+      const contract = Contract.define<Modules>()({ path: `/rpc` });
+
+      const api = await connect(contract, {
+        auth: { signedIn: async () => false, signIn: async () => ({ status: `ok` }), signOut: async () => undefined },
+      });
+
+      const [client] = state.clients;
+      client?.open.mockImplementationOnce(() => {
+        throw new Error(`disconnected`);
+      });
+
+      await expect(api.auth.signIn()).rejects.toThrow(`disconnected`);
+      await expect(api.auth.signIn()).resolves.toStrictEqual({ status: `ok` });
+
+      expect(api.auth()).toBe(true);
+      expect(client?.open).toHaveBeenCalledTimes(2);
     });
   });
 

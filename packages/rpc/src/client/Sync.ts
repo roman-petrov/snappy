@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/try-complexity */
 /* eslint-disable @typescript-eslint/no-unsafe-type-assertion */
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
@@ -70,7 +71,7 @@ type ListItemOfPage<TPage> = TPage extends { items: (infer Item)[] } ? Item : ne
 
 type ListItemOutOf<T> = T extends { read: (input: never) => Promise<infer Out> } ? Out : never;
 
-type ListLoadInputOf<T> = T extends { load: (input?: infer Input) => Promise<void> } ? Input : undefined;
+type ListLoadInputOf<T> = T extends { load: (input?: infer Input) => Promise<boolean> } ? Input : undefined;
 
 type ListMap = Parameters<ReturnType<typeof CoreSync.scope>[`lists`]>[0];
 
@@ -82,7 +83,7 @@ type ListStore = SyncListMut &
   StoreType<SyncListPage<{ id: string }> | undefined> & {
     $item: StoreType<undefined | { id: string }>;
     append: () => Promise<void>;
-    load: (input?: unknown) => Promise<void>;
+    load: (input?: unknown) => Promise<boolean>;
   };
 
 type ListsWithUseOf<TMap extends ListMap> = { [K in keyof ListsOf<TMap>]: ListWithUse<ListsOf<TMap>[K]> };
@@ -94,13 +95,42 @@ type ListWithUse<T> = AsProps<T> &
   ((input?: ListLoadInputOf<T>) => ListViewOf<T>) &
   ([ListItemInputOf<T>] extends [never] ? object : { item: (input: ListItemInputOf<T>) => ListItemOf<T> });
 
-const watchList = (store: ListStore) => {
+const watchList = (store: ListStore, $revision: StoreType<number>) => {
   let loaded: string | undefined;
   let pending: string | undefined;
   let itemKey: string | undefined;
   let itemPending: string | undefined;
   const { $item, append, create, load, patch, read, remove, subscribe, update } = store;
+  let listEpoch = 0;
+  let itemEpoch = 0;
+  let cleared = false;
 
+  const bump = () => {
+    loaded = undefined;
+    pending = undefined;
+    itemKey = undefined;
+    itemPending = undefined;
+    listEpoch += 1;
+    itemEpoch += 1;
+  };
+  subscribe(() => {
+    if (store() === undefined) {
+      bump();
+      cleared = true;
+    } else if (cleared) {
+      cleared = false;
+      if ($item() === undefined) {
+        itemKey = undefined;
+        itemEpoch += 1;
+      }
+    }
+  });
+  $item.subscribe(() => {
+    if ($item() === undefined) {
+      itemKey = undefined;
+    }
+  });
+  $revision.subscribe(bump);
   const methods = {
     append,
     load,
@@ -112,25 +142,36 @@ const watchList = (store: ListStore) => {
   };
 
   const use = (input?: unknown) => {
+    useSyncExternalStore($revision.subscribe, $revision, $revision);
     const value = useSyncExternalStore(subscribe, store, store);
     const inputKey = input === undefined ? `` : JSON.stringify(input);
-    const stale = value === undefined || loaded !== inputKey;
+    const stale = value === undefined || loaded !== inputKey || (pending !== undefined && pending !== inputKey);
+    const epoch = listEpoch;
 
     useEffect(() => {
       if (stale && pending !== inputKey) {
         pending = inputKey;
+        const started = listEpoch;
         void (async () => {
           try {
-            await load(input);
-            loaded = inputKey;
+            const applied = await load(input);
+            if (started !== listEpoch) {
+              return;
+            }
+            if (applied) {
+              loaded = inputKey;
+              pending = undefined;
+            } else if (store() !== undefined) {
+              pending = undefined;
+            }
           } catch {
-            void 0;
-          } finally {
-            pending = undefined;
+            if (started === listEpoch) {
+              pending = undefined;
+            }
           }
         })();
       }
-    }, [inputKey, stale]);
+    }, [epoch, inputKey, stale]);
 
     const hasMore = value?.hasMore === true;
     const items = value?.items ?? [];
@@ -155,17 +196,21 @@ const watchList = (store: ListStore) => {
       ? {}
       : {
           item: (input: unknown) => {
+            useSyncExternalStore($revision.subscribe, $revision, $revision);
             const value = useSyncExternalStore($item.subscribe, $item, $item);
+            useSyncExternalStore(subscribe, store, store);
             const inputKey = JSON.stringify(input);
             const id = input instanceof Object && `id` in input && _.isString(input.id) ? input.id : undefined;
-            const stale = itemKey !== inputKey;
             const current = value?.id === id ? value : undefined;
+            const stale = current === undefined || itemKey !== inputKey;
+            const epoch = itemEpoch;
 
             useEffect(() => {
               if (!stale || itemPending === inputKey) {
                 return;
               }
               itemPending = inputKey;
+              const started = itemEpoch;
               const cached = id === undefined ? undefined : store()?.items.find(row => row.id === id);
               if (cached !== undefined) {
                 $item.set(cached);
@@ -173,16 +218,22 @@ const watchList = (store: ListStore) => {
                 $item.set(undefined);
               }
               void (async () => {
+                let ok = false;
                 try {
                   await read(input);
-                  itemKey = inputKey;
+                  ok = true;
                 } catch {
                   void 0;
-                } finally {
-                  itemPending = undefined;
                 }
+                if (started !== itemEpoch) {
+                  return;
+                }
+                if (ok) {
+                  itemKey = inputKey;
+                }
+                itemPending = undefined;
               })();
-            }, [inputKey, stale]);
+            }, [epoch, inputKey, stale]);
 
             return update === undefined || id === undefined
               ? current
@@ -215,7 +266,9 @@ const scope = ({
     ) as unknown as DocsOf<TMap>;
 
   const lists = <const TMap extends ListMap>(map: TMap): ListsWithUseOf<TMap> =>
-    wrapMap(sync.lists(map), value => watchList(value as unknown as ListStore)) as unknown as ListsWithUseOf<TMap>;
+    wrapMap(sync.lists(map), value =>
+      watchList(value as unknown as ListStore, sync.$revision),
+    ) as unknown as ListsWithUseOf<TMap>;
 
   const resources = <const TDocs extends Record<string, SyncDocEntry>, const TLists extends ListMap>(config: {
     docs?: TDocs;
