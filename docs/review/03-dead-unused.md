@@ -16,7 +16,8 @@ convention atoms.
 
 ## 🔎 Detect
 
-Load `unused/` per `docs/conventions/README.md`; Detect + `applies` on scoped files; verify call sites.
+Via do MCP `conventions`: `search` `group: unused`, then `get` those ids. Detect + `applies` on scoped files; verify
+call sites.
 
 ## 🔧 Fix
 

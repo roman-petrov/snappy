@@ -4,10 +4,10 @@
 
 **Goal:** Find unused code and convention violations, produce a report, then fix only after the user confirms.
 
-**How to run (summary):** Load conventions (groups below) → build file list → scan files in order → **stop on first file
-with any violation** → for that file only, run all loaded convention Detect checks using **grep/search (do not rely on
-memory)** → build linear report (emoji + where + what + fix) → output and ask; **do not apply fixes until user
-confirms.**
+**How to run (summary):** Load conventions via do MCP `conventions` (groups below) → build file list → scan files in
+order → **stop on first file with any violation** → for that file only, run all loaded convention Detect checks using
+**grep/search (do not rely on memory)** → build linear report (emoji + where + what + fix) → output and ask; **do not
+apply fixes until user confirms.**
 
 ---
 
@@ -15,8 +15,9 @@ confirms.**
 
 ### 1️⃣ Step 1 — Load conventions
 
-- Read `docs/conventions/README.md` for the load protocol and applies filter.
-- Load these groups **in order** (skip `agent/` — not an audit checklist):
+- Use do MCP tool `conventions` only (do not read `docs/conventions/**` from the filesystem).
+- For each group **in order** (skip `agent` — not an audit checklist): `search` with `group`, then `get` the returned
+  ids:
   1. `unused`
   2. `programming`
   3. `typescript`
@@ -25,6 +26,7 @@ confirms.**
   6. `testing`
   7. `eslint`
   8. `markdown`
+- Enforce an atom on a file only when its `applies` matches that path (or is `*`).
 - Do **not** copy convention checklists into this command — the loaded atoms are the only checklist.
 
 ---
@@ -71,7 +73,7 @@ complete the full list of its violations. Do not skip a check because the file "
 - Compose a **user-facing report** as a single linear list of violations. Do **not** list or enumerate convention ids in
   the report.
 - For **each** violation include:
-  - **Emoji** — the atom’s `emoji` field (see `docs/conventions/README.md`).
+  - **Emoji** — the atom’s `emoji` field from the loaded atom.
   - **Where** — file path and location (e.g. line, symbol name).
   - **What is violated** — short description of the problem (no convention id).
   - **What will be fixed** — short, actionable fix (what will be done).

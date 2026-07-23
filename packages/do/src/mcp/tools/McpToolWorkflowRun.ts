@@ -8,10 +8,7 @@ import type { McpTool } from "../Types";
 import { CommandRegistry } from "../../CommandRegistry";
 import { Runner } from "../../Runner";
 
-export const McpToolWorkflowRun: McpTool = server => {
-  const fromEnv = process.env[`MCP_SERVER_ROOT`];
-  const root = fromEnv !== undefined && fromEnv !== `` ? fromEnv : Runner.repoRoot;
-
+export const McpToolWorkflowRun: McpTool = (server, { root }) => {
   const scripts = CommandRegistry.filter(
     command => command.mcp !== false && !(`interactive` in command && command.interactive === true),
   );

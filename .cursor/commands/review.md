@@ -142,9 +142,10 @@ Rules:
 Parse the answer against the report numbers. Unclear → ask again. Explicit decline / nothing to fix → CreatePlan with
 `Исправления не требуются` (and todo `no-fixes-needed`). Otherwise only the chosen items.
 
-Load `docs/conventions/README.md`, then groups in order: `agent`, `unused`, `programming`, `typescript`, `react`, `css`,
-`testing`, `eslint`, `markdown`. Drop any remaining `simplify` item whose fix would violate an applicable atom. Prefer
-small/simple fixes; no convention ids in Находки; no atom paste.
+Load conventions via do MCP tool `conventions` only (not the filesystem): for each group in order — `agent`, `unused`,
+`programming`, `typescript`, `react`, `css`, `testing`, `eslint`, `markdown` — `search` with `group`, then `get` the
+returned ids. Enforce each atom only when `applies` matches the target path (or is `*`). Drop any remaining `simplify`
+item whose fix would violate an applicable atom. Prefer small/simple fixes; no convention ids in Находки; no atom paste.
 
 Call `CreatePlan`:
 

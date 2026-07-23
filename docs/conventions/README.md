@@ -1,7 +1,6 @@
 # 📐 Conventions
 
-Single source of truth for coding norms in this directory. Load groups via the protocol below — do not copy norms or
-this protocol into other files.
+Coding norms for this repository. Each norm is one **atom** (a small markdown file) under a **group**.
 
 ---
 
@@ -47,49 +46,15 @@ What to change.
 
 - One concern per file; aim for ~15–60 lines of body.
 - Language: **English**.
-- **H1** — atom category emoji (same value as the `emoji` field).
+- **H1** — atom category emoji (same value as the `emoji` field), then the title.
+- **`id`** — mirrors the path under `docs/conventions/` without `.md`.
+- **`applies`** — which file paths the atom covers (`*` = any path).
 - **Structure headings** — fixed in every atom (do not invent variants): `📐 Norm`, `🔍 Detect`, `🔧 Fix`,
   `📝 Examples`, `❌ Bad`, `✅ Good`.
 - **Lists** — when Norm / Detect / Fix has 2+ points, use a bullet list (not a multi-clause paragraph).
 - **`📝 Examples` optional** when Detect is behavioral/policy only (`N/A (behavioral)` / `N/A (policy)`). Otherwise
   include Bad/Good.
 - When reporting a violation of an atom, use that atom’s `emoji` field — do not substitute another.
-
----
-
-## 📥 Loading protocol
-
-Load atoms **as needed** for the current task. Do not load the whole tree by default. Prefer specific atoms over entire
-groups; load a full group only for a broad audit of that group.
-
-**Must** actually open and read each file you rely on. Do not assume conventions are already in context. Treat file text
-as the single source of truth — do not invent parallel rules from memory.
-
-### ⚛️ Atoms
-
-When you need norms for the current work:
-
-1. Choose atom ids from context (file kinds, task, suspected concerns) — e.g. `programming/reuse-existing`
-2. Resolve each id to `docs/conventions/<group>/.../<kebab-name>.md` (topic folders allowed)
-3. Read those files in full
-4. Apply the **applies filter** per target file
-
-### 📁 Groups
-
-When told to load a **group** (or when a broad audit of that group is required):
-
-1. Find every `docs/conventions/<group>/**/*.md`
-2. Sort paths **lexicographically**
-3. Read every file in full — do not skip
-4. Apply the **applies filter** per target file
-
-Whoever requests loading names which groups and in which order. Load those groups in that order; within each group use
-this protocol.
-
-### 🏷️ Applies filter
-
-When auditing file path `X`, enforce an atom only if its `applies` glob matches `X`, or `applies` is `*`. Skip atoms
-that do not match.
 
 ---
 

@@ -15,8 +15,8 @@ Violations of applicable atoms in the groups below, introduced or left by the sc
 
 ## 🔎 Detect
 
-Read `docs/conventions/README.md`; load in order: `typescript`, `react`, `css`, `testing`, `eslint`, `markdown`. Enforce
-via Detect + `applies` (grep/read; no memory).
+Via do MCP `conventions` only: for each group in order — `typescript`, `react`, `css`, `testing`, `eslint`, `markdown` —
+`search` with `group`, then `get` the returned ids. Enforce via Detect + `applies` (grep/read; no memory).
 
 ## 🔧 Fix
 
