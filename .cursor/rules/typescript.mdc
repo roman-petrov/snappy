@@ -1,9 +1,0 @@
----
-globs: **/*.ts,**/*.tsx
-alwaysApply: false
----
-
-# 📘 TypeScript
-
-Read `docs/conventions/README.md`, then load group `typescript/` per that README.
-Those files are the single source of truth.

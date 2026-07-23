@@ -1,9 +1,0 @@
----
-globs: **/*.test.ts,**/*.test.tsx
-alwaysApply: false
----
-
-# 🧪 Testing
-
-Read `docs/conventions/README.md`, then load group `testing/` per that README.
-Those files are the single source of truth.

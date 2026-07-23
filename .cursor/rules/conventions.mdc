@@ -1,0 +1,18 @@
+---
+description: Load convention atoms from docs/conventions as needed during work.
+alwaysApply: true
+---
+
+# 📐 Conventions
+
+`docs/conventions/` is the single source of truth for coding norms. Do not copy norms into rules or invent them from
+memory.
+
+During work, load atoms **as needed** — not the whole tree, not every group by default:
+
+1. Read `docs/conventions/README.md` when you need layout, atom format, or the loading protocol.
+2. Choose atoms from the current context: target file kinds (`applies`), task type, and what you are about to write or
+   review.
+3. Prefer specific atoms (or a small set) over entire groups. Load a full group only for a broad audit of that group.
+4. **Must** actually Read each atom you rely on before treating it as binding.
+5. When checking path `X`, enforce an atom only if its `applies` matches `X` (or is `*`).

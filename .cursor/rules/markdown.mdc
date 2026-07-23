@@ -1,9 +1,0 @@
----
-globs: **/*.md,**/*.mdc
-alwaysApply: false
----
-
-# 📝 Markdown
-
-Read `docs/conventions/README.md`, then load group `markdown/` per that README.
-Those files are the single source of truth.

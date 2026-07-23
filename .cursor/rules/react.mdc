@@ -1,9 +1,0 @@
----
-description: Use for React components, hooks, and View/State pattern.
-alwaysApply: false
----
-
-# ⚛️ React
-
-Read `docs/conventions/README.md`, then load group `react/` per that README (includes `react/view-state/`).
-Those files are the single source of truth.

@@ -1,9 +1,0 @@
----
-description: Agent behavior guidelines for every coding session.
-alwaysApply: true
----
-
-# 🤖 Agent
-
-**Must** Read `docs/conventions/README.md`, then load group `agent/` per that README before following these guidelines.
-Do not skip the Read/Glob steps. Those files are the single source of truth.
