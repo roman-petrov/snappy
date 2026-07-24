@@ -108,7 +108,7 @@ export const McpToolColor: McpTool = server => {
   server.registerTool(
     `color`,
     {
-      description: `Color calculations. Set action to parse, set, mix, or contrast; see each field for parameters.`,
+      description: `Color calculations via action: parse, mix, set, or contrast. Parameters are per action — see each field.`,
       inputSchema,
     },
     (input: z.infer<typeof inputSchema>) => ({

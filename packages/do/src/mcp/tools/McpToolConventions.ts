@@ -10,29 +10,31 @@ import { z } from "zod";
 
 import type { McpTool } from "../Types";
 
-type AtomSummary = { applies: string; description: string; emoji: string; id: string };
-
-type IndexedAtom = AtomSummary & { filePath: string };
-
 export const McpToolConventions: McpTool = (server, { root }) => {
+  type AtomSummary = { applies: string; description: string; emoji: string; id: string };
+
+  type IndexedAtom = AtomSummary & { filePath: string };
+
   let cached: IndexedAtom[] | undefined;
 
-  const searchSchema = z.object({
-    action: z.literal(`search`).describe(`List atom summaries (id, applies, description). Do not load full bodies.`),
-    group: z.string().optional().describe(`Filter by group prefix (e.g. typescript, react).`),
+  const inputSchema = z.object({
+    action: z
+      .enum([`search`, `get`])
+      .describe(`search: list atom summaries (id, applies, description). get: load full markdown for ids.`),
+    group: z
+      .string()
+      .optional()
+      .describe(`Optional exact group id (first path segment of atom id). See groups in search response.`),
+    ids: z
+      .array(z.string())
+      .min(1)
+      .optional()
+      .describe(`Required for get. Atom ids chosen from search (e.g. typescript/barrels).`),
     path: z
       .string()
       .optional()
-      .describe(`Repo-relative or absolute file path; keep atoms whose applies matches (or *).`),
-    query: z.string().optional().describe(`Case-insensitive substring match on id and description.`),
+      .describe(`Optional file or directory path; keep atoms whose applies matches that scope (or *).`),
   });
-
-  const getSchema = z.object({
-    action: z.literal(`get`).describe(`Load full markdown for selected atom ids only.`),
-    ids: z.array(z.string()).min(1).describe(`Atom ids from search (e.g. typescript/barrels).`),
-  });
-
-  const inputSchema = z.discriminatedUnion(`action`, [searchSchema, getSchema]);
 
   const loadIndex = async () => {
     if (cached !== undefined) {
@@ -92,8 +94,21 @@ export const McpToolConventions: McpTool = (server, { root }) => {
     return atoms;
   };
 
-  const search = async ({ group, path: filePath, query }: z.infer<typeof searchSchema>) => {
+  const search = async ({ group, path: filePath }: Pick<z.infer<typeof inputSchema>, `group` | `path`>) => {
     const atoms = await loadIndex();
+
+    const groups = [
+      ...new Set(atoms.map(({ id }) => id.split(`/`)[0]).filter(segment => segment !== undefined)),
+    ].toSorted((a, b) => a.localeCompare(b));
+
+    if (group !== undefined && !groups.includes(group)) {
+      return {
+        atoms: [] as AtomSummary[],
+        error: `Unknown group \`${group}\`. Available: ${groups.join(`, `)}.`,
+        groups,
+        ok: false as const,
+      };
+    }
 
     const normalizedPath =
       filePath === undefined
@@ -103,21 +118,21 @@ export const McpToolConventions: McpTool = (server, { root }) => {
             .split(path.sep)
             .join(`/`);
 
-    const needle = query?.trim().toLowerCase();
+    const matchOptions = { dot: true };
 
     const matched = atoms
       .filter(
-        ({ applies, description, id }) =>
+        ({ applies, id }) =>
           (group === undefined || id === group || id.startsWith(`${group}/`)) &&
-          (normalizedPath === undefined || applies === `*` || minimatch(normalizedPath, applies, { dot: true })) &&
-          (needle === undefined ||
-            needle === `` ||
-            id.toLowerCase().includes(needle) ||
-            description.toLowerCase().includes(needle)),
+          (normalizedPath === undefined ||
+            applies === `*` ||
+            minimatch(normalizedPath, applies, matchOptions) ||
+            (path.posix.extname(normalizedPath) === `` &&
+              minimatch(normalizedPath, applies, { ...matchOptions, partial: true }))),
       )
       .map(({ applies, description, emoji, id }) => ({ applies, description, emoji, id }));
 
-    return { atoms: matched, ok: true as const };
+    return { atoms: matched, groups, ok: true as const };
   };
 
   const get = async (ids: string[]) => {
@@ -129,11 +144,7 @@ export const McpToolConventions: McpTool = (server, { root }) => {
         ids.map(async id => {
           const atom = byId.get(id);
 
-          if (atom === undefined) {
-            return undefined;
-          }
-
-          return { content: await File.async.read(atom.filePath), id };
+          return atom === undefined ? undefined : { content: await File.async.read(atom.filePath), id };
         }),
       )
     ).filter(atom => atom !== undefined);
@@ -147,15 +158,23 @@ export const McpToolConventions: McpTool = (server, { root }) => {
     `conventions`,
     {
       description: [
-        `Load coding conventions from docs/conventions with progressive disclosure.`,
-        `Protocol: (1) search for summaries by query/path/group; (2) pick relevant ids; (3) get full atom bodies.`,
-        `Prefer specific atoms over whole groups. Do not read docs/conventions via filesystem tools when this tool is available.`,
+        `List and load coding convention atoms.`,
+        `(1) search with optional path and/or group - returns summaries (id, applies, description) and available groups;`,
+        `(2) pick relevant ids from that list; (3) get full markdown for those ids.`,
+        `Browse the summary list; do not invent free-text queries.`,
+        `Prefer specific atoms over whole groups.`,
         `Enforce an atom on file path X only if its applies matches X or applies is *.`,
       ].join(` `),
       inputSchema,
     },
     async (input: z.infer<typeof inputSchema>) => {
-      const payload = input.action === `search` ? await search(input) : await get(input.ids);
+      const payload =
+        input.action === `get`
+          ? input.ids === undefined
+            ? { error: `ids is required when action is get.`, ok: false as const }
+            : await get(input.ids)
+          : await search(input);
+
       const content = [{ text: JSON.stringify(payload, undefined, 2), type: `text` as const }];
 
       return { content };

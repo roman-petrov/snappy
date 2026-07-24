@@ -23,12 +23,11 @@ export const McpToolWorkflowRun: McpTool = (server, { root }) => {
     `workflow_run`,
     {
       description: [
-        `Run one project script.`,
-        `Pick script by name from the script field (each entry is name: what it does).`,
-        `Use the smallest script that fits the task.`,
-        `Names ending in -fix fix issues; the same name without -fix checks.`,
-        `Composite scripts run steps in order; if a step fails, fix and run again.`,
-        `Long-running scripts start in the background and return at once with local URLs in the response; keep working while they run.`,
+        `Run one monorepo script by name from the script field (each entry is name: what it does).`,
+        `Use the smallest script that fits.`,
+        `Names ending in -fix apply fixes; the same name without -fix only checks.`,
+        `Composite scripts run steps in order; on failure, fix and run again.`,
+        `Long-running scripts start in the background and return immediately with local URLs.`,
       ].join(` `),
       inputSchema,
     },
