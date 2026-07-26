@@ -14,7 +14,7 @@ const { ime, mobile, pageSafe } = vi.hoisted(() => ({
   pageSafe: `page-safe-fixture`,
 }));
 
-vi.mock(`@snappy/browser`, () => ({ Keyboard: { height: ime, safe: pageSafe } }));
+vi.mock(`@snappy/browser`, () => ({ Keyboard: { inset: ime, safe: pageSafe } }));
 
 vi.mock(`@snappy/hooks`, () => ({
   ThemeVar: { ref: (name: string) => `token(${name})` },
