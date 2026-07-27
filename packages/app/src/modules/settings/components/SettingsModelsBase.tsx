@@ -6,7 +6,8 @@ import { SettingsModelsBaseView } from "./SettingsModelsBase.view";
 export type SettingsModelsBaseProps = {
   modelFilter?: (model: AiModelItem) => boolean;
   modelType: AiModelType;
-  settingsField: `llmChatModel` | `llmImageModel` | `llmSpeechRecognitionModel` | `llmVisionModel`;
+  settingsField:
+    `llmChatModel` | `llmImageModel` | `llmSpeechRecognitionModel` | `llmVisionModel` | `llmWebSearchModel`;
   title: string;
 };
 

@@ -1,8 +1,8 @@
 import {
   AgentFeedMessageBadge,
+  AgentFeedMessageDetailStream,
   AgentFeedMessageForm,
   AgentFeedMessageImage,
-  AgentFeedMessageReasoning,
   AgentFeedMessageStream,
   AgentFeedMessageText,
   AgentFeedMessageUser,
@@ -10,9 +10,9 @@ import {
 
 export const AgentFeedRow = {
   badge: AgentFeedMessageBadge,
+  detail: AgentFeedMessageDetailStream,
   form: AgentFeedMessageForm,
   image: AgentFeedMessageImage,
-  reasoning: AgentFeedMessageReasoning,
   stream: AgentFeedMessageStream,
   text: AgentFeedMessageText,
   user: AgentFeedMessageUser,

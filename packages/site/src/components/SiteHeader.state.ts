@@ -29,11 +29,7 @@ export const useSiteHeaderState = () => {
 
   const followSection: MouseEventHandler<HTMLElement> = useCallback(
     event => {
-      if (!(event.target instanceof Element)) {
-        return;
-      }
-
-      const href = event.target.closest(`a[href^="#"], a[href^="/#"]`)?.getAttribute(`href`) ?? ``;
+      const href = Dom.closest(event.target, `a[href^="#"], a[href^="/#"]`)?.getAttribute(`href`) ?? ``;
       const hash = href.startsWith(`/#`) ? href.slice(1) : href;
       if (hash.length === 0) {
         return;

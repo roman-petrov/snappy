@@ -17,6 +17,7 @@ export const UserSettings = (db: Db) => {
     llmImageQuality: z.enum(AiConstants.imageQuality),
     llmSpeechRecognitionModel: z.string(),
     llmVisionModel: z.string(),
+    llmWebSearchModel: z.string(),
     typeWriterSpeed: typeWriterSpeedSchema.optional(),
   }) satisfies z.ZodType<DbSettings>;
 
@@ -37,6 +38,7 @@ export const UserSettings = (db: Db) => {
         input.llmImageQuality === undefined &&
         input.llmImageModel === undefined &&
         input.llmVisionModel === undefined &&
+        input.llmWebSearchModel === undefined &&
         input.llmSpeechRecognitionModel === undefined &&
         input.typeWriterSpeed === undefined
       ) {
@@ -61,6 +63,7 @@ export const UserSettings = (db: Db) => {
         llmImageQuality: input.llmImageQuality ?? current.llmImageQuality,
         llmSpeechRecognitionModel: input.llmSpeechRecognitionModel ?? current.llmSpeechRecognitionModel,
         llmVisionModel: input.llmVisionModel ?? current.llmVisionModel,
+        llmWebSearchModel: input.llmWebSearchModel ?? current.llmWebSearchModel,
         ...(typeWriterSpeed === undefined ? {} : { typeWriterSpeed }),
       });
     }),

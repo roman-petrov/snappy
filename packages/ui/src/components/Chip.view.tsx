@@ -6,11 +6,12 @@ import { Text } from "./Text";
 
 export type ChipViewProps = ReturnType<typeof useChipState>;
 
-export const ChipView = ({ interactive, left, rootCn, tapProps, text, textProps }: ChipViewProps) => {
+export const ChipView = ({ interactive, left, right, rootCn, tapProps, text, textProps }: ChipViewProps) => {
   const content = (
     <>
-      {left === undefined ? undefined : <span className={styles.left}>{left}</span>}
-      <Text {...textProps} text={text} typography="captionSm" />
+      {left === undefined ? undefined : <span className={styles.affix}>{left}</span>}
+      <Text {...textProps} cn={styles.label} text={text} typography="captionSm" />
+      {right === undefined ? undefined : <span className={styles.affix}>{right}</span>}
     </>
   );
 

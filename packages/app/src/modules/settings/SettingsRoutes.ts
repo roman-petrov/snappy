@@ -6,6 +6,7 @@ import {
   SettingsModelsImage,
   SettingsModelsSpeech,
   SettingsModelsVision,
+  SettingsModelsWebSearch,
   SettingsProfile,
   SettingsProfilePassword,
   SettingsTheme,
@@ -20,6 +21,7 @@ export const SettingsRoutes = {
     image: { page: SettingsModelsImage, path: `settings/models/image` },
     speech: { page: SettingsModelsSpeech, path: `settings/models/speech` },
     vision: { page: SettingsModelsVision, path: `settings/models/vision` },
+    webSearch: { page: SettingsModelsWebSearch, path: `settings/models/web-search` },
   },
   profile: {
     password: { page: SettingsProfilePassword, path: `settings/profile/password` },

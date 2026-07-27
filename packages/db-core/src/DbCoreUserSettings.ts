@@ -15,6 +15,7 @@ export type DbCoreSettings = {
   llmImageQuality: AiImageQuality;
   llmSpeechRecognitionModel: string;
   llmVisionModel: string;
+  llmWebSearchModel: string;
   typeWriterSpeed?: TypeWriterSpeed;
 };
 
@@ -42,6 +43,7 @@ export const DbCoreUserSettings = DbCoreLive<DbCoreSettings>()(({ emit, prisma, 
     llmImageQuality: imageQuality(DbCoreConvert.optional(row?.llmImageQuality)),
     llmSpeechRecognitionModel: or(row?.llmSpeechRecognitionModel, AiModels.fallback.speechRecognition.name),
     llmVisionModel: or(row?.llmVisionModel, AiModels.fallback.vision.name),
+    llmWebSearchModel: or(row?.llmWebSearchModel, AiModels.fallback.webSearch.name),
     typeWriterSpeed: typeWriterSpeed(DbCoreConvert.optional(row?.typeWriterSpeed)),
   });
 

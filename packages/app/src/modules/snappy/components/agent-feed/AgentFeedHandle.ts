@@ -154,6 +154,15 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
       case `artifact`: {
         return artifactRow(key, entry);
       }
+      case `detail`: {
+        return createElement(AgentFeedRow.detail, {
+          done: entry.done,
+          key,
+          onComplete: () => entry.streamDone.resolve(),
+          stream: entry.stream,
+          text: entry.text,
+        });
+      }
       case `form`: {
         if (`answers` in entry) {
           return createElement(AgentFeedRow.form, { answers: entry.answers, key, plan: entry.plan });
@@ -163,14 +172,6 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
           key,
           onSubmit: value => entry.done.resolve(value),
           plan: entry.plan,
-        });
-      }
-      case `reasoning`: {
-        return createElement(AgentFeedRow.reasoning, {
-          key,
-          onComplete: () => entry.done.resolve(),
-          stream: entry.stream,
-          typeWriterSpeed,
         });
       }
       case `status`: {
@@ -196,13 +197,11 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
 
   const rows = (items: AgentFeedItem[]) => items.map(row);
 
-  const appendStream = async (source: AsyncIterable<string>, type: `reasoning` | `stream`) => {
+  const appendChatStream: AgentFeedRuntime[`appendChatStream`] = async source => {
     const done = Promise.withResolvers<void>();
-    addEntry({ done, stream: source, type });
+    addEntry({ done, stream: source, type: `stream` });
     await done.promise.catch(_.noop);
   };
-
-  const appendChatStream: AgentFeedRuntime[`appendChatStream`] = async source => appendStream(source, `stream`);
 
   const appendChatText: AgentFeedRuntime[`appendChatText`] = async text => {
     const chunks = async function* chunks() {
@@ -212,14 +211,22 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
     await appendChatStream(chunks());
   };
 
-  const appendReasoningStream: AgentFeedRuntime[`appendReasoningStream`] = async source =>
-    appendStream(source, `reasoning`);
+  const appendDetailStream: AgentFeedRuntime[`appendDetailStream`] = async ({ completed, running, stream }) => {
+    const done = Promise.withResolvers<AgentFeedBadgeLabel>();
+    const streamDone = Promise.withResolvers<void>();
+    addEntry({ done, stream, streamDone, text: running, type: `detail` });
+    await streamDone.promise.catch(_.noop);
+    done.resolve({ label: completed });
+  };
 
   const reset = () => {
     commit(previous => {
       for (const { entry } of previous) {
         if (`done` in entry) {
           entry.done.reject();
+        }
+        if (entry.type === `detail`) {
+          entry.streamDone.reject();
         }
       }
 
@@ -238,7 +245,7 @@ export const AgentFeedHandle = ({ commit, typeWriterSpeed }: AgentFeedHandleConf
   return {
     appendChatStream,
     appendChatText,
-    appendReasoningStream,
+    appendDetailStream,
     appendStatus,
     appendToolBadge,
     appendUserText,

@@ -19,6 +19,7 @@ export type AgentAiModels = {
   imageQuality: AiImageQuality;
   speech: AiSpeechModel;
   vision: AiChatModel;
+  webSearch: AiChatModel;
 };
 
 export type AgentAsk = <TPlan extends StaticFormPlan>(plan: TPlan) => Promise<StaticFormAnswersOf<TPlan>>;
@@ -27,10 +28,12 @@ export type AgentEntry = (locale: Locale) => { meta: AgentInfo; module: AgentMod
 
 export type AgentFeedArtifactResult = { artifactId: string; content: string };
 
+export type AgentFeedDetailStream = { completed: string; running: string; stream: AsyncIterable<string> };
+
 export type AgentFeedRuntime = {
   appendChatStream: (stream: AsyncIterable<string>) => Promise<void>;
   appendChatText: (text: string) => Promise<void>;
-  appendReasoningStream: (stream: AsyncIterable<string>) => Promise<void>;
+  appendDetailStream: (input: AgentFeedDetailStream) => Promise<void>;
   appendStatus: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;
   appendToolBadge: (text: string, done: PromiseWithResolvers<{ label: string }>) => number;
   appendUserText: (text: string) => number;

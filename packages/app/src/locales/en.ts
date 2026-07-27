@@ -162,6 +162,7 @@ export const en = {
       },
       speech: { title: `Speech recognition` },
       vision: { title: `Vision` },
+      webSearch: { title: `Web search` },
     },
     modelsGroup: `Models`,
     profile: {

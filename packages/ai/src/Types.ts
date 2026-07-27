@@ -19,7 +19,10 @@ export type AiChatCompletionSession = {
   stream: (stop?: AiSessionStop) => AiChatStream;
 };
 
-export type AiChatCompletionsInput = (AiChatInput | { prompt: string }) & { reasoningEffort?: AiReasoningEffort };
+export type AiChatCompletionsInput = (AiChatInput | { prompt: string }) & {
+  reasoningEffort?: AiReasoningEffort;
+  webSearch?: AiWebSearch | boolean;
+};
 
 export type AiChatInput = { messages: AiChatMessage[]; toolChoice?: AiChatToolChoice; tools?: AiToolSet };
 
@@ -73,7 +76,7 @@ export type AiImageSize = (typeof AiConstants.imageSizePreset)[keyof typeof AiCo
 
 export type AiModality = `audio` | `embeddings` | `image` | `text`;
 
-export type AiModelCapabilities = { input: readonly AiModality[]; output: readonly AiModality[] };
+export type AiModelCapabilities = { input: readonly AiModality[]; output: readonly AiModality[]; webSearch?: boolean };
 
 export type AiModelCost = `high` | `low` | `medium`;
 
@@ -108,6 +111,8 @@ export type AiToolInput<T extends AiTool> = T extends AiTool<infer INPUT> ? INPU
 export type AiToolRunResult = string | { context?: readonly AiContentPart[]; tool: string } | { error: string };
 
 export type AiToolSet = Record<string, AiTool>;
+
+export type AiWebSearch = { contextSize?: `high` | `low` | `medium`; maxResults?: number; maxUses?: number };
 
 export type ImageEditOptions = {
   background?: AiImageBackground;

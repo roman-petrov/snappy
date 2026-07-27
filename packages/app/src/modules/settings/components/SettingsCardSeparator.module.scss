@@ -1,7 +1,0 @@
-@use "pkg:@snappy/theme/tokens/color";
-@use "pkg:@snappy/theme/tokens/space";
-
-.separator {
-  height: 1px;
-  border-top: 1px solid color.outline();
-}

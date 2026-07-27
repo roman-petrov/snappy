@@ -19,6 +19,7 @@ const { dataState } = vi.hoisted(
       llmImageQuality: `standard`,
       llmSpeechRecognitionModel: ``,
       llmVisionModel: ``,
+      llmWebSearchModel: ``,
       typeWriterSpeed: undefined,
     } satisfies UserSettings;
 

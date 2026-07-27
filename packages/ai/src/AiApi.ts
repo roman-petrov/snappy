@@ -1,3 +1,4 @@
+// cspell:word aitunnel
 /* eslint-disable @typescript-eslint/naming-convention */
 export type AiApiAssistantMessage = {
   content: null | string;
@@ -8,20 +9,27 @@ export type AiApiAssistantMessage = {
 
 export type AiApiContentPart = { image_url: { url: string }; type: `image_url` } | { text: string; type: `text` };
 
+export type AiApiFunctionTool = {
+  function: { description: string; name: string; parameters: Record<string, unknown> };
+  type: `function`;
+};
+
 export type AiApiMessage =
   | AiApiAssistantMessage
   | { content: AiApiContentPart[] | string; role: `user` }
   | { content: string; role: `system` }
   | { content: string; role: `tool`; tool_call_id: string };
 
-export type AiApiTool = {
-  function: { description: string; name: string; parameters: Record<string, unknown> };
-  type: `function`;
-};
+export type AiApiTool = AiApiFunctionTool | AiApiWebSearchTool;
 
 export type AiApiToolCall = { function: { arguments: string; name: string }; id: string; type: `function` };
 
 export type AiApiToolChoice = `auto` | `none` | { function: { name: string }; type: `function` };
+
+export type AiApiWebSearchTool = {
+  parameters?: { max_results?: number; max_uses?: number; search_context_size?: `high` | `low` | `medium` };
+  type: `aitunnel:web_search`;
+};
 
 export type AiChatCompletionBody = {
   max_tokens?: number;

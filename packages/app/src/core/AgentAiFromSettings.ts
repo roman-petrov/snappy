@@ -20,6 +20,7 @@ export const AgentAiFromSettings = (settings: UserSettings): AgentAiConfig => {
       imageQuality: settings.llmImageQuality,
       speech: ai.speech(settings.llmSpeechRecognitionModel),
       vision: ai.vision(settings.llmVisionModel),
+      webSearch: ai.webSearch(settings.llmWebSearchModel),
     },
   };
 };

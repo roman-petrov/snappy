@@ -14,6 +14,7 @@ export type ChipProps = Omit<TapProps, `children` | `cn` | `vibrate`> &
     color: ChipColor;
     flat?: boolean;
     left?: ReactNode;
+    right?: ReactNode;
     text: string;
     tile?: boolean;
   };

@@ -56,7 +56,7 @@ const init = (input: readonly MetricsProvider[], runtime: RouterRuntime, signedI
       document,
       `click`,
       ({ target }) => {
-        const name = target instanceof Element ? target.closest(tagSelector)?.getAttribute(`tag`) : undefined;
+        const name = Dom.closest(target, tagSelector)?.getAttribute(`tag`);
 
         if (!_.isString(name) || name === ``) {
           return;

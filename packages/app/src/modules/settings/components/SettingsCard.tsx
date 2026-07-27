@@ -7,18 +7,18 @@ import styles from "./SettingsCard.module.scss";
 
 export type SettingsCardProps = CardProps & { form?: boolean; lead?: string; title?: ReactNode };
 
-export const SettingsCard = ({ children, cn, form = false, lead, title, ...props }: SettingsCardProps) => (
-  <Card
-    {...props}
-    cn={_.cn(styles.block, (title !== undefined || lead !== undefined) && styles.withHeader, form && styles.form, cn)}
-  >
-    {title !== undefined &&
-      (_.isString(title) ? (
-        <Text cn={styles.header} text={title} typography="bodyBold" />
-      ) : (
-        <div className={styles.header}>{title}</div>
-      ))}
-    {lead !== undefined && <Text cn={styles.header} text={lead} typography="bodySm" />}
-    {children}
-  </Card>
-);
+export const SettingsCard = ({ children, cn, form = false, lead, title, ...props }: SettingsCardProps) => {
+  const hasHeader = title !== undefined || lead !== undefined;
+
+  return (
+    <Card {...props} cn={_.cn(styles.block, hasHeader && styles.withHeader, form && styles.form, cn)}>
+      {hasHeader ? (
+        <div className={styles.header}>
+          {title === undefined ? undefined : _.isString(title) ? <Text text={title} typography="bodyBold" /> : title}
+          {lead === undefined ? undefined : <Text text={lead} typography="bodySm" />}
+        </div>
+      ) : undefined}
+      {children}
+    </Card>
+  );
+};

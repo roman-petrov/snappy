@@ -10,7 +10,7 @@ $-transition: animation.settle-md();
 
   .summary {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     cursor: pointer;
     list-style: none;
 
@@ -23,9 +23,12 @@ $-transition: animation.settle-md();
     transition: transform $-transition;
   }
 
+  .body {
+    padding-block-start: space.sm();
+  }
+
   &::details-content {
     height: 0;
-    padding-block-start: space.sm();
     overflow: clip;
     transition:
       height $-transition,
@@ -39,6 +42,7 @@ $-transition: animation.settle-md();
 
     &::details-content {
       height: auto;
+      overflow: visible;
     }
   }
 }

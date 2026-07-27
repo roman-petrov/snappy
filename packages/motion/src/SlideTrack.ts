@@ -459,9 +459,7 @@ export const SlideTrack = ({
 
     peak = Vector.from(0, 0);
     pressArmed = true;
-    skipFlick =
-      target instanceof Element &&
-      target.closest(`input,textarea,select,button,a,[contenteditable],[role="button"]`) !== null;
+    skipFlick = Dom.closest(target, `input,textarea,select,button,a,[contenteditable],[role="button"]`) !== undefined;
     pressOrigin = Vector.from(touch.clientX, touch.clientY);
     started = timeStamp;
     velocityTrack = [{ t: timeStamp, x: touch.clientX }];

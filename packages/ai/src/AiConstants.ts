@@ -18,7 +18,11 @@ const imageAspectRatioExtended = [`1:4`, `4:1`, `1:8`, `8:1`] as const;
 const imageResolution = [`0.5K`, `1K`, `2K`, `4K`] as const;
 
 export const AiConstants = {
-  defaults: { imageQuality: `low`, imageSize: `1024x1024` },
+  defaults: {
+    imageQuality: `low`,
+    imageSize: `1024x1024`,
+    webSearch: { contextSize: `medium`, maxResults: 5, maxUses: 3 },
+  },
   imageAspectRatio,
   imageAspectRatioExtended,
   imageConfigPreset: {

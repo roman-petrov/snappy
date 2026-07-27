@@ -1231,6 +1231,7 @@ export const UserSettingsScalarFieldEnum = {
   llmImageModel: 'llmImageModel',
   llmImageQuality: 'llmImageQuality',
   llmVisionModel: 'llmVisionModel',
+  llmWebSearchModel: 'llmWebSearchModel',
   llmSpeechRecognitionModel: 'llmSpeechRecognitionModel',
   aiTunnelKey: 'aiTunnelKey',
   aiTunnelDirect: 'aiTunnelDirect',

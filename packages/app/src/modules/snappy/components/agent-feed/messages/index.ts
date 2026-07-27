@@ -1,10 +1,10 @@
 export * from "./AgentFeedMessageBadge";
 
+export * from "./AgentFeedMessageDetailStream";
+
 export * from "./AgentFeedMessageForm";
 
 export * from "./AgentFeedMessageImage";
-
-export * from "./AgentFeedMessageReasoning";
 
 export * from "./AgentFeedMessageStream";
 

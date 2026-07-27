@@ -7,7 +7,7 @@ import type { useSettingsProfileState } from "./SettingsProfile.state";
 import { AppTags } from "../../../../AppTags";
 import { t } from "../../../../core";
 import { Routes } from "../../../../Routes";
-import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator } from "../../components";
+import { SettingsCard, SettingsCardRow, SettingsCards } from "../../components";
 
 export type SettingsProfileViewProps = ReturnType<typeof useSettingsProfileState>;
 
@@ -21,7 +21,6 @@ export const SettingsProfileView = ({ balance, email, signOut }: SettingsProfile
           icon={<FilledIcon color="accentPink" icon={Mail} />}
           text={t(`settings.profile.email`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={balance === undefined ? undefined : i.price(balance.balance)}
           icon={<FilledIcon color="accentOrange" icon={CreditCard} />}
@@ -29,7 +28,6 @@ export const SettingsProfileView = ({ balance, email, signOut }: SettingsProfile
           tag={AppTags.billing.topUp.open}
           text={t(`settings.profile.balance`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           icon={<FilledIcon color="accentViolet" icon={KeyRound} />}
           link={Routes.settings.profile.password}

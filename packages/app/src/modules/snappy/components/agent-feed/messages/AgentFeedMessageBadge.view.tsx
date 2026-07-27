@@ -8,7 +8,7 @@ export const AgentFeedMessageBadgeView = ({ hideOnSuccess, message, status }: Ag
   hideOnSuccess && status === `done` ? undefined : (
     <Chip
       color={status === `running` ? `primary` : status === `done` ? `success` : `error`}
-      left={status === `running` ? <Spinner /> : undefined}
-      text={status === `done` ? `✅ ${message}` : status === `error` ? `❌ ${message}` : message}
+      left={status === `running` ? <Spinner /> : status === `done` ? `✅` : `❌`}
+      text={message}
     />
   );

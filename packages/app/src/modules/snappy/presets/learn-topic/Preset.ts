@@ -15,7 +15,7 @@ export const preset: Preset = {
         `I want to learn something new — I'll name the topic and my level.`,
         `Хочу изучить новое — назову тему и уровень.`,
       ],
-      tools: [`ask`, `date-time`, `publish-text`],
+      tools: [`ask`, `date-time`, `publish-text`, `web-search`],
     }),
     Flow.staticText(meta, {
       fields: ({ form, i18n }) =>

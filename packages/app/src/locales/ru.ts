@@ -177,6 +177,7 @@ export const ru = {
       },
       speech: { title: `Распознавание речи` },
       vision: { title: `Зрение` },
+      webSearch: { title: `Веб-поиск` },
     },
     modelsGroup: `Модели`,
     profile: {

@@ -1,8 +1,9 @@
 /* eslint-disable functional/no-expression-statements */
-import type { Locale } from "@snappy/intl";
+import type { AiChatCompletionsInput } from "@snappy/ai";
 
 import { Agent } from "@snappy/agent";
 import { _ } from "@snappy/core";
+import { Bilingual, type Locale } from "@snappy/intl";
 import { type SkillId, Skills } from "@snappy/snappy-skills";
 
 import type { SnappyToolId } from "./SnappyToolId";
@@ -25,9 +26,18 @@ export const SnappyAgent = ({ aiConfig, feed, locale, setup }: SnappyAgentConfig
   const skills = Skill.parse(Skills);
   const files: Record<string, File> = {};
   const media: Record<string, string> = {};
+  const searchEnabled = setup === undefined || setup.tools.includes(`web-search`);
+  const seamless = searchEnabled && aiConfig.models.chat.capabilities.webSearch === true;
   const base = System.prompt(locale, setup === undefined);
   const skill = setup?.skill === undefined ? undefined : skills.find(entry => entry.id === setup.skill)?.content;
   const systemPrompt = skill === undefined ? base : [...base, [`skill_${setup?.skill ?? ``}`, skill] as const];
+
+  const chatModel = seamless
+    ? {
+        ...aiConfig.models.chat,
+        completions: (input: AiChatCompletionsInput) => aiConfig.models.chat.completions({ ...input, webSearch: true }),
+      }
+    : aiConfig.models.chat;
 
   const toolList =
     setup === undefined
@@ -35,7 +45,7 @@ export const SnappyAgent = ({ aiConfig, feed, locale, setup }: SnappyAgentConfig
       : setup.tools.flatMap(toolId => (tools[toolId] === undefined ? [] : [[toolId, tools[toolId]] as const]));
 
   const agent = Agent({
-    chatModel: aiConfig.models.chat,
+    chatModel,
     idleAfterSuccess: true,
     locale,
     maxRounds: 32,
@@ -55,7 +65,12 @@ export const SnappyAgent = ({ aiConfig, feed, locale, setup }: SnappyAgentConfig
     feed.appendUserText(content);
     const agentRun = agent.start([{ content, role: `user` }], {
       chatStream: async stream => feed.appendChatStream(stream),
-      reasoningStream: async stream => feed.appendReasoningStream(stream),
+      reasoningStream: async stream =>
+        feed.appendDetailStream({
+          completed: Bilingual.pick(locale, [`Thought`, `Мысль`]),
+          running: Bilingual.pick(locale, [`Thinking...`, `Думаю...`]),
+          stream,
+        }),
       thinking: (label, done) => feed.appendStatus(label, done),
       tool: part => {
         if (part.label.trim() !== ``) {

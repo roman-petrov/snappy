@@ -14,6 +14,7 @@ export const useChipState = ({
   left,
   link,
   onClick,
+  right,
   submit,
   text,
   tile = false,
@@ -53,5 +54,5 @@ export const useChipState = ({
     ? { disabled, keepFocus, link, onClick, submit, tip, vibrate: `segmentTick` as const }
     : undefined;
 
-  return { interactive, left, rootCn, tapProps, text, textProps };
+  return { interactive, left, right, rootCn, tapProps, text, textProps };
 };

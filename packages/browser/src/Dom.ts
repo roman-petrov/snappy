@@ -59,4 +59,7 @@ const each = (elements: readonly HTMLElement[], apply: (element: HTMLElement) =>
   }
 };
 
-export const Dom = { each, size, subscribe, subscribeOnce, tag, watchSize };
+const closest = (target: EventTarget | null | undefined, selector: string) =>
+  target instanceof Element ? (target.closest(selector) ?? undefined) : undefined;
+
+export const Dom = { closest, each, size, subscribe, subscribeOnce, tag, watchSize };

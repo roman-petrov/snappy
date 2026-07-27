@@ -2,7 +2,7 @@
 import { ModelChat } from "../../core-model";
 
 export const AiModelGemini31ProPreview = ModelChat({
-  capabilities: { input: [`text`, `image`, `audio`], output: [`text`] },
+  capabilities: { input: [`text`, `image`, `audio`], output: [`text`], webSearch: true },
   cost: `medium`,
   name: `gemini-3.1-pro-preview`,
 });

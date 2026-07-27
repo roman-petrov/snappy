@@ -20,6 +20,7 @@ const fallback = {
   image: AiModelGptImage1Mini,
   speechRecognition: AiModelGpt4oMiniTranscribe,
   vision: AiModelGemini35Flash,
+  webSearch: AiModelGemini35Flash,
 } as const;
 
 export const AiModels = { fallback, items };

@@ -4,10 +4,11 @@
 .row {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: space.sm();
+  gap: space.md();
   align-items: center;
   width: 100%;
-  height: calc(#{tokens.field-height()} + #{space.md()});
+  min-height: tokens.field-height();
+  padding-block: space.sm();
   padding-inline: space.md();
   text-align: left;
 }

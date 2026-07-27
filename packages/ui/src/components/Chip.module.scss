@@ -8,25 +8,22 @@
 
 $-height: r(32);
 $-half-height: calc(#{$-height} / 2);
+$-pad-block: space.xs();
 
 .root {
   @include focus($radius: $-half-height);
   @include elevation.e1;
 
   display: inline-flex;
-  flex-wrap: wrap;
   gap: space.xs();
   align-items: center;
   align-self: flex-start;
-  justify-content: center;
   width: fit-content;
   max-width: 100%;
   min-height: $-height;
-  padding-block: calc((#{$-height} - #{icon-size.md()}) / 2);
+  padding-block: $-pad-block;
   padding-inline: space.sm();
-  vertical-align: middle;
-  text-align: center;
-  white-space: normal;
+  text-align: start;
   border-radius: $-half-height;
 
   &.flat {
@@ -44,13 +41,21 @@ $-half-height: calc(#{$-height} / 2);
   }
 }
 
-.left {
+.affix {
   @include primitives.square(icon-size.md());
 
   display: inline-flex;
-  flex: 0 0 auto;
+  flex: none;
   align-items: center;
+  align-self: center;
   justify-content: center;
+}
+
+.label {
+  flex: 1 1 auto;
+  align-self: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .interactive {

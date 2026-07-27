@@ -24,10 +24,15 @@ export type AgentFeedBadgeLabel = { label: string };
 
 export type AgentFeedEntry =
   | AgentFeedArtifactEntry
+  | (AgentFeedEntryDone<AgentFeedBadgeLabel> & {
+      stream: AsyncIterable<string>;
+      streamDone: PromiseWithResolvers<void>;
+      text: string;
+      type: `detail`;
+    })
   | (AgentFeedEntryDone<AgentFeedBadgeLabel> & { text: string; type: `status` })
   | (AgentFeedEntryDone<AgentFeedBadgeLabel> & { text: string; type: `tool-badge` })
   | (AgentFeedEntryDone<StaticFormAnswers> & { plan: StaticFormPlan; type: `form` })
-  | (AgentFeedEntryDone<void> & { stream: AsyncIterable<string>; type: `reasoning` })
   | (AgentFeedEntryDone<void> & { stream: AsyncIterable<string>; type: `stream` })
   | { answers: StaticFormAnswers; plan: StaticFormPlan; type: `form` }
   | { text: string; type: `user` };

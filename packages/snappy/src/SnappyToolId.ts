@@ -7,6 +7,7 @@ export const SnappyToolId = [
   `publish-text`,
   `skill`,
   `transcribe-audio`,
+  `web-search`,
 ] as const;
 
 export type SnappyToolId = (typeof SnappyToolId)[number];

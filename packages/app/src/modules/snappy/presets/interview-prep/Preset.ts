@@ -15,7 +15,7 @@ export const preset: Preset = {
         `I have an interview coming up — I'll share the role and my background.`,
         `Скоро интервью — расскажу о роли и своём опыте.`,
       ],
-      tools: [`ask`, `date-time`, `publish-text`],
+      tools: [`ask`, `date-time`, `publish-text`, `web-search`],
     }),
     Flow.staticText(meta, {
       fields: ({ form, i18n }) =>

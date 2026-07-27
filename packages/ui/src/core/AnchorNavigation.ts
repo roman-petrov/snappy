@@ -1,3 +1,5 @@
+import { Dom } from "@snappy/browser";
+
 type RouteAt = (pathname: string) => unknown;
 
 const base = (root: string) => (root === `/` ? `` : root.endsWith(`/`) ? root.slice(0, -1) : root);
@@ -14,7 +16,7 @@ const fromClick = (event: MouseEvent, prefix: string, routeAt: RouteAt) => {
     return undefined;
   }
 
-  const anchor = event.target instanceof Element ? event.target.closest(`a`) : undefined;
+  const anchor = Dom.closest(event.target, `a`);
   if (!(anchor instanceof HTMLAnchorElement)) {
     return undefined;
   }

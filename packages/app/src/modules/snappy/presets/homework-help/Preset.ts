@@ -15,7 +15,7 @@ export const preset: Preset = {
         `I have a homework problem in a photo — I need step-by-step help.`,
         `Есть задача на фото — нужна пошаговая помощь.`,
       ],
-      tools: [`ask`, `date-time`, `look-image`, `publish-text`],
+      tools: [`ask`, `date-time`, `look-image`, `publish-text`, `web-search`],
     }),
     Flow.staticVision(meta, {
       fields: ({ form, i18n }) =>

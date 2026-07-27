@@ -22,6 +22,9 @@ export const useContextMenuState = ({ children, elementRef }: ContextMenuProps) 
 
     if (mobile) {
       const onClick = (event: MouseEvent) => {
+        if (Dom.closest(event.target, `a[href]`) !== undefined) {
+          return;
+        }
         openAt(event);
       };
 

@@ -1,6 +1,7 @@
 /* eslint-disable functional/no-expression-statements */
 import { AgentTool } from "@snappy/agent";
 import { AiVision } from "@snappy/ai";
+import { Bilingual } from "@snappy/intl";
 import { z } from "zod";
 
 import type { SnappyToolFactory } from "../SnappyTypes";
@@ -35,7 +36,11 @@ export const LookImageTool: SnappyToolFactory = ({ config, feed, isStopped, loca
           }
 
           const session = AiVision.completions(config.models.vision, { prompt, system: System.language(locale), url });
-          await feed.appendChatStream(session.chatText(isStopped));
+          await feed.appendDetailStream({
+            completed: Bilingual.pick(locale, [`Examined the image`, `Изучил изображение`]),
+            running: Bilingual.pick(locale, [`Examining the image...`, `Изучаю изображение...`]),
+            stream: session.chatText(isStopped),
+          });
           if (isStopped()) {
             return ``;
           }

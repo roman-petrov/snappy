@@ -15,7 +15,7 @@ export const preset: Preset = {
         `I need creative ideas — I'll describe the topic and constraints.`,
         `Нужны идеи — опишу тему и ограничения.`,
       ],
-      tools: [`ask`, `date-time`, `publish-text`],
+      tools: [`ask`, `date-time`, `publish-text`, `web-search`],
     }),
     Flow.staticText(meta, {
       fields: ({ form, i18n }) =>

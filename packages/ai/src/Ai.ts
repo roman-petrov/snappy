@@ -14,6 +14,7 @@ export type AiDefaults = {
   image: AiImageModel;
   speech: AiSpeechModel;
   vision: AiChatModel;
+  webSearch: AiChatModel;
 };
 
 export type AiKeyPart = { aiTunnelKey: string };
@@ -43,6 +44,7 @@ export const Ai = (options: AiOptions) => {
     image: fallback.image.of(http),
     speech: fallback.speechRecognition.of(http),
     vision: fallback.vision.of(http),
+    webSearch: fallback.webSearch.of(http),
   };
 
   return {
@@ -52,6 +54,7 @@ export const Ai = (options: AiOptions) => {
     image: bind<AiImageModel>(AiModelImageCatalog, fallback.image, http),
     speech: bind<AiSpeechModel>(AiModelSpeechCatalog, fallback.speechRecognition, http),
     vision: bind<AiChatModel>(AiModelChatCatalog, fallback.vision, http),
+    webSearch: bind<AiChatModel>(AiModelChatCatalog, fallback.webSearch, http),
   };
 };
 

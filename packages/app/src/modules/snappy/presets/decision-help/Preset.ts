@@ -15,7 +15,7 @@ export const preset: Preset = {
         `I'm choosing between options — I'll describe the decision.`,
         `Выбираю между вариантами — опишу решение.`,
       ],
-      tools: [`ask`, `date-time`, `publish-text`],
+      tools: [`ask`, `date-time`, `publish-text`, `web-search`],
     }),
     Flow.staticText(meta, {
       fields: ({ form, i18n }) =>

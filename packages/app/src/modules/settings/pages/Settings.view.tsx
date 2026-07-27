@@ -1,12 +1,12 @@
 import { FilledIcon, Page } from "@snappy/ui";
-import { Eye, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
+import { Eye, Globe, Image, KeyRound, Languages, MessageCircle, Mic, Palette, Type, User } from "lucide-react";
 
 import type { useSettingsState } from "./Settings.state";
 
 import { TabHeaderContent } from "../../../components";
 import { t } from "../../../core";
 import { Routes } from "../../../Routes";
-import { SettingsCard, SettingsCardRow, SettingsCards, SettingsCardSeparator, SettingsFeedback } from "../components";
+import { SettingsCard, SettingsCardRow, SettingsCards, SettingsFeedback } from "../components";
 
 export type SettingsViewProps = ReturnType<typeof useSettingsState>;
 
@@ -17,6 +17,7 @@ export const SettingsView = ({
   llmImageEnd,
   llmSpeechEnd,
   llmVisionEnd,
+  llmWebSearchEnd,
   locale,
   theme,
   typeWriterSpeed,
@@ -30,7 +31,6 @@ export const SettingsView = ({
           link={Routes.settings.profile.root}
           text={t(`settings.profile.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsFeedback />
       </SettingsCard>
       <SettingsCard title={t(`settings.systemGroup`)}>
@@ -40,14 +40,12 @@ export const SettingsView = ({
           link={Routes.settings.theme}
           text={t(`settings.theme.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.language.${locale}`)}
           icon={<FilledIcon color="accentPink" icon={Languages} />}
           link={Routes.settings.language}
           text={t(`settings.language.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={t(`settings.typeWriterSpeed.${typeWriterSpeed ?? `stream`}`)}
           icon={<FilledIcon color="accentPlum" icon={Type} />}
@@ -66,28 +64,30 @@ export const SettingsView = ({
           link={Routes.settings.aiTunnel}
           text={t(`settings.aiTunnel.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmChatEnd}
           icon={<FilledIcon color="accentIndigo" icon={MessageCircle} />}
           link={Routes.settings.models.chat}
           text={t(`settings.models.chat.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmImageEnd}
           icon={<FilledIcon color="accentOrange" icon={Image} />}
           link={Routes.settings.models.image}
           text={t(`settings.models.image.title`)}
         />
-        <SettingsCardSeparator />
         <SettingsCardRow
           bottom={llmVisionEnd}
           icon={<FilledIcon color="accentViolet" icon={Eye} />}
           link={Routes.settings.models.vision}
           text={t(`settings.models.vision.title`)}
         />
-        <SettingsCardSeparator />
+        <SettingsCardRow
+          bottom={llmWebSearchEnd}
+          icon={<FilledIcon color="accentPurple" icon={Globe} />}
+          link={Routes.settings.models.webSearch}
+          text={t(`settings.models.webSearch.title`)}
+        />
         <SettingsCardRow
           bottom={llmSpeechEnd}
           icon={<FilledIcon color="accentFuchsia" icon={Mic} />}

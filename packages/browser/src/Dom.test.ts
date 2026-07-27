@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { Dom } from "./Dom";
 
-const { each, size, watchSize } = Dom;
+const { closest, each, size, watchSize } = Dom;
 
 const resizeObserver = function resizeObserver(callback: ResizeObserverCallback) {
   resizeObserver.callback = callback;
@@ -14,6 +14,25 @@ const resizeObserver = function resizeObserver(callback: ResizeObserverCallback)
 };
 resizeObserver.callback = (() => undefined) as ResizeObserverCallback;
 resizeObserver.instance = { disconnect: vi.fn(), observe: vi.fn(), unobserve: vi.fn() };
+
+describe(`closest`, () => {
+  it(`returns matching ancestor for an element target`, () => {
+    const parent = document.createElement(`div`);
+    const child = document.createElement(`span`);
+    parent.append(child);
+
+    expect(closest(child, `div`)).toBe(parent);
+  });
+
+  it(`returns undefined for non-element targets and misses`, () => {
+    const orphan = document.createElement(`span`);
+
+    expect(closest(undefined, `div`)).toBeUndefined();
+    expect(closest(null, `div`)).toBeUndefined();
+    expect(closest(document.createTextNode(`x`), `div`)).toBeUndefined();
+    expect(closest(orphan, `div`)).toBeUndefined();
+  });
+});
 
 describe(`each`, () => {
   it(`applies callback to every element`, () => {

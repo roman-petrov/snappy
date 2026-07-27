@@ -1,3 +1,4 @@
+// cspell:word aitunnel
 /* eslint-disable no-continue */
 /* eslint-disable init-declarations */
 /* eslint-disable no-await-in-loop */
@@ -14,7 +15,7 @@
 import { _ } from "@snappy/core";
 import { z } from "zod";
 
-import type { AiApiTool, AiChatCompletionBody, AiReasoning, AiStreamChunk } from "./AiApi";
+import type { AiChatCompletionBody, AiReasoning, AiStreamChunk } from "./AiApi";
 import type { AiModelStreamSink } from "./core-model";
 import type { CatalogChat } from "./core-model/ModelChat";
 import type {
@@ -23,10 +24,8 @@ import type {
   AiChatCompletionsInput,
   AiChatStream,
   AiChatStreamSegment,
-  AiChatToolChoice,
   AiSessionStop,
   AiToolCall,
-  AiToolSet,
 } from "./Types";
 
 import { AiConstants } from "./AiConstants";
@@ -112,20 +111,6 @@ const textFromSegments = (
     }
   })();
 
-const apiTools = (tools: AiToolSet): AiApiTool[] =>
-  _.entries(tools).map(([name, definition]) => ({
-    function: { description: definition.description, name, parameters: z.toJSONSchema(definition.inputSchema) },
-    type: `function`,
-  }));
-
-const apiToolChoice = (toolChoice: AiChatToolChoice | undefined) => {
-  if (toolChoice === undefined || toolChoice === `auto` || toolChoice === `none`) {
-    return toolChoice;
-  }
-
-  return { function: { name: toolChoice.name }, type: `function` as const };
-};
-
 type ToolCallDelta = NonNullable<NonNullable<NonNullable<AiStreamChunk[`choices`]>[0][`delta`]>[`tool_calls`]>[number];
 
 const reasoningBody = (
@@ -142,33 +127,72 @@ const reasoningBody = (
 const completion = (
   http: AiHttpConfig,
   catalogChat: CatalogChat,
-  { reasoningEffort, ...input }: AiChatCompletionsInput,
+  { reasoningEffort, webSearch, ...input }: AiChatCompletionsInput,
 ): AiChatCompletionSession => {
   const modelPlugin = catalogChat;
   const sourceMessages = `prompt` in input ? [{ content: input.prompt, role: `user` as const }] : input.messages;
-  const messages = AiMessages.chatToApi(sourceMessages, modelPlugin);
+  const apiMessages = AiMessages.chatToApi(sourceMessages, modelPlugin);
   const chatInput = `prompt` in input ? undefined : input;
   const reasoning = reasoningBody(reasoningEffort, modelPlugin.reasoningOff);
   const reasoningEnabled = reasoning !== undefined && reasoning.effort !== `none`;
+  const toolChoice = chatInput?.toolChoice;
+  const defaults = AiConstants.defaults.webSearch;
+
+  const search =
+    webSearch === undefined || webSearch === false
+      ? undefined
+      : webSearch === true
+        ? defaults
+        : {
+            contextSize: webSearch.contextSize ?? defaults.contextSize,
+            maxResults: webSearch.maxResults ?? defaults.maxResults,
+            maxUses: webSearch.maxUses ?? defaults.maxUses,
+          };
+
+  const tools = [
+    ...(search === undefined
+      ? []
+      : [
+          {
+            parameters: {
+              max_results: search.maxResults,
+              max_uses: search.maxUses,
+              search_context_size: search.contextSize,
+            },
+            type: `aitunnel:web_search` as const,
+          },
+        ]),
+    ...(chatInput?.tools === undefined
+      ? []
+      : _.entries(chatInput.tools).map(([name, definition]) => ({
+          function: { description: definition.description, name, parameters: z.toJSONSchema(definition.inputSchema) },
+          type: `function` as const,
+        }))),
+  ];
+
+  const model =
+    search === undefined ? AiTunnel.openRouterChatModel(catalogChat.name) : AiTunnel.chatModelId(catalogChat.name);
 
   const body: AiChatCompletionBody = {
     max_tokens: AiConstants.maxChatTokens,
-    messages,
-    model: AiTunnel.openRouterChatModel(catalogChat.name),
+    messages: apiMessages,
+    model,
     stream: true,
     ...(reasoning === undefined ? {} : { reasoning }),
-    ...(chatInput?.tools === undefined
+    ...(tools.length === 0
       ? {}
-      : { tool_choice: apiToolChoice(chatInput.toolChoice), tools: apiTools(chatInput.tools) }),
+      : {
+          tool_choice:
+            toolChoice === undefined || toolChoice === `auto` || toolChoice === `none`
+              ? toolChoice
+              : { function: { name: toolChoice.name }, type: `function` as const },
+          tools,
+        }),
   };
 
   const costSlot: { usage?: unknown } = {};
   const segmentOut = streamCell<AiChatStreamSegment>();
-  let resolveDone!: (value: { assistant: AiChatAssistantMessage; cost: number }) => void;
-
-  const done = new Promise<{ assistant: AiChatAssistantMessage; cost: number }>(resolve => {
-    resolveDone = resolve;
-  });
+  const done = Promise.withResolvers<{ assistant: AiChatAssistantMessage; cost: number }>();
 
   const pump = async () => {
     const textCells: Partial<Record<`chat` | `reasoning`, StreamCell<string>>> = {};
@@ -321,22 +345,21 @@ const completion = (
       emitTool(AiMessages.toolCallToAi(row));
     }
 
-    resolveDone({ assistant, cost: AiCost.cost(costSlot.usage) });
+    done.resolve({ assistant, cost: AiCost.cost(costSlot.usage) });
     segmentOut.close();
   };
 
   void pump();
 
   const segments: AiChatStream = segmentOut.stream;
+  const assistant = async () => (await done.promise).assistant;
+  const chatText = (stop?: AiSessionStop) => textFromSegments(segments, `chat`, stop);
+  const cost = async () => (await done.promise).cost;
+  const messages = async () => [await assistant()];
+  const reasoningText = (stop?: AiSessionStop) => textFromSegments(segments, `reasoning`, stop);
+  const stream = (stop?: AiSessionStop) => streamStopped(segments, stop);
 
-  return {
-    assistant: async () => (await done).assistant,
-    chatText: stop => textFromSegments(segments, `chat`, stop),
-    cost: async () => (await done).cost,
-    messages: async () => [(await done).assistant],
-    reasoningText: stop => textFromSegments(segments, `reasoning`, stop),
-    stream: stop => streamStopped(segments, stop),
-  };
+  return { assistant, chatText, cost, messages, reasoningText, stream };
 };
 
 export const AiChat = { completion };

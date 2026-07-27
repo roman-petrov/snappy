@@ -17,7 +17,19 @@ export const useSettingsState = () => {
   const llmImageEnd = settings === undefined ? undefined : `${settings.llmImageModel} · ${settings.llmImageQuality}`;
   const llmSpeechEnd = settings?.llmSpeechRecognitionModel;
   const llmVisionEnd = settings?.llmVisionModel;
+  const llmWebSearchEnd = settings?.llmWebSearchModel;
   const typeWriterSpeed = settings?.typeWriterSpeed;
 
-  return { aiTunnelDirect, email, llmChatEnd, llmImageEnd, llmSpeechEnd, llmVisionEnd, locale, theme, typeWriterSpeed };
+  return {
+    aiTunnelDirect,
+    email,
+    llmChatEnd,
+    llmImageEnd,
+    llmSpeechEnd,
+    llmVisionEnd,
+    llmWebSearchEnd,
+    locale,
+    theme,
+    typeWriterSpeed,
+  };
 };

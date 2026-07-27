@@ -144,8 +144,6 @@ export const Agent = ({ chatModel, idleAfterSuccess, locale, maxRounds, systemPr
           badge?.resolve({ label: formatCall(input, `completed`, locale) });
         }
 
-        setStatus(`thinking`);
-
         return AiToolResult.messages(result, { chatInput, toolCallId: call.toolCallId });
       };
 
