@@ -5,6 +5,7 @@
 @use "pkg:@snappy/theme/material/surface";
 @use "pkg:@snappy/theme/tokens/color";
 @use "pkg:@snappy/theme/tokens/icon-size";
+@use "pkg:@snappy/theme/tokens/material";
 @use "pkg:@snappy/theme/tokens/tokens";
 
 $-icon-gap: calc(#{tokens.icon-button-touch-size()} - #{icon-size.md()});
@@ -38,25 +39,32 @@ $-pill-radius: calc((#{tokens.icon-button-touch-size()} + #{$-edge} * 2) / 2);
     flex-shrink: 0;
   }
 
+  &:hover,
+  &:active,
+  &:focus-within {
+    @include elevation.e1;
+  }
+
   &:focus-within:not(.input-wrap-recording) {
     @include surface.primary-hover;
-    @include elevation.e2;
   }
 
   &.input-wrap-recording {
     @include surface.error;
-    @include elevation.e2;
   }
 }
 
-.glass {
+.input-wrap.glass {
   overflow: hidden;
-  background-color: transparent;
-  border: 1px solid panel.border-glass();
+  background-color: color-mix(in srgb, panel.bg-soft() #{material.fill()}, transparent);
+
+  &:focus-within:not(.input-wrap-recording) {
+    background-color: color-mix(in srgb, panel.bg(color.primary()) #{material.fill()}, transparent);
+  }
 }
 
 .glass-fill {
-  color: color.surface();
+  color: transparent;
 }
 
 .text-area-wrap {

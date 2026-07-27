@@ -14,7 +14,7 @@
   @return -mix-tone(material.highlight(), material.tone-rim());
 }
 
-@function -rim-border($fill) {
+@function rim-border($fill) {
   @return color-mix(in srgb, material.highlight() #{material.border-weight()}, $fill);
 }
 
@@ -38,20 +38,16 @@
   $fill: bg($accent);
 
   @if $accent {
-    $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, -rim-border($fill));
+    $base: color-mix(in srgb, material.highlight() #{material.accent-border-highlight()}, rim-border($fill));
 
     @return color-mix(in srgb, $accent #{material.accent-border-mix()}, $base);
   }
 
-  @return -rim-border($fill);
+  @return rim-border($fill);
 }
 
 @function border-soft() {
-  @return -rim-border(bg-soft());
-}
-
-@function border-glass($accent: null) {
-  @return -rim-border(bg-glass($accent));
+  @return rim-border(bg-soft());
 }
 
 @mixin panel-soft {
