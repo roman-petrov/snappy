@@ -14,7 +14,7 @@ const { ime, mobile, pageSafe } = vi.hoisted(() => ({
   pageSafe: `page-safe-fixture`,
 }));
 
-vi.mock(`@snappy/browser`, () => ({ Keyboard: { inset: ime, safe: pageSafe } }));
+vi.mock(`@snappy/browser`, () => ({ Keyboard: { height: ime, safe: pageSafe } }));
 
 vi.mock(`@snappy/hooks`, () => ({
   ThemeVar: { ref: (name: string) => `token(${name})` },
@@ -40,7 +40,7 @@ describe(`useStageInsets`, () => {
   });
 
   describe(`page`, () => {
-    it(`fade without chrome is safe plus ime`, () => {
+    it(`fade without chrome is safe plus ime height`, () => {
       mobile.value = true;
 
       const { result } = renderHook(() => useStageInsets());
@@ -56,7 +56,7 @@ describe(`useStageInsets`, () => {
       expect(result.current.insets.page.fadeMinHeight).toBe(`calc(${edgeSm} + ${pageSafe} + ${ime})`);
     });
 
-    it(`scrollPad without chrome includes ime`, () => {
+    it(`scrollPad without chrome stacks safe edge ime`, () => {
       mobile.value = true;
 
       const { result } = renderHook(() => useStageInsets());
@@ -64,7 +64,7 @@ describe(`useStageInsets`, () => {
       expect(result.current.insets.page.scrollPad).toBe(`calc(${pageSafe} + ${edgeSm} + ${ime})`);
     });
 
-    it(`scrollPad with chrome stacks height between edges`, () => {
+    it(`scrollPad with chrome stacks height between edges and ime`, () => {
       mobile.value = true;
 
       const { result } = renderHook(() => useStageInsets(undefined, 42));

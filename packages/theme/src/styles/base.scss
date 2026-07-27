@@ -8,7 +8,7 @@
 html {
   @include keyboard.root;
 
-  height: 100dvh;
+  height: 100svh;
   overflow: clip;
   scroll-behavior: smooth;
 }

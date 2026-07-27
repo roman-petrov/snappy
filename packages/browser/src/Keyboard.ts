@@ -6,7 +6,6 @@ import { Dom } from "./Dom";
 import { ThemeVar } from "./ThemeVar";
 
 const heightVar = `ime-height`;
-const insetVar = `ime-inset`;
 const safeVar = `stage-safe-bottom`;
 const coverBottomLeftRadiusVar = `cover-bottom-left-radius`;
 
@@ -22,7 +21,6 @@ const init = (() => {
     const height = Math.max(0, window.innerHeight - viewport.height);
     const next = height > 0;
     ThemeVar.write(heightVar, _.px(height));
-    ThemeVar.write(insetVar, _.px(Math.max(0, height - viewport.offsetTop)));
 
     if (next === open) {
       return;
@@ -42,13 +40,11 @@ const init = (() => {
   return () => {
     sync();
     Dom.subscribe(window.visualViewport, `resize`, sync);
-    Dom.subscribe(window.visualViewport, `scroll`, sync);
   };
 })();
 
 const height = ThemeVar.ref(heightVar);
-const inset = ThemeVar.ref(insetVar);
 const safe = ThemeVar.ref(safeVar);
 const coverBottomLeftRadius = (fallback: string) => `var(--${coverBottomLeftRadiusVar}, ${fallback})`;
 
-export const Keyboard = { coverBottomLeftRadius, height, init, inset, safe };
+export const Keyboard = { coverBottomLeftRadius, height, init, safe };

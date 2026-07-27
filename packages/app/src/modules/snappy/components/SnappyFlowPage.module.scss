@@ -6,9 +6,7 @@ $-transition: animation.settle-lg();
   pointer-events: none;
   transition:
     top $-transition,
-    bottom $-transition,
-    transform $-transition,
-    padding-bottom $-transition;
+    transform $-transition;
 
   > * {
     width: 100%;
