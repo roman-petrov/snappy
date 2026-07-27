@@ -11,6 +11,7 @@ html {
   height: 100svh;
   overflow: clip;
   scroll-behavior: smooth;
+  background: color.backdrop();
 }
 
 * {
