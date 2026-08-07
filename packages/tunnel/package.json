@@ -10,7 +10,7 @@
   "dependencies": {
     "@snappy/core": "workspace:*",
     "@snappy/rpc": "workspace:*",
-    "fastify": "^5.10.0"
+    "fastify": "^5.11.2"
   },
   "devDependencies": {
     "@snappy/node": "workspace:*",
