@@ -1,133 +1,164 @@
-# ⬆️ Upgrade: Package Update with Changelog Review
+<!-- cspell:word upgradelock navigations -->
 
-**Goal:** Menu of outdated packages → upgrade one across the monorepo → project-focused impact report → code changes
-only after confirmation.
+# ⬆️ Upgrade: Bulk Dependency Update
 
-**Flow:** `bun outdated` → AskQuestion → snapshot → edit manifests → `bun i` → MCP `tsc`/`test` → research releases →
-impact report → ask → apply.
+**Goal:** Upgrade all outdated direct dependencies (except `upgradelock`) to latest → green lint/test → safe
+changelog-driven simplifications (including cosmetic ones that shorten code) → browser smoke → `ci` → detailed report.
+No commit.
+
+**Flow:** credentials → `upgradelock` + `bun outdated` → bulk `bun update --latest` → MCP `lint`/`test` → per-package
+changelog pass (apply safe simplifies) → `bun do dev` + browser smoke → MCP `ci` → final report.
+
+**Hard constraints:**
+
+- Do **not** commit or push.
+- Do **not** upgrade packages listed in root `upgradelock`.
+- Do **not** touch `workspace:*` ranges.
+- Do **not** run `bun actions-up` / GitHub Actions upgrades — separate from this command.
+- Code edits: **Required** (to pass checks) + **Safe simplify** from changelogs for our usage — including safe cosmetic
+  updates when they shorten/simplify code. No AskQuestion for those.
+- Ask for local DB user credentials **before** any upgrades; block until answered.
+- Prefer MCP `workflow_run` for `lint`, `test`, `tsc`, `ci`. Use shell for `bun outdated` / `bun update` / `bun i` /
+  `bun do dev` (and other package-manager commands).
 
 ---
 
 ## 📋 Algorithm
 
-### 1️⃣ Discover
+### 0️⃣ Credentials (blocker)
+
+Ask the user for the local DB user’s login and password. Do not proceed until both are provided. Keep them only for Step
+5 smoke login.
+
+---
+
+### 1️⃣ Lock + discover
 
 From repo root:
+
+1. Read `upgradelock`: one package name per line; ignore blank lines and `#` comments.
+2. Run:
 
 ```bash
 bun outdated --recursive
 ```
 
-Parse table rows (`| Package | Current | Update | Latest | Workspace |`). Strip `(dev)`. Ignore `workspace:*`. Aggregate
-by unique package name: `current`, `update`, `latest`, `workspaces`, `dev`.
+Retry with `--no-cache` on failure.
+
+1. Parse table rows (`| Package | Current | Update | Latest | Workspace |`). Strip `(dev)` from the name (keep a `dev`
+   flag). Ignore rows whose resolved range is `workspace:*`. Aggregate by unique package name: `current`, `update`,
+   `latest`, workspaces, `dev`.
 
 ```text
-target = update !== current ? update : latest
-kind   = target === latest && update === current ? major : in-range
+target = latest
+kind   = major if crossing major(current → latest), else minor/patch
 ```
 
-Retry with `--no-cache` on failure. Flag version drift across workspaces. Verify stale output via
-`bun pm view <package> version`.
+1. Drop every name present in `upgradelock` (record them as skipped-by-lock).
+2. If the remaining candidate list is empty — stop with a short “nothing to upgrade” report (still note lock skips).
+3. If any candidate appears in root `patchedDependencies` — warn and **AskQuestion** before Step 2: upgrade (may need
+   patch refresh) or skip for this run. Wait for the answer.
+4. Note paired `@types` in manifests that already list a candidate: `@types/<pkg>` or `@types/scope__name` for
+   `@scope/name`. Include those `@types` packages in the update set when present (unless locked).
 
-If empty — stop; note that major bumps appear only when `Current === Update !== Latest`.
-
----
-
-### 2️⃣ Menu
-
-**AskQuestion:** `Which package do you want to upgrade?`
-
-Label: `<name>  <current> → <target> (<kind>, <N> workspace[s])`. Sort: major → workspace count desc → name.
-
-Wait for selection. One package per run.
+Do **not** use Bun `--filter` to honor `upgradelock` — that flag filters workspaces, not dependency names.
 
 ---
 
-### 3️⃣ Snapshot
+### 2️⃣ Bulk upgrade
 
-Before any edits:
-
-- Grep `"<package>"` in `packages/**/package.json` and root `package.json` — list manifests that **already** list the
-  package (edit only these; never add the package to a manifest where it is absent)
-- In those manifests, note paired `@types` in `devDependencies` if present: `@types/<package>` (unscoped) or
-  `@types/scope__name` (scoped, e.g. `@foo/bar` → `@types/foo__bar`)
-- If `<package>` appears in root `patchedDependencies` — warn and wait for confirm before Step 4
-- Grep imports (`from "<package>"`, `from "<package>/`) — save file list
-
----
-
-### 4️⃣ Upgrade
-
-In each manifest from Step 3: set range to `^<target>` (match pin style of siblings; keep deps vs devDeps). If paired
-`@types` from Step 3 is present — bump it too (`bun pm view @types/… version` → `^<latest>`); same step, no extra ask.
-Then:
+One pass for all candidates (and paired `@types` from Step 1):
 
 ```bash
+bun update --latest --recursive <pkg1> <pkg2> ...
 bun i
 ```
 
-Confirm `bun.lock` updated; upgraded package(s) no longer outdated. No application code in this step.
+Verify:
+
+- `bun.lock` changed as expected
+- locked packages stayed on their previous versions
+- candidates are no longer outdated (or record leftovers)
+
+No application code changes in this step. Record `prev → new` per upgraded package for later steps.
 
 ---
 
-### 5️⃣ Verify
+### 3️⃣ Verify (lint + test)
 
-MCP `workflow_run`: `tsc`, then `test`. On failure — include output in impact report; pause until user decides.
+MCP `workflow_run`: `lint`, then `test`.
 
----
-
-### 6️⃣ Research (internal only)
-
-Changelog is input for analysis — use internally, report only what affects this codebase. Read every release in
-`(previousVersion, targetVersion]`, not only the latest. When `@types` was bumped alongside the main package, research
-the main package only.
-
-1. `bun pm view <package> versions --json` → filter semver range
-2. Notes per version (oldest → newest): CHANGELOG, GitHub Releases, `bun pm view <package>@<version>`
-3. Grep imports + read Step 3 files → map **APIs we use** × **release changes**
-
-**Report:**
-
-- Breaking changes / deprecations in our usage, or already failing `tsc` / `test`
-- New APIs that replace boilerplate we maintain (wrappers, workarounds, redundant config)
-- Security, perf, or bugfix wins for our usage
-- **Simplifications** — local edits that remove or shorten code
-
-**Classify:** **Required** (build/tests break) · **Recommended** (deprecations, shorter code) · **Optional** (marginal;
-skip unless obvious). Prefer Recommended when the upgrade unlocks a shorter replacement.
+On failure — fix only breakages caused by the upgrade (**Required**). Re-run until green, or stop and explain if the
+user must choose (e.g. incompatible major with no clear migration).
 
 ---
 
-### 7️⃣ Impact report
+### 4️⃣ Per-package changelog pass
 
-Lists, not tables. Each bullet: **where → what → why**. At most one link to upstream changelog.
+Only packages whose version actually moved. Prefer packages with our import surface and breaking/deprecations first;
+pure maintenance with no usage — note briefly and skip deep refactor.
 
-1. **Upgrade summary** (≤4 lines) — `prev → target`, kind, edited manifests (incl. paired `@types` if bumped),
-   `tsc`/`test`
-2. **Benefits** — wins for our code only; or _"Maintenance bump."_
-3. **Risks** — 🔴 blocks · 🟡 watch · 🟢 low; only for changes touching our usage
-4. **Required code changes** — 🔴 where / what / why; or _"None."_
-5. **Recommended simplifications** — 🟡 deprecated · 🟢 shorter code · 🔵 config; state code to **delete**
-6. **Ask** — _"Apply these changes?"_ with counts; nudge 🟢 items. Wait for confirmation before code edits.
+For each package (`name`, `prev`, `new`):
+
+1. Read every release in `(prev, new]` (oldest → newest): CHANGELOG, GitHub Releases, `bun pm view`. When `@types` was
+   bumped with a main package, research the main package only.
+2. Grep our usage: `from "<package>"`, `from "<package>/`.
+3. Map APIs we use × release notes. Classify:
+
+- **Required** — fix now if still broken after Step 3
+- **Safe simplify** — apply immediately: remove workarounds, switch deprecated → shorter API, drop redundant
+  wrappers/config, **and safe cosmetic updates that simplify code** (shorter call, fewer options/noise, clearer API,
+  same behavior)
+- **Watch / note** — report only: risk, contested behavior, UX benefit with no code simplification, or purely aesthetic
+  change that does not shorten/simplify
+
+**Apply rules:** surgical; only files/symbols from our usage; prefer deleting code; apply cosmetic edits only when they
+truly simplify; no new abstractions; do not change UX “for taste”. After a batch of edits for a package, run MCP `tsc`
+and/or `test` when risk warrants it.
+
+No AskQuestion before applying **Required** or **Safe simplify**.
 
 ---
 
-### 8️⃣ Apply (after confirmation)
+### 5️⃣ Browser smoke
 
-Apply impact-report items: **Required** (report §4) first, then **Recommended** (report §5). Within each item, delete
-superseded helpers, wrappers, config — choose the edit that removes the most code. Only named files/symbols from the
-report. MCP `tsc` + `test`; summarize in 3–5 bullets with net line reduction.
+1. Shell: `bun do dev` (needs Docker/DB; MCP `dev` is unavailable).
+2. Browser: `https://home.local` (site) and `https://home.local/app` (app).
+3. Log in with credentials from Step 0.
+4. Minimal smoke: no console/network errors on load; login succeeds; one or two basic navigations (site landing + app
+   after login).
+5. Environment blockers (cert/Docker/DB) — stop with concrete fix steps; do not fake success.
 
-If declined — Step 4 upgrade remains.
+---
+
+### 6️⃣ Final CI
+
+MCP `workflow_run`: `ci` (same as `bun do ci`). Fix and re-run until green.
+
+---
+
+### 7️⃣ Final report
+
+Lists, not tables. Each bullet: **where → what → why** when describing code/UX. Sections:
+
+1. **Upgrade summary** — count upgraded; skipped-by-lock; patched skipped/confirmed; lint / test / ci / smoke outcome
+2. **Version changes** — `name: prev → new` (mark majors)
+3. **Code improvements** — what was simplified/removed and why (incl. cosmetic simplifies)
+4. **UX / product benefits** — user-facing wins, or _"Maintenance only."_
+5. **Watch list** — what to verify in manual testing
+6. **Left untouched** — lock list, declined patched, Actions
+7. Explicit line: **No commit created.**
+
+If the git tree was already dirty before this command — mention it; do not stop for that reason.
 
 ---
 
 ## ⚠️ Edge cases
 
-- **Patched** — `<package>` in `patchedDependencies`; confirm before Step 4; patch may need refresh
-- **Version drift** — unify all workspaces to `target`
-- **Root-only package** — e.g. `actions-up` in root `devDependencies`; edit root manifest from Step 3
-- **@types-only upgrade** — bump `@types` only; no automatic main-package bump
+- **Patched** — confirm before upgrading; patch may need refresh
+- **Version drift** — after `--latest --recursive`, versions should unify; if not, align manually to `latest`
+- **@types-only** — bump `@types` alone when that package is the outdated candidate; do not auto-bump the main package
 - **No changelog** — infer from types, failures, release tags
-- **Transitive only** — add to the workspace manifest that needs it
-- **GitHub Actions** — `bun actions-up`; separate from this command
+- **Transitive-only desire** — out of scope unless already a direct dependency
+- **GitHub Actions** — `bun actions-up`; not part of this command
+- **Smoke without credentials** — forbidden; Step 0 is mandatory
