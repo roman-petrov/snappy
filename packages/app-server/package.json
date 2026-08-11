@@ -23,9 +23,9 @@
     "@snappy/server-module": "workspace:*",
     "@snappy/tunnel": "workspace:*",
     "@snappy/ui-core": "workspace:*",
-    "better-auth": "^1.6.24",
-    "fastify": "^5.11.2",
-    "nodemailer": "^9.0.3",
+    "better-auth": "^1.6.26",
+    "fastify": "^5.11.3",
+    "nodemailer": "^9.0.5",
     "zod": "^4.4.3"
   },
   "devDependencies": {

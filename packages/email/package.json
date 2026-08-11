@@ -12,10 +12,10 @@
     "@snappy/intl": "workspace:*",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-email": "^6.9.0"
+    "react-email": "^6.9.2"
   },
   "devDependencies": {
-    "@react-email/ui": "^6.9.0",
+    "@react-email/ui": "^6.9.2",
     "@types/react": "^19.2.18"
   }
 }
