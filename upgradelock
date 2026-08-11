@@ -1,0 +1,4 @@
+@eslint/js
+eslint
+eslint-plugin-unicorn
+typescript
