@@ -28,12 +28,12 @@
     "@snappy/config": "workspace:*",
     "@snappy/db": "workspace:*",
     "@snappy/do": "workspace:*",
-    "prisma": "^7.9.1",
-    "vite": "^8.2.1"
+    "prisma": "^7.10.0",
+    "vite": "^8.2.2"
   },
   "devDependencies": {
     "@knip/mcp": "^0.0.34",
-    "actions-up": "^1.17.0",
+    "actions-up": "^1.18.0",
     "jsdom": "^30.0.1"
   },
   "overrides": {
