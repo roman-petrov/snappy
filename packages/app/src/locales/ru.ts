@@ -72,7 +72,6 @@ export const ru = {
       email: `Email`,
       errors: {
         emailAlreadyRegistered: `Аккаунт с таким email уже зарегистрирован`,
-        foreignEmail: `Используйте российский почтовый сервис (например, Яндекс или Mail.ru)`,
         invalidCredentials: `Слабый пароль`,
         invalidEmail: `Введите корректный email`,
         unknownError: `Не удалось завершить регистрацию`,

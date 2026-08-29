@@ -21,9 +21,6 @@ const toCamelStatus = (code: string) => {
   if (normalized === `INVALID_EMAIL`) {
     return `invalidEmail`;
   }
-  if (normalized === `FOREIGN_EMAIL`) {
-    return `foreignEmail`;
-  }
   if (normalized === `INVALID_EMAIL_OR_PASSWORD` || normalized === `INVALID_PASSWORD`) {
     return `invalidCredentials`;
   }

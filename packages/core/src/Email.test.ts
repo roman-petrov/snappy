@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { Email } from "./Email";
 
-const { foreignProvider, mailto, valid } = Email;
+const { mailto, valid } = Email;
 
 describe(`valid`, () => {
   it(`returns false for empty or whitespace-only input`, () => {
@@ -36,21 +36,5 @@ describe(`mailto`, () => {
     expect(mailto(`user@example.com`, { body: `Line 1\nLine 2`, subject: `Pay #1` })).toBe(
       `mailto:user@example.com?subject=Pay%20%231&body=Line%201%0ALine%202`,
     );
-  });
-});
-
-describe(`foreignProvider`, () => {
-  it(`returns false for invalid or non-foreign addresses`, () => {
-    expect(foreignProvider(``)).toBe(false);
-    expect(foreignProvider(`user`)).toBe(false);
-    expect(foreignProvider(`user@yandex.ru`)).toBe(false);
-    expect(foreignProvider(`user@company.ru`)).toBe(false);
-  });
-
-  it(`returns true for major foreign mail hosts`, () => {
-    expect(foreignProvider(`user@gmail.com`)).toBe(true);
-    expect(foreignProvider(`  User@Gmail.com  `)).toBe(true);
-    expect(foreignProvider(`user@outlook.com`)).toBe(true);
-    expect(foreignProvider(`user@icloud.com`)).toBe(true);
   });
 });
