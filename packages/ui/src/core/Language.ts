@@ -1,24 +1,15 @@
 /* eslint-disable functional/immutable-data */
 /* eslint-disable functional/no-expression-statements */
 /* eslint-disable functional/no-let */
-import type { Language as CoreLanguage } from "@snappy/ui-core";
-
 import { i, type Locale } from "@snappy/intl";
+import { Language as CoreLanguage, type Language as LanguageValue } from "@snappy/ui-core";
 
 import { $locale } from "../Store";
 
-export type Language = CoreLanguage;
+export type Language = LanguageValue;
 
 const values = [`en`, `ru`, `system`] as const;
-
-const resolvedFromSystem = () =>
-  typeof navigator !== `undefined` && navigator.language.startsWith(`ru`) ? `ru` : `en`;
-
-const locale = () => {
-  const v = $locale();
-
-  return v === `system` ? resolvedFromSystem() : v;
-};
+const locale = () => CoreLanguage.resolve($locale(), typeof navigator === `undefined` ? undefined : navigator.language);
 
 const apply = () => {
   document.documentElement.lang = locale();
