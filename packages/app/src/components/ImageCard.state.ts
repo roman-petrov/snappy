@@ -3,6 +3,7 @@ import { AiConstants } from "@snappy/ai";
 import { Mime } from "@snappy/core";
 import { Copy, Share } from "@snappy/platform";
 import { useAsyncEffect } from "@snappy/ui";
+import { useRef } from "react";
 
 import type { ImageCardProps } from "./ImageCard";
 
@@ -24,6 +25,11 @@ export const useImageCardState = (props: ImageCardProps) => {
     type: `image`,
   });
 
+  const completeRef = useRef(complete);
+  const failRef = useRef(fail);
+  completeRef.current = complete;
+  failRef.current = fail;
+
   useAsyncEffect(async () => {
     if (!running) {
       return;
@@ -37,11 +43,11 @@ export const useImageCardState = (props: ImageCardProps) => {
         edit === undefined
           ? await model.generate(options)
           : await model.edit({ ...options, ...edit, images: edit.images });
-      await complete(Mime.pngDataUrl(result.bytes));
+      await completeRef.current(Mime.pngDataUrl(result.bytes));
     } catch (error) {
-      fail(error);
+      failRef.current(error);
     }
-  }, [complete, edit, fail, generation, imageConfig, locale, model, prompt, running, size]);
+  }, [edit, generation, imageConfig, locale, model, prompt, running, size]);
 
   return { actions, busy, pending, remove, running, src: content };
 };

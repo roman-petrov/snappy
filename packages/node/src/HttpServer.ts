@@ -12,14 +12,14 @@ import {
   type Server,
   type ServerResponse,
 } from "node:http";
-import { gzipSync, zstdCompressSync } from "node:zlib";
+import { brotliCompressSync, gzipSync, zstdCompressSync } from "node:zlib";
 
 export type HttpServerBody = (Buffer | string)[] | Buffer | string;
 
 export type HttpServerReply = {
   body: unknown;
   contentType?: MimeType;
-  encoding?: `gzip` | `zstd`;
+  encoding?: `br` | `gzip` | `zstd`;
   headers?: Record<string, string>;
   status?: number;
 };
@@ -37,6 +37,17 @@ export const HttpServer = () => {
     _.isString(body) ||
     Buffer.isBuffer(body) ||
     (_.isArray(body) && body.every(part => _.isString(part) || Buffer.isBuffer(part)));
+
+  const compress = (kind: NonNullable<HttpServerReply[`encoding`]>, bytes: Buffer) => {
+    if (kind === `gzip`) {
+      return gzipSync(bytes);
+    }
+    if (kind === `zstd`) {
+      return zstdCompressSync(bytes);
+    }
+
+    return brotliCompressSync(bytes);
+  };
 
   const toBytes = (body: unknown) =>
     Buffer.isBuffer(body)
@@ -125,7 +136,7 @@ export const HttpServer = () => {
           ? isRawBody(body)
             ? body
             : JSON.stringify(body)
-          : chunked(encoding === `gzip` ? gzipSync(toBytes(body)) : zstdCompressSync(toBytes(body)));
+          : chunked(compress(encoding, toBytes(body)));
 
       const type = contentType ?? (isRawBody(body) ? undefined : MimeType.json);
 

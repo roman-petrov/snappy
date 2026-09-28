@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/try-complexity */
 /* eslint-disable unicorn/no-null */
 /* eslint-disable functional/no-let */
 /* eslint-disable functional/no-loop-statements */
@@ -13,7 +12,7 @@ import type { IncomingHttpHeaders as Http2IncomingHttpHeaders } from "node:http2
 import httpProxy, { type FastifyHttpProxyOptions } from "@fastify/http-proxy";
 import { _, HttpStatus, MimeType } from "@snappy/core";
 import { type Readable, Transform } from "node:stream";
-import { gunzipSync, zstdDecompressSync } from "node:zlib";
+import { brotliDecompressSync, gunzipSync, zstdDecompressSync } from "node:zlib";
 
 export type PayloadProxyConfig = {
   gate?: (headers: PayloadProxyHeaders) => PayloadProxyGateResult | Promise<PayloadProxyGateResult>;
@@ -29,6 +28,23 @@ export type PayloadProxyGateResult =
 export type PayloadProxyHeaders = Record<string, string | string[] | undefined>;
 
 export type PayloadProxyState = Record<string, unknown>;
+
+const decodedBody = (encoding: string | string[] | undefined, raw: Buffer) => {
+  if (!_.isString(encoding)) {
+    return raw;
+  }
+  if (encoding.includes(`zstd`)) {
+    return zstdDecompressSync(raw);
+  }
+  if (encoding.includes(`gzip`)) {
+    return gunzipSync(raw);
+  }
+  if (encoding.includes(`br`)) {
+    return brotliDecompressSync(raw);
+  }
+
+  return raw;
+};
 
 export const PayloadProxy = async (
   app: FastifyInstance,
@@ -122,14 +138,7 @@ export const PayloadProxy = async (
         stream.once(`end`, async () => {
           const raw = Buffer.concat(chunks);
           try {
-            const encoding = upstreamHeaders[`content-encoding`];
-
-            const decoded =
-              _.isString(encoding) && encoding.includes(`zstd`)
-                ? zstdDecompressSync(raw)
-                : _.isString(encoding) && encoding.includes(`gzip`)
-                  ? gunzipSync(raw)
-                  : raw;
+            const decoded = decodedBody(upstreamHeaders[`content-encoding`], raw);
             onPayload(JSON.parse(decoded.toString(`utf8`)) as unknown, path, state);
             await reply.send(raw);
           } catch {

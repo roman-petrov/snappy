@@ -8,7 +8,7 @@ import { HttpStatus, MimeType } from "@snappy/core";
 import { HttpServer } from "@snappy/node";
 import fastifyFactory, { type InjectOptions } from "fastify";
 import { setImmediate } from "node:timers/promises";
-import { gunzipSync, zstdDecompressSync } from "node:zlib";
+import { brotliDecompressSync, gunzipSync, zstdDecompressSync } from "node:zlib";
 import { describe, expect, it } from "vitest";
 
 import { PayloadProxy } from "./PayloadProxy";
@@ -171,6 +171,21 @@ describe(`PayloadProxy`, () => {
         expect(response.statusCode).toBe(HttpStatus.ok);
         expect(response.headers[`content-encoding`]).toBe(`zstd`);
         expect(JSON.parse(zstdDecompressSync(response.rawPayload).toString(`utf8`))).toStrictEqual(body);
+      });
+    });
+
+    it(`emits parsed JSON when body is brotli-compressed`, async () => {
+      await withFixture(async ({ inject, payloads, upstream }) => {
+        const body = { data: [{ b64_json: `aGVsbG8=` }], usage: { cost_rub: 1.25 } };
+        upstream.on(upstream.respond({ body, contentType: MimeType.json, encoding: `br` }));
+
+        const response = await inject({ method: `POST` });
+        await waitPayloads(payloads);
+
+        expect(payloads).toStrictEqual([body]);
+        expect(response.statusCode).toBe(HttpStatus.ok);
+        expect(response.headers[`content-encoding`]).toBe(`br`);
+        expect(JSON.parse(brotliDecompressSync(response.rawPayload).toString(`utf8`))).toStrictEqual(body);
       });
     });
 

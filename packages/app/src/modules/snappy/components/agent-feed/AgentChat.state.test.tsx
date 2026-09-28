@@ -72,7 +72,9 @@ describe(`useAgentChatState`, () => {
     const stop = vi.fn();
 
     const runtime = vi.fn((context: { aiConfig: { models: unknown } }) => ({
-      run: () => run(context.aiConfig.models),
+      run: () => {
+        run(context.aiConfig.models);
+      },
       stop,
     }));
 
