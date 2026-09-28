@@ -54,7 +54,7 @@ export const useAgentChatState = ({ runtime, session = [], showFeed = true }: Ag
     setPhase(`ready`);
   }, [balance, gated, settings]);
 
-  const ready = phase === `ready` && (!gated || aiConfig !== undefined);
+  const ready = phase === `ready` && aiConfig !== undefined;
   const balanceLow = gated && phase === `blocked`;
 
   useEffect(() => {

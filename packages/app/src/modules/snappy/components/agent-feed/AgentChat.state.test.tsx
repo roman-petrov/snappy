@@ -64,4 +64,35 @@ describe(`useAgentChatState`, () => {
     expect(run).toHaveBeenCalledTimes(1);
     expect(stop).not.toHaveBeenCalled();
   });
+
+  it(`does not start the agent until settings are loaded`, () => {
+    const saved = dataState.settings;
+    dataState.settings = undefined;
+    const run = vi.fn();
+    const stop = vi.fn();
+
+    const runtime = vi.fn((context: { aiConfig: { models: unknown } }) => ({
+      run: () => run(context.aiConfig.models),
+      stop,
+    }));
+
+    const Host = () => {
+      const { feed } = useAgentChatState({ runtime, session: [`icon`, `en`], showFeed: true });
+
+      return feed ?? undefined;
+    };
+
+    const { rerender } = render(<Host />);
+
+    expect(runtime).not.toHaveBeenCalled();
+    expect(run).not.toHaveBeenCalled();
+
+    act(() => {
+      dataState.settings = saved;
+      rerender(<Host />);
+    });
+
+    expect(runtime).toHaveBeenCalledTimes(1);
+    expect(run).toHaveBeenCalledTimes(1);
+  });
 });
